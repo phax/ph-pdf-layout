@@ -14,5 +14,6 @@ hs_err_pid*
 target/
 
 # Unit test created PDFs
-pdf/*.pdf
+/pdf/
+
 
