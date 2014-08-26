@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.pdf.element;
+package com.helger.pdflayout.element;
 
 import java.awt.Color;
 
@@ -27,12 +27,17 @@ import org.junit.rules.TestRule;
 import com.helger.commons.CGlobal;
 import com.helger.commons.io.file.FileUtils;
 import com.helger.commons.mock.DebugModeTestRule;
-import com.helger.pdflayout.pdf.PDFCreationException;
-import com.helger.pdflayout.pdf.PageLayoutPDF;
-import com.helger.pdflayout.pdf.spec.BorderStyleSpec;
-import com.helger.pdflayout.pdf.spec.FontSpec;
-import com.helger.pdflayout.pdf.spec.PDFFont;
-import com.helger.pdflayout.pdf.spec.WidthSpec;
+import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.element.PLHBox;
+import com.helger.pdflayout.element.PLPageSet;
+import com.helger.pdflayout.element.PLTable;
+import com.helger.pdflayout.element.PLText;
+import com.helger.pdflayout.element.PLTextSplittable;
+import com.helger.pdflayout.spec.BorderStyleSpec;
+import com.helger.pdflayout.spec.FontSpec;
+import com.helger.pdflayout.spec.PDFFont;
+import com.helger.pdflayout.spec.WidthSpec;
 
 /**
  * Test class for {@link PLText} and {@link PLTextSplittable}

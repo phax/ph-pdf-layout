@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.pdf;
+package com.helger.pdflayout;
 
 import java.awt.Color;
 
@@ -26,20 +26,22 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.file.FileUtils;
 import com.helger.commons.mock.DebugModeTestRule;
-import com.helger.pdflayout.pdf.element.PLHBoxSplittable;
-import com.helger.pdflayout.pdf.element.PLPageBreak;
-import com.helger.pdflayout.pdf.element.PLPageSet;
-import com.helger.pdflayout.pdf.element.PLTable;
-import com.helger.pdflayout.pdf.element.PLTable.PLTableCell;
-import com.helger.pdflayout.pdf.element.PLText;
-import com.helger.pdflayout.pdf.element.PLTextWithPlaceholders;
-import com.helger.pdflayout.pdf.render.RenderPageIndex;
-import com.helger.pdflayout.pdf.spec.BorderStyleSpec;
-import com.helger.pdflayout.pdf.spec.EHorzAlignment;
-import com.helger.pdflayout.pdf.spec.EVertAlignment;
-import com.helger.pdflayout.pdf.spec.FontSpec;
-import com.helger.pdflayout.pdf.spec.PDFFont;
-import com.helger.pdflayout.pdf.spec.PaddingSpec;
+import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.element.PLHBoxSplittable;
+import com.helger.pdflayout.element.PLPageBreak;
+import com.helger.pdflayout.element.PLPageSet;
+import com.helger.pdflayout.element.PLTable;
+import com.helger.pdflayout.element.PLText;
+import com.helger.pdflayout.element.PLTextWithPlaceholders;
+import com.helger.pdflayout.element.PLTable.PLTableCell;
+import com.helger.pdflayout.render.RenderPageIndex;
+import com.helger.pdflayout.spec.BorderStyleSpec;
+import com.helger.pdflayout.spec.EHorzAlignment;
+import com.helger.pdflayout.spec.EVertAlignment;
+import com.helger.pdflayout.spec.FontSpec;
+import com.helger.pdflayout.spec.PDFFont;
+import com.helger.pdflayout.spec.PaddingSpec;
 
 /**
  * Test class for class {@link PageLayoutPDF}.

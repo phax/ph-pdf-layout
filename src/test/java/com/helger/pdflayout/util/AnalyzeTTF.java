@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.pdf.util;
+package com.helger.pdflayout.util;
 
 import org.apache.fontbox.ttf.CMAPEncodingEntry;
 import org.apache.fontbox.ttf.CMAPTable;

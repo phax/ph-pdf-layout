@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.pdf.element;
+package com.helger.pdflayout.element;
 
 import org.junit.Rule;
 import org.junit.rules.TestRule;
