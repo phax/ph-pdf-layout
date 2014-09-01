@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2014 phloc systems
-    http://www.phloc.com
-    office[at]phloc[dot]com
+    Copyright (C) 2014 Philip Helger (www.helger.com)
+    philip[at]helger[dot]com
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -31,6 +30,7 @@
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
   <url>https://github.com/phax/ph-pdf-layout</url>
+  <inceptionYear>2014</inceptionYear>
  
   <licenses>
     <license>
