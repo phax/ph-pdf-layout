@@ -22,8 +22,10 @@ import com.helger.pdflayout.spec.EHorzAlignment;
 
 /**
  * Base interface for objects with a horizontal alignment
- * 
+ *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
 public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>>
 {
@@ -36,7 +38,7 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
 
   /**
    * Set the horizontal alignment of this element.
-   * 
+   *
    * @param eHorzAlign
    *        The new horizontal alignment. May not be <code>null</code>.
    * @return this

@@ -26,8 +26,10 @@ import com.helger.pdflayout.spec.WidthSpec;
 
 /**
  * Horizontal box - groups several columns.
- * 
+ *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
 public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxSplittable <IMPLTYPE>> extends AbstractPLHBox <IMPLTYPE> implements IPLSplittableElement
 {

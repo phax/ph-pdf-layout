@@ -29,8 +29,10 @@ import com.helger.pdflayout.spec.SizeSpec;
 
 /**
  * Vertical box - groups several rows.
- * 
+ *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
 public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxSplittable <IMPLTYPE>> extends AbstractPLVBox <IMPLTYPE> implements IPLSplittableElement
 {
