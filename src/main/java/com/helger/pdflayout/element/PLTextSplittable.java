@@ -31,7 +31,7 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
 
 /**
  * Render text
- * 
+ *
  * @author Philip Helger
  */
 public class PLTextSplittable extends PLText implements IPLSplittableElement
@@ -68,7 +68,9 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
                             " because the result would be " +
                             nLines +
                             " lines for available height " +
-                            fAvailableHeight);
+                            fAvailableHeight +
+                            " and line height " +
+                            fLineHeight);
       return null;
     }
 

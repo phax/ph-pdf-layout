@@ -28,11 +28,6 @@ import com.helger.commons.io.file.FileUtils;
 import com.helger.commons.mock.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
-import com.helger.pdflayout.element.PLHBox;
-import com.helger.pdflayout.element.PLPageSet;
-import com.helger.pdflayout.element.PLTable;
-import com.helger.pdflayout.element.PLText;
-import com.helger.pdflayout.element.PLTextSplittable;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PDFFont;
@@ -40,7 +35,7 @@ import com.helger.pdflayout.spec.WidthSpec;
 
 /**
  * Test class for {@link PLText} and {@link PLTextSplittable}
- * 
+ *
  * @author Philip Helger
  */
 public final class PLTextTest
@@ -89,5 +84,24 @@ public final class PLTextTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext-split.pdf"));
+  }
+
+  @Test
+  public void testWithLongStringWithoutBlanks () throws PDFCreationException
+  {
+    final String s = "http://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLinkhttp://portal-dev.ecosio.com/outbox?25-1.ILinkListener-mailboxPanel-messagesGrid-receivedMessagesTable-body-rows-1-cells-5-cell-1-container-detailBar-editLink";
+    final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (30);
+    final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
+    aHBox.addColumn (new PLTextSplittable (s, r10).setMargin (10)
+                                                  .setPadding (5)
+                                                  .setBorder (new BorderStyleSpec (Color.GRAY)),
+                     WidthSpec.perc (30));
+    aPS1.addElement (aHBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext-split2.pdf"));
   }
 }

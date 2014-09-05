@@ -18,12 +18,13 @@ package com.helger.pdflayout.element;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
  * This class represents the result of splitting as defined in
  * {@link IPLSplittableElement}.
- * 
+ *
  * @author Philip Helger
  */
 public final class PLSplitResult
@@ -33,10 +34,8 @@ public final class PLSplitResult
 
   public PLSplitResult (@Nonnull final PLElementWithSize aFirstElement, @Nonnull final PLElementWithSize aSecondElement)
   {
-    if (aFirstElement == null)
-      throw new NullPointerException ("firstElement");
-    if (aSecondElement == null)
-      throw new NullPointerException ("secondElement");
+    ValueEnforcer.notNull (aFirstElement, "FirstElement");
+    ValueEnforcer.notNull (aSecondElement, "SecondElement");
     m_aFirstElement = aFirstElement;
     m_aSecondElement = aSecondElement;
   }

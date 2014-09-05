@@ -124,7 +124,8 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
     {
       final AbstractPLElement <?> aElement = getColumnElementAtIndex (nCol);
       final boolean bIsSplittable = aElement.isSplittable ();
-      final float fColumnWidthFull = m_aPreparedWidth[nCol] + aElement.getMarginPlusPaddingXSum ();
+      final float fColumnWidth = m_aPreparedWidth[nCol];
+      final float fColumnWidthFull = fColumnWidth + aElement.getMarginPlusPaddingXSum ();
       final float fColumnHeight = m_aPreparedHeight[nCol];
       final float fColumnHeightFull = fColumnHeight + aElement.getMarginPlusPaddingYSum ();
 
@@ -132,8 +133,8 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       if (fColumnHeightFull > fAvailableHeight && bIsSplittable)
       {
         final float fRemainingHeight = fAvailableHeight - aElement.getMarginPlusPaddingYSum ();
-        final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElements (fColumnWidthFull,
-                                                                                      fRemainingHeight);
+        // Use width and height without padding and margin!
+        final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElements (fColumnWidth, fRemainingHeight);
 
         if (aSplitResult != null)
         {
@@ -183,7 +184,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
                                   CGStringHelper.getClassLocalName (aElement) +
                                   " which creates an overflow by " +
                                   (fColumnHeightFull - fAvailableHeight) +
-                                  " for max height " +
+                                  " for available height " +
                                   fAvailableHeight +
                                   "!");
           }
