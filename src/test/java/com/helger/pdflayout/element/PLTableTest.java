@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout;
+package com.helger.pdflayout.element;
 
 import java.awt.Color;
 
@@ -25,27 +25,24 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.file.FileUtils;
 import com.helger.commons.mock.DebugModeTestRule;
-import com.helger.pdflayout.element.PLHBoxSplittable;
-import com.helger.pdflayout.element.PLPageBreak;
-import com.helger.pdflayout.element.PLPageSet;
-import com.helger.pdflayout.element.PLTable;
+import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.PLTable.PLTableCell;
-import com.helger.pdflayout.element.PLText;
-import com.helger.pdflayout.element.PLTextWithPlaceholders;
 import com.helger.pdflayout.render.RenderPageIndex;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
+import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PDFFont;
 import com.helger.pdflayout.spec.PaddingSpec;
 
 /**
- * Test class for class {@link PageLayoutPDF}.
+ * Test class for class {@link PLTable}.
  *
  * @author Philip Helger
  */
-public final class PageLayoutPDFTableTest
+public final class PLTableTest
 {
   @Rule
   public TestRule m_aRule = new DebugModeTestRule ();
@@ -55,6 +52,7 @@ public final class PageLayoutPDFTableTest
   {
     final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
     final FontSpec r14b = new FontSpec (PDFFont.REGULAR_BOLD, 14);
+    final MarginSpec aMargin = new MarginSpec (5);
     final PaddingSpec aPadding = new PaddingSpec (2);
 
     final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (30)
@@ -105,16 +103,21 @@ public final class PageLayoutPDFTableTest
     {
       // Width is determined by the width passed to the table creating method
       aRow = aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding)
+                                                                       .setMargin (aMargin)
                                                                        .setVertAlign (EVertAlignment.BOTTOM),
                                  new PLText ("Name " +
                                                  i +
                                                  (i == 2 ? " this is extra text for row 2 that makes this line longer"
                                                         : ""),
-                                             r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED : Color.BLACK)).setPadding (aPadding),
+                                             r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED : Color.BLACK)).setPadding (aPadding)
+                                                                                                                   .setMargin (aMargin),
                                  new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
+                                                                           .setMargin (aMargin)
                                                                            .setHorzAlign (EHorzAlignment.CENTER),
                                  new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
+                                                                           .setMargin (aMargin)
                                                                            .setHorzAlign (EHorzAlignment.RIGHT));
+      aRow.setPadding (aPadding).setMargin (aMargin);
       if ((i % 4) == 0)
         aRow.setColumnBorder (new BorderStyleSpec (Color.GREEN)).setColumnBorderTop (null);
     }
