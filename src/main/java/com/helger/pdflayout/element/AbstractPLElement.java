@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.element;
 
-import java.awt.Color;
 import java.io.IOException;
 
 import javax.annotation.Nonnegative;
@@ -30,6 +29,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.OverrideOnDemand;
 import com.helger.commons.lang.CGStringHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
@@ -244,7 +244,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
 
       BorderSpec aRealBorder = getBorder ();
       if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
-        aRealBorder = new BorderSpec (new BorderStyleSpec (new Color (0, 255, 0)));
+        aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_ELEMENT));
       if (aRealBorder.hasAnyBorder ())
         renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
     }

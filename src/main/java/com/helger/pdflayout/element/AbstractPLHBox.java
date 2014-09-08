@@ -35,6 +35,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.collections.ContainerHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
@@ -57,7 +58,7 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
   /**
    * This class represents a single column within a HBox. This is a pseudo
    * element and does not have a padding, margin or border!
-   * 
+   *
    * @author Philip Helger
    */
   @NotThreadSafe
@@ -513,7 +514,7 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
 
         BorderSpec aRealBorder = m_aColumnBorder;
         if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
-          aRealBorder = new BorderSpec (new BorderStyleSpec (new Color (0, 0, 255)));
+          aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_HBOX));
         if (aRealBorder.hasAnyBorder ())
           renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
       }

@@ -24,9 +24,11 @@ import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotations.Nonempty;
 import com.helger.commons.annotations.OverrideOnDemand;
 import com.helger.commons.id.IHasSimpleIntID;
 import com.helger.commons.idfactory.GlobalIDFactory;
+import com.helger.commons.lang.CGStringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
 import com.helger.pdflayout.spec.BorderSpec;
@@ -68,6 +70,16 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public final int getID ()
   {
     return m_nElementID;
+  }
+
+  /**
+   * @return The debug ID of this element. Neither <code>null</code> nor empty.
+   */
+  @Nonnull
+  @Nonempty
+  public final String getDebugID ()
+  {
+    return CGStringHelper.getClassLocalName (this) + "-" + m_nElementID;
   }
 
   @Nonnull

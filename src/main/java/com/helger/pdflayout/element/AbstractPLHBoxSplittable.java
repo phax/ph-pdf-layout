@@ -19,7 +19,6 @@ package com.helger.pdflayout.element;
 import javax.annotation.Nullable;
 
 import com.helger.commons.collections.ArrayHelper;
-import com.helger.commons.lang.CGStringHelper;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -152,17 +151,15 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
           if (PLDebug.isDebugSplit ())
             PLDebug.debugSplit (this, "Split column element " +
-                                      CGStringHelper.getClassLocalName (aColumnElement) +
-                                      "-" +
-                                      aColumnElement.getID () +
+                                      aColumnElement.getDebugID () +
                                       " (Column " +
                                       nCol +
                                       ") into pieces: " +
-                                      aHBox1Element.getID () +
+                                      aHBox1Element.getDebugID () +
                                       " (" +
                                       aSplitResult.getFirstElement ().getHeight () +
                                       ") and " +
-                                      aHBox2Element.getID () +
+                                      aHBox2Element.getDebugID () +
                                       " (" +
                                       aSplitResult.getSecondElement ().getHeight () +
                                       ") for remaining height " +
@@ -171,15 +168,12 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
         else
         {
           if (PLDebug.isDebugSplit ())
-            PLDebug.debugSplit (this,
-                                "Failed to split column element " +
-                                    CGStringHelper.getClassLocalName (aColumnElement) +
-                                    "-" +
-                                    aColumnElement.getID () +
-                                    " (Column " +
-                                    nCol +
-                                    ") into pieces for remaining height " +
-                                    fRemainingHeight);
+            PLDebug.debugSplit (this, "Failed to split column element " +
+                                      aColumnElement.getDebugID () +
+                                      " (Column " +
+                                      nCol +
+                                      ") into pieces for remaining height " +
+                                      fRemainingHeight);
         }
       }
 
@@ -194,8 +188,8 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
               PLDebug.debugSplit (this,
                                   "Column " +
                                       nCol +
-                                      " contains splittable element of type " +
-                                      CGStringHelper.getClassLocalName (aColumnElement) +
+                                      " contains splittable element " +
+                                      aColumnElement.getDebugID () +
                                       " which creates an overflow by " +
                                       (fColumnHeightFull - fAvailableHeight) +
                                       " for available height " +
@@ -208,8 +202,8 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
               PLDebug.debugSplit (this,
                                   "Column " +
                                       nCol +
-                                      " contains non splittable element of type " +
-                                      CGStringHelper.getClassLocalName (aColumnElement) +
+                                      " contains non splittable element " +
+                                      aColumnElement.getDebugID () +
                                       " which creates an overflow by " +
                                       (fColumnHeightFull - fAvailableHeight) +
                                       " for max height " +

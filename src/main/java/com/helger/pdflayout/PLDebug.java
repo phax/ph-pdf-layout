@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout;
 
+import java.awt.Color;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -23,12 +25,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.GlobalDebug;
-import com.helger.commons.lang.CGStringHelper;
 import com.helger.pdflayout.element.AbstractPLBaseElement;
 
 @NotThreadSafe
 public final class PLDebug
 {
+  /** red */
+  public static final Color BORDER_COLOR_PAGESET = new Color (255, 0, 0);
+
+  /** green */
+  public static final Color BORDER_COLOR_ELEMENT = new Color (0, 255, 0);
+
+  /** blue */
+  public static final Color BORDER_COLOR_HBOX = new Color (0, 0, 255);
+
+  /** pink */
+  public static final Color BORDER_COLOR_VBOX = new Color (255, 0, 255);
+
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLDebug.class);
   private static boolean s_bDebugText = GlobalDebug.isDebugMode ();
   private static boolean s_bDebugSplit = GlobalDebug.isDebugMode ();
@@ -63,11 +76,6 @@ public final class PLDebug
 
   public static void debugSplit (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Splitting] " +
-                    CGStringHelper.getClassLocalName (aElement) +
-                    "-" +
-                    aElement.getID () +
-                    ": " +
-                    sMsg);
+    s_aLogger.info ("[Splitting] " + aElement.getDebugID () + ": " + sMsg);
   }
 }

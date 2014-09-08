@@ -30,7 +30,6 @@ import com.helger.commons.annotations.Nonempty;
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.collections.ArrayHelper;
 import com.helger.commons.collections.ContainerHelper;
-import com.helger.commons.lang.CGStringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -360,7 +359,9 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
             // don't override fTable1Width
             final float fWidth = Math.max (fTable1Width, fRowWidth);
             final float fWidthFull = Math.max (fTable1WidthFull, fRowWidthFull);
-            final float fRemainingHeight = fAvailableHeight - fTable1HeightFull;
+            final float fRemainingHeight = fAvailableHeight -
+                                           fTable1HeightFull -
+                                           aRowElement.getMarginPlusPaddingYSum ();
 
             // Try to split the element contained in the row
             final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElements (fWidth, fRemainingHeight);
@@ -386,25 +387,26 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
               aTable2RowHeight.add (Float.valueOf (fTable2RowHeight));
 
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this, "Split " +
-                                          CGStringHelper.getClassLocalName (aRowElement) +
-                                          " into pieces: " +
-                                          aTable1RowElement.getID () +
-                                          " (" +
-                                          aSplitResult.getFirstElement ().getHeight () +
-                                          ") and " +
-                                          aTable2RowElement.getID () +
-                                          " (" +
-                                          aSplitResult.getSecondElement ().getHeight () +
-                                          ") for remaining height of " +
-                                          fRemainingHeight);
+                PLDebug.debugSplit (this,
+                                    "Split " +
+                                        aRowElement.getDebugID () +
+                                        " into pieces: " +
+                                        aTable1RowElement.getDebugID () +
+                                        " (" +
+                                        aSplitResult.getFirstElement ().getHeight () +
+                                        ") and " +
+                                        aTable2RowElement.getDebugID () +
+                                        " (" +
+                                        aSplitResult.getSecondElement ().getHeight () +
+                                        ") for remaining height of " +
+                                        fRemainingHeight);
               bSplittedRow = true;
             }
             else
             {
               if (PLDebug.isDebugSplit ())
                 PLDebug.debugSplit (this, "Failed to split " +
-                                          CGStringHelper.getClassLocalName (aRowElement) +
+                                          aRowElement.getDebugID () +
                                           " into pieces for remaining height " +
                                           fRemainingHeight);
             }

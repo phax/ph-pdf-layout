@@ -35,6 +35,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.collections.ContainerHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
@@ -436,8 +437,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     m_aPreparedHeight = new float [m_aRows.size ()];
     final float fAvailableWidth = aCtx.getAvailableWidth ();
     final float fAvailableHeight = aCtx.getAvailableHeight ();
-    float fUsedWidth = 0;
-    float fUsedHeight = 0;
+    float fUsedWidthFull = 0;
+    float fUsedHeightFull = 0;
     int nIndex = 0;
     for (final Row aRow : m_aRows)
     {
@@ -450,36 +451,34 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       final float fItemHeight = aElement.prepare (new PreparationContext (fItemWidth, fAvailableHeight)).getHeight ();
       final float fItemHeightFull = fItemHeight + aElement.getMarginPlusPaddingYSum ();
       // Update used width and height
-      fUsedWidth = Math.max (fUsedWidth, fItemWidthFull);
-      fUsedHeight += fItemHeightFull;
-      // Remember width and height for element (without padding and margin)
-      m_aPreparedWidth[nIndex] = fItemWidth;
-      m_aPreparedHeight[nIndex] = fItemHeight;
+      fUsedWidthFull = Math.max (fUsedWidthFull, fItemWidthFull);
+      fUsedHeightFull += fItemHeightFull;
+      // Must include padding and margin for correct spacing
+      m_aPreparedWidth[nIndex] = fItemWidthFull;
+      m_aPreparedHeight[nIndex] = fItemHeightFull;
       ++nIndex;
     }
 
     // Small consistency check (with rounding included)
     if (GlobalDebug.isDebugMode ())
     {
-      if (fUsedWidth - fAvailableWidth > 0.01)
-        s_aLogger.warn ("VBox " +
-                        getID () +
+      if (fUsedWidthFull - fAvailableWidth > 0.01)
+        s_aLogger.warn (getDebugID () +
                         " uses more width (" +
-                        fUsedWidth +
+                        fUsedWidthFull +
                         ") than available (" +
                         fAvailableWidth +
                         ")!");
-      if (fUsedHeight - fAvailableHeight > 0.01 && !isSplittable ())
-        s_aLogger.warn ("VBox " +
-                        getID () +
+      if (fUsedHeightFull - fAvailableHeight > 0.01 && !isSplittable ())
+        s_aLogger.warn (getDebugID () +
                         " uses more height (" +
-                        fUsedHeight +
+                        fUsedHeightFull +
                         ") than available (" +
                         fAvailableHeight +
                         ")!");
     }
 
-    return new SizeSpec (fUsedWidth, fUsedHeight);
+    return new SizeSpec (fUsedWidthFull, fUsedHeightFull);
   }
 
   @Override
@@ -498,16 +497,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     int nIndex = 0;
     for (final Row aRow : m_aRows)
     {
-      final AbstractPLElement <?> aElement = aRow.getElement ();
-      final float fItemWidth = m_aPreparedWidth[nIndex];
-      final float fItemWidthWithPadding = fItemWidth + aElement.getPaddingXSum ();
-      final float fItemHeight = m_aPreparedHeight[nIndex];
-      final float fItemHeightWithPadding = fItemHeight + aElement.getPaddingYSum ();
+      final AbstractPLElement <?> aRowElement = aRow.getElement ();
+      final float fElementWidth = m_aPreparedWidth[nIndex];
+      final float fElementWidthWithPadding = fElementWidth + aRowElement.getPaddingXSum ();
+      final float fElementHeight = m_aPreparedHeight[nIndex];
+      final float fElementHeightWithPadding = fElementHeight + aRowElement.getPaddingYSum ();
       final RenderingContext aItemCtx = new RenderingContext (aCtx,
-                                                              fCurX + aElement.getMarginLeft (),
-                                                              fCurY - aElement.getMarginTop (),
-                                                              fItemWidthWithPadding,
-                                                              fItemHeightWithPadding);
+                                                              fCurX + aRowElement.getMarginLeft (),
+                                                              fCurY - aRowElement.getMarginTop (),
+                                                              fElementWidthWithPadding,
+                                                              fElementHeightWithPadding);
 
       // apply special row borders - debug: blue
       {
@@ -515,7 +514,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         final float fLeft = fCurX;
         final float fTop = fCurY;
         final float fWidth = aCtx.getWidth () - getPaddingXSum ();
-        final float fHeight = fItemHeightWithPadding + aElement.getMarginYSum ();
+        final float fHeight = fElementHeightWithPadding + aRowElement.getMarginYSum ();
 
         // Fill before border
         if (m_aRowFillColor != null)
@@ -526,16 +525,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
         BorderSpec aRealBorder = m_aRowBorder;
         if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
-          aRealBorder = new BorderSpec (new BorderStyleSpec (new Color (0, 0, 255)));
+          aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_VBOX));
         if (aRealBorder.hasAnyBorder ())
           renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
       }
 
       // Perform contained element after border
-      aElement.perform (aItemCtx);
+      aRowElement.perform (aItemCtx);
 
       // Update Y-pos
-      fCurY -= fItemHeightWithPadding + aElement.getMarginYSum ();
+      fCurY -= fElementHeightWithPadding + aRowElement.getMarginYSum ();
       ++nIndex;
     }
   }

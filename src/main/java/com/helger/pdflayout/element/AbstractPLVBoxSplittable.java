@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.annotations.ReturnsMutableCopy;
-import com.helger.commons.lang.CGStringHelper;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -122,7 +121,9 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
             // don't override fVBox1Width
             final float fWidth = Math.max (fVBox1Width, fRowWidth);
             final float fWidthFull = Math.max (fVBox1WidthFull, fRowWidthFull);
-            final float fRemainingHeight = fAvailableHeight - fVBox1HeightFull;
+            final float fRemainingHeight = fAvailableHeight -
+                                           fVBox1HeightFull -
+                                           aRowElement.getMarginPlusPaddingYSum ();
 
             // Try to split the element contained in the row
             final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElements (fWidth, fRemainingHeight);
@@ -149,17 +150,15 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
 
               if (PLDebug.isDebugSplit ())
                 PLDebug.debugSplit (this, "Split row element " +
-                                          CGStringHelper.getClassLocalName (aRowElement) +
-                                          "-" +
-                                          aRowElement.getID () +
+                                          aRowElement.getDebugID () +
                                           " (Row " +
                                           nRow +
                                           ") into pieces: " +
-                                          aVBox1RowElement.getID () +
+                                          aVBox1RowElement.getDebugID () +
                                           " (" +
                                           aSplitResult.getFirstElement ().getHeight () +
                                           ") and " +
-                                          aVBox2RowElement.getID () +
+                                          aVBox2RowElement.getDebugID () +
                                           " (" +
                                           aSplitResult.getSecondElement ().getHeight () +
                                           ") for remaining height " +
@@ -169,15 +168,12 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
             else
             {
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this,
-                                    "Failed to split row element " +
-                                        CGStringHelper.getClassLocalName (aRowElement) +
-                                        "-" +
-                                        aRowElement.getID () +
-                                        " (Row " +
-                                        nRow +
-                                        ") into pieces for remaining height " +
-                                        fRemainingHeight);
+                PLDebug.debugSplit (this, "Failed to split row element " +
+                                          aRowElement.getDebugID () +
+                                          " (Row " +
+                                          nRow +
+                                          ") into pieces for remaining height " +
+                                          fRemainingHeight);
             }
           }
 

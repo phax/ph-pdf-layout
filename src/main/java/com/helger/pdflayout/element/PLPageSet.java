@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.element;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,6 @@ import com.helger.commons.annotations.Nonempty;
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.annotations.ReturnsMutableObject;
 import com.helger.commons.collections.ContainerHelper;
-import com.helger.commons.lang.CGStringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.render.ERenderingElementType;
@@ -397,27 +395,22 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
               aElementsWithSize.add (1, aSplitResult.getSecondElement ());
 
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this,
-                                    "Split " +
-                                        CGStringHelper.getClassLocalName (aElement) +
-                                        "-" +
-                                        aElement.getID () +
-                                        " into pieces: " +
-                                        aSplitResult.getFirstElement ().getElement ().getID () +
-                                        " (" +
-                                        aSplitResult.getFirstElement ().getHeight () +
-                                        ") and " +
-                                        aSplitResult.getSecondElement ().getElement ().getID () +
-                                        " (" +
-                                        aSplitResult.getSecondElement ().getHeight () +
-                                        ")");
+                PLDebug.debugSplit (this, "Split " +
+                                          aElement.getDebugID () +
+                                          " into pieces: " +
+                                          aSplitResult.getFirstElement ().getElement ().getDebugID () +
+                                          " (" +
+                                          aSplitResult.getFirstElement ().getHeight () +
+                                          ") and " +
+                                          aSplitResult.getSecondElement ().getElement ().getDebugID () +
+                                          " (" +
+                                          aSplitResult.getSecondElement ().getHeight () +
+                                          ")");
               continue;
             }
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this, "The single element " +
-                                        CGStringHelper.getClassLocalName (aElement) +
-                                        "-" +
-                                        aElement.getID () +
+                                        aElement.getDebugID () +
                                         " does not fit onto a single page (" +
                                         fAvailableHeight +
                                         ") even though it is splittable!");
@@ -429,9 +422,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
             if (!bIsPagebreakDesired)
             {
               // one element too large for a page
-              s_aLogger.warn ("A single element (" +
-                              CGStringHelper.getClassLocalName (aElement) +
-                              ") does not fit onto a single page" +
+              s_aLogger.warn ("The single element " +
+                              aElement.getDebugID () +
+                              " does not fit onto a single page" +
                               (bIsSplittable ? " even though it is splittable!" : " and is not splittable!"));
             }
           }
@@ -578,7 +571,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
           BorderSpec aRealBorder = getBorder ();
           if (shouldApplyDebugBorder (aRealBorder, bDebug))
-            aRealBorder = new BorderSpec (new BorderStyleSpec (new Color (255, 0, 0)));
+            aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_PAGESET));
           if (aRealBorder.hasAnyBorder ())
             renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
         }
