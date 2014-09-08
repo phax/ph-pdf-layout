@@ -27,6 +27,7 @@ import com.helger.commons.CGlobal;
 import com.helger.commons.io.file.FileUtils;
 import com.helger.commons.mock.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.FontSpec;
@@ -42,6 +43,11 @@ public final class PLTextTest
 {
   @Rule
   public TestRule m_aRule = new DebugModeTestRule ();
+
+  static
+  {
+    PLDebug.setDebugAll (true);
+  }
 
   @Test
   public void testWithWordBreak () throws PDFCreationException

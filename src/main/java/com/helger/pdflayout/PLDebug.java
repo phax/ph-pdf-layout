@@ -24,7 +24,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.GlobalDebug;
 import com.helger.pdflayout.element.AbstractPLBaseElement;
 
 @NotThreadSafe
@@ -43,9 +42,10 @@ public final class PLDebug
   public static final Color BORDER_COLOR_VBOX = new Color (255, 0, 255);
 
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLDebug.class);
-  private static boolean s_bDebugText = GlobalDebug.isDebugMode ();
-  private static boolean s_bDebugSplit = GlobalDebug.isDebugMode ();
-  private static boolean s_bDebugPrepare = GlobalDebug.isDebugMode ();
+  private static boolean s_bDebugText = false;
+  private static boolean s_bDebugSplit = false;
+  private static boolean s_bDebugPrepare = false;
+  private static boolean s_bDebugRender = false;
 
   private PLDebug ()
   {}
@@ -93,5 +93,34 @@ public final class PLDebug
   public static void debugPrepare (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
     s_aLogger.info ("[Preparing] " + aElement.getDebugID () + ": " + sMsg);
+  }
+
+  public static boolean isDebugRender ()
+  {
+    return s_bDebugRender;
+  }
+
+  public static void setDebugRender (final boolean bDebugRender)
+  {
+    s_bDebugRender = bDebugRender;
+  }
+
+  public static void debugRender (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
+  {
+    s_aLogger.info ("[Rendering] " + aElement.getDebugID () + ": " + sMsg);
+  }
+
+  /**
+   * Shortcut to globally en- or disable debugging
+   *
+   * @param bDebug
+   *        <code>true</code> to enable debug output
+   */
+  public static void setDebugAll (final boolean bDebug)
+  {
+    setDebugText (bDebug);
+    setDebugSplit (bDebug);
+    setDebugPrepare (bDebug);
+    setDebugRender (bDebug);
   }
 }

@@ -241,6 +241,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
                                        CGStringHelper.getClassLocalName (getClass ()) +
                                        " was never prepared!");
 
+    if (PLDebug.isDebugRender ())
+      PLDebug.debugRender (this, "rendering at " + aCtx.getStartLeft () + " & " + aCtx.getStartTop ());
+
     // Render border - debug: green
     {
       final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();

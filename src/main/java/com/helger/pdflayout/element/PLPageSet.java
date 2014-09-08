@@ -30,10 +30,12 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.Nonempty;
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.annotations.ReturnsMutableObject;
 import com.helger.commons.collections.ContainerHelper;
+import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.render.ERenderingElementType;
@@ -134,8 +136,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
      */
     void addPerPageElements (@Nonnull @Nonempty final List <PLElementWithSize> aCurPageElements)
     {
-      if (ContainerHelper.isEmpty (aCurPageElements))
-        throw new IllegalArgumentException ("curPageElements");
+      ValueEnforcer.notEmptyNoNullValue (aCurPageElements, "CurPageElements");
       m_aPerPageElements.add (aCurPageElements);
     }
 
@@ -179,9 +180,23 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
   public PLPageSet (@Nonnull final SizeSpec aPageSize)
   {
-    if (aPageSize == null)
-      throw new NullPointerException ("pageSize");
-    m_aPageSize = aPageSize;
+    m_aPageSize = ValueEnforcer.notNull (aPageSize, "PageSize");
+  }
+
+  @Nonnull
+  public SizeSpec getPageSize ()
+  {
+    return m_aPageSize;
+  }
+
+  public float getPageWidth ()
+  {
+    return m_aPageSize.getWidth ();
+  }
+
+  public float getPageHeight ()
+  {
+    return m_aPageSize.getHeight ();
   }
 
   @Nullable
@@ -356,6 +371,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     {
       List <PLElementWithSize> aCurPageElements = new ArrayList <PLElementWithSize> ();
 
+      if (PLDebug.isDebugPrepare ())
+        PLDebug.debugSplit (this, "Start preparing elements");
+
       // Start at the top
       float fCurY = fYTop;
 
@@ -456,6 +474,14 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
             if (s_aLogger.isDebugEnabled ())
               s_aLogger.debug ("Adding " + aCurPageElements.size () + " elements to page " + ret.getPageNumber ());
 
+            if (PLDebug.isDebugPrepare ())
+            {
+              final List <String> aLastPageContent = new ArrayList <String> ();
+              for (final PLElementWithSize aCurElement : aCurPageElements)
+                aLastPageContent.add (aCurElement.getElement ().getDebugID ());
+              PLDebug.debugPrepare (this, "Finished page with: " + StringHelper.getImploded (aLastPageContent));
+            }
+
             ret.addPerPageElements (aCurPageElements);
             aCurPageElements = new ArrayList <PLElementWithSize> ();
 
@@ -511,6 +537,14 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
         if (s_aLogger.isDebugEnabled ())
           s_aLogger.debug ("Finally adding " + aCurPageElements.size () + " elements to page " + ret.getPageNumber ());
         ret.addPerPageElements (aCurPageElements);
+
+        if (PLDebug.isDebugPrepare ())
+        {
+          final List <String> aLastPageContent = new ArrayList <String> ();
+          for (final PLElementWithSize aCurElement : aCurPageElements)
+            aLastPageContent.add (aCurElement.getElement ().getDebugID ());
+          PLDebug.debugPrepare (this, "Finished last page with: " + StringHelper.getImploded (aLastPageContent));
+        }
       }
     }
 
@@ -551,6 +585,20 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     final int nPageCount = aPrepareResult.getPageCount ();
     for (final List <PLElementWithSize> aPerPage : aPrepareResult.directGetPerPageElements ())
     {
+      if (PLDebug.isDebugRender ())
+        PLDebug.debugRender (this, "Start rendering page index " +
+                                   nPageIndex +
+                                   " (" +
+                                   (nTotalPageStartIndex + nPageIndex) +
+                                   ") with page size " +
+                                   getPageWidth () +
+                                   " & " +
+                                   getPageHeight () +
+                                   " and available size " +
+                                   getAvailableWidth () +
+                                   " & " +
+                                   getAvailableHeight ());
+
       final RenderPageIndex aPageIndex = new RenderPageIndex (nPageSetIndex,
                                                               nPageIndex,
                                                               nPageCount,
@@ -669,6 +717,8 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
       }
       ++nPageIndex;
     }
+    if (PLDebug.isDebugRender ())
+      PLDebug.debugRender (this, "Finished rendering");
   }
 
   @Override
