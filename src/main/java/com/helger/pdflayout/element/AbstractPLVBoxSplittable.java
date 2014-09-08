@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.lang.CGStringHelper;
+import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.SizeSpec;
 
@@ -51,12 +52,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
   @ReturnsMutableCopy
   private static float [] _getAsArray (@Nonnull final List <Float> aList)
   {
-    final int nCount = aList.size ();
-    final float [] ret = new float [nCount];
-    int i = 0;
-    for (final Float aFloat : aList)
-      ret[i++] = aFloat.floatValue ();
-    return ret;
+    return TypeConverter.convertIfNecessary (aList, float [].class);
   }
 
   @Nullable
@@ -69,20 +65,19 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     {
       // Splitting makes no sense
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit ("Cannot split " +
-                            CGStringHelper.getClassLocalName (this) +
-                            " because it contains no splittable elements");
+        PLDebug.debugSplit (this, "Cannot split because no splittable elements are contained");
       return null;
     }
 
-    final PLVBoxSplittable aVBox1 = new PLVBoxSplittable ().setBasicDataFrom (this);
+    // Create resulting VBoxes - the first one is not splittable again!
+    final PLVBox aVBox1 = new PLVBox ().setBasicDataFrom (this);
     final PLVBoxSplittable aVBox2 = new PLVBoxSplittable ().setBasicDataFrom (this);
 
     final int nTotalRows = getRowCount ();
     final List <Float> aVBox1RowWidth = new ArrayList <Float> (nTotalRows);
     final List <Float> aVBox1RowHeight = new ArrayList <Float> (nTotalRows);
 
-    // Copy all header rows
+    // What we need to know
     float fVBox1Width = 0;
     float fVBox1WidthFull = 0;
     float fVBox1Height = 0;
@@ -127,23 +122,25 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
             // don't override fVBox1Width
             final float fWidth = Math.max (fVBox1Width, fRowWidth);
             final float fWidthFull = Math.max (fVBox1WidthFull, fRowWidthFull);
-            final float fRemainingHeight = fAvailableHeight - fVBox1Height;
+            final float fRemainingHeight = fAvailableHeight - fVBox1HeightFull;
+
+            // Try to split the element contained in the row
             final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElements (fWidth, fRemainingHeight);
 
             if (aSplitResult != null)
             {
-              final AbstractPLElement <?> aVBox1Row = aSplitResult.getFirstElement ().getElement ();
-              aVBox1.addRow (aVBox1Row);
+              final AbstractPLElement <?> aVBox1RowElement = aSplitResult.getFirstElement ().getElement ();
+              aVBox1.addRow (aVBox1RowElement);
               fVBox1Width = fWidth;
               fVBox1WidthFull = fWidthFull;
               final float fVBox1RowHeight = aSplitResult.getFirstElement ().getHeight ();
               fVBox1Height += fVBox1RowHeight;
-              fVBox1HeightFull += fVBox1RowHeight + aVBox1Row.getMarginPlusPaddingYSum ();
+              fVBox1HeightFull += fVBox1RowHeight + aVBox1RowElement.getMarginPlusPaddingYSum ();
               aVBox1RowWidth.add (Float.valueOf (fWidth));
               aVBox1RowHeight.add (Float.valueOf (fVBox1RowHeight));
 
-              final AbstractPLElement <?> aVBox2Row = aSplitResult.getSecondElement ().getElement ();
-              aVBox2.addRow (aVBox2Row);
+              final AbstractPLElement <?> aVBox2RowElement = aSplitResult.getSecondElement ().getElement ();
+              aVBox2.addRow (aVBox2RowElement);
               fVBox2Width = fWidth;
               final float fVBox2RowHeight = aSplitResult.getSecondElement ().getHeight ();
               fVBox2Height += fVBox2RowHeight;
@@ -151,31 +148,43 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
               aVBox2RowHeight.add (Float.valueOf (fVBox2RowHeight));
 
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit ("Split " +
-                                    CGStringHelper.getClassLocalName (aRowElement) +
-                                    " (Row " +
-                                    nRow +
-                                    ") into pieces: " +
-                                    aSplitResult.getFirstElement ().getHeight () +
-                                    " and " +
-                                    aSplitResult.getSecondElement ().getHeight ());
+                PLDebug.debugSplit (this, "Split row element " +
+                                          CGStringHelper.getClassLocalName (aRowElement) +
+                                          "-" +
+                                          aRowElement.getID () +
+                                          " (Row " +
+                                          nRow +
+                                          ") into pieces: " +
+                                          aVBox1RowElement.getID () +
+                                          " (" +
+                                          aSplitResult.getFirstElement ().getHeight () +
+                                          ") and " +
+                                          aVBox2RowElement.getID () +
+                                          " (" +
+                                          aSplitResult.getSecondElement ().getHeight () +
+                                          ") for remaining height " +
+                                          fRemainingHeight);
               bSplittedRow = true;
             }
             else
             {
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit ("Failed to split " +
-                                    CGStringHelper.getClassLocalName (aRowElement) +
-                                    " (Row " +
-                                    nRow +
-                                    ") into pieces for remaining height " +
-                                    fRemainingHeight);
+                PLDebug.debugSplit (this,
+                                    "Failed to split row element " +
+                                        CGStringHelper.getClassLocalName (aRowElement) +
+                                        "-" +
+                                        aRowElement.getID () +
+                                        " (Row " +
+                                        nRow +
+                                        ") into pieces for remaining height " +
+                                        fRemainingHeight);
             }
           }
 
           if (!bSplittedRow)
           {
-            // just add the full row to the second VBox
+            // just add the full row to the second VBox since the row does not
+            // fit on first page
             aVBox2.addRow (aRowElement);
             fVBox2Width = Math.max (fVBox2Width, fRowWidth);
             fVBox2Height += fRowHeight;
@@ -186,7 +195,8 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
       }
       else
       {
-        // We're already on VBox 2
+        // We're already on VBox 2 - add all elements, since VBox2 may be split
+        // again!
         aVBox2.addRow (aRowElement);
         fVBox2Width = Math.max (fVBox2Width, fRowWidth);
         fVBox2Height += fRowHeight;
@@ -199,7 +209,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     {
       // Splitting makes no sense!
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit ("Splitting makes no sense, because VBox 1 would be empty");
+        PLDebug.debugSplit (this, "Splitting makes no sense, because VBox 1 would be empty");
       return null;
     }
 
@@ -207,7 +217,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     {
       // Splitting makes no sense!
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit ("Splitting makes no sense, because VBox 2 would be empty");
+        PLDebug.debugSplit (this, "Splitting makes no sense, because VBox 2 would be empty");
       return null;
     }
 

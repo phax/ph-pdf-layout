@@ -52,6 +52,12 @@ import com.helger.pdflayout.spec.SizeSpec;
  */
 public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
 {
+  /**
+   * This class represents a single row within a VBox. This is a pseudo element
+   * and does not have a padding, margin or border!
+   *
+   * @author Philip Helger
+   */
   @NotThreadSafe
   public static final class Row
   {
@@ -456,9 +462,21 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidth - fAvailableWidth > 0.01)
-        s_aLogger.warn ("VBox uses more width (" + fUsedWidth + ") than available (" + fAvailableWidth + ")!");
+        s_aLogger.warn ("VBox " +
+                        getID () +
+                        " uses more width (" +
+                        fUsedWidth +
+                        ") than available (" +
+                        fAvailableWidth +
+                        ")!");
       if (fUsedHeight - fAvailableHeight > 0.01 && !isSplittable ())
-        s_aLogger.warn ("VBox uses more height (" + fUsedHeight + ") than available (" + fAvailableHeight + ")!");
+        s_aLogger.warn ("VBox " +
+                        getID () +
+                        " uses more height (" +
+                        fUsedHeight +
+                        ") than available (" +
+                        fAvailableHeight +
+                        ")!");
     }
 
     return new SizeSpec (fUsedWidth, fUsedHeight);

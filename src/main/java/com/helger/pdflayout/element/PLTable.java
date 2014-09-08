@@ -39,7 +39,7 @@ import com.helger.pdflayout.spec.WidthSpec.EWidthType;
 
 /**
  * A special table with a repeating header
- * 
+ *
  * @author Philip Helger
  */
 public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableElement
@@ -131,7 +131,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
    * Add a new table row. All contained elements are added with the specified
    * width in the constructor. <code>null</code> elements are represented as
    * empty cells.
-   * 
+   *
    * @param aElements
    *        The elements to add. May be <code>null</code>.
    * @return The added row and never <code>null</code>.
@@ -146,7 +146,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
    * Add a new table row. All contained elements are added with the specified
    * width in the constructor. <code>null</code> elements are represented as
    * empty cells.
-   * 
+   *
    * @param aElements
    *        The elements to add. May not be <code>null</code>.
    * @return this
@@ -189,7 +189,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
    * Add a new table row. All contained elements are added with the specified
    * width in the constructor. <code>null</code> elements are represented as
    * empty cells.
-   * 
+   *
    * @param aCells
    *        The cells to add. May not be <code>null</code>.
    * @return this
@@ -255,7 +255,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
 
   /**
    * Set the number of header rows in this table.
-   * 
+   *
    * @param nHeaderRowCount
    *        The number of header rows, to be repeated by page. Must be &ge; 0.
    * @return this
@@ -360,23 +360,25 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
             // don't override fTable1Width
             final float fWidth = Math.max (fTable1Width, fRowWidth);
             final float fWidthFull = Math.max (fTable1WidthFull, fRowWidthFull);
-            final float fRemainingHeight = fAvailableHeight - fTable1Height;
+            final float fRemainingHeight = fAvailableHeight - fTable1HeightFull;
+
+            // Try to split the element contained in the row
             final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElements (fWidth, fRemainingHeight);
 
             if (aSplitResult != null)
             {
-              final AbstractPLElement <?> aTable1Row = aSplitResult.getFirstElement ().getElement ();
-              aTable1.addRow (aTable1Row);
+              final AbstractPLElement <?> aTable1RowElement = aSplitResult.getFirstElement ().getElement ();
+              aTable1.addRow (aTable1RowElement);
               fTable1Width = fWidth;
               fTable1WidthFull = fWidthFull;
               final float fTable1RowHeight = aSplitResult.getFirstElement ().getHeight ();
               fTable1Height += fTable1RowHeight;
-              fTable1HeightFull += fTable1RowHeight + aTable1Row.getMarginPlusPaddingYSum ();
+              fTable1HeightFull += fTable1RowHeight + aTable1RowElement.getMarginPlusPaddingYSum ();
               aTable1RowWidth.add (Float.valueOf (fWidth));
               aTable1RowHeight.add (Float.valueOf (fTable1RowHeight));
 
-              final AbstractPLElement <?> aTable2Row = aSplitResult.getSecondElement ().getElement ();
-              aTable2.addRow (aTable2Row);
+              final AbstractPLElement <?> aTable2RowElement = aSplitResult.getSecondElement ().getElement ();
+              aTable2.addRow (aTable2RowElement);
               fTable2Width = fWidth;
               final float fTable2RowHeight = aSplitResult.getSecondElement ().getHeight ();
               fTable2Height += fTable2RowHeight;
@@ -384,21 +386,27 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
               aTable2RowHeight.add (Float.valueOf (fTable2RowHeight));
 
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit ("Split " +
-                                    CGStringHelper.getClassLocalName (aRowElement) +
-                                    " into pieces: " +
-                                    aSplitResult.getFirstElement ().getHeight () +
-                                    " and " +
-                                    aSplitResult.getSecondElement ().getHeight ());
+                PLDebug.debugSplit (this, "Split " +
+                                          CGStringHelper.getClassLocalName (aRowElement) +
+                                          " into pieces: " +
+                                          aTable1RowElement.getID () +
+                                          " (" +
+                                          aSplitResult.getFirstElement ().getHeight () +
+                                          ") and " +
+                                          aTable2RowElement.getID () +
+                                          " (" +
+                                          aSplitResult.getSecondElement ().getHeight () +
+                                          ") for remaining height of " +
+                                          fRemainingHeight);
               bSplittedRow = true;
             }
             else
             {
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit ("Failed to split " +
-                                    CGStringHelper.getClassLocalName (aRowElement) +
-                                    " into pieces for remaining height " +
-                                    fRemainingHeight);
+                PLDebug.debugSplit (this, "Failed to split " +
+                                          CGStringHelper.getClassLocalName (aRowElement) +
+                                          " into pieces for remaining height " +
+                                          fRemainingHeight);
             }
           }
 
@@ -428,7 +436,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
     {
       // Splitting makes no sense!
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit ("Splitting makes no sense, because only the header row would be in table 1");
+        PLDebug.debugSplit (this, "Splitting makes no sense, because only the header row would be in table 1");
       return null;
     }
 
@@ -436,7 +444,8 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
     {
       // Splitting makes no sense!
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit ("Splitting makes no sense, because only the header row would be in table 2 and this means the whole table 1 would match");
+        PLDebug.debugSplit (this,
+                            "Splitting makes no sense, because only the header row would be in table 2 and this means the whole table 1 would match");
       return null;
     }
 
@@ -464,7 +473,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
 
   /**
    * Create a new table with the specified percentages.
-   * 
+   *
    * @param aPercentages
    *        The array to use. The sum of all percentages should be &le; 100. May
    *        neither be <code>null</code> nor empty.
@@ -484,7 +493,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
 
   /**
    * Create a new table with evenly sized columns.
-   * 
+   *
    * @param nColumnCount
    *        The number of columns to use. Must be &gt; 0.
    * @return The created {@link PLTable} and never <code>null</code>.

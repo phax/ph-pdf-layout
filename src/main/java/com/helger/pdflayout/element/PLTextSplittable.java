@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.collections.ContainerHelper;
-import com.helger.commons.lang.CGStringHelper;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
@@ -63,14 +62,12 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
     {
       // Splitting makes no sense
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit ("Failed to split " +
-                            CGStringHelper.getClassLocalName (this) +
-                            " because the result would be " +
-                            nLines +
-                            " lines for available height " +
-                            fAvailableHeight +
-                            " and line height " +
-                            fLineHeight);
+        PLDebug.debugSplit (this, "Failed to split because the result would be " +
+                                  nLines +
+                                  " lines for available height " +
+                                  fAvailableHeight +
+                                  " and line height " +
+                                  fLineHeight);
       return null;
     }
 
@@ -84,14 +81,12 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
       {
         // Splitting makes no sense
         if (PLDebug.isDebugSplit ())
-          PLDebug.debugSplit ("Failed to split " +
-                              CGStringHelper.getClassLocalName (this) +
-                              " because the result would be " +
-                              nLines +
-                              " lines for available height " +
-                              fAvailableHeight +
-                              " and expected height " +
-                              fExpectedHeight);
+          PLDebug.debugSplit (this, "Failed to split because the result would be " +
+                                    nLines +
+                                    " lines for available height " +
+                                    fAvailableHeight +
+                                    " and expected height " +
+                                    fExpectedHeight);
         return null;
       }
     }

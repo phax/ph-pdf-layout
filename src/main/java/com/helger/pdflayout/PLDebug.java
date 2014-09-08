@@ -16,12 +16,15 @@
  */
 package com.helger.pdflayout;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.GlobalDebug;
+import com.helger.commons.lang.CGStringHelper;
+import com.helger.pdflayout.element.AbstractPLBaseElement;
 
 @NotThreadSafe
 public final class PLDebug
@@ -58,8 +61,13 @@ public final class PLDebug
     s_bDebugSplit = bDebugSplit;
   }
 
-  public static void debugSplit (final String sMsg)
+  public static void debugSplit (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("Splitting: " + sMsg);
+    s_aLogger.info ("[Splitting] " +
+                    CGStringHelper.getClassLocalName (aElement) +
+                    "-" +
+                    aElement.getID () +
+                    ": " +
+                    sMsg);
   }
 }

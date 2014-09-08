@@ -397,16 +397,30 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
               aElementsWithSize.add (1, aSplitResult.getSecondElement ());
 
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit ("Split " +
-                                    CGStringHelper.getClassLocalName (aElement) +
-                                    " into pieces: " +
-                                    aSplitResult.getFirstElement ().getHeight () +
-                                    " and " +
-                                    aSplitResult.getSecondElement ().getHeight ());
+                PLDebug.debugSplit (this,
+                                    "Split " +
+                                        CGStringHelper.getClassLocalName (aElement) +
+                                        "-" +
+                                        aElement.getID () +
+                                        " into pieces: " +
+                                        aSplitResult.getFirstElement ().getElement ().getID () +
+                                        " (" +
+                                        aSplitResult.getFirstElement ().getHeight () +
+                                        ") and " +
+                                        aSplitResult.getSecondElement ().getElement ().getID () +
+                                        " (" +
+                                        aSplitResult.getSecondElement ().getHeight () +
+                                        ")");
               continue;
             }
             if (PLDebug.isDebugSplit ())
-              PLDebug.debugSplit ("A single element does not fit onto a single page even though it is splittable!");
+              PLDebug.debugSplit (this, "The single element " +
+                                        CGStringHelper.getClassLocalName (aElement) +
+                                        "-" +
+                                        aElement.getID () +
+                                        " does not fit onto a single page (" +
+                                        fAvailableHeight +
+                                        ") even though it is splittable!");
           }
 
           // Next page

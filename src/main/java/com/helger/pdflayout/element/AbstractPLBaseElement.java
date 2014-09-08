@@ -25,6 +25,8 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.OverrideOnDemand;
+import com.helger.commons.id.IHasSimpleIntID;
+import com.helger.commons.idfactory.GlobalIDFactory;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
 import com.helger.pdflayout.spec.BorderSpec;
@@ -35,26 +37,37 @@ import com.helger.pdflayout.spec.PaddingSpec;
 /**
  * Abstract base class for a PDF layout (=PL) element that has margin, padding,
  * border and a fill color. It does not directly support rendering.
- * 
+ *
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>>
+public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>> implements IHasSimpleIntID
 {
+  private final int m_nElementID;
   private MarginSpec m_aMargin = MarginSpec.MARGIN0;
   private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
   private BorderSpec m_aBorder = BorderSpec.BORDER0;
   private Color m_aFillColor = null;
 
   public AbstractPLBaseElement ()
-  {}
+  {
+    m_nElementID = GlobalIDFactory.getNewIntID ();
+  }
 
   @SuppressWarnings ("unchecked")
   @Nonnull
   protected final IMPLTYPE thisAsT ()
   {
     return (IMPLTYPE) this;
+  }
+
+  /**
+   * @return The unique element ID that cannot be altered.
+   */
+  public final int getID ()
+  {
+    return m_nElementID;
   }
 
   @Nonnull
@@ -81,7 +94,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
 
   /**
    * Throw an exception, if this object is already prepared.
-   * 
+   *
    * @throws IllegalStateException
    *         if already prepared
    */
@@ -92,7 +105,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all margin values (left, top, right, bottom) to the same value. This
    * method may not be called after an element got prepared!
-   * 
+   *
    * @param fMargin
    *        The value to use.
    * @return this
@@ -106,7 +119,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all margin values. This method may not be called after an element got
    * prepared!
-   * 
+   *
    * @param fMarginX
    *        The X-value to use (for left and right).
    * @param fMarginY
@@ -122,7 +135,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all margin values to potentially different values. This method may not
    * be called after an element got prepared!
-   * 
+   *
    * @param fMarginLeft
    *        Left
    * @param fMarginTop
@@ -145,7 +158,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the margin values. This method may not be called after an element got
    * prepared!
-   * 
+   *
    * @param aMargin
    *        Margin to use. May not be <code>null</code>.
    * @return this
@@ -162,7 +175,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the left margin value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param fMargin
    *        The value to use.
    * @return this
@@ -176,7 +189,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the top margin value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param fMargin
    *        The value to use.
    * @return this
@@ -190,7 +203,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the right margin value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param fMargin
    *        The value to use.
    * @return this
@@ -204,7 +217,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the bottom margin value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param fMargin
    *        The value to use.
    * @return this
@@ -275,7 +288,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all padding values (left, top, right, bottom) to the same value. This
    * method may not be called after an element got prepared!
-   * 
+   *
    * @param fPadding
    *        The value to use.
    * @return this
@@ -289,7 +302,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all padding values. This method may not be called after an element got
    * prepared!
-   * 
+   *
    * @param fPaddingX
    *        The X-value to use (for left and right).
    * @param fPaddingY
@@ -305,7 +318,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all padding values to potentially different values. This method may not
    * be called after an element got prepared!
-   * 
+   *
    * @param fPaddingLeft
    *        Left
    * @param fPaddingTop
@@ -328,7 +341,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the padding values. This method may not be called after an element got
    * prepared!
-   * 
+   *
    * @param aPadding
    *        Padding to use. May not be <code>null</code>.
    * @return this
@@ -345,7 +358,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the left padding value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param fPadding
    *        The value to use.
    * @return this
@@ -359,7 +372,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the top padding value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param fPadding
    *        The value to use.
    * @return this
@@ -373,7 +386,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the right padding value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param fPadding
    *        The value to use.
    * @return this
@@ -387,7 +400,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the bottom padding value. This method may not be called after an
    * element got prepared!
-   * 
+   *
    * @param fPadding
    *        The value to use.
    * @return this
@@ -488,7 +501,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all border values (left, top, right, bottom) to the same value. This
    * method may not be called after an element got prepared!
-   * 
+   *
    * @param aBorder
    *        The border style specification to use. May be <code>null</code> to
    *        indicate no border.
@@ -503,7 +516,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all border values. This method may not be called after an element got
    * prepared!
-   * 
+   *
    * @param aBorderX
    *        The X-value to use (for left and right). May be <code>null</code> to
    *        indicate no border.
@@ -521,7 +534,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all border values to potentially different values. This method may not
    * be called after an element got prepared!
-   * 
+   *
    * @param aBorderLeft
    *        Left. May be <code>null</code> to indicate no border.
    * @param aBorderTop
@@ -544,7 +557,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the border values. This method may not be called after an element got
    * prepared!
-   * 
+   *
    * @param aBorder
    *        Border to use. May not be <code>null</code>.
    * @return this
@@ -561,7 +574,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the left border value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param aBorder
    *        The value to use. May be <code>null</code>.
    * @return this
@@ -575,7 +588,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the top border value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param aBorder
    *        The value to use. May be <code>null</code>.
    * @return this
@@ -589,7 +602,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the right border value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param aBorder
    *        The value to use. May be <code>null</code>.
    * @return this
@@ -603,7 +616,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set the bottom border value. This method may not be called after an element
    * got prepared!
-   * 
+   *
    * @param aBorder
    *        The value to use. May be <code>null</code>.
    * @return this
@@ -625,7 +638,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
 
   /**
    * Set the element fill color.
-   * 
+   *
    * @param aFillColor
    *        The fill color to use. May be <code>null</code>.
    * @return this
@@ -648,7 +661,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
 
   /**
    * Should a debug border be drawn? Only if no other border is present.
-   * 
+   *
    * @param aBorder
    *        The element border. May not be <code>null</code>.
    * @param bDebug
@@ -662,7 +675,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
 
   /**
    * Render a single border
-   * 
+   *
    * @param aContentStream
    *        Content stream
    * @param fLeft
@@ -739,7 +752,8 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("margin", m_aMargin)
+    return new ToStringGenerator (this).append ("id", m_nElementID)
+                                       .append ("margin", m_aMargin)
                                        .append ("padding", m_aPadding)
                                        .append ("border", m_aBorder)
                                        .appendIfNotNull ("fillColor", m_aFillColor)
