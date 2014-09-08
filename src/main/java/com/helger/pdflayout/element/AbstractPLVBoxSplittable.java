@@ -158,6 +158,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
               final float fVBox2RowHeight = aSplitResult.getSecondElement ().getHeight ();
               final float fVBox2RowHeightFull = fVBox2RowHeight + aVBox2RowElement.getMarginPlusPaddingYSum ();
               fUsedVBox2Height += fVBox2RowHeight;
+              fUsedVBox2HeightFull += fVBox2RowHeightFull;
               aVBox2RowWidth.add (Float.valueOf (fWidth));
               aVBox2RowHeight.add (Float.valueOf (fVBox2RowHeight));
 

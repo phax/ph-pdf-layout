@@ -25,15 +25,13 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.file.FileUtils;
 import com.helger.commons.mock.DebugModeTestRule;
-import com.helger.pdflayout.PDFCreationException;
-import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.PLHBoxSplittable;
 import com.helger.pdflayout.element.PLPageBreak;
 import com.helger.pdflayout.element.PLPageSet;
 import com.helger.pdflayout.element.PLTable;
+import com.helger.pdflayout.element.PLTable.PLTableCell;
 import com.helger.pdflayout.element.PLText;
 import com.helger.pdflayout.element.PLTextWithPlaceholders;
-import com.helger.pdflayout.element.PLTable.PLTableCell;
 import com.helger.pdflayout.render.RenderPageIndex;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
@@ -124,12 +122,12 @@ public final class PageLayoutPDFTableTest
 
     // Start a new page
     aPS1.addElement (new PLPageBreak (false));
-    aPS1.addElement (new PLText ("First line on new page", r10).setVertAlign (EVertAlignment.BOTTOM));
+    aPS1.addElement (new PLText ("First line on bottom of new page", r10).setVertAlign (EVertAlignment.BOTTOM));
     // Next page
     aPS1.addElement (new PLPageBreak (false));
     // empty page by using forced page break
     aPS1.addElement (new PLPageBreak (true));
-    aPS1.addElement (new PLText ("First line on last page after one empty page", r10));
+    aPS1.addElement (new PLText ("First line on top of last page after one empty page", r10));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
