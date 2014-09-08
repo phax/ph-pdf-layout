@@ -54,6 +54,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     return TypeConverter.convertIfNecessary (aList, float [].class);
   }
 
+  @SuppressWarnings ("unused")
   @Nullable
   public PLSplitResult splitElements (final float fElementWidth, final float fAvailableHeight)
   {

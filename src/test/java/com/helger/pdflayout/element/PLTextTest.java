@@ -46,7 +46,8 @@ public final class PLTextTest
 
   static
   {
-    PLDebug.setDebugAll (true);
+    if (false)
+      PLDebug.setDebugAll (true);
   }
 
   @Test

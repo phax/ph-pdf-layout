@@ -274,6 +274,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
     return TypeConverter.convertIfNecessary (aList, float [].class);
   }
 
+  @SuppressWarnings ("unused")
   @Override
   @Nullable
   public PLSplitResult splitElements (final float fElementWidth, final float fAvailableHeight)
