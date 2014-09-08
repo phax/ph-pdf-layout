@@ -18,27 +18,23 @@ package com.helger.pdflayout.render;
 
 import javax.annotation.concurrent.Immutable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
  * The current context for preparing an element.
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
 public final class PreparationContext
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (PreparationContext.class);
-
   private final float m_fAvailableWidth;
   private final float m_fAvailableHeight;
 
   /**
    * Constructor
-   * 
+   *
    * @param fAvailableWidth
    *        The available width for an element, without the element's margin and
    *        padding. Should be &gt; 0.
@@ -48,10 +44,8 @@ public final class PreparationContext
    */
   public PreparationContext (final float fAvailableWidth, final float fAvailableHeight)
   {
-    if (fAvailableWidth < 0)
-      s_aLogger.warn ("RenderPreparationContext: available width is too small: " + fAvailableWidth);
-    if (fAvailableHeight < 0)
-      s_aLogger.warn ("RenderPreparationContext: available height is too small: " + fAvailableHeight);
+    ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
+    ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
     m_fAvailableWidth = fAvailableWidth;
     m_fAvailableHeight = fAvailableHeight;
   }

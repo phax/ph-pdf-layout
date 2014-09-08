@@ -47,7 +47,7 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
 
 /**
  * Render text
- * 
+ *
  * @author Philip Helger
  */
 public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizontalAlignment <PLText>, IPLHasVerticalAlignment <PLText>
@@ -89,18 +89,18 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
       for (final char c : m_sText.toCharArray ())
       {
         if (c > 255)
-          PLDebug.debugText ("Character at index " +
-                             nIndex +
-                             " is Unicode (" +
-                             c +
-                             " == " +
-                             (int) c +
-                             " == 0x" +
-                             StringHelper.getHexStringLeadingZero (c, 4) +
-                             "; as part of '" +
-                             sText.substring (Math.max (nIndex - 5, 0), Math.min (nIndex + 5, sText.length ())) +
-                             "') and will most likely lead to display errors! String=" +
-                             sText);
+          PLDebug.debugText (this, "Character at index " +
+                                   nIndex +
+                                   " is Unicode (" +
+                                   c +
+                                   " == " +
+                                   (int) c +
+                                   " == 0x" +
+                                   StringHelper.getHexStringLeadingZero (c, 4) +
+                                   "; as part of '" +
+                                   sText.substring (Math.max (nIndex - 5, 0), Math.min (nIndex + 5, sText.length ())) +
+                                   "') and will most likely lead to display errors! String=" +
+                                   sText);
         ++nIndex;
       }
     }
@@ -174,7 +174,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
 
   /**
    * Set the rendering direction: top-down or bottom-up.
-   * 
+   *
    * @param bTopDown
    *        <code>true</code> to render top-down, <code>false</code> to render
    *        bottom-up.
@@ -200,7 +200,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
 
   /**
    * Set the maximum number of rows to render.
-   * 
+   *
    * @param nMaxRows
    *        Maximum number of rows. If &le; 0 than all lines are rendered.
    * @return this
@@ -278,7 +278,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
   /**
    * Get the text to draw, in case it is different from the stored text (e.g.
    * for page numbers in {@link PLTextWithPlaceholders})
-   * 
+   *
    * @param sText
    *        Original text. Never <code>null</code>.
    * @param aCtx

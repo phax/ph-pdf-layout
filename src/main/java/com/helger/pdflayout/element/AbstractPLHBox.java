@@ -107,9 +107,9 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
   private Color m_aColumnFillColor = null;
 
   /** prepare width (without padding and margin) */
-  protected float [] m_aPreparedWidth;
+  protected float [] m_aPreparedColumnWidth;
   /** prepare height (without padding and margin) */
-  protected float [] m_aPreparedHeight;
+  protected float [] m_aPreparedColumnHeight;
 
   public AbstractPLHBox ()
   {}
@@ -367,8 +367,8 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
   @OverridingMethodsMustInvokeSuper
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
-    m_aPreparedWidth = new float [m_aColumns.size ()];
-    m_aPreparedHeight = new float [m_aColumns.size ()];
+    m_aPreparedColumnWidth = new float [m_aColumns.size ()];
+    m_aPreparedColumnHeight = new float [m_aColumns.size ()];
     final float fAvailableWidth = aCtx.getAvailableWidth ();
     final float fAvailableHeight = aCtx.getAvailableHeight ();
     float fUsedWidth = 0;
@@ -393,8 +393,8 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
         fRestWidth -= fItemWidthFull;
         fUsedHeight = Math.max (fUsedHeight, fItemHeightFull);
         // Remember width and height for element (without padding and margin)
-        m_aPreparedWidth[nIndex] = fItemWidth;
-        m_aPreparedHeight[nIndex] = fItemHeight;
+        m_aPreparedColumnWidth[nIndex] = fItemWidth;
+        m_aPreparedColumnHeight[nIndex] = fItemHeight;
       }
       ++nIndex;
     }
@@ -416,8 +416,8 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
         fUsedWidth += fItemWidthFull;
         fUsedHeight = Math.max (fUsedHeight, fItemHeightFull);
         // Remember width and height for element (without padding and margin)
-        m_aPreparedWidth[nIndex] = fItemWidth;
-        m_aPreparedHeight[nIndex] = fItemHeight;
+        m_aPreparedColumnWidth[nIndex] = fItemWidth;
+        m_aPreparedColumnHeight[nIndex] = fItemHeight;
       }
       ++nIndex;
     }
@@ -438,10 +438,10 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
               fPaddingTop = 0f;
               break;
             case MIDDLE:
-              fPaddingTop = (fUsedHeight - aElement.getMarginPlusPaddingYSum () - m_aPreparedHeight[nIndex]) / 2;
+              fPaddingTop = (fUsedHeight - aElement.getMarginPlusPaddingYSum () - m_aPreparedColumnHeight[nIndex]) / 2;
               break;
             case BOTTOM:
-              fPaddingTop = fUsedHeight - aElement.getMarginPlusPaddingYSum () - m_aPreparedHeight[nIndex];
+              fPaddingTop = fUsedHeight - aElement.getMarginPlusPaddingYSum () - m_aPreparedColumnHeight[nIndex];
               break;
             default:
               throw new IllegalStateException ("Unsupported vertical alignment: " + eVertAlignment);
@@ -450,7 +450,7 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
           {
             aElement.markAsNotPrepared ();
             aElement.setPaddingTop (aElement.getPaddingTop () + fPaddingTop);
-            aElement.markAsPrepared (new SizeSpec (m_aPreparedWidth[nIndex], m_aPreparedHeight[nIndex] + fPaddingTop));
+            aElement.markAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex], m_aPreparedColumnHeight[nIndex] + fPaddingTop));
           }
         }
         ++nIndex;
@@ -487,9 +487,9 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
     for (final Column aColumn : m_aColumns)
     {
       final AbstractPLElement <?> aElement = aColumn.getElement ();
-      final float fItemWidth = m_aPreparedWidth[nIndex];
+      final float fItemWidth = m_aPreparedColumnWidth[nIndex];
       final float fItemWidthWithPadding = fItemWidth + aElement.getPaddingXSum ();
-      final float fItemHeight = m_aPreparedHeight[nIndex];
+      final float fItemHeight = m_aPreparedColumnHeight[nIndex];
       final float fItemHeightWithPadding = fItemHeight + aElement.getPaddingYSum ();
       final RenderingContext aItemCtx = new RenderingContext (aCtx,
                                                               fCurX + aElement.getMarginLeft (),
@@ -536,8 +536,8 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
                             .append ("startWidthItems", m_nStarWidthItems)
                             .append ("columnBorder", m_aColumnBorder)
                             .appendIfNotNull ("columnFillColor", m_aColumnFillColor)
-                            .appendIfNotNull ("preparedWidth", m_aPreparedWidth)
-                            .appendIfNotNull ("preparedHeight", m_aPreparedHeight)
+                            .appendIfNotNull ("preparedWidth", m_aPreparedColumnWidth)
+                            .appendIfNotNull ("preparedHeight", m_aPreparedColumnHeight)
                             .toString ();
   }
 }

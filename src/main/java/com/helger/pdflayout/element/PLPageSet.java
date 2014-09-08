@@ -377,16 +377,26 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
         final float fElementWidth = aElementWithSize.getWidth ();
         final float fElementHeightFull = aElementWithSize.getHeightFull ();
-        final float fAvailableHeight = fCurY - fYLeast - aElement.getMarginPlusPaddingYSum ();
+        final float fAvailableHeight = fCurY - fYLeast;
         if (fCurY - fElementHeightFull < fYLeast || bIsPagebreakDesired)
         {
           // Element does not fit on page - try to split
           final boolean bIsSplittable = aElement.isSplittable ();
           if (bIsSplittable)
           {
+            if (PLDebug.isDebugSplit ())
+              PLDebug.debugSplit (this, "Trying to split " +
+                                        aElement.getDebugID () +
+                                        " into pieces for available width " +
+                                        fElementWidth +
+                                        " and height " +
+                                        fAvailableHeight);
+
             // split elements
-            final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElements (fElementWidth,
-                                                                                          fAvailableHeight);
+            final PLSplitResult aSplitResult = aElement.getAsSplittable ()
+                                                       .splitElements (fElementWidth,
+                                                                       fAvailableHeight -
+                                                                           aElement.getMarginPlusPaddingYSum ());
             if (aSplitResult != null)
             {
               // Re-add them to the list and try again (they may be splitted
@@ -400,11 +410,23 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
                                           " into pieces: " +
                                           aSplitResult.getFirstElement ().getElement ().getDebugID () +
                                           " (" +
+                                          aSplitResult.getFirstElement ().getWidth () +
+                                          "+" +
+                                          aSplitResult.getFirstElement ().getElement ().getMarginPlusPaddingXSum () +
+                                          " & " +
                                           aSplitResult.getFirstElement ().getHeight () +
+                                          "+" +
+                                          aSplitResult.getFirstElement ().getElement ().getMarginPlusPaddingYSum () +
                                           ") and " +
                                           aSplitResult.getSecondElement ().getElement ().getDebugID () +
                                           " (" +
+                                          aSplitResult.getSecondElement ().getWidth () +
+                                          "+" +
+                                          aSplitResult.getSecondElement ().getElement ().getMarginPlusPaddingXSum () +
+                                          " & " +
                                           aSplitResult.getSecondElement ().getHeight () +
+                                          "+" +
+                                          aSplitResult.getSecondElement ().getElement ().getMarginPlusPaddingYSum () +
                                           ")");
               continue;
             }

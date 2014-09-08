@@ -95,9 +95,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   private BorderSpec m_aRowBorder = BorderSpec.BORDER0;
   private Color m_aRowFillColor = null;
   /** prepare width (without padding and margin) */
-  protected float [] m_aPreparedWidth;
+  protected float [] m_aPreparedRowElementWidth;
   /** prepare height (without padding and margin) */
-  protected float [] m_aPreparedHeight;
+  protected float [] m_aPreparedRowElementHeight;
 
   public AbstractPLVBox ()
   {}
@@ -319,17 +319,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   /**
    * Set the border around each contained row.
    *
-   * @param aBorder
+   * @param aRowBorder
    *        The border to set. May not be <code>null</code>.
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setRowBorder (@Nonnull final BorderSpec aBorder)
+  public final IMPLTYPE setRowBorder (@Nonnull final BorderSpec aRowBorder)
   {
-    if (aBorder == null)
-      throw new NullPointerException ("RowBorder");
+    ValueEnforcer.notNull (aRowBorder, "RowBorder");
     checkNotPrepared ();
-    m_aRowBorder = aBorder;
+    m_aRowBorder = aRowBorder;
     return thisAsT ();
   }
 
@@ -433,8 +432,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @OverridingMethodsMustInvokeSuper
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
-    m_aPreparedWidth = new float [m_aRows.size ()];
-    m_aPreparedHeight = new float [m_aRows.size ()];
+    m_aPreparedRowElementWidth = new float [m_aRows.size ()];
+    m_aPreparedRowElementHeight = new float [m_aRows.size ()];
     final float fAvailableWidth = aCtx.getAvailableWidth ();
     final float fAvailableHeight = aCtx.getAvailableHeight ();
     float fUsedWidthFull = 0;
@@ -442,20 +441,24 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     int nIndex = 0;
     for (final Row aRow : m_aRows)
     {
-      final AbstractPLElement <?> aElement = aRow.getElement ();
+      final AbstractPLElement <?> aRowElement = aRow.getElement ();
       // Full width of this element
-      final float fItemWidthFull = fAvailableWidth;
+      final float fRowElementWidthFull = fAvailableWidth;
       // Effective content width of this element
-      final float fItemWidth = fItemWidthFull - aElement.getMarginPlusPaddingXSum ();
+      final float fRowElementWidth = fRowElementWidthFull - aRowElement.getMarginPlusPaddingXSum ();
       // Prepare child element
-      final float fItemHeight = aElement.prepare (new PreparationContext (fItemWidth, fAvailableHeight)).getHeight ();
-      final float fItemHeightFull = fItemHeight + aElement.getMarginPlusPaddingYSum ();
+      final float fRowElementHeight = aRowElement.prepare (new PreparationContext (fRowElementWidth,
+                                                                                   fAvailableHeight -
+                                                                                       aRowElement.getMarginPlusPaddingYSum ()))
+                                                 .getHeight ();
+
+      final float fRowElementHeightFull = fRowElementHeight + aRowElement.getMarginPlusPaddingYSum ();
       // Update used width and height
-      fUsedWidthFull = Math.max (fUsedWidthFull, fItemWidthFull);
-      fUsedHeightFull += fItemHeightFull;
-      // Must include padding and margin for correct spacing
-      m_aPreparedWidth[nIndex] = fItemWidthFull;
-      m_aPreparedHeight[nIndex] = fItemHeightFull;
+      fUsedWidthFull = Math.max (fUsedWidthFull, fRowElementWidthFull);
+      fUsedHeightFull += fRowElementHeightFull;
+      // Widthout padding and margin
+      m_aPreparedRowElementWidth[nIndex] = fRowElementWidth;
+      m_aPreparedRowElementHeight[nIndex] = fRowElementHeight;
       ++nIndex;
     }
 
@@ -492,49 +495,47 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
   {
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
-    final float fCurX = aCtx.getStartLeft () + getPaddingLeft ();
-    float fCurY = aCtx.getStartTop () - getPaddingTop ();
+    final float fVBoxLeft = aCtx.getStartLeft () + getPaddingLeft ();
+    float fVBoxTop = aCtx.getStartTop () - getPaddingTop ();
+    // Disregard the padding of this VBox!!!
+    final float fVBoxWidth = aCtx.getWidth () - getPaddingXSum ();
     int nIndex = 0;
     for (final Row aRow : m_aRows)
     {
       final AbstractPLElement <?> aRowElement = aRow.getElement ();
-      final float fElementWidth = m_aPreparedWidth[nIndex];
-      final float fElementWidthWithPadding = fElementWidth + aRowElement.getPaddingXSum ();
-      final float fElementHeight = m_aPreparedHeight[nIndex];
-      final float fElementHeightWithPadding = fElementHeight + aRowElement.getPaddingYSum ();
-      final RenderingContext aItemCtx = new RenderingContext (aCtx,
-                                                              fCurX + aRowElement.getMarginLeft (),
-                                                              fCurY - aRowElement.getMarginTop (),
-                                                              fElementWidthWithPadding,
-                                                              fElementHeightWithPadding);
+      final float fRowElementWidth = m_aPreparedRowElementWidth[nIndex];
+      final float fRowElementWidthWithPadding = fRowElementWidth + aRowElement.getPaddingXSum ();
+      final float fRowElementHeight = m_aPreparedRowElementHeight[nIndex];
+      final float fRowElementHeightWithPadding = fRowElementHeight + aRowElement.getPaddingYSum ();
+      final RenderingContext aRowElementCtx = new RenderingContext (aCtx,
+                                                                    fVBoxLeft + aRowElement.getMarginLeft (),
+                                                                    fVBoxTop - aRowElement.getMarginTop (),
+                                                                    fRowElementWidthWithPadding,
+                                                                    fRowElementHeightWithPadding);
 
-      // apply special row borders - debug: blue
+      // apply special row borders - debug: pink
       {
-        // Disregard the padding of this VBox!!!
-        final float fLeft = fCurX;
-        final float fTop = fCurY;
-        final float fWidth = aCtx.getWidth () - getPaddingXSum ();
-        final float fHeight = fElementHeightWithPadding + aRowElement.getMarginYSum ();
+        final float fHeight = fRowElementHeightWithPadding;
 
         // Fill before border
         if (m_aRowFillColor != null)
         {
           aContentStream.setNonStrokingColor (m_aRowFillColor);
-          aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
+          aContentStream.fillRect (fVBoxLeft, fVBoxTop - fHeight, fVBoxWidth, fHeight);
         }
 
         BorderSpec aRealBorder = m_aRowBorder;
         if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
           aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_VBOX));
         if (aRealBorder.hasAnyBorder ())
-          renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
+          renderBorder (aContentStream, fVBoxLeft, fVBoxTop, fVBoxWidth, fHeight, aRealBorder);
       }
 
       // Perform contained element after border
-      aRowElement.perform (aItemCtx);
+      aRowElement.perform (aRowElementCtx);
 
       // Update Y-pos
-      fCurY -= fElementHeightWithPadding + aRowElement.getMarginYSum ();
+      fVBoxTop -= fRowElementHeightWithPadding + aRowElement.getMarginYSum ();
       ++nIndex;
     }
   }
@@ -546,8 +547,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                             .append ("rows", m_aRows)
                             .append ("rowBorder", m_aRowBorder)
                             .appendIfNotNull ("rowFillColor", m_aRowFillColor)
-                            .appendIfNotNull ("preparedWidth", m_aPreparedWidth)
-                            .appendIfNotNull ("preparedHeight", m_aPreparedHeight)
+                            .appendIfNotNull ("preparedRowElementWidth", m_aPreparedRowElementWidth)
+                            .appendIfNotNull ("preparedRowElementHeight", m_aPreparedRowElementHeight)
                             .toString ();
   }
 }

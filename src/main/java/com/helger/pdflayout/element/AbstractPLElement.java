@@ -22,9 +22,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.OverrideOnDemand;
 import com.helger.commons.lang.CGStringHelper;
@@ -47,8 +44,6 @@ import com.helger.pdflayout.spec.SizeSpec;
  */
 public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends AbstractPLBaseElement <IMPLTYPE>
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLElement.class);
-
   private SizeSpec m_aMinSize = SizeSpec.SIZE0;
   private SizeSpec m_aMaxSize = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
   private boolean m_bPrepared = false;
@@ -144,6 +139,16 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
 
     m_bPrepared = true;
     m_aPreparedSize = new SizeSpec (fRealWidth, fRealHeight);
+
+    if (PLDebug.isDebugPrepare ())
+      PLDebug.debugPrepare (this, "Prepared object: width=" +
+                                  aPreparedSize.getWidth () +
+                                  "+" +
+                                  getMarginPlusPaddingXSum () +
+                                  " & height=" +
+                                  aPreparedSize.getHeight () +
+                                  "+" +
+                                  getMarginPlusPaddingYSum ());
   }
 
   /**
@@ -162,10 +167,19 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     // Prepare only once!
     checkNotPrepared ();
 
+    if (PLDebug.isDebugPrepare ())
+      PLDebug.debugPrepare (this, "Preparing object for available width " +
+                                  aCtx.getAvailableWidth () +
+                                  "+" +
+                                  getMarginPlusPaddingXSum () +
+                                  " and available height " +
+                                  aCtx.getAvailableHeight () +
+                                  "+" +
+                                  getMarginPlusPaddingYSum ());
+
     // Do prepare
-    _setPreparedSize (onPrepare (aCtx));
-    if (s_aLogger.isDebugEnabled ())
-      s_aLogger.debug ("Prepared object " + CGStringHelper.getClassLocalName (getClass ()));
+    final SizeSpec aOnPrepareResult = onPrepare (aCtx);
+    _setPreparedSize (aOnPrepareResult);
 
     return m_aPreparedSize;
   }

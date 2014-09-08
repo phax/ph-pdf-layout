@@ -45,6 +45,7 @@ public final class PLDebug
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLDebug.class);
   private static boolean s_bDebugText = GlobalDebug.isDebugMode ();
   private static boolean s_bDebugSplit = GlobalDebug.isDebugMode ();
+  private static boolean s_bDebugPrepare = GlobalDebug.isDebugMode ();
 
   private PLDebug ()
   {}
@@ -59,9 +60,9 @@ public final class PLDebug
     s_bDebugText = bDebugText;
   }
 
-  public static void debugText (final String sMsg)
+  public static void debugText (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("Text: " + sMsg);
+    s_aLogger.info ("[Text] " + aElement.getDebugID () + ": " + sMsg);
   }
 
   public static boolean isDebugSplit ()
@@ -77,5 +78,20 @@ public final class PLDebug
   public static void debugSplit (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
     s_aLogger.info ("[Splitting] " + aElement.getDebugID () + ": " + sMsg);
+  }
+
+  public static boolean isDebugPrepare ()
+  {
+    return s_bDebugPrepare;
+  }
+
+  public static void setDebugPrepare (final boolean bDebugPrepare)
+  {
+    s_bDebugPrepare = bDebugPrepare;
+  }
+
+  public static void debugPrepare (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
+  {
+    s_aLogger.info ("[Preparing] " + aElement.getDebugID () + ": " + sMsg);
   }
 }
