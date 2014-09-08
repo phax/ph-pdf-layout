@@ -125,6 +125,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       final AbstractPLElement <?> aElement = getColumnElementAtIndex (nCol);
       final boolean bIsSplittable = aElement.isSplittable ();
       final float fColumnWidth = m_aPreparedWidth[nCol];
+      @SuppressWarnings ("unused")
       final float fColumnWidthFull = fColumnWidth + aElement.getMarginPlusPaddingXSum ();
       final float fColumnHeight = m_aPreparedHeight[nCol];
       final float fColumnHeightFull = fColumnHeight + aElement.getMarginPlusPaddingYSum ();
@@ -141,8 +142,10 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
           aHBox1.getColumnAtIndex (nCol).setElement (aSplitResult.getFirstElement ().getElement ());
           aHBox2.getColumnAtIndex (nCol).setElement (aSplitResult.getSecondElement ().getElement ());
 
-          fHBox1Heights[nCol] = aSplitResult.getFirstElement ().getHeight ();
-          fHBox2Heights[nCol] = aSplitResult.getSecondElement ().getHeight ();
+          // Use the full height, because the column itself has no padding or
+          // margin!
+          fHBox1Heights[nCol] = aSplitResult.getFirstElement ().getHeightFull ();
+          fHBox2Heights[nCol] = aSplitResult.getSecondElement ().getHeightFull ();
           bDidSplitColumn = true;
           bDidSplitAnyColumn = true;
 
@@ -212,7 +215,9 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
         // No splitting and cell fits totally in available height
         aHBox1.getColumnAtIndex (nCol).setElement (aElement);
 
-        fHBox1Heights[nCol] = Math.min (fColumnHeight, fAvailableHeight);
+        // Use the full height, because the column itself has no padding or
+        // margin!
+        fHBox1Heights[nCol] = Math.min (fColumnHeightFull, fAvailableHeight);
         fHBox2Heights[nCol] = 0;
       }
 

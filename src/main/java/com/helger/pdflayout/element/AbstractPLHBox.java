@@ -54,6 +54,12 @@ import com.helger.pdflayout.spec.WidthSpec;
  */
 public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
 {
+  /**
+   * This class represents a single column within a HBox. This is a pseudo
+   * element and does not have a padding, margin or border!
+   * 
+   * @author Philip Helger
+   */
   @NotThreadSafe
   public static final class Column
   {
