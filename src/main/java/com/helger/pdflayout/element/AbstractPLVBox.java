@@ -25,7 +25,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import javax.annotation.concurrent.NotThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,45 +52,9 @@ import com.helger.pdflayout.spec.SizeSpec;
  */
 public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
 {
-  /**
-   * This class represents a single row within a VBox. This is a pseudo element
-   * and does not have a padding, margin or border!
-   *
-   * @author Philip Helger
-   */
-  @NotThreadSafe
-  public static final class Row
-  {
-    private AbstractPLElement <?> m_aElement;
-
-    public Row (@Nonnull final AbstractPLElement <?> aElement)
-    {
-      setElement (aElement);
-    }
-
-    @Nonnull
-    public AbstractPLElement <?> getElement ()
-    {
-      return m_aElement;
-    }
-
-    @Nonnull
-    public Row setElement (@Nonnull final AbstractPLElement <?> aElement)
-    {
-      m_aElement = ValueEnforcer.notNull (aElement, "Element");
-      return this;
-    }
-
-    @Override
-    public String toString ()
-    {
-      return new ToStringGenerator (this).append ("element", m_aElement).toString ();
-    }
-  }
-
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-  protected final List <Row> m_aRows = new ArrayList <Row> ();
+  protected final List <PLVBoxRow> m_aRows = new ArrayList <PLVBoxRow> ();
   private BorderSpec m_aRowBorder = BorderSpec.BORDER0;
   private Color m_aRowFillColor = null;
   /** prepare width (without padding and margin) */
@@ -126,7 +89,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    */
   @Nonnull
   @ReturnsMutableCopy
-  public List <Row> getAllRows ()
+  public List <PLVBoxRow> getAllRows ()
   {
     return ContainerHelper.newList (m_aRows);
   }
@@ -139,7 +102,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return <code>null</code> if an invalid index was provided.
    */
   @Nullable
-  public Row getRowAtIndex (@Nonnegative final int nIndex)
+  public PLVBoxRow getRowAtIndex (@Nonnegative final int nIndex)
   {
     return ContainerHelper.getSafe (m_aRows, nIndex);
   }
@@ -148,7 +111,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return The first row or <code>null</code> if no row is present.
    */
   @Nullable
-  public Row getFirstRow ()
+  public PLVBoxRow getFirstRow ()
   {
     return ContainerHelper.getFirstElement (m_aRows);
   }
@@ -157,7 +120,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return The last row or <code>null</code> if no row is present.
    */
   @Nullable
-  public Row getLastRow ()
+  public PLVBoxRow getLastRow ()
   {
     return ContainerHelper.getLastElement (m_aRows);
   }
@@ -172,7 +135,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public AbstractPLElement <?> getRowElementAtIndex (@Nonnegative final int nIndex)
   {
-    final Row aRow = getRowAtIndex (nIndex);
+    final PLVBoxRow aRow = getRowAtIndex (nIndex);
     return aRow == null ? null : aRow.getElement ();
   }
 
@@ -183,7 +146,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public AbstractPLElement <?> getFirstRowElement ()
   {
-    final Row aRow = getFirstRow ();
+    final PLVBoxRow aRow = getFirstRow ();
     return aRow == null ? null : aRow.getElement ();
   }
 
@@ -194,7 +157,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public AbstractPLElement <?> getLastRowElement ()
   {
-    final Row aRow = getLastRow ();
+    final PLVBoxRow aRow = getLastRow ();
     return aRow == null ? null : aRow.getElement ();
   }
 
@@ -206,10 +169,10 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return the created row
    */
   @Nonnull
-  public Row addAndReturnRow (@Nonnull final AbstractPLElement <?> aElement)
+  public PLVBoxRow addAndReturnRow (@Nonnull final AbstractPLElement <?> aElement)
   {
     checkNotPrepared ();
-    final Row aItem = new Row (aElement);
+    final PLVBoxRow aItem = new PLVBoxRow (aElement);
     m_aRows.add (aItem);
     return aItem;
   }
@@ -238,11 +201,11 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return the created row
    */
   @Nonnull
-  public Row addAndReturnRow (@Nonnegative final int nIndex, @Nonnull final AbstractPLElement <?> aElement)
+  public PLVBoxRow addAndReturnRow (@Nonnegative final int nIndex, @Nonnull final AbstractPLElement <?> aElement)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
     checkNotPrepared ();
-    final Row aItem = new Row (aElement);
+    final PLVBoxRow aItem = new PLVBoxRow (aElement);
     if (nIndex >= m_aRows.size ())
       m_aRows.add (aItem);
     else
@@ -439,7 +402,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     float fUsedWidthFull = 0;
     float fUsedHeightFull = 0;
     int nIndex = 0;
-    for (final Row aRow : m_aRows)
+    for (final PLVBoxRow aRow : m_aRows)
     {
       final AbstractPLElement <?> aRowElement = aRow.getElement ();
       // Full width of this element
@@ -487,7 +450,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Override
   public void doPageSetup (@Nonnull final PageSetupContext aCtx)
   {
-    for (final Row aRow : m_aRows)
+    for (final PLVBoxRow aRow : m_aRows)
       aRow.getElement ().doPageSetup (aCtx);
   }
 
@@ -500,7 +463,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     // Disregard the padding of this VBox!!!
     final float fVBoxWidth = aCtx.getWidth () - getPaddingXSum ();
     int nIndex = 0;
-    for (final Row aRow : m_aRows)
+    for (final PLVBoxRow aRow : m_aRows)
     {
       final AbstractPLElement <?> aRowElement = aRow.getElement ();
       final float fRowElementWidth = m_aPreparedRowElementWidth[nIndex];
@@ -515,7 +478,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
       // apply special row borders - debug: pink
       {
-        final float fHeight = fRowElementHeightWithPadding;
+        final float fHeight = fRowElementHeightWithPadding + aRowElement.getMarginYSum ();
 
         // Fill before border
         if (m_aRowFillColor != null)

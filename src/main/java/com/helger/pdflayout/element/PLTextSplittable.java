@@ -60,7 +60,7 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
     int nLines = (int) (fAvailableHeight / fLineHeight);
     if (nLines <= 0)
     {
-      // Splitting makes no sense
+      // Splitting makes no sense because the resulting text 1 would be empty
       if (PLDebug.isDebugSplit ())
         PLDebug.debugSplit (this, "Failed to split because the result would be " +
                                   nLines +
@@ -68,6 +68,22 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
                                   fAvailableHeight +
                                   " and line height " +
                                   fLineHeight);
+      return null;
+    }
+
+    if (nLines >= aLines.size ())
+    {
+      // Splitting makes no sense because the resulting text 2 would be empty
+      if (PLDebug.isDebugSplit ())
+        PLDebug.debugSplit (this, "Failed to split because the result of " +
+                                  nLines +
+                                  " lines fits into the available height " +
+                                  fAvailableHeight +
+                                  " and line height " +
+                                  fLineHeight +
+                                  " (=" +
+                                  (fAvailableHeight * fLineHeight) +
+                                  ")");
       return null;
     }
 

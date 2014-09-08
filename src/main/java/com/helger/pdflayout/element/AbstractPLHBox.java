@@ -25,7 +25,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-import javax.annotation.concurrent.NotThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,53 +54,9 @@ import com.helger.pdflayout.spec.WidthSpec;
  */
 public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
 {
-  /**
-   * This class represents a single column within a HBox. This is a pseudo
-   * element and does not have a padding, margin or border!
-   *
-   * @author Philip Helger
-   */
-  @NotThreadSafe
-  public static final class Column
-  {
-    private AbstractPLElement <?> m_aElement;
-    private final WidthSpec m_aWidth;
-
-    public Column (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final WidthSpec aWidth)
-    {
-      setElement (aElement);
-      m_aWidth = ValueEnforcer.notNull (aWidth, "Width");
-    }
-
-    @Nonnull
-    public AbstractPLElement <?> getElement ()
-    {
-      return m_aElement;
-    }
-
-    @Nonnull
-    public Column setElement (@Nonnull final AbstractPLElement <?> aElement)
-    {
-      m_aElement = ValueEnforcer.notNull (aElement, "Element");
-      return this;
-    }
-
-    @Nonnull
-    public WidthSpec getWidth ()
-    {
-      return m_aWidth;
-    }
-
-    @Override
-    public String toString ()
-    {
-      return new ToStringGenerator (this).append ("element", m_aElement).append ("width", m_aWidth).toString ();
-    }
-  }
-
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  protected final List <Column> m_aColumns = new ArrayList <Column> ();
+  protected final List <PLHBoxColumn> m_aColumns = new ArrayList <PLHBoxColumn> ();
   private int m_nStarWidthItems = 0;
   private BorderSpec m_aColumnBorder = BorderSpec.BORDER0;
   private Color m_aColumnFillColor = null;
@@ -138,25 +93,25 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
    */
   @Nonnull
   @ReturnsMutableCopy
-  public List <Column> getAllColumns ()
+  public List <PLHBoxColumn> getAllColumns ()
   {
     return ContainerHelper.newList (m_aColumns);
   }
 
   @Nullable
-  public Column getColumnAtIndex (@Nonnegative final int nIndex)
+  public PLHBoxColumn getColumnAtIndex (@Nonnegative final int nIndex)
   {
     return ContainerHelper.getSafe (m_aColumns, nIndex);
   }
 
   @Nullable
-  public Column getFirstColumn ()
+  public PLHBoxColumn getFirstColumn ()
   {
     return ContainerHelper.getFirstElement (m_aColumns);
   }
 
   @Nullable
-  public Column getLastColumn ()
+  public PLHBoxColumn getLastColumn ()
   {
     return ContainerHelper.getLastElement (m_aColumns);
   }
@@ -164,29 +119,29 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
   @Nullable
   public AbstractPLElement <?> getColumnElementAtIndex (@Nonnegative final int nIndex)
   {
-    final Column aColumn = getColumnAtIndex (nIndex);
+    final PLHBoxColumn aColumn = getColumnAtIndex (nIndex);
     return aColumn == null ? null : aColumn.getElement ();
   }
 
   @Nullable
   public AbstractPLElement <?> getFirstColumnElement ()
   {
-    final Column aColumn = getFirstColumn ();
+    final PLHBoxColumn aColumn = getFirstColumn ();
     return aColumn == null ? null : aColumn.getElement ();
   }
 
   @Nullable
   public AbstractPLElement <?> getLastColumnElement ()
   {
-    final Column aColumn = getLastColumn ();
+    final PLHBoxColumn aColumn = getLastColumn ();
     return aColumn == null ? null : aColumn.getElement ();
   }
 
   @Nonnull
-  public Column addAndReturnColumn (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final WidthSpec aWidth)
+  public PLHBoxColumn addAndReturnColumn (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final WidthSpec aWidth)
   {
     checkNotPrepared ();
-    final Column aItem = new Column (aElement, aWidth);
+    final PLHBoxColumn aItem = new PLHBoxColumn (aElement, aWidth);
     m_aColumns.add (aItem);
     if (aWidth.isStar ())
       m_nStarWidthItems++;
@@ -376,7 +331,7 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
     int nIndex = 0;
     float fRestWidth = fAvailableWidth;
     // 1. all non-star width items
-    for (final Column aColumn : m_aColumns)
+    for (final PLHBoxColumn aColumn : m_aColumns)
     {
       if (!aColumn.getWidth ().isStar ())
       {
@@ -400,7 +355,7 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
     }
     // 2. all star widths items
     nIndex = 0;
-    for (final Column aColumn : m_aColumns)
+    for (final PLHBoxColumn aColumn : m_aColumns)
     {
       if (aColumn.getWidth ().isStar ())
       {
@@ -425,7 +380,7 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
     // Apply vertical alignment
     {
       nIndex = 0;
-      for (final Column aColumn : m_aColumns)
+      for (final PLHBoxColumn aColumn : m_aColumns)
       {
         final AbstractPLElement <?> aElement = aColumn.getElement ();
         if (aElement instanceof IPLHasVerticalAlignment <?>)
@@ -473,7 +428,7 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
   @Override
   public void doPageSetup (@Nonnull final PageSetupContext aCtx)
   {
-    for (final Column aColumn : m_aColumns)
+    for (final PLHBoxColumn aColumn : m_aColumns)
       aColumn.getElement ().doPageSetup (aCtx);
   }
 
@@ -484,7 +439,7 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
     float fCurX = aCtx.getStartLeft () + getPaddingLeft ();
     final float fCurY = aCtx.getStartTop () - getPaddingTop ();
     int nIndex = 0;
-    for (final Column aColumn : m_aColumns)
+    for (final PLHBoxColumn aColumn : m_aColumns)
     {
       final AbstractPLElement <?> aElement = aColumn.getElement ();
       final float fItemWidth = m_aPreparedColumnWidth[nIndex];

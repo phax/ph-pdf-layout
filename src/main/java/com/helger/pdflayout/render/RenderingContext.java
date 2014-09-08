@@ -33,7 +33,7 @@ import com.helger.commons.string.StringParser;
 
 /**
  * This class contains the context for rendering a single element onto the PDF.
- * 
+ *
  * @author Philip Helger
  */
 @NotThreadSafe
@@ -58,10 +58,10 @@ public final class RenderingContext
    *        Absolute page y-start position with element y-margin but without
    *        element y-padding
    * @param fWidth
-   *        width without margin but including padding of the surrounding
+   *        width without margin but including x-padding of the surrounding
    *        element
    * @param fHeight
-   *        width without margin but including padding of the surrounding
+   *        height without margin but including y-padding of the surrounding
    *        element
    */
   public RenderingContext (@Nonnull final RenderingContext aCtx,
@@ -154,7 +154,7 @@ public final class RenderingContext
 
   /**
    * Get the placeholder value with the specified name.
-   * 
+   *
    * @param sName
    *        The name to search. May be <code>null</code>.
    * @return <code>null</code> if no such placeholder exists.

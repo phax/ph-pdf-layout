@@ -37,7 +37,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
   public boolean containsAnySplittableElement ()
   {
-    for (final Column aColumn : m_aColumns)
+    for (final PLHBoxColumn aColumn : m_aColumns)
       if (aColumn.getElement ().isSplittable ())
         return true;
     return false;
@@ -94,7 +94,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
     // Fill all columns with empty content
     for (int i = 0; i < nCols; ++i)
     {
-      final Column aColumn = getColumnAtIndex (i);
+      final PLHBoxColumn aColumn = getColumnAtIndex (i);
       final WidthSpec aColumnWidth = aColumn.getWidth ();
       final AbstractPLElement <?> aColumnElement = aColumn.getElement ();
 
