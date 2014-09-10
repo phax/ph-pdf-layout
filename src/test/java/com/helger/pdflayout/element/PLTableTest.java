@@ -27,7 +27,6 @@ import com.helger.commons.io.file.FileUtils;
 import com.helger.commons.mock.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
-import com.helger.pdflayout.element.PLTable.PLTableCell;
 import com.helger.pdflayout.render.RenderPageIndex;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;

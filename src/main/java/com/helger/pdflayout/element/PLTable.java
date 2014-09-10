@@ -44,32 +44,6 @@ import com.helger.pdflayout.spec.WidthSpec.EWidthType;
  */
 public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableElement
 {
-  public static class PLTableCell
-  {
-    private final AbstractPLElement <?> m_aElement;
-    private final int m_nColSpan;
-
-    public PLTableCell (@Nonnull final AbstractPLElement <?> aElement, @Nonnegative final int nColSpan)
-    {
-      ValueEnforcer.notNull (aElement, "Element");
-      ValueEnforcer.isGT0 (nColSpan, "ColSpan");
-      m_aElement = aElement;
-      m_nColSpan = nColSpan;
-    }
-
-    @Nonnull
-    public AbstractPLElement <?> getElement ()
-    {
-      return m_aElement;
-    }
-
-    @Nonnegative
-    public int getColSpan ()
-    {
-      return m_nColSpan;
-    }
-  }
-
   private final List <WidthSpec> m_aWidths;
   private int m_nHeaderRowCount = 0;
 
@@ -160,7 +134,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
                                           m_aWidths.size () +
                                           ")!");
 
-    final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
+    final PLHBoxSplittable aRowHBox = new PLHBoxSplittable ();
     int nWidthIndex = 0;
     for (AbstractPLElement <?> aElement : aElements)
     {
@@ -170,11 +144,11 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
         aElement = new PLSpacerX ();
       }
       final WidthSpec aWidth = m_aWidths.get (nWidthIndex);
-      aHBox.addColumn (aElement, aWidth);
+      aRowHBox.addColumn (aElement, aWidth);
       ++nWidthIndex;
     }
-    super.addRow (aHBox);
-    return aHBox;
+    super.addRow (aRowHBox);
+    return aRowHBox;
   }
 
   @Nonnull
@@ -290,57 +264,57 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
     final List <Float> aTable1RowHeight = new ArrayList <Float> (nTotalRows);
 
     // Copy all header rows
-    float fTable1Width = 0;
-    float fTable1WidthFull = 0;
-    float fTable1Height = 0;
-    float fTable1HeightFull = 0;
-    for (int i = 0; i < m_nHeaderRowCount; ++i)
+    float fUsedTable1Width = 0;
+    float fUsedTable1WidthFull = 0;
+    float fUsedTable1Height = 0;
+    float fUsedTable1HeightFull = 0;
+    for (int nRow = 0; nRow < m_nHeaderRowCount; ++nRow)
     {
-      final AbstractPLElement <?> aHeaderRowElement = getRowElementAtIndex (i);
+      final AbstractPLElement <?> aHeaderRowElement = getRowElementAtIndex (nRow);
       aTable1.addRow (aHeaderRowElement);
       aTable2.addRow (aHeaderRowElement);
 
-      final float fRowWidth = m_aPreparedRowElementWidth[i];
+      final float fRowWidth = m_aPreparedRowElementWidth[nRow];
       final float fRowWidthFull = fRowWidth + aHeaderRowElement.getMarginPlusPaddingXSum ();
-      final float fRowHeight = m_aPreparedRowElementHeight[i];
+      final float fRowHeight = m_aPreparedRowElementHeight[nRow];
       final float fRowHeightFull = fRowHeight + aHeaderRowElement.getMarginPlusPaddingYSum ();
 
-      fTable1Width = Math.max (fTable1Width, fRowWidth);
-      fTable1WidthFull = Math.max (fTable1WidthFull, fRowWidthFull);
-      fTable1Height += fRowHeight;
-      fTable1HeightFull += fRowHeightFull;
+      fUsedTable1Width = Math.max (fUsedTable1Width, fRowWidth);
+      fUsedTable1WidthFull = Math.max (fUsedTable1WidthFull, fRowWidthFull);
+      fUsedTable1Height += fRowHeight;
+      fUsedTable1HeightFull += fRowHeightFull;
       aTable1RowWidth.add (Float.valueOf (fRowWidth));
       aTable1RowHeight.add (Float.valueOf (fRowHeight));
     }
 
     // The height and width after header are identical
-    float fTable2Width = fTable1Width;
-    float fTable2Height = fTable1Height;
-    float fTable2HeightFull = fTable1HeightFull;
+    float fUsedTable2Width = fUsedTable1Width;
+    float fUsedTable2Height = fUsedTable1Height;
+    float fUsedTable2HeightFull = fUsedTable1HeightFull;
     final List <Float> aTable2RowWidth = new ArrayList <Float> (aTable1RowWidth);
     final List <Float> aTable2RowHeight = new ArrayList <Float> (aTable1RowHeight);
 
     // Copy all content rows
     boolean bOnTable1 = true;
 
-    for (int i = m_nHeaderRowCount; i < nTotalRows; ++i)
+    for (int nRow = m_nHeaderRowCount; nRow < nTotalRows; ++nRow)
     {
-      final AbstractPLElement <?> aRowElement = getRowElementAtIndex (i);
-      final float fRowWidth = m_aPreparedRowElementWidth[i];
+      final AbstractPLElement <?> aRowElement = getRowElementAtIndex (nRow);
+      final float fRowWidth = m_aPreparedRowElementWidth[nRow];
       final float fRowWidthFull = fRowWidth + aRowElement.getMarginPlusPaddingXSum ();
-      final float fRowHeight = m_aPreparedRowElementHeight[i];
+      final float fRowHeight = m_aPreparedRowElementHeight[nRow];
       final float fRowHeightFull = fRowHeight + aRowElement.getMarginPlusPaddingYSum ();
 
       if (bOnTable1)
       {
-        if (fTable1HeightFull + fRowHeightFull <= fAvailableHeight)
+        if (fUsedTable1HeightFull + fRowHeightFull <= fAvailableHeight)
         {
           // Row fits in first table without a change
           aTable1.addRow (aRowElement);
-          fTable1Width = Math.max (fTable1Width, fRowWidth);
-          fTable1WidthFull = Math.max (fTable1WidthFull, fRowWidthFull);
-          fTable1Height += fRowHeight;
-          fTable1HeightFull += fRowHeightFull;
+          fUsedTable1Width = Math.max (fUsedTable1Width, fRowWidth);
+          fUsedTable1WidthFull = Math.max (fUsedTable1WidthFull, fRowWidthFull);
+          fUsedTable1Height += fRowHeight;
+          fUsedTable1HeightFull += fRowHeightFull;
           aTable1RowWidth.add (Float.valueOf (fRowWidth));
           aTable1RowHeight.add (Float.valueOf (fRowHeight));
         }
@@ -353,45 +327,46 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
           if (aRowElement.isSplittable ())
           {
             // don't override fTable1Width
-            final float fWidth = Math.max (fTable1Width, fRowWidth);
-            final float fWidthFull = Math.max (fTable1WidthFull, fRowWidthFull);
-            final float fRemainingHeight = fAvailableHeight - fTable1HeightFull;
+            final float fWidth = Math.max (fUsedTable1Width, fRowWidth);
+            final float fWidthFull = Math.max (fUsedTable1WidthFull, fRowWidthFull);
+
+            final float fAvailableSplitWidth = fWidth;
+            final float fAvailableSplitHeight = fAvailableHeight -
+                                                fUsedTable1HeightFull -
+                                                aRowElement.getMarginPlusPaddingYSum ();
 
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this, "Trying to split " +
                                         aRowElement.getDebugID () +
-                                        " into pieces for remaining width " +
-                                        fWidth +
+                                        " into pieces for split width " +
+                                        fAvailableSplitWidth +
                                         " and height " +
-                                        fRemainingHeight);
+                                        fAvailableSplitHeight);
 
             // Try to split the element contained in the row (without padding
             // and margin of the element)
-            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ()
-                                                          .splitElements (fWidth -
-                                                                              aRowElement.getMarginPlusPaddingXSum (),
-                                                                          fRemainingHeight -
-                                                                              aRowElement.getMarginPlusPaddingYSum ());
+            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElements (fAvailableSplitWidth,
+                                                                                             fAvailableSplitHeight);
 
             if (aSplitResult != null)
             {
               final AbstractPLElement <?> aTable1RowElement = aSplitResult.getFirstElement ().getElement ();
               aTable1.addRow (aTable1RowElement);
-              fTable1Width = fWidth;
-              fTable1WidthFull = fWidthFull;
+              fUsedTable1Width = fWidth;
+              fUsedTable1WidthFull = fWidthFull;
               final float fTable1RowHeight = aSplitResult.getFirstElement ().getHeight ();
-              fTable1Height += fTable1RowHeight;
-              fTable1HeightFull += fTable1RowHeight + aTable1RowElement.getMarginPlusPaddingYSum ();
+              fUsedTable1Height += fTable1RowHeight;
+              fUsedTable1HeightFull += fTable1RowHeight + aTable1RowElement.getMarginPlusPaddingYSum ();
               aTable1RowWidth.add (Float.valueOf (fWidth));
               aTable1RowHeight.add (Float.valueOf (fTable1RowHeight));
 
               final AbstractPLElement <?> aTable2RowElement = aSplitResult.getSecondElement ().getElement ();
               aTable2.addRow (aTable2RowElement);
-              fTable2Width = fWidth;
+              fUsedTable2Width = fWidth;
               final float fTable2RowHeight = aSplitResult.getSecondElement ().getHeight ();
               final float fTable2RowHeightFull = fTable2RowHeight + aTable2RowElement.getMarginPlusPaddingYSum ();
-              fTable2Height += fTable2RowHeight;
-              fTable2HeightFull += fTable2RowHeightFull;
+              fUsedTable2Height += fTable2RowHeight;
+              fUsedTable2HeightFull += fTable2RowHeightFull;
               aTable2RowWidth.add (Float.valueOf (fWidth));
               aTable2RowHeight.add (Float.valueOf (fTable2RowHeight));
 
@@ -407,17 +382,13 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
                                         aTable2RowElement.getDebugID () +
                                         " (" +
                                         aSplitResult.getSecondElement ().getHeight () +
-                                        ") for remaining height of " +
-                                        fRemainingHeight);
+                                        ")");
               bSplittedRow = true;
             }
             else
             {
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this, "Failed to split " +
-                                          aRowElement.getDebugID () +
-                                          " into pieces for remaining height " +
-                                          fRemainingHeight);
+                PLDebug.debugSplit (this, "Failed to split " + aRowElement.getDebugID () + " into pieces");
             }
           }
 
@@ -425,9 +396,9 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
           {
             // just add the full row to the second table
             aTable2.addRow (aRowElement);
-            fTable2Width = Math.max (fTable2Width, fRowWidth);
-            fTable2Height += fRowHeight;
-            fTable2HeightFull += fRowHeightFull;
+            fUsedTable2Width = Math.max (fUsedTable2Width, fRowWidth);
+            fUsedTable2Height += fRowHeight;
+            fUsedTable2HeightFull += fRowHeightFull;
             aTable2RowWidth.add (Float.valueOf (fRowWidth));
             aTable2RowHeight.add (Float.valueOf (fRowHeight));
           }
@@ -437,9 +408,9 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
       {
         // We're already on table 2
         aTable2.addRow (aRowElement);
-        fTable2Width = Math.max (fTable2Width, fRowWidth);
-        fTable2Height += fRowHeight;
-        fTable2HeightFull += fRowHeightFull;
+        fUsedTable2Width = Math.max (fUsedTable2Width, fRowWidth);
+        fUsedTable2Height += fRowHeight;
+        fUsedTable2HeightFull += fRowHeightFull;
         aTable2RowWidth.add (Float.valueOf (fRowWidth));
         aTable2RowHeight.add (Float.valueOf (fRowHeight));
       }
@@ -463,16 +434,16 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
     }
 
     // Excluding padding/margin
-    aTable1.markAsPrepared (new SizeSpec (fElementWidth, fTable1HeightFull));
+    aTable1.markAsPrepared (new SizeSpec (fElementWidth, fUsedTable1HeightFull));
     aTable1.m_aPreparedRowElementWidth = _getAsArray (aTable1RowWidth);
     aTable1.m_aPreparedRowElementHeight = _getAsArray (aTable1RowHeight);
 
-    aTable2.markAsPrepared (new SizeSpec (fElementWidth, fTable2HeightFull));
+    aTable2.markAsPrepared (new SizeSpec (fElementWidth, fUsedTable2HeightFull));
     aTable2.m_aPreparedRowElementWidth = _getAsArray (aTable2RowWidth);
     aTable2.m_aPreparedRowElementHeight = _getAsArray (aTable2RowHeight);
 
-    return new PLSplitResult (new PLElementWithSize (aTable1, new SizeSpec (fElementWidth, fTable1HeightFull)),
-                              new PLElementWithSize (aTable2, new SizeSpec (fElementWidth, fTable2HeightFull)));
+    return new PLSplitResult (new PLElementWithSize (aTable1, new SizeSpec (fElementWidth, fUsedTable1HeightFull)),
+                              new PLElementWithSize (aTable2, new SizeSpec (fElementWidth, fUsedTable2HeightFull)));
   }
 
   @Override
