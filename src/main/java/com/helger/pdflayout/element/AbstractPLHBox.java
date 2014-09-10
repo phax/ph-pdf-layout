@@ -405,7 +405,8 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
           {
             aElement.markAsNotPrepared ();
             aElement.setPaddingTop (aElement.getPaddingTop () + fPaddingTop);
-            aElement.markAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex], m_aPreparedColumnHeight[nIndex] + fPaddingTop));
+            aElement.markAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex], m_aPreparedColumnHeight[nIndex] +
+                                                                                   fPaddingTop));
           }
         }
         ++nIndex;
