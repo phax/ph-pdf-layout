@@ -64,6 +64,12 @@ public final class PLTextTest
     aTable.addRow (aHBox);
     aPS1.addElement (aTable);
 
+    // All chars from 32-255
+    final StringBuilder aSB = new StringBuilder ();
+    for (int i = 32; i <= 255; ++i)
+      aSB.append ((char) i);
+    aPS1.addElement (new PLText (aSB.toString (), r10));
+
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext.pdf"));
