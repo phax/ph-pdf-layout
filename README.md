@@ -14,3 +14,7 @@ Add the following to your pom.xml to use this artifact:
   <version>1.3.1</version>
 </dependency>
 ```
+
+---
+
+On Twitter: <a href="https://twitter.com/philiphelger">Follow @philiphelger</a>
