@@ -42,7 +42,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends AbstractPLBaseElement <IMPLTYPE>
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends
+                                                                                        AbstractPLBaseElement <IMPLTYPE>
 {
   private SizeSpec m_aMinSize = SizeSpec.SIZE0;
   private SizeSpec m_aMaxSize = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
@@ -52,12 +53,25 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public AbstractPLElement ()
   {}
 
+  /**
+   * @return The minimum size to be used. Excluding padding and margin. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public SizeSpec getMinSize ()
   {
     return m_aMinSize;
   }
 
+  /**
+   * Set the minimum size to be used. Excluding padding and margin.
+   *
+   * @param fMinWidth
+   *        Minimum width. Must be &ge; 0.
+   * @param fMinHeight
+   *        Minimum height. Must be &ge; 0.
+   * @return this
+   */
   @Nonnull
   public IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight)
   {
@@ -65,17 +79,47 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     return thisAsT ();
   }
 
+  /**
+   * @return The maximum size to be used. Excluding padding and margin. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public SizeSpec getMaxSize ()
   {
     return m_aMaxSize;
   }
 
+  /**
+   * Set the maximum size to be used. Excluding padding and margin.
+   *
+   * @param fMaxWidth
+   *        Maximum width. Must be &ge; 0.
+   * @param fMaxHeight
+   *        Maximum height. Must be &ge; 0.
+   * @return this
+   */
   @Nonnull
   public IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight)
   {
     m_aMaxSize = new SizeSpec (fMaxWidth, fMaxHeight);
     return thisAsT ();
+  }
+
+  /**
+   * Set the exact size to be used. Excluding padding and margin. This is a
+   * shortcut for setting minimum and maximum size to the same values.
+   *
+   * @param fWidth
+   *        Width to use. Must be &ge; 0.
+   * @param fHeight
+   *        Height to use. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  public IMPLTYPE setExactSize (@Nonnegative final float fWidth, @Nonnegative final float fHeight)
+  {
+    setMinSize (fWidth, fHeight);
+    return setMaxSize (fWidth, fHeight);
   }
 
   /**
@@ -125,6 +169,10 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   @Nonnull
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException;
 
+  /**
+   * @param aPreparedSize
+   *        Prepared size without padding and margin.
+   */
   private final void _setPreparedSize (@Nonnull final SizeSpec aPreparedSize)
   {
     ValueEnforcer.notNull (aPreparedSize, "PreparedSize");
