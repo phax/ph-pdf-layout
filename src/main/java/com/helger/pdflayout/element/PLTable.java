@@ -29,7 +29,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.Nonempty;
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.collections.ArrayHelper;
-import com.helger.commons.collections.ContainerHelper;
+import com.helger.commons.collections.CollectionHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
@@ -66,7 +66,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
                                               eWidthType +
                                               " and " +
                                               aWidth.getType ());
-    m_aWidths = ContainerHelper.newList (aWidths);
+    m_aWidths = CollectionHelper.newList (aWidths);
   }
 
   @Nonnull
@@ -87,7 +87,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   @ReturnsMutableCopy
   public List <WidthSpec> getWidths ()
   {
-    return ContainerHelper.newList (m_aWidths);
+    return CollectionHelper.newList (m_aWidths);
   }
 
   /**
@@ -111,7 +111,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   @Nonnull
   public PLHBoxSplittable addTableRow (@Nullable final AbstractPLElement <?>... aElements)
   {
-    return addTableRow (ContainerHelper.newList (aElements));
+    return addTableRow (CollectionHelper.newList (aElements));
   }
 
   /**
@@ -154,7 +154,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   @Nonnull
   public PLHBoxSplittable addTableRowExt (@Nonnull final PLTableCell... aCells)
   {
-    return addTableRowExt (ContainerHelper.newList (aCells));
+    return addTableRowExt (CollectionHelper.newList (aCells));
   }
 
   /**

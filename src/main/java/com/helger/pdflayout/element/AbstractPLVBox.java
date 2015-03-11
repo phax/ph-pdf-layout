@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.GlobalDebug;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.ReturnsMutableCopy;
-import com.helger.commons.collections.ContainerHelper;
+import com.helger.commons.collections.CollectionHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
@@ -91,7 +91,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @ReturnsMutableCopy
   public List <PLVBoxRow> getAllRows ()
   {
-    return ContainerHelper.newList (m_aRows);
+    return CollectionHelper.newList (m_aRows);
   }
 
   /**
@@ -104,7 +104,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public PLVBoxRow getRowAtIndex (@Nonnegative final int nIndex)
   {
-    return ContainerHelper.getSafe (m_aRows, nIndex);
+    return CollectionHelper.getSafe (m_aRows, nIndex);
   }
 
   /**
@@ -113,7 +113,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public PLVBoxRow getFirstRow ()
   {
-    return ContainerHelper.getFirstElement (m_aRows);
+    return CollectionHelper.getFirstElement (m_aRows);
   }
 
   /**
@@ -122,7 +122,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public PLVBoxRow getLastRow ()
   {
-    return ContainerHelper.getLastElement (m_aRows);
+    return CollectionHelper.getLastElement (m_aRows);
   }
 
   /**

@@ -31,7 +31,7 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.collections.ContainerHelper;
+import com.helger.commons.collections.CollectionHelper;
 import com.helger.commons.io.streams.StreamUtils;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.vendor.VendorInfo;
@@ -142,7 +142,7 @@ public class PageLayoutPDF
   @Nonnull
   public List <? extends PLPageSet> getAllPageSets ()
   {
-    return ContainerHelper.newList (m_aPageSets);
+    return CollectionHelper.newList (m_aPageSets);
   }
 
   /**

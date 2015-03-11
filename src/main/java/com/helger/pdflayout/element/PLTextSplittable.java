@@ -22,7 +22,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.collections.ContainerHelper;
+import com.helger.commons.collections.CollectionHelper;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
@@ -55,7 +55,7 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
 
     // Get the lines in the correct order from top to bottom
     final List <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines
-                                                       : ContainerHelper.getReverseList (m_aPreparedLines);
+                                                       : CollectionHelper.getReverseList (m_aPreparedLines);
 
     int nLines = (int) (fAvailableHeight / fLineHeight);
     if (nLines <= 0)

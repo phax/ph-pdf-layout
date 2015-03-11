@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.GlobalDebug;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.ReturnsMutableCopy;
-import com.helger.commons.collections.ContainerHelper;
+import com.helger.commons.collections.CollectionHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
@@ -95,25 +95,25 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
   @ReturnsMutableCopy
   public List <PLHBoxColumn> getAllColumns ()
   {
-    return ContainerHelper.newList (m_aColumns);
+    return CollectionHelper.newList (m_aColumns);
   }
 
   @Nullable
   public PLHBoxColumn getColumnAtIndex (@Nonnegative final int nIndex)
   {
-    return ContainerHelper.getSafe (m_aColumns, nIndex);
+    return CollectionHelper.getSafe (m_aColumns, nIndex);
   }
 
   @Nullable
   public PLHBoxColumn getFirstColumn ()
   {
-    return ContainerHelper.getFirstElement (m_aColumns);
+    return CollectionHelper.getFirstElement (m_aColumns);
   }
 
   @Nullable
   public PLHBoxColumn getLastColumn ()
   {
-    return ContainerHelper.getLastElement (m_aColumns);
+    return CollectionHelper.getLastElement (m_aColumns);
   }
 
   @Nullable

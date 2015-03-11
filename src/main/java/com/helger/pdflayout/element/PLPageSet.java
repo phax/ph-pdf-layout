@@ -34,7 +34,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.Nonempty;
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.annotations.ReturnsMutableObject;
-import com.helger.commons.collections.ContainerHelper;
+import com.helger.commons.collections.CollectionHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
@@ -106,7 +106,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     @ReturnsMutableCopy
     List <PLElementWithSize> getAllElements ()
     {
-      return ContainerHelper.newList (m_aContentHeight);
+      return CollectionHelper.newList (m_aContentHeight);
     }
 
     /**
@@ -256,7 +256,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   @Nonnull
   public List <? extends AbstractPLElement <?>> getAllElements ()
   {
-    return ContainerHelper.newList (m_aElements);
+    return CollectionHelper.newList (m_aElements);
   }
 
   @Nonnull

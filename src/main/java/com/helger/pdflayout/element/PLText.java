@@ -32,7 +32,7 @@ import com.helger.commons.annotations.Nonempty;
 import com.helger.commons.annotations.OverrideOnDemand;
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.charset.CCharset;
-import com.helger.commons.collections.ContainerHelper;
+import com.helger.commons.collections.CollectionHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
@@ -240,7 +240,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
     if (!m_bTopDown)
     {
       // Reverse order only once
-      m_aPreparedLines = ContainerHelper.getReverseInlineList (m_aPreparedLines);
+      m_aPreparedLines = CollectionHelper.getReverseInlineList (m_aPreparedLines);
     }
   }
 
@@ -272,7 +272,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
   {
     if (m_aPreparedLinesUnmodified == null)
       throw new IllegalStateException ("Preparation is not yet done");
-    return ContainerHelper.newList (m_aPreparedLinesUnmodified);
+    return CollectionHelper.newList (m_aPreparedLinesUnmodified);
   }
 
   /**
@@ -387,7 +387,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
     ValueEnforcer.notEmpty (aLines, "Lines");
 
     // Create a copy to be independent!
-    final List <TextAndWidthSpec> aLineCopy = ContainerHelper.newList (aLines);
+    final List <TextAndWidthSpec> aLineCopy = CollectionHelper.newList (aLines);
 
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));
