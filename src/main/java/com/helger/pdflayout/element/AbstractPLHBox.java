@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -138,20 +139,62 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
   }
 
   @Nonnull
-  public PLHBoxColumn addAndReturnColumn (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final WidthSpec aWidth)
+  private PLHBoxColumn _addAndReturnColumn (@CheckForSigned final int nIndex,
+                                            @Nonnull final AbstractPLElement <?> aElement,
+                                            @Nonnull final WidthSpec aWidth)
   {
     checkNotPrepared ();
     final PLHBoxColumn aItem = new PLHBoxColumn (aElement, aWidth);
-    m_aColumns.add (aItem);
+    if (nIndex < 0 || nIndex >= m_aColumns.size ())
+      m_aColumns.add (aItem);
+    else
+      m_aColumns.add (nIndex, aItem);
     if (aWidth.isStar ())
       m_nStarWidthItems++;
     return aItem;
   }
 
   @Nonnull
+  public PLHBoxColumn addAndReturnColumn (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final WidthSpec aWidth)
+  {
+    checkNotPrepared ();
+    return _addAndReturnColumn (-1, aElement, aWidth);
+  }
+
+  @Nonnull
   public IMPLTYPE addColumn (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final WidthSpec aWidth)
   {
     addAndReturnColumn (aElement, aWidth);
+    return thisAsT ();
+  }
+
+  @Nonnull
+  public PLHBoxColumn addAndReturnColumn (@Nonnegative final int nIndex,
+                                          @Nonnull final AbstractPLElement <?> aElement,
+                                          @Nonnull final WidthSpec aWidth)
+  {
+    ValueEnforcer.isGE0 (nIndex, "Index");
+    checkNotPrepared ();
+    return _addAndReturnColumn (nIndex, aElement, aWidth);
+  }
+
+  @Nonnull
+  public IMPLTYPE addColumn (@Nonnegative final int nIndex,
+                             @Nonnull final AbstractPLElement <?> aElement,
+                             @Nonnull final WidthSpec aWidth)
+  {
+    addAndReturnColumn (nIndex, aElement, aWidth);
+    return thisAsT ();
+  }
+
+  @Nonnull
+  public IMPLTYPE removeColumn (@Nonnegative final int nIndex)
+  {
+    ValueEnforcer.isGE0 (nIndex, "Index");
+    checkNotPrepared ();
+    final PLHBoxColumn aColumn = m_aColumns.remove (nIndex);
+    if (aColumn.getWidth ().isStar ())
+      m_nStarWidthItems--;
     return thisAsT ();
   }
 

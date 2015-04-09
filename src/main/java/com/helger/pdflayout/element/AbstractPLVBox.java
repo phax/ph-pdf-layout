@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -161,6 +162,17 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     return aRow == null ? null : aRow.getElement ();
   }
 
+  @Nonnull
+  private PLVBoxRow _addAndReturnRow (@CheckForSigned final int nIndex, @Nonnull final AbstractPLElement <?> aElement)
+  {
+    final PLVBoxRow aItem = new PLVBoxRow (aElement);
+    if (nIndex < 0 || nIndex >= m_aRows.size ())
+      m_aRows.add (aItem);
+    else
+      m_aRows.add (nIndex, aItem);
+    return aItem;
+  }
+
   /**
    * Add a row to this VBox.
    *
@@ -172,9 +184,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public PLVBoxRow addAndReturnRow (@Nonnull final AbstractPLElement <?> aElement)
   {
     checkNotPrepared ();
-    final PLVBoxRow aItem = new PLVBoxRow (aElement);
-    m_aRows.add (aItem);
-    return aItem;
+    return _addAndReturnRow (-1, aElement);
   }
 
   /**
@@ -205,12 +215,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
     checkNotPrepared ();
-    final PLVBoxRow aItem = new PLVBoxRow (aElement);
-    if (nIndex >= m_aRows.size ())
-      m_aRows.add (aItem);
-    else
-      m_aRows.add (nIndex, aItem);
-    return aItem;
+    return _addAndReturnRow (nIndex, aElement);
   }
 
   /**
@@ -226,6 +231,15 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public IMPLTYPE addRow (@Nonnegative final int nIndex, @Nonnull final AbstractPLElement <?> aElement)
   {
     addAndReturnRow (nIndex, aElement);
+    return thisAsT ();
+  }
+
+  @Nonnull
+  public IMPLTYPE removeRow (@Nonnegative final int nIndex)
+  {
+    ValueEnforcer.isGE0 (nIndex, "Index");
+    checkNotPrepared ();
+    m_aRows.remove (nIndex);
     return thisAsT ();
   }
 
