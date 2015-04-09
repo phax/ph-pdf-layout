@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.CGlobal;
@@ -29,17 +30,66 @@ import com.helger.commons.annotations.PresentForCodeCoverage;
 @Immutable
 public final class CPageLayoutPDF
 {
+  /** Default user space unit DPI */
   public static final int DEFAULT_USER_SPACE_UNIT_DPI = 72;
-
-  /** Conversion rate from MM to PDF units */
-  public static final float MM_TO_UNITS = 1 / CGlobal.MM_PER_INCH * DEFAULT_USER_SPACE_UNIT_DPI;
-
-  /** Conversion rate from CEM to PDF units */
-  public static final float CM_TO_UNITS = 1 / CGlobal.CM_PER_INCH * DEFAULT_USER_SPACE_UNIT_DPI;
 
   @PresentForCodeCoverage
   private static final CPageLayoutPDF s_aInstance = new CPageLayoutPDF ();
 
   private CPageLayoutPDF ()
   {}
+
+  /**
+   * Utility function to convert from millimeters to PDF units. It uses
+   * {@link #DEFAULT_USER_SPACE_UNIT_DPI} for the DPIs.
+   *
+   * @param fMillimeters
+   *        Source millimeters
+   * @return The PDF units.
+   */
+  public static float mm2units (final float fMillimeters)
+  {
+    return mm2units (fMillimeters, DEFAULT_USER_SPACE_UNIT_DPI);
+  }
+
+  /**
+   * Utility function to convert from millimeters to PDF units.
+   *
+   * @param fMillimeters
+   *        Source millimeters
+   * @param nDPI
+   *        User space DPIs to use.
+   * @return The PDF units.
+   */
+  public static float mm2units (final float fMillimeters, @Nonnegative final int nDPI)
+  {
+    return fMillimeters / CGlobal.MM_PER_INCH * nDPI;
+  }
+
+  /**
+   * Utility function to convert from centimeters to PDF units. It uses
+   * {@link #DEFAULT_USER_SPACE_UNIT_DPI} for the DPIs.
+   *
+   * @param fCentimeters
+   *        Source centimeters
+   * @return The PDF units.
+   */
+  public static float cm2units (final float fCentimeters)
+  {
+    return cm2units (fCentimeters, DEFAULT_USER_SPACE_UNIT_DPI);
+  }
+
+  /**
+   * Utility function to convert from centimeters to PDF units.
+   *
+   * @param fCentimeters
+   *        Source centimeters
+   * @param nDPI
+   *        User space DPIs to use.
+   * @return The PDF units.
+   */
+  public static float cm2units (final float fCentimeters, @Nonnegative final int nDPI)
+  {
+    return fCentimeters / CGlobal.CM_PER_INCH * nDPI;
+  }
 }

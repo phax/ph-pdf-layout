@@ -31,7 +31,7 @@ public final class CPageLayoutPDFTest
   @Test
   public void testBasic ()
   {
-    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), 210 * CPageLayoutPDF.MM_TO_UNITS, 0.001f);
-    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), 21 * CPageLayoutPDF.CM_TO_UNITS, 0.001f);
+    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), CPageLayoutPDF.mm2units (210), 0.001f);
+    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), CPageLayoutPDF.cm2units (21), 0.001f);
   }
 }
