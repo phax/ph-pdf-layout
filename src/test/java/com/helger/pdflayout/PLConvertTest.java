@@ -22,16 +22,16 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.junit.Test;
 
 /**
- * Test class for class {@link CPageLayoutPDF}.
+ * Test class for class {@link PLConvert}.
  *
  * @author Philip Helger
  */
-public final class CPageLayoutPDFTest
+public final class PLConvertTest
 {
   @Test
   public void testBasic ()
   {
-    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), CPageLayoutPDF.mm2units (210), 0.001f);
-    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), CPageLayoutPDF.cm2units (21), 0.001f);
+    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), PLConvert.mm2units (210), 0.001f);
+    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), PLConvert.cm2units (21), 0.001f);
   }
 }

@@ -23,20 +23,20 @@ import com.helger.commons.CGlobal;
 import com.helger.commons.annotations.PresentForCodeCoverage;
 
 /**
- * Constants for this project.
+ * Conversion utility methods for this project.
  *
  * @author Philip Helger
  */
 @Immutable
-public final class CPageLayoutPDF
+public final class PLConvert
 {
   /** Default user space unit DPI */
   public static final int DEFAULT_USER_SPACE_UNIT_DPI = 72;
 
   @PresentForCodeCoverage
-  private static final CPageLayoutPDF s_aInstance = new CPageLayoutPDF ();
+  private static final PLConvert s_aInstance = new PLConvert ();
 
-  private CPageLayoutPDF ()
+  private PLConvert ()
   {}
 
   /**
