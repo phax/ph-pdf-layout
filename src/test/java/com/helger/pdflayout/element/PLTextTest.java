@@ -30,6 +30,7 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.spec.BorderStyleSpec;
+import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PDFFont;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -139,5 +140,26 @@ public final class PLTextTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext-split-vbox.pdf"));
+  }
+
+  @Test
+  public void testVerticalAlign () throws PDFCreationException
+  {
+    final String s = "Test text for vertical align";
+    final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (40);
+    if (false)
+      System.out.println ("Available size: " + aPS1.getAvailableWidth () + "x" + aPS1.getAvailableHeight ());
+
+    final PLHBox aHBox = new PLHBox ();
+    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100).setVertAlign (EVertAlignment.TOP), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100).setVertAlign (EVertAlignment.MIDDLE), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100).setVertAlign (EVertAlignment.BOTTOM), WidthSpec.star ());
+    aPS1.addElement (aHBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext-vertical-align.pdf"));
   }
 }
