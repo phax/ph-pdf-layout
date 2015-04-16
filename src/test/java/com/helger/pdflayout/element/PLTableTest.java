@@ -112,7 +112,8 @@ public final class PLTableTest
                                                                                                                    .setMargin (aMargin),
                                  new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
                                                                            .setMargin (aMargin)
-                                                                           .setHorzAlign (EHorzAlignment.CENTER),
+                                                                           .setHorzAlign (EHorzAlignment.CENTER)
+                                                                           .setVertAlign (EVertAlignment.MIDDLE),
                                  new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
                                                                            .setMargin (aMargin)
                                                                            .setHorzAlign (EHorzAlignment.RIGHT));
