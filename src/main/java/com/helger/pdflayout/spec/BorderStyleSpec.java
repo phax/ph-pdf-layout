@@ -21,6 +21,7 @@ import java.awt.Color;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.MustImplementEqualsAndHashcode;
 import com.helger.commons.hash.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
@@ -28,7 +29,7 @@ import com.helger.commons.string.ToStringGenerator;
 /**
  * This class contains the styling of a single border part. Currently only the
  * color can be set.
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -61,10 +62,8 @@ public class BorderStyleSpec
 
   public BorderStyleSpec (@Nonnull final Color aColor, @Nonnull final LineDashPatternSpec aLineDashPattern)
   {
-    if (aColor == null)
-      throw new NullPointerException ("Color");
-    if (aLineDashPattern == null)
-      throw new NullPointerException ("LineDashPattern");
+    ValueEnforcer.notNull (aColor, "Color");
+    ValueEnforcer.notNull (aLineDashPattern, "LineDashPattern");
 
     m_aColor = aColor;
     m_aLineDashPattern = aLineDashPattern;
