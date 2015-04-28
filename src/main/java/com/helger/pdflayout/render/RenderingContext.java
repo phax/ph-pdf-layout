@@ -25,10 +25,10 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotations.Nonempty;
 import com.helger.commons.annotations.ReturnsMutableCopy;
 import com.helger.commons.collections.CollectionHelper;
-import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.StringParser;
 
 /**
@@ -102,10 +102,8 @@ public final class RenderingContext
                            final float fWidth,
                            final float fHeight)
   {
-    if (eElementType == null)
-      throw new NullPointerException ("ElementType");
-    if (aCS == null)
-      throw new NullPointerException ("ContentStream");
+    ValueEnforcer.notNull (eElementType, "ElementType");
+    ValueEnforcer.notNull (aCS, "ContentStream");
     m_eElementType = eElementType;
     m_aCS = aCS;
     m_bDebugMode = bDebugMode;
@@ -186,10 +184,8 @@ public final class RenderingContext
   @Nonnull
   public RenderingContext setPlaceholder (@Nonnull @Nonempty final String sName, @Nonnull final String sValue)
   {
-    if (StringHelper.hasNoText (sName))
-      throw new NullPointerException ("name");
-    if (sValue == null)
-      throw new NullPointerException ("value");
+    ValueEnforcer.notEmpty (sName, "Name");
+    ValueEnforcer.notNull (sValue, "Value");
     m_aPlaceholders.put (sName, sValue);
     return this;
   }

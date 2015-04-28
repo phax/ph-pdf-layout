@@ -31,6 +31,7 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.collections.CollectionHelper;
 import com.helger.commons.io.streams.StreamUtils;
 import com.helger.commons.string.StringHelper;
@@ -153,8 +154,7 @@ public class PageLayoutPDF
    */
   public void addPageSet (@Nonnull final PLPageSet aPageSet)
   {
-    if (aPageSet == null)
-      throw new NullPointerException ("PageSet");
+    ValueEnforcer.notNull (aPageSet, "PageSet");
     m_aPageSets.add (aPageSet);
   }
 
@@ -225,7 +225,7 @@ public class PageLayoutPDF
         nPageSetIndex++;
       }
 
-      // Start applying all page sets
+      // Start applying all page sets - real rendering
       nPageSetIndex = 0;
       int nTotalPageIndex = 0;
       for (final PLPageSet aPageSet : m_aPageSets)

@@ -646,7 +646,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
             renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
         }
 
-        // Start with the page rect
+        // Start with the page rectangle
         if (m_aPageHeader != null)
         {
           // Page header does not care about page padding
