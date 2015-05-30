@@ -25,10 +25,10 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.file.FileUtils;
 import com.helger.commons.mock.DebugModeTestRule;
-import com.helger.pdflayout.PDFCreationException;
-import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.PLHBox;
 import com.helger.pdflayout.element.PLPageSet;
+import com.helger.pdflayout.element.PLSpacerX;
+import com.helger.pdflayout.element.PLSpacerY;
 import com.helger.pdflayout.element.PLText;
 import com.helger.pdflayout.element.PLTextWithPlaceholders;
 import com.helger.pdflayout.element.PLVBox;
@@ -175,5 +175,122 @@ public final class PageLayoutPDFTest
     aPageLayout.addPageSet (aPS2);
     aPageLayout.addPageSet (aPS3);
     aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test1.pdf"));
+  }
+
+  @Test
+  public void testCreatePDFProperties () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (30);
+    aPS1.addElement (new PLText ("Dummy line", r10));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.setDocumentAuthor ("Weird author äöü");
+    aPageLayout.setDocumentTitle ("Special chars €!\"§$%&/()=\uFFE5");
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-properties.pdf"));
+  }
+
+  @Test
+  public void testPageLayoutPDFMarginPadding () throws PDFCreationException
+  {
+    final String sLID = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
+    final String sLIDShort = sLID.substring (0, sLID.length () / 3);
+
+    final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (10, 20, 30, 40)
+                                                              .setPadding (10, 20, 30, 40)
+                                                              .setFillColor (new Color (0xeeeeee));
+    aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
+                                                    .setPadding (0, 4)
+                                                    .setHorzAlign (EHorzAlignment.CENTER));
+    aPS1.setPageFooter (new PLTextWithPlaceholders ("Page " +
+                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                                    " of " +
+                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_COUNT, r10).setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                                                      .setMarginTop (10)
+                                                                                                      .setPadding (10,
+                                                                                                                   4)
+                                                                                                      .setHorzAlign (EHorzAlignment.RIGHT));
+    {
+      final PLHBox h = new PLHBox ().setMargin (0, -20, -30, 10)
+                                    .setPadding (5)
+                                    .setColumnFillColor (new Color (0xbbbbbb));
+      if (false)
+        h.setBorder (new BorderStyleSpec (Color.RED)).setColumnBorder (new BorderStyleSpec (Color.GREEN));
+
+      h.addColumn (new PLText (sLID, r10).setHorzAlign (EHorzAlignment.CENTER).setPadding (20, 0), WidthSpec.star ());
+
+      final PLVBox v1 = new PLVBox ().setPadding (5).setFillColor (new Color (0xabcdef));
+      if (false)
+        v1.setBorder (new BorderStyleSpec (Color.RED)).setRowBorder (new BorderStyleSpec (Color.GREEN));
+      v1.addRow (new PLText (sLIDShort, r10).setMargin (0).setPadding (10).setBorder (new BorderStyleSpec (Color.BLUE)));
+      v1.addRow (new PLText (sLIDShort, r10).setMargin (5)
+                                            .setPadding (5)
+                                            .setBorder (new BorderStyleSpec (Color.BLUE, LineDashPatternSpec.DASHED_2)));
+      v1.addRow (new PLText (sLIDShort, r10).setMargin (10).setPadding (0).setBorder (new BorderStyleSpec (Color.BLUE)));
+      h.addColumn (v1, WidthSpec.star ());
+
+      final PLVBox v2 = new PLVBox ();
+      v2.addRow (new PLText (sLIDShort, r10).setHorzAlign (EHorzAlignment.RIGHT));
+      v2.addRow (new PLText (sLIDShort, r10).setHorzAlign (EHorzAlignment.RIGHT).setFillColor (new Color (0xdddddd)));
+      v2.addRow (new PLText (sLIDShort, r10).setHorzAlign (EHorzAlignment.RIGHT));
+      h.addColumn (v2, WidthSpec.star ());
+      aPS1.addElement (h);
+    }
+    if (true)
+    {
+      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.WHITE)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                      .setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                                      .setFillColor (Color.RED)
+                                                                                      .setMargin (0)
+                                                                                      .setPadding (10));
+      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                    .setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                                    .setFillColor (Color.GREEN)
+                                                                                    .setMargin (5)
+                                                                                    .setPadding (5));
+      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.WHITE)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                      .setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                                      .setFillColor (Color.BLUE)
+                                                                                      .setMargin (10)
+                                                                                      .setPadding (0));
+      aPS1.addElement (new PLText (sLID, r10).setFillColor (new Color (0xabcdef)));
+    }
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test2.pdf"));
+  }
+
+  @Test
+  public void testDINLetter () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4);
+    {
+      final PLVBox aVBox = new PLVBox ();
+      final PLHBox aHBox = new PLHBox ();
+      aHBox.addColumn (new PLSpacerX (), WidthSpec.abs (PLConvert.mm2units (20)));
+      {
+        final PLVBox aWindow = new PLVBox ();
+        aWindow.addRow (new PLSpacerY (PLConvert.mm2units (42)));
+        aWindow.addRow (new PLText ("Hr. MaxMustermann\nMusterstraße 15\nA-1010 Wien", r10).setExactSize (PLConvert.mm2units (90),
+                                                                                                          PLConvert.mm2units (45)));
+        aWindow.addRow (new PLSpacerY (PLConvert.mm2units (12)));
+        aHBox.addColumn (aWindow, WidthSpec.abs (PLConvert.mm2units (90)));
+      }
+      aHBox.addColumn (new PLSpacerX (), WidthSpec.star ());
+      aVBox.addRow (aHBox);
+      aPS1.addElement (aVBox);
+    }
+    aPS1.addElement (new PLSpacerY (PLConvert.mm2units (99)));
+    aPS1.addElement (new PLSpacerY (PLConvert.mm2units (98.5f)));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-din-letter.pdf"));
   }
 }
