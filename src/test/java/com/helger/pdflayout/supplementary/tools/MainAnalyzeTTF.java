@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.util;
+package com.helger.pdflayout.supplementary.tools;
 
 import org.apache.fontbox.ttf.CMAPEncodingEntry;
 import org.apache.fontbox.ttf.CMAPTable;
@@ -25,7 +25,7 @@ import com.helger.commons.io.IReadableResource;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.string.StringHelper;
 
-public class AnalyzeTTF
+public class MainAnalyzeTTF
 {
   public static void main (final String [] args) throws Exception
   {
