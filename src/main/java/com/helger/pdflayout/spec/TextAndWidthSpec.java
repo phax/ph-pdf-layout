@@ -22,14 +22,14 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.commons.annotations.MustImplementEqualsAndHashcode;
-import com.helger.commons.equals.EqualsUtils;
-import com.helger.commons.hash.HashCodeGenerator;
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
  * This class wraps a text with a specified rendering width.
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -67,7 +67,7 @@ public class TextAndWidthSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final TextAndWidthSpec rhs = (TextAndWidthSpec) o;
-    return m_sText.equals (rhs.m_sText) && EqualsUtils.equals (m_fWidth, rhs.m_fWidth);
+    return m_sText.equals (rhs.m_sText) && EqualsHelper.equals (m_fWidth, rhs.m_fWidth);
   }
 
   @Override

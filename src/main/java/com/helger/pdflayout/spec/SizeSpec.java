@@ -23,14 +23,14 @@ import javax.annotation.concurrent.Immutable;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotations.MustImplementEqualsAndHashcode;
-import com.helger.commons.equals.EqualsUtils;
-import com.helger.commons.hash.HashCodeGenerator;
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
  * This class defines a size.
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -44,7 +44,7 @@ public class SizeSpec
 
   /**
    * Constructor
-   * 
+   *
    * @param fWidth
    *        Width. Must be &ge; 0.
    * @param fHeight
@@ -103,7 +103,7 @@ public class SizeSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final SizeSpec rhs = (SizeSpec) o;
-    return EqualsUtils.equals (m_fWidth, rhs.m_fWidth) && EqualsUtils.equals (m_fHeight, rhs.m_fHeight);
+    return EqualsHelper.equals (m_fWidth, rhs.m_fWidth) && EqualsHelper.equals (m_fHeight, rhs.m_fHeight);
   }
 
   @Override

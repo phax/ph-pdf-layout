@@ -21,8 +21,8 @@ import org.apache.fontbox.ttf.CMAPTable;
 import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
 
-import com.helger.commons.io.IReadableResource;
 import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.io.resource.IReadableResource;
 import com.helger.commons.string.StringHelper;
 
 public class MainAnalyzeTTF

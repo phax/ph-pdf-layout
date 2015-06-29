@@ -24,11 +24,11 @@ import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotations.Nonempty;
-import com.helger.commons.annotations.OverrideOnDemand;
-import com.helger.commons.id.IHasSimpleIntID;
-import com.helger.commons.idfactory.GlobalIDFactory;
-import com.helger.commons.lang.CGStringHelper;
+import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.OverrideOnDemand;
+import com.helger.commons.id.IHasIntID;
+import com.helger.commons.id.factory.GlobalIDFactory;
+import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
 import com.helger.pdflayout.spec.BorderSpec;
@@ -44,7 +44,7 @@ import com.helger.pdflayout.spec.PaddingSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>> implements IHasSimpleIntID
+public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>> implements IHasIntID
 {
   private final int m_nElementID;
   private MarginSpec m_aMargin = MarginSpec.MARGIN0;
@@ -79,7 +79,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   @Nonempty
   public final String getDebugID ()
   {
-    return CGStringHelper.getClassLocalName (this) + "-" + m_nElementID;
+    return ClassHelper.getClassLocalName (this) + "-" + m_nElementID;
   }
 
   @Nonnull

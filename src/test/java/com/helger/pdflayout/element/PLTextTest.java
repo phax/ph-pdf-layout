@@ -24,8 +24,8 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.commons.CGlobal;
-import com.helger.commons.io.file.FileUtils;
-import com.helger.commons.mock.DebugModeTestRule;
+import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
@@ -73,7 +73,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext.pdf"));
   }
 
   @Test
@@ -97,7 +97,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext-split.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split.pdf"));
   }
 
   @Test
@@ -117,7 +117,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext-split-hbox.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split-hbox.pdf"));
   }
 
   @Test
@@ -139,7 +139,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext-split-vbox.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split-vbox.pdf"));
   }
 
   @Test
@@ -160,6 +160,6 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-pltext-vertical-align.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-vertical-align.pdf"));
   }
 }

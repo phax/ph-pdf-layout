@@ -27,7 +27,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.io.IInputStreamProvider;
+import com.helger.commons.io.IHasInputStream;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
@@ -39,7 +39,7 @@ import com.helger.pdflayout.spec.SizeSpec;
 
 /**
  * Render an image
- * 
+ *
  * @author Philip Helger
  */
 public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizontalAlignment <PLImage>, IPLHasVerticalAlignment <PLImage>
@@ -48,7 +48,7 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
   public static final EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
 
   private final BufferedImage m_aImage;
-  private final IInputStreamProvider m_aIIS;
+  private final IHasInputStream m_aIIS;
   private final float m_fWidth;
   private final float m_fHeight;
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
@@ -74,7 +74,7 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
     m_fHeight = fHeight;
   }
 
-  public PLImage (@Nonnull final IInputStreamProvider aImage,
+  public PLImage (@Nonnull final IHasInputStream aImage,
                   @Nonnegative final float fWidth,
                   @Nonnegative final float fHeight)
   {
@@ -95,7 +95,7 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
   }
 
   @Nullable
-  public IInputStreamProvider getIIS ()
+  public IHasInputStream getIIS ()
   {
     return m_aIIS;
   }

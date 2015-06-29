@@ -23,8 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotations.OverrideOnDemand;
-import com.helger.commons.lang.CGStringHelper;
+import com.helger.commons.annotation.OverrideOnDemand;
+import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.render.PDPageContentStreamWithCache;
@@ -42,8 +42,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends
-                                                                                        AbstractPLBaseElement <IMPLTYPE>
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends AbstractPLBaseElement <IMPLTYPE>
 {
   private SizeSpec m_aMinSize = SizeSpec.SIZE0;
   private SizeSpec m_aMaxSize = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
@@ -285,9 +284,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public final void perform (@Nonnull final RenderingContext aCtx) throws IOException
   {
     if (!m_bPrepared)
-      throw new IllegalStateException ("Element " +
-                                       CGStringHelper.getClassLocalName (getClass ()) +
-                                       " was never prepared!");
+      throw new IllegalStateException ("Element " + ClassHelper.getClassLocalName (this) + " was never prepared!");
 
     if (PLDebug.isDebugRender ())
       PLDebug.debugRender (this, "rendering at " + aCtx.getStartLeft () + " & " + aCtx.getStartTop ());

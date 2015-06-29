@@ -23,8 +23,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.io.file.FileUtils;
-import com.helger.commons.mock.DebugModeTestRule;
+import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.element.PLHBox;
 import com.helger.pdflayout.element.PLPageSet;
 import com.helger.pdflayout.element.PLSpacerX;
@@ -174,7 +174,7 @@ public final class PageLayoutPDFTest
     aPageLayout.addPageSet (aPS1);
     aPageLayout.addPageSet (aPS2);
     aPageLayout.addPageSet (aPS3);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test1.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test1.pdf"));
   }
 
   @Test
@@ -189,7 +189,7 @@ public final class PageLayoutPDFTest
     aPageLayout.setDocumentAuthor ("Weird author äöü");
     aPageLayout.setDocumentTitle ("Special chars €!\"§$%&/()=\uFFE5");
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-properties.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-properties.pdf"));
   }
 
   @Test
@@ -261,7 +261,7 @@ public final class PageLayoutPDFTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test2.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test2.pdf"));
   }
 
   @Test
@@ -291,6 +291,6 @@ public final class PageLayoutPDFTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-din-letter.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-din-letter.pdf"));
   }
 }

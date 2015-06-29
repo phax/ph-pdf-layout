@@ -18,7 +18,7 @@ package com.helger.pdflayout.element;
 
 import javax.annotation.Nullable;
 
-import com.helger.commons.collections.ArrayHelper;
+import com.helger.commons.collection.ArrayHelper;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;

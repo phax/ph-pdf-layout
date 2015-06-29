@@ -19,14 +19,14 @@ package com.helger.pdflayout.spec;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.commons.annotations.MustImplementEqualsAndHashcode;
-import com.helger.commons.equals.EqualsUtils;
-import com.helger.commons.hash.HashCodeGenerator;
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
  * Defines a rectangular padding.
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -124,7 +124,7 @@ public class PaddingSpec
   @Nonnull
   public PaddingSpec getCloneWithLeft (final float fLeft)
   {
-    if (EqualsUtils.equals (fLeft, m_fLeft))
+    if (EqualsHelper.equals (fLeft, m_fLeft))
       return this;
     return new PaddingSpec (fLeft, m_fTop, m_fRight, m_fBottom);
   }
@@ -132,7 +132,7 @@ public class PaddingSpec
   @Nonnull
   public PaddingSpec getCloneWithTop (final float fTop)
   {
-    if (EqualsUtils.equals (fTop, m_fTop))
+    if (EqualsHelper.equals (fTop, m_fTop))
       return this;
     return new PaddingSpec (m_fLeft, fTop, m_fRight, m_fBottom);
   }
@@ -140,7 +140,7 @@ public class PaddingSpec
   @Nonnull
   public PaddingSpec getCloneWithRight (final float fRight)
   {
-    if (EqualsUtils.equals (fRight, m_fRight))
+    if (EqualsHelper.equals (fRight, m_fRight))
       return this;
     return new PaddingSpec (m_fLeft, m_fTop, fRight, m_fBottom);
   }
@@ -148,7 +148,7 @@ public class PaddingSpec
   @Nonnull
   public PaddingSpec getCloneWithBottom (final float fBottom)
   {
-    if (EqualsUtils.equals (fBottom, m_fBottom))
+    if (EqualsHelper.equals (fBottom, m_fBottom))
       return this;
     return new PaddingSpec (m_fLeft, m_fTop, m_fRight, fBottom);
   }
@@ -161,10 +161,10 @@ public class PaddingSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final PaddingSpec rhs = (PaddingSpec) o;
-    return EqualsUtils.equals (m_fLeft, rhs.m_fLeft) &&
-           EqualsUtils.equals (m_fTop, rhs.m_fTop) &&
-           EqualsUtils.equals (m_fRight, rhs.m_fRight) &&
-           EqualsUtils.equals (m_fBottom, rhs.m_fBottom);
+    return EqualsHelper.equals (m_fLeft, rhs.m_fLeft) &&
+           EqualsHelper.equals (m_fTop, rhs.m_fTop) &&
+           EqualsHelper.equals (m_fRight, rhs.m_fRight) &&
+           EqualsHelper.equals (m_fBottom, rhs.m_fBottom);
   }
 
   @Override

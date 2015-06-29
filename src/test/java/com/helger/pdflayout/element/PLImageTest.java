@@ -26,15 +26,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.io.file.FileUtils;
+import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.mock.DebugModeTestRule;
+import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
-import com.helger.pdflayout.element.PLHBox;
-import com.helger.pdflayout.element.PLImage;
-import com.helger.pdflayout.element.PLPageSet;
-import com.helger.pdflayout.element.PLText;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PDFFont;
@@ -42,7 +38,7 @@ import com.helger.pdflayout.spec.WidthSpec;
 
 /**
  * TEst class for {@link PLImage}
- * 
+ *
  * @author Philip Helger
  */
 public final class PLImageTest
@@ -70,6 +66,6 @@ public final class PLImageTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-plimage.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plimage.pdf"));
   }
 }

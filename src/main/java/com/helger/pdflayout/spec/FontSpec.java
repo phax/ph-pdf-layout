@@ -26,10 +26,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.commons.annotations.MustImplementEqualsAndHashcode;
-import com.helger.commons.annotations.ReturnsMutableCopy;
-import com.helger.commons.equals.EqualsUtils;
-import com.helger.commons.hash.HashCodeGenerator;
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
@@ -174,7 +174,7 @@ public class FontSpec
   {
     if (fNewFontSize <= 0)
       throw new IllegalArgumentException ("Font size is invalid: " + fNewFontSize);
-    if (EqualsUtils.equals (fNewFontSize, m_fFontSize))
+    if (EqualsHelper.equals (fNewFontSize, m_fFontSize))
       return this;
     return new FontSpec (m_aFont, fNewFontSize, m_aColor);
   }
@@ -205,7 +205,7 @@ public class FontSpec
       return false;
     final FontSpec rhs = (FontSpec) o;
     return m_aFont.equals (rhs.m_aFont) &&
-           EqualsUtils.equals (m_fFontSize, rhs.m_fFontSize) &&
+           EqualsHelper.equals (m_fFontSize, rhs.m_fFontSize) &&
            m_aColor.equals (rhs.m_aColor);
   }
 

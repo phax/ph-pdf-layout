@@ -20,15 +20,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.commons.annotations.MustImplementEqualsAndHashcode;
-import com.helger.commons.equals.EqualsUtils;
-import com.helger.commons.hash.HashCodeGenerator;
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
  * This class represents a border around a single element. Each side can be
  * styled separately.
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -45,7 +45,7 @@ public class BorderSpec
 
   /**
    * Constructor.
-   * 
+   *
    * @param aBorder
    *        The border to set for all sides (left, top, right, bottom). Maybe
    *        <code>null</code>.
@@ -57,7 +57,7 @@ public class BorderSpec
 
   /**
    * Constructor.
-   * 
+   *
    * @param aBorderX
    *        The border to set for left and right. Maybe <code>null</code>.
    * @param aBorderY
@@ -70,7 +70,7 @@ public class BorderSpec
 
   /**
    * Constructor.
-   * 
+   *
    * @param aBorderLeft
    *        The border to set for left. Maybe <code>null</code>.
    * @param aBorderTop
@@ -116,9 +116,9 @@ public class BorderSpec
    */
   public boolean areAllBordersEqual ()
   {
-    return EqualsUtils.equals (m_aLeft, m_aTop) &&
-           EqualsUtils.equals (m_aLeft, m_aRight) &&
-           EqualsUtils.equals (m_aLeft, m_aBottom);
+    return EqualsHelper.equals (m_aLeft, m_aTop) &&
+           EqualsHelper.equals (m_aLeft, m_aRight) &&
+           EqualsHelper.equals (m_aLeft, m_aBottom);
   }
 
   /**
@@ -160,7 +160,7 @@ public class BorderSpec
   @Nonnull
   public BorderSpec getCloneWithLeft (@Nullable final BorderStyleSpec aLeft)
   {
-    if (EqualsUtils.equals (aLeft, m_aLeft))
+    if (EqualsHelper.equals (aLeft, m_aLeft))
       return this;
     return new BorderSpec (aLeft, m_aTop, m_aRight, m_aBottom);
   }
@@ -168,7 +168,7 @@ public class BorderSpec
   @Nonnull
   public BorderSpec getCloneWithTop (@Nullable final BorderStyleSpec aTop)
   {
-    if (EqualsUtils.equals (aTop, m_aTop))
+    if (EqualsHelper.equals (aTop, m_aTop))
       return this;
     return new BorderSpec (m_aLeft, aTop, m_aRight, m_aBottom);
   }
@@ -176,7 +176,7 @@ public class BorderSpec
   @Nonnull
   public BorderSpec getCloneWithRight (@Nullable final BorderStyleSpec aRight)
   {
-    if (EqualsUtils.equals (aRight, m_aRight))
+    if (EqualsHelper.equals (aRight, m_aRight))
       return this;
     return new BorderSpec (m_aLeft, m_aTop, aRight, m_aBottom);
   }
@@ -184,7 +184,7 @@ public class BorderSpec
   @Nonnull
   public BorderSpec getCloneWithBottom (@Nullable final BorderStyleSpec aBottom)
   {
-    if (EqualsUtils.equals (aBottom, m_aBottom))
+    if (EqualsHelper.equals (aBottom, m_aBottom))
       return this;
     return new BorderSpec (m_aLeft, m_aTop, m_aRight, aBottom);
   }
@@ -197,10 +197,10 @@ public class BorderSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final BorderSpec rhs = (BorderSpec) o;
-    return EqualsUtils.equals (m_aLeft, rhs.m_aLeft) &&
-           EqualsUtils.equals (m_aTop, rhs.m_aTop) &&
-           EqualsUtils.equals (m_aRight, rhs.m_aRight) &&
-           EqualsUtils.equals (m_aBottom, rhs.m_aBottom);
+    return EqualsHelper.equals (m_aLeft, rhs.m_aLeft) &&
+           EqualsHelper.equals (m_aTop, rhs.m_aTop) &&
+           EqualsHelper.equals (m_aRight, rhs.m_aRight) &&
+           EqualsHelper.equals (m_aBottom, rhs.m_aBottom);
   }
 
   @Override

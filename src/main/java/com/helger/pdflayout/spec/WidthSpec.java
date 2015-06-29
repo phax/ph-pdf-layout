@@ -20,9 +20,9 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.commons.annotations.MustImplementEqualsAndHashcode;
-import com.helger.commons.equals.EqualsUtils;
-import com.helger.commons.hash.HashCodeGenerator;
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
@@ -34,7 +34,7 @@ import com.helger.commons.string.ToStringGenerator;
  * <li>star - element width is a relative part of the unused width of the
  * surrounding element</li>
  * </ul>
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -90,7 +90,7 @@ public class WidthSpec
   /**
    * Get the effective width based on the passed available width. This may not
    * be called for star width elements.
-   * 
+   *
    * @param fAvailableWidth
    *        The available width.
    * @return The effective width to use.
@@ -117,7 +117,7 @@ public class WidthSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final WidthSpec rhs = (WidthSpec) o;
-    return m_eType.equals (rhs.m_eType) && EqualsUtils.equals (m_fValue, rhs.m_fValue);
+    return m_eType.equals (rhs.m_eType) && EqualsHelper.equals (m_fValue, rhs.m_fValue);
   }
 
   @Override
@@ -134,7 +134,7 @@ public class WidthSpec
 
   /**
    * Create a width element with an absolute value.
-   * 
+   *
    * @param fValue
    *        The width to use. Must be &gt; 0.
    * @return Never <code>null</code>.
@@ -149,7 +149,7 @@ public class WidthSpec
 
   /**
    * Create a width element with an percentage value.
-   * 
+   *
    * @param fPerc
    *        The width percentage to use. Must be &gt; 0.
    * @return Never <code>null</code>.
@@ -164,7 +164,7 @@ public class WidthSpec
 
   /**
    * Create a new star width element.
-   * 
+   *
    * @return Never <code>null</code>.
    */
   @Nonnull

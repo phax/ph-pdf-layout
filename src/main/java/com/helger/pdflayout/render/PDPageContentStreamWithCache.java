@@ -25,14 +25,14 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
-import com.helger.commons.equals.EqualsUtils;
+import com.helger.commons.equals.EqualsHelper;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 
 /**
  * A special version of PDPageContentStream with an intergated "cache" to avoid
  * setting the same information over and over again.
- * 
+ *
  * @author Philip Helger
  */
 public class PDPageContentStreamWithCache extends PDPageContentStream
@@ -75,7 +75,7 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
 
     if (m_aLastUsedFont == null ||
         !aFont.getFont ().equals (m_aLastUsedFont.getFont ()) ||
-        !EqualsUtils.equals (aFont.getFontSize (), m_aLastUsedFont.getFontSize ()))
+        !EqualsHelper.equals (aFont.getFontSize (), m_aLastUsedFont.getFontSize ()))
     {
       super.setFont (aFont.getFont ().getFont (), aFont.getFontSize ());
       m_aLastUsedFont = aFont;

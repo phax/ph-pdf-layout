@@ -32,8 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.collections.CollectionHelper;
-import com.helger.commons.io.streams.StreamUtils;
+import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.pdflayout.element.PLPageSet;
@@ -271,7 +271,7 @@ public class PageLayoutPDF
       }
 
       // Necessary in case of an exception
-      StreamUtils.close (aOS);
+      StreamHelper.close (aOS);
     }
   }
 }

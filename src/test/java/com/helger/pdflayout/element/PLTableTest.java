@@ -23,8 +23,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.io.file.FileUtils;
-import com.helger.commons.mock.DebugModeTestRule;
+import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.render.RenderPageIndex;
@@ -134,6 +134,6 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileUtils.getOutputStream ("pdf/test-table.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table.pdf"));
   }
 }

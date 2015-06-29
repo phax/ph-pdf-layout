@@ -18,7 +18,7 @@ package com.helger.pdflayout.element;
 
 import javax.annotation.Nonnull;
 
-import com.helger.commons.annotations.OverrideOnDemand;
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.FontSpec;

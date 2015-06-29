@@ -22,16 +22,16 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotations.MustImplementEqualsAndHashcode;
-import com.helger.commons.annotations.ReturnsMutableCopy;
-import com.helger.commons.collections.ArrayHelper;
-import com.helger.commons.equals.EqualsUtils;
-import com.helger.commons.hash.HashCodeGenerator;
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.ArrayHelper;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
  * Different dashed line times
- * 
+ *
  * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
@@ -109,7 +109,7 @@ public class LineDashPatternSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final LineDashPatternSpec rhs = (LineDashPatternSpec) o;
-    return EqualsUtils.equals (m_aPattern, rhs.m_aPattern) && EqualsUtils.equals (m_fPhase, rhs.m_fPhase);
+    return EqualsHelper.equals (m_aPattern, rhs.m_aPattern) && EqualsHelper.equals (m_fPhase, rhs.m_fPhase);
   }
 
   @Override
