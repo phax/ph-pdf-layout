@@ -201,7 +201,7 @@ public class FontSpec
   {
     if (o == this)
       return true;
-    if (!(o instanceof FontSpec))
+    if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final FontSpec rhs = (FontSpec) o;
     return m_aFont.equals (rhs.m_aFont) &&

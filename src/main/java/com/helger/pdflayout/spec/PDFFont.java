@@ -43,7 +43,7 @@ import com.helger.commons.string.ToStringGenerator;
 
 /**
  * This class wraps PDF Fonts and offers some sanity methods.
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -269,7 +269,7 @@ public class PDFFont
   {
     if (o == this)
       return true;
-    if (!(o instanceof PDFFont))
+    if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final PDFFont rhs = (PDFFont) o;
     return m_aFont.equals (rhs.m_aFont);
