@@ -62,7 +62,7 @@
   </developers>
   
   <properties>
-    <pdfbox.version>1.8.9</pdfbox.version>
+    <pdfbox.version>1.8.10</pdfbox.version>
   </properties>
 
   <dependencies>
