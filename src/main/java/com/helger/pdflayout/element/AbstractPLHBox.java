@@ -53,7 +53,7 @@ import com.helger.pdflayout.spec.WidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
+public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
@@ -155,7 +155,8 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
   }
 
   @Nonnull
-  public PLHBoxColumn addAndReturnColumn (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final WidthSpec aWidth)
+  public PLHBoxColumn addAndReturnColumn (@Nonnull final AbstractPLElement <?> aElement,
+                                          @Nonnull final WidthSpec aWidth)
   {
     checkNotPrepared ();
     return _addAndReturnColumn (-1, aElement, aWidth);
@@ -448,8 +449,8 @@ public class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
           {
             aElement.markAsNotPrepared ();
             aElement.setPaddingTop (aElement.getPaddingTop () + fPaddingTop);
-            aElement.markAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex], m_aPreparedColumnHeight[nIndex] +
-                                                                                   fPaddingTop));
+            aElement.markAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex],
+                                                   m_aPreparedColumnHeight[nIndex] + fPaddingTop));
           }
         }
         ++nIndex;
