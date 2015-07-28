@@ -20,6 +20,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
@@ -43,9 +44,9 @@ public class WidthSpec
 {
   public static enum EWidthType
   {
-    ABSOLUTE,
-    PERCENTAGE,
-    STAR;
+   ABSOLUTE,
+   PERCENTAGE,
+   STAR;
   }
 
   private final EWidthType m_eType;
@@ -53,8 +54,7 @@ public class WidthSpec
 
   public WidthSpec (@Nonnull final EWidthType eType, final float fValue)
   {
-    if (eType == null)
-      throw new NullPointerException ("type");
+    ValueEnforcer.notNull (eType, "WidthType");
     m_eType = eType;
     m_fValue = fValue;
   }
@@ -142,8 +142,7 @@ public class WidthSpec
   @Nonnull
   public static WidthSpec abs (@Nonnegative final float fValue)
   {
-    if (fValue <= 0)
-      throw new IllegalArgumentException ("Value must be > 0!");
+    ValueEnforcer.isGT0 (fValue, "Value");
     return new WidthSpec (EWidthType.ABSOLUTE, fValue);
   }
 
@@ -157,8 +156,7 @@ public class WidthSpec
   @Nonnull
   public static WidthSpec perc (@Nonnegative final float fPerc)
   {
-    if (fPerc <= 0)
-      throw new IllegalArgumentException ("Perc must be > 0: " + fPerc);
+    ValueEnforcer.isGT0 (fPerc, "Perc");
     return new WidthSpec (EWidthType.PERCENTAGE, fPerc);
   }
 

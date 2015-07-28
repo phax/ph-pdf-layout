@@ -18,12 +18,13 @@ package com.helger.pdflayout.element;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
  * Wraps an {@link AbstractPLElement} and stores the height.
- * 
+ *
  * @author Philip Helger
  */
 public final class PLElementWithSize
@@ -34,7 +35,7 @@ public final class PLElementWithSize
 
   /**
    * Constructor
-   * 
+   *
    * @param aElement
    *        Element itself.
    * @param aSize
@@ -42,13 +43,12 @@ public final class PLElementWithSize
    */
   public PLElementWithSize (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final SizeSpec aSize)
   {
-    if (aElement == null)
-      throw new NullPointerException ("element");
-    if (aSize == null)
-      throw new NullPointerException ("size");
+    ValueEnforcer.notNull (aElement, "Element");
+    ValueEnforcer.notNull (aSize, "Size");
     m_aElement = aElement;
     m_aSize = aSize;
-    m_aSizeFull = new SizeSpec (aSize.getWidth () + aElement.getMarginPlusPaddingXSum (),
+    m_aSizeFull = new SizeSpec (aSize.getWidth () +
+                                aElement.getMarginPlusPaddingXSum (),
                                 aSize.getHeight () + aElement.getMarginPlusPaddingYSum ());
   }
 

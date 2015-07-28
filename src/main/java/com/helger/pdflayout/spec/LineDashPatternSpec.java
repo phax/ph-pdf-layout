@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout.spec;
 
-import java.util.Arrays;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
@@ -74,11 +72,10 @@ public class LineDashPatternSpec
   public LineDashPatternSpec (@Nonnull final float [] aPattern, final float fPhase)
   {
     ValueEnforcer.notNull (aPattern, "Pattern");
-    if (aPattern.length > 2)
-      throw new IllegalArgumentException ();
+    ValueEnforcer.isTrue (aPattern.length <= 2, "Too many patterns provided");
     for (final float fPatternValue : aPattern)
-      if (fPatternValue <= 0)
-        throw new IllegalArgumentException ("At least one pattern value is negative: " + Arrays.toString (aPattern));
+      ValueEnforcer.isGT0 (fPatternValue, "PatternValue");
+
     m_aPattern = ArrayHelper.getCopy (aPattern);
     m_fPhase = fPhase;
   }

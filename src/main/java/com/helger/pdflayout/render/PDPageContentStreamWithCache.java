@@ -25,6 +25,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
@@ -70,8 +71,7 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
 
   public void setFont (@Nonnull final FontSpec aFont) throws IOException
   {
-    if (aFont == null)
-      throw new NullPointerException ("font");
+    ValueEnforcer.notNull (aFont, "Font");
 
     if (m_aLastUsedFont == null ||
         !aFont.getFont ().equals (m_aLastUsedFont.getFont ()) ||
@@ -86,8 +86,7 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
   @Override
   public void setStrokingColor (@Nonnull final Color aColor) throws IOException
   {
-    if (aColor == null)
-      throw new NullPointerException ("color");
+    ValueEnforcer.notNull (aColor, "Color");
 
     if (!m_aLastUsedStrokingColor.equals (aColor))
     {
@@ -105,8 +104,7 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
   @Override
   public void setNonStrokingColor (@Nonnull final Color aColor) throws IOException
   {
-    if (aColor == null)
-      throw new NullPointerException ("color");
+    ValueEnforcer.notNull (aColor, "Color");
 
     if (!m_aLastUsedNonStrokingColor.equals (aColor))
     {
@@ -123,8 +121,7 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
 
   public void setLineDashPattern (@Nonnull final LineDashPatternSpec aLineDashPattern) throws IOException
   {
-    if (aLineDashPattern == null)
-      throw new NullPointerException ("LineDashPattern");
+    ValueEnforcer.notNull (aLineDashPattern, "LineDashPattern");
 
     if (!m_aLastUsedLineDashPattern.equals (aLineDashPattern))
     {

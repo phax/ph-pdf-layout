@@ -28,7 +28,6 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.typeconvert.TypeConverter;
@@ -42,7 +41,7 @@ import com.helger.pdflayout.spec.WidthSpec.EWidthType;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableElement
+public class PLTable extends AbstractPLVBox <PLTable>implements IPLSplittableElement
 {
   private final List <WidthSpec> m_aWidths;
   private int m_nHeaderRowCount = 0;
@@ -336,7 +335,8 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
                                                 aRowElement.getMarginPlusPaddingYSum ();
 
             if (PLDebug.isDebugSplit ())
-              PLDebug.debugSplit (this, "Trying to split " +
+              PLDebug.debugSplit (this,
+                                  "Trying to split " +
                                         aRowElement.getDebugID () +
                                         " into pieces for split width " +
                                         fAvailableSplitWidth +
@@ -373,16 +373,16 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
               if (PLDebug.isDebugSplit ())
                 PLDebug.debugSplit (this,
                                     "Split " +
-                                        aRowElement.getDebugID () +
-                                        " into pieces: " +
-                                        aTable1RowElement.getDebugID () +
-                                        " (" +
-                                        aSplitResult.getFirstElement ().getHeight () +
-                                        ") and " +
-                                        aTable2RowElement.getDebugID () +
-                                        " (" +
-                                        aSplitResult.getSecondElement ().getHeight () +
-                                        ")");
+                                          aRowElement.getDebugID () +
+                                          " into pieces: " +
+                                          aTable1RowElement.getDebugID () +
+                                          " (" +
+                                          aSplitResult.getFirstElement ().getHeight () +
+                                          ") and " +
+                                          aTable2RowElement.getDebugID () +
+                                          " (" +
+                                          aSplitResult.getSecondElement ().getHeight () +
+                                          ")");
               bSplittedRow = true;
             }
             else
@@ -467,8 +467,8 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   @ReturnsMutableCopy
   public static PLTable createWithPercentage (@Nonnull @Nonempty final float... aPercentages)
   {
-    if (ArrayHelper.isEmpty (aPercentages))
-      throw new IllegalArgumentException ("Percentages");
+    ValueEnforcer.notEmpty (aPercentages, "Percentages");
+
     final List <WidthSpec> aWidths = new ArrayList <WidthSpec> (aPercentages.length);
     for (final float fPercentage : aPercentages)
       aWidths.add (WidthSpec.perc (fPercentage));
@@ -486,8 +486,8 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   @ReturnsMutableCopy
   public static PLTable createWithEvenlySizedColumns (@Nonnegative final int nColumnCount)
   {
-    if (nColumnCount < 1)
-      throw new IllegalArgumentException ("Columns must be >= 1: " + nColumnCount);
+    ValueEnforcer.isGT0 (nColumnCount, "ColumnCount");
+
     final List <WidthSpec> aWidths = new ArrayList <WidthSpec> (nColumnCount);
     for (int i = 0; i < nColumnCount; ++i)
       aWidths.add (WidthSpec.star ());

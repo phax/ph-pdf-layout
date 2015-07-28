@@ -22,6 +22,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
@@ -39,10 +40,10 @@ public class TextAndWidthSpec
   private final String m_sText;
   private final float m_fWidth;
 
-  public TextAndWidthSpec (@Nonnull final String sText, final float fWidth)
+  public TextAndWidthSpec (@Nonnull final String sText, @Nonnegative final float fWidth)
   {
-    if (sText == null)
-      throw new NullPointerException ("Text");
+    ValueEnforcer.notNull (sText, "Text");
+    ValueEnforcer.isGE0 (fWidth, "Width");
     m_sText = sText;
     m_fWidth = fWidth;
   }

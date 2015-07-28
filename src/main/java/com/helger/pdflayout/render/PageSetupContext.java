@@ -22,9 +22,11 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 
+import com.helger.commons.ValueEnforcer;
+
 /**
  * This class contains the context for setting a new page in the PDF.
- * 
+ *
  * @author Philip Helger
  */
 @NotThreadSafe
@@ -35,10 +37,8 @@ public final class PageSetupContext
 
   public PageSetupContext (@Nonnull final PDDocument aDoc, @Nonnull final PDPage aPage)
   {
-    if (aDoc == null)
-      throw new NullPointerException ("doc");
-    if (aPage == null)
-      throw new NullPointerException ("page");
+    ValueEnforcer.notNull (aDoc, "Document");
+    ValueEnforcer.notNull (aPage, "Page");
     m_aDoc = aDoc;
     m_aPage = aPage;
   }

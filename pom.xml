@@ -82,12 +82,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>ph-fonts</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <scope>test</scope>

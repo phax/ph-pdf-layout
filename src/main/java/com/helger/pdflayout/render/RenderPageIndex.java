@@ -19,11 +19,12 @@ package com.helger.pdflayout.render;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
  * This class describes the index of the current page.
- * 
+ *
  * @author Philip Helger
  */
 public class RenderPageIndex
@@ -49,16 +50,12 @@ public class RenderPageIndex
                           @Nonnegative final int nTotalPageCount)
 
   {
-    if (nPageSetIndex < 0)
-      throw new IllegalArgumentException ("PageSetIndex");
-    if (nPageSetPageIndex < 0)
-      throw new IllegalArgumentException ("PageSetPageIndex");
-    if (nPageSetPageCount < 0)
-      throw new IllegalArgumentException ("PageSetPageCount");
-    if (nTotalPageIndex < 0)
-      throw new IllegalArgumentException ("TotalPageIndex");
-    if (nTotalPageCount < 0)
-      throw new IllegalArgumentException ("TotalPageCount");
+    ValueEnforcer.isGE0 (nPageSetIndex, "PageSetIndex");
+    ValueEnforcer.isGE0 (nPageSetPageIndex, "PageSetPageIndex");
+    ValueEnforcer.isGE0 (nPageSetPageCount, "PageSetPageCount");
+    ValueEnforcer.isGE0 (nTotalPageIndex, "TotalPageIndex");
+    ValueEnforcer.isGE0 (nTotalPageCount, "TotalPageCount");
+
     m_nPageSetIndex = nPageSetIndex;
     m_nPageSetPageIndex = nPageSetPageIndex;
     m_nPageSetPageCount = nPageSetPageCount;
@@ -148,7 +145,7 @@ public class RenderPageIndex
     return new ToStringGenerator (this).append ("pageSetIndex", m_nPageSetIndex)
                                        .append ("pageSetPageIndex", m_nPageSetPageIndex)
                                        .append ("pageSetPageCount", m_nPageSetPageCount)
-                                       .append ("tTotalPageIndex", m_nTotalPageIndex)
+                                       .append ("totalPageIndex", m_nTotalPageIndex)
                                        .append ("totalPageCount", m_nTotalPageCount)
                                        .toString ();
   }

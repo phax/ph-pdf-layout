@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.equals.EqualsHelper;
@@ -57,12 +58,9 @@ public class FontSpec
 
   public FontSpec (@Nonnull final PDFFont aFont, @Nonnegative final float fFontSize, @Nonnull final Color aColor)
   {
-    if (aFont == null)
-      throw new NullPointerException ("font");
-    if (fFontSize <= 0)
-      throw new IllegalArgumentException ("Font size is invalid: " + fFontSize);
-    if (aColor == null)
-      throw new NullPointerException ("color");
+    ValueEnforcer.notNull (aFont, "Font");
+    ValueEnforcer.isGT0 (fFontSize, "FontSize");
+    ValueEnforcer.notNull (aColor, "Color");
     m_aFont = aFont;
     m_fFontSize = fFontSize;
     m_fLineHeight = aFont.getLineHeight (fFontSize);
@@ -155,8 +153,7 @@ public class FontSpec
   @Nonnull
   public FontSpec getCloneWithDifferentFont (@Nonnull final PDFFont aNewFont)
   {
-    if (aNewFont == null)
-      throw new NullPointerException ("font");
+    ValueEnforcer.notNull (aNewFont, "NewFont");
     if (aNewFont.equals (m_aFont))
       return this;
     return new FontSpec (aNewFont, m_fFontSize, m_aColor);
@@ -172,8 +169,7 @@ public class FontSpec
   @Nonnull
   public FontSpec getCloneWithDifferentFontSize (final float fNewFontSize)
   {
-    if (fNewFontSize <= 0)
-      throw new IllegalArgumentException ("Font size is invalid: " + fNewFontSize);
+    ValueEnforcer.isGT0 (fNewFontSize, "FontSize");
     if (EqualsHelper.equals (fNewFontSize, m_fFontSize))
       return this;
     return new FontSpec (m_aFont, fNewFontSize, m_aColor);
@@ -189,8 +185,7 @@ public class FontSpec
   @Nonnull
   public FontSpec getCloneWithDifferentColor (@Nonnull final Color aNewColor)
   {
-    if (aNewColor == null)
-      throw new NullPointerException ("newColor");
+    ValueEnforcer.notNull (aNewColor, "NewColor");
     if (aNewColor.equals (m_aColor))
       return this;
     return new FontSpec (m_aFont, m_fFontSize, aNewColor);
