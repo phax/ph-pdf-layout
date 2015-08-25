@@ -24,7 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.IHasInputStream;
@@ -42,7 +43,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizontalAlignment <PLImage>, IPLHasVerticalAlignment <PLImage>
+public class PLImage extends AbstractPLElement <PLImage>implements IPLHasHorizontalAlignment <PLImage>, IPLHasVerticalAlignment <PLImage>
 {
   public static final EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
   public static final EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
@@ -55,14 +56,16 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
 
   // Status var
-  private PDJpeg m_aJpeg;
+  private PDImageXObject m_aJpeg;
 
   public PLImage (@Nonnull final BufferedImage aImage)
   {
     this (aImage, aImage.getWidth (), aImage.getHeight ());
   }
 
-  public PLImage (@Nonnull final BufferedImage aImage, @Nonnegative final float fWidth, @Nonnegative final float fHeight)
+  public PLImage (@Nonnull final BufferedImage aImage,
+                  @Nonnegative final float fWidth,
+                  @Nonnegative final float fHeight)
   {
     ValueEnforcer.notNull (aImage, "Image");
     ValueEnforcer.isGT0 (fWidth, "Width");
@@ -163,11 +166,11 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
       if (m_aIIS != null)
       {
         // The input stream is closed automatically
-        m_aJpeg = new PDJpeg (aCtx.getDocument (), m_aIIS.getInputStream ());
+        m_aJpeg = JPEGFactory.createFromStream (aCtx.getDocument (), m_aIIS.getInputStream ());
       }
       else
       {
-        m_aJpeg = new PDJpeg (aCtx.getDocument (), m_aImage);
+        m_aJpeg = JPEGFactory.createFromImage (aCtx.getDocument (), m_aImage);
       }
     }
     catch (final IOException ex)
@@ -199,9 +202,11 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
         throw new IllegalStateException ("Unsupported horizontal alignment " + m_eHorzAlign);
     }
 
-    aContentStream.drawXObject (m_aJpeg, aCtx.getStartLeft () + fIndentX, aCtx.getStartTop () -
-                                                                          getPaddingTop () -
-                                                                          m_fHeight, m_fWidth, m_fHeight);
+    aContentStream.drawXObject (m_aJpeg,
+                                aCtx.getStartLeft () + fIndentX,
+                                aCtx.getStartTop () - getPaddingTop () - m_fHeight,
+                                m_fWidth,
+                                m_fHeight);
   }
 
   @Override

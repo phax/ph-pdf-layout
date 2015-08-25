@@ -18,7 +18,7 @@ package com.helger.pdflayout.element;
 
 import java.awt.Color;
 
-import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -54,25 +54,24 @@ public final class PLTableTest
     final MarginSpec aMargin = new MarginSpec (5);
     final PaddingSpec aPadding = new PaddingSpec (2);
 
-    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (30)
-                                                              .setPadding (10, 0, 20, 0)
-                                                              .setFillColor (new Color (0xddffff));
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30)
+                                                         .setPadding (10, 0, 20, 0)
+                                                         .setFillColor (new Color (0xddffff));
     aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
                                                     .setPadding (0, 4)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLTextWithPlaceholders ("Page " +
                                                     RenderPageIndex.PLACEHOLDER_PAGESET_PAGE_NUMBER +
                                                     "/" +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_COUNT, r10).setBorder (new BorderStyleSpec (Color.RED))
-                                                                                                      .setPadding (0, 4)
-                                                                                                      .setHorzAlign (EHorzAlignment.CENTER));
+                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_COUNT,
+                                                    r10).setBorder (new BorderStyleSpec (Color.RED))
+                                                        .setPadding (0, 4)
+                                                        .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.addElement (new PLText ("Erste Dummy Zeile", r10));
 
     // Start table
-    final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4) : PLTable.createWithPercentage (10,
-                                                                                                           40,
-                                                                                                           25,
-                                                                                                           25);
+    final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
+                                : PLTable.createWithPercentage (10, 40, 25, 25);
     aTable.setHeaderRowCount (1);
 
     // Add row
@@ -105,11 +104,13 @@ public final class PLTableTest
                                                                        .setMargin (aMargin)
                                                                        .setVertAlign (EVertAlignment.BOTTOM),
                                  new PLText ("Name " +
-                                                 i +
-                                                 (i == 2 ? " this is extra text for row 2 that makes this line longer"
-                                                        : ""),
-                                             r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED : Color.BLACK)).setPadding (aPadding)
-                                                                                                                   .setMargin (aMargin),
+                                             i +
+                                             (i == 2 ? " this is extra text for row 2 that makes this line longer"
+                                                     : ""),
+                                             r10.getCloneWithDifferentColor (i %
+                                                                             3 == 0 ? Color.RED
+                                                                                    : Color.BLACK)).setPadding (aPadding)
+                                                                                                   .setMargin (aMargin),
                                  new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
                                                                            .setMargin (aMargin)
                                                                            .setHorzAlign (EHorzAlignment.CENTER)

@@ -23,7 +23,8 @@ import javax.annotation.Nonnull;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
@@ -36,10 +37,11 @@ import com.helger.pdflayout.spec.LineDashPatternSpec;
  *
  * @author Philip Helger
  */
-public class PDPageContentStreamWithCache extends PDPageContentStream
+public class PDPageContentStreamWithCache
 {
   private final PDDocument m_aDocument;
   private final PDPage m_aPage;
+  private final PDPageContentStream m_aStream;
 
   // Status cache
   private FontSpec m_aLastUsedFont;
@@ -52,9 +54,9 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
                                        final boolean bAppendContent,
                                        final boolean bCompress) throws IOException
   {
-    super (aDocument, aSourcePage, bAppendContent, bCompress);
     m_aDocument = aDocument;
     m_aPage = aSourcePage;
+    m_aStream = new PDPageContentStream (aDocument, aSourcePage, bAppendContent, bCompress);
   }
 
   @Nonnull
@@ -77,20 +79,19 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
         !aFont.getFont ().equals (m_aLastUsedFont.getFont ()) ||
         !EqualsHelper.equals (aFont.getFontSize (), m_aLastUsedFont.getFontSize ()))
     {
-      super.setFont (aFont.getFont ().getFont (), aFont.getFontSize ());
+      m_aStream.setFont (aFont.getFont ().getFont (), aFont.getFontSize ());
       m_aLastUsedFont = aFont;
     }
     setNonStrokingColor (aFont.getColor ());
   }
 
-  @Override
   public void setStrokingColor (@Nonnull final Color aColor) throws IOException
   {
     ValueEnforcer.notNull (aColor, "Color");
 
     if (!m_aLastUsedStrokingColor.equals (aColor))
     {
-      super.setStrokingColor (aColor);
+      m_aStream.setStrokingColor (aColor);
       m_aLastUsedStrokingColor = aColor;
     }
   }
@@ -101,14 +102,13 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
     return m_aLastUsedStrokingColor;
   }
 
-  @Override
   public void setNonStrokingColor (@Nonnull final Color aColor) throws IOException
   {
     ValueEnforcer.notNull (aColor, "Color");
 
     if (!m_aLastUsedNonStrokingColor.equals (aColor))
     {
-      super.setNonStrokingColor (aColor);
+      m_aStream.setNonStrokingColor (aColor);
       m_aLastUsedNonStrokingColor = aColor;
     }
   }
@@ -125,7 +125,7 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
 
     if (!m_aLastUsedLineDashPattern.equals (aLineDashPattern))
     {
-      super.setLineDashPattern (aLineDashPattern.getPattern (), aLineDashPattern.getPhase ());
+      m_aStream.setLineDashPattern (aLineDashPattern.getPattern (), aLineDashPattern.getPhase ());
       m_aLastUsedLineDashPattern = aLineDashPattern;
     }
   }
@@ -134,5 +134,70 @@ public class PDPageContentStreamWithCache extends PDPageContentStream
   public LineDashPatternSpec getLastUsedLineDashPattern ()
   {
     return m_aLastUsedLineDashPattern;
+  }
+
+  public void moveTextPositionByAmount (final float tx, final float ty) throws IOException
+  {
+    m_aStream.newLineAtOffset (tx, ty);
+  }
+
+  public void stroke () throws IOException
+  {
+    m_aStream.stroke ();
+  }
+
+  public void fill () throws IOException
+  {
+    m_aStream.fill ();
+  }
+
+  public void addRect (final float fLeft,
+                       final float fBottom,
+                       final float fWidth,
+                       final float fHeight) throws IOException
+  {
+    m_aStream.addRect (fLeft, fBottom, fWidth, fHeight);
+  }
+
+  public void drawLine (final float xStart, final float yStart, final float xEnd, final float yEnd) throws IOException
+  {
+    m_aStream.moveTo (xStart, yStart);
+    m_aStream.lineTo (xEnd, yEnd);
+    stroke ();
+  }
+
+  public void fillRect (final float fX, final float fY, final float fWidth, final float fHeight) throws IOException
+  {
+    addRect (fX, fY, fWidth, fHeight);
+    fill ();
+  }
+
+  public void beginText () throws IOException
+  {
+    m_aStream.beginText ();
+  }
+
+  public void endText () throws IOException
+  {
+    m_aStream.endText ();
+  }
+
+  public void drawString (final String sDrawText) throws IOException
+  {
+    m_aStream.showText (sDrawText);
+  }
+
+  public void drawXObject (final PDImageXObject aImage,
+                           final float fX,
+                           final float fY,
+                           final float fWidth,
+                           final float fHeight) throws IOException
+  {
+    m_aStream.drawImage (aImage, fX, fY, fWidth, fHeight);
+  }
+
+  public void close () throws IOException
+  {
+    m_aStream.close ();
   }
 }
