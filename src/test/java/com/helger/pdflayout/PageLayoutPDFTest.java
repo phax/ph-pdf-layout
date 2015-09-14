@@ -18,7 +18,7 @@ package com.helger.pdflayout;
 
 import java.awt.Color;
 
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -57,7 +57,7 @@ public final class PageLayoutPDFTest
   {
     final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
     final FontSpec r12 = r10.getCloneWithDifferentFontSize (12);
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30, 50).setPadding (15);
+    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (30, 50).setPadding (15);
     aPS1.setPageHeader (new PLText ("Das ist die Kopfzeile", r10).setBorderBottom (new BorderStyleSpec (Color.BLACK))
                                                                  .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLTextWithPlaceholders ("Das ist die Fusszeile, Seite " +
@@ -137,15 +137,15 @@ public final class PageLayoutPDFTest
     aPS1.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
                                  r12).setHorzAlign (EHorzAlignment.CENTER));
 
-    final PLPageSet aPS2 = new PLPageSet (PDRectangle.A4.getWidth (), PDRectangle.A4.getWidth ()).setMargin (30, 50)
-                                                                                                 .setPadding (15);
+    final PLPageSet aPS2 = new PLPageSet (PDPage.PAGE_SIZE_A4.getWidth (),
+                                          PDPage.PAGE_SIZE_A4.getWidth ()).setMargin (30, 50).setPadding (15);
     aPS2.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
                                  r10).setHorzAlign (EHorzAlignment.RIGHT));
     aPS2.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
                                  r12));
 
-    final PLPageSet aPS3 = new PLPageSet (PDRectangle.A4.getHeight (), PDRectangle.A4.getWidth ()).setMargin (30, 50)
-                                                                                                  .setPadding (15);
+    final PLPageSet aPS3 = new PLPageSet (PDPage.PAGE_SIZE_A4.getHeight (),
+                                          PDPage.PAGE_SIZE_A4.getWidth ()).setMargin (30, 50).setPadding (15);
     aPS3.setRenderingContextCustomizer (new IRenderingContextCustomizer ()
     {
       public void customizeRenderingContext (final RenderingContext aRC)
@@ -181,7 +181,7 @@ public final class PageLayoutPDFTest
   {
     final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
 
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (30);
     aPS1.addElement (new PLText ("Dummy line", r10));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
@@ -198,9 +198,9 @@ public final class PageLayoutPDFTest
     final String sLIDShort = sLID.substring (0, sLID.length () / 3);
 
     final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (10, 20, 30, 40)
-                                                         .setPadding (10, 20, 30, 40)
-                                                         .setFillColor (new Color (0xeeeeee));
+    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (10, 20, 30, 40)
+                                                              .setPadding (10, 20, 30, 40)
+                                                              .setFillColor (new Color (0xeeeeee));
     aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
                                                     .setPadding (0, 4)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
@@ -275,7 +275,7 @@ public final class PageLayoutPDFTest
   {
     final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
 
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4);
     {
       final PLVBox aVBox = new PLVBox ();
       final PLHBox aHBox = new PLHBox ();

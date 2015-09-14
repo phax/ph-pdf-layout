@@ -18,7 +18,7 @@ package com.helger.pdflayout;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.junit.Test;
 
 /**
@@ -31,7 +31,7 @@ public final class PLConvertTest
   @Test
   public void testBasic ()
   {
-    assertEquals (PDRectangle.A4.getWidth (), PLConvert.mm2units (210), 0.001f);
-    assertEquals (PDRectangle.A4.getWidth (), PLConvert.cm2units (21), 0.001f);
+    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), PLConvert.mm2units (210), 0.001f);
+    assertEquals (PDPage.PAGE_SIZE_A4.getWidth (), PLConvert.cm2units (21), 0.001f);
   }
 }

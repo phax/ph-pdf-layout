@@ -120,19 +120,19 @@ public class PDFFont
                                @Nonnull final Charset aCharset,
                                @Nonnegative final float fFontSize) throws IOException
   {
-    if (true)
+    if (false)
     {
-      try
+      float fWidth = 0;
+      final int nMax = sText.length ();
+      for (int nIndex = 0; nIndex < nMax; ++nIndex)
       {
-        final float fWidth = m_aFont.getStringWidth (sText);
+        final byte [] aCharBytes = CharsetManager.getAsBytes (sText.substring (nIndex, nIndex + 1), aCharset);
+        fWidth += m_aFont.getFontWidth (aCharBytes, 0, aCharBytes.length);
+        ++nIndex;
+      }
 
-        // The width is in 1000 unit of text space, ie 333 or 777
-        return fWidth * fFontSize / 1000f;
-      }
-      catch (final IllegalArgumentException ex)
-      {
-        throw new IllegalStateException ("Failed to get font width of '" + sText + "'", ex);
-      }
+      // The width is in 1000 unit of text space, ie 333 or 777
+      return fWidth * fFontSize / 1000f;
     }
 
     float fWidth = 0;
@@ -143,7 +143,7 @@ public class PDFFont
       {
         m_aIso88591WidthCache = new float [256];
         for (int i = 0; i < 256; ++i)
-          m_aIso88591WidthCache[i] = m_aFont.getWidth (i);
+          m_aIso88591WidthCache[i] = m_aFont.getFontWidth (new byte [] { (byte) i }, 0, 1);
       }
 
       for (final char c : sText.toCharArray ())
@@ -163,7 +163,7 @@ public class PDFFont
       // Need to it per byte, as getFontWidth (aTextBytes, 0, aTextBytes.length)
       // does not work
       for (int i = 0; i < aTextBytes.length; i++)
-        fWidth += m_aFont.getWidth (aTextBytes[i]);
+        fWidth += m_aFont.getFontWidth (aTextBytes, i, 1);
     }
 
     // The width is in 1000 unit of text space, ie 333 or 777
