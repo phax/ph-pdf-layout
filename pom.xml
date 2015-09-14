@@ -60,6 +60,17 @@
       <url>http://www.helger.com</url>
     </developer>
   </developers>
+
+  <repositories>
+    <repository>
+      <id>ApacheSnapshot</id>
+      <name>Apache Repository</name>
+      <url>https://repository.apache.org/content/groups/snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
   
   <properties>
     <pdfbox.version>2.0.0-SNAPSHOT</pdfbox.version>
@@ -69,7 +80,7 @@
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-commons</artifactId>
-      <version>6.1.1</version>
+      <version>6.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
