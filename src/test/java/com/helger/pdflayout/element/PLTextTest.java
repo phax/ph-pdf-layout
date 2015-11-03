@@ -65,11 +65,10 @@ public final class PLTextTest
     aTable.addRow (aHBox);
     aPS1.addElement (aTable);
 
-    // All chars from 32-255
+    // All chars from 32-127
     final StringBuilder aSB = new StringBuilder ();
-    for (int i = 32; i <= 255; ++i)
-      if (i != 0x7f)
-        aSB.append ((char) i);
+    for (int i = 32; i <= 0x7e; ++i)
+      aSB.append ((char) i);
     aPS1.addElement (new PLText (aSB.toString (), r10));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
@@ -110,9 +109,7 @@ public final class PLTextTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
     final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
     for (int i = 0; i < 3; ++i)
-      aHBox.addColumn (new PLTextSplittable (s + s, r10).setMargin (10)
-                                                        .setPadding (5)
-                                                        .setBorder (new BorderStyleSpec (Color.GRAY)),
+      aHBox.addColumn (new PLTextSplittable (s + s, r10).setMargin (10).setPadding (5).setBorder (new BorderStyleSpec (Color.GRAY)),
                        WidthSpec.star ());
     aPS1.addElement (aHBox);
 
@@ -133,9 +130,7 @@ public final class PLTextTest
 
     final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
     for (int i = 0; i < 3; ++i)
-      aVBox.addRow (new PLTextSplittable (s, r10).setMargin (20)
-                                                 .setPadding (5)
-                                                 .setBorder (new BorderStyleSpec (Color.GRAY)));
+      aVBox.addRow (new PLTextSplittable (s, r10).setMargin (20).setPadding (5).setBorder (new BorderStyleSpec (Color.GRAY)));
     aPS1.addElement (aVBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
