@@ -19,10 +19,8 @@ package com.helger.pdflayout.element;
 import java.awt.Color;
 import java.io.IOException;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -30,7 +28,7 @@ import org.junit.rules.TestRule;
 import com.helger.commons.CGlobal;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
-import com.helger.font.EFontResource;
+import com.helger.font.roboto.EFontResource;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
@@ -171,12 +169,12 @@ public final class PLTextTest
   @Test
   public void testCustomFont () throws PDFCreationException, IOException
   {
-    final PDFont font = PDType0Font.load (new PDDocument (), EFontResource.ALGREYA_SANS_NORMAL.getInputStream ());
+    final PDFont aFont = PDFFont.loadFontResource (EFontResource.ROBOTO_NORMAL.getFontResource ());
 
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
                      "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
                      "Tataa: €";
-    final FontSpec r10 = new FontSpec (new PDFFont (font), 10);
+    final FontSpec r10 = new FontSpec (new PDFFont (aFont), 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 

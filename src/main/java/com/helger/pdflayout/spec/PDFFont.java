@@ -26,8 +26,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,7 @@ import com.helger.commons.charset.CCharset;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.font.api.IFontResource;
 
 /**
  * This class wraps PDF Fonts and offers some sanity methods.
@@ -283,5 +286,18 @@ public class PDFFont
   public String toString ()
   {
     return new ToStringGenerator (this).append ("font", m_aFont).append ("bbHeight", m_fBBHeight).toString ();
+  }
+
+  @Nonnull
+  public static PDFont loadFontResource (@Nonnull final IFontResource aFontRes) throws IOException
+  {
+    ValueEnforcer.notNull (aFontRes, "FontRes");
+    switch (aFontRes.getFontType ())
+    {
+      case TTF:
+        return PDType0Font.load (new PDDocument (), aFontRes.getInputStream ());
+      default:
+        throw new IllegalArgumentException ("Cannot load font resources of type " + aFontRes.getFontType ());
+    }
   }
 }
