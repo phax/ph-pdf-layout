@@ -267,7 +267,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
    *
    * @param aCtx
    *        Rendering context
-   * @throws IOException
+   * @throws IOException In case of a PDFBox error
    */
   @Nonnegative
   protected abstract void onPerform (@Nonnull RenderingContext aCtx) throws IOException;
