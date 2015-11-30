@@ -28,7 +28,6 @@ import org.junit.rules.TestRule;
 import com.helger.commons.CGlobal;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
-import com.helger.font.roboto.EFontResource;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
@@ -169,7 +168,7 @@ public final class PLTextTest
   @Test
   public void testCustomFont () throws PDFCreationException, IOException
   {
-    final PDFont aFont = PDFFont.loadFontResource (EFontResource.ROBOTO_NORMAL.getFontResource ());
+    final PDFont aFont = PDFFont.loadFontResource (com.helger.font.open_sans.EFontResource.OPEN_SANS_NORMAL.getFontResource ());
 
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
                      "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
