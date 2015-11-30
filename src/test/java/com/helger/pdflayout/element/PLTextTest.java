@@ -171,7 +171,7 @@ public final class PLTextTest
   @Test
   public void testCustomFont () throws PDFCreationException, IOException
   {
-    final PDFont font = PDType0Font.load (new PDDocument (), EFontResource.LATO2_BLACK_ITALIC.getInputStream ());
+    final PDFont font = PDType0Font.load (new PDDocument (), EFontResource.ALGREYA_SANS_NORMAL.getInputStream ());
 
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
                      "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
