@@ -73,14 +73,14 @@
   </repositories>
   
   <properties>
-    <pdfbox.version>2.0.0-RC1</pdfbox.version>
+    <pdfbox.version>2.0.0-RC2</pdfbox.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-commons</artifactId>
-      <version>6.2.1</version>
+      <version>6.2.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
@@ -95,6 +95,12 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-fonts</artifactId>
+      <version>2.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

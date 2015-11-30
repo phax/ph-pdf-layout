@@ -109,7 +109,9 @@ public final class PLTextTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
     final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
     for (int i = 0; i < 3; ++i)
-      aHBox.addColumn (new PLTextSplittable (s + s, r10).setMargin (10).setPadding (5).setBorder (new BorderStyleSpec (Color.GRAY)),
+      aHBox.addColumn (new PLTextSplittable (s + s, r10).setMargin (10)
+                                                        .setPadding (5)
+                                                        .setBorder (new BorderStyleSpec (Color.GRAY)),
                        WidthSpec.star ());
     aPS1.addElement (aHBox);
 
@@ -130,7 +132,9 @@ public final class PLTextTest
 
     final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
     for (int i = 0; i < 3; ++i)
-      aVBox.addRow (new PLTextSplittable (s, r10).setMargin (20).setPadding (5).setBorder (new BorderStyleSpec (Color.GRAY)));
+      aVBox.addRow (new PLTextSplittable (s, r10).setMargin (20)
+                                                 .setPadding (5)
+                                                 .setBorder (new BorderStyleSpec (Color.GRAY)));
     aPS1.addElement (aVBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);

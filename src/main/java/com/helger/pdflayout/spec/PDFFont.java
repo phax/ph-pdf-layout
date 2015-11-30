@@ -36,7 +36,6 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.charset.CCharset;
-import com.helger.commons.charset.CharsetManager;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
@@ -120,52 +119,51 @@ public class PDFFont
                                @Nonnull final Charset aCharset,
                                @Nonnegative final float fFontSize) throws IOException
   {
-    if (true)
+    final boolean bIsISO = aCharset.equals (CCharset.CHARSET_ISO_8859_1_OBJ);
+    if (bIsISO)
     {
-      try
-      {
-        final float fWidth = m_aFont.getStringWidth (sText);
-
-        // The width is in 1000 unit of text space, ie 333 or 777
-        return fWidth * fFontSize / 1000f;
-      }
-      catch (final IllegalArgumentException ex)
-      {
-        throw new IllegalStateException ("Failed to get font width of '" + sText + "'", ex);
-      }
-    }
-
-    float fWidth = 0;
-    if (aCharset.equals (CCharset.CHARSET_ISO_8859_1_OBJ))
-    {
-      // Performance improvement, because each char is always the same width
+      // Performance improvement, because each char is always the same width if
+      // this encoding is used
       if (m_aIso88591WidthCache == null)
       {
         m_aIso88591WidthCache = new float [256];
         for (int i = 0; i < 256; ++i)
           m_aIso88591WidthCache[i] = m_aFont.getWidth (i);
       }
-
-      for (final char c : sText.toCharArray ())
-        if (c > 255)
-        {
-          // Character not in iso-8859-1 range
-          fWidth += m_aIso88591WidthCache['?'];
-        }
-        else
-          fWidth += m_aIso88591WidthCache[c];
     }
-    else
+
+    float fWidth = 0;
+    try
     {
-      // Should be quicker than m_aFont.getStringWidth (sText)
-      final byte [] aTextBytes = CharsetManager.getAsBytes (sText, aCharset);
+      if (bIsISO)
+      {
+        for (final char c : sText.toCharArray ())
+          if (c > 255)
+          {
+            // Character not in iso-8859-1 range
+            fWidth += m_aIso88591WidthCache['?'];
+          }
+          else
+            fWidth += m_aIso88591WidthCache[c];
 
-      // Need to it per byte, as getFontWidth (aTextBytes, 0, aTextBytes.length)
-      // does not work
-      for (int i = 0; i < aTextBytes.length; i++)
-        fWidth += m_aFont.getWidth (aTextBytes[i]);
+        // Checked to deliver the same result in all tests!
+        if (false)
+        {
+          final float fExpected = m_aFont.getStringWidth (sText);
+          if (fWidth != fExpected)
+            throw new IllegalStateException (fWidth + " vs. " + fExpected);
+        }
+      }
+      else
+      {
+        // Regular version
+        fWidth = m_aFont.getStringWidth (sText);
+      }
     }
-
+    catch (final IllegalArgumentException ex)
+    {
+      throw new IllegalStateException ("Failed to get font width of '" + sText + "'", ex);
+    }
     // The width is in 1000 unit of text space, ie 333 or 777
     return fWidth * fFontSize / 1000f;
   }
