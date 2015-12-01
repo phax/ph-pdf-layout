@@ -24,7 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.IHasInputStream;
@@ -55,7 +56,7 @@ public class PLImage extends AbstractPLElement <PLImage>implements IPLHasHorizon
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
 
   // Status var
-  private PDJpeg m_aJpeg;
+  private PDImageXObject m_aJpeg;
 
   public PLImage (@Nonnull final BufferedImage aImage)
   {
@@ -165,11 +166,11 @@ public class PLImage extends AbstractPLElement <PLImage>implements IPLHasHorizon
       if (m_aIIS != null)
       {
         // The input stream is closed automatically
-        m_aJpeg = new PDJpeg (aCtx.getDocument (), m_aIIS.getInputStream ());
+        m_aJpeg = JPEGFactory.createFromStream (aCtx.getDocument (), m_aIIS.getInputStream ());
       }
       else
       {
-        m_aJpeg = new PDJpeg (aCtx.getDocument (), m_aImage);
+        m_aJpeg = JPEGFactory.createFromImage (aCtx.getDocument (), m_aImage);
       }
     }
     catch (final IOException ex)

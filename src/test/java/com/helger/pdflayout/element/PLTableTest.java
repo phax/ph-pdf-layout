@@ -18,7 +18,7 @@ package com.helger.pdflayout.element;
 
 import java.awt.Color;
 
-import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -54,9 +54,9 @@ public final class PLTableTest
     final MarginSpec aMargin = new MarginSpec (5);
     final PaddingSpec aPadding = new PaddingSpec (2);
 
-    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (30)
-                                                              .setPadding (10, 0, 20, 0)
-                                                              .setFillColor (new Color (0xddffff));
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30)
+                                                         .setPadding (10, 0, 20, 0)
+                                                         .setFillColor (new Color (0xddffff));
     aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
                                                     .setPadding (0, 4)
                                                     .setHorzAlign (EHorzAlignment.CENTER));

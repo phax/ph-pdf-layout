@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -51,7 +51,7 @@ public final class PLImageTest
   {
     final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
 
-    final PLPageSet aPS1 = new PLPageSet (PDPage.PAGE_SIZE_A4).setMargin (30);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
     aPS1.addElement (new PLText ("First line", r10).setBorder (new BorderStyleSpec (Color.RED)));
     aPS1.addElement (new PLImage (ImageIO.read (ClassPathResource.getInputStream ("images/test1.jpg")), 50, 50));
     aPS1.addElement (new PLText ("Second line", r10).setBorder (new BorderStyleSpec (Color.BLUE)));

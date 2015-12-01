@@ -17,15 +17,14 @@
 package com.helger.pdflayout.render;
 
 import java.awt.Color;
-import java.awt.geom.PathIterator;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
@@ -139,7 +138,7 @@ public class PDPageContentStreamWithCache
 
   public void moveTextPositionByAmount (final float tx, final float ty) throws IOException
   {
-    m_aStream.moveTextPositionByAmount (tx, ty);
+    m_aStream.newLineAtOffset (tx, ty);
   }
 
   public void stroke () throws IOException
@@ -149,7 +148,7 @@ public class PDPageContentStreamWithCache
 
   public void fill () throws IOException
   {
-    m_aStream.fill (PathIterator.WIND_NON_ZERO);
+    m_aStream.fill ();
   }
 
   public void addRect (final float fLeft,
@@ -185,16 +184,16 @@ public class PDPageContentStreamWithCache
 
   public void drawString (final String sDrawText) throws IOException
   {
-    m_aStream.drawString (sDrawText);
+    m_aStream.showText (sDrawText);
   }
 
-  public void drawXObject (final PDJpeg aImage,
+  public void drawXObject (final PDImageXObject aImage,
                            final float fX,
                            final float fY,
                            final float fWidth,
                            final float fHeight) throws IOException
   {
-    m_aStream.drawXObject (aImage, fX, fY, fWidth, fHeight);
+    m_aStream.drawImage (aImage, fX, fY, fWidth, fHeight);
   }
 
   public void close () throws IOException

@@ -133,9 +133,6 @@ public class PDFFont
         for (int i = 0; i < 256; ++i)
           m_aIso88591WidthCache[i] = m_aFont.getWidth (i);
       }
-
-      // The width is in 1000 unit of text space, ie 333 or 777
-      return fWidth * fFontSize / 1000f;
     }
 
     float fWidth = 0;
