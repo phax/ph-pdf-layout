@@ -17,8 +17,10 @@
 package com.helger.pdflayout.element;
 
 import java.awt.Color;
+import java.io.IOException;
 
-import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -65,11 +67,10 @@ public final class PLTextTest
     aTable.addRow (aHBox);
     aPS1.addElement (aTable);
 
-    // All chars from 32-255
+    // All chars from 32-127
     final StringBuilder aSB = new StringBuilder ();
-    for (int i = 32; i <= 255; ++i)
-      if (i != 0x7f)
-        aSB.append ((char) i);
+    for (int i = 32; i <= 0x7e; ++i)
+      aSB.append ((char) i);
     aPS1.addElement (new PLText (aSB.toString (), r10));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
@@ -162,5 +163,24 @@ public final class PLTextTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-vertical-align.pdf"));
+  }
+
+  @Test
+  public void testCustomFont () throws PDFCreationException, IOException
+  {
+    final PDFont aFont = PDFFont.loadFontResource (com.helger.font.open_sans.EFontResource.OPEN_SANS_NORMAL.getFontResource ());
+
+    final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                     "Tataa: €";
+    final FontSpec r10 = new FontSpec (new PDFFont (aFont), 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    aPS1.addElement (new PLText (s, r10));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font.pdf"));
   }
 }

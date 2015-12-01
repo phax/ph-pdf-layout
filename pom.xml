@@ -25,7 +25,7 @@
     <version>1.4.1</version>
   </parent>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>2.0.1-SNAPSHOT</version>
+  <version>2.1.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
@@ -62,15 +62,38 @@
   </developers>
   
   <properties>
-    <pdfbox.version>1.8.10</pdfbox.version>
+    <pdfbox.version>2.0.0-RC2</pdfbox.version>
   </properties>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-commons-parent-pom</artifactId>
+        <version>6.2.3</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-fonts-parent-pom</artifactId>
+        <version>2.1.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-commons</artifactId>
-      <version>6.2.3</version>
     </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-fonts-api</artifactId>
+    </dependency>
+    
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox</artifactId>
@@ -84,6 +107,11 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-fonts-open-sans</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

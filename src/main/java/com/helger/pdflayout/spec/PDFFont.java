@@ -26,8 +26,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +38,10 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.charset.CCharset;
-import com.helger.commons.charset.CharsetManager;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.font.api.IFontResource;
 
 /**
  * This class wraps PDF Fonts and offers some sanity methods.
@@ -120,15 +122,16 @@ public class PDFFont
                                @Nonnull final Charset aCharset,
                                @Nonnegative final float fFontSize) throws IOException
   {
-    if (false)
+    final boolean bIsISO = aCharset.equals (CCharset.CHARSET_ISO_8859_1_OBJ);
+    if (bIsISO)
     {
-      float fWidth = 0;
-      final int nMax = sText.length ();
-      for (int nIndex = 0; nIndex < nMax; ++nIndex)
+      // Performance improvement, because each char is always the same width if
+      // this encoding is used
+      if (m_aIso88591WidthCache == null)
       {
-        final byte [] aCharBytes = CharsetManager.getAsBytes (sText.substring (nIndex, nIndex + 1), aCharset);
-        fWidth += m_aFont.getFontWidth (aCharBytes, 0, aCharBytes.length);
-        ++nIndex;
+        m_aIso88591WidthCache = new float [256];
+        for (int i = 0; i < 256; ++i)
+          m_aIso88591WidthCache[i] = m_aFont.getWidth (i);
       }
 
       // The width is in 1000 unit of text space, ie 333 or 777
@@ -136,36 +139,37 @@ public class PDFFont
     }
 
     float fWidth = 0;
-    if (aCharset.equals (CCharset.CHARSET_ISO_8859_1_OBJ))
+    try
     {
-      // Performance improvement, because each char is always the same width
-      if (m_aIso88591WidthCache == null)
+      if (bIsISO)
       {
-        m_aIso88591WidthCache = new float [256];
-        for (int i = 0; i < 256; ++i)
-          m_aIso88591WidthCache[i] = m_aFont.getFontWidth (new byte [] { (byte) i }, 0, 1);
-      }
+        for (final char c : sText.toCharArray ())
+          if (c > 255)
+          {
+            // Character not in iso-8859-1 range
+            fWidth += m_aIso88591WidthCache['?'];
+          }
+          else
+            fWidth += m_aIso88591WidthCache[c];
 
-      for (final char c : sText.toCharArray ())
-        if (c > 255)
+        // Checked to deliver the same result in all tests!
+        if (false)
         {
-          // Character not in iso-8859-1 range
-          fWidth += m_aIso88591WidthCache['?'];
+          final float fExpected = m_aFont.getStringWidth (sText);
+          if (fWidth != fExpected)
+            throw new IllegalStateException (fWidth + " vs. " + fExpected);
         }
-        else
-          fWidth += m_aIso88591WidthCache[c];
+      }
+      else
+      {
+        // Regular version
+        fWidth = m_aFont.getStringWidth (sText);
+      }
     }
-    else
+    catch (final IllegalArgumentException ex)
     {
-      // Should be quicker than m_aFont.getStringWidth (sText)
-      final byte [] aTextBytes = CharsetManager.getAsBytes (sText, aCharset);
-
-      // Need to it per byte, as getFontWidth (aTextBytes, 0, aTextBytes.length)
-      // does not work
-      for (int i = 0; i < aTextBytes.length; i++)
-        fWidth += m_aFont.getFontWidth (aTextBytes, i, 1);
+      throw new IllegalStateException ("Failed to get font width of '" + sText + "'", ex);
     }
-
     // The width is in 1000 unit of text space, ie 333 or 777
     return fWidth * fFontSize / 1000f;
   }
@@ -285,5 +289,18 @@ public class PDFFont
   public String toString ()
   {
     return new ToStringGenerator (this).append ("font", m_aFont).append ("bbHeight", m_fBBHeight).toString ();
+  }
+
+  @Nonnull
+  public static PDFont loadFontResource (@Nonnull final IFontResource aFontRes) throws IOException
+  {
+    ValueEnforcer.notNull (aFontRes, "FontRes");
+    switch (aFontRes.getFontType ())
+    {
+      case TTF:
+        return PDType0Font.load (new PDDocument (), aFontRes.getInputStream ());
+      default:
+        throw new IllegalArgumentException ("Cannot load font resources of type " + aFontRes.getFontType ());
+    }
   }
 }
