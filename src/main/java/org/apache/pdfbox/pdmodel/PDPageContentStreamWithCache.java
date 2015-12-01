@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.render;
+package org.apache.pdfbox.pdmodel;
 
 import java.awt.Color;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdfwriter.COSWriter;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDFontHelper;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
@@ -41,7 +41,7 @@ public class PDPageContentStreamWithCache
 {
   private final PDDocument m_aDocument;
   private final PDPage m_aPage;
-  private final PDPageContentStream m_aStream;
+  private final PDPageContentStreamExt m_aStream;
 
   // Status cache
   private FontSpec m_aLastUsedFont;
@@ -56,7 +56,7 @@ public class PDPageContentStreamWithCache
   {
     m_aDocument = aDocument;
     m_aPage = aSourcePage;
-    m_aStream = new PDPageContentStream (aDocument, aSourcePage, bAppendContent, bCompress);
+    m_aStream = new PDPageContentStreamExt (aDocument, aSourcePage, bAppendContent, bCompress);
   }
 
   @Nonnull
@@ -184,7 +184,26 @@ public class PDPageContentStreamWithCache
 
   public void drawString (final String sDrawText) throws IOException
   {
-    m_aStream.showText (sDrawText);
+    if (false)
+      m_aStream.showText (sDrawText);
+
+    final PDFont font = m_aStream.peekFont ();
+
+    // Unicode code points to keep when subsetting
+    if (font.willBeSubset ())
+    {
+      for (int offset = 0; offset < sDrawText.length ();)
+      {
+        final int codePoint = sDrawText.codePointAt (offset);
+        font.addToSubset (codePoint);
+        offset += Character.charCount (codePoint);
+      }
+    }
+
+    COSWriter.writeString (PDFontHelper.encode (font, sDrawText, '?'), m_aStream.output);
+    m_aStream.write (" ");
+
+    m_aStream.writeOperator ("Tj");
   }
 
   public void drawXObject (final PDImageXObject aImage,

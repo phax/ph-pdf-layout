@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.element;
 
-import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -40,11 +39,6 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
     super (sText, aFont);
   }
 
-  public PLTextSplittable (@Nullable final String sText, @Nonnull final Charset aCharset, @Nonnull final FontSpec aFont)
-  {
-    super (sText, aCharset, aFont);
-  }
-
   @Nullable
   public PLSplitResult splitElements (final float fElementWidth, final float fAvailableHeight)
   {
@@ -55,14 +49,15 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
 
     // Get the lines in the correct order from top to bottom
     final List <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines
-                                                       : CollectionHelper.getReverseList (m_aPreparedLines);
+                                                        : CollectionHelper.getReverseList (m_aPreparedLines);
 
     int nLines = (int) (fAvailableHeight / fLineHeight);
     if (nLines <= 0)
     {
       // Splitting makes no sense because the resulting text 1 would be empty
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Failed to split because the result would be " +
+        PLDebug.debugSplit (this,
+                            "Failed to split because the result would be " +
                                   nLines +
                                   " lines for available height " +
                                   fAvailableHeight +
@@ -75,7 +70,8 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
     {
       // Splitting makes no sense because the resulting text 2 would be empty
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Failed to split because the result of " +
+        PLDebug.debugSplit (this,
+                            "Failed to split because the result of " +
                                   nLines +
                                   " lines fits into the available height " +
                                   fAvailableHeight +
@@ -97,7 +93,8 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
       {
         // Splitting makes no sense
         if (PLDebug.isDebugSplit ())
-          PLDebug.debugSplit (this, "Failed to split because the result would be " +
+          PLDebug.debugSplit (this,
+                              "Failed to split because the result would be " +
                                     nLines +
                                     " lines for available height " +
                                     fAvailableHeight +

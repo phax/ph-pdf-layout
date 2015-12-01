@@ -17,7 +17,6 @@
 package com.helger.pdflayout.element;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.annotation.CheckForSigned;
@@ -26,17 +25,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import org.apache.pdfbox.pdmodel.PDPageContentStreamWithCache;
+
 import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.charset.CCharset;
 import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.render.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.EHorzAlignment;
@@ -50,7 +49,8 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  *
  * @author Philip Helger
  */
-public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizontalAlignment <PLText>, IPLHasVerticalAlignment <PLText>
+public class PLText extends AbstractPLElement <PLText>
+                    implements IPLHasHorizontalAlignment <PLText>, IPLHasVerticalAlignment <PLText>
 {
   public static final EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
   public static final EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
@@ -58,7 +58,6 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
 
   private final String m_sText;
-  private final Charset m_aCharset;
   private final FontSpec m_aFont;
   private final float m_fLineHeight;
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
@@ -73,13 +72,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
 
   public PLText (@Nullable final String sText, @Nonnull final FontSpec aFont)
   {
-    this (sText, CCharset.CHARSET_ISO_8859_1_OBJ, aFont);
-  }
-
-  public PLText (@Nullable final String sText, @Nonnull final Charset aCharset, @Nonnull final FontSpec aFont)
-  {
     m_sText = StringHelper.getNotNull (sText);
-    m_aCharset = ValueEnforcer.notNull (aCharset, "Charset");
     m_aFont = ValueEnforcer.notNull (aFont, "Font");
     m_fLineHeight = m_aFont.getLineHeight ();
 
@@ -89,7 +82,8 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
       for (final char c : m_sText.toCharArray ())
       {
         if (c > 255)
-          PLDebug.debugText (this, "Character at index " +
+          PLDebug.debugText (this,
+                             "Character at index " +
                                    nIndex +
                                    " is Unicode (" +
                                    c +
@@ -248,7 +242,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
     // Split text into rows
-    internalSetPreparedLines (m_aFont.getFitToWidth (m_sText, m_aCharset, aCtx.getAvailableWidth ()));
+    internalSetPreparedLines (m_aFont.getFitToWidth (m_sText, aCtx.getAvailableWidth ()));
 
     // Determine height by number of lines
     return new SizeSpec (aCtx.getAvailableWidth (), m_aPreparedLines.size () * m_fLineHeight);
@@ -317,7 +311,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
       if (!sOrigText.equals (sDrawText))
       {
         // Text changed - recalculate width!
-        fWidth = m_aFont.getStringWidth (sDrawText, m_aCharset);
+        fWidth = m_aFont.getStringWidth (sDrawText);
       }
 
       float fIndentX;
@@ -339,9 +333,9 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
-        aContentStream.moveTextPositionByAmount (aCtx.getStartLeft () + fIndentX, aCtx.getStartTop () -
-                                                                                  fTop -
-                                                                                  (m_fLineHeight * 0.75f));
+        aContentStream.moveTextPositionByAmount (aCtx.getStartLeft () +
+                                                 fIndentX,
+                                                 aCtx.getStartTop () - fTop - (m_fLineHeight * 0.75f));
       }
       else
         if (fIndentX != 0)
@@ -394,7 +388,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
 
     final String sTextContent = TextAndWidthSpec.getAsText (aLineCopy);
     final PLText aNewText = bSplittableCopy ? new PLTextSplittable (sTextContent, getFontSpec ())
-                                           : new PLText (sTextContent, getFontSpec ());
+                                            : new PLText (sTextContent, getFontSpec ());
     aNewText.setBasicDataFrom (this).markAsPrepared (aSize).internalSetPreparedLines (aLineCopy);
 
     return new PLElementWithSize (aNewText, aSize);

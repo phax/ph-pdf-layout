@@ -17,7 +17,6 @@
 package com.helger.pdflayout.spec;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +25,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.font.PDFontHelper;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +35,10 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.charset.CCharset;
 import com.helger.commons.hashcode.HashCodeGenerator;
+import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.font.api.IFontResource;
 
 /**
  * This class wraps PDF Fonts and offers some sanity methods.
@@ -72,7 +69,7 @@ public class PDFFont
   private final PDFont m_aFont;
   // Helper
   private final float m_fBBHeight;
-  private float [] m_aIso88591WidthCache;
+  private float [] m_aWidthCache;
 
   public PDFFont (@Nonnull final PDFont aFont)
   {
@@ -119,53 +116,27 @@ public class PDFFont
 
   @Nonnegative
   public float getStringWidth (@Nonnull final String sText,
-                               @Nonnull final Charset aCharset,
                                @Nonnegative final float fFontSize) throws IOException
   {
-    final boolean bIsISO = aCharset.equals (CCharset.CHARSET_ISO_8859_1_OBJ);
-    if (bIsISO)
+    // Performance improvement, because each char is always the same width if
+    // this encoding is used
+    final int nCacheMax = 256;
+    if (m_aWidthCache == null)
     {
-      // Performance improvement, because each char is always the same width if
-      // this encoding is used
-      if (m_aIso88591WidthCache == null)
-      {
-        m_aIso88591WidthCache = new float [256];
-        for (int i = 0; i < 256; ++i)
-          m_aIso88591WidthCache[i] = m_aFont.getWidth (i);
-      }
+      m_aWidthCache = new float [nCacheMax];
+      for (int i = 0; i < nCacheMax; ++i)
+        m_aWidthCache[i] = m_aFont.getWidth (i);
     }
-
+    final byte [] aEncodedText = PDFontHelper.encode (m_aFont, sText, '?');
+    final NonBlockingByteArrayInputStream in = new NonBlockingByteArrayInputStream (aEncodedText);
     float fWidth = 0;
-    try
+    while (in.available () > 0)
     {
-      if (bIsISO)
-      {
-        for (final char c : sText.toCharArray ())
-          if (c > 255)
-          {
-            // Character not in iso-8859-1 range
-            fWidth += m_aIso88591WidthCache['?'];
-          }
-          else
-            fWidth += m_aIso88591WidthCache[c];
-
-        // Checked to deliver the same result in all tests!
-        if (false)
-        {
-          final float fExpected = m_aFont.getStringWidth (sText);
-          if (fWidth != fExpected)
-            throw new IllegalStateException (fWidth + " vs. " + fExpected);
-        }
-      }
+      final int code = m_aFont.readCode (in);
+      if (code < nCacheMax)
+        fWidth += m_aWidthCache[code];
       else
-      {
-        // Regular version
-        fWidth = m_aFont.getStringWidth (sText);
-      }
-    }
-    catch (final IllegalArgumentException ex)
-    {
-      throw new IllegalStateException ("Failed to get font width of '" + sText + "'", ex);
+        fWidth += m_aFont.getWidth (code);
     }
     // The width is in 1000 unit of text space, ie 333 or 777
     return fWidth * fFontSize / 1000f;
@@ -174,7 +145,6 @@ public class PDFFont
   @Nonnull
   @ReturnsMutableCopy
   public List <TextAndWidthSpec> getFitToWidth (@Nullable final String sText,
-                                                @Nonnull final Charset aCharset,
                                                 @Nonnegative final float fFontSize,
                                                 @Nonnegative final float fMaxWidth) throws IOException
   {
@@ -187,7 +157,7 @@ public class PDFFont
       // Now split each source line into the best matching sub-lines
       String sCurLine = sLine;
       float fCurLineWidth;
-      outer: while ((fCurLineWidth = getStringWidth (sCurLine, aCharset, fFontSize)) > fMaxWidth)
+      outer: while ((fCurLineWidth = getStringWidth (sCurLine, fFontSize)) > fMaxWidth)
       {
         // Line is too long to fit
 
@@ -198,7 +168,7 @@ public class PDFFont
           {
             // Whitespace found
             final String sLineStart = sCurLine.substring (0, i);
-            final float fLineStartWidth = getStringWidth (sLineStart, aCharset, fFontSize);
+            final float fLineStartWidth = getStringWidth (sLineStart, fFontSize);
             if (fLineStartWidth <= fMaxWidth)
             {
               // We found a line - continue with the rest of the line
@@ -220,7 +190,7 @@ public class PDFFont
           do
           {
             final String sWordPart = sCurLine.substring (0, nIndex);
-            final float fWordPartLength = getStringWidth (sWordPart, aCharset, fFontSize);
+            final float fWordPartLength = getStringWidth (sWordPart, fFontSize);
             if (fWordPartLength > fMaxWidth)
             {
               // We have an overflow - take everything except the last char
@@ -286,18 +256,5 @@ public class PDFFont
   public String toString ()
   {
     return new ToStringGenerator (this).append ("font", m_aFont).append ("bbHeight", m_fBBHeight).toString ();
-  }
-
-  @Nonnull
-  public static PDFont loadFontResource (@Nonnull final IFontResource aFontRes) throws IOException
-  {
-    ValueEnforcer.notNull (aFontRes, "FontRes");
-    switch (aFontRes.getFontType ())
-    {
-      case TTF:
-        return PDType0Font.load (new PDDocument (), aFontRes.getInputStream ());
-      default:
-        throw new IllegalArgumentException ("Cannot load font resources of type " + aFontRes.getFontType ());
-    }
   }
 }

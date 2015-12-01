@@ -33,6 +33,7 @@ import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EVertAlignment;
+import com.helger.pdflayout.spec.FontLoader;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PDFFont;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -166,9 +167,10 @@ public final class PLTextTest
   }
 
   @Test
-  public void testCustomFont () throws PDFCreationException, IOException
+  public void testCustomFontOpenSans () throws PDFCreationException, IOException
   {
-    final PDFont aFont = PDFFont.loadFontResource (com.helger.font.open_sans.EFontResource.OPEN_SANS_NORMAL.getFontResource ());
+    // Load TTF font
+    final PDFont aFont = FontLoader.loadFontResource (com.helger.font.open_sans.EFontResource.OPEN_SANS_NORMAL.getFontResource ());
 
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
                      "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
@@ -181,6 +183,26 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-open-sans.pdf"));
+  }
+
+  @Test
+  public void testCustomFontLato2 () throws PDFCreationException, IOException
+  {
+    // Load OTF font
+    final PDFont aFont = FontLoader.loadFontResource (com.helger.font.lato2.EFontResource.LATO2_NORMAL.getFontResource ());
+
+    final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                     "Tataa: €";
+    final FontSpec r10 = new FontSpec (new PDFFont (aFont), 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    aPS1.addElement (new PLText (s, r10));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-lato2.pdf"));
   }
 }

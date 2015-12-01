@@ -18,7 +18,6 @@ package com.helger.pdflayout.spec;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.annotation.Nonnegative;
@@ -108,16 +107,14 @@ public class FontSpec
    *
    * @param sText
    *        The text to determine the width of. May not be <code>null</code>.
-   * @param aCharset
-   *        The charset to be used. May not be <code>null</code>.
    * @return The string width
    * @throws IOException
    *         Internally
    */
   @Nonnegative
-  public float getStringWidth (@Nonnull final String sText, @Nonnull final Charset aCharset) throws IOException
+  public float getStringWidth (@Nonnull final String sText) throws IOException
   {
-    return m_aFont.getStringWidth (sText, aCharset, m_fFontSize);
+    return m_aFont.getStringWidth (sText, m_fFontSize);
   }
 
   /**
@@ -125,8 +122,6 @@ public class FontSpec
    *
    * @param sText
    *        The text to fit. Maybe <code>null</code>.
-   * @param aCharset
-   *        The charset to be used. May not be <code>null</code>.
    * @param fMaxWidth
    *        The maximum width available. Must be &gt; 0.
    * @return A list with all texts and widths that fit best. Never
@@ -137,10 +132,9 @@ public class FontSpec
   @Nonnull
   @ReturnsMutableCopy
   public List <TextAndWidthSpec> getFitToWidth (@Nullable final String sText,
-                                                @Nonnull final Charset aCharset,
                                                 @Nonnegative final float fMaxWidth) throws IOException
   {
-    return m_aFont.getFitToWidth (sText, aCharset, m_fFontSize, fMaxWidth);
+    return m_aFont.getFitToWidth (sText, m_fFontSize, fMaxWidth);
   }
 
   /**
