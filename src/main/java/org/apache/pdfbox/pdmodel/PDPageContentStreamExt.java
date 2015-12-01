@@ -286,11 +286,6 @@ public final class PDPageContentStreamExt implements Closeable
     inTextMode = false;
   }
 
-  public PDFont peekFont ()
-  {
-    return fontStack.isEmpty () ? null : fontStack.peek ();
-  }
-
   /**
    * Set the font and font size to draw text with.
    *

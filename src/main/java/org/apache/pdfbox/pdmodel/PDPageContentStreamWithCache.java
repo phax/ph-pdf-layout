@@ -32,7 +32,7 @@ import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 
 /**
- * A special version of PDPageContentStream with an intergated "cache" to avoid
+ * A special version of PDPageContentStream with an integrated "cache" to avoid
  * setting the same information over and over again.
  *
  * @author Philip Helger
@@ -187,7 +187,7 @@ public class PDPageContentStreamWithCache
     if (false)
       m_aStream.showText (sDrawText);
 
-    final PDFont font = m_aStream.peekFont ();
+    final PDFont font = m_aLastUsedFont.getFont ().getFont ();
 
     // Unicode code points to keep when subsetting
     if (font.willBeSubset ())
