@@ -9,13 +9,13 @@ public final class PDFontHelper
   private PDFontHelper ()
   {}
 
-  public static byte [] encode (final PDFont font, final String sDrawText, final int nFallback) throws IOException
+  public static byte [] encode (final PDFont font,
+                                final String sDrawText,
+                                final int nFallbackCodepoint,
+                                final boolean bPerformSubsetting) throws IOException
   {
-    return encode (font, sDrawText, font.encode (nFallback));
-  }
-
-  public static byte [] encode (final PDFont font, final String sDrawText, final byte [] aFallback) throws IOException
-  {
+    final byte [] aFallback = font.encode (nFallbackCodepoint);
+    final boolean bAddToSubset = bPerformSubsetting && font.willBeSubset ();
     final NonBlockingByteArrayOutputStream out = new NonBlockingByteArrayOutputStream ();
     int offset = 0;
     while (offset < sDrawText.length ())
@@ -27,6 +27,9 @@ public final class PDFontHelper
       try
       {
         bytes = font.encode (codePoint);
+
+        if (bAddToSubset)
+          font.addToSubset (codePoint);
       }
       catch (final IllegalArgumentException ex)
       {

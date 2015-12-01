@@ -115,8 +115,7 @@ public class PDFFont
   }
 
   @Nonnegative
-  public float getStringWidth (@Nonnull final String sText,
-                               @Nonnegative final float fFontSize) throws IOException
+  public float getStringWidth (@Nonnull final String sText, @Nonnegative final float fFontSize) throws IOException
   {
     // Performance improvement, because each char is always the same width if
     // this encoding is used
@@ -127,7 +126,7 @@ public class PDFFont
       for (int i = 0; i < nCacheMax; ++i)
         m_aWidthCache[i] = m_aFont.getWidth (i);
     }
-    final byte [] aEncodedText = PDFontHelper.encode (m_aFont, sText, '?');
+    final byte [] aEncodedText = PDFontHelper.encode (m_aFont, sText, '?', false);
     final NonBlockingByteArrayInputStream in = new NonBlockingByteArrayInputStream (aEncodedText);
     float fWidth = 0;
     while (in.available () > 0)

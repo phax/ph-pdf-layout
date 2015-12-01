@@ -191,18 +191,7 @@ public class PDPageContentStreamWithCache
 
     final PDFont font = m_aLastUsedFont.getFont ().getFont ();
 
-    // Unicode code points to keep when subsetting
-    if (font.willBeSubset ())
-    {
-      for (int offset = 0; offset < sDrawText.length ();)
-      {
-        final int codePoint = sDrawText.codePointAt (offset);
-        font.addToSubset (codePoint);
-        offset += Character.charCount (codePoint);
-      }
-    }
-
-    COSWriter.writeString (PDFontHelper.encode (font, sDrawText, '?'), m_aStream.output);
+    COSWriter.writeString (PDFontHelper.encode (font, sDrawText, '?', true), m_aStream.output);
     m_aStream.write (" ");
 
     m_aStream.writeOperator ("Tj");
