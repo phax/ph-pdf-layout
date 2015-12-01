@@ -40,7 +40,7 @@ import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
-import com.helger.pdflayout.spec.PDFFont;
+import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.TextAndWidthSpec;
 
@@ -64,7 +64,7 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
 
   // prepare result
-  private PDFFont m_aLoadedFont;
+  private LoadedFont m_aLoadedFont;
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
   protected List <TextAndWidthSpec> m_aPreparedLinesUnmodified;
   protected List <TextAndWidthSpec> m_aPreparedLines;
@@ -231,8 +231,9 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
     }
   }
 
-  final void internalSetPreparedLoadedFont (@Nonnull final PDFFont aLoadedFont)
+  final void internalSetPreparedLoadedFont (@Nonnull final LoadedFont aLoadedFont)
   {
+    ValueEnforcer.notNull (aLoadedFont, "LoadedFont");
     m_aLoadedFont = aLoadedFont;
   }
 

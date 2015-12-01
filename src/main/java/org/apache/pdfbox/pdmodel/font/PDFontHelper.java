@@ -14,7 +14,7 @@ public final class PDFontHelper
                                 final int nFallbackCodepoint,
                                 final boolean bPerformSubsetting) throws IOException
   {
-    final byte [] aFallback = font.encode (nFallbackCodepoint);
+    final byte [] aFallbackBytes = font.encode (nFallbackCodepoint);
     final boolean bAddToSubset = bPerformSubsetting && font.willBeSubset ();
     final NonBlockingByteArrayOutputStream out = new NonBlockingByteArrayOutputStream ();
     int offset = 0;
@@ -33,7 +33,7 @@ public final class PDFontHelper
       }
       catch (final IllegalArgumentException ex)
       {
-        bytes = aFallback;
+        bytes = aFallbackBytes;
       }
       out.write (bytes);
 

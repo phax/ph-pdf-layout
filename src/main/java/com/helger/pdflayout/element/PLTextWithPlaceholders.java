@@ -31,9 +31,9 @@ import com.helger.pdflayout.spec.FontSpec;
  */
 public class PLTextWithPlaceholders extends PLText
 {
-  public PLTextWithPlaceholders (@Nonnull final String sText, @Nonnull final FontSpec aFont)
+  public PLTextWithPlaceholders (@Nonnull final String sText, @Nonnull final FontSpec aFontSpec)
   {
-    super (sText, aFont);
+    super (sText, aFontSpec);
   }
 
   @Override

@@ -42,22 +42,24 @@ import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
- * This class wraps PDF Fonts and offers some sanity methods.
+ * This class represents a wrapper around a {@link PDFont} that is uniquely
+ * assigned to a PDDocument.
  *
  * @author Philip Helger
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public class PDFFont
+public class LoadedFont
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (PDFFont.class);
+  private static final Logger s_aLogger = LoggerFactory.getLogger (LoadedFont.class);
+  private static final int WIDTH_CACHE_MAX = 256;
 
   private final PDFont m_aFont;
-  // Helper
+  // Status vars
   private final float m_fBBHeight;
-  private float [] m_aWidthCache;
+  private final float [] m_aWidthCache;
 
-  public PDFFont (@Nonnull final PDFont aFont)
+  public LoadedFont (@Nonnull final PDFont aFont) throws IOException
   {
     ValueEnforcer.notNull (aFont, "Font");
     m_aFont = aFont;
@@ -76,6 +78,12 @@ public class PDFFont
       throw new IllegalArgumentException ("Failed to determined FontDescriptor from specified font " + aFont);
 
     m_fBBHeight = aFD.getFontBoundingBox ().getHeight ();
+
+    // Performance improvement, because each char is always the same width if
+    // this encoding is used
+    m_aWidthCache = new float [WIDTH_CACHE_MAX];
+    for (int i = 0; i < WIDTH_CACHE_MAX; ++i)
+      m_aWidthCache[i] = m_aFont.getWidth (i);
   }
 
   /**
@@ -103,26 +111,18 @@ public class PDFFont
   @Nonnegative
   public float getStringWidth (@Nonnull final String sText, @Nonnegative final float fFontSize) throws IOException
   {
-    // Performance improvement, because each char is always the same width if
-    // this encoding is used
-    final int nCacheMax = 256;
-    if (m_aWidthCache == null)
-    {
-      m_aWidthCache = new float [nCacheMax];
-      for (int i = 0; i < nCacheMax; ++i)
-        m_aWidthCache[i] = m_aFont.getWidth (i);
-    }
     final byte [] aEncodedText = PDFontHelper.encode (m_aFont, sText, '?', false);
     final NonBlockingByteArrayInputStream in = new NonBlockingByteArrayInputStream (aEncodedText);
     float fWidth = 0;
     while (in.available () > 0)
     {
       final int code = m_aFont.readCode (in);
-      if (code < nCacheMax)
+      if (code < WIDTH_CACHE_MAX)
         fWidth += m_aWidthCache[code];
       else
         fWidth += m_aFont.getWidth (code);
     }
+
     // The width is in 1000 unit of text space, ie 333 or 777
     return fWidth * fFontSize / 1000f;
   }
@@ -227,7 +227,7 @@ public class PDFFont
       return true;
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
-    final PDFFont rhs = (PDFFont) o;
+    final LoadedFont rhs = (LoadedFont) o;
     return m_aFont.equals (rhs.m_aFont);
   }
 

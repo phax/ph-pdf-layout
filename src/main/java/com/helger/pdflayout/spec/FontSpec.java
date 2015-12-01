@@ -47,7 +47,7 @@ public class FontSpec
   private final PreloadFont m_aFont;
   private final float m_fFontSize;
   private final Color m_aColor;
-  private PDFFont m_aLoadedFont;
+  private LoadedFont m_aLoadedFont;
 
   public FontSpec (@Nonnull final PreloadFont aFont, @Nonnegative final float fFontSize)
   {
@@ -91,12 +91,19 @@ public class FontSpec
     return m_aColor;
   }
 
+  /**
+   * @param aDoc
+   *        The PDDocument for which the font should be loaded.
+   * @return The loaded font or the cached value.
+   * @throws IOException
+   *         In case font loading fails
+   */
   @Nonnull
-  public PDFFont getAsLoadedFont (@Nonnull final PDDocument aDoc) throws IOException
+  public LoadedFont getAsLoadedFont (@Nonnull final PDDocument aDoc) throws IOException
   {
     // Cache to avoid parsing TTF over and over again
     if (m_aLoadedFont == null)
-      m_aLoadedFont = new PDFFont (m_aFont.getAsPDFont (aDoc));
+      m_aLoadedFont = new LoadedFont (m_aFont.getAsPDFont (aDoc));
     return m_aLoadedFont;
   }
 
