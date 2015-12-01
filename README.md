@@ -1,10 +1,9 @@
-ph-pdf-layout
-=============
+#ph-pdf-layout
 
 Java library for creating fluid page layouts with Apache PDFBox.
 
 Please check the test files to see how to create PDFs with the different elements.
-Version 2.1.0 uses PDFBox 2.0.0-RC2, previous versions use PDFBox 1.8.x.
+Version 2.1.0 uses PDFBox 2.0.0-RC2, previous versions (up to and including 2.0.0) use PDFBox 1.8.x.
 
 #Maven usage
 Add the following to your pom.xml to use this artifact:
