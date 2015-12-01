@@ -1,10 +1,14 @@
 package org.apache.pdfbox.pdmodel.font;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class PDFontHelper
+import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
+
+public final class PDFontHelper
 {
+  private PDFontHelper ()
+  {}
+
   public static byte [] encode (final PDFont font, final String sDrawText, final int nFallback) throws IOException
   {
     return encode (font, sDrawText, font.encode (nFallback));
@@ -12,7 +16,7 @@ public class PDFontHelper
 
   public static byte [] encode (final PDFont font, final String sDrawText, final byte [] aFallback) throws IOException
   {
-    final ByteArrayOutputStream out = new ByteArrayOutputStream ();
+    final NonBlockingByteArrayOutputStream out = new NonBlockingByteArrayOutputStream ();
     int offset = 0;
     while (offset < sDrawText.length ())
     {

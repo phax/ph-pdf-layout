@@ -26,7 +26,6 @@ import javax.annotation.Nullable;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStreamWithCache;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +38,7 @@ import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.ERenderingElementType;
 import com.helger.pdflayout.render.IRenderingContextCustomizer;
 import com.helger.pdflayout.render.PageSetupContext;

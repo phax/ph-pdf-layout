@@ -1,4 +1,4 @@
-package org.apache.pdfbox.pdmodel;
+package com.helger.pdflayout.pdfbox;
 
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
@@ -17,6 +17,10 @@ import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSNumber;
 import org.apache.pdfbox.pdfwriter.COSWriter;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentHelper;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.documentinterchange.markedcontent.PDPropertyList;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -307,10 +311,7 @@ public final class PDPageContentStreamExt implements Closeable
       fontStack.setElementAt (font, fontStack.size () - 1);
     }
 
-    if (font.willBeSubset () && !_document.getFontsToSubset ().contains (font))
-    {
-      _document.getFontsToSubset ().add (font);
-    }
+    PDDocumentHelper.handleFontSubset (_document, font);
 
     writeOperand (resources.add (font));
     writeOperand (fontSize);

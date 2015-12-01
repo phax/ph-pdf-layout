@@ -24,13 +24,13 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPageContentStreamWithCache;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.string.StringParser;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 
 /**
  * This class contains the context for rendering a single element onto the PDF.

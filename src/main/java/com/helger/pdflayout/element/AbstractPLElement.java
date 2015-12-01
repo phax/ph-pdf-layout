@@ -22,13 +22,12 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.pdfbox.pdmodel.PDPageContentStreamWithCache;
-
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;

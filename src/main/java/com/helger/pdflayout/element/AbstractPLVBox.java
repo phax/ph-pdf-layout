@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
-import org.apache.pdfbox.pdmodel.PDPageContentStreamWithCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +36,7 @@ import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.pdfbox.pdmodel;
+package com.helger.pdflayout.pdfbox;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -22,6 +22,8 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import org.apache.pdfbox.pdfwriter.COSWriter;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontHelper;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
