@@ -9,36 +9,38 @@ public final class PDFontHelper
   private PDFontHelper ()
   {}
 
-  public static byte [] encode (final PDFont font,
-                                final String sDrawText,
-                                final int nFallbackCodepoint,
-                                final boolean bPerformSubsetting) throws IOException
+  public static byte [] encodeWithFallback (final PDFont aFont,
+                                            final String sDrawText,
+                                            final int nFallbackCodepoint,
+                                            final boolean bPerformSubsetting) throws IOException
   {
-    final byte [] aFallbackBytes = font.encode (nFallbackCodepoint);
-    final boolean bAddToSubset = bPerformSubsetting && font.willBeSubset ();
-    final NonBlockingByteArrayOutputStream out = new NonBlockingByteArrayOutputStream ();
-    int offset = 0;
-    while (offset < sDrawText.length ())
+    final byte [] aFallbackBytes = aFont.encode (nFallbackCodepoint);
+    final boolean bAddToSubset = bPerformSubsetting && aFont.willBeSubset ();
+
+    final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
+    int nCPOfs = 0;
+    while (nCPOfs < sDrawText.length ())
     {
-      final int codePoint = sDrawText.codePointAt (offset);
+      final int nCP = sDrawText.codePointAt (nCPOfs);
 
       // multi-byte encoding with 1 to 4 bytes
-      byte [] bytes;
+      byte [] aCPBytes;
       try
       {
-        bytes = font.encode (codePoint);
+        // This method is package private
+        aCPBytes = aFont.encode (nCP);
 
         if (bAddToSubset)
-          font.addToSubset (codePoint);
+          aFont.addToSubset (nCP);
       }
       catch (final IllegalArgumentException ex)
       {
-        bytes = aFallbackBytes;
+        aCPBytes = aFallbackBytes;
       }
-      out.write (bytes);
+      aBAOS.write (aCPBytes);
 
-      offset += Character.charCount (codePoint);
+      nCPOfs += Character.charCount (nCP);
     }
-    return out.toByteArray ();
+    return aBAOS.toByteArray ();
   }
 }

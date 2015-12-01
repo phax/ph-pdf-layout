@@ -189,7 +189,7 @@ public class PDPageContentStreamWithCache
 
     final PDFont font = m_aLastUsedFont;
 
-    COSWriter.writeString (PDFontHelper.encode (font, sDrawText, '?', true), m_aStream.output);
+    COSWriter.writeString (PDFontHelper.encodeWithFallback (font, sDrawText, '?', true), m_aStream.output);
     m_aStream.write (" ");
 
     m_aStream.writeOperator ("Tj");

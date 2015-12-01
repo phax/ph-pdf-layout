@@ -29,6 +29,7 @@ import org.apache.pdfbox.pdmodel.font.PDCIDFont;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontHelper;
+import org.apache.pdfbox.pdmodel.font.PDSimpleFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ public class LoadedFont
   private static final int WIDTH_CACHE_MAX = 256;
 
   private final PDFont m_aFont;
+  private final boolean m_bSingleByteFont;
   // Status vars
   private final float m_fBBHeight;
   private final float [] m_aWidthCache;
@@ -63,6 +65,7 @@ public class LoadedFont
   {
     ValueEnforcer.notNull (aFont, "Font");
     m_aFont = aFont;
+    m_bSingleByteFont = aFont instanceof PDSimpleFont;
 
     PDFontDescriptor aFD = aFont.getFontDescriptor ();
     if (aFD == null)
@@ -87,7 +90,7 @@ public class LoadedFont
   }
 
   /**
-   * @return The underyling font. Never <code>null</code>.
+   * @return The underlying font. Never <code>null</code>.
    */
   @Nonnull
   public PDFont getFont ()
@@ -111,16 +114,31 @@ public class LoadedFont
   @Nonnegative
   public float getStringWidth (@Nonnull final String sText, @Nonnegative final float fFontSize) throws IOException
   {
-    final byte [] aEncodedText = PDFontHelper.encode (m_aFont, sText, '?', false);
-    final NonBlockingByteArrayInputStream in = new NonBlockingByteArrayInputStream (aEncodedText);
+    final byte [] aEncodedText = PDFontHelper.encodeWithFallback (m_aFont, sText, '?', false);
+
     float fWidth = 0;
-    while (in.available () > 0)
+    if (m_bSingleByteFont)
     {
-      final int code = m_aFont.readCode (in);
-      if (code < WIDTH_CACHE_MAX)
-        fWidth += m_aWidthCache[code];
-      else
-        fWidth += m_aFont.getWidth (code);
+      for (final byte b : aEncodedText)
+      {
+        final int nCode = b & 0xff;
+        if (nCode < WIDTH_CACHE_MAX)
+          fWidth += m_aWidthCache[nCode];
+        else
+          fWidth += m_aFont.getWidth (nCode);
+      }
+    }
+    else
+    {
+      final NonBlockingByteArrayInputStream aIS = new NonBlockingByteArrayInputStream (aEncodedText);
+      while (aIS.available () > 0)
+      {
+        final int nCode = m_aFont.readCode (aIS);
+        if (nCode < WIDTH_CACHE_MAX)
+          fWidth += m_aWidthCache[nCode];
+        else
+          fWidth += m_aFont.getWidth (nCode);
+      }
     }
 
     // The width is in 1000 unit of text space, ie 333 or 777
