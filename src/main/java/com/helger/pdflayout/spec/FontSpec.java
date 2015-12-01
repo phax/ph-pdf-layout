@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
@@ -37,29 +37,31 @@ import com.helger.commons.string.ToStringGenerator;
  *
  * @author Philip Helger
  */
-@Immutable
+@NotThreadSafe
 @MustImplementEqualsAndHashcode
 public class FontSpec
 {
   /** The default font color: black */
   public static final Color DEFAULT_COLOR = Color.BLACK;
 
-  private final PreloadFont m_aFont;
+  private final PreloadFont m_aPreloadFont;
   private final float m_fFontSize;
   private final Color m_aColor;
+  // Status vars
+  private PDDocument m_aFontDoc;
   private LoadedFont m_aLoadedFont;
 
-  public FontSpec (@Nonnull final PreloadFont aFont, @Nonnegative final float fFontSize)
+  public FontSpec (@Nonnull final PreloadFont aPreloadFont, @Nonnegative final float fFontSize)
   {
-    this (aFont, fFontSize, DEFAULT_COLOR);
+    this (aPreloadFont, fFontSize, DEFAULT_COLOR);
   }
 
-  public FontSpec (@Nonnull final PreloadFont aFont, @Nonnegative final float fFontSize, @Nonnull final Color aColor)
+  public FontSpec (@Nonnull final PreloadFont aPreloadFont, @Nonnegative final float fFontSize, @Nonnull final Color aColor)
   {
-    ValueEnforcer.notNull (aFont, "Font");
+    ValueEnforcer.notNull (aPreloadFont, "Font");
     ValueEnforcer.isGT0 (fFontSize, "FontSize");
     ValueEnforcer.notNull (aColor, "Color");
-    m_aFont = aFont;
+    m_aPreloadFont = aPreloadFont;
     m_fFontSize = fFontSize;
     m_aColor = aColor;
   }
@@ -70,7 +72,7 @@ public class FontSpec
   @Nonnull
   public PreloadFont getPreloadFont ()
   {
-    return m_aFont;
+    return m_aPreloadFont;
   }
 
   /**
@@ -102,8 +104,12 @@ public class FontSpec
   public LoadedFont getAsLoadedFont (@Nonnull final PDDocument aDoc) throws IOException
   {
     // Cache to avoid parsing TTF over and over again
-    if (m_aLoadedFont == null)
-      m_aLoadedFont = new LoadedFont (m_aFont.getAsPDFont (aDoc));
+    if (m_aLoadedFont == null || m_aFontDoc != aDoc)
+    {
+      // Load font again, if the PDDocument changed
+      m_aLoadedFont = new LoadedFont (m_aPreloadFont.getAsPDFont (aDoc));
+      m_aFontDoc = aDoc;
+    }
     return m_aLoadedFont;
   }
 
@@ -118,7 +124,7 @@ public class FontSpec
   public FontSpec getCloneWithDifferentFont (@Nonnull final PreloadFont aNewFont)
   {
     ValueEnforcer.notNull (aNewFont, "NewFont");
-    if (aNewFont.equals (m_aFont))
+    if (aNewFont.equals (m_aPreloadFont))
       return this;
     return new FontSpec (aNewFont, m_fFontSize, m_aColor);
   }
@@ -136,7 +142,7 @@ public class FontSpec
     ValueEnforcer.isGT0 (fNewFontSize, "FontSize");
     if (EqualsHelper.equals (fNewFontSize, m_fFontSize))
       return this;
-    return new FontSpec (m_aFont, fNewFontSize, m_aColor);
+    return new FontSpec (m_aPreloadFont, fNewFontSize, m_aColor);
   }
 
   /**
@@ -152,7 +158,7 @@ public class FontSpec
     ValueEnforcer.notNull (aNewColor, "NewColor");
     if (aNewColor.equals (m_aColor))
       return this;
-    return new FontSpec (m_aFont, m_fFontSize, aNewColor);
+    return new FontSpec (m_aPreloadFont, m_fFontSize, aNewColor);
   }
 
   @Override
@@ -163,18 +169,18 @@ public class FontSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final FontSpec rhs = (FontSpec) o;
-    return m_aFont.equals (rhs.m_aFont) && EqualsHelper.equals (m_fFontSize, rhs.m_fFontSize) && m_aColor.equals (rhs.m_aColor);
+    return m_aPreloadFont.equals (rhs.m_aPreloadFont) && EqualsHelper.equals (m_fFontSize, rhs.m_fFontSize) && m_aColor.equals (rhs.m_aColor);
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aFont).append (m_fFontSize).append (m_aColor).getHashCode ();
+    return new HashCodeGenerator (this).append (m_aPreloadFont).append (m_fFontSize).append (m_aColor).getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("font", m_aFont).append ("fontSize", m_fFontSize).append ("color", m_aColor).toString ();
+    return new ToStringGenerator (this).append ("font", m_aPreloadFont).append ("fontSize", m_fFontSize).append ("color", m_aColor).toString ();
   }
 }

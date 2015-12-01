@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,6 +34,8 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.exception.InitializationException;
+import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.vendor.VendorInfo;
@@ -42,6 +45,24 @@ import com.helger.pdflayout.element.PLPageSet.PageSetPrepareResult;
 public class PageLayoutPDF
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (PageLayoutPDF.class);
+
+  public static final String PROJECT_NAME = "ph-pdf-layout";
+  public static final String PROJECT_URL = "https://github.com/phax/ph-pdf-layout";
+  public static final String PROJECT_VERSION;
+
+  static
+  {
+    try
+    {
+      final Properties p = new Properties ();
+      p.load (ClassPathResource.getInputStream ("ph-pdf-layout-version.properties"));
+      PROJECT_VERSION = p.getProperty ("version");
+    }
+    catch (final IOException ex)
+    {
+      throw new InitializationException ("Failed to load version number!");
+    }
+  }
 
   private String m_sDocumentAuthor;
   private Calendar m_aDocumentCreationDate;
@@ -208,7 +229,7 @@ public class PageLayoutPDF
           aProperties.setKeywords (m_sDocumentKeywords);
         if (StringHelper.hasText (m_sDocumentSubject))
           aProperties.setSubject (m_sDocumentSubject);
-        aProperties.setProducer ("ph-pdf-layout - https://github.com/phax/ph-pdf-layout");
+        aProperties.setProducer (PROJECT_NAME + " " + PROJECT_VERSION + " - " + PROJECT_URL);
         // add the created properties
         aDoc.setDocumentInformation (aProperties);
       }

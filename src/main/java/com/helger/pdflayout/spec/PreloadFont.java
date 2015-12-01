@@ -49,6 +49,7 @@ public final class PreloadFont
   {
     if (m_aFont == null)
     {
+      // Not loaded custom font
       final boolean bEmbed = true;
       switch (m_aFontRes.getFontType ())
       {
