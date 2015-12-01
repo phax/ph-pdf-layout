@@ -34,9 +34,9 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  */
 public class PLTextSplittable extends PLText implements IPLSplittableElement
 {
-  public PLTextSplittable (@Nullable final String sText, @Nonnull final FontSpec aFont)
+  public PLTextSplittable (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
   {
-    super (sText, aFont);
+    super (sText, aFontSpec);
   }
 
   @Nullable
@@ -45,11 +45,10 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
     if (fAvailableHeight <= 0)
       return null;
 
-    final float fLineHeight = getLineHeight ();
+    final float fLineHeight = m_fLineHeight;
 
     // Get the lines in the correct order from top to bottom
-    final List <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines
-                                                        : CollectionHelper.getReverseList (m_aPreparedLines);
+    final List <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines : CollectionHelper.getReverseList (m_aPreparedLines);
 
     int nLines = (int) (fAvailableHeight / fLineHeight);
     if (nLines <= 0)

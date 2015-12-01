@@ -298,7 +298,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   }
 
   @Nonnull
-  public PageSetPrepareResult prepareAllPages () throws IOException
+  public PageSetPrepareResult prepareAllPages (@Nonnull final PDDocument aDoc) throws IOException
   {
     // The result element
     final PageSetPrepareResult ret = new PageSetPrepareResult ();
@@ -307,11 +307,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     if (m_aPageHeader != null)
     {
       // Page header does not care about page padding
-      final PreparationContext aRPC = new PreparationContext (m_aPageSize.getWidth () -
-                                                              getMarginXSum () -
-                                                              m_aPageHeader.getMarginPlusPaddingXSum (),
-                                                              getMarginTop () -
-                                                                                                         m_aPageHeader.getMarginPlusPaddingYSum ());
+      final PreparationContext aRPC = new PreparationContext (aDoc,
+                                                              m_aPageSize.getWidth () - getMarginXSum () - m_aPageHeader.getMarginPlusPaddingXSum (),
+                                                              getMarginTop () - m_aPageHeader.getMarginPlusPaddingYSum ());
       final SizeSpec aElementSize = m_aPageHeader.prepare (aRPC);
       ret.setHeaderHeight (aElementSize.getHeight ());
 
@@ -327,11 +325,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     if (m_aPageFooter != null)
     {
       // Page footer does not care about page padding
-      final PreparationContext aRPC = new PreparationContext (m_aPageSize.getWidth () -
-                                                              getMarginXSum () -
-                                                              m_aPageFooter.getMarginPlusPaddingXSum (),
-                                                              getMarginBottom () -
-                                                                                                         m_aPageFooter.getMarginPlusPaddingYSum ());
+      final PreparationContext aRPC = new PreparationContext (aDoc,
+                                                              m_aPageSize.getWidth () - getMarginXSum () - m_aPageFooter.getMarginPlusPaddingXSum (),
+                                                              getMarginBottom () - m_aPageFooter.getMarginPlusPaddingYSum ());
       final SizeSpec aElementSize = m_aPageFooter.prepare (aRPC);
       ret.setFooterHeight (aElementSize.getHeight ());
 
@@ -357,7 +353,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     {
       final float fAvailableWidth = getAvailableWidth () - aElement.getMarginPlusPaddingXSum ();
       final float fAvailableHeight = getAvailableHeight () - aElement.getMarginPlusPaddingYSum ();
-      final PreparationContext aRPC = new PreparationContext (fAvailableWidth, fAvailableHeight);
+      final PreparationContext aRPC = new PreparationContext (aDoc, fAvailableWidth, fAvailableHeight);
       final SizeSpec aElementSize = aElement.prepare (aRPC);
       ret.addElement (new PLElementWithSize (aElement, aElementSize));
     }
@@ -410,10 +406,8 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
                                         fAvailableHeight);
 
             // split elements
-            final PLSplitResult aSplitResult = aElement.getAsSplittable ()
-                                                       .splitElements (fElementWidth,
-                                                                       fAvailableHeight -
-                                                                                      aElement.getMarginPlusPaddingYSum ());
+            final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElements (fElementWidth,
+                                                                                          fAvailableHeight - aElement.getMarginPlusPaddingYSum ());
             if (aSplitResult != null)
             {
               // Re-add them to the list and try again (they may be splitted
@@ -621,10 +615,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
           m_aPageFooter.doPageSetup (aCtx);
       }
 
-      final PDPageContentStreamWithCache aContentStream = new PDPageContentStreamWithCache (aDoc,
-                                                                                            aPage,
-                                                                                            false,
-                                                                                            bCompressPDF);
+      final PDPageContentStreamWithCache aContentStream = new PDPageContentStreamWithCache (aDoc, aPage, false, bCompressPDF);
       try
       {
         // Page rect before content - debug: red
@@ -658,11 +649,8 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
                                                              bDebug,
                                                              getMarginLeft () + m_aPageHeader.getMarginLeft (),
                                                              m_aPageSize.getHeight () - m_aPageHeader.getMarginTop (),
-                                                             m_aPageSize.getWidth () -
-                                                                                                                       getMarginXSum () -
-                                                                                                                       m_aPageHeader.getMarginXSum (),
-                                                             aPrepareResult.getHeaderHeight () +
-                                                                                                                                                       m_aPageHeader.getPaddingYSum ());
+                                                             m_aPageSize.getWidth () - getMarginXSum () - m_aPageHeader.getMarginXSum (),
+                                                             aPrepareResult.getHeaderHeight () + m_aPageHeader.getPaddingYSum ());
           aPageIndex.setPlaceholdersInRenderingContext (aRC);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderingContext (aRC);

@@ -16,7 +16,11 @@
  */
 package com.helger.pdflayout.render;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
@@ -29,12 +33,15 @@ import com.helger.commons.string.ToStringGenerator;
 @Immutable
 public final class PreparationContext
 {
+  private final PDDocument m_aDoc;
   private final float m_fAvailableWidth;
   private final float m_fAvailableHeight;
 
   /**
    * Constructor
    *
+   * @param aDoc
+   *        The {@link PDDocument} worked upon
    * @param fAvailableWidth
    *        The available width for an element, without the element's margin and
    *        padding. Should be &gt; 0.
@@ -42,12 +49,20 @@ public final class PreparationContext
    *        The available height for an element, without the element's margin
    *        and padding. Should be &gt; 0.
    */
-  public PreparationContext (final float fAvailableWidth, final float fAvailableHeight)
+  public PreparationContext (@Nonnull final PDDocument aDoc, @Nonnegative final float fAvailableWidth, @Nonnegative final float fAvailableHeight)
   {
+    ValueEnforcer.notNull (aDoc, "PDDocument");
     ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
     ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
+    m_aDoc = aDoc;
     m_fAvailableWidth = fAvailableWidth;
     m_fAvailableHeight = fAvailableHeight;
+  }
+
+  @Nonnull
+  public PDDocument getDocument ()
+  {
+    return m_aDoc;
   }
 
   /**
@@ -71,8 +86,6 @@ public final class PreparationContext
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("availableWidth", m_fAvailableWidth)
-                                       .append ("availableHeight", m_fAvailableHeight)
-                                       .toString ();
+    return new ToStringGenerator (this).append ("availableWidth", m_fAvailableWidth).append ("availableHeight", m_fAvailableHeight).toString ();
   }
 }

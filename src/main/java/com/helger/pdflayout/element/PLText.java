@@ -40,6 +40,7 @@ import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
+import com.helger.pdflayout.spec.PDFFont;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.TextAndWidthSpec;
 
@@ -48,8 +49,7 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  *
  * @author Philip Helger
  */
-public class PLText extends AbstractPLElement <PLText>
-                    implements IPLHasHorizontalAlignment <PLText>, IPLHasVerticalAlignment <PLText>
+public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizontalAlignment <PLText>, IPLHasVerticalAlignment <PLText>
 {
   public static final EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
   public static final EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
@@ -57,23 +57,23 @@ public class PLText extends AbstractPLElement <PLText>
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
 
   private final String m_sText;
-  private final FontSpec m_aFont;
-  private final float m_fLineHeight;
+  private final FontSpec m_aFontSpec;
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
   private boolean m_bTopDown = DEFAULT_TOP_DOWN;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
 
   // prepare result
+  private PDFFont m_aLoadedFont;
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
   protected List <TextAndWidthSpec> m_aPreparedLinesUnmodified;
   protected List <TextAndWidthSpec> m_aPreparedLines;
+  protected float m_fLineHeight;
 
-  public PLText (@Nullable final String sText, @Nonnull final FontSpec aFont)
+  public PLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
   {
     m_sText = StringHelper.getNotNull (sText);
-    m_aFont = ValueEnforcer.notNull (aFont, "Font");
-    m_fLineHeight = m_aFont.getLineHeight ();
+    m_aFontSpec = ValueEnforcer.notNull (aFontSpec, "FontSpec");
 
     if (PLDebug.isDebugText ())
     {
@@ -108,13 +108,7 @@ public class PLText extends AbstractPLElement <PLText>
   @Nonnull
   public FontSpec getFontSpec ()
   {
-    return m_aFont;
-  }
-
-  @Nonnegative
-  public float getLineHeight ()
-  {
-    return m_fLineHeight;
+    return m_aFontSpec;
   }
 
   @Nonnull
@@ -237,11 +231,21 @@ public class PLText extends AbstractPLElement <PLText>
     }
   }
 
+  final void internalSetPreparedLoadedFont (@Nonnull final PDFFont aLoadedFont)
+  {
+    m_aLoadedFont = aLoadedFont;
+  }
+
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
+    // Load font into document
+    m_aLoadedFont = m_aFontSpec.getAsLoadedFont (aCtx.getDocument ());
+    final float fFontSize = m_aFontSpec.getFontSize ();
+    m_fLineHeight = m_aLoadedFont.getLineHeight (fFontSize);
+
     // Split text into rows
-    internalSetPreparedLines (m_aFont.getFitToWidth (m_sText, aCtx.getAvailableWidth ()));
+    internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sText, fFontSize, aCtx.getAvailableWidth ()));
 
     // Determine height by number of lines
     return new SizeSpec (aCtx.getAvailableWidth (), m_aPreparedLines.size () * m_fLineHeight);
@@ -292,7 +296,10 @@ public class PLText extends AbstractPLElement <PLText>
     aContentStream.beginText ();
 
     // Set font if changed
-    aContentStream.setFont (m_aFont);
+    aContentStream.setFont (m_aLoadedFont.getFont (), m_aFontSpec);
+
+    final float fFontSize = m_aFontSpec.getFontSize ();
+    final float fLineHeight = m_fLineHeight;
 
     final float fLeft = getPaddingLeft ();
     final float fUsableWidth = aCtx.getWidth () - getPaddingXSum ();
@@ -310,7 +317,7 @@ public class PLText extends AbstractPLElement <PLText>
       if (!sOrigText.equals (sDrawText))
       {
         // Text changed - recalculate width!
-        fWidth = m_aFont.getStringWidth (sDrawText);
+        fWidth = m_aLoadedFont.getStringWidth (sDrawText, fFontSize);
       }
 
       float fIndentX;
@@ -332,9 +339,7 @@ public class PLText extends AbstractPLElement <PLText>
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
-        aContentStream.moveTextPositionByAmount (aCtx.getStartLeft () +
-                                                 fIndentX,
-                                                 aCtx.getStartTop () - fTop - (m_fLineHeight * 0.75f));
+        aContentStream.moveTextPositionByAmount (aCtx.getStartLeft () + fIndentX, aCtx.getStartTop () - fTop - (fLineHeight * 0.75f));
       }
       else
         if (fIndentX != 0)
@@ -353,12 +358,12 @@ public class PLText extends AbstractPLElement <PLText>
         if (m_bTopDown)
         {
           // Outdent and one line down, except for last line
-          aContentStream.moveTextPositionByAmount (-fIndentX, -m_fLineHeight);
+          aContentStream.moveTextPositionByAmount (-fIndentX, -fLineHeight);
         }
         else
         {
           // Outdent and one line up, except for last line
-          aContentStream.moveTextPositionByAmount (-fIndentX, m_fLineHeight);
+          aContentStream.moveTextPositionByAmount (-fIndentX, fLineHeight);
         }
       }
     }
@@ -369,13 +374,11 @@ public class PLText extends AbstractPLElement <PLText>
   {
     // Note: when drawing the text, only 0.75*lineHeight is subtracted so now we
     // need to add 0.25*lineHeight so that it looks good.
-    return (nLineCount + 0.25f) * getLineHeight ();
+    return (nLineCount + 0.25f) * m_fLineHeight;
   }
 
   @Nonnull
-  public PLElementWithSize getCopy (final float fElementWidth,
-                                    @Nonnull @Nonempty final List <TextAndWidthSpec> aLines,
-                                    final boolean bSplittableCopy)
+  public PLElementWithSize getCopy (final float fElementWidth, @Nonnull @Nonempty final List <TextAndWidthSpec> aLines, final boolean bSplittableCopy)
   {
     ValueEnforcer.notEmpty (aLines, "Lines");
 
@@ -386,9 +389,9 @@ public class PLText extends AbstractPLElement <PLText>
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));
 
     final String sTextContent = TextAndWidthSpec.getAsText (aLineCopy);
-    final PLText aNewText = bSplittableCopy ? new PLTextSplittable (sTextContent, getFontSpec ())
-                                            : new PLText (sTextContent, getFontSpec ());
+    final PLText aNewText = bSplittableCopy ? new PLTextSplittable (sTextContent, getFontSpec ()) : new PLText (sTextContent, getFontSpec ());
     aNewText.setBasicDataFrom (this).markAsPrepared (aSize).internalSetPreparedLines (aLineCopy);
+    aNewText.internalSetPreparedLoadedFont (m_aLoadedFont);
 
     return new PLElementWithSize (aNewText, aSize);
   }
@@ -397,12 +400,12 @@ public class PLText extends AbstractPLElement <PLText>
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("text", m_sText)
-                            .append ("font", m_aFont)
-                            .append ("lineHeight", m_fLineHeight)
-                            .append ("horzAlign", m_eHorzAlign)
-                            .append ("vertAlign", m_eVertAlign)
-                            .append ("topDown", m_bTopDown)
+                            .append ("Text", m_sText)
+                            .append ("FontSpec", m_aFontSpec)
+                            .append ("HorzAlign", m_eHorzAlign)
+                            .append ("VertAlign", m_eVertAlign)
+                            .append ("TopDown", m_bTopDown)
+                            .append ("MaxRows", m_nMaxRows)
                             .toString ();
   }
 }

@@ -219,7 +219,7 @@ public class PageLayoutPDF
       int nTotalPageCount = 0;
       for (final PLPageSet aPageSet : m_aPageSets)
       {
-        final PageSetPrepareResult aPR = aPageSet.prepareAllPages ();
+        final PageSetPrepareResult aPR = aPageSet.prepareAllPages (aDoc);
         aPRs[nPageSetIndex] = aPR;
         nTotalPageCount += aPR.getPageCount ();
         nPageSetIndex++;

@@ -18,16 +18,15 @@ package com.helger.pdflayout.spec;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.List;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
-import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
@@ -45,24 +44,23 @@ public class FontSpec
   /** The default font color: black */
   public static final Color DEFAULT_COLOR = Color.BLACK;
 
-  private final PDFFont m_aFont;
+  private final PreloadFont m_aFont;
   private final float m_fFontSize;
-  private final float m_fLineHeight;
   private final Color m_aColor;
+  private PDFFont m_aLoadedFont;
 
-  public FontSpec (@Nonnull final PDFFont aFont, @Nonnegative final float fFontSize)
+  public FontSpec (@Nonnull final PreloadFont aFont, @Nonnegative final float fFontSize)
   {
     this (aFont, fFontSize, DEFAULT_COLOR);
   }
 
-  public FontSpec (@Nonnull final PDFFont aFont, @Nonnegative final float fFontSize, @Nonnull final Color aColor)
+  public FontSpec (@Nonnull final PreloadFont aFont, @Nonnegative final float fFontSize, @Nonnull final Color aColor)
   {
     ValueEnforcer.notNull (aFont, "Font");
     ValueEnforcer.isGT0 (fFontSize, "FontSize");
     ValueEnforcer.notNull (aColor, "Color");
     m_aFont = aFont;
     m_fFontSize = fFontSize;
-    m_fLineHeight = aFont.getLineHeight (fFontSize);
     m_aColor = aColor;
   }
 
@@ -70,7 +68,7 @@ public class FontSpec
    * @return The font to use. Never <code>null</code>.
    */
   @Nonnull
-  public PDFFont getFont ()
+  public PreloadFont getPreloadFont ()
   {
     return m_aFont;
   }
@@ -85,15 +83,6 @@ public class FontSpec
   }
 
   /**
-   * @return The line height of the font in the given font size.
-   */
-  @Nonnegative
-  public float getLineHeight ()
-  {
-    return m_fLineHeight;
-  }
-
-  /**
    * @return The text color to use.
    */
   @Nonnull
@@ -102,39 +91,13 @@ public class FontSpec
     return m_aColor;
   }
 
-  /**
-   * Get the width of a string
-   *
-   * @param sText
-   *        The text to determine the width of. May not be <code>null</code>.
-   * @return The string width
-   * @throws IOException
-   *         Internally
-   */
-  @Nonnegative
-  public float getStringWidth (@Nonnull final String sText) throws IOException
-  {
-    return m_aFont.getStringWidth (sText, m_fFontSize);
-  }
-
-  /**
-   * Split the passed text so that it fits into the specified width.
-   *
-   * @param sText
-   *        The text to fit. Maybe <code>null</code>.
-   * @param fMaxWidth
-   *        The maximum width available. Must be &gt; 0.
-   * @return A list with all texts and widths that fit best. Never
-   *         <code>null</code>.
-   * @throws IOException
-   *         in case of an error
-   */
   @Nonnull
-  @ReturnsMutableCopy
-  public List <TextAndWidthSpec> getFitToWidth (@Nullable final String sText,
-                                                @Nonnegative final float fMaxWidth) throws IOException
+  public PDFFont getAsLoadedFont (@Nonnull final PDDocument aDoc) throws IOException
   {
-    return m_aFont.getFitToWidth (sText, m_fFontSize, fMaxWidth);
+    // Cache to avoid parsing TTF over and over again
+    if (m_aLoadedFont == null)
+      m_aLoadedFont = new PDFFont (m_aFont.getAsPDFont (aDoc));
+    return m_aLoadedFont;
   }
 
   /**
@@ -145,7 +108,7 @@ public class FontSpec
    * @return this if the fonts are equal - a new object otherwise.
    */
   @Nonnull
-  public FontSpec getCloneWithDifferentFont (@Nonnull final PDFFont aNewFont)
+  public FontSpec getCloneWithDifferentFont (@Nonnull final PreloadFont aNewFont)
   {
     ValueEnforcer.notNull (aNewFont, "NewFont");
     if (aNewFont.equals (m_aFont))
@@ -193,9 +156,7 @@ public class FontSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final FontSpec rhs = (FontSpec) o;
-    return m_aFont.equals (rhs.m_aFont) &&
-           EqualsHelper.equals (m_fFontSize, rhs.m_fFontSize) &&
-           m_aColor.equals (rhs.m_aColor);
+    return m_aFont.equals (rhs.m_aFont) && EqualsHelper.equals (m_fFontSize, rhs.m_fFontSize) && m_aColor.equals (rhs.m_aColor);
   }
 
   @Override
@@ -207,10 +168,6 @@ public class FontSpec
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("font", m_aFont)
-                                       .append ("fontSize", m_fFontSize)
-                                       .append ("lineHeight", m_fLineHeight)
-                                       .append ("color", m_aColor)
-                                       .toString ();
+    return new ToStringGenerator (this).append ("font", m_aFont).append ("fontSize", m_fFontSize).append ("color", m_aColor).toString ();
   }
 }

@@ -33,7 +33,7 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.FontSpec;
-import com.helger.pdflayout.spec.PDFFont;
+import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.WidthSpec;
 
 /**
@@ -49,7 +49,7 @@ public final class PLImageTest
   @Test
   public void testWithWordBreak () throws PDFCreationException, IOException
   {
-    final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
     aPS1.addElement (new PLText ("First line", r10).setBorder (new BorderStyleSpec (Color.RED)));

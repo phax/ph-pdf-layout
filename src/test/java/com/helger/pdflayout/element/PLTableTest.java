@@ -33,8 +33,8 @@ import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.MarginSpec;
-import com.helger.pdflayout.spec.PDFFont;
 import com.helger.pdflayout.spec.PaddingSpec;
+import com.helger.pdflayout.spec.PreloadFont;
 
 /**
  * Test class for class {@link PLTable}.
@@ -49,14 +49,12 @@ public final class PLTableTest
   @Test
   public void testBasic () throws PDFCreationException
   {
-    final FontSpec r10 = new FontSpec (PDFFont.REGULAR, 10);
-    final FontSpec r14b = new FontSpec (PDFFont.REGULAR_BOLD, 14);
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final FontSpec r14b = new FontSpec (PreloadFont.REGULAR_BOLD, 14);
     final MarginSpec aMargin = new MarginSpec (5);
     final PaddingSpec aPadding = new PaddingSpec (2);
 
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30)
-                                                         .setPadding (10, 0, 20, 0)
-                                                         .setFillColor (new Color (0xddffff));
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30).setPadding (10, 0, 20, 0).setFillColor (new Color (0xddffff));
     aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
                                                     .setPadding (0, 4)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
@@ -70,31 +68,24 @@ public final class PLTableTest
     aPS1.addElement (new PLText ("Erste Dummy Zeile", r10));
 
     // Start table
-    final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
-                                : PLTable.createWithPercentage (10, 40, 25, 25);
+    final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4) : PLTable.createWithPercentage (10, 40, 25, 25);
     aTable.setHeaderRowCount (1);
 
     // Add row
     PLHBoxSplittable aRow = aTable.addTableRow (new PLText ("ID", r14b).setPadding (aPadding),
                                                 new PLText ("Name", r14b).setPadding (aPadding),
-                                                new PLText ("Sum1", r14b).setPadding (aPadding)
-                                                                         .setHorzAlign (EHorzAlignment.CENTER),
-                                                new PLText ("Sum2", r14b).setPadding (aPadding)
-                                                                         .setHorzAlign (EHorzAlignment.RIGHT));
+                                                new PLText ("Sum1", r14b).setPadding (aPadding).setHorzAlign (EHorzAlignment.CENTER),
+                                                new PLText ("Sum2", r14b).setPadding (aPadding).setHorzAlign (EHorzAlignment.RIGHT));
     aRow.setColumnBorder (new BorderStyleSpec (Color.GRAY)).setFillColor (Color.WHITE);
 
     // Test colspan
-    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 2a", r10), 2),
-                           new PLTableCell (new PLText ("Colspan 2b", r10), 2))
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 2a", r10), 2), new PLTableCell (new PLText ("Colspan 2b", r10), 2))
           .setColumnBorder (new BorderStyleSpec (Color.BLACK));
-    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 3a", r10), 3),
-                           new PLTableCell (new PLText ("Colspan 1b", r10), 1))
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 3a", r10), 3), new PLTableCell (new PLText ("Colspan 1b", r10), 1))
           .setColumnBorder (new BorderStyleSpec (Color.BLACK));
-    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 1a", r10), 1),
-                           new PLTableCell (new PLText ("Colspan 3b", r10), 3))
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 1a", r10), 1), new PLTableCell (new PLText ("Colspan 3b", r10), 3))
           .setColumnBorder (new BorderStyleSpec (Color.BLACK));
-    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 4", r10), 4))
-          .setColumnBorder (new BorderStyleSpec (Color.BLACK));
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 4", r10), 4)).setColumnBorder (new BorderStyleSpec (Color.BLACK));
 
     // Add content lines
     for (int i = 0; i < 184; ++i)
@@ -105,12 +96,9 @@ public final class PLTableTest
                                                                        .setVertAlign (EVertAlignment.BOTTOM),
                                  new PLText ("Name " +
                                              i +
-                                             (i == 2 ? " this is extra text for row 2 that makes this line longer"
-                                                     : ""),
-                                             r10.getCloneWithDifferentColor (i %
-                                                                             3 == 0 ? Color.RED
-                                                                                    : Color.BLACK)).setPadding (aPadding)
-                                                                                                   .setMargin (aMargin),
+                                             (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
+                                             r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED : Color.BLACK)).setPadding (aPadding)
+                                                                                                                   .setMargin (aMargin),
                                  new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
                                                                            .setMargin (aMargin)
                                                                            .setHorzAlign (EHorzAlignment.CENTER)

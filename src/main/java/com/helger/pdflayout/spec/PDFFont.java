@@ -25,10 +25,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import org.apache.pdfbox.pdmodel.font.PDCIDFont;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontHelper;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,21 +50,6 @@ import com.helger.commons.string.ToStringGenerator;
 @MustImplementEqualsAndHashcode
 public class PDFFont
 {
-  public static final PDFFont REGULAR = new PDFFont (PDType1Font.HELVETICA);
-  public static final PDFFont REGULAR_BOLD = new PDFFont (PDType1Font.HELVETICA_BOLD);
-  public static final PDFFont REGULAR_ITALIC = new PDFFont (PDType1Font.HELVETICA_OBLIQUE);
-  public static final PDFFont REGULAR_BOLD_ITALIC = new PDFFont (PDType1Font.HELVETICA_BOLD_OBLIQUE);
-  public static final PDFFont MONOSPACE = new PDFFont (PDType1Font.COURIER);
-  public static final PDFFont MONOSPACE_BOLD = new PDFFont (PDType1Font.COURIER_BOLD);
-  public static final PDFFont MONOSPACE_ITALIC = new PDFFont (PDType1Font.COURIER_OBLIQUE);
-  public static final PDFFont MONOSPACE_BOLD_ITALIC = new PDFFont (PDType1Font.COURIER_BOLD_OBLIQUE);
-  public static final PDFFont TIMES = new PDFFont (PDType1Font.TIMES_ROMAN);
-  public static final PDFFont TIMES_BOLD = new PDFFont (PDType1Font.TIMES_BOLD);
-  public static final PDFFont TIMES_ITALIC = new PDFFont (PDType1Font.TIMES_ITALIC);
-  public static final PDFFont TIMES_BOLD_ITALIC = new PDFFont (PDType1Font.TIMES_BOLD_ITALIC);
-  public static final PDFFont SYMBOL = new PDFFont (PDType1Font.SYMBOL);
-  public static final PDFFont ZAPF_DINGBATS = new PDFFont (PDType1Font.ZAPF_DINGBATS);
-
   private static final Logger s_aLogger = LoggerFactory.getLogger (PDFFont.class);
 
   private final PDFont m_aFont;
@@ -73,19 +59,19 @@ public class PDFFont
 
   public PDFFont (@Nonnull final PDFont aFont)
   {
-    m_aFont = ValueEnforcer.notNull (aFont, "Font");
-    final PDFontDescriptor aFD = aFont.getFontDescriptor ();
-    // 2.0.0 code. Does not work with 1.8.4
-    // if (aFD == null)
-    // {
-    // if (aFont instanceof PDType0Font)
-    // {
-    // final PDFont aDescendantFont = ((PDType0Font) aFont).getDescendantFont
-    // ();
-    // if (aDescendantFont != null)
-    // aFD = aDescendantFont.getFontDescriptor ();
-    // }
-    // }
+    ValueEnforcer.notNull (aFont, "Font");
+    m_aFont = aFont;
+
+    PDFontDescriptor aFD = aFont.getFontDescriptor ();
+    if (aFD == null)
+    {
+      if (aFont instanceof PDType0Font)
+      {
+        final PDCIDFont aDescendantFont = ((PDType0Font) aFont).getDescendantFont ();
+        if (aDescendantFont != null)
+          aFD = aDescendantFont.getFontDescriptor ();
+      }
+    }
     if (aFD == null)
       throw new IllegalArgumentException ("Failed to determined FontDescriptor from specified font " + aFont);
 

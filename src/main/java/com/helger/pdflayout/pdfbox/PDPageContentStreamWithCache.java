@@ -46,7 +46,8 @@ public class PDPageContentStreamWithCache
   private final PDPageContentStreamExt m_aStream;
 
   // Status cache
-  private FontSpec m_aLastUsedFont;
+  private PDFont m_aLastUsedFont;
+  private float m_fLastUsedFontSize;
   private Color m_aLastUsedStrokingColor = Color.BLACK;
   private Color m_aLastUsedNonStrokingColor = Color.BLACK;
   private LineDashPatternSpec m_aLastUsedLineDashPattern = LineDashPatternSpec.SOLID;
@@ -73,18 +74,18 @@ public class PDPageContentStreamWithCache
     return m_aPage;
   }
 
-  public void setFont (@Nonnull final FontSpec aFont) throws IOException
+  public void setFont (@Nonnull final PDFont aFont, @Nonnull final FontSpec aFontSpec) throws IOException
   {
     ValueEnforcer.notNull (aFont, "Font");
 
-    if (m_aLastUsedFont == null ||
-        !aFont.getFont ().equals (m_aLastUsedFont.getFont ()) ||
-        !EqualsHelper.equals (aFont.getFontSize (), m_aLastUsedFont.getFontSize ()))
+    final float fFontSize = aFontSpec.getFontSize ();
+    if (m_aLastUsedFont == null || !aFont.equals (m_aLastUsedFont) || !EqualsHelper.equals (fFontSize, m_fLastUsedFontSize))
     {
-      m_aStream.setFont (aFont.getFont ().getFont (), aFont.getFontSize ());
+      m_aStream.setFont (aFont, fFontSize);
       m_aLastUsedFont = aFont;
+      m_fLastUsedFontSize = fFontSize;
     }
-    setNonStrokingColor (aFont.getColor ());
+    setNonStrokingColor (aFontSpec.getColor ());
   }
 
   public void setStrokingColor (@Nonnull final Color aColor) throws IOException
@@ -153,10 +154,7 @@ public class PDPageContentStreamWithCache
     m_aStream.fill ();
   }
 
-  public void addRect (final float fLeft,
-                       final float fBottom,
-                       final float fWidth,
-                       final float fHeight) throws IOException
+  public void addRect (final float fLeft, final float fBottom, final float fWidth, final float fHeight) throws IOException
   {
     m_aStream.addRect (fLeft, fBottom, fWidth, fHeight);
   }
@@ -189,7 +187,7 @@ public class PDPageContentStreamWithCache
     if (false)
       m_aStream.showText (sDrawText);
 
-    final PDFont font = m_aLastUsedFont.getFont ().getFont ();
+    final PDFont font = m_aLastUsedFont;
 
     COSWriter.writeString (PDFontHelper.encode (font, sDrawText, '?', true), m_aStream.output);
     m_aStream.write (" ");
@@ -197,11 +195,7 @@ public class PDPageContentStreamWithCache
     m_aStream.writeOperator ("Tj");
   }
 
-  public void drawXObject (final PDImageXObject aImage,
-                           final float fX,
-                           final float fY,
-                           final float fWidth,
-                           final float fHeight) throws IOException
+  public void drawXObject (final PDImageXObject aImage, final float fX, final float fY, final float fWidth, final float fHeight) throws IOException
   {
     m_aStream.drawImage (aImage, fX, fY, fWidth, fHeight);
   }

@@ -424,9 +424,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       // Effective content width of this element
       final float fRowElementWidth = fRowElementWidthFull - aRowElement.getMarginPlusPaddingXSum ();
       // Prepare child element
-      final float fRowElementHeight = aRowElement.prepare (new PreparationContext (fRowElementWidth,
-                                                                                   fAvailableHeight -
-                                                                                       aRowElement.getMarginPlusPaddingYSum ()))
+      final float fRowElementHeight = aRowElement.prepare (new PreparationContext (aCtx.getDocument (),
+                                                                                   fRowElementWidth,
+                                                                                   fAvailableHeight - aRowElement.getMarginPlusPaddingYSum ()))
                                                  .getHeight ();
 
       final float fRowElementHeightFull = fRowElementHeight + aRowElement.getMarginPlusPaddingYSum ();
@@ -443,19 +443,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidthFull - fAvailableWidth > 0.01)
-        s_aLogger.warn (getDebugID () +
-                        " uses more width (" +
-                        fUsedWidthFull +
-                        ") than available (" +
-                        fAvailableWidth +
-                        ")!");
+        s_aLogger.warn (getDebugID () + " uses more width (" + fUsedWidthFull + ") than available (" + fAvailableWidth + ")!");
       if (fUsedHeightFull - fAvailableHeight > 0.01 && !isSplittable ())
-        s_aLogger.warn (getDebugID () +
-                        " uses more height (" +
-                        fUsedHeightFull +
-                        ") than available (" +
-                        fAvailableHeight +
-                        ")!");
+        s_aLogger.warn (getDebugID () + " uses more height (" + fUsedHeightFull + ") than available (" + fAvailableHeight + ")!");
     }
 
     return new SizeSpec (fUsedWidthFull, fUsedHeightFull);
