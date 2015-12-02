@@ -17,7 +17,6 @@
 package com.helger.pdflayout.element;
 
 import java.awt.Color;
-import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -110,7 +109,9 @@ public final class PLTextTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
     final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
     for (int i = 0; i < 3; ++i)
-      aHBox.addColumn (new PLTextSplittable (s + s, r10).setMargin (10).setPadding (5).setBorder (new BorderStyleSpec (Color.GRAY)),
+      aHBox.addColumn (new PLTextSplittable (s + s, r10).setMargin (10)
+                                                        .setPadding (5)
+                                                        .setBorder (new BorderStyleSpec (Color.GRAY)),
                        WidthSpec.star ());
     aPS1.addElement (aHBox);
 
@@ -131,7 +132,9 @@ public final class PLTextTest
 
     final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
     for (int i = 0; i < 3; ++i)
-      aVBox.addRow (new PLTextSplittable (s, r10).setMargin (20).setPadding (5).setBorder (new BorderStyleSpec (Color.GRAY)));
+      aVBox.addRow (new PLTextSplittable (s, r10).setMargin (20)
+                                                 .setPadding (5)
+                                                 .setBorder (new BorderStyleSpec (Color.GRAY)));
     aPS1.addElement (aVBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
@@ -161,7 +164,7 @@ public final class PLTextTest
   }
 
   @Test
-  public void testCustomFontOpenSans () throws PDFCreationException, IOException
+  public void testCustomFontOpenSans () throws PDFCreationException
   {
     // Load TTF font
     final PreloadFont aFont = PreloadFont.createEmbedding (com.helger.font.open_sans.EFontResource.OPEN_SANS_NORMAL.getFontResource ());
@@ -181,7 +184,7 @@ public final class PLTextTest
   }
 
   @Test
-  public void testCustomFontLato2 () throws PDFCreationException, IOException
+  public void testCustomFontLato2 () throws PDFCreationException
   {
     // Load OTF font
     final PreloadFont aFont = PreloadFont.createEmbedding (com.helger.font.lato2.EFontResource.LATO2_NORMAL.getFontResource ());
