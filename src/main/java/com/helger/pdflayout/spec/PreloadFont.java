@@ -94,12 +94,16 @@ public final class PreloadFont
   {
     if (m_aFontRes != null)
     {
+      PDFont ret = null;
       if (m_aTTF != null)
-        return PDType0Font.load (aDoc, m_aTTF, m_bEmbed);
-      if (m_aOTF != null)
-        return PDType0Font.load (aDoc, m_aOTF, m_bEmbed);
+        ret = PDType0Font.load (aDoc, m_aTTF, m_bEmbed);
+      else
+        if (m_aOTF != null)
+          ret = PDType0Font.load (aDoc, m_aOTF, m_bEmbed);
 
-      throw new IllegalArgumentException ("Cannot load font resources of type " + m_aFontRes.getFontType ());
+      if (ret == null)
+        throw new IllegalArgumentException ("Cannot load font resources of type " + m_aFontRes.getFontType ());
+      return ret;
     }
     return m_aFont;
   }
