@@ -1,5 +1,7 @@
 package org.apache.pdfbox.pdmodel;
 
+import javax.annotation.Nonnull;
+
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 public final class PDDocumentHelper
@@ -7,11 +9,10 @@ public final class PDDocumentHelper
   private PDDocumentHelper ()
   {}
 
-  public static void handleFontSubset (final PDDocument doc, final PDFont font)
+  public static void handleFontSubset (@Nonnull final PDDocument aDoc, @Nonnull final PDFont aFont)
   {
-    if (font.willBeSubset () && !doc.getFontsToSubset ().contains (font))
-    {
-      doc.getFontsToSubset ().add (font);
-    }
+    // getFontsToSubset is package private
+    if (aFont.willBeSubset () && !aDoc.getFontsToSubset ().contains (aFont))
+      aDoc.getFontsToSubset ().add (aFont);
   }
 }

@@ -25,13 +25,13 @@ import org.apache.pdfbox.pdfwriter.COSWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDFontHelper;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
+import com.helger.pdflayout.spec.LoadedFont;
 
 /**
  * A special version of PDPageContentStream with an integrated "cache" to avoid
@@ -79,7 +79,9 @@ public class PDPageContentStreamWithCache
     ValueEnforcer.notNull (aFont, "Font");
 
     final float fFontSize = aFontSpec.getFontSize ();
-    if (m_aLastUsedFont == null || !aFont.equals (m_aLastUsedFont) || !EqualsHelper.equals (fFontSize, m_fLastUsedFontSize))
+    if (m_aLastUsedFont == null ||
+        !aFont.equals (m_aLastUsedFont) ||
+        !EqualsHelper.equals (fFontSize, m_fLastUsedFontSize))
     {
       m_aStream.setFont (aFont, fFontSize);
       m_aLastUsedFont = aFont;
@@ -154,7 +156,10 @@ public class PDPageContentStreamWithCache
     m_aStream.fill ();
   }
 
-  public void addRect (final float fLeft, final float fBottom, final float fWidth, final float fHeight) throws IOException
+  public void addRect (final float fLeft,
+                       final float fBottom,
+                       final float fWidth,
+                       final float fHeight) throws IOException
   {
     m_aStream.addRect (fLeft, fBottom, fWidth, fHeight);
   }
@@ -189,13 +194,17 @@ public class PDPageContentStreamWithCache
 
     final PDFont font = m_aLastUsedFont;
 
-    COSWriter.writeString (PDFontHelper.encodeWithFallback (font, sDrawText, '?', true), m_aStream.output);
+    COSWriter.writeString (LoadedFont.encodeWithFallback (font, sDrawText, '?', true), m_aStream.output);
     m_aStream.write (" ");
 
     m_aStream.writeOperator ("Tj");
   }
 
-  public void drawXObject (final PDImageXObject aImage, final float fX, final float fY, final float fWidth, final float fHeight) throws IOException
+  public void drawXObject (final PDImageXObject aImage,
+                           final float fX,
+                           final float fY,
+                           final float fWidth,
+                           final float fHeight) throws IOException
   {
     m_aStream.drawImage (aImage, fX, fY, fWidth, fHeight);
   }

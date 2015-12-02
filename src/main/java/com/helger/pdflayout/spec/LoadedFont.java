@@ -39,6 +39,7 @@ import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
+import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 
@@ -111,10 +112,46 @@ public class LoadedFont
     return getTextHeight (fFontSize) * 1.05f;
   }
 
+  public static byte [] encodeWithFallback (final PDFont aFont,
+                                            final String sDrawText,
+                                            final int nFallbackCodepoint,
+                                            final boolean bPerformSubsetting) throws IOException
+  {
+    final byte [] aFallbackBytes = PDFontHelper.encode (aFont, nFallbackCodepoint);
+    final boolean bAddToSubset = bPerformSubsetting && aFont.willBeSubset ();
+
+    final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
+    int nCPOfs = 0;
+    while (nCPOfs < sDrawText.length ())
+    {
+      final int nCP = sDrawText.codePointAt (nCPOfs);
+
+      // multi-byte encoding with 1 to 4 bytes
+      byte [] aCPBytes;
+      try
+      {
+        // This method is package private
+        aCPBytes = PDFontHelper.encode (aFont, nCP);
+
+        if (bAddToSubset)
+          aFont.addToSubset (nCP);
+      }
+      catch (final IllegalArgumentException ex)
+      {
+        s_aLogger.warn ("No code point " + nCP + " in font " + aFont);
+        aCPBytes = aFallbackBytes;
+      }
+      aBAOS.write (aCPBytes);
+
+      nCPOfs += Character.charCount (nCP);
+    }
+    return aBAOS.toByteArray ();
+  }
+
   @Nonnegative
   public float getStringWidth (@Nonnull final String sText, @Nonnegative final float fFontSize) throws IOException
   {
-    final byte [] aEncodedText = PDFontHelper.encodeWithFallback (m_aFont, sText, '?', false);
+    final byte [] aEncodedText = encodeWithFallback (m_aFont, sText, '?', false);
 
     float fWidth = 0;
     if (m_bSingleByteFont)
