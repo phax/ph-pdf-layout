@@ -49,7 +49,8 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  *
  * @author Philip Helger
  */
-public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizontalAlignment <PLText>, IPLHasVerticalAlignment <PLText>
+public class PLText extends AbstractPLElement <PLText>
+                    implements IPLHasHorizontalAlignment <PLText>, IPLHasVerticalAlignment <PLText>
 {
   public static final EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
   public static final EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
@@ -231,10 +232,11 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
     }
   }
 
-  final void internalSetPreparedLoadedFont (@Nonnull final LoadedFont aLoadedFont)
+  final void internalSetPreparedFontData (@Nonnull final LoadedFont aLoadedFont, final float fLineHeight)
   {
     ValueEnforcer.notNull (aLoadedFont, "LoadedFont");
     m_aLoadedFont = aLoadedFont;
+    m_fLineHeight = fLineHeight;
   }
 
   @Override
@@ -340,7 +342,9 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
-        aContentStream.moveTextPositionByAmount (aCtx.getStartLeft () + fIndentX, aCtx.getStartTop () - fTop - (fLineHeight * 0.75f));
+        aContentStream.moveTextPositionByAmount (aCtx.getStartLeft () +
+                                                 fIndentX,
+                                                 aCtx.getStartTop () - fTop - (fLineHeight * 0.75f));
       }
       else
         if (fIndentX != 0)
@@ -379,7 +383,9 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
   }
 
   @Nonnull
-  public PLElementWithSize getCopy (final float fElementWidth, @Nonnull @Nonempty final List <TextAndWidthSpec> aLines, final boolean bSplittableCopy)
+  public PLElementWithSize getCopy (final float fElementWidth,
+                                    @Nonnull @Nonempty final List <TextAndWidthSpec> aLines,
+                                    final boolean bSplittableCopy)
   {
     ValueEnforcer.notEmpty (aLines, "Lines");
 
@@ -390,9 +396,11 @@ public class PLText extends AbstractPLElement <PLText> implements IPLHasHorizont
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));
 
     final String sTextContent = TextAndWidthSpec.getAsText (aLineCopy);
-    final PLText aNewText = bSplittableCopy ? new PLTextSplittable (sTextContent, getFontSpec ()) : new PLText (sTextContent, getFontSpec ());
-    aNewText.setBasicDataFrom (this).markAsPrepared (aSize).internalSetPreparedLines (aLineCopy);
-    aNewText.internalSetPreparedLoadedFont (m_aLoadedFont);
+    final PLText aNewText = bSplittableCopy ? new PLTextSplittable (sTextContent, getFontSpec ())
+                                            : new PLText (sTextContent, getFontSpec ());
+    aNewText.setBasicDataFrom (this).markAsPrepared (aSize);
+    aNewText.internalSetPreparedLines (aLineCopy);
+    aNewText.internalSetPreparedFontData (m_aLoadedFont, m_fLineHeight);
 
     return new PLElementWithSize (aNewText, aSize);
   }
