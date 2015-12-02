@@ -56,7 +56,9 @@ public class FontSpec
     this (aPreloadFont, fFontSize, DEFAULT_COLOR);
   }
 
-  public FontSpec (@Nonnull final PreloadFont aPreloadFont, @Nonnegative final float fFontSize, @Nonnull final Color aColor)
+  public FontSpec (@Nonnull final PreloadFont aPreloadFont,
+                   @Nonnegative final float fFontSize,
+                   @Nonnull final Color aColor)
   {
     ValueEnforcer.notNull (aPreloadFont, "Font");
     ValueEnforcer.isGT0 (fFontSize, "FontSize");
@@ -107,7 +109,7 @@ public class FontSpec
     if (m_aLoadedFont == null || m_aFontDoc != aDoc)
     {
       // Load font again, if the PDDocument changed
-      m_aLoadedFont = new LoadedFont (m_aPreloadFont.getAsPDFont (aDoc));
+      m_aLoadedFont = new LoadedFont (m_aPreloadFont.loadPDFont (aDoc));
       m_aFontDoc = aDoc;
     }
     return m_aLoadedFont;
@@ -169,7 +171,9 @@ public class FontSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final FontSpec rhs = (FontSpec) o;
-    return m_aPreloadFont.equals (rhs.m_aPreloadFont) && EqualsHelper.equals (m_fFontSize, rhs.m_fFontSize) && m_aColor.equals (rhs.m_aColor);
+    return m_aPreloadFont.equals (rhs.m_aPreloadFont) &&
+           EqualsHelper.equals (m_fFontSize, rhs.m_fFontSize) &&
+           m_aColor.equals (rhs.m_aColor);
   }
 
   @Override
@@ -181,6 +185,9 @@ public class FontSpec
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("font", m_aPreloadFont).append ("fontSize", m_fFontSize).append ("color", m_aColor).toString ();
+    return new ToStringGenerator (this).append ("font", m_aPreloadFont)
+                                       .append ("fontSize", m_fFontSize)
+                                       .append ("color", m_aColor)
+                                       .toString ();
   }
 }
