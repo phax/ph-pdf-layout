@@ -17,6 +17,7 @@
 package com.helger.pdflayout;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,14 +56,19 @@ public class PageLayoutPDF
     try
     {
       final Properties p = new Properties ();
-      p.load (ClassPathResource.getInputStream ("ph-pdf-layout-version.properties"));
-      sProjectVersion = p.getProperty ("version");
+      final InputStream aIS = ClassPathResource.getInputStream ("ph-pdf-layout-version.properties");
+      if (aIS != null)
+      {
+        p.load (aIS);
+        sProjectVersion = p.getProperty ("version");
+      }
     }
     catch (final IOException ex)
     {
-      s_aLogger.error ("Failed to load version number: " + ex.getMessage ());
       // Project version stays undefined
     }
+    if (sProjectVersion == null)
+      s_aLogger.warn ("Failed to load version number");
     PROJECT_VERSION = sProjectVersion;
   }
 
