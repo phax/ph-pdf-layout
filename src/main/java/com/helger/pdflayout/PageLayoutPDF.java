@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.collection.CollectionHelper;
-import com.helger.commons.exception.InitializationException;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.StringHelper;
@@ -52,16 +51,19 @@ public class PageLayoutPDF
 
   static
   {
+    String sProjectVersion = "undefined";
     try
     {
       final Properties p = new Properties ();
       p.load (ClassPathResource.getInputStream ("ph-pdf-layout-version.properties"));
-      PROJECT_VERSION = p.getProperty ("version");
+      sProjectVersion = p.getProperty ("version");
     }
     catch (final IOException ex)
     {
-      throw new InitializationException ("Failed to load version number!");
+      s_aLogger.error ("Failed to load version number: " + ex.getMessage ());
+      // Project version stays undefined
     }
+    PROJECT_VERSION = sProjectVersion;
   }
 
   private String m_sDocumentAuthor;
@@ -205,7 +207,8 @@ public class PageLayoutPDF
    * @throws PDFCreationException
    *         In case of an error
    */
-  public void renderTo (@Nullable final IPDDocumentCustomizer aCustomizer, @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
+  public void renderTo (@Nullable final IPDDocumentCustomizer aCustomizer,
+                        @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
   {
     // create a new document
     PDDocument aDoc = null;
