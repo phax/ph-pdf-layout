@@ -18,7 +18,6 @@ package com.helger.pdflayout.pdfbox;
 
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.PathIterator;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -40,7 +39,6 @@ import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.documentinterchange.markedcontent.PDPropertyList;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.graphics.PDXObject;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK;
@@ -255,7 +253,9 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IOException
    *         If there is an error writing to the page contents.
    */
-  public PDPageContentStreamExt (final PDDocument doc, final PDAppearanceStream appearance, final OutputStream outputStream) throws IOException
+  public PDPageContentStreamExt (final PDDocument doc,
+                                 final PDAppearanceStream appearance,
+                                 final OutputStream outputStream) throws IOException
   {
     this._document = doc;
 
@@ -333,21 +333,6 @@ public final class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * This will draw a string at the current location on the screen.
-   *
-   * @param text
-   *        The text to draw.
-   * @throws IOException
-   *         If an io exception occurs.
-   * @deprecated Use {@link #showText} instead.
-   */
-  @Deprecated
-  public void drawString (final String text) throws IOException
-  {
-    showText (text);
-  }
-
-  /**
    * Shows the given text at the location specified by the current text matrix.
    *
    * @param text
@@ -417,24 +402,6 @@ public final class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * The Td operator. A current text matrix will be replaced with a new one (1 0
-   * 0 1 x y).
-   *
-   * @param tx
-   *        The x translation.
-   * @param ty
-   *        The y translation.
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #newLineAtOffset} instead.
-   */
-  @Deprecated
-  public void moveTextPositionByAmount (final float tx, final float ty) throws IOException
-  {
-    newLineAtOffset (tx, ty);
-  }
-
-  /**
    * The Td operator. Move to the start of the next line, offset from the start
    * of the current line by (tx, ty).
    *
@@ -462,48 +429,6 @@ public final class PDPageContentStreamExt implements Closeable
    * The Tm operator. Sets the text matrix to the given values. A current text
    * matrix will be replaced with the new one.
    *
-   * @param a
-   *        The a value of the matrix.
-   * @param b
-   *        The b value of the matrix.
-   * @param c
-   *        The c value of the matrix.
-   * @param d
-   *        The d value of the matrix.
-   * @param e
-   *        The e value of the matrix.
-   * @param f
-   *        The f value of the matrix.
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #setTextMatrix(Matrix)} instead.
-   */
-  @Deprecated
-  public void setTextMatrix (final double a, final double b, final double c, final double d, final double e, final double f) throws IOException
-  {
-    setTextMatrix (new Matrix ((float) a, (float) b, (float) c, (float) d, (float) e, (float) f));
-  }
-
-  /**
-   * The Tm operator. Sets the text matrix to the given values. A current text
-   * matrix will be replaced with the new one.
-   *
-   * @param matrix
-   *        the transformation matrix
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #setTextMatrix(Matrix)} instead.
-   */
-  @Deprecated
-  public void setTextMatrix (final AffineTransform matrix) throws IOException
-  {
-    setTextMatrix (new Matrix (matrix));
-  }
-
-  /**
-   * The Tm operator. Sets the text matrix to the given values. A current text
-   * matrix will be replaced with the new one.
-   *
    * @param matrix
    *        the transformation matrix
    * @throws IOException
@@ -519,66 +444,6 @@ public final class PDPageContentStreamExt implements Closeable
     }
     writeAffineTransform (matrix.createAffineTransform ());
     writeOperator ("Tm");
-  }
-
-  /**
-   * The Tm operator. Sets the text matrix to the given scaling and translation
-   * values. A current text matrix will be replaced with the new one.
-   *
-   * @param sx
-   *        The scaling factor in x-direction.
-   * @param sy
-   *        The scaling factor in y-direction.
-   * @param tx
-   *        The translation value in x-direction.
-   * @param ty
-   *        The translation value in y-direction.
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #setTextMatrix(Matrix)} instead.
-   */
-  @Deprecated
-  public void setTextScaling (final double sx, final double sy, final double tx, final double ty) throws IOException
-  {
-    setTextMatrix (new Matrix ((float) sx, 0f, 0f, (float) sy, (float) tx, (float) ty));
-  }
-
-  /**
-   * The Tm operator. Sets the text matrix to the given translation values. A
-   * current text matrix will be replaced with the new one.
-   *
-   * @param tx
-   *        The translation value in x-direction.
-   * @param ty
-   *        The translation value in y-direction.
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #setTextMatrix(Matrix)} instead.
-   */
-  @Deprecated
-  public void setTextTranslation (final double tx, final double ty) throws IOException
-  {
-    setTextMatrix (Matrix.getTranslateInstance ((float) tx, (float) ty));
-  }
-
-  /**
-   * The Tm operator. Sets the text matrix to the given rotation and translation
-   * values. A current text matrix will be replaced with the new one.
-   *
-   * @param angle
-   *        The angle used for the counterclockwise rotation in radians.
-   * @param tx
-   *        The translation value in x-direction.
-   * @param ty
-   *        The translation value in y-direction.
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #setTextMatrix(Matrix)} instead.
-   */
-  @Deprecated
-  public void setTextRotation (final double angle, final double tx, final double ty) throws IOException
-  {
-    setTextMatrix (Matrix.getRotateInstance (angle, (float) tx, (float) ty));
   }
 
   /**
@@ -616,7 +481,11 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IllegalStateException
    *         If the method was called within a text block.
    */
-  public void drawImage (final PDImageXObject image, final float x, final float y, final float width, final float height) throws IOException
+  public void drawImage (final PDImageXObject image,
+                         final float x,
+                         final float y,
+                         final float width,
+                         final float height) throws IOException
   {
     if (inTextMode)
     {
@@ -632,26 +501,6 @@ public final class PDPageContentStreamExt implements Closeable
     writeOperator ("Do");
 
     restoreGraphicsState ();
-  }
-
-  /**
-   * Draw an inline image at the x,y coordinates, with the default size of the
-   * image.
-   *
-   * @param inlineImage
-   *        The inline image to draw.
-   * @param x
-   *        The x-coordinate to draw the inline image.
-   * @param y
-   *        The y-coordinate to draw the inline image.
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #drawImage(PDInlineImage, float, float)} instead.
-   */
-  @Deprecated
-  public void drawInlineImage (final PDInlineImage inlineImage, final float x, final float y) throws IOException
-  {
-    drawImage (inlineImage, x, y, inlineImage.getWidth (), inlineImage.getHeight ());
   }
 
   /**
@@ -687,39 +536,14 @@ public final class PDPageContentStreamExt implements Closeable
    *        The height of the inline image to draw.
    * @throws IOException
    *         If there is an error writing to the stream.
-   * @deprecated Use
-   *             {@link #drawImage(PDInlineImage, float, float, float, float)}
-   *             instead.
-   */
-  @Deprecated
-  public void drawInlineImage (final PDInlineImage inlineImage,
-                               final float x,
-                               final float y,
-                               final float width,
-                               final float height) throws IOException
-  {
-    drawImage (inlineImage, x, y, width, height);
-  }
-
-  /**
-   * Draw an inline image at the x,y coordinates and a certain width and height.
-   *
-   * @param inlineImage
-   *        The inline image to draw.
-   * @param x
-   *        The x-coordinate to draw the inline image.
-   * @param y
-   *        The y-coordinate to draw the inline image.
-   * @param width
-   *        The width of the inline image to draw.
-   * @param height
-   *        The height of the inline image to draw.
-   * @throws IOException
-   *         If there is an error writing to the stream.
    * @throws IllegalStateException
    *         If the method was called within a text block.
    */
-  public void drawImage (final PDInlineImage inlineImage, final float x, final float y, final float width, final float height) throws IOException
+  public void drawImage (final PDInlineImage inlineImage,
+                         final float x,
+                         final float y,
+                         final float width,
+                         final float height) throws IOException
   {
     if (inTextMode)
     {
@@ -777,73 +601,6 @@ public final class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Draw an xobject(form or image) at the x,y coordinates and a certain width
-   * and height.
-   *
-   * @param xobject
-   *        The xobject to draw.
-   * @param x
-   *        The x-coordinate to draw the image.
-   * @param y
-   *        The y-coordinate to draw the image.
-   * @param width
-   *        The width of the image to draw.
-   * @param height
-   *        The height of the image to draw.
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #drawImage} instead.
-   */
-  @Deprecated
-  public void drawXObject (final PDXObject xobject, final float x, final float y, final float width, final float height) throws IOException
-  {
-    final AffineTransform transform = new AffineTransform (width, 0, 0, height, x, y);
-    drawXObject (xobject, transform);
-  }
-
-  /**
-   * Draw an xobject(form or image) using the given {@link AffineTransform} to
-   * position the xobject.
-   *
-   * @param xobject
-   *        The xobject to draw.
-   * @param transform
-   *        the transformation matrix
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @throws IllegalStateException
-   *         If the method was called within a text block.
-   * @deprecated Use {@link #drawImage} or {@link #drawForm} instead.
-   */
-  @Deprecated
-  public void drawXObject (final PDXObject xobject, final AffineTransform transform) throws IOException
-  {
-    if (inTextMode)
-    {
-      throw new IllegalStateException ("Error: drawXObject is not allowed within a text block.");
-    }
-
-    String xObjectPrefix;
-    if (xobject instanceof PDImageXObject)
-    {
-      xObjectPrefix = "Im";
-    }
-    else
-    {
-      xObjectPrefix = "Form";
-    }
-    final COSName objMapping = resources.add (xobject, xObjectPrefix);
-
-    saveGraphicsState ();
-    transform (new Matrix (transform));
-
-    writeOperand (objMapping);
-    writeOperator ("Do");
-
-    restoreGraphicsState ();
-  }
-
-  /**
    * Draws the given Form XObject at the current location.
    *
    * @param form
@@ -862,48 +619,6 @@ public final class PDPageContentStreamExt implements Closeable
 
     writeOperand (resources.add (form));
     writeOperator ("Do");
-  }
-
-  /**
-   * The cm operator. Concatenates the current transformation matrix with the
-   * given values.
-   *
-   * @param a
-   *        The a value of the matrix.
-   * @param b
-   *        The b value of the matrix.
-   * @param c
-   *        The c value of the matrix.
-   * @param d
-   *        The d value of the matrix.
-   * @param e
-   *        The e value of the matrix.
-   * @param f
-   *        The f value of the matrix.
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #transform} instead.
-   */
-  @Deprecated
-  public void concatenate2CTM (final double a, final double b, final double c, final double d, final double e, final double f) throws IOException
-  {
-    transform (new Matrix ((float) a, (float) b, (float) c, (float) d, (float) e, (float) f));
-  }
-
-  /**
-   * The cm operator. Concatenates the current transformation matrix with the
-   * given {@link AffineTransform}.
-   *
-   * @param at
-   *        the transformation matrix
-   * @throws IOException
-   *         If there is an error writing to the stream.
-   * @deprecated Use {@link #transform} instead.
-   */
-  @Deprecated
-  public void concatenate2CTM (final AffineTransform at) throws IOException
-  {
-    transform (new Matrix (at));
   }
 
   /**
@@ -964,58 +679,6 @@ public final class PDPageContentStreamExt implements Closeable
       nonStrokingColorSpaceStack.pop ();
     }
     writeOperator ("Q");
-  }
-
-  /**
-   * Set the stroking color space. This will add the colorspace to the
-   * PDResources if necessary.
-   *
-   * @param colorSpace
-   *        The colorspace to write.
-   * @throws IOException
-   *         If there is an error writing the colorspace.
-   * @deprecated Use {@link #setStrokingColor} instead.
-   */
-  @Deprecated
-  public void setStrokingColorSpace (final PDColorSpace colorSpace) throws IOException
-  {
-    if (strokingColorSpaceStack.isEmpty ())
-    {
-      strokingColorSpaceStack.add (colorSpace);
-    }
-    else
-    {
-      strokingColorSpaceStack.setElementAt (colorSpace, nonStrokingColorSpaceStack.size () - 1);
-    }
-
-    writeOperand (getName (colorSpace));
-    writeOperator ("CS");
-  }
-
-  /**
-   * Set the stroking color space. This will add the colorspace to the
-   * PDResources if necessary.
-   *
-   * @param colorSpace
-   *        The colorspace to write.
-   * @throws IOException
-   *         If there is an error writing the colorspace.
-   * @deprecated Use {@link #setNonStrokingColor} instead.
-   */
-  @Deprecated
-  public void setNonStrokingColorSpace (final PDColorSpace colorSpace) throws IOException
-  {
-    if (nonStrokingColorSpaceStack.isEmpty ())
-    {
-      nonStrokingColorSpaceStack.add (colorSpace);
-    }
-    else
-    {
-      nonStrokingColorSpaceStack.setElementAt (colorSpace, nonStrokingColorSpaceStack.size () - 1);
-    }
-
-    writeOperand (getName (colorSpace));
-    writeOperator ("cs");
   }
 
   private COSName getName (final PDColorSpace colorSpace)
@@ -1086,45 +749,12 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setStrokingColor (final Color color) throws IOException
   {
-    final float [] components = new float [] { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
+    final float [] components = new float [] { color.getRed () /
+                                               255f,
+                                               color.getGreen () / 255f,
+                                               color.getBlue () / 255f };
     final PDColor pdColor = new PDColor (components, PDDeviceRGB.INSTANCE);
     setStrokingColor (pdColor);
-  }
-
-  /**
-   * Set the color components of current stroking color space.
-   *
-   * @param components
-   *        The components to set for the current color.
-   * @throws IOException
-   *         If there is an error while writing to the stream.
-   * @deprecated Use {@link #setStrokingColor(PDColor)} instead.
-   */
-  @Deprecated
-  public void setStrokingColor (final float [] components) throws IOException
-  {
-    if (strokingColorSpaceStack.isEmpty ())
-    {
-      throw new IllegalStateException ("The color space must be set before setting a color");
-    }
-
-    for (final float component : components)
-    {
-      writeOperand (component);
-    }
-
-    final PDColorSpace currentStrokingColorSpace = strokingColorSpaceStack.peek ();
-
-    if (currentStrokingColorSpace instanceof PDSeparation ||
-        currentStrokingColorSpace instanceof PDPattern ||
-        currentStrokingColorSpace instanceof PDICCBased)
-    {
-      writeOperator ("SCN");
-    }
-    else
-    {
-      writeOperator ("SC");
-    }
   }
 
   /**
@@ -1145,40 +775,12 @@ public final class PDPageContentStreamExt implements Closeable
   {
     if (isOutside255Interval (r) || isOutside255Interval (g) || isOutside255Interval (b))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..255, but are " + String.format ("(%d,%d,%d)", r, g, b));
+      throw new IllegalArgumentException ("Parameters must be within 0..255, but are (" + r + "," + g + "," + b + ")");
     }
     writeOperand (r / 255f);
     writeOperand (g / 255f);
     writeOperand (b / 255f);
     writeOperator ("RG");
-  }
-
-  /**
-   * Set the stroking color in the DeviceCMYK color space. Range is 0..255.
-   *
-   * @param c
-   *        The cyan value.
-   * @param m
-   *        The magenta value.
-   * @param y
-   *        The yellow value.
-   * @param k
-   *        The black value.
-   * @throws IOException
-   *         If an IO error occurs while writing to the stream.
-   * @throws IllegalArgumentException
-   *         If the parameters are invalid.
-   * @deprecated Use {@link #setStrokingColor(float, float, float, float)}
-   *             instead.
-   */
-  @Deprecated
-  public void setStrokingColor (final int c, final int m, final int y, final int k) throws IOException
-  {
-    if (isOutside255Interval (c) || isOutside255Interval (m) || isOutside255Interval (y) || isOutside255Interval (k))
-    {
-      throw new IllegalArgumentException ("Parameters must be within 0..255, but are " + String.format ("(%d,%d,%d,%d)", c, m, y, k));
-    }
-    setStrokingColor (c / 255f, m / 255f, y / 255f, k / 255f);
   }
 
   /**
@@ -1197,38 +799,19 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IllegalArgumentException
    *         If the parameters are invalid.
    */
+  @SuppressWarnings ("boxing")
   public void setStrokingColor (final float c, final float m, final float y, final float k) throws IOException
   {
     if (isOutsideOneInterval (c) || isOutsideOneInterval (m) || isOutsideOneInterval (y) || isOutsideOneInterval (k))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..1, but are " + String.format ("(%.2f,%.2f,%.2f,%.2f)", c, m, y, k));
+      throw new IllegalArgumentException ("Parameters must be within 0..1, but are " +
+                                          String.format ("(%.2f,%.2f,%.2f,%.2f)", c, m, y, k));
     }
     writeOperand (c);
     writeOperand (m);
     writeOperand (y);
     writeOperand (k);
     writeOperator ("K");
-  }
-
-  /**
-   * Set the stroking color in the DeviceGray color space. Range is 0..255.
-   *
-   * @param g
-   *        The gray value.
-   * @throws IOException
-   *         If an IO error occurs while writing to the stream.
-   * @throws IllegalArgumentException
-   *         If the parameter is invalid.
-   * @deprecated Use {@link #setStrokingColor(double)} instead.
-   */
-  @Deprecated
-  public void setStrokingColor (final int g) throws IOException
-  {
-    if (isOutside255Interval (g))
-    {
-      throw new IllegalArgumentException ("Parameter must be within 0..255, but is " + g);
-    }
-    setStrokingColor (g / 255f);
   }
 
   /**
@@ -1311,45 +894,12 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setNonStrokingColor (final Color color) throws IOException
   {
-    final float [] components = new float [] { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
+    final float [] components = new float [] { color.getRed () /
+                                               255f,
+                                               color.getGreen () / 255f,
+                                               color.getBlue () / 255f };
     final PDColor pdColor = new PDColor (components, PDDeviceRGB.INSTANCE);
     setNonStrokingColor (pdColor);
-  }
-
-  /**
-   * Set the color components of current non-stroking color space.
-   *
-   * @param components
-   *        The components to set for the current color.
-   * @throws IOException
-   *         If there is an error while writing to the stream.
-   * @deprecated Use {@link #setNonStrokingColor(PDColor)} instead.
-   */
-  @Deprecated
-  public void setNonStrokingColor (final float [] components) throws IOException
-  {
-    if (nonStrokingColorSpaceStack.isEmpty ())
-    {
-      throw new IllegalStateException ("The color space must be set before setting a color");
-    }
-
-    for (final float component : components)
-    {
-      writeOperand (component);
-    }
-
-    final PDColorSpace currentNonStrokingColorSpace = nonStrokingColorSpaceStack.peek ();
-
-    if (currentNonStrokingColorSpace instanceof PDSeparation ||
-        currentNonStrokingColorSpace instanceof PDPattern ||
-        currentNonStrokingColorSpace instanceof PDICCBased)
-    {
-      writeOperator ("scn");
-    }
-    else
-    {
-      writeOperator ("sc");
-    }
   }
 
   /**
@@ -1366,11 +916,13 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IllegalArgumentException
    *         If the parameters are invalid.
    */
+  @SuppressWarnings ("boxing")
   public void setNonStrokingColor (final int r, final int g, final int b) throws IOException
   {
     if (isOutside255Interval (r) || isOutside255Interval (g) || isOutside255Interval (b))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..255, but are " + String.format ("(%d,%d,%d)", r, g, b));
+      throw new IllegalArgumentException ("Parameters must be within 0..255, but are " +
+                                          String.format ("(%d,%d,%d)", r, g, b));
     }
     writeOperand (r / 255f);
     writeOperand (g / 255f);
@@ -1394,11 +946,13 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IllegalArgumentException
    *         If the parameters are invalid.
    */
+  @SuppressWarnings ("boxing")
   public void setNonStrokingColor (final int c, final int m, final int y, final int k) throws IOException
   {
     if (isOutside255Interval (c) || isOutside255Interval (m) || isOutside255Interval (y) || isOutside255Interval (k))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..255, but are " + String.format ("(%d,%d,%d,%d)", c, m, y, k));
+      throw new IllegalArgumentException ("Parameters must be within 0..255, but are " +
+                                          String.format ("(%d,%d,%d,%d)", c, m, y, k));
     }
     setNonStrokingColor (c / 255f, m / 255f, y / 255f, k / 255f);
   }
@@ -1417,11 +971,13 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IOException
    *         If an IO error occurs while writing to the stream.
    */
+  @SuppressWarnings ("boxing")
   public void setNonStrokingColor (final double c, final double m, final double y, final double k) throws IOException
   {
     if (isOutsideOneInterval (c) || isOutsideOneInterval (m) || isOutsideOneInterval (y) || isOutsideOneInterval (k))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..1, but are " + String.format ("(%.2f,%.2f,%.2f,%.2f)", c, m, y, k));
+      throw new IllegalArgumentException ("Parameters must be within 0..1, but are " +
+                                          String.format ("(%.2f,%.2f,%.2f,%.2f)", c, m, y, k));
     }
     writeOperand ((float) c);
     writeOperand ((float) m);
@@ -1499,61 +1055,6 @@ public final class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Draw a rectangle on the page using the current non stroking color.
-   *
-   * @param x
-   *        The lower left x coordinate.
-   * @param y
-   *        The lower left y coordinate.
-   * @param width
-   *        The width of the rectangle.
-   * @param height
-   *        The height of the rectangle.
-   * @throws IOException
-   *         If there is an error while drawing on the screen.
-   * @throws IllegalStateException
-   *         If the method was called within a text block.
-   * @deprecated Use {@link #addRect} followed by {@link #fill()} instead.
-   */
-  @Deprecated
-  public void fillRect (final float x, final float y, final float width, final float height) throws IOException
-  {
-    if (inTextMode)
-    {
-      throw new IllegalStateException ("Error: fillRect is not allowed within a text block.");
-    }
-    addRect (x, y, width, height);
-    fill ();
-  }
-
-  /**
-   * Append a cubic Bézier curve to the current path. The curve extends from the
-   * current point to the point (x3 , y3 ), using (x1 , y1 ) and (x2 , y2 ) as
-   * the Bézier control points
-   *
-   * @param x1
-   *        x coordinate of the point 1
-   * @param y1
-   *        y coordinate of the point 1
-   * @param x2
-   *        x coordinate of the point 2
-   * @param y2
-   *        y coordinate of the point 2
-   * @param x3
-   *        x coordinate of the point 3
-   * @param y3
-   *        y coordinate of the point 3
-   * @throws IOException
-   *         If there is an error while adding the .
-   * @deprecated Use {@link #curveTo} instead.
-   */
-  @Deprecated
-  public void addBezier312 (final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) throws IOException
-  {
-    curveTo (x1, y1, x2, y2, x3, y3);
-  }
-
-  /**
    * Append a cubic Bézier curve to the current path. The curve extends from the
    * current point to the point (x3, y3), using (x1, y1) and (x2, y2) as the
    * Bézier control points.
@@ -1575,7 +1076,12 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IllegalStateException
    *         If the method was called within a text block.
    */
-  public void curveTo (final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) throws IOException
+  public void curveTo (final float x1,
+                       final float y1,
+                       final float x2,
+                       final float y2,
+                       final float x3,
+                       final float y3) throws IOException
   {
     if (inTextMode)
     {
@@ -1588,29 +1094,6 @@ public final class PDPageContentStreamExt implements Closeable
     writeOperand (x3);
     writeOperand (y3);
     writeOperator ("c");
-  }
-
-  /**
-   * Append a cubic Bézier curve to the current path. The curve extends from the
-   * current point to the point (x3 , y3 ), using the current point and (x2 , y2
-   * ) as the Bézier control points/
-   *
-   * @param x2
-   *        x coordinate of the point 2
-   * @param y2
-   *        y coordinate of the point 2
-   * @param x3
-   *        x coordinate of the point 3
-   * @param y3
-   *        y coordinate of the point 3
-   * @throws IOException
-   *         If there is an error while adding the .
-   * @deprecated Use {@link #curveTo2} instead.
-   */
-  @Deprecated
-  public void addBezier32 (final float x2, final float y2, final float x3, final float y3) throws IOException
-  {
-    curveTo2 (x2, y2, x3, y3);
   }
 
   /**
@@ -1642,29 +1125,6 @@ public final class PDPageContentStreamExt implements Closeable
     writeOperand (x3);
     writeOperand (y3);
     writeOperator ("v");
-  }
-
-  /**
-   * Append a cubic Bézier curve to the current path. The curve extends from the
-   * current point to the point (x3 , y3 ), using (x1 , y1 ) and (x3 , y3 ) as
-   * the Bézier control points/
-   *
-   * @param x1
-   *        x coordinate of the point 1
-   * @param y1
-   *        y coordinate of the point 1
-   * @param x3
-   *        x coordinate of the point 3
-   * @param y3
-   *        y coordinate of the point 3
-   * @throws IOException
-   *         If there is an error while adding the .
-   * @deprecated Use {@link #curveTo1} instead.
-   */
-  @Deprecated
-  public void addBezier31 (final float x1, final float y1, final float x3, final float y3) throws IOException
-  {
-    curveTo1 (x1, y1, x3, y3);
   }
 
   /**
@@ -1745,153 +1205,6 @@ public final class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * add a line to the current path.
-   *
-   * @param xStart
-   *        The start x coordinate.
-   * @param yStart
-   *        The start y coordinate.
-   * @param xEnd
-   *        The end x coordinate.
-   * @param yEnd
-   *        The end y coordinate.
-   * @throws IOException
-   *         If there is an error while adding the line.
-   * @throws IllegalStateException
-   *         If the method was called within a text block.
-   * @deprecated Use {@link #moveTo} followed by {@link #lineTo}.
-   */
-  @Deprecated
-  public void addLine (final float xStart, final float yStart, final float xEnd, final float yEnd) throws IOException
-  {
-    if (inTextMode)
-    {
-      throw new IllegalStateException ("Error: addLine is not allowed within a text block.");
-    }
-    moveTo (xStart, yStart);
-    lineTo (xEnd, yEnd);
-  }
-
-  /**
-   * Draw a line on the page using the current non stroking color and the
-   * current line width.
-   *
-   * @param xStart
-   *        The start x coordinate.
-   * @param yStart
-   *        The start y coordinate.
-   * @param xEnd
-   *        The end x coordinate.
-   * @param yEnd
-   *        The end y coordinate.
-   * @throws IOException
-   *         If there is an error while drawing on the screen.
-   * @throws IllegalStateException
-   *         If the method was called within a text block.
-   * @deprecated Use {@link #moveTo} followed by {@link #lineTo} followed by
-   *             {@link #stroke}.
-   */
-  @Deprecated
-  public void drawLine (final float xStart, final float yStart, final float xEnd, final float yEnd) throws IOException
-  {
-    if (inTextMode)
-    {
-      throw new IllegalStateException ("Error: drawLine is not allowed within a text block.");
-    }
-    moveTo (xStart, yStart);
-    lineTo (xEnd, yEnd);
-    stroke ();
-  }
-
-  /**
-   * Add a polygon to the current path.
-   *
-   * @param x
-   *        x coordinate of each points
-   * @param y
-   *        y coordinate of each points
-   * @throws IOException
-   *         If there is an error while drawing on the screen.
-   * @throws IllegalStateException
-   *         If the method was called within a text block.
-   * @throws IllegalArgumentException
-   *         If the two arrays have different lengths.
-   * @deprecated Use {@link #moveTo} and {@link #lineTo} methods instead.
-   */
-  @Deprecated
-  public void addPolygon (final float [] x, final float [] y) throws IOException
-  {
-    if (inTextMode)
-    {
-      throw new IllegalStateException ("Error: addPolygon is not allowed within a text block.");
-    }
-    if (x.length != y.length)
-    {
-      throw new IllegalArgumentException ("Error: some points are missing coordinate");
-    }
-    for (int i = 0; i < x.length; i++)
-    {
-      if (i == 0)
-      {
-        moveTo (x[i], y[i]);
-      }
-      else
-      {
-        lineTo (x[i], y[i]);
-      }
-    }
-    closeSubPath ();
-  }
-
-  /**
-   * Draw a polygon on the page using the current non stroking color.
-   *
-   * @param x
-   *        x coordinate of each points
-   * @param y
-   *        y coordinate of each points
-   * @throws IOException
-   *         If there is an error while drawing on the screen.
-   * @throws IllegalStateException
-   *         If the method was called within a text block.
-   * @deprecated Use {@link #moveTo} and {@link #lineTo} methods instead.
-   */
-  @Deprecated
-  public void drawPolygon (final float [] x, final float [] y) throws IOException
-  {
-    if (inTextMode)
-    {
-      throw new IllegalStateException ("Error: drawPolygon is not allowed within a text block.");
-    }
-    addPolygon (x, y);
-    stroke ();
-  }
-
-  /**
-   * Draw and fill a polygon on the page using the current non stroking color.
-   *
-   * @param x
-   *        x coordinate of each points
-   * @param y
-   *        y coordinate of each points
-   * @throws IOException
-   *         If there is an error while drawing on the screen.
-   * @throws IllegalStateException
-   *         If the method was called within a text block.
-   * @deprecated Use {@link #moveTo} and {@link #lineTo} methods instead.
-   */
-  @Deprecated
-  public void fillPolygon (final float [] x, final float [] y) throws IOException
-  {
-    if (inTextMode)
-    {
-      throw new IllegalStateException ("Error: fillPolygon is not allowed within a text block.");
-    }
-    addPolygon (x, y);
-    fill ();
-  }
-
-  /**
    * Stroke the path.
    *
    * @throws IOException
@@ -1923,35 +1236,6 @@ public final class PDPageContentStreamExt implements Closeable
       throw new IllegalStateException ("Error: closeAndStroke is not allowed within a text block.");
     }
     writeOperator ("s");
-  }
-
-  /**
-   * Fill the path.
-   *
-   * @param windingRule
-   *        the winding rule to be used for filling
-   * @throws IOException
-   *         If the content stream could not be written
-   * @throws IllegalArgumentException
-   *         If the parameter is not a valid winding rule.
-   * @deprecated Use {@link #fill()} or {@link #fillEvenOdd} instead.
-   */
-  @Deprecated
-  public void fill (final int windingRule) throws IOException
-  {
-    if (windingRule == PathIterator.WIND_NON_ZERO)
-    {
-      fill ();
-    }
-    else
-      if (windingRule == PathIterator.WIND_EVEN_ODD)
-      {
-        fillEvenOdd ();
-      }
-      else
-      {
-        throw new IllegalArgumentException ("Error: unknown value for winding rule");
-      }
   }
 
   /**
@@ -2014,19 +1298,6 @@ public final class PDPageContentStreamExt implements Closeable
    *
    * @throws IOException
    *         If the content stream could not be written
-   * @deprecated Use {@link #closePath()} instead.
-   */
-  @Deprecated
-  public void closeSubPath () throws IOException
-  {
-    closePath ();
-  }
-
-  /**
-   * Closes the current subpath.
-   *
-   * @throws IOException
-   *         If the content stream could not be written
    * @throws IllegalStateException
    *         If the method was called within a text block.
    */
@@ -2037,40 +1308,6 @@ public final class PDPageContentStreamExt implements Closeable
       throw new IllegalStateException ("Error: closePath is not allowed within a text block.");
     }
     writeOperator ("h");
-  }
-
-  /**
-   * Clip path.
-   *
-   * @param windingRule
-   *        the winding rule to be used for clipping
-   * @throws IOException
-   *         If there is an error while clipping the path.
-   * @throws IllegalStateException
-   *         If the method was called within a text block.
-   * @deprecated Use {@link #clip()} or {@link #clipEvenOdd} instead.
-   */
-  @Deprecated
-  public void clipPath (final int windingRule) throws IOException
-  {
-    if (inTextMode)
-    {
-      throw new IllegalStateException ("Error: clipPath is not allowed within a text block.");
-    }
-    if (windingRule == PathIterator.WIND_NON_ZERO)
-    {
-      writeOperator ("W");
-    }
-    else
-      if (windingRule == PathIterator.WIND_EVEN_ODD)
-      {
-        writeOperator ("W*");
-      }
-      else
-      {
-        throw new IllegalArgumentException ("Error: unknown value for winding rule");
-      }
-    writeOperator ("n");
   }
 
   /**
@@ -2227,48 +1464,12 @@ public final class PDPageContentStreamExt implements Closeable
    * @param tag
    *        the tag
    * @throws IOException
-   *         if an I/O error occurs
-   * @deprecated Use {@link #beginMarkedContent} instead.
-   */
-  @Deprecated
-  public void beginMarkedContentSequence (final COSName tag) throws IOException
-  {
-    beginMarkedContent (tag);
-  }
-
-  /**
-   * Begin a marked content sequence.
-   *
-   * @param tag
-   *        the tag
-   * @throws IOException
    *         If the content stream could not be written
    */
   public void beginMarkedContent (final COSName tag) throws IOException
   {
     writeOperand (tag);
     writeOperator ("BMC");
-  }
-
-  /**
-   * Begin a marked content sequence with a reference to an entry in the page
-   * resources' Properties dictionary.
-   *
-   * @param tag
-   *        the tag
-   * @param propsName
-   *        the properties reference
-   * @throws IOException
-   *         if an I/O error occurs
-   * @deprecated Use {@link #beginMarkedContent(COSName, PDPropertyList)}
-   *             instead.
-   */
-  @Deprecated
-  public void beginMarkedContentSequence (final COSName tag, final COSName propsName) throws IOException
-  {
-    writeOperand (tag);
-    writeOperand (propsName);
-    writeOperator ("BDC");
   }
 
   /**
@@ -2294,113 +1495,10 @@ public final class PDPageContentStreamExt implements Closeable
    *
    * @throws IOException
    *         If the content stream could not be written
-   * @deprecated Use {@link #endMarkedContent} instead.
-   */
-  @Deprecated
-  public void endMarkedContentSequence () throws IOException
-  {
-    endMarkedContent ();
-  }
-
-  /**
-   * End a marked content sequence.
-   *
-   * @throws IOException
-   *         If the content stream could not be written
    */
   public void endMarkedContent () throws IOException
   {
     writeOperator ("EMC");
-  }
-
-  /**
-   * This will append raw commands to the content stream.
-   *
-   * @param commands
-   *        The commands to append to the stream.
-   * @throws IOException
-   *         If an error occurs while writing to the stream.
-   * @deprecated This method will be removed in a future release.
-   */
-  @Deprecated
-  public void appendRawCommands (final String commands) throws IOException
-  {
-    output.write (commands.getBytes (Charsets.US_ASCII));
-  }
-
-  /**
-   * This will append raw commands to the content stream.
-   *
-   * @param commands
-   *        The commands to append to the stream.
-   * @throws IOException
-   *         If an error occurs while writing to the stream.
-   * @deprecated This method will be removed in a future release.
-   */
-  @Deprecated
-  public void appendRawCommands (final byte [] commands) throws IOException
-  {
-    output.write (commands);
-  }
-
-  /**
-   * This will append raw commands to the content stream.
-   *
-   * @param data
-   *        Append a raw byte to the stream.
-   * @throws IOException
-   *         If an error occurs while writing to the stream.
-   * @deprecated This method will be removed in a future release.
-   */
-  @Deprecated
-  public void appendRawCommands (final int data) throws IOException
-  {
-    output.write (data);
-  }
-
-  /**
-   * This will append raw commands to the content stream.
-   *
-   * @param data
-   *        Append a formatted double value to the stream.
-   * @throws IOException
-   *         If an error occurs while writing to the stream.
-   * @deprecated This method will be removed in a future release.
-   */
-  @Deprecated
-  public void appendRawCommands (final double data) throws IOException
-  {
-    output.write (formatDecimal.format (data).getBytes (Charsets.US_ASCII));
-  }
-
-  /**
-   * This will append raw commands to the content stream.
-   *
-   * @param data
-   *        Append a formatted float value to the stream.
-   * @throws IOException
-   *         If an error occurs while writing to the stream.
-   * @deprecated This method will be removed in a future release.
-   */
-  @Deprecated
-  public void appendRawCommands (final float data) throws IOException
-  {
-    output.write (formatDecimal.format (data).getBytes (Charsets.US_ASCII));
-  }
-
-  /**
-   * This will append a {@link COSName} to the content stream.
-   *
-   * @param name
-   *        the name
-   * @throws IOException
-   *         If an error occurs while writing to the stream.
-   * @deprecated This method will be removed in a future release.
-   */
-  @Deprecated
-  public void appendCOSName (final COSName name) throws IOException
-  {
-    name.writePDF (output);
   }
 
   /**
