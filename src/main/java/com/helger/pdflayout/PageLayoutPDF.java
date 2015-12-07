@@ -17,16 +17,15 @@
 package com.helger.pdflayout;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.WillClose;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -34,43 +33,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.CollectionHelper;
-import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.io.stream.StreamHelper;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.pdflayout.element.PLPageSet;
 import com.helger.pdflayout.element.PLPageSet.PageSetPrepareResult;
 
+/**
+ * Main class for creating layouted PDFs. This class contains the meta data as
+ * well as a list of {@link PLPageSet} objects that represent a set of pages
+ * with a consistent layouting scheme.
+ *
+ * @author Philip Helger
+ */
+@NotThreadSafe
 public class PageLayoutPDF
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (PageLayoutPDF.class);
-
-  public static final String PROJECT_NAME = "ph-pdf-layout";
-  public static final String PROJECT_URL = "https://github.com/phax/ph-pdf-layout";
-  public static final String PROJECT_VERSION;
-
-  static
-  {
-    String sProjectVersion = "undefined";
-    try
-    {
-      final Properties p = new Properties ();
-      final InputStream aIS = ClassPathResource.getInputStream ("ph-pdf-layout-version.properties");
-      if (aIS != null)
-      {
-        p.load (aIS);
-        sProjectVersion = p.getProperty ("version");
-      }
-    }
-    catch (final IOException ex)
-    {
-      // Project version stays undefined
-    }
-    if (sProjectVersion == null)
-      s_aLogger.warn ("Failed to load version number");
-    PROJECT_VERSION = sProjectVersion;
-  }
 
   private String m_sDocumentAuthor;
   private Calendar m_aDocumentCreationDate;
@@ -82,7 +64,8 @@ public class PageLayoutPDF
   private final List <PLPageSet> m_aPageSets = new ArrayList <PLPageSet> ();
 
   /**
-   * Constructor. Initializes Author, CreationDate and Creator.
+   * Constructor. Initializes Author, CreationDate and Creator from class
+   * {@link VendorInfo}.
    */
   public PageLayoutPDF ()
   {
@@ -91,11 +74,21 @@ public class PageLayoutPDF
     m_sDocumentCreator = VendorInfo.getVendorName ();
   }
 
+  /**
+   * @return debug mode is active. This will draw additional box lines on the
+   *         PDF.
+   */
   public boolean isDebug ()
   {
     return m_bDebug;
   }
 
+  /**
+   * @param bDebug
+   *        <code>true</code> to enable PDF debug mode, <code>false</code> to
+   *        disable it.
+   * @return this for chaining
+   */
   @Nonnull
   public PageLayoutPDF setDebug (final boolean bDebug)
   {
@@ -170,6 +163,7 @@ public class PageLayoutPDF
   }
 
   @Nonnull
+  @ReturnsMutableCopy
   public List <? extends PLPageSet> getAllPageSets ()
   {
     return CollectionHelper.newList (m_aPageSets);
@@ -185,6 +179,12 @@ public class PageLayoutPDF
   {
     ValueEnforcer.notNull (aPageSet, "PageSet");
     m_aPageSets.add (aPageSet);
+  }
+
+  @Nonnull
+  public EChange removePageSet (@Nullable final PLPageSet aPageSet)
+  {
+    return EChange.valueOf (m_aPageSets.remove (aPageSet));
   }
 
   /**
@@ -238,7 +238,8 @@ public class PageLayoutPDF
           aProperties.setKeywords (m_sDocumentKeywords);
         if (StringHelper.hasText (m_sDocumentSubject))
           aProperties.setSubject (m_sDocumentSubject);
-        aProperties.setProducer (PROJECT_NAME + " " + PROJECT_VERSION + " - " + PROJECT_URL);
+        aProperties.setProducer (PLConfig.PROJECT_NAME + " " + PLConfig.PROJECT_VERSION + " - " + PLConfig.PROJECT_URL);
+
         // add the created properties
         aDoc.setDocumentInformation (aProperties);
       }
@@ -287,18 +288,8 @@ public class PageLayoutPDF
     }
     finally
     {
-      // close document
-      if (aDoc != null)
-      {
-        try
-        {
-          aDoc.close ();
-        }
-        catch (final IOException ex)
-        {
-          s_aLogger.error ("Failed to close PDF document " + aDoc, ex);
-        }
-      }
+      // close PDF document
+      StreamHelper.close (aDoc);
 
       // Necessary in case of an exception
       StreamHelper.close (aOS);

@@ -51,7 +51,8 @@ import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Represents a single page layout as element
+ * Represents a single page layout as element. It consists of a page size, a
+ * page header and footer as well as a set of page body elements.
  *
  * @author Philip Helger
  */
