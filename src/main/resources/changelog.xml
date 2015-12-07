@@ -18,6 +18,19 @@
 
 -->
 <changelog xmlns="http://www.helger.com/xsd/changelog/1.0" version="1.0" component="ph-pdf-layout">
+  <release date="2015-12-07" version="2.2.1" />
+  <entry date="2015-12-07" category="tech" action="update">
+    <change>
+      <text locale="en">Fixed configuration errors with bundle plugin and Maven resource filtering</text>
+    </change>
+  </entry>
+  <release date="2015-12-03" version="2.2.0" />
+  <release date="2015-12-01" version="2.1.0" />
+  <entry date="2015-12-01" category="tech" action="update">
+    <change>
+      <text locale="en">Updated to PDFBox 2.0.0-RC2</text>
+    </change>
+  </entry>
   <release date="2015-07-28" version="2.0.0" />
   <entry date="2015-07-24" category="tech" action="update">
     <change>
