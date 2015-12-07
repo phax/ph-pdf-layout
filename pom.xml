@@ -128,11 +128,11 @@
   </dependencies>
   
   <build>
-  <!--  
     <resources>
+      <!-- Don't specify the targetPath because this leads to a broken JAR file 
+        in combination with the bundle plugin (absolute file paths in ZIP file) -->
       <resource>
         <directory>${basedir}/src/main/resources</directory>
-        <targetPath>${project.build.directory}/classes</targetPath>
         <filtering>true</filtering>
         <includes>
           <include>**/*.properties</include>
@@ -140,23 +140,12 @@
       </resource>
       <resource>
         <directory>${basedir}/src/main/resources</directory>
-        <targetPath>${project.build.directory}/classes</targetPath>
         <filtering>false</filtering>
         <excludes>
           <exclude>**/*.properties</exclude>
         </excludes>
       </resource>
-      <resource>
-        <directory>${basedir}/src/test/resources</directory>
-        <targetPath>${project.build.directory}/test-classes</targetPath>
-        <filtering>false</filtering>
-      </resource>
     </resources>
-    
-    <filters>
-      <filter>filter.properties</filter>
-    </filters>
--->
     
     <plugins>
       <plugin>
@@ -165,7 +154,6 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <_include>filter.properties</_include>
             <!-- Split-packages must be the first statements -->
             <Export-Package>
               org.apache.pdfbox.pdmodel.font;-split-package:=first,
