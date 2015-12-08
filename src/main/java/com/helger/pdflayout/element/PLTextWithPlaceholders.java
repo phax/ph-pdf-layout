@@ -17,6 +17,7 @@
 package com.helger.pdflayout.element;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.string.StringHelper;
@@ -26,12 +27,12 @@ import com.helger.pdflayout.spec.FontSpec;
 /**
  * Render text but before that replace all placeholders defined in the
  * {@link RenderingContext}.
- * 
+ *
  * @author Philip Helger
  */
 public class PLTextWithPlaceholders extends PLText
 {
-  public PLTextWithPlaceholders (@Nonnull final String sText, @Nonnull final FontSpec aFontSpec)
+  public PLTextWithPlaceholders (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
   {
     super (sText, aFontSpec);
   }
