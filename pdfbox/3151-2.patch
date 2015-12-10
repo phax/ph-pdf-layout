@@ -1,0 +1,19 @@
+### Eclipse Workspace Patch 1.0
+#P pdfbox
+Index: src/main/java/org/apache/pdfbox/pdmodel/font/PDCIDFont.java
+===================================================================
+--- src/main/java/org/apache/pdfbox/pdmodel/font/PDCIDFont.java	(revision 1718847)
++++ src/main/java/org/apache/pdfbox/pdmodel/font/PDCIDFont.java	(working copy)
+@@ -298,9 +298,10 @@
+         // font widths with the widths given in the font dictionary
+         
+         int cid = codeToCID(code);
+-        if (widths.containsKey(cid))
++        Float width = widths.get(cid);
++        if (width != null)
+         {
+-            return widths.get(cid);
++          return width;
+         }
+         else
+         {
