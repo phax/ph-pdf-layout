@@ -62,7 +62,7 @@
   </developers>
   
   <properties>
-    <pdfbox.version>2.0.0-RC2</pdfbox.version>
+    <pdfbox.version>2.0.0-SNAPSHOT</pdfbox.version>
   </properties>
   
   <dependencyManagement>
@@ -103,6 +103,21 @@
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value</artifactId>
+      <version>1.0-rc1</version>
+      <scope>provided</scope>
+    </dependency>
+<!--  
+    <dependency>
+        <groupId>net.openhft</groupId>
+        <artifactId>koloboke-impl-jdk6-7</artifactId>
+        <version>0.6.8</version>
+        <scope>runtime</scope>
+    </dependency>
+-->
 
     <dependency>
       <groupId>org.slf4j</groupId>

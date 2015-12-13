@@ -43,6 +43,9 @@ import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 
+import net.openhft.koloboke.collect.map.hash.HashIntFloatMap;
+import net.openhft.koloboke.collect.map.hash.HashIntFloatMaps;
+
 /**
  * This class represents a wrapper around a {@link PDFont} that is uniquely
  * assigned to a PDDocument.
@@ -54,13 +57,12 @@ import com.helger.commons.string.ToStringGenerator;
 public class LoadedFont
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (LoadedFont.class);
-  private static final int WIDTH_CACHE_MAX = 256;
 
   private final PDFont m_aFont;
   private final boolean m_bSingleByteFont;
   // Status vars
   private final float m_fBBHeight;
-  private final float [] m_aWidthCache;
+  private final HashIntFloatMap m_aWidthCache = HashIntFloatMaps.newMutableMap ();
 
   public LoadedFont (@Nonnull final PDFont aFont) throws IOException
   {
@@ -83,11 +85,9 @@ public class LoadedFont
 
     m_fBBHeight = aFD.getFontBoundingBox ().getHeight ();
 
-    // Performance improvement, because each char is always the same width if
-    // this encoding is used
-    m_aWidthCache = new float [WIDTH_CACHE_MAX];
-    for (int i = 0; i < WIDTH_CACHE_MAX; ++i)
-      m_aWidthCache[i] = m_aFont.getWidth (i);
+    // Pre-cache basic values
+    for (int i = 0; i < 256; ++i)
+      m_aWidthCache.put (i, m_aFont.getWidth (i));
   }
 
   /**
@@ -148,9 +148,23 @@ public class LoadedFont
     return aBAOS.toByteArray ();
   }
 
+  private float _getWidth (final int nCode) throws IOException
+  {
+    float fWidth = m_aWidthCache.getOrDefault (nCode, -1);
+    if (fWidth < 0)
+    {
+      fWidth = m_aFont.getWidth (nCode);
+      m_aWidthCache.put (nCode, fWidth);
+    }
+    return fWidth;
+  }
+
   @Nonnegative
   public float getStringWidth (@Nonnull final String sText, @Nonnegative final float fFontSize) throws IOException
   {
+    if (false)
+      return m_aFont.getStringWidth (sText) * fFontSize / 1000f;
+
     final byte [] aEncodedText = encodeWithFallback (m_aFont, sText, '?', false);
 
     float fWidth = 0;
@@ -158,11 +172,9 @@ public class LoadedFont
     {
       for (final byte b : aEncodedText)
       {
+        // Spare the call to "readCode"
         final int nCode = b & 0xff;
-        if (nCode < WIDTH_CACHE_MAX)
-          fWidth += m_aWidthCache[nCode];
-        else
-          fWidth += m_aFont.getWidth (nCode);
+        fWidth += _getWidth (nCode);
       }
     }
     else
@@ -171,10 +183,7 @@ public class LoadedFont
       while (aIS.available () > 0)
       {
         final int nCode = m_aFont.readCode (aIS);
-        if (nCode < WIDTH_CACHE_MAX)
-          fWidth += m_aWidthCache[nCode];
-        else
-          fWidth += m_aFont.getWidth (nCode);
+        fWidth += _getWidth (nCode);
       }
     }
 
