@@ -5,33 +5,39 @@ import java.util.Arrays;
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 
 /**
- * Special int-int-primitive map. Source: https://github.com/mikvor/hashmapTest
+ * Special int-Object map. Based on: https://github.com/mikvor/hashmapTest
  *
  * @author Mikhail Vorontsov
  * @author Philip Helger
+ * @param <T>
+ *        Element type
  */
 @NotThreadSafe
-public class IntIntMap
+public class IntObjectMap <T>
 {
   private static final int FREE_KEY = 0;
 
-  public static final int NO_VALUE = 0;
+  public static final Object NO_VALUE = new Object ();
+
+  @SuppressWarnings ("unchecked")
+  private final T m_aNoValue = (T) NO_VALUE;
 
   /** Keys */
   private int [] m_aKeys;
   /** Values */
-  private int [] m_aValues;
+  private T [] m_aValues;
 
   /** Do we have 'free' key in the map? */
   private boolean m_bHasFreeKey;
   /** Value of 'free' key */
-  private int m_nFreeValue = NO_VALUE;
+  private T m_aFreeValue = m_aNoValue;
 
   /** Fill factor, must be between (0 and 1) */
   private final float m_fFillFactor;
@@ -42,17 +48,17 @@ public class IntIntMap
   /** Mask to calculate the original position */
   private int m_nMask;
 
-  public IntIntMap ()
+  public IntObjectMap ()
   {
     this (16);
   }
 
-  public IntIntMap (final int nSize)
+  public IntObjectMap (final int nSize)
   {
     this (nSize, 0.75f);
   }
 
-  public IntIntMap (final int nSize, final float fFillFactor)
+  public IntObjectMap (final int nSize, final float fFillFactor)
   {
     ValueEnforcer.isBetweenInclusive (fFillFactor, "FillFactor", 0f, 1f);
     ValueEnforcer.isGT0 (nSize, "Size");
@@ -65,41 +71,50 @@ public class IntIntMap
     m_nThreshold = (int) (nCapacity * fFillFactor);
   }
 
+  @SuppressWarnings ("unchecked")
   @Nonnull
   @ReturnsMutableCopy
-  private static int [] _createValueArray (@Nonnegative final int nSize)
+  private T [] _createValueArray (@Nonnegative final int nSize)
   {
-    final int [] ret = new int [nSize];
+    final Object [] ret = new Object [nSize];
     Arrays.fill (ret, NO_VALUE);
-    return ret;
+    return (T []) ret;
   }
 
-  public int get (final int key)
+  @Nullable
+  public T get (final int key)
   {
-    return get (key, NO_VALUE);
+    return get (key, null);
   }
 
-  public int get (final int key, final int nDefault)
+  @Nullable
+  public T get (final int key, final T aDefault)
   {
     if (key == FREE_KEY)
-      return m_bHasFreeKey ? m_nFreeValue : nDefault;
+      return m_bHasFreeKey ? m_aFreeValue : aDefault;
 
     final int idx = _getReadIndex (key);
-    return idx != -1 ? m_aValues[idx] : nDefault;
+    return idx != -1 ? m_aValues[idx] : aDefault;
   }
 
-  public int put (final int key, final int value)
+  @Nullable
+  private T _getOld (final T aValue)
+  {
+    return aValue == m_aNoValue ? null : aValue;
+  }
+
+  public T put (final int key, final T value)
   {
     if (key == FREE_KEY)
     {
-      final int ret = m_nFreeValue;
+      final T ret = m_aFreeValue;
       if (!m_bHasFreeKey)
       {
         ++m_nSize;
         m_bHasFreeKey = true;
       }
-      m_nFreeValue = value;
-      return ret;
+      m_aFreeValue = value;
+      return _getOld (ret);
     }
 
     int idx = _getPutIndex (key);
@@ -109,7 +124,7 @@ public class IntIntMap
       _rehash (m_aKeys.length * 2);
       idx = _getPutIndex (key);
     }
-    final int prev = m_aValues[idx];
+    final T prev = m_aValues[idx];
     if (m_aKeys[idx] != key)
     {
       m_aKeys[idx] = key;
@@ -124,31 +139,32 @@ public class IntIntMap
       assert m_aKeys[idx] == key;
       m_aValues[idx] = value;
     }
-    return prev;
+    return _getOld (prev);
   }
 
-  public int remove (final int key)
+  public T remove (final int key)
   {
     if (key == FREE_KEY)
     {
       if (!m_bHasFreeKey)
-        return NO_VALUE;
+        return null;
+
       m_bHasFreeKey = false;
-      final int ret = m_nFreeValue;
-      m_nFreeValue = NO_VALUE;
+      final T ret = m_aFreeValue;
+      m_aFreeValue = m_aNoValue;
       --m_nSize;
-      return ret;
+      return _getOld (ret);
     }
 
     final int idx = _getReadIndex (key);
     if (idx == -1)
-      return NO_VALUE;
+      return null;
 
-    final int res = m_aValues[idx];
-    m_aValues[idx] = NO_VALUE;
+    final T res = m_aValues[idx];
+    m_aValues[idx] = m_aNoValue;
     _shiftKeys (idx);
     --m_nSize;
-    return res;
+    return _getOld (res);
   }
 
   @Nonnegative
@@ -164,7 +180,7 @@ public class IntIntMap
 
     final int oldCapacity = m_aKeys.length;
     final int [] oldKeys = m_aKeys;
-    final int [] oldValues = m_aValues;
+    final T [] oldValues = m_aValues;
 
     m_aKeys = new int [nNewCapacity];
     m_aValues = _createValueArray (nNewCapacity);
@@ -180,7 +196,7 @@ public class IntIntMap
     // Shift entries with the same hash.
     int last, slot, pos = nPos;
     int k;
-    final int [] keys = this.m_aKeys;
+    final int [] keys = m_aKeys;
     while (true)
     {
       last = pos;
@@ -191,7 +207,7 @@ public class IntIntMap
         if (k == FREE_KEY)
         {
           keys[last] = FREE_KEY;
-          m_aValues[last] = NO_VALUE;
+          m_aValues[last] = m_aNoValue;
           return last;
         }
         // calculate the starting slot for the current key

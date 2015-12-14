@@ -95,8 +95,10 @@ public class IntFloatMap
     {
       final float ret = m_aFreeValue;
       if (!m_bHasFreeKey)
+      {
         ++m_nSize;
-      m_bHasFreeKey = true;
+        m_bHasFreeKey = true;
+      }
       m_aFreeValue = value;
       return ret;
     }
@@ -170,10 +172,8 @@ public class IntFloatMap
     m_nSize = m_bHasFreeKey ? 1 : 0;
 
     for (int i = oldCapacity; i-- > 0;)
-    {
       if (oldKeys[i] != FREE_KEY)
         put (oldKeys[i], oldValues[i]);
-    }
   }
 
   private int _shiftKeys (final int nPos)

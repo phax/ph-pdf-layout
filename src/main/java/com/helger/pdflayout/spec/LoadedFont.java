@@ -115,7 +115,7 @@ public class LoadedFont
                                             final int nFallbackCodepoint,
                                             final boolean bPerformSubsetting) throws IOException
   {
-    final byte [] aFallbackBytes = PDFontHelper.encode (aFont, nFallbackCodepoint);
+    byte [] aFallbackBytes = null;
     final boolean bAddToSubset = bPerformSubsetting && aFont.willBeSubset ();
 
     final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
@@ -137,6 +137,9 @@ public class LoadedFont
       catch (final IllegalArgumentException ex)
       {
         s_aLogger.warn ("No code point " + nCP + " in font " + aFont);
+        // Lazy init
+        if (aFallbackBytes == null)
+          aFallbackBytes = PDFontHelper.encode (aFont, nFallbackCodepoint);
         aCPBytes = aFallbackBytes;
       }
       aBAOS.write (aCPBytes);
@@ -148,7 +151,7 @@ public class LoadedFont
 
   private float _getWidth (final int nCode) throws IOException
   {
-    float fWidth = m_aWidthCache.get (nCode, -1);
+    float fWidth = m_aWidthCache.get (nCode, -1f);
     if (fWidth < 0)
     {
       fWidth = m_aFont.getWidth (nCode);
