@@ -162,17 +162,17 @@ public class IntIntMap
     m_nThreshold = (int) (nNewCapacity * m_fFillFactor);
     m_nMask = nNewCapacity - 1;
 
-    final int oldCapacity = m_aKeys.length;
-    final int [] oldKeys = m_aKeys;
-    final int [] oldValues = m_aValues;
+    final int nOldCapacity = m_aKeys.length;
+    final int [] aOldKeys = m_aKeys;
+    final int [] aOldValues = m_aValues;
 
     m_aKeys = new int [nNewCapacity];
     m_aValues = _createValueArray (nNewCapacity);
     m_nSize = m_bHasFreeKey ? 1 : 0;
 
-    for (int i = oldCapacity; i-- > 0;)
-      if (oldKeys[i] != FREE_KEY)
-        put (oldKeys[i], oldValues[i]);
+    for (int i = nOldCapacity; i-- > 0;)
+      if (aOldKeys[i] != FREE_KEY)
+        put (aOldKeys[i], aOldValues[i]);
   }
 
   private int _shiftKeys (final int nPos)
