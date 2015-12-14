@@ -42,9 +42,7 @@ import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-
-import net.openhft.koloboke.collect.map.hash.HashIntFloatMap;
-import net.openhft.koloboke.collect.map.hash.HashIntFloatMaps;
+import com.helger.pdflayout.util.IntFloatMap;
 
 /**
  * This class represents a wrapper around a {@link PDFont} that is uniquely
@@ -62,7 +60,7 @@ public class LoadedFont
   private final boolean m_bSingleByteFont;
   // Status vars
   private final float m_fBBHeight;
-  private final HashIntFloatMap m_aWidthCache = HashIntFloatMaps.newMutableMap ();
+  private final IntFloatMap m_aWidthCache = new IntFloatMap ();
 
   public LoadedFont (@Nonnull final PDFont aFont) throws IOException
   {
@@ -150,7 +148,7 @@ public class LoadedFont
 
   private float _getWidth (final int nCode) throws IOException
   {
-    float fWidth = m_aWidthCache.getOrDefault (nCode, -1);
+    float fWidth = m_aWidthCache.get (nCode, -1);
     if (fWidth < 0)
     {
       fWidth = m_aFont.getWidth (nCode);
