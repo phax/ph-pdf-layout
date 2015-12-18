@@ -33,7 +33,6 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
@@ -73,31 +72,17 @@ public class PLText extends AbstractPLElement <PLText>
 
   public PLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
   {
-    m_sText = StringHelper.getNotNull (sText);
-    m_aFontSpec = ValueEnforcer.notNull (aFontSpec, "FontSpec");
-
-    if (PLDebug.isDebugText ())
+    if (StringHelper.hasNoText (sText))
     {
-      int nIndex = 0;
-      for (final char c : m_sText.toCharArray ())
-      {
-        if (c > 255)
-          PLDebug.debugText (this,
-                             "Character at index " +
-                                   nIndex +
-                                   " is Unicode (" +
-                                   c +
-                                   " == " +
-                                   (int) c +
-                                   " == 0x" +
-                                   StringHelper.getHexStringLeadingZero (c, 4) +
-                                   "; as part of '" +
-                                   sText.substring (Math.max (nIndex - 5, 0), Math.min (nIndex + 5, sText.length ())) +
-                                   "') and will most likely lead to display errors! String=" +
-                                   sText);
-        ++nIndex;
-      }
+      m_sText = "";
     }
+    else
+    {
+      // Unify line endings so that all "\r" are removed and only "\n" is
+      // contained
+      m_sText = sText.replace ("\r\n", "\n").replace ('\r', '\n');
+    }
+    m_aFontSpec = ValueEnforcer.notNull (aFontSpec, "FontSpec");
   }
 
   @Nonnull
