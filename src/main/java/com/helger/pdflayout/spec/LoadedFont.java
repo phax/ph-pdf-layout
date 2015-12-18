@@ -141,6 +141,9 @@ public class LoadedFont
         if (aFallbackBytes == null)
           aFallbackBytes = PDFontHelper.encode (aFont, nFallbackCodepoint);
         aCPBytes = aFallbackBytes;
+
+        if (bAddToSubset)
+          aFont.addToSubset (nFallbackCodepoint);
       }
       aBAOS.write (aCPBytes);
 
