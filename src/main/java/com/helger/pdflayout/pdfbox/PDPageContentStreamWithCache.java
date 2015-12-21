@@ -191,13 +191,14 @@ public class PDPageContentStreamWithCache
   {
     if (false)
       m_aStream.showText (sDrawText);
+    else
+    {
+      final byte [] aEncoded = LoadedFont.encodeWithFallback (m_aLastUsedFont, sDrawText, '?', true);
+      COSWriter.writeString (aEncoded, m_aStream.output);
+      m_aStream.write (" ");
 
-    final PDFont font = m_aLastUsedFont;
-
-    COSWriter.writeString (LoadedFont.encodeWithFallback (font, sDrawText, '?', true), m_aStream.output);
-    m_aStream.write (" ");
-
-    m_aStream.writeOperator ("Tj");
+      m_aStream.writeOperator ("Tj");
+    }
   }
 
   public void drawXObject (final PDImageXObject aImage,

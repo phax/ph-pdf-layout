@@ -110,8 +110,8 @@ public class LoadedFont
     return getTextHeight (fFontSize) * 1.05f;
   }
 
-  public static byte [] encodeWithFallback (final PDFont aFont,
-                                            final String sDrawText,
+  public static byte [] encodeWithFallback (@Nonnull final PDFont aFont,
+                                            @Nonnull final String sDrawText,
                                             final int nFallbackCodepoint,
                                             final boolean bPerformSubsetting) throws IOException
   {
