@@ -16,22 +16,26 @@
  */
 package com.helger.pdflayout;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnull;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
  * Callback interface for PDF customization
- * 
+ *
  * @author Philip Helger
  */
 public interface IPDDocumentCustomizer
 {
   /**
    * Customize the passed PDDocument
-   * 
+   *
    * @param aDoc
    *        The document to be customized. Never <code>null</code>.
+   * @throws IOException
+   *         in case something goes wrong
    */
-  void customizeDocument (@Nonnull PDDocument aDoc);
+  void customizeDocument (@Nonnull PDDocument aDoc) throws IOException;
 }
