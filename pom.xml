@@ -39,7 +39,16 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  
+
+  <repository>
+    <id>ApacheSnapshot</id>
+    <name>Apache Repository</name>
+    <url>https://repository.apache.org/content/groups/snapshots/</url>
+    <snapshots>
+      <enabled>true</enabled>
+    </snapshots>
+  </repository>
+
   <scm>
     <connection>scm:git:git@github.com:phax/ph-pdf-layout.git</connection>
     <developerConnection>scm:git:git@github.com:phax/ph-pdf-layout.git</developerConnection>
