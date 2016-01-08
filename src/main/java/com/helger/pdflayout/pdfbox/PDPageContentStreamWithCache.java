@@ -192,7 +192,7 @@ public class PDPageContentStreamWithCache
       m_aStream.showText (sDrawText);
     else
     {
-      final byte [] aEncoded = m_aLastUsedLoadedFont.getEncodedForPageContentStream (sDrawText, true);
+      final byte [] aEncoded = m_aLastUsedLoadedFont.getEncodedForPageContentStream (sDrawText);
       COSWriter.writeString (aEncoded, m_aStream.output);
       m_aStream.write (" ");
 
