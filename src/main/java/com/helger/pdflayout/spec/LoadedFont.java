@@ -31,7 +31,6 @@ import org.apache.pdfbox.pdmodel.font.PDCIDFont;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontHelper;
-import org.apache.pdfbox.pdmodel.font.PDSimpleFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +39,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.hashcode.HashCodeGenerator;
-import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
-import com.helger.commons.mock.CommonsAssert;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.util.IntFloatMap;
@@ -60,18 +57,19 @@ public class LoadedFont
   private static final Logger s_aLogger = LoggerFactory.getLogger (LoadedFont.class);
 
   private final PDFont m_aFont;
-  private final boolean m_bSingleByteFont;
   private final int m_nFallbackCodepoint;
   // Status vars
   private final float m_fBBHeight;
-  private final IntFloatMap m_aEncodedWidthCache = new IntFloatMap ();
   private final IntFloatMap m_aCodepointWidthCache = new IntFloatMap ();
 
   public LoadedFont (@Nonnull final PDFont aFont)
   {
     ValueEnforcer.notNull (aFont, "Font");
     m_aFont = aFont;
-    m_bSingleByteFont = aFont instanceof PDSimpleFont;
+
+    // The fallback character to be used in case an unmappable character is
+    // contained
+    m_nFallbackCodepoint = '?';
 
     PDFontDescriptor aFD = aFont.getFontDescriptor ();
     if (aFD == null)
@@ -84,13 +82,9 @@ public class LoadedFont
       }
     }
     if (aFD == null)
-      throw new IllegalArgumentException ("Failed to determined FontDescriptor from specified font " + aFont);
+      throw new IllegalArgumentException ("Failed to determine FontDescriptor from specified font " + aFont);
 
     m_fBBHeight = aFD.getFontBoundingBox ().getHeight ();
-
-    // The fallback character to be used in case an unmappable character is
-    // contained
-    m_nFallbackCodepoint = '?';
   }
 
   /**
@@ -192,12 +186,10 @@ public class LoadedFont
     }
   }
 
-  public static byte [] encodeTextWithFallback (@Nonnull final PDFont aFont,
-                                                @Nonnull final String sText,
-                                                final int nFallbackCodepoint,
-                                                final boolean bPerformSubsetting) throws IOException
+  public byte [] getEncodedForPageContentStream (@Nonnull final String sText,
+                                                 final boolean bPerformSubsetting) throws IOException
   {
-    final boolean bAddToSubset = bPerformSubsetting && aFont.willBeSubset ();
+    final boolean bAddToSubset = bPerformSubsetting && m_aFont.willBeSubset ();
 
     final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
     int nCPOfs = 0;
@@ -205,9 +197,9 @@ public class LoadedFont
     {
       final int nCP = sText.codePointAt (nCPOfs);
 
-      final EncodedCodepoint aECP = encodeCodepointWithFallback (aFont, nCP, nFallbackCodepoint);
+      final EncodedCodepoint aECP = encodeCodepointWithFallback (m_aFont, nCP, m_nFallbackCodepoint);
       if (bAddToSubset)
-        aFont.addToSubset (aECP.getCodepoint ());
+        m_aFont.addToSubset (aECP.getCodepoint ());
       aECP.writeEncodedBytes (aBAOS);
 
       nCPOfs += Character.charCount (nCP);
@@ -215,23 +207,12 @@ public class LoadedFont
     return aBAOS.toByteArray ();
   }
 
-  private float _getEncodedCachedWidth (final int nEncodedValue) throws IOException
-  {
-    float fWidth = m_aEncodedWidthCache.get (nEncodedValue, -1f);
-    if (fWidth < 0)
-    {
-      fWidth = m_aFont.getWidth (nEncodedValue);
-      m_aEncodedWidthCache.put (nEncodedValue, fWidth);
-    }
-    return fWidth;
-  }
-
   private float _getCodepointCachedWidth (final int nCodepoint) throws IOException
   {
     float fWidth = m_aCodepointWidthCache.get (nCodepoint, -1f);
     if (fWidth < 0)
     {
-      // Encode codepoint
+      // Encode codepoint according to the font rules
       final EncodedCodepoint aECP = encodeCodepointWithFallback (m_aFont, nCodepoint, m_nFallbackCodepoint);
       // Get width of encoded value
       fWidth = m_aFont.getWidth (aECP.getEncodedIntValue ());
@@ -251,51 +232,16 @@ public class LoadedFont
     }
 
     float fWidth = 0;
-    if (true)
-    {
-      int nCPOfs = 0;
-      while (nCPOfs < sText.length ())
-      {
-        final int nCP = sText.codePointAt (nCPOfs);
-        nCPOfs += Character.charCount (nCP);
 
-        if (true)
-        {
-          // Use codepoint cache
-          fWidth += _getCodepointCachedWidth (nCP);
-        }
-        else
-        {
-          // Use encoded cache
-          final EncodedCodepoint aECP = encodeCodepointWithFallback (m_aFont, nCP, m_nFallbackCodepoint);
-          fWidth += _getEncodedCachedWidth (aECP.getEncodedIntValue ());
-        }
-      }
-      if (false)
-        CommonsAssert.assertEquals (fWidth, m_aFont.getStringWidth (sText));
-    }
-    else
+    // Iterate on codepoint basis
+    int nCPOfs = 0;
+    while (nCPOfs < sText.length ())
     {
-      final byte [] aEncodedText = encodeTextWithFallback (m_aFont, sText, m_nFallbackCodepoint, false);
+      final int nCP = sText.codePointAt (nCPOfs);
+      nCPOfs += Character.charCount (nCP);
 
-      if (m_bSingleByteFont)
-      {
-        for (final byte b : aEncodedText)
-        {
-          // Spare the call to "readCode"
-          final int nCode = b & 0xff;
-          fWidth += _getEncodedCachedWidth (nCode);
-        }
-      }
-      else
-      {
-        final NonBlockingByteArrayInputStream aIS = new NonBlockingByteArrayInputStream (aEncodedText);
-        while (aIS.available () > 0)
-        {
-          final int nCode = m_aFont.readCode (aIS);
-          fWidth += _getEncodedCachedWidth (nCode);
-        }
-      }
+      // Use codepoint cache for maximum performance
+      fWidth += _getCodepointCachedWidth (nCP);
     }
 
     // The width is in 1000 unit of text space, ie 333 or 777

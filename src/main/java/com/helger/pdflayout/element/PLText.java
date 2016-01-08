@@ -284,7 +284,7 @@ public class PLText extends AbstractPLElement <PLText>
     aContentStream.beginText ();
 
     // Set font if changed
-    aContentStream.setFont (m_aLoadedFont.getFont (), m_aFontSpec);
+    aContentStream.setFont (m_aLoadedFont, m_aFontSpec);
 
     final float fFontSize = m_aFontSpec.getFontSize ();
     final float fLineHeight = m_fLineHeight;

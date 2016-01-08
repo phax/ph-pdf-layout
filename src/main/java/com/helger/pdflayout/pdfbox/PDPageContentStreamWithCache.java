@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import org.apache.pdfbox.pdfwriter.COSWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
@@ -46,7 +45,7 @@ public class PDPageContentStreamWithCache
   private final PDPageContentStreamExt m_aStream;
 
   // Status cache
-  private PDFont m_aLastUsedFont;
+  private LoadedFont m_aLastUsedLoadedFont;
   private float m_fLastUsedFontSize;
   private Color m_aLastUsedStrokingColor = Color.BLACK;
   private Color m_aLastUsedNonStrokingColor = Color.BLACK;
@@ -74,17 +73,17 @@ public class PDPageContentStreamWithCache
     return m_aPage;
   }
 
-  public void setFont (@Nonnull final PDFont aFont, @Nonnull final FontSpec aFontSpec) throws IOException
+  public void setFont (@Nonnull final LoadedFont aLoadedFont, @Nonnull final FontSpec aFontSpec) throws IOException
   {
-    ValueEnforcer.notNull (aFont, "Font");
+    ValueEnforcer.notNull (aLoadedFont, "Font");
 
     final float fFontSize = aFontSpec.getFontSize ();
-    if (m_aLastUsedFont == null ||
-        !aFont.equals (m_aLastUsedFont) ||
+    if (m_aLastUsedLoadedFont == null ||
+        !aLoadedFont.equals (m_aLastUsedLoadedFont) ||
         !EqualsHelper.equals (fFontSize, m_fLastUsedFontSize))
     {
-      m_aStream.setFont (aFont, fFontSize);
-      m_aLastUsedFont = aFont;
+      m_aStream.setFont (aLoadedFont.getFont (), fFontSize);
+      m_aLastUsedLoadedFont = aLoadedFont;
       m_fLastUsedFontSize = fFontSize;
     }
     setNonStrokingColor (aFontSpec.getColor ());
@@ -193,7 +192,7 @@ public class PDPageContentStreamWithCache
       m_aStream.showText (sDrawText);
     else
     {
-      final byte [] aEncoded = LoadedFont.encodeTextWithFallback (m_aLastUsedFont, sDrawText, '?', true);
+      final byte [] aEncoded = m_aLastUsedLoadedFont.getEncodedForPageContentStream (sDrawText, true);
       COSWriter.writeString (aEncoded, m_aStream.output);
       m_aStream.write (" ");
 
