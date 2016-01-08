@@ -193,7 +193,7 @@ public class PDPageContentStreamWithCache
       m_aStream.showText (sDrawText);
     else
     {
-      final byte [] aEncoded = LoadedFont.encodeWithFallback (m_aLastUsedFont, sDrawText, '?', true);
+      final byte [] aEncoded = LoadedFont.encodeTextWithFallback (m_aLastUsedFont, sDrawText, '?', true);
       COSWriter.writeString (aEncoded, m_aStream.output);
       m_aStream.write (" ");
 

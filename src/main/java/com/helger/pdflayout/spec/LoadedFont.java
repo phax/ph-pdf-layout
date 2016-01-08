@@ -17,12 +17,14 @@
 package com.helger.pdflayout.spec;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.Immutable;
 
 import org.apache.pdfbox.pdmodel.font.PDCIDFont;
@@ -40,6 +42,7 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
+import com.helger.commons.mock.CommonsAssert;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.util.IntFloatMap;
@@ -58,11 +61,13 @@ public class LoadedFont
 
   private final PDFont m_aFont;
   private final boolean m_bSingleByteFont;
+  private final int m_nFallbackCodepoint;
   // Status vars
   private final float m_fBBHeight;
-  private final IntFloatMap m_aWidthCache = new IntFloatMap ();
+  private final IntFloatMap m_aEncodedWidthCache = new IntFloatMap ();
+  private final IntFloatMap m_aCodepointWidthCache = new IntFloatMap ();
 
-  public LoadedFont (@Nonnull final PDFont aFont) throws IOException
+  public LoadedFont (@Nonnull final PDFont aFont)
   {
     ValueEnforcer.notNull (aFont, "Font");
     m_aFont = aFont;
@@ -83,9 +88,9 @@ public class LoadedFont
 
     m_fBBHeight = aFD.getFontBoundingBox ().getHeight ();
 
-    // Pre-cache basic values
-    for (int i = 0; i < 256; ++i)
-      m_aWidthCache.put (i, m_aFont.getWidth (i));
+    // The fallback character to be used in case an unmappable character is
+    // contained
+    m_nFallbackCodepoint = '?';
   }
 
   /**
@@ -110,55 +115,128 @@ public class LoadedFont
     return getTextHeight (fFontSize) * 1.05f;
   }
 
-  public static byte [] encodeWithFallback (@Nonnull final PDFont aFont,
-                                            @Nonnull final String sDrawText,
-                                            final int nFallbackCodepoint,
-                                            final boolean bPerformSubsetting) throws IOException
+  public static final class EncodedCodepoint
   {
-    byte [] aFallbackBytes = null;
+    private final int m_nCP;
+    private final byte [] m_aEncoded;
+    private Integer m_aEncodedValue;
+    private final boolean m_bIsFallback;
+
+    private static int _toInt (@Nonnull final byte [] aEncoded)
+    {
+      int ret = 0;
+      for (final byte b : aEncoded)
+      {
+        ret <<= 8;
+        ret |= (b + 256) % 256;
+      }
+      return ret;
+    }
+
+    private EncodedCodepoint (final int nCP, @Nonnull final byte [] aEncoded, final boolean bIsFallback)
+    {
+      m_nCP = nCP;
+      m_aEncoded = aEncoded;
+      m_bIsFallback = bIsFallback;
+    }
+
+    /**
+     * @return The effective codepoint use.
+     */
+    public int getCodepoint ()
+    {
+      return m_nCP;
+    }
+
+    public void writeEncodedBytes (@Nonnull @WillNotClose final OutputStream aOS) throws IOException
+    {
+      aOS.write (m_aEncoded);
+    }
+
+    public int getEncodedIntValue ()
+    {
+      if (m_aEncodedValue == null)
+      {
+        // Lazy init
+        m_aEncodedValue = Integer.valueOf (_toInt (m_aEncoded));
+      }
+      return m_aEncodedValue.intValue ();
+    }
+
+    /**
+     * @return <code>true</code> if the fallback codepoint was used,
+     *         <code>false</code> if the original codepoint was used.
+     */
+    public boolean isFallback ()
+    {
+      return m_bIsFallback;
+    }
+  }
+
+  @Nonnull
+  public static EncodedCodepoint encodeCodepointWithFallback (@Nonnull final PDFont aFont,
+                                                              final int nCodepoint,
+                                                              final int nFallbackCodepoint) throws IOException
+  {
+    // multi-byte encoding with 1 to 4 bytes
+    try
+    {
+      return new EncodedCodepoint (nCodepoint, PDFontHelper.encode (aFont, nCodepoint), false);
+    }
+    catch (final IllegalArgumentException ex)
+    {
+      s_aLogger.warn ("No code point " + nCodepoint + " in font " + aFont);
+
+      // Use fallback codepoint
+      return new EncodedCodepoint (nFallbackCodepoint, PDFontHelper.encode (aFont, nFallbackCodepoint), true);
+    }
+  }
+
+  public static byte [] encodeTextWithFallback (@Nonnull final PDFont aFont,
+                                                @Nonnull final String sText,
+                                                final int nFallbackCodepoint,
+                                                final boolean bPerformSubsetting) throws IOException
+  {
     final boolean bAddToSubset = bPerformSubsetting && aFont.willBeSubset ();
 
     final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
     int nCPOfs = 0;
-    while (nCPOfs < sDrawText.length ())
+    while (nCPOfs < sText.length ())
     {
-      final int nCP = sDrawText.codePointAt (nCPOfs);
+      final int nCP = sText.codePointAt (nCPOfs);
 
-      // multi-byte encoding with 1 to 4 bytes
-      byte [] aCPBytes;
-      try
-      {
-        // This method is package private
-        aCPBytes = PDFontHelper.encode (aFont, nCP);
-
-        if (bAddToSubset)
-          aFont.addToSubset (nCP);
-      }
-      catch (final IllegalArgumentException ex)
-      {
-        s_aLogger.warn ("No code point " + nCP + " in font " + aFont);
-        // Lazy init
-        if (aFallbackBytes == null)
-          aFallbackBytes = PDFontHelper.encode (aFont, nFallbackCodepoint);
-        aCPBytes = aFallbackBytes;
-
-        if (bAddToSubset)
-          aFont.addToSubset (nFallbackCodepoint);
-      }
-      aBAOS.write (aCPBytes);
+      final EncodedCodepoint aECP = encodeCodepointWithFallback (aFont, nCP, nFallbackCodepoint);
+      if (bAddToSubset)
+        aFont.addToSubset (aECP.getCodepoint ());
+      aECP.writeEncodedBytes (aBAOS);
 
       nCPOfs += Character.charCount (nCP);
     }
     return aBAOS.toByteArray ();
   }
 
-  private float _getWidth (final int nCode) throws IOException
+  private float _getEncodedCachedWidth (final int nEncodedValue) throws IOException
   {
-    float fWidth = m_aWidthCache.get (nCode, -1f);
+    float fWidth = m_aEncodedWidthCache.get (nEncodedValue, -1f);
     if (fWidth < 0)
     {
-      fWidth = m_aFont.getWidth (nCode);
-      m_aWidthCache.put (nCode, fWidth);
+      fWidth = m_aFont.getWidth (nEncodedValue);
+      m_aEncodedWidthCache.put (nEncodedValue, fWidth);
+    }
+    return fWidth;
+  }
+
+  private float _getCodepointCachedWidth (final int nCodepoint) throws IOException
+  {
+    float fWidth = m_aCodepointWidthCache.get (nCodepoint, -1f);
+    if (fWidth < 0)
+    {
+      // Encode codepoint
+      final EncodedCodepoint aECP = encodeCodepointWithFallback (m_aFont, nCodepoint, m_nFallbackCodepoint);
+      // Get width of encoded value
+      fWidth = m_aFont.getWidth (aECP.getEncodedIntValue ());
+      // Map codepoint to width to save encoding
+      m_aCodepointWidthCache.put (nCodepoint, fWidth);
     }
     return fWidth;
   }
@@ -167,27 +245,56 @@ public class LoadedFont
   public float getStringWidth (@Nonnull final String sText, @Nonnegative final float fFontSize) throws IOException
   {
     if (false)
+    {
+      // Toooo slow
       return m_aFont.getStringWidth (sText) * fFontSize / 1000f;
-
-    final byte [] aEncodedText = encodeWithFallback (m_aFont, sText, '?', false);
+    }
 
     float fWidth = 0;
-    if (m_bSingleByteFont)
+    if (true)
     {
-      for (final byte b : aEncodedText)
+      int nCPOfs = 0;
+      while (nCPOfs < sText.length ())
       {
-        // Spare the call to "readCode"
-        final int nCode = b & 0xff;
-        fWidth += _getWidth (nCode);
+        final int nCP = sText.codePointAt (nCPOfs);
+        nCPOfs += Character.charCount (nCP);
+
+        if (true)
+        {
+          // Use codepoint cache
+          fWidth += _getCodepointCachedWidth (nCP);
+        }
+        else
+        {
+          // Use encoded cache
+          final EncodedCodepoint aECP = encodeCodepointWithFallback (m_aFont, nCP, m_nFallbackCodepoint);
+          fWidth += _getEncodedCachedWidth (aECP.getEncodedIntValue ());
+        }
       }
+      if (false)
+        CommonsAssert.assertEquals (fWidth, m_aFont.getStringWidth (sText));
     }
     else
     {
-      final NonBlockingByteArrayInputStream aIS = new NonBlockingByteArrayInputStream (aEncodedText);
-      while (aIS.available () > 0)
+      final byte [] aEncodedText = encodeTextWithFallback (m_aFont, sText, m_nFallbackCodepoint, false);
+
+      if (m_bSingleByteFont)
       {
-        final int nCode = m_aFont.readCode (aIS);
-        fWidth += _getWidth (nCode);
+        for (final byte b : aEncodedText)
+        {
+          // Spare the call to "readCode"
+          final int nCode = b & 0xff;
+          fWidth += _getEncodedCachedWidth (nCode);
+        }
+      }
+      else
+      {
+        final NonBlockingByteArrayInputStream aIS = new NonBlockingByteArrayInputStream (aEncodedText);
+        while (aIS.available () > 0)
+        {
+          final int nCode = m_aFont.readCode (aIS);
+          fWidth += _getEncodedCachedWidth (nCode);
+        }
       }
     }
 
