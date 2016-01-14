@@ -57,11 +57,14 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceStream;
 import org.apache.pdfbox.util.Charsets;
 import org.apache.pdfbox.util.Matrix;
 
+import com.helger.commons.annotation.CodingStyleguideUnaware;
+
 /**
  * Provides the ability to write to a page content stream.
  *
  * @author Ben Litchfield
  */
+@CodingStyleguideUnaware
 public final class PDPageContentStreamExt implements Closeable
 {
   private static final Log LOG = LogFactory.getLog (PDPageContentStreamExt.class);
