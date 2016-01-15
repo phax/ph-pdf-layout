@@ -25,7 +25,7 @@
     <version>1.4.1</version>
   </parent>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>2.2.2-SNAPSHOT</version>
+  <version>2.2.2</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
@@ -55,7 +55,7 @@
     <connection>scm:git:git@github.com:phax/ph-pdf-layout.git</connection>
     <developerConnection>scm:git:git@github.com:phax/ph-pdf-layout.git</developerConnection>
     <url>http://github.com/phax/ph-pdf-layout</url>
-    <tag>HEAD</tag>
+    <tag>ph-pdf-layout-2.2.2</tag>
   </scm>
 
   <organization>
