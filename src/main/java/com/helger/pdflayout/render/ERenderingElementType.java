@@ -18,7 +18,7 @@ package com.helger.pdflayout.render;
 
 /**
  * Defines the type of a rendered element.
- * 
+ *
  * @author Philip Helger
  */
 public enum ERenderingElementType

@@ -18,7 +18,7 @@ package com.helger.pdflayout.element;
 
 /**
  * Vertical box - groups several rows.
- * 
+ *
  * @author Philip Helger
  */
 public class PLVBoxSplittable extends AbstractPLVBoxSplittable <PLVBoxSplittable>

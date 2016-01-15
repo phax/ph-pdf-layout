@@ -41,7 +41,7 @@ import com.helger.pdflayout.spec.WidthSpec.EWidthType;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLVBox <PLTable>implements IPLSplittableElement
+public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableElement
 {
   private final List <WidthSpec> m_aWidths;
   private int m_nHeaderRowCount = 0;

@@ -39,27 +39,23 @@ public final class MainIssue3170
       aSB.append (s).append (' ');
     final String message = aSB.toString ();
 
-    final PDDocument doc = new PDDocument ();
-    try
+    try (final PDDocument doc = new PDDocument ())
     {
       final PDPage page = new PDPage (PDRectangle.A4);
       doc.addPage (page);
 
       final PDFont font = PDType0Font.load (doc, EFontResource.OPEN_SANS_NORMAL.getFontResource ().getInputStream ());
 
-      final PDPageContentStream contents = new PDPageContentStream (doc, page);
-      contents.beginText ();
-      contents.setFont (font, 12);
-      contents.newLineAtOffset (100, 700);
-      contents.showText (message);
-      contents.endText ();
-      contents.close ();
+      try (final PDPageContentStream contents = new PDPageContentStream (doc, page))
+      {
+        contents.beginText ();
+        contents.setFont (font, 12);
+        contents.newLineAtOffset (100, 700);
+        contents.showText (message);
+        contents.endText ();
+      }
 
       doc.save (file);
-    }
-    finally
-    {
-      doc.close ();
     }
   }
 }

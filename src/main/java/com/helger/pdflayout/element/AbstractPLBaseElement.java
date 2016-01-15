@@ -700,7 +700,8 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
    *        Height
    * @param aBorder
    *        Border to use. May not be <code>null</code>.
-   * @throws IOException In case of a PDFBox error
+   * @throws IOException
+   *         In case of a PDFBox error
    */
   protected static void renderBorder (@Nonnull final PDPageContentStreamWithCache aContentStream,
                                       final float fLeft,

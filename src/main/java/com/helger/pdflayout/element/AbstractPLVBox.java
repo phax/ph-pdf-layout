@@ -266,7 +266,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setRowBorder (@Nullable final BorderStyleSpec aBorderX, @Nullable final BorderStyleSpec aBorderY)
+  public final IMPLTYPE setRowBorder (@Nullable final BorderStyleSpec aBorderX,
+                                      @Nullable final BorderStyleSpec aBorderY)
   {
     return setRowBorder (new BorderSpec (aBorderX, aBorderY));
   }
@@ -443,9 +444,19 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidthFull - fAvailableWidth > 0.01)
-        s_aLogger.warn (getDebugID () + " uses more width (" + fUsedWidthFull + ") than available (" + fAvailableWidth + ")!");
+        s_aLogger.warn (getDebugID () +
+                        " uses more width (" +
+                        fUsedWidthFull +
+                        ") than available (" +
+                        fAvailableWidth +
+                        ")!");
       if (fUsedHeightFull - fAvailableHeight > 0.01 && !isSplittable ())
-        s_aLogger.warn (getDebugID () + " uses more height (" + fUsedHeightFull + ") than available (" + fAvailableHeight + ")!");
+        s_aLogger.warn (getDebugID () +
+                        " uses more height (" +
+                        fUsedHeightFull +
+                        ") than available (" +
+                        fAvailableHeight +
+                        ")!");
     }
 
     return new SizeSpec (fUsedWidthFull, fUsedHeightFull);

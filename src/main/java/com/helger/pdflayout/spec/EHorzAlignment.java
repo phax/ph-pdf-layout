@@ -18,7 +18,7 @@ package com.helger.pdflayout.spec;
 
 /**
  * Represents the possible horizontal alignments.
- * 
+ *
  * @author Philip Helger
  */
 public enum EHorzAlignment

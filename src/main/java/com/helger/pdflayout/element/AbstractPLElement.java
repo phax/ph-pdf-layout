@@ -42,7 +42,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends AbstractPLBaseElement <IMPLTYPE>
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>>
+                                        extends AbstractPLBaseElement <IMPLTYPE>
 {
   private SizeSpec m_aMinSize = SizeSpec.SIZE0;
   private SizeSpec m_aMaxSize = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
@@ -188,7 +189,8 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     m_aPreparedSize = new SizeSpec (fRealWidth, fRealHeight);
 
     if (PLDebug.isDebugPrepare ())
-      PLDebug.debugPrepare (this, "Prepared object: width=" +
+      PLDebug.debugPrepare (this,
+                            "Prepared object: width=" +
                                   aPreparedSize.getWidth () +
                                   "+" +
                                   getMarginPlusPaddingXSum () +
@@ -215,7 +217,8 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     checkNotPrepared ();
 
     if (PLDebug.isDebugPrepare ())
-      PLDebug.debugPrepare (this, "Preparing object for available width " +
+      PLDebug.debugPrepare (this,
+                            "Preparing object for available width " +
                                   aCtx.getAvailableWidth () +
                                   "+" +
                                   getMarginPlusPaddingXSum () +
@@ -267,7 +270,8 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
    *
    * @param aCtx
    *        Rendering context
-   * @throws IOException In case of a PDFBox error
+   * @throws IOException
+   *         In case of a PDFBox error
    */
   @Nonnegative
   protected abstract void onPerform (@Nonnull RenderingContext aCtx) throws IOException;

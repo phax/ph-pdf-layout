@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 /**
  * Base interface for a splittable element
- * 
+ *
  * @author Philip Helger
  */
 public interface IPLSplittableElement
@@ -30,7 +30,7 @@ public interface IPLSplittableElement
    * Split this element into sub-elements according to the available height.
    * Splitting is always done after preparation and must return prepared
    * objects!
-   * 
+   *
    * @param fElementWidth
    *        The element width without padding or margin of the element.
    * @param fAvailableHeight

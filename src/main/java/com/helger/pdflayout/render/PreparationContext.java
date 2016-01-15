@@ -49,7 +49,9 @@ public final class PreparationContext
    *        The available height for an element, without the element's margin
    *        and padding. Should be &gt; 0.
    */
-  public PreparationContext (@Nonnull final PDDocument aDoc, @Nonnegative final float fAvailableWidth, @Nonnegative final float fAvailableHeight)
+  public PreparationContext (@Nonnull final PDDocument aDoc,
+                             @Nonnegative final float fAvailableWidth,
+                             @Nonnegative final float fAvailableHeight)
   {
     ValueEnforcer.notNull (aDoc, "PDDocument");
     ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
@@ -86,6 +88,8 @@ public final class PreparationContext
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("availableWidth", m_fAvailableWidth).append ("availableHeight", m_fAvailableHeight).toString ();
+    return new ToStringGenerator (this).append ("availableWidth", m_fAvailableWidth)
+                                       .append ("availableHeight", m_fAvailableHeight)
+                                       .toString ();
   }
 }

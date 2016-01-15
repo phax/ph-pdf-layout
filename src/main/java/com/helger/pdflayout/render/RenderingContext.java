@@ -71,7 +71,13 @@ public final class RenderingContext
                            final float fWidth,
                            final float fHeight)
   {
-    this (aCtx.getElementType (), aCtx.getContentStream (), aCtx.isDebugMode (), fStartLeft, fStartTop, fWidth, fHeight);
+    this (aCtx.getElementType (),
+          aCtx.getContentStream (),
+          aCtx.isDebugMode (),
+          fStartLeft,
+          fStartTop,
+          fWidth,
+          fHeight);
     m_aPlaceholders.putAll (aCtx.m_aPlaceholders);
   }
 

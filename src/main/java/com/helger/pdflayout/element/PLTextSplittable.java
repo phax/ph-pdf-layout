@@ -48,7 +48,8 @@ public class PLTextSplittable extends PLText implements IPLSplittableElement
     final float fLineHeight = m_fLineHeight;
 
     // Get the lines in the correct order from top to bottom
-    final List <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines : CollectionHelper.getReverseList (m_aPreparedLines);
+    final List <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines
+                                                        : CollectionHelper.getReverseList (m_aPreparedLines);
 
     int nLines = (int) (fAvailableHeight / fLineHeight);
     if (nLines <= 0)

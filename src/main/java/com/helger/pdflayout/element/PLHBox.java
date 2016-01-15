@@ -18,7 +18,7 @@ package com.helger.pdflayout.element;
 
 /**
  * Horizontal box - groups several columns.
- * 
+ *
  * @author Philip Helger
  */
 public class PLHBox extends AbstractPLHBox <PLHBox>

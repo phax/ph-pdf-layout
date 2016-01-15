@@ -26,7 +26,7 @@ import com.helger.pdflayout.spec.SizeSpec;
 
 /**
  * A horizontal spacer
- * 
+ *
  * @author Philip Helger
  */
 public class PLSpacerX extends AbstractPLElement <PLSpacerX>

@@ -34,7 +34,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxSplittable <IMPLTYPE>> extends AbstractPLVBox <IMPLTYPE> implements IPLSplittableElement
+public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxSplittable <IMPLTYPE>>
+                                               extends AbstractPLVBox <IMPLTYPE> implements IPLSplittableElement
 {
   public AbstractPLVBoxSplittable ()
   {}
@@ -128,7 +129,8 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
                                                 fUsedVBox1HeightFull -
                                                 aRowElement.getMarginPlusPaddingYSum ();
             if (PLDebug.isDebugSplit ())
-              PLDebug.debugSplit (this, "Trying to split " +
+              PLDebug.debugSplit (this,
+                                  "Trying to split " +
                                         aRowElement.getDebugID () +
                                         " into pieces for split width " +
                                         fAvailableSplitWidth +
@@ -164,7 +166,8 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
               aVBox2RowHeight.add (Float.valueOf (fVBox2RowHeight));
 
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this, "Split row element " +
+                PLDebug.debugSplit (this,
+                                    "Split row element " +
                                           aRowElement.getDebugID () +
                                           " (Row " +
                                           nRow +
@@ -194,7 +197,8 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
             else
             {
               if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this, "Failed to split row element " +
+                PLDebug.debugSplit (this,
+                                    "Failed to split row element " +
                                           aRowElement.getDebugID () +
                                           " (Row " +
                                           nRow +

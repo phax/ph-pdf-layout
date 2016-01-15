@@ -44,9 +44,9 @@ public class WidthSpec
 {
   public static enum EWidthType
   {
-   ABSOLUTE,
-   PERCENTAGE,
-   STAR;
+    ABSOLUTE,
+    PERCENTAGE,
+    STAR;
   }
 
   private final EWidthType m_eType;

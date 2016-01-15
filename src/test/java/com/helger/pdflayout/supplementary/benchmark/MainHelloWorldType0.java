@@ -39,8 +39,7 @@ public final class MainHelloWorldType0
     final String message = aSB.toString ();
 
     final long nStart = System.currentTimeMillis ();
-    final PDDocument doc = new PDDocument ();
-    try
+    try (final PDDocument doc = new PDDocument ())
     {
       final PDPage page = new PDPage ();
       doc.addPage (page);
@@ -56,19 +55,16 @@ public final class MainHelloWorldType0
                           (System.currentTimeMillis () - nStart) +
                           "ms");
 
-      final PDPageContentStream contents = new PDPageContentStream (doc, page);
-      contents.beginText ();
-      contents.setFont (font, 12);
-      contents.newLineAtOffset (100, 700);
-      contents.showText (message);
-      contents.endText ();
-      contents.close ();
+      try (final PDPageContentStream contents = new PDPageContentStream (doc, page))
+      {
+        contents.beginText ();
+        contents.setFont (font, 12);
+        contents.newLineAtOffset (100, 700);
+        contents.showText (message);
+        contents.endText ();
+      }
 
       doc.save (file);
-    }
-    finally
-    {
-      doc.close ();
     }
     System.out.println (file + " created! Took " + (System.currentTimeMillis () - nStart) + "ms");
   }

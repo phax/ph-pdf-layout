@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 
 /**
  * For all exceptions occurring during PDF creation.
- * 
+ *
  * @author Philip Helger
  */
 public class PDFCreationException extends Exception

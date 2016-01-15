@@ -28,7 +28,7 @@ import com.helger.pdflayout.spec.SizeSpec;
 
 /**
  * A vertical spacer
- * 
+ *
  * @author Philip Helger
  */
 public class PLSpacerY extends AbstractPLElement <PLSpacerY>
