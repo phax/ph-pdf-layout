@@ -30,14 +30,13 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.font.api.IFontResource;
+import com.helger.pdflayout.PLDebug;
 
 /**
  * Represents an abstract font that is potentially not yet loaded and can be
@@ -63,20 +62,20 @@ public final class PreloadFont
   public static final PreloadFont SYMBOL = PreloadFont.createPredefined (PDType1Font.SYMBOL);
   public static final PreloadFont ZAPF_DINGBATS = PreloadFont.createPredefined (PDType1Font.ZAPF_DINGBATS);
 
-  private static final Logger s_aLogger = LoggerFactory.getLogger (PreloadFont.class);
-
   private final PDFont m_aFont;
   private final IFontResource m_aFontRes;
+  private final boolean m_bEmbed;
+  // Status vars
   private TrueTypeFont m_aTTF;
   private OpenTypeFont m_aOTF;
-  private final boolean m_bEmbed = true;
 
-  private PreloadFont (@Nullable final PDFont aFont, @Nullable final IFontResource aFontRes)
+  private PreloadFont (@Nullable final PDFont aFont, @Nullable final IFontResource aFontRes, final boolean bEmbed)
   {
     ValueEnforcer.isFalse (aFont == null && aFontRes == null, "One param must be non-null");
     ValueEnforcer.isFalse (aFont != null && aFontRes != null, "One param must be null");
     m_aFont = aFont;
     m_aFontRes = aFontRes;
+    m_bEmbed = bEmbed;
   }
 
   private void _parseFontResource () throws IOException
@@ -87,11 +86,13 @@ public final class PreloadFont
       switch (m_aFontRes.getFontType ())
       {
         case TTF:
-          s_aLogger.info ("Loading TTF font " + m_aFontRes);
+          if (PLDebug.isDebugFont ())
+            PLDebug.debugFont (m_aFontRes.toString (), "Loading TTF font");
           m_aTTF = new TTFParser ().parse (m_aFontRes.getInputStream ());
           break;
         case OTF:
-          s_aLogger.info ("Loading OTF font " + m_aFontRes);
+          if (PLDebug.isDebugFont ())
+            PLDebug.debugFont (m_aFontRes.toString (), "Loading OTF font");
           m_aOTF = new OTFParser ().parse (m_aFontRes.getInputStream ());
           break;
         default:
@@ -140,13 +141,15 @@ public final class PreloadFont
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final PreloadFont rhs = (PreloadFont) o;
-    return EqualsHelper.equals (m_aFont, rhs.m_aFont) && EqualsHelper.equals (m_aFontRes, rhs.m_aFontRes);
+    return EqualsHelper.equals (m_aFont, rhs.m_aFont) &&
+           EqualsHelper.equals (m_aFontRes, rhs.m_aFontRes) &&
+           m_bEmbed == rhs.m_bEmbed;
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aFont).append (m_aFontRes).getHashCode ();
+    return new HashCodeGenerator (this).append (m_aFont).append (m_aFontRes).append (m_bEmbed).getHashCode ();
   }
 
   @Override
@@ -154,6 +157,7 @@ public final class PreloadFont
   {
     return new ToStringGenerator (null).appendIfNotNull ("Font", m_aFont)
                                        .appendIfNotNull ("FontResource", m_aFontRes)
+                                       .append ("Embed", m_bEmbed)
                                        .toString ();
   }
 
@@ -161,14 +165,14 @@ public final class PreloadFont
   public static PreloadFont createPredefined (@Nonnull final PDFont aFont)
   {
     ValueEnforcer.notNull (aFont, "Font");
-    return new PreloadFont (aFont, null);
+    return new PreloadFont (aFont, null, false);
   }
 
   @Nonnull
   public static PreloadFont createEmbedding (@Nonnull final IFontResource aFontRes)
   {
     ValueEnforcer.notNull (aFontRes, "FontRes");
-    final PreloadFont ret = new PreloadFont (null, aFontRes);
+    final PreloadFont ret = new PreloadFont (null, aFontRes, true);
     try
     {
       ret._parseFontResource ();
