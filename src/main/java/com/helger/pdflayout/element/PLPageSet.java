@@ -301,11 +301,10 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   }
 
   @Nonnull
-  public PageSetPrepareResult prepareAllPages (@Nonnull final PDDocument aDoc) throws IOException
+  public PageSetPrepareResult prepareAllPages (@Nonnull final PreparationContextGlobal aGlobalCtx) throws IOException
   {
     // The result element
     final PageSetPrepareResult ret = new PageSetPrepareResult ();
-    final PreparationContextGlobal aGlobalCtx = new PreparationContextGlobal (aDoc);
 
     // Prepare page header
     if (m_aPageHeader != null)

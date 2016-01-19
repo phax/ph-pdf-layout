@@ -41,6 +41,7 @@ import com.helger.commons.string.StringHelper;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.pdflayout.element.PLPageSet;
 import com.helger.pdflayout.element.PLPageSet.PageSetPrepareResult;
+import com.helger.pdflayout.render.PreparationContextGlobal;
 
 /**
  * Main class for creating layouted PDFs. This class contains the meta data as
@@ -245,12 +246,13 @@ public class PageLayoutPDF
       }
 
       // Prepare all page sets
+      final PreparationContextGlobal aGlobalCtx = new PreparationContextGlobal (aDoc);
       final PageSetPrepareResult [] aPRs = new PageSetPrepareResult [m_aPageSets.size ()];
       int nPageSetIndex = 0;
       int nTotalPageCount = 0;
       for (final PLPageSet aPageSet : m_aPageSets)
       {
-        final PageSetPrepareResult aPR = aPageSet.prepareAllPages (aDoc);
+        final PageSetPrepareResult aPR = aPageSet.prepareAllPages (aGlobalCtx);
         aPRs[nPageSetIndex] = aPR;
         nTotalPageCount += aPR.getPageCount ();
         nPageSetIndex++;
