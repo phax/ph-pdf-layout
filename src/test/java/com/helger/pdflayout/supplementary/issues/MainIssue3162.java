@@ -18,7 +18,10 @@ package com.helger.pdflayout.supplementary.issues;
 
 import java.io.IOException;
 
+import org.apache.fontbox.ttf.TTFParser;
+import org.apache.fontbox.ttf.TrueTypeFont;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentHelper;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -27,17 +30,12 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 
 import com.helger.font.open_sans.EFontResource;
 
-public final class MainIssue3170
+public final class MainIssue3162
 {
   public static void main (final String [] args) throws IOException
   {
-    final String s = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. ";
-    final String file = "pdf/issue-3170.pdf";
-
-    final StringBuilder aSB = new StringBuilder ();
-    for (int i = 0; i < 300; i++)
-      aSB.append (s).append (' ');
-    final String message = aSB.toString ();
+    final String s = "This is a test";
+    final String file = "pdf/issue-3162.pdf";
 
     final PDDocument doc = new PDDocument ();
     try
@@ -45,7 +43,12 @@ public final class MainIssue3170
       final PDPage page = new PDPage (PDRectangle.A4);
       doc.addPage (page);
 
-      final PDFont font = PDType0Font.load (doc, EFontResource.OPEN_SANS_NORMAL.getFontResource ().getInputStream ());
+      final TrueTypeFont ttf = new TTFParser ().parse (EFontResource.OPEN_SANS_NORMAL.getFontResource ()
+                                                                                     .getInputStream ());
+      final PDFont font = PDType0Font.load (doc, ttf, true);
+      final PDFont font2 = PDType0Font.load (doc, ttf, true);
+      PDDocumentHelper.handleFontSubset (doc, font);
+      PDDocumentHelper.handleFontSubset (doc, font2);
 
       final PDPageContentStream contents = new PDPageContentStream (doc, page);
       try
@@ -53,7 +56,10 @@ public final class MainIssue3170
         contents.beginText ();
         contents.setFont (font, 12);
         contents.newLineAtOffset (100, 700);
-        contents.showText (message);
+        contents.showText (s);
+        contents.setFont (font2, 12);
+        contents.newLineAtOffset (0, -14);
+        contents.showText (s + " line 2");
         contents.endText ();
       }
       finally

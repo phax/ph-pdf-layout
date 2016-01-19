@@ -27,7 +27,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
  *
  * @author Philip Helger
  */
-@FunctionalInterface
 public interface IPDDocumentCustomizer
 {
   /**

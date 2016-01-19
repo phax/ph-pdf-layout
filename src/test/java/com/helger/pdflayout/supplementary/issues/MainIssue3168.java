@@ -34,14 +34,16 @@ public final class MainIssue3168
     final String s = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. ";
     final String file = "pdf/issue-3168.pdf";
 
-    try (final PDDocument doc = new PDDocument ())
+    final PDDocument doc = new PDDocument ();
+    try
     {
       final PDPage page = new PDPage (PDRectangle.A4);
       doc.addPage (page);
 
       final PDFont font = PDType0Font.load (doc, EFontResource.OPEN_SANS_NORMAL.getFontResource ().getInputStream ());
 
-      try (final PDPageContentStream contents = new PDPageContentStream (doc, page))
+      final PDPageContentStream contents = new PDPageContentStream (doc, page);
+      try
       {
         contents.beginText ();
         contents.setFont (font, 12);
@@ -49,8 +51,16 @@ public final class MainIssue3168
         contents.showText (s);
         contents.endText ();
       }
+      finally
+      {
+        contents.close ();
+      }
 
       doc.save (file);
+    }
+    finally
+    {
+      doc.close ();
     }
   }
 }

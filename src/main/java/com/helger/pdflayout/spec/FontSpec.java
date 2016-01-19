@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -60,12 +61,23 @@ public class FontSpec
                    @Nonnegative final float fFontSize,
                    @Nonnull final Color aColor)
   {
+    this (aPreloadFont, fFontSize, aColor, null, null);
+  }
+
+  private FontSpec (@Nonnull final PreloadFont aPreloadFont,
+                    @Nonnegative final float fFontSize,
+                    @Nonnull final Color aColor,
+                    @Nullable final PDDocument aFontDoc,
+                    @Nullable final LoadedFont aLoadedFont)
+  {
     ValueEnforcer.notNull (aPreloadFont, "Font");
     ValueEnforcer.isGT0 (fFontSize, "FontSize");
     ValueEnforcer.notNull (aColor, "Color");
     m_aPreloadFont = aPreloadFont;
     m_fFontSize = fFontSize;
     m_aColor = aColor;
+    m_aFontDoc = aFontDoc;
+    m_aLoadedFont = aLoadedFont;
   }
 
   /**
@@ -95,6 +107,12 @@ public class FontSpec
     return m_aColor;
   }
 
+  private void _loadFontForDocument (@Nonnull final PDDocument aDoc) throws IOException
+  {
+    m_aLoadedFont = new LoadedFont (m_aPreloadFont.loadPDFont (aDoc));
+    m_aFontDoc = aDoc;
+  }
+
   /**
    * @param aDoc
    *        The PDDocument for which the font should be loaded.
@@ -106,12 +124,14 @@ public class FontSpec
   public LoadedFont getAsLoadedFont (@Nonnull final PDDocument aDoc) throws IOException
   {
     // Cache to avoid parsing TTF over and over again
-    if (m_aLoadedFont == null || m_aFontDoc != aDoc)
-    {
-      // Load font again, if the PDDocument changed
-      m_aLoadedFont = new LoadedFont (m_aPreloadFont.loadPDFont (aDoc));
-      m_aFontDoc = aDoc;
-    }
+    if (m_aLoadedFont == null)
+      _loadFontForDocument (aDoc);
+    else
+      if (m_aFontDoc != aDoc)
+      {
+        // Load font again, if the PDDocument changed
+        _loadFontForDocument (aDoc);
+      }
     return m_aLoadedFont;
   }
 
@@ -128,7 +148,8 @@ public class FontSpec
     ValueEnforcer.notNull (aNewFont, "NewFont");
     if (aNewFont.equals (m_aPreloadFont))
       return this;
-    return new FontSpec (aNewFont, m_fFontSize, m_aColor);
+    // Don't copy loaded font!
+    return new FontSpec (aNewFont, m_fFontSize, m_aColor, null, null);
   }
 
   /**
@@ -144,7 +165,7 @@ public class FontSpec
     ValueEnforcer.isGT0 (fNewFontSize, "FontSize");
     if (EqualsHelper.equals (fNewFontSize, m_fFontSize))
       return this;
-    return new FontSpec (m_aPreloadFont, fNewFontSize, m_aColor);
+    return new FontSpec (m_aPreloadFont, fNewFontSize, m_aColor, m_aFontDoc, m_aLoadedFont);
   }
 
   /**
@@ -160,7 +181,7 @@ public class FontSpec
     ValueEnforcer.notNull (aNewColor, "NewColor");
     if (aNewColor.equals (m_aColor))
       return this;
-    return new FontSpec (m_aPreloadFont, m_fFontSize, aNewColor);
+    return new FontSpec (m_aPreloadFont, m_fFontSize, aNewColor, m_aFontDoc, m_aLoadedFont);
   }
 
   @Override

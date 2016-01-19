@@ -70,6 +70,8 @@ public final class PreloadFont
 
   private PreloadFont (@Nullable final PDFont aFont, @Nullable final IFontResource aFontRes)
   {
+    ValueEnforcer.isFalse (aFont == null && aFontRes == null, "One param must be non-null");
+    ValueEnforcer.isFalse (aFont != null && aFontRes != null, "One param must be null");
     m_aFont = aFont;
     m_aFontRes = aFontRes;
   }
@@ -108,20 +110,22 @@ public final class PreloadFont
   @Nonnull
   public PDFont loadPDFont (@Nonnull final PDDocument aDoc) throws IOException
   {
-    if (m_aFontRes != null)
+    if (m_aFont != null)
     {
-      PDFont ret = null;
-      if (m_aTTF != null)
-        ret = PDType0Font.load (aDoc, m_aTTF, m_bEmbed);
-      else
-        if (m_aOTF != null)
-          ret = PDType0Font.load (aDoc, m_aOTF, m_bEmbed);
-
-      if (ret == null)
-        throw new IllegalArgumentException ("Cannot load font resources of type " + m_aFontRes.getFontType ());
-      return ret;
+      // Pre-defined font
+      return m_aFont;
     }
-    return m_aFont;
+
+    PDFont ret = null;
+    if (m_aTTF != null)
+      ret = PDType0Font.load (aDoc, m_aTTF, m_bEmbed);
+    else
+      if (m_aOTF != null)
+        ret = PDType0Font.load (aDoc, m_aOTF, m_bEmbed);
+
+    if (ret == null)
+      throw new IllegalArgumentException ("Cannot load font resources of type " + m_aFontRes.getFontType ());
+    return ret;
   }
 
   @Nonnull
