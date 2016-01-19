@@ -16,10 +16,17 @@
  */
 package org.apache.pdfbox.pdmodel;
 
+import java.util.Set;
+
 import javax.annotation.Nonnull;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
+/**
+ * Helper class to access package private classes of {@link PDDocument}.
+ * 
+ * @author Philip Helger
+ */
 public final class PDDocumentHelper
 {
   private PDDocumentHelper ()
@@ -27,8 +34,12 @@ public final class PDDocumentHelper
 
   public static void handleFontSubset (@Nonnull final PDDocument aDoc, @Nonnull final PDFont aFont)
   {
-    // getFontsToSubset is package private
-    if (aFont.willBeSubset () && !aDoc.getFontsToSubset ().contains (aFont))
-      aDoc.getFontsToSubset ().add (aFont);
+    if (aFont.willBeSubset ())
+    {
+      // getFontsToSubset is package private
+      final Set <PDFont> aFontsToSubset = aDoc.getFontsToSubset ();
+      if (!aFontsToSubset.contains (aFont))
+        aFontsToSubset.add (aFont);
+    }
   }
 }

@@ -20,6 +20,11 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Helper class to access package private classes of {@link PDFont}.
+ *
+ * @author Philip Helger
+ */
 public final class PDFontHelper
 {
   private PDFontHelper ()
