@@ -223,7 +223,8 @@ public class LoadedFont
 
     // Iterate on codepoint basis
     int nCPOfs = 0;
-    while (nCPOfs < sText.length ())
+    final int nLength = sText.length ();
+    while (nCPOfs < nLength)
     {
       final int nCP = sText.codePointAt (nCPOfs);
       nCPOfs += Character.charCount (nCP);
