@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.font.api.IFontResource;
 
 /**
@@ -146,6 +147,14 @@ public final class PreloadFont
   public int hashCode ()
   {
     return new HashCodeGenerator (this).append (m_aFont).append (m_aFontRes).getHashCode ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (null).appendIfNotNull ("Font", m_aFont)
+                                       .appendIfNotNull ("FontResource", m_aFontRes)
+                                       .toString ();
   }
 
   @Nonnull

@@ -42,6 +42,7 @@ import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.util.IntFloatMap;
 import com.helger.pdflayout.util.IntObjectMap;
 
@@ -172,7 +173,8 @@ public class LoadedFont
     }
     catch (final IllegalArgumentException ex)
     {
-      s_aLogger.warn ("No code point " + nCodepoint + " in font " + aFont);
+      if (PLDebug.isDebugFont ())
+        PLDebug.debugFont (aFont.toString (), "No code point " + nCodepoint + " in this font");
 
       // Use fallback codepoint
       return new EncodedCodePoint (nFallbackCodepoint, PDFontHelper.encode (aFont, nFallbackCodepoint));

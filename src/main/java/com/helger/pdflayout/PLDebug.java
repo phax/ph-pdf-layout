@@ -43,6 +43,7 @@ public final class PLDebug
 
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLDebug.class);
   private static boolean s_bDebugText = false;
+  private static boolean s_bDebugFont = false;
   private static boolean s_bDebugSplit = false;
   private static boolean s_bDebugPrepare = false;
   private static boolean s_bDebugRender = false;
@@ -63,6 +64,21 @@ public final class PLDebug
   public static void debugText (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
     s_aLogger.info ("[Text] " + aElement.getDebugID () + ": " + sMsg);
+  }
+
+  public static boolean isDebugFont ()
+  {
+    return s_bDebugFont;
+  }
+
+  public static void setDebugFont (final boolean bDebugFont)
+  {
+    s_bDebugFont = bDebugFont;
+  }
+
+  public static void debugFont (@Nonnull final String sFontID, final String sMsg)
+  {
+    s_aLogger.info ("[Font] " + sFontID + ": " + sMsg);
   }
 
   public static boolean isDebugSplit ()
@@ -119,6 +135,7 @@ public final class PLDebug
   public static void setDebugAll (final boolean bDebug)
   {
     setDebugText (bDebug);
+    setDebugFont (bDebug);
     setDebugSplit (bDebug);
     setDebugPrepare (bDebug);
     setDebugRender (bDebug);

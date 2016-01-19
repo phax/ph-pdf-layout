@@ -26,6 +26,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.PreloadFont;
@@ -67,6 +68,9 @@ public final class PreparationContextGlobal
     LoadedFont aLoadedFont = m_aFontCache.get (aPreloadFont);
     if (aLoadedFont == null)
     {
+      if (PLDebug.isDebugFont ())
+        PLDebug.debugFont (aPreloadFont.toString (), "Loading into current document");
+
       aLoadedFont = new LoadedFont (aPreloadFont.loadPDFont (m_aDoc));
       m_aFontCache.put (aPreloadFont, aLoadedFont);
     }
