@@ -34,6 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.font.api.IFontResource;
 
 /**
@@ -98,11 +100,12 @@ public final class PreloadFont
   }
 
   /**
-   * Load the PDFont associated to this font, without caching the result in this
-   * class.
+   * Load the {@link PDFont} associated to this preload font. This class uses no
+   * caching!
    *
    * @param aDoc
-   *        The {@link PDDocument} to which the font should be attached to.
+   *        The {@link PDDocument} to which the font should be attached to. May
+   *        not be <code>null</code>.
    * @return The loaded font.
    * @throws IOException
    *         In case loading the external file fails
@@ -126,6 +129,23 @@ public final class PreloadFont
     if (ret == null)
       throw new IllegalArgumentException ("Cannot load font resources of type " + m_aFontRes.getFontType ());
     return ret;
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final PreloadFont rhs = (PreloadFont) o;
+    return EqualsHelper.equals (m_aFont, rhs.m_aFont) && EqualsHelper.equals (m_aFontRes, rhs.m_aFontRes);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aFont).append (m_aFontRes).getHashCode ();
   }
 
   @Nonnull
