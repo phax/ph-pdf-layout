@@ -385,7 +385,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         // Effective content width of this element
         final float fItemWidth = fItemWidthFull - aElement.getMarginPlusPaddingXSum ();
         // Prepare child element
-        final float fItemHeight = aElement.prepare (new PreparationContext (aCtx.getDocument (),
+        final float fItemHeight = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                             fItemWidth,
                                                                             fAvailableHeight))
                                           .getHeight ();
@@ -412,7 +412,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         // Effective content width of this element
         final float fItemWidth = fItemWidthFull - aElement.getMarginPlusPaddingXSum ();
         // Prepare child element
-        final float fItemHeight = aElement.prepare (new PreparationContext (aCtx.getDocument (),
+        final float fItemHeight = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                             fItemWidth,
                                                                             fAvailableHeight))
                                           .getHeight ();

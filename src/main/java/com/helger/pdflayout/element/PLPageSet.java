@@ -43,6 +43,7 @@ import com.helger.pdflayout.render.ERenderingElementType;
 import com.helger.pdflayout.render.IRenderingContextCustomizer;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
+import com.helger.pdflayout.render.PreparationContextGlobal;
 import com.helger.pdflayout.render.RenderPageIndex;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.BorderSpec;
@@ -304,17 +305,18 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   {
     // The result element
     final PageSetPrepareResult ret = new PageSetPrepareResult ();
+    final PreparationContextGlobal aGlobalCtx = new PreparationContextGlobal (aDoc);
 
     // Prepare page header
     if (m_aPageHeader != null)
     {
       // Page header does not care about page padding
-      final PreparationContext aRPC = new PreparationContext (aDoc,
+      final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
                                                               m_aPageSize.getWidth () -
-                                                                    getMarginXSum () -
-                                                                    m_aPageHeader.getMarginPlusPaddingXSum (),
+                                                                          getMarginXSum () -
+                                                                          m_aPageHeader.getMarginPlusPaddingXSum (),
                                                               getMarginTop () -
-                                                                                                               m_aPageHeader.getMarginPlusPaddingYSum ());
+                                                                                                                     m_aPageHeader.getMarginPlusPaddingYSum ());
       final SizeSpec aElementSize = m_aPageHeader.prepare (aRPC);
       ret.setHeaderHeight (aElementSize.getHeight ());
 
@@ -330,12 +332,12 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     if (m_aPageFooter != null)
     {
       // Page footer does not care about page padding
-      final PreparationContext aRPC = new PreparationContext (aDoc,
+      final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
                                                               m_aPageSize.getWidth () -
-                                                                    getMarginXSum () -
-                                                                    m_aPageFooter.getMarginPlusPaddingXSum (),
+                                                                          getMarginXSum () -
+                                                                          m_aPageFooter.getMarginPlusPaddingXSum (),
                                                               getMarginBottom () -
-                                                                                                               m_aPageFooter.getMarginPlusPaddingYSum ());
+                                                                                                                     m_aPageFooter.getMarginPlusPaddingYSum ());
       final SizeSpec aElementSize = m_aPageFooter.prepare (aRPC);
       ret.setFooterHeight (aElementSize.getHeight ());
 
@@ -361,7 +363,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     {
       final float fAvailableWidth = getAvailableWidth () - aElement.getMarginPlusPaddingXSum ();
       final float fAvailableHeight = getAvailableHeight () - aElement.getMarginPlusPaddingYSum ();
-      final PreparationContext aRPC = new PreparationContext (aDoc, fAvailableWidth, fAvailableHeight);
+      final PreparationContext aRPC = new PreparationContext (aGlobalCtx, fAvailableWidth, fAvailableHeight);
       final SizeSpec aElementSize = aElement.prepare (aRPC);
       ret.addElement (new PLElementWithSize (aElement, aElementSize));
     }

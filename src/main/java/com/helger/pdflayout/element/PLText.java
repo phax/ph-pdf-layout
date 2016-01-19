@@ -247,7 +247,7 @@ public class PLText extends AbstractPLElement <PLText>
     }
 
     // Load font into document
-    m_aLoadedFont = aCtx.getLoadedFont (m_aFontSpec);
+    m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
     final float fFontSize = m_aFontSpec.getFontSize ();
     m_fLineHeight = m_aLoadedFont.getLineHeight (fFontSize);
 

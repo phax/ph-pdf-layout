@@ -16,40 +16,31 @@
  */
 package com.helger.pdflayout.render;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.spec.FontSpec;
-import com.helger.pdflayout.spec.LoadedFont;
-import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * The current context for preparing an element.
+ * The current context for preparing an element. The preparation context depends
+ * on the location of an element.
  *
  * @author Philip Helger
  */
 @Immutable
 public final class PreparationContext
 {
-  private final PDDocument m_aDoc;
+  private final PreparationContextGlobal m_aGlobalCtx;
   private final float m_fAvailableWidth;
   private final float m_fAvailableHeight;
-  private final Map <PreloadFont, LoadedFont> m_aFontCache = new HashMap <PreloadFont, LoadedFont> ();
 
   /**
    * Constructor
    *
-   * @param aDoc
-   *        The {@link PDDocument} worked upon
+   * @param aGlobalCtx
+   *        The global preparation context worked upon
    * @param fAvailableWidth
    *        The available width for an element, without the element's margin and
    *        padding. Should be &gt; 0.
@@ -57,22 +48,19 @@ public final class PreparationContext
    *        The available height for an element, without the element's margin
    *        and padding. Should be &gt; 0.
    */
-  public PreparationContext (@Nonnull final PDDocument aDoc,
+  public PreparationContext (@Nonnull final PreparationContextGlobal aGlobalCtx,
                              @Nonnegative final float fAvailableWidth,
                              @Nonnegative final float fAvailableHeight)
   {
-    ValueEnforcer.notNull (aDoc, "PDDocument");
-    ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
-    ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
-    m_aDoc = aDoc;
-    m_fAvailableWidth = fAvailableWidth;
-    m_fAvailableHeight = fAvailableHeight;
+    m_aGlobalCtx = ValueEnforcer.notNull (aGlobalCtx, "GlobalCtx");
+    m_fAvailableWidth = ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
+    m_fAvailableHeight = ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
   }
 
   @Nonnull
-  public PDDocument getDocument ()
+  public PreparationContextGlobal getGlobalContext ()
   {
-    return m_aDoc;
+    return m_aGlobalCtx;
   }
 
   /**
@@ -91,19 +79,6 @@ public final class PreparationContext
   public float getAvailableHeight ()
   {
     return m_fAvailableHeight;
-  }
-
-  @Nonnull
-  public LoadedFont getLoadedFont (@Nonnull final FontSpec aFontSpec) throws IOException
-  {
-    final PreloadFont aPreloadFont = aFontSpec.getPreloadFont ();
-    LoadedFont aLoadedFont = m_aFontCache.get (aPreloadFont);
-    if (aLoadedFont == null)
-    {
-      aLoadedFont = new LoadedFont (aPreloadFont.loadPDFont (m_aDoc));
-      m_aFontCache.put (aPreloadFont, aLoadedFont);
-    }
-    return aLoadedFont;
   }
 
   @Override

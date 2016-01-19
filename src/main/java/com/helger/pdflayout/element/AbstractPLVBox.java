@@ -425,7 +425,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       // Effective content width of this element
       final float fRowElementWidth = fRowElementWidthFull - aRowElement.getMarginPlusPaddingXSum ();
       // Prepare child element
-      final float fRowElementHeight = aRowElement.prepare (new PreparationContext (aCtx.getDocument (),
+      final float fRowElementHeight = aRowElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                    fRowElementWidth,
                                                                                    fAvailableHeight - aRowElement.getMarginPlusPaddingYSum ()))
                                                  .getHeight ();
