@@ -80,7 +80,10 @@ public class PLText extends AbstractPLElement <PLText>
     {
       // Unify line endings so that all "\r" are removed and only "\n" is
       // contained
-      m_sText = sText.replace ("\r\n", "\n").replace ('\r', '\n');
+      String sCleaned = sText;
+      sCleaned = StringHelper.replaceAll (sCleaned, "\r\n", "\n");
+      sCleaned = StringHelper.replaceAll (sCleaned, '\r', '\n');
+      m_sText = sCleaned;
     }
     m_aFontSpec = ValueEnforcer.notNull (aFontSpec, "FontSpec");
   }
@@ -89,6 +92,16 @@ public class PLText extends AbstractPLElement <PLText>
   public String getText ()
   {
     return m_sText;
+  }
+
+  public boolean hasText ()
+  {
+    return m_sText.length () > 0;
+  }
+
+  public boolean hasNoText ()
+  {
+    return m_sText.length () == 0;
   }
 
   @Nonnull
@@ -227,8 +240,14 @@ public class PLText extends AbstractPLElement <PLText>
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
+    if (hasNoText ())
+    {
+      // Nothing to do - empty
+      return SizeSpec.SIZE0;
+    }
+
     // Load font into document
-    m_aLoadedFont = m_aFontSpec.getAsLoadedFont (aCtx.getDocument ());
+    m_aLoadedFont = aCtx.getLoadedFont (m_aFontSpec);
     final float fFontSize = m_aFontSpec.getFontSize ();
     m_fLineHeight = m_aLoadedFont.getLineHeight (fFontSize);
 
@@ -280,6 +299,12 @@ public class PLText extends AbstractPLElement <PLText>
   @Override
   protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
   {
+    if (hasNoText ())
+    {
+      // Nothing to do - empty text
+      return;
+    }
+
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     aContentStream.beginText ();
 

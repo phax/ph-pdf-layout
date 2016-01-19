@@ -16,6 +16,10 @@
  */
 package com.helger.pdflayout.render;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -24,6 +28,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.spec.FontSpec;
+import com.helger.pdflayout.spec.LoadedFont;
+import com.helger.pdflayout.spec.PreloadFont;
 
 /**
  * The current context for preparing an element.
@@ -36,6 +43,7 @@ public final class PreparationContext
   private final PDDocument m_aDoc;
   private final float m_fAvailableWidth;
   private final float m_fAvailableHeight;
+  private final Map <PreloadFont, LoadedFont> m_aFontCache = new HashMap <PreloadFont, LoadedFont> ();
 
   /**
    * Constructor
@@ -83,6 +91,19 @@ public final class PreparationContext
   public float getAvailableHeight ()
   {
     return m_fAvailableHeight;
+  }
+
+  @Nonnull
+  public LoadedFont getLoadedFont (@Nonnull final FontSpec aFontSpec) throws IOException
+  {
+    final PreloadFont aPreloadFont = aFontSpec.getPreloadFont ();
+    LoadedFont aLoadedFont = m_aFontCache.get (aPreloadFont);
+    if (aLoadedFont == null)
+    {
+      aLoadedFont = new LoadedFont (aPreloadFont.loadPDFont (m_aDoc));
+      m_aFontCache.put (aPreloadFont, aLoadedFont);
+    }
+    return aLoadedFont;
   }
 
   @Override
