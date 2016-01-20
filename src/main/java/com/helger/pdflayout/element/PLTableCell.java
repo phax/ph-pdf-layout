@@ -24,7 +24,7 @@ import com.helger.commons.ValueEnforcer;
 
 /**
  * This class represents a single table cell within a table row.
- * 
+ *
  * @author Philip Helger
  */
 @NotThreadSafe

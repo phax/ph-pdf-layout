@@ -30,29 +30,19 @@ public final class MainIssue3162
 {
   public static void main (final String [] args) throws IOException
   {
-    final PDDocument doc = new PDDocument ();
-    try
+    try (final PDDocument doc = new PDDocument ())
     {
       final PDPage page = new PDPage (PDRectangle.A4);
       doc.addPage (page);
 
-      final PDPageContentStream contents = new PDPageContentStream (doc, page);
-      try
+      try (final PDPageContentStream contents = new PDPageContentStream (doc, page))
       {
         contents.beginText ();
         contents.setFont (PDType0Font.load (doc, EFontResource.OPEN_SANS_NORMAL.getFontResource ().getInputStream ()),
                           12);
         contents.endText ();
       }
-      finally
-      {
-        contents.close ();
-      }
       // No need to save
-    }
-    finally
-    {
-      doc.close ();
     }
   }
 }
