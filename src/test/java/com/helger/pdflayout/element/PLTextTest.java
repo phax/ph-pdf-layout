@@ -80,7 +80,7 @@ public final class PLTextTest
   public void testWithTextExceedingPage () throws PDFCreationException
   {
     final StringBuilder aSB = new StringBuilder (5 * CGlobal.BYTES_PER_MEGABYTE);
-    for (int i = 0; i < 500; ++i)
+    for (int i = 0; i < 1000; ++i)
     {
       if (aSB.length () > 0)
         aSB.append (" - ");

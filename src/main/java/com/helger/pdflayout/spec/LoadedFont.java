@@ -111,7 +111,7 @@ public class LoadedFont
   private final float m_fBBHeight;
   private final boolean m_bFontWillBeSubset;
   private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <EncodedCodePoint> ();
-  private final IntFloatMap m_aCodepointWidthCache = new IntFloatMap ();
+  private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
 
   public LoadedFont (@Nonnull final PDFont aFont)
   {
@@ -195,9 +195,9 @@ public class LoadedFont
     return aECP;
   }
 
-  private float _getCodepointWidth (final int nCodePoint) throws IOException
+  private float _getCodePointWidth (final int nCodePoint) throws IOException
   {
-    float fWidth = m_aCodepointWidthCache.get (nCodePoint, -1f);
+    float fWidth = m_aCodePointWidthCache.get (nCodePoint, -1f);
     if (fWidth < 0)
     {
       // Get encoded codepoint (from its own cache)
@@ -206,10 +206,16 @@ public class LoadedFont
       // Get width of encoded value
       fWidth = m_aFont.getWidth (aECP.getEncodedIntValue ());
 
-      // Map codepoint to width to save encoding
-      m_aCodepointWidthCache.put (nCodePoint, fWidth);
+      // Map code point to width to save encoding
+      m_aCodePointWidthCache.put (nCodePoint, fWidth);
     }
     return fWidth;
+  }
+
+  private static float _getWidthForFontSize (final float fWidth, final float fFontSize)
+  {
+    // The width is in 1000 unit of text space, ie 333 or 777
+    return fWidth * fFontSize / 1000f;
   }
 
   @Nonnegative
@@ -223,7 +229,7 @@ public class LoadedFont
 
     float fWidth = 0;
 
-    // Iterate on codepoint basis
+    // Iterate on code point basis
     int nCPOfs = 0;
     final int nLength = sText.length ();
     while (nCPOfs < nLength)
@@ -232,11 +238,11 @@ public class LoadedFont
       nCPOfs += Character.charCount (nCP);
 
       // Use codepoint cache for maximum performance
-      fWidth += _getCodepointWidth (nCP);
+      fWidth += _getCodePointWidth (nCP);
     }
 
     // The width is in 1000 unit of text space, ie 333 or 777
-    return fWidth * fFontSize / 1000f;
+    return _getWidthForFontSize (fWidth, fFontSize);
   }
 
   /**
@@ -270,94 +276,182 @@ public class LoadedFont
     return aBAOS.toByteArray ();
   }
 
+  private void _getLineFitToWidthBackward (@Nonnull final String sLine,
+                                           final float fFontSize,
+                                           final float fMaxWidth,
+                                           @Nonnull final List <TextAndWidthSpec> ret) throws IOException
+  {
+    // Now split each source line into the best matching sub-lines
+    String sCurLine = sLine;
+    float fCurLineWidth;
+    outer: while ((fCurLineWidth = getStringWidth (sCurLine, fFontSize)) > fMaxWidth)
+    {
+      // Line is too long to fit
+
+      // Try to break line as late as possible, at a whitespace position
+      boolean bFoundSpace = false;
+      for (int i = sCurLine.length () - 1; i >= 0; i--)
+        if (Character.isWhitespace (sCurLine.charAt (i)))
+        {
+          // Whitespace found
+          final String sLineStart = sCurLine.substring (0, i);
+          final float fLineStartWidth = getStringWidth (sLineStart, fFontSize);
+          if (fLineStartWidth <= fMaxWidth)
+          {
+            // We found a line - continue with the rest of the line
+            ret.add (new TextAndWidthSpec (sLineStart, fLineStartWidth));
+
+            // Automatically skip the white space and continue with the rest
+            // of the line
+            sCurLine = sCurLine.substring (i + 1);
+            bFoundSpace = true;
+            break;
+          }
+        }
+
+      if (!bFoundSpace)
+      {
+        // No word break found - split in the middle of the word
+        int nIndex = 1;
+        float fPrevWordPartLength = -1;
+        do
+        {
+          final String sWordPart = sCurLine.substring (0, nIndex);
+          final float fWordPartLength = getStringWidth (sWordPart, fFontSize);
+          if (fWordPartLength > fMaxWidth)
+          {
+            // We have an overflow - take everything except the last char
+            if (nIndex == 1)
+            {
+              s_aLogger.warn ("A single character exceeds the maximum width of " + fMaxWidth);
+
+              // Continue anyway
+              ++nIndex;
+              fPrevWordPartLength = fWordPartLength;
+            }
+            else
+            {
+              // Add everything except the last character.
+              final String sWordPartToUse = sCurLine.substring (0, nIndex - 1);
+              ret.add (new TextAndWidthSpec (sWordPartToUse, fPrevWordPartLength));
+
+              // Remove the current word part
+              sCurLine = sCurLine.substring (nIndex - 1);
+
+              // And check for the next whitespace
+              continue outer;
+            }
+          }
+          else
+          {
+            // No overflow yet
+            ++nIndex;
+            fPrevWordPartLength = fWordPartLength;
+          }
+        } while (nIndex < sCurLine.length ());
+
+        // The rest of the string is added below!
+        break;
+      }
+    }
+
+    // Add the part of the line that fits
+    ret.add (new TextAndWidthSpec (sCurLine, fCurLineWidth));
+  }
+
+  private void _getLineFitToWidthForward (@Nonnull final String sLine,
+                                          final float fFontSize,
+                                          final float fMaxWidth,
+                                          @Nonnull final List <TextAndWidthSpec> ret) throws IOException
+  {
+    String sCurLine = sLine;
+    float fSumWidth = 0f;
+    int nCPOfs = 0;
+
+    float fSumWidthOfLastWS = 0f;
+    int nCPOfsOfLastWS = 0;
+    // For each code point
+    while (nCPOfs < sCurLine.length ())
+    {
+      final int nCP = sCurLine.codePointAt (nCPOfs);
+      final float fCPWidth = _getWidthForFontSize (_getCodePointWidth (nCP), fFontSize);
+
+      if (Character.isWhitespace (nCP))
+      {
+        nCPOfsOfLastWS = nCPOfs;
+        fSumWidthOfLastWS = fSumWidth;
+      }
+
+      final float fNewWidth = fSumWidth + fCPWidth;
+      if (fNewWidth > fMaxWidth)
+      {
+        // Maximum width reached
+        if (nCPOfsOfLastWS > 0)
+        {
+          // Use everything up to but excluding the last whitespace
+          final String sPart = sCurLine.substring (0, nCPOfsOfLastWS);
+          // Skip whitespace char in this case
+          sCurLine = sCurLine.substring (nCPOfsOfLastWS + 1);
+          ret.add (new TextAndWidthSpec (sPart, fSumWidthOfLastWS));
+        }
+        else
+        {
+          // No whitespace - use up to but excluding last char
+          final String sPart = sCurLine.substring (0, nCPOfs);
+          sCurLine = sCurLine.substring (nCPOfs);
+          ret.add (new TextAndWidthSpec (sPart, fSumWidth));
+        }
+
+        fSumWidth = 0f;
+        nCPOfs = 0;
+        fSumWidthOfLastWS = 0f;
+        nCPOfsOfLastWS = 0;
+      }
+      else
+      {
+        nCPOfs += Character.charCount (nCP);
+        fSumWidth = fNewWidth;
+      }
+    }
+
+    // Add the rest
+    ret.add (new TextAndWidthSpec (sCurLine, fSumWidth));
+  }
+
   @Nonnull
   @ReturnsMutableCopy
   public List <TextAndWidthSpec> getFitToWidth (@Nullable final String sText,
                                                 @Nonnegative final float fFontSize,
                                                 @Nonnegative final float fMaxWidth) throws IOException
   {
-    final List <TextAndWidthSpec> ret = new ArrayList <TextAndWidthSpec> ();
-
     // First split by the contained line breaks
+    // In the constructor we ensured that only "\n" is used
     final String [] aLines = StringHelper.getExplodedArray ('\n', sText);
-    for (final String sLine : aLines)
+
+    final List <TextAndWidthSpec> ret = new ArrayList <TextAndWidthSpec> ();
+    if (true)
     {
-      // Now split each source line into the best matching sub-lines
-      String sCurLine = sLine;
-      float fCurLineWidth;
-      outer: while ((fCurLineWidth = getStringWidth (sCurLine, fFontSize)) > fMaxWidth)
+      // This is much quicker
+      for (final String sLine : aLines)
+        _getLineFitToWidthForward (sLine, fFontSize, fMaxWidth, ret);
+
+      if (false)
       {
-        // Line is too long to fit
+        // Just for comparison
+        final List <TextAndWidthSpec> retb = new ArrayList <TextAndWidthSpec> ();
+        for (final String sLine : aLines)
+          _getLineFitToWidthBackward (sLine, fFontSize, fMaxWidth, retb);
 
-        // Try to break line as late as possible, at a whitespace position
-        boolean bFoundSpace = false;
-        for (int i = sCurLine.length () - 1; i >= 0; i--)
-          if (Character.isWhitespace (sCurLine.charAt (i)))
-          {
-            // Whitespace found
-            final String sLineStart = sCurLine.substring (0, i);
-            final float fLineStartWidth = getStringWidth (sLineStart, fFontSize);
-            if (fLineStartWidth <= fMaxWidth)
-            {
-              // We found a line - continue with the rest of the line
-              ret.add (new TextAndWidthSpec (sLineStart, fLineStartWidth));
-
-              // Automatically skip the white space and continue with the rest
-              // of the line
-              sCurLine = sCurLine.substring (i + 1);
-              bFoundSpace = true;
-              break;
-            }
-          }
-
-        if (!bFoundSpace)
-        {
-          // No word break found - split in the middle of the word
-          int nIndex = 1;
-          float fPrevWordPartLength = -1;
-          do
-          {
-            final String sWordPart = sCurLine.substring (0, nIndex);
-            final float fWordPartLength = getStringWidth (sWordPart, fFontSize);
-            if (fWordPartLength > fMaxWidth)
-            {
-              // We have an overflow - take everything except the last char
-              if (nIndex == 1)
-              {
-                s_aLogger.warn ("A single character exceeds the maximum width of " + fMaxWidth);
-
-                // Continue anyway
-                ++nIndex;
-                fPrevWordPartLength = fWordPartLength;
-              }
-              else
-              {
-                // Add everything except the last character.
-                final String sWordPartToUse = sCurLine.substring (0, nIndex - 1);
-                ret.add (new TextAndWidthSpec (sWordPartToUse, fPrevWordPartLength));
-
-                // Remove the current word part
-                sCurLine = sCurLine.substring (nIndex - 1);
-
-                // And check for the next whitespace
-                continue outer;
-              }
-            }
-            else
-            {
-              // No overflow yet
-              ++nIndex;
-              fPrevWordPartLength = fWordPartLength;
-            }
-          } while (nIndex < sCurLine.length ());
-
-          // The rest of the string is added below!
-          break;
-        }
+        System.out.println ("ret-f=" + ret);
+        System.out.println ("ret-b=" + retb);
+        System.out.println ();
       }
-
-      // Add the part of the line that fits
-      ret.add (new TextAndWidthSpec (sCurLine, fCurLineWidth));
+    }
+    else
+    {
+      // This is known to work
+      for (final String sLine : aLines)
+        _getLineFitToWidthBackward (sLine, fFontSize, fMaxWidth, ret);
     }
 
     return ret;
