@@ -332,9 +332,9 @@ public class LoadedFont
       }
     }
 
-    // Add the rest
-    if (sCurLine.length () > 0)
-      ret.add (new TextAndWidthSpec (sCurLine, fSumWidth));
+    // Add the rest (even if it is empty, otherwise empty lines won't get
+    // printed)
+    ret.add (new TextAndWidthSpec (sCurLine, fSumWidth));
   }
 
   @Nonnull
