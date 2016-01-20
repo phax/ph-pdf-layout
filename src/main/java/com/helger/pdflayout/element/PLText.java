@@ -243,7 +243,8 @@ public class PLText extends AbstractPLElement <PLText>
     if (hasNoText ())
     {
       // Nothing to do - empty
-      return SizeSpec.SIZE0;
+      // But keep the height distance!
+      return new SizeSpec (0, m_fLineHeight);
     }
 
     // Load font into document
