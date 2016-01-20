@@ -240,17 +240,17 @@ public class PLText extends AbstractPLElement <PLText>
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
+    // Load font into document
+    m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
+    final float fFontSize = m_aFontSpec.getFontSize ();
+    m_fLineHeight = m_aLoadedFont.getLineHeight (fFontSize);
+
     if (hasNoText ())
     {
       // Nothing to do - empty
       // But keep the height distance!
       return new SizeSpec (0, m_fLineHeight);
     }
-
-    // Load font into document
-    m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
-    final float fFontSize = m_aFontSpec.getFontSize ();
-    m_fLineHeight = m_aLoadedFont.getLineHeight (fFontSize);
 
     // Split text into rows
     internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sText, fFontSize, aCtx.getAvailableWidth ()));

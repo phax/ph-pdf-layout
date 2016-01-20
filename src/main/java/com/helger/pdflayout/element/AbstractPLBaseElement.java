@@ -26,7 +26,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.OverrideOnDemand;
-import com.helger.commons.id.IHasIntID;
+import com.helger.commons.id.IHasID;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
@@ -44,9 +44,10 @@ import com.helger.pdflayout.spec.PaddingSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>> implements IHasIntID
+public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>>
+                                            implements IHasID <String>
 {
-  private final int m_nElementID;
+  private String m_sElementID;
   private MarginSpec m_aMargin = MarginSpec.MARGIN0;
   private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
   private BorderSpec m_aBorder = BorderSpec.BORDER0;
@@ -54,7 +55,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
 
   public AbstractPLBaseElement ()
   {
-    m_nElementID = GlobalIDFactory.getNewIntID ();
+    m_sElementID = ClassHelper.getClassLocalName (this) + "-" + GlobalIDFactory.getNewIntID ();
   }
 
   @SuppressWarnings ("unchecked")
@@ -65,11 +66,18 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   }
 
   /**
-   * @return The unique element ID that cannot be altered.
+   * @return The unique element ID.
    */
-  public final int getID ()
+  public final String getID ()
   {
-    return m_nElementID;
+    return m_sElementID;
+  }
+
+  @Nonnull
+  public final IMPLTYPE setID (@Nonnull @Nonempty final String sID)
+  {
+    m_sElementID = ValueEnforcer.notEmpty (sID, "ID");
+    return thisAsT ();
   }
 
   /**
@@ -79,7 +87,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   @Nonempty
   public final String getDebugID ()
   {
-    return ClassHelper.getClassLocalName (this) + "-" + m_nElementID;
+    return getID ();
   }
 
   @Nonnull
@@ -765,7 +773,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("id", m_nElementID)
+    return new ToStringGenerator (this).append ("id", m_sElementID)
                                        .append ("margin", m_aMargin)
                                        .append ("padding", m_aPadding)
                                        .append ("border", m_aBorder)
