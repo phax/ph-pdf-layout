@@ -161,17 +161,6 @@ public class WidthSpec
   }
 
   /**
-   * Create a width element with an value of 100%.
-   *
-   * @return Never <code>null</code>.
-   */
-  @Nonnull
-  public static WidthSpec perc100 ()
-  {
-    return perc (100f);
-  }
-
-  /**
    * Create a new star width element.
    *
    * @return Never <code>null</code>.
