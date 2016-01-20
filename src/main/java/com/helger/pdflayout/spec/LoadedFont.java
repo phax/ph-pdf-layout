@@ -32,8 +32,6 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontHelper;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
@@ -80,7 +78,7 @@ public class LoadedFont
     }
 
     /**
-     * @return The effective codepoint use.
+     * @return The effective code point use.
      */
     public int getCodePoint ()
     {
@@ -102,8 +100,6 @@ public class LoadedFont
       return m_aEncodedValue.intValue ();
     }
   }
-
-  private static final Logger s_aLogger = LoggerFactory.getLogger (LoadedFont.class);
 
   private final PDFont m_aFont;
   private final int m_nFallbackCodePoint;
@@ -176,7 +172,7 @@ public class LoadedFont
       if (PLDebug.isDebugFont ())
         PLDebug.debugFont (aFont.toString (), "No code point " + nCodepoint + " in this font");
 
-      // Use fallback codepoint
+      // Use fallback code point
       return new EncodedCodePoint (nFallbackCodepoint, PDFontHelper.encode (aFont, nFallbackCodepoint));
     }
   }
@@ -187,7 +183,7 @@ public class LoadedFont
     EncodedCodePoint aECP = m_aEncodedCodePointCache.get (nCodePoint);
     if (aECP == null)
     {
-      // Encode codepoint according to the font rules
+      // Encode code point according to the font rules
       aECP = encodeCodepointWithFallback (m_aFont, nCodePoint, m_nFallbackCodePoint);
       // put in cache
       m_aEncodedCodePointCache.put (nCodePoint, aECP);
@@ -200,7 +196,7 @@ public class LoadedFont
     float fWidth = m_aCodePointWidthCache.get (nCodePoint, -1f);
     if (fWidth < 0)
     {
-      // Get encoded codepoint (from its own cache)
+      // Get encoded code point (from its own cache)
       final EncodedCodePoint aECP = _getEncodedCodePoint (nCodePoint);
 
       // Get width of encoded value
@@ -237,7 +233,7 @@ public class LoadedFont
       final int nCP = sText.codePointAt (nCPOfs);
       nCPOfs += Character.charCount (nCP);
 
-      // Use codepoint cache for maximum performance
+      // Use code point cache for maximum performance
       fWidth += _getCodePointWidth (nCP);
     }
 
@@ -276,89 +272,6 @@ public class LoadedFont
     return aBAOS.toByteArray ();
   }
 
-  private void _getLineFitToWidthBackward (@Nonnull final String sLine,
-                                           final float fFontSize,
-                                           final float fMaxWidth,
-                                           @Nonnull final List <TextAndWidthSpec> ret) throws IOException
-  {
-    // Now split each source line into the best matching sub-lines
-    String sCurLine = sLine;
-    float fCurLineWidth;
-    outer: while ((fCurLineWidth = getStringWidth (sCurLine, fFontSize)) > fMaxWidth)
-    {
-      // Line is too long to fit
-
-      // Try to break line as late as possible, at a whitespace position
-      boolean bFoundSpace = false;
-      for (int i = sCurLine.length () - 1; i >= 0; i--)
-        if (Character.isWhitespace (sCurLine.charAt (i)))
-        {
-          // Whitespace found
-          final String sLineStart = sCurLine.substring (0, i);
-          final float fLineStartWidth = getStringWidth (sLineStart, fFontSize);
-          if (fLineStartWidth <= fMaxWidth)
-          {
-            // We found a line - continue with the rest of the line
-            ret.add (new TextAndWidthSpec (sLineStart, fLineStartWidth));
-
-            // Automatically skip the white space and continue with the rest
-            // of the line
-            sCurLine = sCurLine.substring (i + 1);
-            bFoundSpace = true;
-            break;
-          }
-        }
-
-      if (!bFoundSpace)
-      {
-        // No word break found - split in the middle of the word
-        int nIndex = 1;
-        float fPrevWordPartLength = -1;
-        do
-        {
-          final String sWordPart = sCurLine.substring (0, nIndex);
-          final float fWordPartLength = getStringWidth (sWordPart, fFontSize);
-          if (fWordPartLength > fMaxWidth)
-          {
-            // We have an overflow - take everything except the last char
-            if (nIndex == 1)
-            {
-              s_aLogger.warn ("A single character exceeds the maximum width of " + fMaxWidth);
-
-              // Continue anyway
-              ++nIndex;
-              fPrevWordPartLength = fWordPartLength;
-            }
-            else
-            {
-              // Add everything except the last character.
-              final String sWordPartToUse = sCurLine.substring (0, nIndex - 1);
-              ret.add (new TextAndWidthSpec (sWordPartToUse, fPrevWordPartLength));
-
-              // Remove the current word part
-              sCurLine = sCurLine.substring (nIndex - 1);
-
-              // And check for the next whitespace
-              continue outer;
-            }
-          }
-          else
-          {
-            // No overflow yet
-            ++nIndex;
-            fPrevWordPartLength = fWordPartLength;
-          }
-        } while (nIndex < sCurLine.length ());
-
-        // The rest of the string is added below!
-        break;
-      }
-    }
-
-    // Add the part of the line that fits
-    ret.add (new TextAndWidthSpec (sCurLine, fCurLineWidth));
-  }
-
   private void _getLineFitToWidthForward (@Nonnull final String sLine,
                                           final float fFontSize,
                                           final float fMaxWidth,
@@ -370,6 +283,7 @@ public class LoadedFont
 
     float fSumWidthOfLastWS = 0f;
     int nCPOfsOfLastWS = 0;
+
     // For each code point
     while (nCPOfs < sCurLine.length ())
     {
@@ -378,6 +292,8 @@ public class LoadedFont
 
       if (Character.isWhitespace (nCP))
       {
+        // Whitespace is considered a word break and allows us to break the line
+        // here, so remember it
         nCPOfsOfLastWS = nCPOfs;
         fSumWidthOfLastWS = fSumWidth;
       }
@@ -402,6 +318,7 @@ public class LoadedFont
           ret.add (new TextAndWidthSpec (sPart, fSumWidth));
         }
 
+        // Reset counter
         fSumWidth = 0f;
         nCPOfs = 0;
         fSumWidthOfLastWS = 0f;
@@ -409,13 +326,15 @@ public class LoadedFont
       }
       else
       {
+        // Add current char
         nCPOfs += Character.charCount (nCP);
         fSumWidth = fNewWidth;
       }
     }
 
     // Add the rest
-    ret.add (new TextAndWidthSpec (sCurLine, fSumWidth));
+    if (sCurLine.length () > 0)
+      ret.add (new TextAndWidthSpec (sCurLine, fSumWidth));
   }
 
   @Nonnull
@@ -429,30 +348,8 @@ public class LoadedFont
     final String [] aLines = StringHelper.getExplodedArray ('\n', sText);
 
     final List <TextAndWidthSpec> ret = new ArrayList <TextAndWidthSpec> ();
-    if (true)
-    {
-      // This is much quicker
-      for (final String sLine : aLines)
-        _getLineFitToWidthForward (sLine, fFontSize, fMaxWidth, ret);
-
-      if (false)
-      {
-        // Just for comparison
-        final List <TextAndWidthSpec> retb = new ArrayList <TextAndWidthSpec> ();
-        for (final String sLine : aLines)
-          _getLineFitToWidthBackward (sLine, fFontSize, fMaxWidth, retb);
-
-        System.out.println ("ret-f=" + ret);
-        System.out.println ("ret-b=" + retb);
-        System.out.println ();
-      }
-    }
-    else
-    {
-      // This is known to work
-      for (final String sLine : aLines)
-        _getLineFitToWidthBackward (sLine, fFontSize, fMaxWidth, ret);
-    }
+    for (final String sLine : aLines)
+      _getLineFitToWidthForward (sLine, fFontSize, fMaxWidth, ret);
 
     return ret;
   }
