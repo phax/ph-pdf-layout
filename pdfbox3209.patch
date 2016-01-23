@@ -1,0 +1,43 @@
+### Eclipse Workspace Patch 1.0
+#P pdfbox
+Index: src/main/java/org/apache/pdfbox/multipdf/Overlay.java
+===================================================================
+--- src/main/java/org/apache/pdfbox/multipdf/Overlay.java	(revision 1726456)
++++ src/main/java/org/apache/pdfbox/multipdf/Overlay.java	(working copy)
+@@ -101,6 +101,24 @@
+     public void overlay(Map<Integer, String> specificPageOverlayFile)
+             throws IOException
+     {
++      overlay (specificPageOverlayFile, null);
++    }
++    
++    /**
++     * This will add overlays to a documents.
++     * 
++     * @param specificPageOverlayFile map of overlay files for specific pages
++     * @param outStream Custom output stream to write the overlaid PDF to. If 
++     *                  it is <code>null</code> the file is written to the file
++     *                  specified by {@link #setOutputFile(String)}. If it is
++     *                  not <code>null</code> the {@link OutputStream} is automatically
++     *                  closed inside.
++     * @throws IOException if something went wrong
++     */
++    public void overlay(Map<Integer, String> specificPageOverlayFile,
++                        OutputStream outStream)
++            throws IOException
++    {
+         try
+         {
+             loadPDFs();
+@@ -112,7 +130,10 @@
+             }
+             processPages(inputPDFDocument);
+ 
+-            inputPDFDocument.save(outputFilename);
++            if (outStream != null)
++                inputPDFDocument.save(outStream);
++            else
++                inputPDFDocument.save(outputFilename);
+         }
+         finally
+         {
