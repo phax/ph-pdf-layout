@@ -28,6 +28,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamExt.EAppendMode;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.pdflayout.spec.LoadedFont;
@@ -53,7 +54,7 @@ public class PDPageContentStreamWithCache
 
   public PDPageContentStreamWithCache (@Nonnull final PDDocument aDocument,
                                        @Nonnull final PDPage aSourcePage,
-                                       final boolean bAppendContent,
+                                       final EAppendMode bAppendContent,
                                        final boolean bCompress) throws IOException
   {
     m_aDocument = aDocument;
@@ -193,7 +194,7 @@ public class PDPageContentStreamWithCache
     else
     {
       final byte [] aEncoded = m_aLastUsedLoadedFont.getEncodedForPageContentStream (sDrawText);
-      COSWriter.writeString (aEncoded, m_aStream.output);
+      COSWriter.writeString (aEncoded, m_aStream.m_aOS);
       m_aStream.write (" ");
 
       m_aStream.writeOperator ("Tj");

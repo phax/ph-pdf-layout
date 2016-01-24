@@ -38,6 +38,7 @@ import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamExt.EAppendMode;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.ERenderingElementType;
 import com.helger.pdflayout.render.IRenderingContextCustomizer;
@@ -628,7 +629,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
       final PDPageContentStreamWithCache aContentStream = new PDPageContentStreamWithCache (aDoc,
                                                                                             aPage,
-                                                                                            false,
+                                                                                            EAppendMode.OVERWRITE,
                                                                                             bCompressPDF);
       try
       {

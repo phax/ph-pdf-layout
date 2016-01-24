@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.Stack;
+
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,6 +59,7 @@ import org.apache.pdfbox.util.Charsets;
 import org.apache.pdfbox.util.Matrix;
 
 import com.helger.commons.annotation.CodingStyleguideUnaware;
+import com.helger.commons.collection.impl.NonBlockingStack;
 
 /**
  * Provides the ability to write to a page content stream.
@@ -65,19 +67,37 @@ import com.helger.commons.annotation.CodingStyleguideUnaware;
  * @author Ben Litchfield
  */
 @CodingStyleguideUnaware
+@NotThreadSafe
 public final class PDPageContentStreamExt implements Closeable
 {
-  private static final Log LOG = LogFactory.getLog (PDPageContentStreamExt.class);
+  public static enum EAppendMode
+  {
+    OVERWRITE,
+    APPEND,
+    PREPEND;
 
-  private final PDDocument _document;
-  protected OutputStream output;
+    public boolean isNotOverwrite ()
+    {
+      return this != OVERWRITE;
+    }
+
+    public boolean isPrepend ()
+    {
+      return this == PREPEND;
+    }
+  }
+
+  private static final Log s_aLogger = LogFactory.getLog (PDPageContentStreamExt.class);
+
+  private final PDDocument m_aDoc;
+  protected OutputStream m_aOS;
   private PDResources resources;
 
   private boolean inTextMode = false;
-  private final Stack <PDFont> fontStack = new Stack <PDFont> ();
+  private final NonBlockingStack <PDFont> fontStack = new NonBlockingStack <> ();
 
-  private final Stack <PDColorSpace> nonStrokingColorSpaceStack = new Stack <PDColorSpace> ();
-  private final Stack <PDColorSpace> strokingColorSpaceStack = new Stack <PDColorSpace> ();
+  private final NonBlockingStack <PDColorSpace> nonStrokingColorSpaceStack = new NonBlockingStack <> ();
+  private final NonBlockingStack <PDColorSpace> strokingColorSpaceStack = new NonBlockingStack <> ();
 
   // number format
   private final NumberFormat formatDecimal = NumberFormat.getNumberInstance (Locale.US);
@@ -94,7 +114,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public PDPageContentStreamExt (final PDDocument document, final PDPage sourcePage) throws IOException
   {
-    this (document, sourcePage, false, true);
+    this (document, sourcePage, EAppendMode.OVERWRITE, true);
   }
 
   /**
@@ -114,7 +134,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public PDPageContentStreamExt (final PDDocument document,
                                  final PDPage sourcePage,
-                                 final boolean appendContent,
+                                 final EAppendMode appendContent,
                                  final boolean compress) throws IOException
   {
     this (document, sourcePage, appendContent, compress, false);
@@ -139,15 +159,15 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public PDPageContentStreamExt (final PDDocument document,
                                  final PDPage sourcePage,
-                                 final boolean appendContent,
+                                 final EAppendMode appendContent,
                                  final boolean compress,
                                  final boolean resetContext) throws IOException
   {
-    this._document = document;
+    this.m_aDoc = document;
     final COSName filter = compress ? COSName.FLATE_DECODE : null;
 
     // If request specifies the need to append to the document
-    if (appendContent && sourcePage.hasContents ())
+    if (appendContent.isNotOverwrite () && sourcePage.hasContents ())
     {
       // Create a stream to append new content
       final PDStream contentsToAppend = new PDStream (document);
@@ -160,14 +180,20 @@ public final class PDPageContentStreamExt implements Closeable
         // If contents is already an array, a new stream is simply appended to
         // it
         array = (COSArray) contents;
-        array.add (contentsToAppend);
+        if (appendContent.isPrepend ())
+          array.add (0, contentsToAppend.getCOSObject ());
+        else
+          array.add (contentsToAppend);
       }
       else
       {
         // Creates a new array and adds the current stream plus a new one to it
         array = new COSArray ();
         array.add (contents);
-        array.add (contentsToAppend);
+        if (appendContent.isPrepend ())
+          array.add (0, contentsToAppend.getCOSObject ());
+        else
+          array.add (contentsToAppend);
       }
 
       // save the initial/unmodified graphics context
@@ -175,7 +201,7 @@ public final class PDPageContentStreamExt implements Closeable
       {
         // create a new stream to encapsulate the existing stream
         final PDStream saveGraphics = new PDStream (document);
-        output = saveGraphics.createOutputStream (filter);
+        m_aOS = saveGraphics.createOutputStream (filter);
 
         // save the initial/unmodified graphics context
         saveGraphicsState ();
@@ -187,7 +213,7 @@ public final class PDPageContentStreamExt implements Closeable
 
       // Sets the compoundStream as page contents
       sourcePage.getCOSObject ().setItem (COSName.CONTENTS, array);
-      output = contentsToAppend.createOutputStream (filter);
+      m_aOS = contentsToAppend.createOutputStream (filter);
 
       // restore the initial/unmodified graphics context
       if (resetContext)
@@ -199,16 +225,15 @@ public final class PDPageContentStreamExt implements Closeable
     {
       if (sourcePage.hasContents ())
       {
-        LOG.warn ("You are overwriting an existing content, you should use the append mode");
+        s_aLogger.warn ("You are overwriting an existing content, you should use the append mode");
       }
       final PDStream contents = new PDStream (document);
       sourcePage.setContents (contents);
-      output = contents.createOutputStream (filter);
+      m_aOS = contents.createOutputStream (filter);
     }
 
     // this has to be done here, as the resources will be set to null when
-    // resetting the content
-    // stream
+    // resetting the content stream
     resources = sourcePage.getResources ();
     if (resources == null)
     {
@@ -234,9 +259,9 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public PDPageContentStreamExt (final PDDocument doc, final PDAppearanceStream appearance) throws IOException
   {
-    this._document = doc;
+    this.m_aDoc = doc;
 
-    output = appearance.getStream ().createOutputStream ();
+    m_aOS = appearance.getStream ().createOutputStream ();
     this.resources = appearance.getResources ();
 
     formatDecimal.setMaximumFractionDigits (4);
@@ -260,9 +285,9 @@ public final class PDPageContentStreamExt implements Closeable
                                  final PDAppearanceStream appearance,
                                  final OutputStream outputStream) throws IOException
   {
-    this._document = doc;
+    this.m_aDoc = doc;
 
-    output = outputStream;
+    m_aOS = outputStream;
     this.resources = appearance.getResources ();
 
     formatDecimal.setMaximumFractionDigits (4);
@@ -320,15 +345,11 @@ public final class PDPageContentStreamExt implements Closeable
   public void setFont (final PDFont font, final float fontSize) throws IOException
   {
     if (fontStack.isEmpty ())
-    {
       fontStack.add (font);
-    }
     else
-    {
-      fontStack.setElementAt (font, fontStack.size () - 1);
-    }
+      fontStack.set (fontStack.size () - 1, font);
 
-    PDDocumentHelper.handleFontSubset (_document, font);
+    PDDocumentHelper.handleFontSubset (m_aDoc, font);
 
     writeOperand (resources.add (font));
     writeOperand (fontSize);
@@ -368,7 +389,7 @@ public final class PDPageContentStreamExt implements Closeable
       }
     }
 
-    COSWriter.writeString (font.encode (text), output);
+    COSWriter.writeString (font.encode (text), m_aOS);
     write (" ");
 
     writeOperator ("Tj");
@@ -714,7 +735,7 @@ public final class PDPageContentStreamExt implements Closeable
       }
       else
       {
-        strokingColorSpaceStack.setElementAt (color.getColorSpace (), nonStrokingColorSpaceStack.size () - 1);
+        strokingColorSpaceStack.set (nonStrokingColorSpaceStack.size () - 1, color.getColorSpace ());
       }
     }
 
@@ -859,7 +880,7 @@ public final class PDPageContentStreamExt implements Closeable
       }
       else
       {
-        nonStrokingColorSpaceStack.setElementAt (color.getColorSpace (), nonStrokingColorSpaceStack.size () - 1);
+        nonStrokingColorSpaceStack.set (nonStrokingColorSpaceStack.size () - 1, color.getColorSpace ());
       }
     }
 
@@ -1524,7 +1545,7 @@ public final class PDPageContentStreamExt implements Closeable
   protected void writeOperand (final float real) throws IOException
   {
     write (formatDecimal.format (real));
-    output.write (' ');
+    m_aOS.write (' ');
   }
 
   /**
@@ -1533,7 +1554,7 @@ public final class PDPageContentStreamExt implements Closeable
   protected void writeOperand (final int integer) throws IOException
   {
     write (formatDecimal.format (integer));
-    output.write (' ');
+    m_aOS.write (' ');
   }
 
   /**
@@ -1541,8 +1562,8 @@ public final class PDPageContentStreamExt implements Closeable
    */
   protected void writeOperand (final COSName name) throws IOException
   {
-    name.writePDF (output);
-    output.write (' ');
+    name.writePDF (m_aOS);
+    m_aOS.write (' ');
   }
 
   /**
@@ -1550,8 +1571,8 @@ public final class PDPageContentStreamExt implements Closeable
    */
   protected void writeOperator (final String text) throws IOException
   {
-    output.write (text.getBytes (Charsets.US_ASCII));
-    output.write ('\n');
+    m_aOS.write (text.getBytes (Charsets.US_ASCII));
+    m_aOS.write ('\n');
   }
 
   /**
@@ -1559,7 +1580,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   protected void write (final String text) throws IOException
   {
-    output.write (text.getBytes (Charsets.US_ASCII));
+    m_aOS.write (text.getBytes (Charsets.US_ASCII));
   }
 
   /**
@@ -1567,7 +1588,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   protected void writeLine () throws IOException
   {
-    output.write ('\n');
+    m_aOS.write ('\n');
   }
 
   /**
@@ -1575,7 +1596,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   protected void writeBytes (final byte [] data) throws IOException
   {
-    output.write (data);
+    m_aOS.write (data);
   }
 
   /**
@@ -1601,7 +1622,7 @@ public final class PDPageContentStreamExt implements Closeable
   @Override
   public void close () throws IOException
   {
-    output.close ();
+    m_aOS.close ();
   }
 
   private boolean isOutside255Interval (final int val)
