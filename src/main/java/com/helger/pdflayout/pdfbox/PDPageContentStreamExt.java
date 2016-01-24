@@ -62,7 +62,13 @@ import com.helger.commons.annotation.CodingStyleguideUnaware;
 import com.helger.commons.collection.impl.NonBlockingStack;
 
 /**
- * Provides the ability to write to a page content stream.
+ * Provides the ability to write to a page content stream.<br>
+ * Extensions/changes for this project:
+ * <ul>
+ * <li>Speed up in text drawing</li>
+ * <li>Removed all deprecated methods</li>
+ * <li>Allowing to prepend content</li>
+ * </ul>
  *
  * @author Ben Litchfield
  */
