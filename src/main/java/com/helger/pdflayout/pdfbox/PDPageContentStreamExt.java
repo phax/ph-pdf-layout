@@ -186,21 +186,17 @@ public final class PDPageContentStreamExt implements Closeable
         // If contents is already an array, a new stream is simply appended to
         // it
         array = (COSArray) contents;
-        if (appendContent.isPrepend ())
-          array.add (0, contentsToAppend.getCOSObject ());
-        else
-          array.add (contentsToAppend);
       }
       else
       {
         // Creates a new array and adds the current stream plus a new one to it
         array = new COSArray ();
         array.add (contents);
-        if (appendContent.isPrepend ())
-          array.add (0, contentsToAppend.getCOSObject ());
-        else
-          array.add (contentsToAppend);
       }
+      if (appendContent.isPrepend ())
+        array.add (0, contentsToAppend.getCOSObject ());
+      else
+        array.add (contentsToAppend);
 
       // save the initial/unmodified graphics context
       if (resetContext)
@@ -265,13 +261,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public PDPageContentStreamExt (final PDDocument doc, final PDAppearanceStream appearance) throws IOException
   {
-    this.m_aDoc = doc;
-
-    m_aOS = appearance.getStream ().createOutputStream ();
-    this.resources = appearance.getResources ();
-
-    formatDecimal.setMaximumFractionDigits (4);
-    formatDecimal.setGroupingUsed (false);
+    this (doc, appearance, appearance.getStream ().createOutputStream ());
   }
 
   /**

@@ -1,0 +1,139 @@
+### Eclipse Workspace Patch 1.0
+#P pdfbox
+Index: src/main/java/org/apache/pdfbox/pdmodel/PDPageContentStream.java
+===================================================================
+--- src/main/java/org/apache/pdfbox/pdmodel/PDPageContentStream.java	(revision 1726627)
++++ src/main/java/org/apache/pdfbox/pdmodel/PDPageContentStream.java	(working copy)
+@@ -61,6 +61,23 @@
+  */
+ public final class PDPageContentStream implements Closeable
+ {
++    public static enum AppendMode
++    {
++      OVERWRITE,
++      APPEND,
++      PREPEND;
++  
++      public boolean isNotOverwrite ()
++      {
++        return this != OVERWRITE;
++      }
++  
++      public boolean isPrepend ()
++      {
++        return this == PREPEND;
++      }
++    }
++  
+     private static final Log LOG = LogFactory.getLog(PDPageContentStream.class);
+ 
+     private final PDDocument document;
+@@ -85,7 +102,7 @@
+      */
+     public PDPageContentStream(PDDocument document, PDPage sourcePage) throws IOException
+     {
+-        this(document, sourcePage, false, true);
++        this(document, sourcePage, AppendMode.OVERWRITE, true, false);
+     }
+ 
+     /**
+@@ -98,6 +115,7 @@
+      * @param compress Tell if the content stream should compress the page contents.
+      * @throws IOException If there is an error writing to the page contents.
+      */
++    @Deprecated
+     public PDPageContentStream(PDDocument document, PDPage sourcePage, boolean appendContent,
+                                boolean compress) throws IOException
+     {
+@@ -109,6 +127,21 @@
+      *
+      * @param document The document the page is part of.
+      * @param sourcePage The page to write the contents to.
++     * @param appendContent Indicates whether content will be overwritten, appended or prepended.
++     * @param compress Tell if the content stream should compress the page contents.
++     * @throws IOException If there is an error writing to the page contents.
++     */
++    public PDPageContentStream(PDDocument document, PDPage sourcePage, AppendMode appendContent,
++                               boolean compress) throws IOException
++    {
++        this(document, sourcePage, appendContent, compress, false);
++    }
++
++    /**
++     * Create a new PDPage content stream.
++     *
++     * @param document The document the page is part of.
++     * @param sourcePage The page to write the contents to.
+      * @param appendContent Indicates whether content will be overwritten. If false all previous
+      *                      content is deleted.
+      * @param compress Tell if the content stream should compress the page contents.
+@@ -115,14 +148,32 @@
+      * @param resetContext Tell if the graphic context should be reseted.
+      * @throws IOException If there is an error writing to the page contents.
+      */
++    @Deprecated
+     public PDPageContentStream(PDDocument document, PDPage sourcePage, boolean appendContent,
+                                boolean compress, boolean resetContext) throws IOException
+     {
++      this (document, sourcePage, appendContent ? AppendMode.APPEND : AppendMode.OVERWRITE, compress, resetContext);
++    }
++    
++    /**
++     * Create a new PDPage content stream.
++     *
++     * @param document The document the page is part of.
++     * @param sourcePage The page to write the contents to.
++     * @param appendContent Indicates whether content will be overwritten, appended or prepended.
++     * @param compress Tell if the content stream should compress the page contents.
++     * @param resetContext Tell if the graphic context should be reset. This is only relevant
++     *                     in non-overwrite modes.
++     * @throws IOException If there is an error writing to the page contents.
++     */
++    public PDPageContentStream(PDDocument document, PDPage sourcePage, AppendMode appendContent,
++                               boolean compress, boolean resetContext) throws IOException
++    {
+         this.document = document;
+         COSName filter = compress ? COSName.FLATE_DECODE : null;
+         
+         // If request specifies the need to append to the document
+-        if (appendContent && sourcePage.hasContents())
++        if (appendContent.isNotOverwrite () && sourcePage.hasContents())
+         {
+             // Create a stream to append new content
+             PDStream contentsToAppend = new PDStream(document);
+@@ -134,7 +185,6 @@
+             {
+                 // If contents is already an array, a new stream is simply appended to it
+                 array = (COSArray)contents;
+-                array.add(contentsToAppend);
+             }
+             else
+             {
+@@ -141,8 +191,11 @@
+                 // Creates a new array and adds the current stream plus a new one to it
+                 array = new COSArray();
+                 array.add(contents);
+-                array.add(contentsToAppend);
+             }
++            if (appendContent.isPrepend ())
++              array.add(0, contentsToAppend.getCOSObject ());
++            else
++              array.add(contentsToAppend);
+ 
+             // save the initial/unmodified graphics context
+             if (resetContext)
+@@ -203,13 +256,7 @@
+      */
+     public PDPageContentStream(PDDocument doc, PDAppearanceStream appearance) throws IOException
+     {
+-        this.document = doc;
+-        
+-        output = appearance.getStream().createOutputStream();
+-        this.resources = appearance.getResources();
+-        
+-        formatDecimal.setMaximumFractionDigits(4);
+-        formatDecimal.setGroupingUsed(false);
++        this (doc, appearance, appearance.getStream().createOutputStream()); 
+     }
+     
+     /**
