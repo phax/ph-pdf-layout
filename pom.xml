@@ -114,6 +114,21 @@
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
     </dependency>
+    
+    <!-- For reading PDFs with contained JPEGs -->
+    <dependency>
+      <groupId>com.levigo.jbig2</groupId>
+      <artifactId>levigo-jbig2-imageio</artifactId>
+      <version>1.6.5</version>
+      <optional>true</optional>
+    </dependency>
+    <!-- For reading encrypted PDFs -->
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcmail-jdk15on</artifactId>
+      <version>1.54</version>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
