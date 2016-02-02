@@ -30,6 +30,7 @@ import com.helger.commons.id.IHasID;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.commons.traits.IGenericImplTrait;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
@@ -45,7 +46,7 @@ import com.helger.pdflayout.spec.PaddingSpec;
  *        The implementation type of this class.
  */
 public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>>
-                                            implements IHasID <String>
+                                            implements IHasID <String>, IGenericImplTrait <IMPLTYPE>
 {
   private String m_sElementID;
   private MarginSpec m_aMargin = MarginSpec.MARGIN0;
@@ -56,13 +57,6 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public AbstractPLBaseElement ()
   {
     m_sElementID = ClassHelper.getClassLocalName (this) + "-" + GlobalIDFactory.getNewIntID ();
-  }
-
-  @SuppressWarnings ("unchecked")
-  @Nonnull
-  protected final IMPLTYPE thisAsT ()
-  {
-    return (IMPLTYPE) this;
   }
 
   /**

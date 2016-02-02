@@ -16,4 +16,4 @@ target/
 # Unit test created PDFs
 /pdf/
 
-
+/**/.pmd
