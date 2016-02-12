@@ -102,7 +102,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   @Nullable
   public PLHBoxColumn getColumnAtIndex (@Nonnegative final int nIndex)
   {
-    return CollectionHelper.getSafe (m_aColumns, nIndex);
+    return CollectionHelper.getAtIndex (m_aColumns, nIndex);
   }
 
   @Nullable

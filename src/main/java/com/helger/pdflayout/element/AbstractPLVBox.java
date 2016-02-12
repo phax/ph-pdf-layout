@@ -105,7 +105,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public PLVBoxRow getRowAtIndex (@Nonnegative final int nIndex)
   {
-    return CollectionHelper.getSafe (m_aRows, nIndex);
+    return CollectionHelper.getAtIndex (m_aRows, nIndex);
   }
 
   /**
