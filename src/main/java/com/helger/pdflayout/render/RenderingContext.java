@@ -16,9 +16,6 @@
  */
 package com.helger.pdflayout.render;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -28,7 +25,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.collection.ext.CommonsLinkedHashMap;
+import com.helger.commons.collection.ext.ICommonsOrderedMap;
 import com.helger.commons.string.StringParser;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 
@@ -47,7 +45,7 @@ public final class RenderingContext
   private final float m_fStartTop;
   private final float m_fWidth;
   private final float m_fHeight;
-  private final Map <String, String> m_aPlaceholders = new LinkedHashMap <String, String> ();
+  private final ICommonsOrderedMap <String, String> m_aPlaceholders = new CommonsLinkedHashMap <> ();
 
   /**
    * @param aCtx
@@ -177,9 +175,9 @@ public final class RenderingContext
 
   @Nonnull
   @ReturnsMutableCopy
-  public Map <String, String> getAllPlaceholders ()
+  public ICommonsOrderedMap <String, String> getAllPlaceholders ()
   {
-    return CollectionHelper.newOrderedMap (m_aPlaceholders);
+    return m_aPlaceholders.getClone ();
   }
 
   @Nonnull
