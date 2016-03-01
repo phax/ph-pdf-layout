@@ -18,8 +18,6 @@ package com.helger.pdflayout.element;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
@@ -32,7 +30,8 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.collection.ext.CommonsArrayList;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
@@ -55,7 +54,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-  protected final List <PLVBoxRow> m_aRows = new ArrayList <PLVBoxRow> ();
+  protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
   private BorderSpec m_aRowBorder = BorderSpec.BORDER0;
   private Color m_aRowFillColor = null;
   /** prepare width (without padding and margin) */
@@ -90,9 +89,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    */
   @Nonnull
   @ReturnsMutableCopy
-  public List <PLVBoxRow> getAllRows ()
+  public ICommonsList <PLVBoxRow> getAllRows ()
   {
-    return CollectionHelper.newList (m_aRows);
+    return m_aRows.getClone ();
   }
 
   /**
@@ -105,7 +104,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public PLVBoxRow getRowAtIndex (@Nonnegative final int nIndex)
   {
-    return CollectionHelper.getAtIndex (m_aRows, nIndex);
+    return m_aRows.getAtIndex (nIndex);
   }
 
   /**
@@ -114,7 +113,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public PLVBoxRow getFirstRow ()
   {
-    return CollectionHelper.getFirstElement (m_aRows);
+    return m_aRows.getFirst ();
   }
 
   /**
@@ -123,7 +122,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public PLVBoxRow getLastRow ()
   {
-    return CollectionHelper.getLastElement (m_aRows);
+    return m_aRows.getLast ();
   }
 
   /**

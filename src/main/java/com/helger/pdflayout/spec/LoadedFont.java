@@ -18,7 +18,6 @@ package com.helger.pdflayout.spec;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnegative;
@@ -36,6 +35,8 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.ext.CommonsArrayList;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.collection.map.IntFloatMap;
 import com.helger.commons.collection.map.IntObjectMap;
 import com.helger.commons.hashcode.HashCodeGenerator;
@@ -339,15 +340,15 @@ public class LoadedFont
 
   @Nonnull
   @ReturnsMutableCopy
-  public List <TextAndWidthSpec> getFitToWidth (@Nullable final String sText,
-                                                @Nonnegative final float fFontSize,
-                                                @Nonnegative final float fMaxWidth) throws IOException
+  public ICommonsList <TextAndWidthSpec> getFitToWidth (@Nullable final String sText,
+                                                        @Nonnegative final float fFontSize,
+                                                        @Nonnegative final float fMaxWidth) throws IOException
   {
     // First split by the contained line breaks
     // In the constructor we ensured that only "\n" is used
     final String [] aLines = StringHelper.getExplodedArray ('\n', sText);
 
-    final List <TextAndWidthSpec> ret = new ArrayList <TextAndWidthSpec> ();
+    final ICommonsList <TextAndWidthSpec> ret = new CommonsArrayList <> ();
     for (final String sLine : aLines)
       _getLineFitToWidthForward (sLine, fFontSize, fMaxWidth, ret);
 

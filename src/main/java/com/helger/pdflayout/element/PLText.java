@@ -17,6 +17,7 @@
 package com.helger.pdflayout.element;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.CheckForSigned;
@@ -30,7 +31,8 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.collection.ext.CommonsArrayList;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
@@ -66,7 +68,7 @@ public class PLText extends AbstractPLElement <PLText>
   // prepare result
   private LoadedFont m_aLoadedFont;
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
-  protected List <TextAndWidthSpec> m_aPreparedLinesUnmodified;
+  protected ICommonsList <TextAndWidthSpec> m_aPreparedLinesUnmodified;
   protected List <TextAndWidthSpec> m_aPreparedLines;
   protected float m_fLineHeight;
 
@@ -198,7 +200,7 @@ public class PLText extends AbstractPLElement <PLText>
     return this;
   }
 
-  final void internalSetPreparedLines (@Nonnull final List <TextAndWidthSpec> aLines)
+  final void internalSetPreparedLines (@Nonnull final ICommonsList <TextAndWidthSpec> aLines)
   {
     final int nLines = aLines.size ();
     m_nPreparedLineCountUnmodified = nLines;
@@ -226,7 +228,7 @@ public class PLText extends AbstractPLElement <PLText>
     if (!m_bTopDown)
     {
       // Reverse order only once
-      m_aPreparedLines = CollectionHelper.getReverseInlineList (m_aPreparedLines);
+      Collections.reverse (m_aPreparedLines);
     }
   }
 
@@ -273,11 +275,11 @@ public class PLText extends AbstractPLElement <PLText>
 
   @Nonnull
   @ReturnsMutableCopy
-  public List <TextAndWidthSpec> getAllPreparedLinesUnmodified ()
+  public ICommonsList <TextAndWidthSpec> getAllPreparedLinesUnmodified ()
   {
     if (m_aPreparedLinesUnmodified == null)
       throw new IllegalStateException ("Preparation is not yet done");
-    return CollectionHelper.newList (m_aPreparedLinesUnmodified);
+    return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
   }
 
   /**
@@ -401,7 +403,7 @@ public class PLText extends AbstractPLElement <PLText>
     ValueEnforcer.notEmpty (aLines, "Lines");
 
     // Create a copy to be independent!
-    final List <TextAndWidthSpec> aLineCopy = CollectionHelper.newList (aLines);
+    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList <> (aLines);
 
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));

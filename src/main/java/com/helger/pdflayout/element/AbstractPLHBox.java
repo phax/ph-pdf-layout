@@ -18,8 +18,6 @@ package com.helger.pdflayout.element;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
@@ -32,7 +30,8 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.collection.ext.CommonsArrayList;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
@@ -57,7 +56,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  protected final List <PLHBoxColumn> m_aColumns = new ArrayList <PLHBoxColumn> ();
+  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
   private int m_nStarWidthItems = 0;
   private BorderSpec m_aColumnBorder = BorderSpec.BORDER0;
   private Color m_aColumnFillColor = null;
@@ -94,27 +93,27 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
    */
   @Nonnull
   @ReturnsMutableCopy
-  public List <PLHBoxColumn> getAllColumns ()
+  public ICommonsList <PLHBoxColumn> getAllColumns ()
   {
-    return CollectionHelper.newList (m_aColumns);
+    return m_aColumns.getClone ();
   }
 
   @Nullable
   public PLHBoxColumn getColumnAtIndex (@Nonnegative final int nIndex)
   {
-    return CollectionHelper.getAtIndex (m_aColumns, nIndex);
+    return m_aColumns.getAtIndex (nIndex);
   }
 
   @Nullable
   public PLHBoxColumn getFirstColumn ()
   {
-    return CollectionHelper.getFirstElement (m_aColumns);
+    return m_aColumns.getFirst ();
   }
 
   @Nullable
   public PLHBoxColumn getLastColumn ()
   {
-    return CollectionHelper.getLastElement (m_aColumns);
+    return m_aColumns.getLast ();
   }
 
   @Nullable

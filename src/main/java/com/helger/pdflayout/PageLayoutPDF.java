@@ -18,9 +18,7 @@ package com.helger.pdflayout;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,7 +32,8 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.collection.ext.CommonsArrayList;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
@@ -62,7 +61,7 @@ public class PageLayoutPDF
   private String m_sDocumentKeywords;
   private String m_sDocumentSubject;
   private boolean m_bDebug = false;
-  private final List <PLPageSet> m_aPageSets = new ArrayList <PLPageSet> ();
+  private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class
@@ -165,9 +164,9 @@ public class PageLayoutPDF
 
   @Nonnull
   @ReturnsMutableCopy
-  public List <? extends PLPageSet> getAllPageSets ()
+  public ICommonsList <? extends PLPageSet> getAllPageSets ()
   {
-    return CollectionHelper.newList (m_aPageSets);
+    return m_aPageSets.getClone ();
   }
 
   /**
@@ -185,7 +184,7 @@ public class PageLayoutPDF
   @Nonnull
   public EChange removePageSet (@Nullable final PLPageSet aPageSet)
   {
-    return EChange.valueOf (m_aPageSets.remove (aPageSet));
+    return m_aPageSets.removeObject (aPageSet);
   }
 
   /**

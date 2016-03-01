@@ -16,13 +16,14 @@
  */
 package com.helger.pdflayout.element;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.ext.CommonsArrayList;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -42,10 +43,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
 
   public boolean containsAnySplittableElement ()
   {
-    for (final PLVBoxRow aRow : m_aRows)
-      if (aRow.getElement ().isSplittable ())
-        return true;
-    return false;
+    return m_aRows.containsAny (r -> r.getElement ().isSplittable ());
   }
 
   @Nonnull
@@ -75,14 +73,14 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     final PLVBoxSplittable aVBox2 = new PLVBoxSplittable ().setBasicDataFrom (this);
 
     final int nTotalRows = getRowCount ();
-    final List <Float> aVBox1RowWidth = new ArrayList <Float> (nTotalRows);
-    final List <Float> aVBox1RowHeight = new ArrayList <Float> (nTotalRows);
+    final ICommonsList <Float> aVBox1RowWidth = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <Float> aVBox1RowHeight = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox1Width = 0;
     float fUsedVBox1WidthFull = 0;
     float fUsedVBox1Height = 0;
     float fUsedVBox1HeightFull = 0;
-    final List <Float> aVBox2RowWidth = new ArrayList <Float> (nTotalRows);
-    final List <Float> aVBox2RowHeight = new ArrayList <Float> (nTotalRows);
+    final ICommonsList <Float> aVBox2RowWidth = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <Float> aVBox2RowHeight = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox2Width = 0;
     float fUsedVBox2WidthFull = 0;
     float fUsedVBox2Height = 0;

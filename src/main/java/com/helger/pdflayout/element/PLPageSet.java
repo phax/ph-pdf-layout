@@ -17,8 +17,6 @@
 package com.helger.pdflayout.element;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -34,7 +32,8 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.annotation.ReturnsMutableObject;
-import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.collection.ext.CommonsArrayList;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
@@ -63,9 +62,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   public static final class PageSetPrepareResult
   {
     private float m_fHeaderHeight = Float.NaN;
-    private final List <PLElementWithSize> m_aContentHeight = new ArrayList <PLElementWithSize> ();
+    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList <> ();
     private float m_fFooterHeight = Float.NaN;
-    private final List <List <PLElementWithSize>> m_aPerPageElements = new ArrayList <List <PLElementWithSize>> ();
+    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList <> ();
 
     PageSetPrepareResult ()
     {}
@@ -106,9 +105,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
      */
     @Nonnull
     @ReturnsMutableCopy
-    List <PLElementWithSize> getAllElements ()
+    ICommonsList <PLElementWithSize> getAllElements ()
     {
-      return CollectionHelper.newList (m_aContentHeight);
+      return m_aContentHeight.getClone ();
     }
 
     /**
@@ -137,7 +136,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
      * @param aCurPageElements
      *        The list to use. May neither be <code>null</code> nor empty.
      */
-    void addPerPageElements (@Nonnull @Nonempty final List <PLElementWithSize> aCurPageElements)
+    void addPerPageElements (@Nonnull @Nonempty final ICommonsList <PLElementWithSize> aCurPageElements)
     {
       ValueEnforcer.notEmptyNoNullValue (aCurPageElements, "CurPageElements");
       m_aPerPageElements.add (aCurPageElements);
@@ -157,7 +156,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
     @Nonnull
     @ReturnsMutableObject ("speed")
-    List <List <PLElementWithSize>> directGetPerPageElements ()
+    ICommonsList <ICommonsList <PLElementWithSize>> directGetPerPageElements ()
     {
       return m_aPerPageElements;
     }
@@ -167,7 +166,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
   private final SizeSpec m_aPageSize;
   private AbstractPLElement <?> m_aPageHeader;
-  private final List <AbstractPLElement <?>> m_aElements = new ArrayList <AbstractPLElement <?>> ();
+  private final ICommonsList <AbstractPLElement <?>> m_aElements = new CommonsArrayList <> ();
   private AbstractPLElement <?> m_aPageFooter;
   private IRenderingContextCustomizer m_aRCCustomizer;
 
@@ -257,9 +256,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   }
 
   @Nonnull
-  public List <? extends AbstractPLElement <?>> getAllElements ()
+  public ICommonsList <? extends AbstractPLElement <?>> getAllElements ()
   {
-    return CollectionHelper.newList (m_aElements);
+    return m_aElements.getClone ();
   }
 
   @Nonnull
@@ -373,7 +372,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     final float fYLeast = getMarginBottom () + getPaddingBottom ();
 
     {
-      List <PLElementWithSize> aCurPageElements = new ArrayList <PLElementWithSize> ();
+      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList <> ();
 
       if (PLDebug.isDebugPrepare ())
         PLDebug.debugSplit (this, "Start preparing elements");
@@ -382,7 +381,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
       float fCurY = fYTop;
 
       // Create a copy of the list, so that we can safely modify it
-      final List <PLElementWithSize> aElementsWithSize = ret.getAllElements ();
+      final ICommonsList <PLElementWithSize> aElementsWithSize = ret.getAllElements ();
       while (!aElementsWithSize.isEmpty ())
       {
         // Use the first element
@@ -483,14 +482,14 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
             if (PLDebug.isDebugPrepare ())
             {
-              final List <String> aLastPageContent = new ArrayList <String> ();
+              final ICommonsList <String> aLastPageContent = new CommonsArrayList <> ();
               for (final PLElementWithSize aCurElement : aCurPageElements)
                 aLastPageContent.add (aCurElement.getElement ().getDebugID ());
               PLDebug.debugPrepare (this, "Finished page with: " + StringHelper.getImploded (aLastPageContent));
             }
 
             ret.addPerPageElements (aCurPageElements);
-            aCurPageElements = new ArrayList <PLElementWithSize> ();
+            aCurPageElements = new CommonsArrayList <> ();
 
             // Start new page
             fCurY = fYTop;
@@ -547,7 +546,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
         if (PLDebug.isDebugPrepare ())
         {
-          final List <String> aLastPageContent = new ArrayList <String> ();
+          final ICommonsList <String> aLastPageContent = new CommonsArrayList <> ();
           for (final PLElementWithSize aCurElement : aCurPageElements)
             aLastPageContent.add (aCurElement.getElement ().getDebugID ());
           PLDebug.debugPrepare (this, "Finished last page with: " + StringHelper.getImploded (aLastPageContent));
@@ -590,7 +589,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     final boolean bCompressPDF = !bDebug;
     int nPageIndex = 0;
     final int nPageCount = aPrepareResult.getPageCount ();
-    for (final List <PLElementWithSize> aPerPage : aPrepareResult.directGetPerPageElements ())
+    for (final ICommonsList <PLElementWithSize> aPerPage : aPrepareResult.directGetPerPageElements ())
     {
       if (PLDebug.isDebugRender ())
         PLDebug.debugRender (this,

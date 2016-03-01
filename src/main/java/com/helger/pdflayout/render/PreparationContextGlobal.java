@@ -17,8 +17,6 @@
 package com.helger.pdflayout.render;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -26,6 +24,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.collection.ext.CommonsHashMap;
+import com.helger.commons.collection.ext.ICommonsMap;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
@@ -41,7 +41,7 @@ import com.helger.pdflayout.spec.PreloadFont;
 public final class PreparationContextGlobal
 {
   private final PDDocument m_aDoc;
-  private final Map <PreloadFont, LoadedFont> m_aFontCache = new HashMap <PreloadFont, LoadedFont> ();
+  private final ICommonsMap <PreloadFont, LoadedFont> m_aFontCache = new CommonsHashMap <> ();
 
   /**
    * Constructor

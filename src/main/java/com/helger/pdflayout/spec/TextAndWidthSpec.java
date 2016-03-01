@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout.spec;
 
-import java.util.Collection;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -26,6 +24,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
+import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
@@ -84,15 +83,8 @@ public class TextAndWidthSpec
   }
 
   @Nonnull
-  public static String getAsText (@Nonnull final Collection <? extends TextAndWidthSpec> aTexts)
+  public static String getAsText (@Nonnull final Iterable <? extends TextAndWidthSpec> aTexts)
   {
-    final StringBuilder aSB = new StringBuilder ();
-    for (final TextAndWidthSpec aLine : aTexts)
-    {
-      if (aSB.length () > 0)
-        aSB.append ('\n');
-      aSB.append (aLine.getText ());
-    }
-    return aSB.toString ();
+    return StringHelper.getImploded ('\n', aTexts, aLine -> aLine.getText ());
   }
 }

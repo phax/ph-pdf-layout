@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.element;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,7 +27,8 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.collection.ext.CommonsArrayList;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
@@ -43,7 +43,7 @@ import com.helger.pdflayout.spec.WidthSpec.EWidthType;
  */
 public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableElement
 {
-  private final List <WidthSpec> m_aWidths;
+  private final ICommonsList <WidthSpec> m_aWidths;
   private int m_nHeaderRowCount = 0;
 
   /**
@@ -65,7 +65,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
                                               eWidthType +
                                               " and " +
                                               aWidth.getType ());
-    m_aWidths = CollectionHelper.newList (aWidths);
+    m_aWidths = new CommonsArrayList <> (aWidths);
   }
 
   @Nonnull
@@ -84,9 +84,9 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   @Nonnull
   @Nonempty
   @ReturnsMutableCopy
-  public List <WidthSpec> getWidths ()
+  public ICommonsList <WidthSpec> getWidths ()
   {
-    return CollectionHelper.newList (m_aWidths);
+    return m_aWidths.getClone ();
   }
 
   /**
@@ -110,7 +110,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   @Nonnull
   public PLHBoxSplittable addTableRow (@Nullable final AbstractPLElement <?>... aElements)
   {
-    return addTableRow (CollectionHelper.newList (aElements));
+    return addTableRow (new CommonsArrayList <> (aElements));
   }
 
   /**
@@ -153,7 +153,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   @Nonnull
   public PLHBoxSplittable addTableRowExt (@Nonnull final PLTableCell... aCells)
   {
-    return addTableRowExt (CollectionHelper.newList (aCells));
+    return addTableRowExt (new CommonsArrayList <> (aCells));
   }
 
   /**
@@ -166,7 +166,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
    * @return this
    */
   @Nonnull
-  public PLHBoxSplittable addTableRowExt (@Nonnull final Collection <? extends PLTableCell> aCells)
+  public PLHBoxSplittable addTableRowExt (@Nonnull final Iterable <? extends PLTableCell> aCells)
   {
     ValueEnforcer.notNull (aCells, "Cells");
 
@@ -259,8 +259,8 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
     final PLTable aTable2 = new PLTable (m_aWidths).setBasicDataFrom (this);
 
     final int nTotalRows = getRowCount ();
-    final List <Float> aTable1RowWidth = new ArrayList <Float> (nTotalRows);
-    final List <Float> aTable1RowHeight = new ArrayList <Float> (nTotalRows);
+    final ICommonsList <Float> aTable1RowWidth = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <Float> aTable1RowHeight = new CommonsArrayList <> (nTotalRows);
 
     // Copy all header rows
     float fUsedTable1Width = 0;
@@ -290,8 +290,8 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
     float fUsedTable2Width = fUsedTable1Width;
     float fUsedTable2Height = fUsedTable1Height;
     float fUsedTable2HeightFull = fUsedTable1HeightFull;
-    final List <Float> aTable2RowWidth = new ArrayList <Float> (aTable1RowWidth);
-    final List <Float> aTable2RowHeight = new ArrayList <Float> (aTable1RowHeight);
+    final ICommonsList <Float> aTable2RowWidth = new CommonsArrayList <> (aTable1RowWidth);
+    final ICommonsList <Float> aTable2RowHeight = new CommonsArrayList <> (aTable1RowHeight);
 
     // Copy all content rows
     boolean bOnTable1 = true;
@@ -469,7 +469,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   {
     ValueEnforcer.notEmpty (aPercentages, "Percentages");
 
-    final List <WidthSpec> aWidths = new ArrayList <WidthSpec> (aPercentages.length);
+    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList <> (aPercentages.length);
     for (final float fPercentage : aPercentages)
       aWidths.add (WidthSpec.perc (fPercentage));
     return new PLTable (aWidths);
@@ -488,7 +488,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   {
     ValueEnforcer.isGT0 (nColumnCount, "ColumnCount");
 
-    final List <WidthSpec> aWidths = new ArrayList <WidthSpec> (nColumnCount);
+    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList <> (nColumnCount);
     for (int i = 0; i < nColumnCount; ++i)
       aWidths.add (WidthSpec.star ());
     return new PLTable (aWidths);
