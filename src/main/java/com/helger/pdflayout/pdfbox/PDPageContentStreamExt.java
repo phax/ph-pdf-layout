@@ -100,10 +100,10 @@ public final class PDPageContentStreamExt implements Closeable
   private PDResources resources;
 
   private boolean inTextMode = false;
-  private final NonBlockingStack <PDFont> fontStack = new NonBlockingStack <> ();
+  private final NonBlockingStack <PDFont> fontStack = new NonBlockingStack<> ();
 
-  private final NonBlockingStack <PDColorSpace> nonStrokingColorSpaceStack = new NonBlockingStack <> ();
-  private final NonBlockingStack <PDColorSpace> strokingColorSpaceStack = new NonBlockingStack <> ();
+  private final NonBlockingStack <PDColorSpace> nonStrokingColorSpaceStack = new NonBlockingStack<> ();
+  private final NonBlockingStack <PDColorSpace> strokingColorSpaceStack = new NonBlockingStack<> ();
 
   // number format
   private final NumberFormat formatDecimal = NumberFormat.getNumberInstance (Locale.US);
@@ -210,7 +210,7 @@ public final class PDPageContentStreamExt implements Closeable
         close ();
 
         // insert the new stream at the beginning
-        array.add (0, saveGraphics.getStream ());
+        array.add (0, saveGraphics.getCOSObject ());
       }
 
       // Sets the compoundStream as page contents
