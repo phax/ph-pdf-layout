@@ -16,16 +16,14 @@
  */
 package com.helger.pdflayout;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import javax.annotation.concurrent.Immutable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.collection.ext.ICommonsMap;
 import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.lang.PropertiesHelper;
 
 @Immutable
 public final class PLConfig
@@ -42,20 +40,9 @@ public final class PLConfig
   static
   {
     String sProjectVersion = "undefined";
-    try
-    {
-      final Properties p = new Properties ();
-      final InputStream aIS = ClassPathResource.getInputStream ("ph-pdf-layout-version.properties");
-      if (aIS != null)
-      {
-        p.load (aIS);
-        sProjectVersion = p.getProperty ("version");
-      }
-    }
-    catch (final IOException ex)
-    {
-      // Project version stays "undefined"
-    }
+    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout-version.properties"));
+    if (p != null)
+      sProjectVersion = p.get ("version");
     if (sProjectVersion == null)
       s_aLogger.warn ("Failed to load version number");
     PROJECT_VERSION = sProjectVersion;
