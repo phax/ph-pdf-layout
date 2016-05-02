@@ -18,6 +18,16 @@
 
 -->
 <changelog xmlns="http://www.helger.com/xsd/changelog/1.0" version="1.0" component="ph-pdf-layout">
+  <entry date="2016-05-02" category="tech" action="update">
+    <change>
+      <text locale="en">Updated to PDFBox 2.0.1</text>
+    </change>
+  </entry>
+  <entry date="2016-04-17" category="tech" action="update">
+    <change>
+      <text locale="en">Updated to PDFBox 2.0.0</text>
+    </change>
+  </entry>
   <release date="2016-01-15" version="2.2.2" />
   <entry date="2016-01-15" category="tech" action="update">
     <change>
