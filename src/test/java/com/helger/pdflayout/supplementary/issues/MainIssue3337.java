@@ -51,7 +51,7 @@ public final class MainIssue3337
           contents.showText ("Test");
           contents.endText ();
         }
-        doc.save (new File ("test-3337-" + i + ".pdf"));
+        doc.save (new File ("pdf/test-3337-" + i + ".pdf"));
       }
     }
   }
