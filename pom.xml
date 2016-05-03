@@ -73,7 +73,8 @@
   </developers>
   
   <properties>
-    <pdfbox.version>2.0.1</pdfbox.version>
+    <!-- 2.0.1 has problems with TrueTypeFont resue -->
+    <pdfbox.version>2.0.0</pdfbox.version>
   </properties>
   
   <dependencyManagement>
