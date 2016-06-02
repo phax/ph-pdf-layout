@@ -28,6 +28,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.CodingStyleguideUnaware;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -69,6 +70,7 @@ public class PLText extends AbstractPLElement <PLText>
   private LoadedFont m_aLoadedFont;
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLinesUnmodified;
+  @CodingStyleguideUnaware
   protected List <TextAndWidthSpec> m_aPreparedLines;
   protected float m_fLineHeight;
 
