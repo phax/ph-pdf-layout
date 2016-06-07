@@ -157,6 +157,58 @@ public class BorderSpec
     return m_aLeft;
   }
 
+  /**
+   * @return The top border width.
+   */
+  public float getTopWidth ()
+  {
+    final BorderStyleSpec aBSS = m_aTop;
+    return aBSS == null ? 0 : aBSS.getLineWidth ();
+  }
+
+  /**
+   * @return The right border width.
+   */
+  public float getRightWidth ()
+  {
+    final BorderStyleSpec aBSS = m_aRight;
+    return aBSS == null ? 0 : aBSS.getLineWidth ();
+  }
+
+  /**
+   * @return The bottom border width.
+   */
+  public float getBottomWidth ()
+  {
+    final BorderStyleSpec aBSS = m_aBottom;
+    return aBSS == null ? 0 : aBSS.getLineWidth ();
+  }
+
+  /**
+   * @return The left border width.
+   */
+  public float getLeftWidth ()
+  {
+    final BorderStyleSpec aBSS = m_aLeft;
+    return aBSS == null ? 0 : aBSS.getLineWidth ();
+  }
+
+  /**
+   * @return The sum of left and right border width.
+   */
+  public float getXSumWidth ()
+  {
+    return getLeftWidth () + getRightWidth ();
+  }
+
+  /**
+   * @return The sum of left and right border width.
+   */
+  public float getYSumWidth ()
+  {
+    return getTopWidth () + getBottomWidth ();
+  }
+
   @Nonnull
   public BorderSpec getCloneWithTop (@Nullable final BorderStyleSpec aTop)
   {

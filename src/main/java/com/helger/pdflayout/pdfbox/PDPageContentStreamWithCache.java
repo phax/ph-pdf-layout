@@ -51,6 +51,7 @@ public class PDPageContentStreamWithCache
   private Color m_aLastUsedStrokingColor = Color.BLACK;
   private Color m_aLastUsedNonStrokingColor = Color.BLACK;
   private LineDashPatternSpec m_aLastUsedLineDashPattern = LineDashPatternSpec.SOLID;
+  private float m_fLastUsedLineWidth;
 
   public PDPageContentStreamWithCache (@Nonnull final PDDocument aDocument,
                                        @Nonnull final PDPage aSourcePage,
@@ -139,6 +140,20 @@ public class PDPageContentStreamWithCache
   public LineDashPatternSpec getLastUsedLineDashPattern ()
   {
     return m_aLastUsedLineDashPattern;
+  }
+
+  public void setLineWidth (final float fLineWidth) throws IOException
+  {
+    if (!EqualsHelper.equals (m_fLastUsedLineWidth, fLineWidth))
+    {
+      m_aStream.setLineWidth (fLineWidth);
+      m_fLastUsedLineWidth = fLineWidth;
+    }
+  }
+
+  public float getLastUsedLineWidth ()
+  {
+    return m_fLastUsedLineWidth;
   }
 
   public void moveTextPositionByAmount (final float tx, final float ty) throws IOException

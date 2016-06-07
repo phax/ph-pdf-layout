@@ -62,7 +62,7 @@ public final class PLImageTest
     aHBox.addColumn (new PLImage (new ClassPathResource ("images/test1.jpg"), 50, 50), WidthSpec.abs (50));
     aHBox.addColumn (new PLText ("Col3", r10), WidthSpec.perc (10));
     aPS1.addElement (aHBox);
-    aPS1.addElement (new PLText ("Third line", r10).setBorder (new BorderStyleSpec (Color.GREEN)));
+    aPS1.addElement (new PLText ("Third line", r10).setBorder (new BorderStyleSpec (Color.GREEN, 5)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);

@@ -1376,7 +1376,7 @@ public final class PDPageContentStreamExt implements Closeable
    * Set line width to the given value.
    *
    * @param lineWidth
-   *        The width which is used for drwaing.
+   *        The width which is used for drawing.
    * @throws IOException
    *         If the content stream could not be written
    * @throws IllegalStateException

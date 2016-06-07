@@ -484,32 +484,32 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
 
   public float getMarginPlusPaddingTop ()
   {
-    return m_aMargin.getTop () + m_aPadding.getTop ();
+    return m_aMargin.getTop () + m_aBorder.getTopWidth () + m_aPadding.getTop ();
   }
 
   public float getMarginPlusPaddingRight ()
   {
-    return m_aMargin.getRight () + m_aPadding.getRight ();
+    return m_aMargin.getRight () + m_aBorder.getRightWidth () + m_aPadding.getRight ();
   }
 
   public float getMarginPlusPaddingBottom ()
   {
-    return m_aMargin.getBottom () + m_aPadding.getBottom ();
+    return m_aMargin.getBottom () + m_aBorder.getBottomWidth () + m_aPadding.getBottom ();
   }
 
   public float getMarginPlusPaddingLeft ()
   {
-    return m_aMargin.getLeft () + m_aPadding.getLeft ();
+    return m_aMargin.getLeft () + m_aBorder.getLeftWidth () + m_aPadding.getLeft ();
   }
 
   public float getMarginPlusPaddingXSum ()
   {
-    return m_aMargin.getXSum () + m_aPadding.getXSum ();
+    return m_aMargin.getXSum () + m_aBorder.getXSumWidth () + m_aPadding.getXSum ();
   }
 
   public float getMarginPlusPaddingYSum ()
   {
-    return m_aMargin.getYSum () + m_aPadding.getYSum ();
+    return m_aMargin.getYSum () + m_aBorder.getYSumWidth () + m_aPadding.getYSum ();
   }
 
   /**
@@ -548,7 +548,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all border values to potentially different values. This method may not
    * be called after an element got prepared!
-   * 
+   *
    * @param aBorderTop
    *        Top. May be <code>null</code> to indicate no border.
    * @param aBorderRight
@@ -724,25 +724,19 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       final BorderStyleSpec aAll = aBorder.getLeft ();
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
+      aContentStream.setLineWidth (aAll.getLineWidth ());
       aContentStream.addRect (fLeft, fBottom, fWidth, fHeight);
       aContentStream.stroke ();
     }
     else
     {
       // partially
-      final BorderStyleSpec aLeft = aBorder.getLeft ();
-      if (aLeft != null)
-      {
-        aContentStream.setStrokingColor (aLeft.getColor ());
-        aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
-        aContentStream.drawLine (fLeft, fTop, fLeft, fBottom);
-      }
-
       final BorderStyleSpec aTop = aBorder.getTop ();
       if (aTop != null)
       {
         aContentStream.setStrokingColor (aTop.getColor ());
         aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
+        aContentStream.setLineWidth (aTop.getLineWidth ());
         aContentStream.drawLine (fLeft, fTop, fRight, fTop);
       }
 
@@ -751,6 +745,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         aContentStream.setStrokingColor (aRight.getColor ());
         aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
+        aContentStream.setLineWidth (aRight.getLineWidth ());
         aContentStream.drawLine (fRight, fTop, fRight, fBottom);
       }
 
@@ -759,7 +754,17 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         aContentStream.setStrokingColor (aBottom.getColor ());
         aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
+        aContentStream.setLineWidth (aBottom.getLineWidth ());
         aContentStream.drawLine (fLeft, fBottom, fRight, fBottom);
+      }
+
+      final BorderStyleSpec aLeft = aBorder.getLeft ();
+      if (aLeft != null)
+      {
+        aContentStream.setStrokingColor (aLeft.getColor ());
+        aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
+        aContentStream.setLineWidth (aLeft.getLineWidth ());
+        aContentStream.drawLine (fLeft, fTop, fLeft, fBottom);
       }
     }
   }

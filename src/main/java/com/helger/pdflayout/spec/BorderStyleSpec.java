@@ -18,17 +18,19 @@ package com.helger.pdflayout.spec;
 
 import java.awt.Color;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
  * This class contains the styling of a single border part. Currently only the
- * color can be set.
+ * color, the dash pattern and the line width can be set.
  *
  * @author Philip Helger
  */
@@ -42,31 +44,53 @@ public class BorderStyleSpec
   /** The default border style: solid */
   public static final LineDashPatternSpec DEFAULT_LINE_DASH_PATTERN = LineDashPatternSpec.SOLID;
 
+  public static final float DEFAULT_LINE_WIDTH = 1f;
+
   private final Color m_aColor;
   private final LineDashPatternSpec m_aLineDashPattern;
+  private final float m_fLineWidth;
 
   public BorderStyleSpec ()
   {
-    this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN);
+    this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
   }
 
   public BorderStyleSpec (@Nonnull final Color aColor)
   {
-    this (aColor, DEFAULT_LINE_DASH_PATTERN);
+    this (aColor, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
   }
 
   public BorderStyleSpec (@Nonnull final LineDashPatternSpec aLineDashPattern)
   {
-    this (DEFAULT_COLOR, aLineDashPattern);
+    this (DEFAULT_COLOR, aLineDashPattern, DEFAULT_LINE_WIDTH);
+  }
+
+  public BorderStyleSpec (final float fLineWidth)
+  {
+    this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
+  }
+
+  public BorderStyleSpec (@Nonnull final Color aColor, final float fLineWidth)
+  {
+    this (aColor, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
   }
 
   public BorderStyleSpec (@Nonnull final Color aColor, @Nonnull final LineDashPatternSpec aLineDashPattern)
   {
+    this (aColor, aLineDashPattern, DEFAULT_LINE_WIDTH);
+  }
+
+  public BorderStyleSpec (@Nonnull final Color aColor,
+                          @Nonnull final LineDashPatternSpec aLineDashPattern,
+                          @Nonnegative final float fLineWidth)
+  {
     ValueEnforcer.notNull (aColor, "Color");
     ValueEnforcer.notNull (aLineDashPattern, "LineDashPattern");
+    ValueEnforcer.isGE0 (fLineWidth, "LineWidth");
 
     m_aColor = aColor;
     m_aLineDashPattern = aLineDashPattern;
+    m_fLineWidth = fLineWidth;
   }
 
   /**
@@ -87,6 +111,12 @@ public class BorderStyleSpec
     return m_aLineDashPattern;
   }
 
+  @Nonnegative
+  public float getLineWidth ()
+  {
+    return m_fLineWidth;
+  }
+
   @Override
   public boolean equals (final Object o)
   {
@@ -95,20 +125,26 @@ public class BorderStyleSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final BorderStyleSpec rhs = (BorderStyleSpec) o;
-    return m_aColor.equals (rhs.m_aColor) && m_aLineDashPattern.equals (rhs.m_aLineDashPattern);
+    return m_aColor.equals (rhs.m_aColor) &&
+           m_aLineDashPattern.equals (rhs.m_aLineDashPattern) &&
+           EqualsHelper.equals (m_fLineWidth, rhs.m_fLineWidth);
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aColor).append (m_aLineDashPattern).getHashCode ();
+    return new HashCodeGenerator (this).append (m_aColor)
+                                       .append (m_aLineDashPattern)
+                                       .append (m_fLineWidth)
+                                       .getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("color", m_aColor)
-                                       .append ("lineDashPattern", m_aLineDashPattern)
+    return new ToStringGenerator (this).append ("Color", m_aColor)
+                                       .append ("LineDashPattern", m_aLineDashPattern)
+                                       .append ("LineWidth", m_fLineWidth)
                                        .toString ();
   }
 }
