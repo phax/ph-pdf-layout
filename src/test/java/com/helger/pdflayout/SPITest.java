@@ -18,7 +18,7 @@ package com.helger.pdflayout;
 
 import org.junit.Test;
 
-import com.helger.commons.mock.CommonsTestHelper;
+import com.helger.commons.mock.SPITestHelper;
 
 /**
  * Test all SPI definitions.
@@ -30,6 +30,6 @@ public final class SPITest
   @Test
   public void testBasic () throws Exception
   {
-    CommonsTestHelper.testIfAllSPIImplementationsAreValid ();
+    SPITestHelper.testIfAllSPIImplementationsAreValid ();
   }
 }
