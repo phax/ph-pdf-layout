@@ -35,17 +35,17 @@ public class MarginSpec
 {
   public static final MarginSpec MARGIN0 = new MarginSpec (0, 0, 0, 0);
 
-  private final float m_fLeft;
   private final float m_fTop;
   private final float m_fRight;
   private final float m_fBottom;
+  private final float m_fLeft;
   // Helper vars
   private final float m_fXSum;
   private final float m_fYSum;
 
   public MarginSpec (@Nonnull final MarginSpec aOther)
   {
-    this (aOther.m_fLeft, aOther.m_fTop, aOther.m_fRight, aOther.m_fBottom);
+    this (aOther.m_fTop, aOther.m_fRight, aOther.m_fBottom, aOther.m_fLeft);
   }
 
   public MarginSpec (final float f)
@@ -55,30 +55,22 @@ public class MarginSpec
 
   public MarginSpec (final float fX, final float fY)
   {
-    this (fX, fY, fX, fY);
+    this (fY, fX, fY, fX);
   }
 
-  public MarginSpec (final float fLeft, final float fTop, final float fRight, final float fBottom)
+  public MarginSpec (final float fTop, final float fRight, final float fBottom, final float fLeft)
   {
-    m_fLeft = fLeft;
     m_fTop = fTop;
     m_fRight = fRight;
     m_fBottom = fBottom;
+    m_fLeft = fLeft;
     m_fXSum = fLeft + fRight;
     m_fYSum = fTop + fBottom;
   }
 
   public boolean hasAnyMargin ()
   {
-    return m_fLeft != 0 || m_fTop != 0 || m_fRight != 0 || m_fBottom != 0;
-  }
-
-  /**
-   * @return Left value
-   */
-  public float getLeft ()
-  {
-    return m_fLeft;
+    return m_fTop != 0 || m_fRight != 0 || m_fBottom != 0 && m_fLeft != 0;
   }
 
   /**
@@ -106,6 +98,14 @@ public class MarginSpec
   }
 
   /**
+   * @return Left value
+   */
+  public float getLeft ()
+  {
+    return m_fLeft;
+  }
+
+  /**
    * @return Left + right value
    */
   public float getXSum ()
@@ -122,19 +122,11 @@ public class MarginSpec
   }
 
   @Nonnull
-  public MarginSpec getCloneWithLeft (final float fLeft)
-  {
-    if (EqualsHelper.equals (fLeft, m_fLeft))
-      return this;
-    return new MarginSpec (fLeft, m_fTop, m_fRight, m_fBottom);
-  }
-
-  @Nonnull
   public MarginSpec getCloneWithTop (final float fTop)
   {
     if (EqualsHelper.equals (fTop, m_fTop))
       return this;
-    return new MarginSpec (m_fLeft, fTop, m_fRight, m_fBottom);
+    return new MarginSpec (fTop, m_fRight, m_fBottom, m_fLeft);
   }
 
   @Nonnull
@@ -142,7 +134,7 @@ public class MarginSpec
   {
     if (EqualsHelper.equals (fRight, m_fRight))
       return this;
-    return new MarginSpec (m_fLeft, m_fTop, fRight, m_fBottom);
+    return new MarginSpec (m_fTop, fRight, m_fBottom, m_fLeft);
   }
 
   @Nonnull
@@ -150,7 +142,15 @@ public class MarginSpec
   {
     if (EqualsHelper.equals (fBottom, m_fBottom))
       return this;
-    return new MarginSpec (m_fLeft, m_fTop, m_fRight, fBottom);
+    return new MarginSpec (m_fTop, m_fRight, fBottom, m_fLeft);
+  }
+
+  @Nonnull
+  public MarginSpec getCloneWithLeft (final float fLeft)
+  {
+    if (EqualsHelper.equals (fLeft, m_fLeft))
+      return this;
+    return new MarginSpec (m_fTop, m_fRight, m_fBottom, fLeft);
   }
 
   @Override
@@ -161,29 +161,29 @@ public class MarginSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final MarginSpec rhs = (MarginSpec) o;
-    return EqualsHelper.equals (m_fLeft, rhs.m_fLeft) &&
-           EqualsHelper.equals (m_fTop, rhs.m_fTop) &&
+    return EqualsHelper.equals (m_fTop, rhs.m_fTop) &&
            EqualsHelper.equals (m_fRight, rhs.m_fRight) &&
-           EqualsHelper.equals (m_fBottom, rhs.m_fBottom);
+           EqualsHelper.equals (m_fBottom, rhs.m_fBottom) &&
+           EqualsHelper.equals (m_fLeft, rhs.m_fLeft);
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_fLeft)
-                                       .append (m_fTop)
+    return new HashCodeGenerator (this).append (m_fTop)
                                        .append (m_fRight)
                                        .append (m_fBottom)
+                                       .append (m_fLeft)
                                        .getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("marginLeft", m_fLeft)
-                                       .append ("marginTop", m_fTop)
+    return new ToStringGenerator (this).append ("marginTop", m_fTop)
                                        .append ("marginRight", m_fRight)
                                        .append ("marginBottom", m_fBottom)
+                                       .append ("marginLeft", m_fLeft)
                                        .append ("XSum", m_fXSum)
                                        .append ("YSum", m_fYSum)
                                        .toString ();

@@ -56,7 +56,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
+  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
   private int m_nStarWidthItems = 0;
   private BorderSpec m_aColumnBorder = BorderSpec.BORDER0;
   private Color m_aColumnFillColor = null;
@@ -229,24 +229,24 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   /**
    * Set the border around each contained column.
-   *
-   * @param aBorderLeft
-   *        The border to set for left. Maybe <code>null</code>.
+   * 
    * @param aBorderTop
    *        The border to set for top. Maybe <code>null</code>.
    * @param aBorderRight
    *        The border to set for right. Maybe <code>null</code>.
    * @param aBorderBottom
    *        The border to set for bottom. Maybe <code>null</code>.
+   * @param aBorderLeft
+   *        The border to set for left. Maybe <code>null</code>.
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setColumnBorder (@Nullable final BorderStyleSpec aBorderLeft,
-                                         @Nullable final BorderStyleSpec aBorderTop,
+  public final IMPLTYPE setColumnBorder (@Nullable final BorderStyleSpec aBorderTop,
                                          @Nullable final BorderStyleSpec aBorderRight,
-                                         @Nullable final BorderStyleSpec aBorderBottom)
+                                         @Nullable final BorderStyleSpec aBorderBottom,
+                                         @Nullable final BorderStyleSpec aBorderLeft)
   {
-    return setColumnBorder (new BorderSpec (aBorderLeft, aBorderTop, aBorderRight, aBorderBottom));
+    return setColumnBorder (new BorderSpec (aBorderTop, aBorderRight, aBorderBottom, aBorderLeft));
   }
 
   /**
@@ -263,20 +263,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     checkNotPrepared ();
     m_aColumnBorder = aBorder;
     return thisAsT ();
-  }
-
-  /**
-   * Set the left border value around each contained column. This method may not
-   * be called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setColumnBorderLeft (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setColumnBorder (m_aColumnBorder.getCloneWithLeft (aBorder));
   }
 
   /**
@@ -319,6 +305,20 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public final IMPLTYPE setColumnBorderBottom (@Nullable final BorderStyleSpec aBorder)
   {
     return setColumnBorder (m_aColumnBorder.getCloneWithBottom (aBorder));
+  }
+
+  /**
+   * Set the left border value around each contained column. This method may not
+   * be called after an element got prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  public final IMPLTYPE setColumnBorderLeft (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setColumnBorder (m_aColumnBorder.getCloneWithLeft (aBorder));
   }
 
   /**

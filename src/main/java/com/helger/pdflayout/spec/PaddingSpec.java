@@ -35,17 +35,17 @@ public class PaddingSpec
 {
   public static final PaddingSpec PADDING0 = new PaddingSpec (0, 0, 0, 0);
 
-  private final float m_fLeft;
   private final float m_fTop;
   private final float m_fRight;
   private final float m_fBottom;
+  private final float m_fLeft;
   // Helper vars only
   private final float m_fXSum;
   private final float m_fYSum;
 
   public PaddingSpec (@Nonnull final PaddingSpec aOther)
   {
-    this (aOther.m_fLeft, aOther.m_fTop, aOther.m_fRight, aOther.m_fBottom);
+    this (aOther.m_fTop, aOther.m_fRight, aOther.m_fBottom, aOther.m_fLeft);
   }
 
   public PaddingSpec (final float f)
@@ -55,30 +55,22 @@ public class PaddingSpec
 
   public PaddingSpec (final float fX, final float fY)
   {
-    this (fX, fY, fX, fY);
+    this (fY, fX, fY, fX);
   }
 
-  public PaddingSpec (final float fLeft, final float fTop, final float fRight, final float fBottom)
+  public PaddingSpec (final float fTop, final float fRight, final float fBottom, final float fLeft)
   {
-    m_fLeft = fLeft;
     m_fTop = fTop;
     m_fRight = fRight;
     m_fBottom = fBottom;
+    m_fLeft = fLeft;
     m_fXSum = fLeft + fRight;
     m_fYSum = fTop + fBottom;
   }
 
   public boolean hasAnyPadding ()
   {
-    return m_fLeft != 0 || m_fTop != 0 || m_fRight != 0 || m_fBottom != 0;
-  }
-
-  /**
-   * @return Left value
-   */
-  public float getLeft ()
-  {
-    return m_fLeft;
+    return m_fTop != 0 || m_fRight != 0 || m_fBottom != 0 || m_fLeft != 0;
   }
 
   /**
@@ -106,6 +98,14 @@ public class PaddingSpec
   }
 
   /**
+   * @return Left value
+   */
+  public float getLeft ()
+  {
+    return m_fLeft;
+  }
+
+  /**
    * @return Left + right value
    */
   public float getXSum ()
@@ -122,19 +122,11 @@ public class PaddingSpec
   }
 
   @Nonnull
-  public PaddingSpec getCloneWithLeft (final float fLeft)
-  {
-    if (EqualsHelper.equals (fLeft, m_fLeft))
-      return this;
-    return new PaddingSpec (fLeft, m_fTop, m_fRight, m_fBottom);
-  }
-
-  @Nonnull
   public PaddingSpec getCloneWithTop (final float fTop)
   {
     if (EqualsHelper.equals (fTop, m_fTop))
       return this;
-    return new PaddingSpec (m_fLeft, fTop, m_fRight, m_fBottom);
+    return new PaddingSpec (fTop, m_fRight, m_fBottom, m_fLeft);
   }
 
   @Nonnull
@@ -142,7 +134,7 @@ public class PaddingSpec
   {
     if (EqualsHelper.equals (fRight, m_fRight))
       return this;
-    return new PaddingSpec (m_fLeft, m_fTop, fRight, m_fBottom);
+    return new PaddingSpec (m_fTop, fRight, m_fBottom, m_fLeft);
   }
 
   @Nonnull
@@ -150,7 +142,15 @@ public class PaddingSpec
   {
     if (EqualsHelper.equals (fBottom, m_fBottom))
       return this;
-    return new PaddingSpec (m_fLeft, m_fTop, m_fRight, fBottom);
+    return new PaddingSpec (m_fTop, m_fRight, fBottom, m_fLeft);
+  }
+
+  @Nonnull
+  public PaddingSpec getCloneWithLeft (final float fLeft)
+  {
+    if (EqualsHelper.equals (fLeft, m_fLeft))
+      return this;
+    return new PaddingSpec (m_fTop, m_fRight, m_fBottom, fLeft);
   }
 
   @Override
@@ -161,29 +161,29 @@ public class PaddingSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final PaddingSpec rhs = (PaddingSpec) o;
-    return EqualsHelper.equals (m_fLeft, rhs.m_fLeft) &&
-           EqualsHelper.equals (m_fTop, rhs.m_fTop) &&
+    return EqualsHelper.equals (m_fTop, rhs.m_fTop) &&
            EqualsHelper.equals (m_fRight, rhs.m_fRight) &&
-           EqualsHelper.equals (m_fBottom, rhs.m_fBottom);
+           EqualsHelper.equals (m_fBottom, rhs.m_fBottom) &&
+           EqualsHelper.equals (m_fLeft, rhs.m_fLeft);
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_fLeft)
-                                       .append (m_fTop)
+    return new HashCodeGenerator (this).append (m_fTop)
                                        .append (m_fRight)
                                        .append (m_fBottom)
+                                       .append (m_fLeft)
                                        .getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("paddingLeft", m_fLeft)
-                                       .append ("paddingTop", m_fTop)
+    return new ToStringGenerator (this).append ("paddingTop", m_fTop)
                                        .append ("paddingRight", m_fRight)
                                        .append ("paddingBottom", m_fBottom)
+                                       .append ("paddingLeft", m_fLeft)
                                        .append ("XSum", m_fXSum)
                                        .append ("YSum", m_fYSum)
                                        .toString ();

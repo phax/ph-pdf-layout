@@ -54,7 +54,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-  protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
+  protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
   private BorderSpec m_aRowBorder = BorderSpec.BORDER0;
   private Color m_aRowFillColor = null;
   /** prepare width (without padding and margin) */
@@ -273,24 +273,24 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
   /**
    * Set the border around each contained row.
-   *
-   * @param aBorderLeft
-   *        The border to set for left. Maybe <code>null</code>.
+   * 
    * @param aBorderTop
    *        The border to set for top. Maybe <code>null</code>.
    * @param aBorderRight
    *        The border to set for right. Maybe <code>null</code>.
    * @param aBorderBottom
    *        The border to set for bottom. Maybe <code>null</code>.
+   * @param aBorderLeft
+   *        The border to set for left. Maybe <code>null</code>.
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setRowBorder (@Nullable final BorderStyleSpec aBorderLeft,
-                                      @Nullable final BorderStyleSpec aBorderTop,
+  public final IMPLTYPE setRowBorder (@Nullable final BorderStyleSpec aBorderTop,
                                       @Nullable final BorderStyleSpec aBorderRight,
-                                      @Nullable final BorderStyleSpec aBorderBottom)
+                                      @Nullable final BorderStyleSpec aBorderBottom,
+                                      @Nullable final BorderStyleSpec aBorderLeft)
   {
-    return setRowBorder (new BorderSpec (aBorderLeft, aBorderTop, aBorderRight, aBorderBottom));
+    return setRowBorder (new BorderSpec (aBorderTop, aBorderRight, aBorderBottom, aBorderLeft));
   }
 
   /**
@@ -307,20 +307,6 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     checkNotPrepared ();
     m_aRowBorder = aRowBorder;
     return thisAsT ();
-  }
-
-  /**
-   * Set the left border value around each contained row. This method may not be
-   * called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setRowBorderLeft (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setRowBorder (m_aRowBorder.getCloneWithLeft (aBorder));
   }
 
   /**
@@ -363,6 +349,20 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public final IMPLTYPE setRowBorderBottom (@Nullable final BorderStyleSpec aBorder)
   {
     return setRowBorder (m_aRowBorder.getCloneWithBottom (aBorder));
+  }
+
+  /**
+   * Set the left border value around each contained row. This method may not be
+   * called after an element got prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  public final IMPLTYPE setRowBorderLeft (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setRowBorder (m_aRowBorder.getCloneWithLeft (aBorder));
   }
 
   /**
@@ -426,7 +426,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       // Prepare child element
       final float fRowElementHeight = aRowElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                    fRowElementWidth,
-                                                                                   fAvailableHeight - aRowElement.getMarginPlusPaddingYSum ()))
+                                                                                   fAvailableHeight -
+                                                                                                     aRowElement.getMarginPlusPaddingYSum ()))
                                                  .getHeight ();
 
       final float fRowElementHeightFull = fRowElementHeight + aRowElement.getMarginPlusPaddingYSum ();

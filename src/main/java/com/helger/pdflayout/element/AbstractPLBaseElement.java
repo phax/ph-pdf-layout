@@ -143,30 +143,30 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   @Nonnull
   public final IMPLTYPE setMargin (final float fMarginX, final float fMarginY)
   {
-    return setMargin (fMarginX, fMarginY, fMarginX, fMarginY);
+    return setMargin (fMarginY, fMarginX, fMarginY, fMarginX);
   }
 
   /**
    * Set all margin values to potentially different values. This method may not
    * be called after an element got prepared!
    *
-   * @param fMarginLeft
-   *        Left
    * @param fMarginTop
    *        Top
    * @param fMarginRight
    *        Right
    * @param fMarginBottom
    *        Bottom
+   * @param fMarginLeft
+   *        Left
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setMargin (final float fMarginLeft,
-                                   final float fMarginTop,
+  public final IMPLTYPE setMargin (final float fMarginTop,
                                    final float fMarginRight,
-                                   final float fMarginBottom)
+                                   final float fMarginBottom,
+                                   final float fMarginLeft)
   {
-    return setMargin (new MarginSpec (fMarginLeft, fMarginTop, fMarginRight, fMarginBottom));
+    return setMargin (new MarginSpec (fMarginTop, fMarginRight, fMarginBottom, fMarginLeft));
   }
 
   /**
@@ -184,20 +184,6 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     checkNotPrepared ();
     m_aMargin = aMargin;
     return thisAsT ();
-  }
-
-  /**
-   * Set the left margin value. This method may not be called after an element
-   * got prepared!
-   *
-   * @param fMargin
-   *        The value to use.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setMarginLeft (final float fMargin)
-  {
-    return setMargin (m_aMargin.getCloneWithLeft (fMargin));
   }
 
   /**
@@ -243,20 +229,26 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   }
 
   /**
+   * Set the left margin value. This method may not be called after an element
+   * got prepared!
+   *
+   * @param fMargin
+   *        The value to use.
+   * @return this
+   */
+  @Nonnull
+  public final IMPLTYPE setMarginLeft (final float fMargin)
+  {
+    return setMargin (m_aMargin.getCloneWithLeft (fMargin));
+  }
+
+  /**
    * @return The current margin. Never <code>null</code>.
    */
   @Nonnull
   public final MarginSpec getMargin ()
   {
     return m_aMargin;
-  }
-
-  /**
-   * @return The current left margin.
-   */
-  public final float getMarginLeft ()
-  {
-    return m_aMargin.getLeft ();
   }
 
   /**
@@ -281,6 +273,14 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public final float getMarginBottom ()
   {
     return m_aMargin.getBottom ();
+  }
+
+  /**
+   * @return The current left margin.
+   */
+  public final float getMarginLeft ()
+  {
+    return m_aMargin.getLeft ();
   }
 
   /**
@@ -326,30 +326,30 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   @Nonnull
   public final IMPLTYPE setPadding (final float fPaddingX, final float fPaddingY)
   {
-    return setPadding (fPaddingX, fPaddingY, fPaddingX, fPaddingY);
+    return setPadding (fPaddingY, fPaddingX, fPaddingY, fPaddingX);
   }
 
   /**
    * Set all padding values to potentially different values. This method may not
    * be called after an element got prepared!
    *
-   * @param fPaddingLeft
-   *        Left
    * @param fPaddingTop
    *        Top
    * @param fPaddingRight
    *        Right
    * @param fPaddingBottom
    *        Bottom
+   * @param fPaddingLeft
+   *        Left
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setPadding (final float fPaddingLeft,
-                                    final float fPaddingTop,
+  public final IMPLTYPE setPadding (final float fPaddingTop,
                                     final float fPaddingRight,
-                                    final float fPaddingBottom)
+                                    final float fPaddingBottom,
+                                    final float fPaddingLeft)
   {
-    return setPadding (new PaddingSpec (fPaddingLeft, fPaddingTop, fPaddingRight, fPaddingBottom));
+    return setPadding (new PaddingSpec (fPaddingTop, fPaddingRight, fPaddingBottom, fPaddingLeft));
   }
 
   /**
@@ -367,20 +367,6 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     checkNotPrepared ();
     m_aPadding = aPadding;
     return thisAsT ();
-  }
-
-  /**
-   * Set the left padding value. This method may not be called after an element
-   * got prepared!
-   *
-   * @param fPadding
-   *        The value to use.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setPaddingLeft (final float fPadding)
-  {
-    return setPadding (m_aPadding.getCloneWithLeft (fPadding));
   }
 
   /**
@@ -426,20 +412,26 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   }
 
   /**
+   * Set the left padding value. This method may not be called after an element
+   * got prepared!
+   *
+   * @param fPadding
+   *        The value to use.
+   * @return this
+   */
+  @Nonnull
+  public final IMPLTYPE setPaddingLeft (final float fPadding)
+  {
+    return setPadding (m_aPadding.getCloneWithLeft (fPadding));
+  }
+
+  /**
    * @return The current padding. Never <code>null</code>.
    */
   @Nonnull
   public final PaddingSpec getPadding ()
   {
     return m_aPadding;
-  }
-
-  /**
-   * @return The current left padding.
-   */
-  public final float getPaddingLeft ()
-  {
-    return m_aPadding.getLeft ();
   }
 
   /**
@@ -467,6 +459,14 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   }
 
   /**
+   * @return The current left padding.
+   */
+  public final float getPaddingLeft ()
+  {
+    return m_aPadding.getLeft ();
+  }
+
+  /**
    * @return The sum of left and right padding.
    */
   public final float getPaddingXSum ()
@@ -482,11 +482,6 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     return m_aPadding.getYSum ();
   }
 
-  public float getMarginPlusPaddingLeft ()
-  {
-    return m_aMargin.getLeft () + m_aPadding.getLeft ();
-  }
-
   public float getMarginPlusPaddingTop ()
   {
     return m_aMargin.getTop () + m_aPadding.getTop ();
@@ -500,6 +495,11 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public float getMarginPlusPaddingBottom ()
   {
     return m_aMargin.getBottom () + m_aPadding.getBottom ();
+  }
+
+  public float getMarginPlusPaddingLeft ()
+  {
+    return m_aMargin.getLeft () + m_aPadding.getLeft ();
   }
 
   public float getMarginPlusPaddingXSum ()
@@ -548,24 +548,24 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all border values to potentially different values. This method may not
    * be called after an element got prepared!
-   *
-   * @param aBorderLeft
-   *        Left. May be <code>null</code> to indicate no border.
+   * 
    * @param aBorderTop
    *        Top. May be <code>null</code> to indicate no border.
    * @param aBorderRight
    *        Right. May be <code>null</code> to indicate no border.
    * @param aBorderBottom
    *        Bottom. May be <code>null</code> to indicate no border.
+   * @param aBorderLeft
+   *        Left. May be <code>null</code> to indicate no border.
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorderLeft,
-                                   @Nullable final BorderStyleSpec aBorderTop,
+  public final IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorderTop,
                                    @Nullable final BorderStyleSpec aBorderRight,
-                                   @Nullable final BorderStyleSpec aBorderBottom)
+                                   @Nullable final BorderStyleSpec aBorderBottom,
+                                   @Nullable final BorderStyleSpec aBorderLeft)
   {
-    return setBorder (new BorderSpec (aBorderLeft, aBorderTop, aBorderRight, aBorderBottom));
+    return setBorder (new BorderSpec (aBorderTop, aBorderRight, aBorderBottom, aBorderLeft));
   }
 
   /**
@@ -583,20 +583,6 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     checkNotPrepared ();
     m_aBorder = aBorder;
     return thisAsT ();
-  }
-
-  /**
-   * Set the left border value. This method may not be called after an element
-   * got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setBorderLeft (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setBorder (m_aBorder.getCloneWithLeft (aBorder));
   }
 
   /**
@@ -639,6 +625,20 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public final IMPLTYPE setBorderBottom (@Nullable final BorderStyleSpec aBorder)
   {
     return setBorder (m_aBorder.getCloneWithBottom (aBorder));
+  }
+
+  /**
+   * Set the left border value. This method may not be called after an element
+   * got prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  public final IMPLTYPE setBorderLeft (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorder (m_aBorder.getCloneWithLeft (aBorder));
   }
 
   /**

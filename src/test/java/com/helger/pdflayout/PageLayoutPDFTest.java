@@ -70,10 +70,10 @@ public final class PageLayoutPDFTest
       // First column 30%
       aHBox.addColumn (new PLText ("Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text ",
                                    r10).setMargin (10).setPadding (5).setHorzAlign (EHorzAlignment.LEFT).setBorder (
-                                                                                                                    new BorderStyleSpec (Color.RED),
                                                                                                                     new BorderStyleSpec (Color.GREEN),
                                                                                                                     new BorderStyleSpec (Color.BLUE),
-                                                                                                                    new BorderStyleSpec (Color.CYAN)),
+                                                                                                                    new BorderStyleSpec (Color.CYAN),
+                                                                                                                    new BorderStyleSpec (Color.RED)),
                        WidthSpec.perc (30));
       // Remaining columns use each the same part of the space: WidthSpec.star()
       aHBox.addColumn (new PLText ("Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text ",
@@ -192,8 +192,8 @@ public final class PageLayoutPDFTest
     final String sLIDShort = sLID.substring (0, sLID.length () / 3);
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (10, 20, 30, 40)
-                                                         .setPadding (10, 20, 30, 40)
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (20, 30, 40, 10)
+                                                         .setPadding (20, 30, 40, 10)
                                                          .setFillColor (new Color (0xeeeeee));
     aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
                                                     .setPadding (0, 4)
@@ -207,7 +207,7 @@ public final class PageLayoutPDFTest
                                                         .setPadding (10, 4)
                                                         .setHorzAlign (EHorzAlignment.RIGHT));
     {
-      final PLHBox h = new PLHBox ().setMargin (0, -20, -30, 10)
+      final PLHBox h = new PLHBox ().setMargin (-20, -30, 10, 0)
                                     .setPadding (5)
                                     .setColumnFillColor (new Color (0xbbbbbb));
       if (false)

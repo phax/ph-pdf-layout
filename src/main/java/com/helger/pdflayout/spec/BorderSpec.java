@@ -38,10 +38,10 @@ public class BorderSpec
   /** Represents no border at all! */
   public static final BorderSpec BORDER0 = new BorderSpec (null);
 
-  private final BorderStyleSpec m_aLeft;
   private final BorderStyleSpec m_aTop;
   private final BorderStyleSpec m_aRight;
   private final BorderStyleSpec m_aBottom;
+  private final BorderStyleSpec m_aLeft;
 
   /**
    * Constructor.
@@ -65,25 +65,25 @@ public class BorderSpec
    */
   public BorderSpec (@Nullable final BorderStyleSpec aBorderX, @Nullable final BorderStyleSpec aBorderY)
   {
-    this (aBorderX, aBorderY, aBorderX, aBorderY);
+    this (aBorderY, aBorderX, aBorderY, aBorderX);
   }
 
   /**
    * Constructor.
    *
-   * @param aBorderLeft
-   *        The border to set for left. Maybe <code>null</code>.
    * @param aBorderTop
    *        The border to set for top. Maybe <code>null</code>.
    * @param aBorderRight
    *        The border to set for right. Maybe <code>null</code>.
    * @param aBorderBottom
    *        The border to set for bottom. Maybe <code>null</code>.
+   * @param aBorderLeft
+   *        The border to set for left. Maybe <code>null</code>.
    */
-  public BorderSpec (@Nullable final BorderStyleSpec aBorderLeft,
-                     @Nullable final BorderStyleSpec aBorderTop,
+  public BorderSpec (@Nullable final BorderStyleSpec aBorderTop,
                      @Nullable final BorderStyleSpec aBorderRight,
-                     @Nullable final BorderStyleSpec aBorderBottom)
+                     @Nullable final BorderStyleSpec aBorderBottom,
+                     @Nullable final BorderStyleSpec aBorderLeft)
   {
     m_aLeft = aBorderLeft;
     m_aTop = aBorderTop;
@@ -97,7 +97,7 @@ public class BorderSpec
    */
   public boolean hasAllBorders ()
   {
-    return m_aLeft != null && m_aTop != null && m_aRight != null && m_aBottom != null;
+    return m_aTop != null && m_aRight != null && m_aBottom != null && m_aLeft != null;
   }
 
   /**
@@ -106,7 +106,7 @@ public class BorderSpec
    */
   public boolean hasAnyBorder ()
   {
-    return m_aLeft != null || m_aTop != null || m_aRight != null || m_aBottom != null;
+    return m_aTop != null || m_aRight != null || m_aBottom != null || m_aLeft != null;
   }
 
   /**
@@ -119,15 +119,6 @@ public class BorderSpec
     return EqualsHelper.equals (m_aLeft, m_aTop) &&
            EqualsHelper.equals (m_aLeft, m_aRight) &&
            EqualsHelper.equals (m_aLeft, m_aBottom);
-  }
-
-  /**
-   * @return The left border style. May be <code>null</code>.
-   */
-  @Nullable
-  public BorderStyleSpec getLeft ()
-  {
-    return m_aLeft;
   }
 
   /**
@@ -157,12 +148,13 @@ public class BorderSpec
     return m_aBottom;
   }
 
-  @Nonnull
-  public BorderSpec getCloneWithLeft (@Nullable final BorderStyleSpec aLeft)
+  /**
+   * @return The left border style. May be <code>null</code>.
+   */
+  @Nullable
+  public BorderStyleSpec getLeft ()
   {
-    if (EqualsHelper.equals (aLeft, m_aLeft))
-      return this;
-    return new BorderSpec (aLeft, m_aTop, m_aRight, m_aBottom);
+    return m_aLeft;
   }
 
   @Nonnull
@@ -170,7 +162,7 @@ public class BorderSpec
   {
     if (EqualsHelper.equals (aTop, m_aTop))
       return this;
-    return new BorderSpec (m_aLeft, aTop, m_aRight, m_aBottom);
+    return new BorderSpec (aTop, m_aRight, m_aBottom, m_aLeft);
   }
 
   @Nonnull
@@ -178,7 +170,7 @@ public class BorderSpec
   {
     if (EqualsHelper.equals (aRight, m_aRight))
       return this;
-    return new BorderSpec (m_aLeft, m_aTop, aRight, m_aBottom);
+    return new BorderSpec (m_aTop, aRight, m_aBottom, m_aLeft);
   }
 
   @Nonnull
@@ -186,7 +178,15 @@ public class BorderSpec
   {
     if (EqualsHelper.equals (aBottom, m_aBottom))
       return this;
-    return new BorderSpec (m_aLeft, m_aTop, m_aRight, aBottom);
+    return new BorderSpec (m_aTop, m_aRight, aBottom, m_aLeft);
+  }
+
+  @Nonnull
+  public BorderSpec getCloneWithLeft (@Nullable final BorderStyleSpec aLeft)
+  {
+    if (EqualsHelper.equals (aLeft, m_aLeft))
+      return this;
+    return new BorderSpec (m_aTop, m_aRight, m_aBottom, aLeft);
   }
 
   @Override
@@ -197,19 +197,19 @@ public class BorderSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final BorderSpec rhs = (BorderSpec) o;
-    return EqualsHelper.equals (m_aLeft, rhs.m_aLeft) &&
-           EqualsHelper.equals (m_aTop, rhs.m_aTop) &&
+    return EqualsHelper.equals (m_aTop, rhs.m_aTop) &&
            EqualsHelper.equals (m_aRight, rhs.m_aRight) &&
-           EqualsHelper.equals (m_aBottom, rhs.m_aBottom);
+           EqualsHelper.equals (m_aBottom, rhs.m_aBottom) &&
+           EqualsHelper.equals (m_aLeft, rhs.m_aLeft);
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aLeft)
-                                       .append (m_aTop)
+    return new HashCodeGenerator (this).append (m_aTop)
                                        .append (m_aRight)
                                        .append (m_aBottom)
+                                       .append (m_aLeft)
                                        .getHashCode ();
   }
 
