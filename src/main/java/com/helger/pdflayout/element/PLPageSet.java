@@ -62,9 +62,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   public static final class PageSetPrepareResult
   {
     private float m_fHeaderHeight = Float.NaN;
-    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList <> ();
+    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList<> ();
     private float m_fFooterHeight = Float.NaN;
-    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList <> ();
+    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList<> ();
 
     PageSetPrepareResult ()
     {}
@@ -166,7 +166,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
   private final SizeSpec m_aPageSize;
   private AbstractPLElement <?> m_aPageHeader;
-  private final ICommonsList <AbstractPLElement <?>> m_aElements = new CommonsArrayList <> ();
+  private final ICommonsList <AbstractPLElement <?>> m_aElements = new CommonsArrayList<> ();
   private AbstractPLElement <?> m_aPageFooter;
   private IRenderingContextCustomizer m_aRCCustomizer;
 
@@ -297,7 +297,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
    */
   public float getYTop ()
   {
-    return m_aPageSize.getHeight () - getMarginTop () - getPaddingTop ();
+    return m_aPageSize.getHeight () - getMarginPlusPaddingTop ();
   }
 
   @Nonnull
@@ -369,10 +369,10 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
     // Split into pieces that fit onto a page
     final float fYTop = getYTop ();
-    final float fYLeast = getMarginBottom () + getPaddingBottom ();
+    final float fYLeast = getMarginPlusPaddingBottom ();
 
     {
-      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList <> ();
+      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList<> ();
 
       if (PLDebug.isDebugPrepare ())
         PLDebug.debugSplit (this, "Start preparing elements");
@@ -482,14 +482,14 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
             if (PLDebug.isDebugPrepare ())
             {
-              final ICommonsList <String> aLastPageContent = new CommonsArrayList <> ();
+              final ICommonsList <String> aLastPageContent = new CommonsArrayList<> ();
               for (final PLElementWithSize aCurElement : aCurPageElements)
                 aLastPageContent.add (aCurElement.getElement ().getDebugID ());
               PLDebug.debugPrepare (this, "Finished page with: " + StringHelper.getImploded (aLastPageContent));
             }
 
             ret.addPerPageElements (aCurPageElements);
-            aCurPageElements = new CommonsArrayList <> ();
+            aCurPageElements = new CommonsArrayList<> ();
 
             // Start new page
             fCurY = fYTop;
@@ -546,7 +546,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
         if (PLDebug.isDebugPrepare ())
         {
-          final ICommonsList <String> aLastPageContent = new CommonsArrayList <> ();
+          final ICommonsList <String> aLastPageContent = new CommonsArrayList<> ();
           for (final PLElementWithSize aCurElement : aCurPageElements)
             aLastPageContent.add (aCurElement.getElement ().getDebugID ());
           PLDebug.debugPrepare (this, "Finished last page with: " + StringHelper.getImploded (aLastPageContent));
@@ -583,7 +583,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
                               @Nonnegative final int nTotalPageCount) throws IOException
   {
     // Start at the left
-    final float fXLeft = getMarginLeft () + getPaddingLeft ();
+    final float fXLeft = getMarginPlusPaddingLeft ();
     final float fYTop = getYTop ();
 
     final boolean bCompressPDF = !bDebug;

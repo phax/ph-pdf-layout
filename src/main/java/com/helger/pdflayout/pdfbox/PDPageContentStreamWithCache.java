@@ -146,7 +146,8 @@ public class PDPageContentStreamWithCache
   {
     if (!EqualsHelper.equals (m_fLastUsedLineWidth, fLineWidth))
     {
-      m_aStream.setLineWidth (fLineWidth);
+      if (false)
+        m_aStream.setLineWidth (fLineWidth);
       m_fLastUsedLineWidth = fLineWidth;
     }
   }

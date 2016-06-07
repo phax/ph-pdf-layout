@@ -61,7 +61,7 @@ public class PageLayoutPDF
   private String m_sDocumentKeywords;
   private String m_sDocumentSubject;
   private boolean m_bDebug = false;
-  private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
+  private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList<> ();
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class
@@ -216,6 +216,8 @@ public class PageLayoutPDF
   public void renderTo (@Nullable final IPDDocumentCustomizer aCustomizer,
                         @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
   {
+    ValueEnforcer.notNull (aOS, "OutputStream");
+
     // create a new document
     PDDocument aDoc = null;
 

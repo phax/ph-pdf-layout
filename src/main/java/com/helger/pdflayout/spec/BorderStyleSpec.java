@@ -114,7 +114,7 @@ public class BorderStyleSpec
   @Nonnegative
   public float getLineWidth ()
   {
-    return m_fLineWidth;
+    return true ? 0 : m_fLineWidth;
   }
 
   @Override

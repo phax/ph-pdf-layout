@@ -64,7 +64,7 @@ public final class PLImageTest
     aPS1.addElement (aHBox);
     aPS1.addElement (new PLText ("Third line", r10).setBorder (new BorderStyleSpec (Color.GREEN, 5)));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plimage.pdf"));
   }
