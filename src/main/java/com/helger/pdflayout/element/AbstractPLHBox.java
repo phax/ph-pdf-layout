@@ -213,7 +213,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   /**
    * Set the border around each contained column.
-   * 
+   *
    * @param aBorderY
    *        The border to set for top and bottom. Maybe <code>null</code>.
    * @param aBorderX
@@ -369,6 +369,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     m_aPreparedColumnHeight = new float [m_aColumns.size ()];
     final float fAvailableWidth = aCtx.getAvailableWidth ();
     final float fAvailableHeight = aCtx.getAvailableHeight ();
+    final float fBorderTopWidth = m_aColumnBorder.getTopWidth ();
+    final float fBorderRightWidth = m_aColumnBorder.getRightWidth ();
+    final float fBorderBottomWidth = m_aColumnBorder.getBottomWidth ();
+    final float fBorderLeftWidth = m_aColumnBorder.getLeftWidth ();
+    final float fBorderXWidth = m_aColumnBorder.getXSumWidth ();
+    final float fBorderYWidth = m_aColumnBorder.getYSumWidth ();
+
     float fUsedWidth = 0;
     float fUsedHeight = 0;
     int nIndex = 0;
@@ -466,22 +473,12 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidth - fAvailableWidth > 0.01)
-        s_aLogger.warn ("HBox[" +
-                        getDebugID () +
-                        "] uses more width (" +
-                        fUsedWidth +
-                        ") than available (" +
-                        fAvailableWidth +
-                        ")!");
+        s_aLogger.warn ("HBox[" + getDebugID () + "] uses more width (" + fUsedWidth + ") than available (" +
+                        fAvailableWidth + ")!");
       if (fUsedHeight - fAvailableHeight > 0.01)
         if (!isSplittable ())
-          s_aLogger.warn ("HBox[" +
-                          getDebugID () +
-                          "] uses more height (" +
-                          fUsedHeight +
-                          ") than available (" +
-                          fAvailableHeight +
-                          ")!");
+          s_aLogger.warn ("HBox[" + getDebugID () + "] uses more height (" + fUsedHeight + ") than available (" +
+                          fAvailableHeight + ")!");
     }
 
     return new SizeSpec (fUsedWidth, fUsedHeight);
@@ -509,8 +506,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       final float fItemHeight = m_aPreparedColumnHeight[nIndex];
       final float fItemHeightWithPadding = fItemHeight + aElement.getPaddingYSum ();
       final RenderingContext aItemCtx = new RenderingContext (aCtx,
-                                                              fCurX + aElement.getMarginLeft (),
-                                                              fCurY - aElement.getMarginTop (),
+                                                              fCurX + aElement.getMarginAndBorderLeft (),
+                                                              fCurY - aElement.getMarginAndBorderTop (),
                                                               fItemWidthWithPadding,
                                                               fItemHeightWithPadding);
 
@@ -519,7 +516,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         // Disregard the padding of this HBox!!!
         final float fLeft = fCurX;
         final float fTop = fCurY;
-        final float fWidth = fItemWidthWithPadding + aElement.getMarginXSum ();
+        final float fWidth = fItemWidthWithPadding + aElement.getMarginAndBorderXSum ();
         final float fHeight = aCtx.getHeight () - getPaddingYSum ();
 
         // Fill before border
@@ -540,7 +537,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       aElement.perform (aItemCtx);
 
       // Update X-pos
-      fCurX += fItemWidthWithPadding + aElement.getMarginXSum ();
+      fCurX += fItemWidthWithPadding + aElement.getMarginAndBorderXSum ();
       ++nIndex;
     }
   }

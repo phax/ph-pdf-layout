@@ -190,14 +190,10 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
 
     if (PLDebug.isDebugPrepare ())
       PLDebug.debugPrepare (this,
-                            "Prepared object: width=" +
-                                  aPreparedSize.getWidth () +
-                                  "+" +
-                                  getFullXSum () +
-                                  " & height=" +
-                                  aPreparedSize.getHeight () +
-                                  "+" +
-                                  getFullYSum ());
+                            "Prepared object: width=" + aPreparedSize.getWidth () + "+(" + getMarginXSum () + "+" +
+                                  getBorderXSumWidth () + "+" + getPaddingXSum () + "=" + getFullXSum () + ")" +
+                                  " & height=" + aPreparedSize.getHeight () + "+(" + getMarginYSum () + "+" +
+                                  getBorderYSumWidth () + "+" + getPaddingYSum () + "=" + getFullYSum () + ")");
   }
 
   /**
@@ -218,14 +214,8 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
 
     if (PLDebug.isDebugPrepare ())
       PLDebug.debugPrepare (this,
-                            "Preparing object for available width " +
-                                  aCtx.getAvailableWidth () +
-                                  "+" +
-                                  getFullXSum () +
-                                  " and available height " +
-                                  aCtx.getAvailableHeight () +
-                                  "+" +
-                                  getFullYSum ());
+                            "Preparing object for available width " + aCtx.getAvailableWidth () + "+" + getFullXSum () +
+                                  " and available height " + aCtx.getAvailableHeight () + "+" + getFullYSum ());
 
     // Do prepare
     final SizeSpec aOnPrepareResult = onPrepare (aCtx);

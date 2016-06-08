@@ -349,16 +349,29 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
                                        ") take more height than available on the page (" + m_aPageSize.getHeight () +
                                        ")!");
 
-    // Prepare content elements
-    // Must be done after header and footer, because the margins may got
-    // adopted!
-    for (final AbstractPLElement <?> aElement : m_aElements)
     {
-      final float fAvailableWidth = getAvailableWidth () - aElement.getFullXSum ();
-      final float fAvailableHeight = getAvailableHeight () - aElement.getFullYSum ();
-      final PreparationContext aRPC = new PreparationContext (aGlobalCtx, fAvailableWidth, fAvailableHeight);
-      final SizeSpec aElementSize = aElement.prepare (aRPC);
-      ret.addElement (new PLElementWithSize (aElement, aElementSize));
+      final float fAvailWidth = getAvailableWidth ();
+      final float fAvailHeight = getAvailableHeight ();
+
+      if (PLDebug.isDebugPrepare ())
+        PLDebug.debugPrepare (this,
+                              "Start preparing elements on width=" + fAvailWidth + "+" + getFullXSum () +
+                                    " and height=" + fAvailHeight + "+" + getFullYSum ());
+
+      // Prepare content elements
+      // Must be done after header and footer, because the margins may got
+      // adopted!
+      for (final AbstractPLElement <?> aElement : m_aElements)
+      {
+        final float fAvailableWidth = fAvailWidth - aElement.getFullXSum ();
+        final float fAvailableHeight = fAvailHeight - aElement.getFullYSum ();
+        final PreparationContext aRPC = new PreparationContext (aGlobalCtx, fAvailableWidth, fAvailableHeight);
+        final SizeSpec aElementSize = aElement.prepare (aRPC);
+        ret.addElement (new PLElementWithSize (aElement, aElementSize));
+      }
+
+      if (PLDebug.isDebugPrepare ())
+        PLDebug.debugPrepare (this, "Finished preparing elements");
     }
 
     // Split into pieces that fit onto a page
@@ -366,10 +379,10 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     final float fYLeast = getFullBottom ();
 
     {
-      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList <> ();
+      if (PLDebug.isDebugSplit ())
+        PLDebug.debugSplit (this, "Start splitting elements");
 
-      if (PLDebug.isDebugPrepare ())
-        PLDebug.debugSplit (this, "Start preparing elements");
+      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList <> ();
 
       // Start at the top
       float fCurY = fYTop;
@@ -416,6 +429,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
               aElementsWithSize.add (1, aSplitResult.getSecondElement ());
 
               if (PLDebug.isDebugSplit ())
+              {
                 PLDebug.debugSplit (this,
                                     "Split " + aElement.getDebugID () + " into pieces: " +
                                           aSplitResult.getFirstElement ().getElement ().getDebugID () + " (" +
@@ -428,6 +442,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
                                           aSplitResult.getSecondElement ().getElement ().getFullXSum () + " & " +
                                           aSplitResult.getSecondElement ().getHeight () + "+" +
                                           aSplitResult.getSecondElement ().getElement ().getFullYSum () + ")");
+              }
               continue;
             }
             if (PLDebug.isDebugSplit ())
@@ -455,9 +470,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
             if (PLDebug.isDebugPrepare ())
             {
-              final ICommonsList <String> aLastPageContent = new CommonsArrayList <> ();
-              for (final PLElementWithSize aCurElement : aCurPageElements)
-                aLastPageContent.add (aCurElement.getElement ().getDebugID ());
+              final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
+                                                                                      x -> x.getElement ()
+                                                                                            .getDebugID ());
               PLDebug.debugPrepare (this, "Finished page with: " + StringHelper.getImploded (aLastPageContent));
             }
 
@@ -513,18 +528,22 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
       // Add elements to last page
       if (!aCurPageElements.isEmpty ())
       {
-        if (s_aLogger.isDebugEnabled ())
-          s_aLogger.debug ("Finally adding " + aCurPageElements.size () + " elements to page " + ret.getPageNumber ());
+        if (PLDebug.isDebugSplit ())
+          PLDebug.debugSplit (this,
+                              "Finally adding " + aCurPageElements.size () + " elements to page " +
+                                    ret.getPageNumber ());
         ret.addPerPageElements (aCurPageElements);
 
-        if (PLDebug.isDebugPrepare ())
+        if (PLDebug.isDebugSplit ())
         {
-          final ICommonsList <String> aLastPageContent = new CommonsArrayList <> ();
-          for (final PLElementWithSize aCurElement : aCurPageElements)
-            aLastPageContent.add (aCurElement.getElement ().getDebugID ());
-          PLDebug.debugPrepare (this, "Finished last page with: " + StringHelper.getImploded (", ", aLastPageContent));
+          final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
+                                                                                  x -> x.getElement ().getDebugID ());
+          PLDebug.debugSplit (this, "Finished last page with: " + StringHelper.getImploded (", ", aLastPageContent));
         }
       }
+
+      if (PLDebug.isDebugSplit ())
+        PLDebug.debugSplit (this, "Finished splitting elements");
     }
 
     return ret;
