@@ -281,7 +281,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
       throw new IllegalStateException ("Element " + ClassHelper.getClassLocalName (this) + " was never prepared!");
 
     if (PLDebug.isDebugRender ())
-      PLDebug.debugRender (this, "rendering at " + aCtx.getStartLeft () + " & " + aCtx.getStartTop ());
+      PLDebug.debugRender (this,
+                           "Rendering at " + aCtx.getStartLeft () + "/" + aCtx.getStartTop () + " for " +
+                                 m_aPreparedSize.getWidth () + "/" + m_aPreparedSize.getHeight ());
 
     // Render border - debug: green
     {

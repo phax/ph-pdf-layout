@@ -257,7 +257,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
   /**
    * Set the border around each contained row.
-   * 
+   *
    * @param aBorderY
    *        The border to set for top and bottom. Maybe <code>null</code>.
    * @param aBorderX
@@ -443,21 +443,11 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidthFull - fAvailableWidth > 0.01)
-        s_aLogger.warn ("VBox[" +
-                        getDebugID () +
-                        "] uses more width (" +
-                        fUsedWidthFull +
-                        ") than available (" +
-                        fAvailableWidth +
+        s_aLogger.warn (getDebugID () + " uses more width (" + fUsedWidthFull + ") than available (" + fAvailableWidth +
                         ")!");
       if (fUsedHeightFull - fAvailableHeight > 0.01 && !isSplittable ())
-        s_aLogger.warn ("VBox[" +
-                        getDebugID () +
-                        "] uses more height (" +
-                        fUsedHeightFull +
-                        ") than available (" +
-                        fAvailableHeight +
-                        ")!");
+        s_aLogger.warn (getDebugID () + " uses more height (" + fUsedHeightFull + ") than available (" +
+                        fAvailableHeight + ")!");
     }
 
     return new SizeSpec (fUsedWidthFull, fUsedHeightFull);

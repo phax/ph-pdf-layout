@@ -61,15 +61,9 @@ public final class PLDebug
     s_bDebugText = bDebugText;
   }
 
-  @Nonnull
-  private static String _getID (@Nonnull final AbstractPLBaseElement <?> aElement)
-  {
-    return "<" + aElement.getDebugID () + ">";
-  }
-
   public static void debugText (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Text] " + _getID (aElement) + ": " + sMsg);
+    s_aLogger.info ("[Text] " + aElement.getDebugID () + ": " + sMsg);
   }
 
   public static boolean isDebugFont ()
@@ -99,7 +93,7 @@ public final class PLDebug
 
   public static void debugSplit (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Splitting] " + _getID (aElement) + ": " + sMsg);
+    s_aLogger.info ("[Splitting] " + aElement.getDebugID () + ": " + sMsg);
   }
 
   public static boolean isDebugPrepare ()
@@ -114,7 +108,7 @@ public final class PLDebug
 
   public static void debugPrepare (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Preparing] " + _getID (aElement) + ": " + sMsg);
+    s_aLogger.info ("[Preparing] " + aElement.getDebugID () + ": " + sMsg);
   }
 
   public static boolean isDebugRender ()
@@ -129,7 +123,7 @@ public final class PLDebug
 
   public static void debugRender (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Rendering] " + _getID (aElement) + ": " + sMsg);
+    s_aLogger.info ("[Rendering] " + aElement.getDebugID () + ": " + sMsg);
   }
 
   /**

@@ -23,12 +23,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.id.IHasID;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
+import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.traits.IGenericImplTrait;
 import com.helger.pdflayout.PLDebug;
@@ -49,29 +53,40 @@ import com.helger.pdflayout.spec.PaddingSpec;
 public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>>
                                             implements IHasID <String>, IGenericImplTrait <IMPLTYPE>
 {
+  private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLBaseElement.class);
+
   private String m_sElementID;
+  private transient String m_sDebugID;
   private MarginSpec m_aMargin = MarginSpec.MARGIN0;
   private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
   private BorderSpec m_aBorder = BorderSpec.BORDER0;
   private Color m_aFillColor = null;
 
   public AbstractPLBaseElement ()
-  {
-    m_sElementID = ClassHelper.getClassLocalName (this) + "-" + GlobalIDFactory.getNewIntID ();
-  }
+  {}
 
   /**
-   * @return The unique element ID.
+   * @return The unique element ID. Never <code>null</code>.
    */
   public final String getID ()
   {
-    return m_sElementID;
+    String ret = m_sElementID;
+    if (ret == null)
+      m_sElementID = ret = GlobalIDFactory.getNewStringID ();
+    return ret;
   }
 
   @Nonnull
   public final IMPLTYPE setID (@Nonnull @Nonempty final String sID)
   {
-    m_sElementID = ValueEnforcer.notEmpty (sID, "ID");
+    ValueEnforcer.notEmpty (sID, "ID");
+    if (StringHelper.hasText (m_sElementID))
+    {
+      s_aLogger.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
+      // Disable caching
+      m_sDebugID = null;
+    }
+    m_sElementID = sID;
     return thisAsT ();
   }
 
@@ -82,7 +97,10 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   @Nonempty
   public final String getDebugID ()
   {
-    return getID ();
+    String ret = m_sDebugID;
+    if (ret == null)
+      m_sDebugID = ret = "<" + ClassHelper.getClassLocalName (this) + "-" + getID () + ">";
+    return ret;
   }
 
   @Nonnull
@@ -134,11 +152,11 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all margin values. This method may not be called after an element got
    * prepared!
+   *
    * @param fMarginY
    *        The Y-value to use (for top and bottom).
    * @param fMarginX
    *        The X-value to use (for left and right).
-   *
    * @return this
    */
   @Nonnull
@@ -317,11 +335,11 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all padding values. This method may not be called after an element got
    * prepared!
+   *
    * @param fPaddingY
    *        The Y-value to use (for top and bottom).
    * @param fPaddingX
    *        The X-value to use (for left and right).
-   *
    * @return this
    */
   @Nonnull
@@ -501,13 +519,13 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all border values. This method may not be called after an element got
    * prepared!
+   *
    * @param aBorderY
    *        The Y-value to use (for top and bottom). May be <code>null</code> to
    *        indicate no border.
    * @param aBorderX
    *        The X-value to use (for left and right). May be <code>null</code> to
    *        indicate no border.
-   *
    * @return this
    */
   @Nonnull
@@ -772,13 +790,13 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
    * @param aContentStream
    *        Content stream
    * @param fLeft
-   *        Left position
+   *        Left position (including left border width)
    * @param fTop
-   *        Top position
+   *        Top position (including top border width)
    * @param fWidth
-   *        Width
+   *        Width (excluding left and right border width)
    * @param fHeight
-   *        Height
+   *        Height (excluding top and bottom border width)
    * @param aBorder
    *        Border to use. May not be <code>null</code>.
    * @throws IOException
@@ -791,46 +809,29 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
                                final float fHeight,
                                @Nonnull final BorderSpec aBorder) throws IOException
   {
-    float fBorderTop = fTop;
-    float fBorderRight = fLeft + fWidth;
-    float fBorderBottom = fTop - fHeight;
-    float fBorderLeft = fLeft;
-    float fBorderWidth = fWidth;
-    float fBorderHeight = fHeight;
-
-    if (PLDebug.isDebugRender ())
-      PLDebug.debugRender (this,
-                           "Border: " +
-                                 fBorderLeft +
-                                 "/" +
-                                 fBorderBottom +
-                                 " - " +
-                                 fBorderRight +
-                                 "/" +
-                                 fBorderTop +
-                                 " (= " +
-                                 fBorderWidth +
-                                 "/" +
-                                 fBorderHeight +
-                                 ")");
+    final float fRight = fLeft + fWidth;
+    final float fBottom = fTop - fHeight;
 
     if (aBorder.hasAllBorders () && aBorder.areAllBordersEqual ())
     {
       // draw full rect
       final BorderStyleSpec aAll = aBorder.getLeft ();
-
       // The border position must be in the middle of the line
-      fBorderTop += aAll.getHalfLineWidth ();
-      fBorderRight += aAll.getHalfLineWidth ();
-      fBorderBottom -= aAll.getHalfLineWidth ();
-      fBorderLeft -= aAll.getHalfLineWidth ();
-      fBorderWidth += aAll.getLineWidth ();
-      fBorderHeight += aAll.getLineWidth ();
+      final float fLineWidth = aAll.getLineWidth ();
+      final float fHalfLineWidth = fLineWidth / 2f;
+
+      if (PLDebug.isDebugRender ())
+        PLDebug.debugRender (this,
+                             "Border around: " + fLeft + "/" + fBottom + " - " + fRight + "/" + fTop + " (= " + fWidth +
+                                   "/" + fHeight + ") with width " + fLineWidth);
 
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
-      aContentStream.setLineWidth (aAll.getLineWidth ());
-      aContentStream.addRect (fBorderLeft, fBorderBottom, fBorderWidth, fBorderHeight);
+      aContentStream.setLineWidth (fLineWidth);
+      aContentStream.addRect (fLeft - fHalfLineWidth,
+                              fBottom - fHalfLineWidth,
+                              fWidth + fLineWidth,
+                              fHeight + fLineWidth);
       aContentStream.stroke ();
     }
     else
@@ -847,46 +848,58 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
 
       if (aTop != null)
       {
+        if (PLDebug.isDebugRender ())
+          PLDebug.debugRender (this,
+                               "Border top:    " + fLeft + "/" + fTop + " - " + fRight + "/" + fTop + " (= " + fWidth +
+                                     "/0) with width " + fTopWidth);
+
         final float fDelta = fTopWidth / 2f;
         aContentStream.setStrokingColor (aTop.getColor ());
         aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
-        aContentStream.setLineWidth (aTop.getLineWidth ());
-        aContentStream.drawLine (fBorderLeft, fBorderTop + fDelta, fBorderRight + fRightWidth, fBorderTop + fDelta);
+        aContentStream.setLineWidth (fTopWidth);
+        aContentStream.drawLine (fLeft, fTop + fDelta, fRight + fRightWidth, fTop + fDelta);
       }
 
       if (aRight != null)
       {
+        if (PLDebug.isDebugRender ())
+          PLDebug.debugRender (this,
+                               "Border right:  " + fRight + "/" + fBottom + " - " + fRight + "/" + fTop + " (= 0/" +
+                                     fHeight + ") with width " + fRightWidth);
+
         final float fDelta = fRightWidth / 2f;
         aContentStream.setStrokingColor (aRight.getColor ());
         aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
-        aContentStream.setLineWidth (aRight.getLineWidth ());
-        aContentStream.drawLine (fBorderRight +
-                                 fDelta,
-                                 fBorderTop,
-                                 fBorderRight + fDelta,
-                                 fBorderBottom - fBottomWidth);
+        aContentStream.setLineWidth (fRightWidth);
+        aContentStream.drawLine (fRight + fDelta, fTop, fRight + fDelta, fBottom - fBottomWidth);
       }
 
       if (aBottom != null)
       {
+        if (PLDebug.isDebugRender ())
+          PLDebug.debugRender (this,
+                               "Border bottom: " + fLeft + "/" + fBottom + " - " + fRight + "/" + fBottom + " (= " +
+                                     fWidth + "/0) with width " + fBottomWidth);
+
         final float fDelta = fBottomWidth / 2f;
         aContentStream.setStrokingColor (aBottom.getColor ());
         aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
-        aContentStream.setLineWidth (aBottom.getLineWidth ());
-        aContentStream.drawLine (fBorderLeft -
-                                 fLeftWidth,
-                                 fBorderBottom - fDelta,
-                                 fBorderRight,
-                                 fBorderBottom - fDelta);
+        aContentStream.setLineWidth (fBottomWidth);
+        aContentStream.drawLine (fLeft - fLeftWidth, fBottom - fDelta, fRight, fBottom - fDelta);
       }
 
       if (aLeft != null)
       {
+        if (PLDebug.isDebugRender ())
+          PLDebug.debugRender (this,
+                               "Border left:   " + fLeft + "/" + fBottom + " - " + fLeft + "/" + fTop + " (= 0/" +
+                                     fHeight + ") with width " + fLeftWidth);
+
         final float fDelta = fLeftWidth / 2f;
         aContentStream.setStrokingColor (aLeft.getColor ());
         aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
-        aContentStream.setLineWidth (aLeft.getLineWidth ());
-        aContentStream.drawLine (fBorderLeft - fDelta, fBorderTop + fTopWidth, fBorderLeft - fDelta, fBorderBottom);
+        aContentStream.setLineWidth (fLeftWidth);
+        aContentStream.drawLine (fLeft - fDelta, fTop + fTopWidth, fLeft - fDelta, fBottom);
       }
     }
   }

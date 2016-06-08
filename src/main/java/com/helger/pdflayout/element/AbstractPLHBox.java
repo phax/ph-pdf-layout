@@ -369,17 +369,17 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     m_aPreparedColumnHeight = new float [m_aColumns.size ()];
     final float fAvailableWidth = aCtx.getAvailableWidth ();
     final float fAvailableHeight = aCtx.getAvailableHeight ();
-    final float fBorderTopWidth = m_aColumnBorder.getTopWidth ();
-    final float fBorderRightWidth = m_aColumnBorder.getRightWidth ();
-    final float fBorderBottomWidth = m_aColumnBorder.getBottomWidth ();
-    final float fBorderLeftWidth = m_aColumnBorder.getLeftWidth ();
-    final float fBorderXWidth = m_aColumnBorder.getXSumWidth ();
-    final float fBorderYWidth = m_aColumnBorder.getYSumWidth ();
+    final float fColumnBorderTopWidth = m_aColumnBorder.getTopWidth ();
+    final float fColumnBorderRightWidth = m_aColumnBorder.getRightWidth ();
+    final float fColumnBorderBottomWidth = m_aColumnBorder.getBottomWidth ();
+    final float fColumnBorderLeftWidth = m_aColumnBorder.getLeftWidth ();
+    final float fColumnBorderXSumWidth = m_aColumnBorder.getXSumWidth ();
+    final float fColumnBorderYSumWidth = m_aColumnBorder.getYSumWidth ();
 
-    float fUsedWidth = 0;
+    float fUsedWidth = fColumnBorderXSumWidth * m_aColumns.size ();
     float fUsedHeight = 0;
     int nIndex = 0;
-    float fRestWidth = fAvailableWidth;
+    float fRestWidth = fAvailableWidth - fUsedWidth;
     // 1. all non-star width items
     for (final PLHBoxColumn aColumn : m_aColumns)
     {
@@ -469,15 +469,17 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
     }
 
+    fUsedHeight += fColumnBorderYSumWidth;
+
     // Small consistency check (with rounding included)
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidth - fAvailableWidth > 0.01)
-        s_aLogger.warn ("HBox[" + getDebugID () + "] uses more width (" + fUsedWidth + ") than available (" +
-                        fAvailableWidth + ")!");
+        s_aLogger.warn (getDebugID () + " uses more width (" + fUsedWidth + ") than available (" + fAvailableWidth +
+                        ")!");
       if (fUsedHeight - fAvailableHeight > 0.01)
         if (!isSplittable ())
-          s_aLogger.warn ("HBox[" + getDebugID () + "] uses more height (" + fUsedHeight + ") than available (" +
+          s_aLogger.warn (getDebugID () + " uses more height (" + fUsedHeight + ") than available (" +
                           fAvailableHeight + ")!");
     }
 
@@ -496,8 +498,18 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   {
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     float fCurX = aCtx.getStartLeft () + getPaddingLeft ();
-    final float fCurY = aCtx.getStartTop () - getPaddingTop ();
+    float fCurY = aCtx.getStartTop () - getPaddingTop ();
+
+    final float fColumnBorderTopWidth = m_aColumnBorder.getTopWidth ();
+    final float fColumnBorderRightWidth = m_aColumnBorder.getRightWidth ();
+    final float fColumnBorderBottomWidth = m_aColumnBorder.getBottomWidth ();
+    final float fColumnBorderLeftWidth = m_aColumnBorder.getLeftWidth ();
+    final float fColumnBorderXSumWidth = m_aColumnBorder.getXSumWidth ();
+    final float fColumnBorderYSumWidth = m_aColumnBorder.getYSumWidth ();
     int nIndex = 0;
+    fCurX += fColumnBorderLeftWidth;
+    fCurY -= fColumnBorderTopWidth;
+
     for (final PLHBoxColumn aColumn : m_aColumns)
     {
       final AbstractPLElement <?> aElement = aColumn.getElement ();
@@ -505,11 +517,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       final float fItemWidthWithPadding = fItemWidth + aElement.getPaddingXSum ();
       final float fItemHeight = m_aPreparedColumnHeight[nIndex];
       final float fItemHeightWithPadding = fItemHeight + aElement.getPaddingYSum ();
-      final RenderingContext aItemCtx = new RenderingContext (aCtx,
-                                                              fCurX + aElement.getMarginAndBorderLeft (),
-                                                              fCurY - aElement.getMarginAndBorderTop (),
-                                                              fItemWidthWithPadding,
-                                                              fItemHeightWithPadding);
 
       // apply special column borders - debug: blue
       {
@@ -534,10 +541,15 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
 
       // Perform contained element after border
+      final RenderingContext aItemCtx = new RenderingContext (aCtx,
+                                                              fCurX + aElement.getMarginAndBorderLeft (),
+                                                              fCurY - aElement.getMarginAndBorderTop (),
+                                                              fItemWidthWithPadding,
+                                                              fItemHeightWithPadding);
       aElement.perform (aItemCtx);
 
       // Update X-pos
-      fCurX += fItemWidthWithPadding + aElement.getMarginAndBorderXSum ();
+      fCurX += fItemWidthWithPadding + aElement.getMarginAndBorderXSum () + fColumnBorderXSumWidth;
       ++nIndex;
     }
   }
