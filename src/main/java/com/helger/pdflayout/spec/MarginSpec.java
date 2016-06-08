@@ -43,7 +43,7 @@ public class MarginSpec extends AbstractRectSpec
     this (f, f);
   }
 
-  public MarginSpec (final float fX, final float fY)
+  public MarginSpec (final float fY, final float fX)
   {
     this (fY, fX, fY, fX);
   }

@@ -43,7 +43,7 @@ public class PaddingSpec extends AbstractRectSpec
     this (f, f);
   }
 
-  public PaddingSpec (final float fX, final float fY)
+  public PaddingSpec (final float fY, final float fX)
   {
     this (fY, fX, fY, fX);
   }

@@ -257,18 +257,18 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
   /**
    * Set the border around each contained row.
-   *
-   * @param aBorderX
-   *        The border to set for left and right. Maybe <code>null</code>.
+   * 
    * @param aBorderY
    *        The border to set for top and bottom. Maybe <code>null</code>.
+   * @param aBorderX
+   *        The border to set for left and right. Maybe <code>null</code>.
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setRowBorder (@Nullable final BorderStyleSpec aBorderX,
-                                      @Nullable final BorderStyleSpec aBorderY)
+  public final IMPLTYPE setRowBorder (@Nullable final BorderStyleSpec aBorderY,
+                                      @Nullable final BorderStyleSpec aBorderX)
   {
-    return setRowBorder (new BorderSpec (aBorderX, aBorderY));
+    return setRowBorder (new BorderSpec (aBorderY, aBorderX));
   }
 
   /**
@@ -443,15 +443,17 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidthFull - fAvailableWidth > 0.01)
-        s_aLogger.warn (getDebugID () +
-                        " uses more width (" +
+        s_aLogger.warn ("VBox[" +
+                        getDebugID () +
+                        "] uses more width (" +
                         fUsedWidthFull +
                         ") than available (" +
                         fAvailableWidth +
                         ")!");
       if (fUsedHeightFull - fAvailableHeight > 0.01 && !isSplittable ())
-        s_aLogger.warn (getDebugID () +
-                        " uses more height (" +
+        s_aLogger.warn ("VBox[" +
+                        getDebugID () +
+                        "] uses more height (" +
                         fUsedHeightFull +
                         ") than available (" +
                         fAvailableHeight +

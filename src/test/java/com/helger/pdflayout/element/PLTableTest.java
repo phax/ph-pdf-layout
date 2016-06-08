@@ -44,7 +44,7 @@ import com.helger.pdflayout.spec.PreloadFont;
 public final class PLTableTest
 {
   @Rule
-  public TestRule m_aRule = new DebugModeTestRule ();
+  public final TestRule m_aRule = new DebugModeTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -58,14 +58,14 @@ public final class PLTableTest
                                                          .setPadding (0, 20, 0, 10)
                                                          .setFillColor (new Color (0xddffff));
     aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
-                                                    .setPadding (0, 4)
+                                                    .setPadding (4, 0)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLTextWithPlaceholders ("Page " +
                                                     RenderPageIndex.PLACEHOLDER_PAGESET_PAGE_NUMBER +
                                                     "/" +
                                                     RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_COUNT,
                                                     r10).setBorder (new BorderStyleSpec (Color.RED))
-                                                        .setPadding (0, 4)
+                                                        .setPadding (4, 0)
                                                         .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.addElement (new PLText ("Erste Dummy Zeile", r10));
 

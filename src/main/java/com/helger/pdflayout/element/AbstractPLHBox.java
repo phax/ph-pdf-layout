@@ -213,18 +213,18 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   /**
    * Set the border around each contained column.
-   *
-   * @param aBorderX
-   *        The border to set for left and right. Maybe <code>null</code>.
+   * 
    * @param aBorderY
    *        The border to set for top and bottom. Maybe <code>null</code>.
+   * @param aBorderX
+   *        The border to set for left and right. Maybe <code>null</code>.
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setColumnBorder (@Nullable final BorderStyleSpec aBorderX,
-                                         @Nullable final BorderStyleSpec aBorderY)
+  public final IMPLTYPE setColumnBorder (@Nullable final BorderStyleSpec aBorderY,
+                                         @Nullable final BorderStyleSpec aBorderX)
   {
-    return setColumnBorder (new BorderSpec (aBorderX, aBorderY));
+    return setColumnBorder (new BorderSpec (aBorderY, aBorderX));
   }
 
   /**
@@ -455,7 +455,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
             aElement.internalMarkAsNotPrepared ();
             aElement.setPaddingTop (aElement.getPaddingTop () + fPaddingTop);
             aElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex],
-                                                   m_aPreparedColumnHeight[nIndex] + fPaddingTop));
+                                                           m_aPreparedColumnHeight[nIndex] + fPaddingTop));
           }
         }
         ++nIndex;
@@ -466,10 +466,22 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidth - fAvailableWidth > 0.01)
-        s_aLogger.warn ("HBox uses more width (" + fUsedWidth + ") than available (" + fAvailableWidth + ")!");
+        s_aLogger.warn ("HBox[" +
+                        getDebugID () +
+                        "] uses more width (" +
+                        fUsedWidth +
+                        ") than available (" +
+                        fAvailableWidth +
+                        ")!");
       if (fUsedHeight - fAvailableHeight > 0.01)
         if (!isSplittable ())
-          s_aLogger.warn ("HBox uses more height (" + fUsedHeight + ") than available (" + fAvailableHeight + ")!");
+          s_aLogger.warn ("HBox[" +
+                          getDebugID () +
+                          "] uses more height (" +
+                          fUsedHeight +
+                          ") than available (" +
+                          fAvailableHeight +
+                          ")!");
     }
 
     return new SizeSpec (fUsedWidth, fUsedHeight);

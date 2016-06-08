@@ -57,13 +57,12 @@ public class BorderSpec
 
   /**
    * Constructor.
-   *
-   * @param aBorderX
-   *        The border to set for left and right. Maybe <code>null</code>.
    * @param aBorderY
    *        The border to set for top and bottom. Maybe <code>null</code>.
+   * @param aBorderX
+   *        The border to set for left and right. Maybe <code>null</code>.
    */
-  public BorderSpec (@Nullable final BorderStyleSpec aBorderX, @Nullable final BorderStyleSpec aBorderY)
+  public BorderSpec (@Nullable final BorderStyleSpec aBorderY, @Nullable final BorderStyleSpec aBorderX)
   {
     this (aBorderY, aBorderX, aBorderY, aBorderX);
   }

@@ -134,15 +134,15 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all margin values. This method may not be called after an element got
    * prepared!
-   *
-   * @param fMarginX
-   *        The X-value to use (for left and right).
    * @param fMarginY
    *        The Y-value to use (for top and bottom).
+   * @param fMarginX
+   *        The X-value to use (for left and right).
+   *
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setMargin (final float fMarginX, final float fMarginY)
+  public final IMPLTYPE setMargin (final float fMarginY, final float fMarginX)
   {
     return setMargin (fMarginY, fMarginX, fMarginY, fMarginX);
   }
@@ -317,15 +317,15 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all padding values. This method may not be called after an element got
    * prepared!
-   *
-   * @param fPaddingX
-   *        The X-value to use (for left and right).
    * @param fPaddingY
    *        The Y-value to use (for top and bottom).
+   * @param fPaddingX
+   *        The X-value to use (for left and right).
+   *
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setPadding (final float fPaddingX, final float fPaddingY)
+  public final IMPLTYPE setPadding (final float fPaddingY, final float fPaddingX)
   {
     return setPadding (fPaddingY, fPaddingX, fPaddingY, fPaddingX);
   }
@@ -501,19 +501,19 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   /**
    * Set all border values. This method may not be called after an element got
    * prepared!
-   *
-   * @param aBorderX
-   *        The X-value to use (for left and right). May be <code>null</code> to
-   *        indicate no border.
    * @param aBorderY
    *        The Y-value to use (for top and bottom). May be <code>null</code> to
    *        indicate no border.
+   * @param aBorderX
+   *        The X-value to use (for left and right). May be <code>null</code> to
+   *        indicate no border.
+   *
    * @return this
    */
   @Nonnull
-  public final IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorderX, @Nullable final BorderStyleSpec aBorderY)
+  public final IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorderY, @Nullable final BorderStyleSpec aBorderX)
   {
-    return setBorder (new BorderSpec (aBorderX, aBorderY));
+    return setBorder (new BorderSpec (aBorderY, aBorderX));
   }
 
   /**

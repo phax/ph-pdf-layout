@@ -43,7 +43,7 @@ import com.helger.pdflayout.spec.WidthSpec;
 public final class PLTextTest
 {
   @Rule
-  public TestRule m_aRule = new DebugModeTestRule ();
+  public final TestRule m_aRule = new DebugModeTestRule ();
 
   static
   {

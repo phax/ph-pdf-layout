@@ -87,17 +87,17 @@ public final class RenderingContext
    * @param bDebugMode
    *        debug mode?
    * @param fStartLeft
-   *        Absolute page x-start position with element x-margin but without
-   *        element x-padding
+   *        Absolute page x-start position with element x-margin and x-border
+   *        but without element x-padding
    * @param fStartTop
-   *        Absolute page y-start position with element y-margin but without
-   *        element y-padding
+   *        Absolute page y-start position with element y-margin and y-border
+   *        but without element y-padding
    * @param fWidth
-   *        width without margin but including padding of the surrounding
-   *        element
+   *        width without margin and border but including padding of the
+   *        surrounding element
    * @param fHeight
-   *        width without margin but including padding of the surrounding
-   *        element
+   *        width without margin and border but including padding of the
+   *        surrounding element
    */
   public RenderingContext (@Nonnull final ERenderingElementType eElementType,
                            @Nonnull final PDPageContentStreamWithCache aCS,
