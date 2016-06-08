@@ -35,16 +35,22 @@ public final class PLConfig
   /** Current version - from properties file */
   public static final String PROJECT_VERSION;
 
+  /** Debug constant */
+  public static final boolean ALLOW_BORDER_WIDTH = true;
+
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLConfig.class);
 
   static
   {
-    String sProjectVersion = "undefined";
+    String sProjectVersion = null;
     final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout-version.properties"));
     if (p != null)
       sProjectVersion = p.get ("version");
     if (sProjectVersion == null)
+    {
+      sProjectVersion = "undefined";
       s_aLogger.warn ("Failed to load version number");
+    }
     PROJECT_VERSION = sProjectVersion;
   }
 

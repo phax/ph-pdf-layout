@@ -28,6 +28,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
+import com.helger.pdflayout.PLConfig;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamExt.EAppendMode;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
@@ -146,7 +147,7 @@ public class PDPageContentStreamWithCache
   {
     if (!EqualsHelper.equals (m_fLastUsedLineWidth, fLineWidth))
     {
-      if (false)
+      if (PLConfig.ALLOW_BORDER_WIDTH)
         m_aStream.setLineWidth (fLineWidth);
       m_fLastUsedLineWidth = fLineWidth;
     }

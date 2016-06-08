@@ -27,6 +27,7 @@ import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLConfig;
 
 /**
  * This class contains the styling of a single border part. Currently only the
@@ -114,7 +115,7 @@ public class BorderStyleSpec
   @Nonnegative
   public float getLineWidth ()
   {
-    return true ? 0 : m_fLineWidth;
+    return PLConfig.ALLOW_BORDER_WIDTH ? m_fLineWidth : 0;
   }
 
   @Override
