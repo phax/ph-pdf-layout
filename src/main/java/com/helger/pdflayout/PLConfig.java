@@ -35,9 +35,6 @@ public final class PLConfig
   /** Current version - from properties file */
   public static final String PROJECT_VERSION;
 
-  /** Debug constant */
-  public static final boolean ALLOW_BORDER_WIDTH = true;
-
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLConfig.class);
 
   static

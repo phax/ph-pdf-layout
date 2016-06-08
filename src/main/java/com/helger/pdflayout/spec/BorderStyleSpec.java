@@ -27,7 +27,6 @@ import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.PLConfig;
 
 /**
  * This class contains the styling of a single border part. Currently only the
@@ -45,7 +44,7 @@ public class BorderStyleSpec
   /** The default border style: solid */
   public static final LineDashPatternSpec DEFAULT_LINE_DASH_PATTERN = LineDashPatternSpec.SOLID;
 
-  public static final float DEFAULT_LINE_WIDTH = 1f;
+  public static final float DEFAULT_LINE_WIDTH = 0f;
 
   private final Color m_aColor;
   private final LineDashPatternSpec m_aLineDashPattern;
@@ -115,7 +114,7 @@ public class BorderStyleSpec
   @Nonnegative
   public float getLineWidth ()
   {
-    return PLConfig.ALLOW_BORDER_WIDTH ? m_fLineWidth : 0;
+    return m_fLineWidth;
   }
 
   @Override

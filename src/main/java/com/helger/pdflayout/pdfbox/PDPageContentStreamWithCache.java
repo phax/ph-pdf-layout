@@ -28,7 +28,6 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
-import com.helger.pdflayout.PLConfig;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamExt.EAppendMode;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
@@ -81,8 +80,7 @@ public class PDPageContentStreamWithCache
     ValueEnforcer.notNull (aLoadedFont, "Font");
 
     final float fFontSize = aFontSpec.getFontSize ();
-    if (m_aLastUsedLoadedFont == null ||
-        !aLoadedFont.equals (m_aLastUsedLoadedFont) ||
+    if (m_aLastUsedLoadedFont == null || !aLoadedFont.equals (m_aLastUsedLoadedFont) ||
         !EqualsHelper.equals (fFontSize, m_fLastUsedFontSize))
     {
       m_aStream.setFont (aLoadedFont.getFont (), fFontSize);
@@ -145,12 +143,12 @@ public class PDPageContentStreamWithCache
 
   public void setLineWidth (final float fLineWidth) throws IOException
   {
-    if (!EqualsHelper.equals (m_fLastUsedLineWidth, fLineWidth))
-    {
-      if (PLConfig.ALLOW_BORDER_WIDTH)
+    if (fLineWidth > 0)
+      if (!EqualsHelper.equals (m_fLastUsedLineWidth, fLineWidth))
+      {
         m_aStream.setLineWidth (fLineWidth);
-      m_fLastUsedLineWidth = fLineWidth;
-    }
+        m_fLastUsedLineWidth = fLineWidth;
+      }
   }
 
   public float getLastUsedLineWidth ()
