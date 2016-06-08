@@ -44,6 +44,7 @@ public class BorderStyleSpec
   /** The default border style: solid */
   public static final LineDashPatternSpec DEFAULT_LINE_DASH_PATTERN = LineDashPatternSpec.SOLID;
 
+  /** Use the default line width if unspecified */
   public static final float DEFAULT_LINE_WIDTH = 0f;
 
   private final Color m_aColor;
