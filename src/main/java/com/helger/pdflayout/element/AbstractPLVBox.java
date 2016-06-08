@@ -411,10 +411,14 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   {
     m_aPreparedRowElementWidth = new float [m_aRows.size ()];
     m_aPreparedRowElementHeight = new float [m_aRows.size ()];
-    final float fAvailableWidth = aCtx.getAvailableWidth ();
-    final float fAvailableHeight = aCtx.getAvailableHeight ();
+    final float fRowBorderXSumWidth = m_aRowBorder.getXSumWidth ();
+    final float fRowBorderYSumWidth = m_aRowBorder.getYSumWidth ();
+
     float fUsedWidthFull = 0;
-    float fUsedHeightFull = 0;
+    float fUsedHeightFull = fRowBorderYSumWidth * m_aRows.size ();
+    final float fAvailableWidth = aCtx.getAvailableWidth () - fRowBorderXSumWidth;
+    final float fAvailableHeight = aCtx.getAvailableHeight () - fUsedHeightFull;
+
     int nIndex = 0;
     for (final PLVBoxRow aRow : m_aRows)
     {
@@ -433,21 +437,24 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       // Update used width and height
       fUsedWidthFull = Math.max (fUsedWidthFull, fRowElementWidthFull);
       fUsedHeightFull += fRowElementHeightFull;
-      // Widthout padding and margin
+      // Without padding and margin
       m_aPreparedRowElementWidth[nIndex] = fRowElementWidth;
       m_aPreparedRowElementHeight[nIndex] = fRowElementHeight;
       ++nIndex;
     }
 
+    // Add at the end, because previously only the max was used
+    fUsedWidthFull += fRowBorderXSumWidth;
+
     // Small consistency check (with rounding included)
     if (GlobalDebug.isDebugMode ())
     {
-      if (fUsedWidthFull - fAvailableWidth > 0.01)
-        s_aLogger.warn (getDebugID () + " uses more width (" + fUsedWidthFull + ") than available (" + fAvailableWidth +
-                        ")!");
-      if (fUsedHeightFull - fAvailableHeight > 0.01 && !isSplittable ())
-        s_aLogger.warn (getDebugID () + " uses more height (" + fUsedHeightFull + ") than available (" +
-                        fAvailableHeight + ")!");
+      if (fUsedWidthFull - aCtx.getAvailableWidth () > 0.01)
+        s_aLogger.warn (getDebugID () + " " + PLDebug.getXMBP (this) + " uses more width (" + fUsedWidthFull +
+                        ") than available (" + aCtx.getAvailableWidth () + ")!");
+      if (fUsedHeightFull - aCtx.getAvailableHeight () > 0.01 && !isSplittable ())
+        s_aLogger.warn (getDebugID () + " " + PLDebug.getYMBP (this) + " uses more height (" + fUsedHeightFull +
+                        ") than available (" + aCtx.getAvailableHeight () + ")!");
     }
 
     return new SizeSpec (fUsedWidthFull, fUsedHeightFull);
@@ -464,10 +471,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
   {
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
-    final float fVBoxLeft = aCtx.getStartLeft () + getPaddingLeft ();
-    float fVBoxTop = aCtx.getStartTop () - getPaddingTop ();
+    final float fRowBorderTopWidth = m_aRowBorder.getTopWidth ();
+    final float fRowBorderLeftWidth = m_aRowBorder.getLeftWidth ();
+    final float fRowBorderXSumWidth = m_aRowBorder.getXSumWidth ();
+    final float fRowBorderYSumWidth = m_aRowBorder.getYSumWidth ();
+
+    final float fCurX = aCtx.getStartLeft () + getPaddingLeft () + fRowBorderLeftWidth;
+    float fCurY = aCtx.getStartTop () - getPaddingTop () - fRowBorderTopWidth;
     // Disregard the padding of this VBox!!!
-    final float fVBoxWidth = aCtx.getWidth () - getPaddingXSum ();
+    final float fVBoxWidth = aCtx.getWidth () - getPaddingXSum () - fRowBorderXSumWidth;
+
     int nIndex = 0;
     for (final PLVBoxRow aRow : m_aRows)
     {
@@ -477,34 +490,37 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       final float fRowElementHeight = m_aPreparedRowElementHeight[nIndex];
       final float fRowElementHeightWithPadding = fRowElementHeight + aRowElement.getPaddingYSum ();
       final RenderingContext aRowElementCtx = new RenderingContext (aCtx,
-                                                                    fVBoxLeft + aRowElement.getMarginLeft (),
-                                                                    fVBoxTop - aRowElement.getMarginTop (),
+                                                                    fCurX + aRowElement.getMarginAndBorderLeft (),
+                                                                    fCurY - aRowElement.getMarginAndBorderTop (),
                                                                     fRowElementWidthWithPadding,
                                                                     fRowElementHeightWithPadding);
 
       // apply special row borders - debug: pink
       {
-        final float fHeight = fRowElementHeightWithPadding + aRowElement.getMarginYSum ();
+        final float fLeft = fCurX;
+        final float fTop = fCurY;
+        final float fWidth = fVBoxWidth;
+        final float fHeight = fRowElementHeightWithPadding + aRowElement.getMarginAndBorderYSum ();
 
         // Fill before border
         if (m_aRowFillColor != null)
         {
           aContentStream.setNonStrokingColor (m_aRowFillColor);
-          aContentStream.fillRect (fVBoxLeft, fVBoxTop - fHeight, fVBoxWidth, fHeight);
+          aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
         }
 
         BorderSpec aRealBorder = m_aRowBorder;
         if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
           aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_VBOX));
         if (aRealBorder.hasAnyBorder ())
-          renderBorder (aContentStream, fVBoxLeft, fVBoxTop, fVBoxWidth, fHeight, aRealBorder);
+          renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
       }
 
       // Perform contained element after border
       aRowElement.perform (aRowElementCtx);
 
       // Update Y-pos
-      fVBoxTop -= fRowElementHeightWithPadding + aRowElement.getMarginYSum ();
+      fCurY -= fRowElementHeightWithPadding + aRowElement.getMarginAndBorderYSum () + fRowBorderYSumWidth;
       ++nIndex;
     }
   }

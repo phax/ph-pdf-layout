@@ -370,6 +370,260 @@ public final class PLBorderTest
   }
 
   @Test
+  public void testDifferentBordersVBox () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    final float fValue = 20f;
+    final float fSpacer = 10f;
+    final BorderStyleSpec aTop = new BorderStyleSpec (Color.RED, fValue);
+    final BorderStyleSpec aRight = new BorderStyleSpec (Color.BLUE, fValue);
+    final BorderStyleSpec aBottom = new BorderStyleSpec (Color.MAGENTA, fValue);
+    final BorderStyleSpec aLeft = new BorderStyleSpec (Color.CYAN, fValue);
+    final BorderStyleSpec aAll = new BorderStyleSpec (Color.GRAY, fValue);
+
+    // Use simple numbers - approx. A4
+    final PLPageSet aPS1 = new PLPageSet (new PDRectangle (500,
+                                                           800)).setID ("pageset")
+                                                                .setMargin (fValue)
+                                                                .setFillColor (Color.GREEN)
+                                                                .setBorder (new BorderSpec (new BorderStyleSpec (Color.PINK,
+                                                                                                                 fValue)));
+
+    // Works!
+    if (true)
+    {
+      // Border around the box
+      aPS1.addElement (new PLText ("Border around the box:", r10).setID ("text")
+                                                                 .setPadding (fValue, 0)
+                                                                 .setFillColor (Color.WHITE));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox1a").setBorderTop (aTop);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox2a").setBorderRight (aRight);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox3a").setBorderBottom (aBottom);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox4a").setBorderLeft (aLeft);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox5a").setBorder (aAll);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox6a").setBorderLeft (aLeft).setBorderBottom (aBottom);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox7a").setBorder (aAll);
+        for (int i = 1; i <= 4; ++i)
+          aVBox.addRow (new PLText ("Row" + i, r10));
+        aPS1.addElement (aVBox);
+      }
+    }
+
+    // Works!
+    if (true)
+    {
+      // Using column border
+      aPS1.addElement (new PLText ("Using row border:", r10).setID ("text")
+                                                            .setPadding (fValue, 0)
+                                                            .setFillColor (Color.WHITE));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox1b").setRowBorderTop (aTop);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox2b").setRowBorderRight (aRight);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox3b").setRowBorderBottom (aBottom);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox4b").setRowBorderLeft (aLeft);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox5b").setRowBorder (aAll);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox6b").setRowBorderLeft (aLeft).setRowBorderBottom (aBottom);
+        aVBox.addRow (new PLText ("Row1", r10));
+        aVBox.addRow (new PLText ("Row2", r10));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox7b").setRowBorder (aAll);
+        for (int i = 1; i <= 4; ++i)
+          aVBox.addRow (new PLText ("Row" + i, r10));
+        aPS1.addElement (aVBox);
+      }
+    }
+
+    // Works!
+    if (true)
+    {
+      // Using border around column elements
+      aPS1.addElement (new PLText ("Using border around row elements:", r10).setID ("text")
+                                                                            .setPadding (fValue, 0)
+                                                                            .setFillColor (Color.WHITE));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox1c");
+        aVBox.addRow (new PLText ("Row1", r10).setBorderTop (aTop));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderTop (aTop));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox2c");
+        aVBox.addRow (new PLText ("Row1", r10).setBorderRight (aRight));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderRight (aRight));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox3c");
+        aVBox.addRow (new PLText ("Row1", r10).setBorderBottom (aBottom));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderBottom (aBottom));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox4c");
+        aVBox.addRow (new PLText ("Row1", r10).setBorderLeft (aLeft));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderLeft (aLeft));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox5c");
+        aVBox.addRow (new PLText ("Row1", r10).setBorder (aAll));
+        aVBox.addRow (new PLText ("Row2", r10).setBorder (aAll));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox6c");
+        aVBox.addRow (new PLText ("Row1", r10).setBorderLeft (aLeft).setBorderBottom (aBottom));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderLeft (aLeft).setBorderBottom (aBottom));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox7c");
+        for (int i = 1; i <= 4; ++i)
+          aVBox.addRow (new PLText ("Row" + i, r10).setBorder (aAll));
+        aPS1.addElement (aVBox);
+      }
+    }
+
+    // Works!
+    if (true)
+    {
+      // Using border around column elements
+      aPS1.addElement (new PLText ("Using row border and border around row elements:", r10).setID ("text")
+                                                                                           .setPadding (fValue, 0)
+                                                                                           .setFillColor (Color.WHITE));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox1d").setRowBorderTop (aTop);
+        aVBox.addRow (new PLText ("Row1", r10).setBorderTop (aTop));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderTop (aTop));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox2d").setRowBorderRight (aRight);
+        aVBox.addRow (new PLText ("Row1", r10).setBorderRight (aRight));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderRight (aRight));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox3d").setRowBorderBottom (aBottom);
+        aVBox.addRow (new PLText ("Row1", r10).setBorderBottom (aBottom));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderBottom (aBottom));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox4d").setRowBorderLeft (aLeft);
+        aVBox.addRow (new PLText ("Row1", r10).setBorderLeft (aLeft));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderLeft (aLeft));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox5d").setRowBorder (aAll);
+        aVBox.addRow (new PLText ("Row1", r10).setBorder (aAll));
+        aVBox.addRow (new PLText ("Row2", r10).setBorder (aAll));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox6d").setRowBorderLeft (aLeft).setRowBorderBottom (aBottom);
+        aVBox.addRow (new PLText ("Row1", r10).setBorderLeft (aLeft).setBorderBottom (aBottom));
+        aVBox.addRow (new PLText ("Row2", r10).setBorderLeft (aLeft).setBorderBottom (aBottom));
+        aPS1.addElement (aVBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLVBox aVBox = new PLVBox ().setID ("vbox7d").setRowBorder (aAll);
+        for (int i = 1; i <= 4; ++i)
+          aVBox.addRow (new PLText ("Row" + i, r10).setBorder (aAll));
+        aPS1.addElement (aVBox);
+      }
+    }
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-vbox.pdf"));
+  }
+
+  @Test
   public void testBorderWithHeaderAndFooter () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
