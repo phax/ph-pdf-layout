@@ -26,7 +26,6 @@ import org.junit.rules.TestRule;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
-import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
@@ -114,10 +113,9 @@ public final class PLBorderTest
   }
 
   @Test
-  public void testDifferentBordersBox () throws PDFCreationException
+  public void testDifferentBordersHBox () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-    PLDebug.setDebugAll (true);
 
     final float fValue = 20f;
     final float fSpacer = 10f;
@@ -136,7 +134,7 @@ public final class PLBorderTest
                                                                                                                  fValue)));
 
     // Works!
-    if (false)
+    if (true)
     {
       // Border around the box
       aPS1.addElement (new PLText ("Border around the box:", r10).setID ("text")
@@ -176,9 +174,23 @@ public final class PLBorderTest
         aHBox.addColumn (new PLText ("Column2", r10), WidthSpec.star ());
         aPS1.addElement (aHBox);
       }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox6a").setBorderLeft (aLeft).setBorderBottom (aBottom);
+        aHBox.addColumn (new PLText ("Column1", r10), WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox7a").setBorder (aAll);
+        for (int i = 1; i <= 4; ++i)
+          aHBox.addColumn (new PLText ("Column" + i, r10), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
     }
 
-    // errors
+    // Works!
     if (true)
     {
       // Using column border
@@ -219,10 +231,24 @@ public final class PLBorderTest
         aHBox.addColumn (new PLText ("Column2", r10), WidthSpec.star ());
         aPS1.addElement (aHBox);
       }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox6b").setColumnBorderLeft (aLeft).setColumnBorderBottom (aBottom);
+        aHBox.addColumn (new PLText ("Column1", r10), WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox7b").setColumnBorder (aAll);
+        for (int i = 1; i <= 4; ++i)
+          aHBox.addColumn (new PLText ("Column" + i, r10), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
     }
 
     // Works!
-    if (false)
+    if (true)
     {
       // Using border around column elements
       aPS1.addElement (new PLText ("Using border around column elements:", r10).setID ("text")
@@ -262,11 +288,85 @@ public final class PLBorderTest
         aHBox.addColumn (new PLText ("Column2", r10).setBorder (aAll), WidthSpec.star ());
         aPS1.addElement (aHBox);
       }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox6c");
+        aHBox.addColumn (new PLText ("Column1", r10).setBorderLeft (aLeft).setBorderBottom (aBottom),
+                         WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10).setBorderLeft (aLeft).setBorderBottom (aBottom),
+                         WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox7c");
+        for (int i = 1; i <= 4; ++i)
+          aHBox.addColumn (new PLText ("Column" + i, r10).setBorder (aAll), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+    }
+
+    // Works!
+    if (true)
+    {
+      // Using border around column elements
+      aPS1.addElement (new PLText ("Using column border and border around column elements:",
+                                   r10).setID ("text").setPadding (fValue, 0).setFillColor (Color.WHITE));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox1d").setColumnBorderTop (aTop);
+        aHBox.addColumn (new PLText ("Column1", r10).setBorderTop (aTop), WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10).setBorderTop (aTop), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox2d").setColumnBorderRight (aRight);
+        aHBox.addColumn (new PLText ("Column1", r10).setBorderRight (aRight), WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10).setBorderRight (aRight), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox3d").setColumnBorderBottom (aBottom);
+        aHBox.addColumn (new PLText ("Column1", r10).setBorderBottom (aBottom), WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10).setBorderBottom (aBottom), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox4d").setColumnBorderLeft (aLeft);
+        aHBox.addColumn (new PLText ("Column1", r10).setBorderLeft (aLeft), WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10).setBorderLeft (aLeft), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox5d").setColumnBorder (aAll);
+        aHBox.addColumn (new PLText ("Column1", r10).setBorder (aAll), WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10).setBorder (aAll), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox6d").setColumnBorderLeft (aLeft).setColumnBorderBottom (aBottom);
+        aHBox.addColumn (new PLText ("Column1", r10).setBorderLeft (aLeft).setBorderBottom (aBottom),
+                         WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10).setBorderLeft (aLeft).setBorderBottom (aBottom),
+                         WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
+      aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
+      {
+        final PLHBox aHBox = new PLHBox ().setID ("hbox7d").setColumnBorder (aAll);
+        for (int i = 1; i <= 4; ++i)
+          aHBox.addColumn (new PLText ("Column" + i, r10).setBorder (aAll), WidthSpec.star ());
+        aPS1.addElement (aHBox);
+      }
     }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-box.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-hbox.pdf"));
   }
 
   @Test
@@ -281,10 +381,10 @@ public final class PLBorderTest
     final BorderStyleSpec aCyan = new BorderStyleSpec (Color.CYAN, fValue);
     final BorderStyleSpec aGray = new BorderStyleSpec (Color.GRAY, fValue);
 
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setID ("pageset")
-                                                         .setMargin (100, fValue)
-                                                         .setFillColor (Color.GREEN)
-                                                         .setBorder (new BorderSpec (aGray));
+    final PLPageSet aPS1 = new PLPageSet (new PDRectangle (500, 800)).setID ("pageset")
+                                                                     .setMargin (100, fValue)
+                                                                     .setFillColor (Color.GREEN)
+                                                                     .setBorder (new BorderSpec (aGray));
     {
       final PLHBox aPageHeader = new PLHBox ().setID ("pageheader");
       aPageHeader.setMargin (fValue);

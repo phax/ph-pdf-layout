@@ -822,8 +822,8 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
 
       if (PLDebug.isDebugRender ())
         PLDebug.debugRender (this,
-                             "Border around: " + fLeft + "/" + fBottom + " - " + fRight + "/" + fTop + " (= " + fWidth +
-                                   "/" + fHeight + ") with width " + fLineWidth);
+                             "Border around " + PLDebug.getXYWH (fLeft, fTop, fWidth, fHeight) + " with line width " +
+                                   fLineWidth);
 
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
@@ -850,8 +850,8 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         if (PLDebug.isDebugRender ())
           PLDebug.debugRender (this,
-                               "Border top:    " + fLeft + "/" + fTop + " - " + fRight + "/" + fTop + " (= " + fWidth +
-                                     "/0) with width " + fTopWidth);
+                               "Border top " + PLDebug.getXYWH (fLeft, fTop, fWidth, 0) + " with line width " +
+                                     fTopWidth);
 
         final float fDelta = fTopWidth / 2f;
         aContentStream.setStrokingColor (aTop.getColor ());
@@ -864,8 +864,8 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         if (PLDebug.isDebugRender ())
           PLDebug.debugRender (this,
-                               "Border right:  " + fRight + "/" + fBottom + " - " + fRight + "/" + fTop + " (= 0/" +
-                                     fHeight + ") with width " + fRightWidth);
+                               "Border right " + PLDebug.getXYWH (fRight, fTop, 0, fHeight) + " with line width " +
+                                     fRightWidth);
 
         final float fDelta = fRightWidth / 2f;
         aContentStream.setStrokingColor (aRight.getColor ());
@@ -878,8 +878,8 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         if (PLDebug.isDebugRender ())
           PLDebug.debugRender (this,
-                               "Border bottom: " + fLeft + "/" + fBottom + " - " + fRight + "/" + fBottom + " (= " +
-                                     fWidth + "/0) with width " + fBottomWidth);
+                               "Border bottom " + PLDebug.getXYWH (fLeft, fBottom, fWidth, 0) + " with line width " +
+                                     fBottomWidth);
 
         final float fDelta = fBottomWidth / 2f;
         aContentStream.setStrokingColor (aBottom.getColor ());
@@ -892,8 +892,8 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         if (PLDebug.isDebugRender ())
           PLDebug.debugRender (this,
-                               "Border left:   " + fLeft + "/" + fBottom + " - " + fLeft + "/" + fTop + " (= 0/" +
-                                     fHeight + ") with width " + fLeftWidth);
+                               "Border left " + PLDebug.getXYWH (fLeft, fTop, 0, fHeight) + " with line width " +
+                                     fLeftWidth);
 
         final float fDelta = fLeftWidth / 2f;
         aContentStream.setStrokingColor (aLeft.getColor ());

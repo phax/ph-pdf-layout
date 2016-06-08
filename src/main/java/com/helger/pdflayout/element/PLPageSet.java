@@ -586,8 +586,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
       if (PLDebug.isDebugRender ())
         PLDebug.debugRender (this,
                              "Start rendering page index " + nPageIndex + " (" + (nTotalPageStartIndex + nPageIndex) +
-                                   ") with page size " + getPageWidth () + " & " + getPageHeight () +
-                                   " and available size " + getAvailableWidth () + " & " + getAvailableHeight ());
+                                   ") with page size " + PLDebug.getWH (getPageWidth (), getPageHeight ()) +
+                                   " and available size " +
+                                   PLDebug.getWH (getAvailableWidth (), getAvailableHeight ()));
 
       final RenderPageIndex aPageIndex = new RenderPageIndex (nPageSetIndex,
                                                               nPageIndex,

@@ -63,7 +63,7 @@ public final class PLDebug
 
   public static void debugText (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Text] " + aElement.getDebugID () + ": " + sMsg);
+    s_aLogger.info ("[Text] " + aElement.getDebugID () + " " + sMsg);
   }
 
   public static boolean isDebugFont ()
@@ -78,7 +78,7 @@ public final class PLDebug
 
   public static void debugFont (@Nonnull final String sFontID, final String sMsg)
   {
-    s_aLogger.info ("[Font] " + sFontID + ": " + sMsg);
+    s_aLogger.info ("[Font] " + sFontID + " " + sMsg);
   }
 
   public static boolean isDebugSplit ()
@@ -93,7 +93,7 @@ public final class PLDebug
 
   public static void debugSplit (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Splitting] " + aElement.getDebugID () + ": " + sMsg);
+    s_aLogger.info ("[Splitting] " + aElement.getDebugID () + " " + sMsg);
   }
 
   public static boolean isDebugPrepare ()
@@ -108,7 +108,7 @@ public final class PLDebug
 
   public static void debugPrepare (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Preparing] " + aElement.getDebugID () + ": " + sMsg);
+    s_aLogger.info ("[Preparing] " + aElement.getDebugID () + " " + sMsg);
   }
 
   public static boolean isDebugRender ()
@@ -123,7 +123,7 @@ public final class PLDebug
 
   public static void debugRender (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Rendering] " + aElement.getDebugID () + ": " + sMsg);
+    s_aLogger.info ("[Rendering] " + aElement.getDebugID () + " " + sMsg);
   }
 
   /**
@@ -139,5 +139,39 @@ public final class PLDebug
     setDebugSplit (bDebug);
     setDebugPrepare (bDebug);
     setDebugRender (bDebug);
+  }
+
+  @Nonnull
+  public static String getXY (final float fX, final float fY)
+  {
+    return "[" + fX + "/" + fY + "]";
+  }
+
+  @Nonnull
+  public static String getWH (final float fWidth, final float fHeight)
+  {
+    return fWidth + "/" + fHeight;
+  }
+
+  @Nonnull
+  public static String getXYWH (final float fLeft, final float fTop, final float fWidth, final float fHeight)
+  {
+    final float fRight = fLeft + fWidth;
+    final float fBottom = fTop - fHeight;
+    return getXY (fLeft, fBottom) + "-" + getXY (fRight, fTop) + " (=" + getWH (fWidth, fHeight) + ")";
+  }
+
+  @Nonnull
+  public static String getXMBP (final AbstractPLBaseElement <?> aElement)
+  {
+    return "[X-MBP: " + aElement.getMarginXSum () + "/" + aElement.getBorderXSumWidth () + "/" +
+           aElement.getPaddingXSum () + "=" + aElement.getFullXSum () + "]";
+  }
+
+  @Nonnull
+  public static String getYMBP (final AbstractPLBaseElement <?> aElement)
+  {
+    return "[Y-MBP: " + aElement.getMarginYSum () + "/" + aElement.getBorderYSumWidth () + "/" +
+           aElement.getPaddingYSum () + "=" + aElement.getFullYSum () + "]";
   }
 }

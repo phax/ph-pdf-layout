@@ -190,10 +190,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
 
     if (PLDebug.isDebugPrepare ())
       PLDebug.debugPrepare (this,
-                            "Prepared object: width=" + aPreparedSize.getWidth () + "+(" + getMarginXSum () + "+" +
-                                  getBorderXSumWidth () + "+" + getPaddingXSum () + "=" + getFullXSum () + ")" +
-                                  " & height=" + aPreparedSize.getHeight () + "+(" + getMarginYSum () + "+" +
-                                  getBorderYSumWidth () + "+" + getPaddingYSum () + "=" + getFullYSum () + ")");
+                            "Prepared object: " +
+                                  PLDebug.getWH (aPreparedSize.getWidth (), aPreparedSize.getHeight ()) + " with " +
+                                  PLDebug.getXMBP (this) + " and " + PLDebug.getYMBP (this));
   }
 
   /**
@@ -214,8 +213,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
 
     if (PLDebug.isDebugPrepare ())
       PLDebug.debugPrepare (this,
-                            "Preparing object for available width " + aCtx.getAvailableWidth () + "+" + getFullXSum () +
-                                  " and available height " + aCtx.getAvailableHeight () + "+" + getFullYSum ());
+                            "Preparing object for available " +
+                                  PLDebug.getWH (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ()) + " with " +
+                                  PLDebug.getXMBP (this) + " and " + PLDebug.getYMBP (this));
 
     // Do prepare
     final SizeSpec aOnPrepareResult = onPrepare (aCtx);
@@ -282,8 +282,11 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
 
     if (PLDebug.isDebugRender ())
       PLDebug.debugRender (this,
-                           "Rendering at " + aCtx.getStartLeft () + "/" + aCtx.getStartTop () + " for " +
-                                 m_aPreparedSize.getWidth () + "/" + m_aPreparedSize.getHeight ());
+                           "Rendering at " +
+                                 PLDebug.getXYWH (aCtx.getStartLeft (),
+                                                  aCtx.getStartTop (),
+                                                  m_aPreparedSize.getWidth (),
+                                                  m_aPreparedSize.getHeight ()));
 
     // Render border - debug: green
     {
