@@ -142,7 +142,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                             @Nonnull final AbstractPLElement <?> aElement,
                                             @Nonnull final WidthSpec aWidth)
   {
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     final PLHBoxColumn aItem = new PLHBoxColumn (aElement, aWidth);
     if (nIndex < 0 || nIndex >= m_aColumns.size ())
       m_aColumns.add (aItem);
@@ -157,7 +157,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public PLHBoxColumn addAndReturnColumn (@Nonnull final AbstractPLElement <?> aElement,
                                           @Nonnull final WidthSpec aWidth)
   {
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     return _addAndReturnColumn (-1, aElement, aWidth);
   }
 
@@ -174,7 +174,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                           @Nonnull final WidthSpec aWidth)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     return _addAndReturnColumn (nIndex, aElement, aWidth);
   }
 
@@ -191,7 +191,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public IMPLTYPE removeColumn (@Nonnegative final int nIndex)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     final PLHBoxColumn aColumn = m_aColumns.remove (nIndex);
     if (aColumn.getWidth ().isStar ())
       m_nStarWidthItems--;
@@ -260,7 +260,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public final IMPLTYPE setColumnBorder (@Nonnull final BorderSpec aBorder)
   {
     ValueEnforcer.notNull (aBorder, "ColumnBorder");
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     m_aColumnBorder = aBorder;
     return thisAsT ();
   }

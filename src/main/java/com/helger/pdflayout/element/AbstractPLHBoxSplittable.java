@@ -38,10 +38,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
   public boolean containsAnySplittableElement ()
   {
-    for (final PLHBoxColumn aColumn : m_aColumns)
-      if (aColumn.getElement ().isSplittable ())
-        return true;
-    return false;
+    return m_aColumns.containsAny (x -> x.getElement ().isSplittable ());
   }
 
   @Nullable
@@ -82,8 +79,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       if (PLDebug.isDebugSplit ())
         PLDebug.debugSplit (this,
                             "no need to split because all splittable elements easily fit into the available height (" +
-                                  fAvailableHeight +
-                                  ")");
+                                  fAvailableHeight + ")");
       return null;
     }
 
@@ -132,12 +128,8 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       {
         if (PLDebug.isDebugSplit ())
           PLDebug.debugSplit (this,
-                              "Trying to split " +
-                                    aColumnElement.getDebugID () +
-                                    " into pieces for remaining width " +
-                                    fColumnWidth +
-                                    " and height " +
-                                    fAvailableHeight);
+                              "Trying to split " + aColumnElement.getDebugID () + " into pieces for remaining size " +
+                                    PLDebug.getWH (fColumnWidth, fAvailableHeight));
 
         // Use width and height without padding and margin!
         final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ()
@@ -162,43 +154,22 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
           if (PLDebug.isDebugSplit ())
             PLDebug.debugSplit (this,
-                                "Split column element " +
-                                      aColumnElement.getDebugID () +
-                                      " (Column " +
-                                      nCol +
-                                      ") into pieces: " +
-                                      aHBox1Element.getDebugID () +
-                                      " (" +
-                                      aSplitResult.getFirstElement ().getWidth () +
-                                      "+" +
-                                      aHBox1Element.getFullXSum () +
-                                      " & " +
-                                      aSplitResult.getFirstElement ().getHeight () +
-                                      "+" +
-                                      aHBox1Element.getFullYSum () +
-                                      ") and " +
-                                      aHBox2Element.getDebugID () +
-                                      " (" +
-                                      aSplitResult.getSecondElement ().getWidth () +
-                                      "+" +
-                                      aHBox2Element.getFullXSum () +
-                                      " & " +
-                                      aSplitResult.getSecondElement ().getHeight () +
-                                      "+" +
-                                      aHBox2Element.getFullYSum () +
-                                      ") for available height " +
-                                      fAvailableHeight);
+                                "Split column element " + aColumnElement.getDebugID () + " (Column " + nCol +
+                                      ") into pieces: " + aHBox1Element.getDebugID () + " (" +
+                                      aSplitResult.getFirstElement ().getWidth () + "+" + aHBox1Element.getFullXSum () +
+                                      " & " + aSplitResult.getFirstElement ().getHeight () + "+" +
+                                      aHBox1Element.getFullYSum () + ") and " + aHBox2Element.getDebugID () + " (" +
+                                      aSplitResult.getSecondElement ().getWidth () + "+" +
+                                      aHBox2Element.getFullXSum () + " & " +
+                                      aSplitResult.getSecondElement ().getHeight () + "+" +
+                                      aHBox2Element.getFullYSum () + ") for available height " + fAvailableHeight);
         }
         else
         {
           if (PLDebug.isDebugSplit ())
             PLDebug.debugSplit (this,
-                                "Failed to split column element " +
-                                      aColumnElement.getDebugID () +
-                                      " (Column " +
-                                      nCol +
-                                      ") into pieces for available height " +
-                                      fAvailableHeight);
+                                "Failed to split column element " + aColumnElement.getDebugID () + " (Column " + nCol +
+                                      ") into pieces for available height " + fAvailableHeight);
         }
       }
 
@@ -211,28 +182,17 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
           {
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this,
-                                  "Column " +
-                                        nCol +
-                                        " contains splittable element " +
-                                        aColumnElement.getDebugID () +
-                                        " which creates an overflow by " +
-                                        (fColumnHeightFull - fAvailableHeight) +
-                                        " for available height " +
-                                        fAvailableHeight +
-                                        "!");
+                                  "Column " + nCol + " contains splittable element " + aColumnElement.getDebugID () +
+                                        " which creates an overflow by " + (fColumnHeightFull - fAvailableHeight) +
+                                        " for available height " + fAvailableHeight + "!");
           }
           else
           {
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this,
-                                  "Column " +
-                                        nCol +
-                                        " contains non splittable element " +
-                                        aColumnElement.getDebugID () +
-                                        " which creates an overflow by " +
-                                        (fColumnHeightFull - fAvailableHeight) +
-                                        " for max height " +
-                                        fAvailableHeight +
+                                  "Column " + nCol + " contains non splittable element " +
+                                        aColumnElement.getDebugID () + " which creates an overflow by " +
+                                        (fColumnHeightFull - fAvailableHeight) + " for max height " + fAvailableHeight +
                                         "!");
           }
 

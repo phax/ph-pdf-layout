@@ -129,10 +129,10 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
    *         if already prepared
    */
   @Override
-  protected final void checkNotPrepared ()
+  protected final void internlCheckNotPrepared ()
   {
     if (isPrepared ())
-      throw new IllegalStateException ("This object was already prepared and can therefore not be modified: " +
+      throw new IllegalStateException (getDebugID () + " was already prepared and can therefore not be modified: " +
                                        toString ());
   }
 
@@ -209,7 +209,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public final SizeSpec prepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
     // Prepare only once!
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
 
     if (PLDebug.isDebugPrepare ())
       PLDebug.debugPrepare (this,
@@ -239,7 +239,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   protected final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
   {
     // Prepare only once!
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
 
     _setPreparedSize (aPreparedSize);
     return thisAsT ();

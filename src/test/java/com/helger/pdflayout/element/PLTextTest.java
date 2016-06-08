@@ -69,7 +69,7 @@ public final class PLTextTest
     final StringBuilder aSB = new StringBuilder ();
     for (int i = 32; i <= 0x7e; ++i)
       aSB.append ((char) i);
-    aPS1.addElement (new PLText (aSB.toString (), r10));
+    aPS1.addElement (new PLText ("Chars 32-127: " + aSB.toString (), r10));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
@@ -170,8 +170,7 @@ public final class PLTextTest
     final PreloadFont aFont = PreloadFont.createEmbedding (com.helger.font.open_sans.EFontResource.OPEN_SANS_NORMAL.getFontResource ());
 
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
-                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
-                     "Tataa: €";
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" + "Tataa: €";
     final FontSpec r10 = new FontSpec (aFont, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
@@ -190,8 +189,7 @@ public final class PLTextTest
     final PreloadFont aFont = PreloadFont.createEmbedding (com.helger.font.lato2.EFontResource.LATO2_NORMAL.getFontResource ());
 
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
-                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
-                     "Tataa: €";
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" + "Tataa: €";
     final FontSpec r10 = new FontSpec (aFont, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);

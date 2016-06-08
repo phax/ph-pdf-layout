@@ -182,7 +182,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nonnull
   public PLVBoxRow addAndReturnRow (@Nonnull final AbstractPLElement <?> aElement)
   {
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     return _addAndReturnRow (-1, aElement);
   }
 
@@ -213,7 +213,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public PLVBoxRow addAndReturnRow (@Nonnegative final int nIndex, @Nonnull final AbstractPLElement <?> aElement)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     return _addAndReturnRow (nIndex, aElement);
   }
 
@@ -237,7 +237,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public IMPLTYPE removeRow (@Nonnegative final int nIndex)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     m_aRows.remove (nIndex);
     return thisAsT ();
   }
@@ -304,7 +304,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public final IMPLTYPE setRowBorder (@Nonnull final BorderSpec aRowBorder)
   {
     ValueEnforcer.notNull (aRowBorder, "RowBorder");
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     m_aRowBorder = aRowBorder;
     return thisAsT ();
   }

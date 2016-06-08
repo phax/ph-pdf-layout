@@ -132,7 +132,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
    *         if already prepared
    */
   @OverrideOnDemand
-  protected void checkNotPrepared ()
+  protected void internlCheckNotPrepared ()
   {}
 
   /**
@@ -200,7 +200,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public final IMPLTYPE setMargin (@Nonnull final MarginSpec aMargin)
   {
     ValueEnforcer.notNull (aMargin, "Mergin");
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     m_aMargin = aMargin;
     return thisAsT ();
   }
@@ -383,7 +383,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public final IMPLTYPE setPadding (@Nonnull final PaddingSpec aPadding)
   {
     ValueEnforcer.notNull (aPadding, "Padding");
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     m_aPadding = aPadding;
     return thisAsT ();
   }
@@ -569,7 +569,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public final IMPLTYPE setBorder (@Nonnull final BorderSpec aBorder)
   {
     ValueEnforcer.notNull (aBorder, "Border");
-    checkNotPrepared ();
+    internlCheckNotPrepared ();
     m_aBorder = aBorder;
     return thisAsT ();
   }
