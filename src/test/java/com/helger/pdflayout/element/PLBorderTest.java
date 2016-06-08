@@ -50,36 +50,62 @@ public final class PLBorderTest
     PLDebug.setDebugAll (true);
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
+    final BorderStyleSpec aTop = new BorderStyleSpec (Color.RED, 10);
+    final BorderStyleSpec aRight = new BorderStyleSpec (Color.BLUE, 10);
+    final BorderStyleSpec aBottom = new BorderStyleSpec (Color.MAGENTA, 10);
+    final BorderStyleSpec aLeft = new BorderStyleSpec (Color.CYAN, 10);
+    final BorderStyleSpec aAll = new BorderStyleSpec (Color.GRAY, 10);
+
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setID ("pageset")
                                                          .setMargin (0)
                                                          .setMarginTop (30)
-                                                         .setBorder (new BorderSpec (new BorderStyleSpec (Color.GREEN,
-                                                                                                          10)));
-    aPS1.addElement (new PLText ("Border top", r10).setID ("top").setBorderTop (new BorderStyleSpec (Color.RED, 10)));
-    aPS1.addElement (new PLText ("Border right", r10).setID ("right")
-                                                     .setBorderRight (new BorderStyleSpec (Color.BLUE, 10)));
-    aPS1.addElement (new PLText ("Border bottom", r10).setID ("bottom")
-                                                      .setBorderBottom (new BorderStyleSpec (Color.MAGENTA, 10)));
-    aPS1.addElement (new PLText ("Border left", r10).setID ("left")
-                                                    .setBorderLeft (new BorderStyleSpec (Color.CYAN, 10)));
+                                                         .setBorder (new BorderSpec (aAll));
+    aPS1.addElement (new PLText ("Border top", r10).setID ("top").setBorderTop (aTop));
+    aPS1.addElement (new PLText ("Border right", r10).setID ("right").setBorderRight (aRight));
+    aPS1.addElement (new PLText ("Border bottom", r10).setID ("bottom").setBorderBottom (aBottom));
+    aPS1.addElement (new PLText ("Border left", r10).setID ("left").setBorderLeft (aLeft));
     aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
-    aPS1.addElement (new PLText ("Border top left", r10).setID ("top left")
-                                                        .setBorderTop (new BorderStyleSpec (Color.RED, 10))
-                                                        .setBorderLeft (new BorderStyleSpec (Color.RED, 10)));
+    aPS1.addElement (new PLText ("Border top left", r10).setID ("top left").setBorderTop (aTop).setBorderLeft (aLeft));
     aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
     aPS1.addElement (new PLText ("Border top right", r10).setID ("top right")
-                                                         .setBorderTop (new BorderStyleSpec (Color.BLUE, 10))
-                                                         .setBorderRight (new BorderStyleSpec (Color.BLUE, 10)));
+                                                         .setBorderTop (aTop)
+                                                         .setBorderRight (aRight));
     aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
     aPS1.addElement (new PLText ("Border bottom right", r10).setID ("bottom right")
-                                                            .setBorderBottom (new BorderStyleSpec (Color.MAGENTA, 10))
-                                                            .setBorderRight (new BorderStyleSpec (Color.MAGENTA, 10)));
+                                                            .setBorderBottom (aBottom)
+                                                            .setBorderRight (aRight));
     aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
     aPS1.addElement (new PLText ("Border bottom left", r10).setID ("bottom left")
-                                                           .setBorderBottom (new BorderStyleSpec (Color.GREEN, 10))
-                                                           .setBorderLeft (new BorderStyleSpec (Color.GREEN, 10)));
+                                                           .setBorderBottom (aBottom)
+                                                           .setBorderLeft (aLeft));
     aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
-    aPS1.addElement (new PLText ("Border all", r10).setID ("all").setBorder (new BorderStyleSpec (Color.CYAN, 10)));
+    aPS1.addElement (new PLText ("Border top right left", r10).setID ("top right left")
+                                                              .setBorderTop (aTop)
+                                                              .setBorderRight (aRight)
+                                                              .setBorderLeft (aLeft));
+    aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
+    aPS1.addElement (new PLText ("Border right bottom left", r10).setID ("right bottom left")
+                                                                 .setBorderRight (aRight)
+                                                                 .setBorderBottom (aBottom)
+                                                                 .setBorderLeft (aLeft));
+    aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
+    aPS1.addElement (new PLText ("Border top right bottom", r10).setID ("top right bottom")
+                                                                .setBorderTop (aTop)
+                                                                .setBorderRight (aRight)
+                                                                .setBorderBottom (aBottom));
+    aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
+    aPS1.addElement (new PLText ("Border top bottom left", r10).setID ("top bottom left")
+                                                               .setBorderTop (aTop)
+                                                               .setBorderBottom (aBottom)
+                                                               .setBorderLeft (aLeft));
+    aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
+    aPS1.addElement (new PLText ("Border top right bottom left", r10).setID ("top right bottom left")
+                                                                     .setBorderTop (aTop)
+                                                                     .setBorderRight (aRight)
+                                                                     .setBorderBottom (aBottom)
+                                                                     .setBorderLeft (aLeft));
+    aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
+    aPS1.addElement (new PLText ("Border all", r10).setID ("all").setBorder (aAll));
 
     if (false)
       aPS1.addElement (new PLHBox ().setID ("hbox")

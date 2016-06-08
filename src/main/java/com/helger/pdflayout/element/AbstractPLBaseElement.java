@@ -820,12 +820,12 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       final BorderStyleSpec aAll = aBorder.getLeft ();
 
       // The border position must be in the middle of the line
-      fBorderTop -= aAll.getHalfLineWidth ();
-      fBorderRight -= aAll.getHalfLineWidth ();
-      fBorderBottom += aAll.getHalfLineWidth ();
-      fBorderLeft += aAll.getHalfLineWidth ();
-      fBorderWidth -= aAll.getLineWidth ();
-      fBorderHeight -= aAll.getLineWidth ();
+      fBorderTop += aAll.getHalfLineWidth ();
+      fBorderRight += aAll.getHalfLineWidth ();
+      fBorderBottom -= aAll.getHalfLineWidth ();
+      fBorderLeft -= aAll.getHalfLineWidth ();
+      fBorderWidth += aAll.getLineWidth ();
+      fBorderHeight += aAll.getLineWidth ();
 
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
@@ -840,41 +840,53 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       final BorderStyleSpec aRight = aBorder.getRight ();
       final BorderStyleSpec aBottom = aBorder.getBottom ();
       final BorderStyleSpec aLeft = aBorder.getLeft ();
+      final float fTopWidth = aTop == null ? 0 : aTop.getLineWidth ();
+      final float fRightWidth = aRight == null ? 0 : aRight.getLineWidth ();
+      final float fBottomWidth = aBottom == null ? 0 : aBottom.getLineWidth ();
+      final float fLeftWidth = aLeft == null ? 0 : aLeft.getLineWidth ();
 
       if (aTop != null)
       {
-        final float fDelta = aTop.getHalfLineWidth ();
+        final float fDelta = fTopWidth / 2f;
         aContentStream.setStrokingColor (aTop.getColor ());
         aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
         aContentStream.setLineWidth (aTop.getLineWidth ());
-        aContentStream.drawLine (fBorderLeft, fBorderTop + fDelta, fBorderRight, fBorderTop + fDelta);
+        aContentStream.drawLine (fBorderLeft, fBorderTop + fDelta, fBorderRight + fRightWidth, fBorderTop + fDelta);
       }
 
       if (aRight != null)
       {
-        final float fDelta = aRight.getHalfLineWidth ();
+        final float fDelta = fRightWidth / 2f;
         aContentStream.setStrokingColor (aRight.getColor ());
         aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
         aContentStream.setLineWidth (aRight.getLineWidth ());
-        aContentStream.drawLine (fBorderRight + fDelta, fBorderTop, fBorderRight + fDelta, fBorderBottom);
+        aContentStream.drawLine (fBorderRight +
+                                 fDelta,
+                                 fBorderTop,
+                                 fBorderRight + fDelta,
+                                 fBorderBottom - fBottomWidth);
       }
 
       if (aBottom != null)
       {
-        final float fDelta = aBottom.getHalfLineWidth ();
+        final float fDelta = fBottomWidth / 2f;
         aContentStream.setStrokingColor (aBottom.getColor ());
         aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
         aContentStream.setLineWidth (aBottom.getLineWidth ());
-        aContentStream.drawLine (fBorderLeft, fBorderBottom - fDelta, fBorderRight, fBorderBottom - fDelta);
+        aContentStream.drawLine (fBorderLeft -
+                                 fLeftWidth,
+                                 fBorderBottom - fDelta,
+                                 fBorderRight,
+                                 fBorderBottom - fDelta);
       }
 
       if (aLeft != null)
       {
-        final float fDelta = aLeft.getHalfLineWidth ();
+        final float fDelta = fLeftWidth / 2f;
         aContentStream.setStrokingColor (aLeft.getColor ());
         aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
         aContentStream.setLineWidth (aLeft.getLineWidth ());
-        aContentStream.drawLine (fBorderLeft - fDelta, fBorderTop, fBorderLeft - fDelta, fBorderBottom);
+        aContentStream.drawLine (fBorderLeft - fDelta, fBorderTop + fTopWidth, fBorderLeft - fDelta, fBorderBottom);
       }
     }
   }
