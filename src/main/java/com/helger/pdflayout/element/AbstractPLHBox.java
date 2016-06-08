@@ -452,9 +452,9 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           }
           if (fPaddingTop != 0f)
           {
-            aElement.markAsNotPrepared ();
+            aElement.internalMarkAsNotPrepared ();
             aElement.setPaddingTop (aElement.getPaddingTop () + fPaddingTop);
-            aElement.markAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex],
+            aElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex],
                                                    m_aPreparedColumnHeight[nIndex] + fPaddingTop));
           }
         }

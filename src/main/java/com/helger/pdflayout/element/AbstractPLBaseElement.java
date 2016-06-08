@@ -621,32 +621,80 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     return m_aBorder;
   }
 
-  public float getMarginAndBorderFullTop ()
+  /**
+   * @return The current top border.
+   */
+  public final float getBorderTopWidth ()
+  {
+    return m_aBorder.getTopWidth ();
+  }
+
+  /**
+   * @return The current right border.
+   */
+  public final float getBorderRightWidth ()
+  {
+    return m_aBorder.getRightWidth ();
+  }
+
+  /**
+   * @return The current bottom border.
+   */
+  public final float getBorderBottomWidth ()
+  {
+    return m_aBorder.getBottomWidth ();
+  }
+
+  /**
+   * @return The current left border.
+   */
+  public final float getBorderLeftWidth ()
+  {
+    return m_aBorder.getLeftWidth ();
+  }
+
+  /**
+   * @return The sum of left and right border.
+   */
+  public final float getBorderXSumWidth ()
+  {
+    return m_aBorder.getXSumWidth ();
+  }
+
+  /**
+   * @return The sum of top and bottom border.
+   */
+  public final float getBorderYSumWidth ()
+  {
+    return m_aBorder.getYSumWidth ();
+  }
+
+  public float getMarginAndBorderTop ()
   {
     return m_aMargin.getTop () + m_aBorder.getTopWidth ();
   }
 
-  public float getMarginAndBorderFullRight ()
+  public float getMarginAndBorderRight ()
   {
     return m_aMargin.getRight () + m_aBorder.getRightWidth ();
   }
 
-  public float getMarginAndBorderFullBottom ()
+  public float getMarginAndBorderBottom ()
   {
     return m_aMargin.getBottom () + m_aBorder.getBottomWidth ();
   }
 
-  public float getMarginAndBorderFullLeft ()
+  public float getMarginAndBorderLeft ()
   {
     return m_aMargin.getLeft () + m_aBorder.getLeftWidth ();
   }
 
-  public float getMarginAndBorderFullXSum ()
+  public float getMarginAndBorderXSum ()
   {
     return m_aMargin.getXSum () + m_aBorder.getXSumWidth ();
   }
 
-  public float getMarginAndBorderFullYSum ()
+  public float getMarginAndBorderYSum ()
   {
     return m_aMargin.getYSum () + m_aBorder.getYSumWidth ();
   }
@@ -743,72 +791,90 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
                                final float fHeight,
                                @Nonnull final BorderSpec aBorder) throws IOException
   {
-    final float fRight = fLeft + fWidth;
-    final float fBottom = fTop - fHeight;
+    float fBorderTop = fTop;
+    float fBorderRight = fLeft + fWidth;
+    float fBorderBottom = fTop - fHeight;
+    float fBorderLeft = fLeft;
+    float fBorderWidth = fWidth;
+    float fBorderHeight = fHeight;
 
     if (PLDebug.isDebugRender ())
       PLDebug.debugRender (this,
                            "Border: " +
-                                 fLeft +
+                                 fBorderLeft +
                                  "/" +
-                                 fBottom +
+                                 fBorderBottom +
                                  " - " +
-                                 fRight +
+                                 fBorderRight +
                                  "/" +
-                                 fTop +
+                                 fBorderTop +
                                  " (= " +
-                                 fWidth +
+                                 fBorderWidth +
                                  "/" +
-                                 fHeight +
+                                 fBorderHeight +
                                  ")");
 
     if (aBorder.hasAllBorders () && aBorder.areAllBordersEqual ())
     {
       // draw full rect
       final BorderStyleSpec aAll = aBorder.getLeft ();
+
+      // The border position must be in the middle of the line
+      fBorderTop -= aAll.getHalfLineWidth ();
+      fBorderRight -= aAll.getHalfLineWidth ();
+      fBorderBottom += aAll.getHalfLineWidth ();
+      fBorderLeft += aAll.getHalfLineWidth ();
+      fBorderWidth -= aAll.getLineWidth ();
+      fBorderHeight -= aAll.getLineWidth ();
+
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
       aContentStream.setLineWidth (aAll.getLineWidth ());
-      aContentStream.addRect (fLeft, fBottom, fWidth, fHeight);
+      aContentStream.addRect (fBorderLeft, fBorderBottom, fBorderWidth, fBorderHeight);
       aContentStream.stroke ();
     }
     else
     {
       // partially
       final BorderStyleSpec aTop = aBorder.getTop ();
+      final BorderStyleSpec aRight = aBorder.getRight ();
+      final BorderStyleSpec aBottom = aBorder.getBottom ();
+      final BorderStyleSpec aLeft = aBorder.getLeft ();
+
       if (aTop != null)
       {
+        final float fDelta = aTop.getHalfLineWidth ();
         aContentStream.setStrokingColor (aTop.getColor ());
         aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
         aContentStream.setLineWidth (aTop.getLineWidth ());
-        aContentStream.drawLine (fLeft, fTop, fRight, fTop);
+        aContentStream.drawLine (fBorderLeft, fBorderTop + fDelta, fBorderRight, fBorderTop + fDelta);
       }
 
-      final BorderStyleSpec aRight = aBorder.getRight ();
       if (aRight != null)
       {
+        final float fDelta = aRight.getHalfLineWidth ();
         aContentStream.setStrokingColor (aRight.getColor ());
         aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
         aContentStream.setLineWidth (aRight.getLineWidth ());
-        aContentStream.drawLine (fRight, fTop, fRight, fBottom);
+        aContentStream.drawLine (fBorderRight + fDelta, fBorderTop, fBorderRight + fDelta, fBorderBottom);
       }
 
-      final BorderStyleSpec aBottom = aBorder.getBottom ();
       if (aBottom != null)
       {
+        final float fDelta = aBottom.getHalfLineWidth ();
         aContentStream.setStrokingColor (aBottom.getColor ());
         aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
         aContentStream.setLineWidth (aBottom.getLineWidth ());
-        aContentStream.drawLine (fLeft, fBottom, fRight, fBottom);
+        aContentStream.drawLine (fBorderLeft, fBorderBottom - fDelta, fBorderRight, fBorderBottom - fDelta);
       }
 
-      final BorderStyleSpec aLeft = aBorder.getLeft ();
       if (aLeft != null)
       {
+        final float fDelta = aLeft.getHalfLineWidth ();
         aContentStream.setStrokingColor (aLeft.getColor ());
         aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
         aContentStream.setLineWidth (aLeft.getLineWidth ());
-        aContentStream.drawLine (fLeft, fTop, fLeft, fBottom);
+        aContentStream.drawLine (fBorderLeft - fDelta, fBorderTop, fBorderLeft - fDelta, fBorderBottom);
       }
     }
   }

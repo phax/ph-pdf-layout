@@ -81,7 +81,7 @@ public class PLPageBreak extends AbstractPLElement <PLPageBreak>
   public static PLPageBreak createPreparedPageBreak ()
   {
     final PLPageBreak ret = new PLPageBreak (false);
-    ret.markAsPrepared (SizeSpec.SIZE0);
+    ret.internalMarkAsPrepared (SizeSpec.SIZE0);
     return ret;
   }
 }

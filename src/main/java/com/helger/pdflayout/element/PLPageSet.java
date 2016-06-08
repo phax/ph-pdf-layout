@@ -521,10 +521,10 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
           if (fPaddingTop != 0f)
           {
             final SizeSpec aOldSize = aElement.getPreparedSize ();
-            aElement.markAsNotPrepared ();
+            aElement.internalMarkAsNotPrepared ();
             aElement.setPaddingTop (aElement.getPaddingTop () + fPaddingTop);
             final SizeSpec aNewSize = new SizeSpec (aOldSize.getWidth (), aOldSize.getHeight () + fPaddingTop);
-            aElement.markAsPrepared (aNewSize);
+            aElement.internalMarkAsPrepared (aNewSize);
             aElementWithSize = new PLElementWithSize (aElement, aNewSize);
           }
         }
@@ -546,7 +546,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
           final ICommonsList <String> aLastPageContent = new CommonsArrayList <> ();
           for (final PLElementWithSize aCurElement : aCurPageElements)
             aLastPageContent.add (aCurElement.getElement ().getDebugID ());
-          PLDebug.debugPrepare (this, "Finished last page with: " + StringHelper.getImploded (aLastPageContent));
+          PLDebug.debugPrepare (this, "Finished last page with: " + StringHelper.getImploded (", ", aLastPageContent));
         }
       }
     }
@@ -677,14 +677,16 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
           final AbstractPLElement <?> aElement = aElementWithHeight.getElement ();
           // Get element height
           final float fThisHeight = aElementWithHeight.getHeight ();
-          final float fThisHeightWithPadding = fThisHeight + aElement.getPaddingYSum ();
+          final float fThisHeightWithPadding = fThisHeight +
+                                               aElement.getBorderYSumWidth () +
+                                               aElement.getPaddingYSum ();
 
           final RenderingContext aRC = new RenderingContext (ERenderingElementType.CONTENT_ELEMENT,
                                                              aContentStream,
                                                              bDebug,
-                                                             fXLeft + aElement.getMarginLeft (),
-                                                             fCurY - aElement.getMarginTop (),
-                                                             getAvailableWidth () - aElement.getMarginXSum (),
+                                                             fXLeft + aElement.getMarginAndBorderLeft (),
+                                                             fCurY - aElement.getMarginAndBorderTop (),
+                                                             getAvailableWidth () - aElement.getMarginAndBorderXSum (),
                                                              fThisHeightWithPadding);
           aPageIndex.setPlaceholdersInRenderingContext (aRC);
           if (m_aRCCustomizer != null)

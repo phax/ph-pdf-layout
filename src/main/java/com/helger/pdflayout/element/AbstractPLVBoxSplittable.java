@@ -249,11 +249,11 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     }
 
     // Excluding padding/margin
-    aVBox1.markAsPrepared (new SizeSpec (fElementWidth, fUsedVBox1HeightFull));
+    aVBox1.internalMarkAsPrepared (new SizeSpec (fElementWidth, fUsedVBox1HeightFull));
     aVBox1.m_aPreparedRowElementWidth = _getAsArray (aVBox1RowWidth);
     aVBox1.m_aPreparedRowElementHeight = _getAsArray (aVBox1RowHeight);
 
-    aVBox2.markAsPrepared (new SizeSpec (fElementWidth, fUsedVBox2HeightFull));
+    aVBox2.internalMarkAsPrepared (new SizeSpec (fElementWidth, fUsedVBox2HeightFull));
     aVBox2.m_aPreparedRowElementWidth = _getAsArray (aVBox2RowWidth);
     aVBox2.m_aPreparedRowElementHeight = _getAsArray (aVBox2RowHeight);
 

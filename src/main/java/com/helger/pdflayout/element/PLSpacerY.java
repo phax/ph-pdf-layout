@@ -82,7 +82,7 @@ public class PLSpacerY extends AbstractPLElement <PLSpacerY>
   public static PLSpacerY createPrepared (final float fWidth, final float fHeight)
   {
     final PLSpacerY ret = new PLSpacerY (fHeight);
-    ret.markAsPrepared (new SizeSpec (fWidth, fHeight));
+    ret.internalMarkAsPrepared (new SizeSpec (fWidth, fHeight));
     return ret;
   }
 }

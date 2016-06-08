@@ -104,7 +104,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       final PLSpacerX aEmptyElement = new PLSpacerX ();
       aEmptyElement.setPadding (aColumnElement.getPadding ());
       aEmptyElement.setMargin (aColumnElement.getMargin ());
-      aEmptyElement.markAsPrepared (new SizeSpec (m_aPreparedColumnWidth[i], 0));
+      aEmptyElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnWidth[i], 0));
 
       aHBox1.addColumn (aEmptyElement, aColumnWidth);
       aHBox2.addColumn (aEmptyElement, aColumnWidth);
@@ -264,8 +264,8 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
     }
 
     // mark new hboxes as prepared
-    aHBox1.markAsPrepared (new SizeSpec (fElementWidth, fHBox1MaxHeight));
-    aHBox2.markAsPrepared (new SizeSpec (fElementWidth, fHBox2MaxHeight));
+    aHBox1.internalMarkAsPrepared (new SizeSpec (fElementWidth, fHBox1MaxHeight));
+    aHBox2.internalMarkAsPrepared (new SizeSpec (fElementWidth, fHBox2MaxHeight));
     // reuse prepared widths - nothing changed here
     aHBox1.m_aPreparedColumnWidth = ArrayHelper.getCopy (m_aPreparedColumnWidth);
     aHBox2.m_aPreparedColumnWidth = ArrayHelper.getCopy (m_aPreparedColumnWidth);

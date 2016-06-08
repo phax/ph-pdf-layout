@@ -413,7 +413,7 @@ public class PLText extends AbstractPLElement <PLText>
     final String sTextContent = TextAndWidthSpec.getAsText (aLineCopy);
     final PLText aNewText = bSplittableCopy ? new PLTextSplittable (sTextContent, getFontSpec ())
                                             : new PLText (sTextContent, getFontSpec ());
-    aNewText.setBasicDataFrom (this).markAsPrepared (aSize);
+    aNewText.setBasicDataFrom (this).internalMarkAsPrepared (aSize);
     aNewText.internalSetPreparedLines (aLineCopy);
     aNewText.internalSetPreparedFontData (m_aLoadedFont, m_fLineHeight);
 

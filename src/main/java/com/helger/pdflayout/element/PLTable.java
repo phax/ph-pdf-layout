@@ -434,11 +434,11 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
     }
 
     // Excluding padding/margin
-    aTable1.markAsPrepared (new SizeSpec (fElementWidth, fUsedTable1HeightFull));
+    aTable1.internalMarkAsPrepared (new SizeSpec (fElementWidth, fUsedTable1HeightFull));
     aTable1.m_aPreparedRowElementWidth = _getAsArray (aTable1RowWidth);
     aTable1.m_aPreparedRowElementHeight = _getAsArray (aTable1RowHeight);
 
-    aTable2.markAsPrepared (new SizeSpec (fElementWidth, fUsedTable2HeightFull));
+    aTable2.internalMarkAsPrepared (new SizeSpec (fElementWidth, fUsedTable2HeightFull));
     aTable2.m_aPreparedRowElementWidth = _getAsArray (aTable2RowWidth);
     aTable2.m_aPreparedRowElementHeight = _getAsArray (aTable2RowHeight);
 

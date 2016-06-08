@@ -49,7 +49,7 @@ public class PLSpacerX extends AbstractPLElement <PLSpacerX>
   public static PLSpacerX createPrepared (final float fWidth)
   {
     final PLSpacerX ret = new PLSpacerX ();
-    ret.markAsPrepared (new SizeSpec (fWidth, 0));
+    ret.internalMarkAsPrepared (new SizeSpec (fWidth, 0));
     return ret;
   }
 }

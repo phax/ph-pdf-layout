@@ -118,6 +118,12 @@ public class BorderStyleSpec
     return PLConfig.ALLOW_BORDER_WIDTH ? m_fLineWidth : 0;
   }
 
+  @Nonnegative
+  public float getHalfLineWidth ()
+  {
+    return getLineWidth () / 2f;
+  }
+
   @Override
   public boolean equals (final Object o)
   {

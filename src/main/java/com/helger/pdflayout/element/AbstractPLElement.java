@@ -205,8 +205,8 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
    *
    * @param aCtx
    *        The preparation context
-   * @return The net size of the rendered object without padding or margin. May
-   *         not be <code>null</code>.
+   * @return The net size of the rendered object without margin, border and
+   *         margin. May not be <code>null</code>.
    * @throws IOException
    *         if already prepared
    */
@@ -234,7 +234,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     return m_aPreparedSize;
   }
 
-  protected final void markAsNotPrepared ()
+  protected final void internalMarkAsNotPrepared ()
   {
     m_aPreparedSize = null;
     m_bPrepared = false;
@@ -246,7 +246,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
    * @return this
    */
   @Nonnull
-  protected final IMPLTYPE markAsPrepared (@Nonnull final SizeSpec aPreparedSize)
+  protected final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
   {
     // Prepare only once!
     checkNotPrepared ();
