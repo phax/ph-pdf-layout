@@ -56,7 +56,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
+  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
   private int m_nStarWidthItems = 0;
   private BorderSpec m_aColumnBorder = BorderSpec.BORDER0;
   private Color m_aColumnFillColor = null;
@@ -229,7 +229,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   /**
    * Set the border around each contained column.
-   * 
+   *
    * @param aBorderTop
    *        The border to set for top. Maybe <code>null</code>.
    * @param aBorderRight
@@ -382,13 +382,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         // Full width of this element
         final float fItemWidthFull = aColumn.getWidth ().getEffectiveValue (fAvailableWidth);
         // Effective content width of this element
-        final float fItemWidth = fItemWidthFull - aElement.getMarginPlusPaddingXSum ();
+        final float fItemWidth = fItemWidthFull - aElement.getFullXSum ();
         // Prepare child element
         final float fItemHeight = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                             fItemWidth,
                                                                             fAvailableHeight))
                                           .getHeight ();
-        final float fItemHeightFull = fItemHeight + aElement.getMarginPlusPaddingYSum ();
+        final float fItemHeightFull = fItemHeight + aElement.getFullYSum ();
         // Update used width and height
         fUsedWidth += fItemWidthFull;
         fRestWidth -= fItemWidthFull;
@@ -409,13 +409,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         // Full width of this element
         final float fItemWidthFull = fRestWidth / m_nStarWidthItems;
         // Effective content width of this element
-        final float fItemWidth = fItemWidthFull - aElement.getMarginPlusPaddingXSum ();
+        final float fItemWidth = fItemWidthFull - aElement.getFullXSum ();
         // Prepare child element
         final float fItemHeight = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                             fItemWidth,
                                                                             fAvailableHeight))
                                           .getHeight ();
-        final float fItemHeightFull = fItemHeight + aElement.getMarginPlusPaddingYSum ();
+        final float fItemHeightFull = fItemHeight + aElement.getFullYSum ();
         // Update used width and height
         fUsedWidth += fItemWidthFull;
         fUsedHeight = Math.max (fUsedHeight, fItemHeightFull);
@@ -442,10 +442,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
               fPaddingTop = 0f;
               break;
             case MIDDLE:
-              fPaddingTop = (fUsedHeight - aElement.getMarginPlusPaddingYSum () - m_aPreparedColumnHeight[nIndex]) / 2;
+              fPaddingTop = (fUsedHeight - aElement.getFullYSum () - m_aPreparedColumnHeight[nIndex]) / 2;
               break;
             case BOTTOM:
-              fPaddingTop = fUsedHeight - aElement.getMarginPlusPaddingYSum () - m_aPreparedColumnHeight[nIndex];
+              fPaddingTop = fUsedHeight - aElement.getFullYSum () - m_aPreparedColumnHeight[nIndex];
               break;
             default:
               throw new IllegalStateException ("Unsupported vertical alignment: " + eVertAlignment);

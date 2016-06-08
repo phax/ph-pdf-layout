@@ -193,11 +193,11 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
                             "Prepared object: width=" +
                                   aPreparedSize.getWidth () +
                                   "+" +
-                                  getMarginPlusPaddingXSum () +
+                                  getFullXSum () +
                                   " & height=" +
                                   aPreparedSize.getHeight () +
                                   "+" +
-                                  getMarginPlusPaddingYSum ());
+                                  getFullYSum ());
   }
 
   /**
@@ -221,11 +221,11 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
                             "Preparing object for available width " +
                                   aCtx.getAvailableWidth () +
                                   "+" +
-                                  getMarginPlusPaddingXSum () +
+                                  getFullXSum () +
                                   " and available height " +
                                   aCtx.getAvailableHeight () +
                                   "+" +
-                                  getMarginPlusPaddingYSum ());
+                                  getFullYSum ());
 
     // Do prepare
     final SizeSpec aOnPrepareResult = onPrepare (aCtx);

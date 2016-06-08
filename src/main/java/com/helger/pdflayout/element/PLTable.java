@@ -274,9 +274,9 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
       aTable2.addRow (aHeaderRowElement);
 
       final float fRowWidth = m_aPreparedRowElementWidth[nRow];
-      final float fRowWidthFull = fRowWidth + aHeaderRowElement.getMarginPlusPaddingXSum ();
+      final float fRowWidthFull = fRowWidth + aHeaderRowElement.getFullXSum ();
       final float fRowHeight = m_aPreparedRowElementHeight[nRow];
-      final float fRowHeightFull = fRowHeight + aHeaderRowElement.getMarginPlusPaddingYSum ();
+      final float fRowHeightFull = fRowHeight + aHeaderRowElement.getFullYSum ();
 
       fUsedTable1Width = Math.max (fUsedTable1Width, fRowWidth);
       fUsedTable1WidthFull = Math.max (fUsedTable1WidthFull, fRowWidthFull);
@@ -300,9 +300,9 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
     {
       final AbstractPLElement <?> aRowElement = getRowElementAtIndex (nRow);
       final float fRowWidth = m_aPreparedRowElementWidth[nRow];
-      final float fRowWidthFull = fRowWidth + aRowElement.getMarginPlusPaddingXSum ();
+      final float fRowWidthFull = fRowWidth + aRowElement.getFullXSum ();
       final float fRowHeight = m_aPreparedRowElementHeight[nRow];
-      final float fRowHeightFull = fRowHeight + aRowElement.getMarginPlusPaddingYSum ();
+      final float fRowHeightFull = fRowHeight + aRowElement.getFullYSum ();
 
       if (bOnTable1)
       {
@@ -332,7 +332,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
             final float fAvailableSplitWidth = fWidth;
             final float fAvailableSplitHeight = fAvailableHeight -
                                                 fUsedTable1HeightFull -
-                                                aRowElement.getMarginPlusPaddingYSum ();
+                                                aRowElement.getFullYSum ();
 
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this,
@@ -356,7 +356,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
               fUsedTable1WidthFull = fWidthFull;
               final float fTable1RowHeight = aSplitResult.getFirstElement ().getHeight ();
               fUsedTable1Height += fTable1RowHeight;
-              fUsedTable1HeightFull += fTable1RowHeight + aTable1RowElement.getMarginPlusPaddingYSum ();
+              fUsedTable1HeightFull += fTable1RowHeight + aTable1RowElement.getFullYSum ();
               aTable1RowWidth.add (Float.valueOf (fWidth));
               aTable1RowHeight.add (Float.valueOf (fTable1RowHeight));
 
@@ -364,7 +364,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
               aTable2.addRow (aTable2RowElement);
               fUsedTable2Width = fWidth;
               final float fTable2RowHeight = aSplitResult.getSecondElement ().getHeight ();
-              final float fTable2RowHeightFull = fTable2RowHeight + aTable2RowElement.getMarginPlusPaddingYSum ();
+              final float fTable2RowHeightFull = fTable2RowHeight + aTable2RowElement.getFullYSum ();
               fUsedTable2Height += fTable2RowHeight;
               fUsedTable2HeightFull += fTable2RowHeightFull;
               aTable2RowWidth.add (Float.valueOf (fWidth));

@@ -31,6 +31,7 @@ import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.traits.IGenericImplTrait;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
@@ -482,36 +483,6 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     return m_aPadding.getYSum ();
   }
 
-  public float getMarginPlusPaddingTop ()
-  {
-    return m_aMargin.getTop () + m_aBorder.getTopWidth () + m_aPadding.getTop ();
-  }
-
-  public float getMarginPlusPaddingRight ()
-  {
-    return m_aMargin.getRight () + m_aBorder.getRightWidth () + m_aPadding.getRight ();
-  }
-
-  public float getMarginPlusPaddingBottom ()
-  {
-    return m_aMargin.getBottom () + m_aBorder.getBottomWidth () + m_aPadding.getBottom ();
-  }
-
-  public float getMarginPlusPaddingLeft ()
-  {
-    return m_aMargin.getLeft () + m_aBorder.getLeftWidth () + m_aPadding.getLeft ();
-  }
-
-  public float getMarginPlusPaddingXSum ()
-  {
-    return m_aMargin.getXSum () + m_aBorder.getXSumWidth () + m_aPadding.getXSum ();
-  }
-
-  public float getMarginPlusPaddingYSum ()
-  {
-    return m_aMargin.getYSum () + m_aBorder.getYSumWidth () + m_aPadding.getYSum ();
-  }
-
   /**
    * Set all border values (left, top, right, bottom) to the same value. This
    * method may not be called after an element got prepared!
@@ -650,6 +621,66 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     return m_aBorder;
   }
 
+  public float getMarginAndBorderFullTop ()
+  {
+    return m_aMargin.getTop () + m_aBorder.getTopWidth ();
+  }
+
+  public float getMarginAndBorderFullRight ()
+  {
+    return m_aMargin.getRight () + m_aBorder.getRightWidth ();
+  }
+
+  public float getMarginAndBorderFullBottom ()
+  {
+    return m_aMargin.getBottom () + m_aBorder.getBottomWidth ();
+  }
+
+  public float getMarginAndBorderFullLeft ()
+  {
+    return m_aMargin.getLeft () + m_aBorder.getLeftWidth ();
+  }
+
+  public float getMarginAndBorderFullXSum ()
+  {
+    return m_aMargin.getXSum () + m_aBorder.getXSumWidth ();
+  }
+
+  public float getMarginAndBorderFullYSum ()
+  {
+    return m_aMargin.getYSum () + m_aBorder.getYSumWidth ();
+  }
+
+  public float getFullTop ()
+  {
+    return m_aMargin.getTop () + m_aBorder.getTopWidth () + m_aPadding.getTop ();
+  }
+
+  public float getFullRight ()
+  {
+    return m_aMargin.getRight () + m_aBorder.getRightWidth () + m_aPadding.getRight ();
+  }
+
+  public float getFullBottom ()
+  {
+    return m_aMargin.getBottom () + m_aBorder.getBottomWidth () + m_aPadding.getBottom ();
+  }
+
+  public float getFullLeft ()
+  {
+    return m_aMargin.getLeft () + m_aBorder.getLeftWidth () + m_aPadding.getLeft ();
+  }
+
+  public float getFullXSum ()
+  {
+    return m_aMargin.getXSum () + m_aBorder.getXSumWidth () + m_aPadding.getXSum ();
+  }
+
+  public float getFullYSum ()
+  {
+    return m_aMargin.getYSum () + m_aBorder.getYSumWidth () + m_aPadding.getYSum ();
+  }
+
   /**
    * Set the element fill color.
    *
@@ -705,18 +736,31 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
    * @throws IOException
    *         In case of a PDFBox error
    */
-  protected static void renderBorder (@Nonnull final PDPageContentStreamWithCache aContentStream,
-                                      final float fLeft,
-                                      final float fTop,
-                                      final float fWidth,
-                                      final float fHeight,
-                                      @Nonnull final BorderSpec aBorder) throws IOException
+  protected void renderBorder (@Nonnull final PDPageContentStreamWithCache aContentStream,
+                               final float fLeft,
+                               final float fTop,
+                               final float fWidth,
+                               final float fHeight,
+                               @Nonnull final BorderSpec aBorder) throws IOException
   {
     final float fRight = fLeft + fWidth;
     final float fBottom = fTop - fHeight;
 
-    if (false)
-      System.out.println (fLeft + "/" + fBottom + " - " + fRight + "/" + fTop + " (= " + fWidth + "/" + fHeight + ")");
+    if (PLDebug.isDebugRender ())
+      PLDebug.debugRender (this,
+                           "Border: " +
+                                 fLeft +
+                                 "/" +
+                                 fBottom +
+                                 " - " +
+                                 fRight +
+                                 "/" +
+                                 fTop +
+                                 " (= " +
+                                 fWidth +
+                                 "/" +
+                                 fHeight +
+                                 ")");
 
     if (aBorder.hasAllBorders () && aBorder.areAllBordersEqual ())
     {

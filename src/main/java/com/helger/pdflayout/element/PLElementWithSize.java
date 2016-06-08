@@ -48,8 +48,8 @@ public final class PLElementWithSize
     m_aElement = aElement;
     m_aSize = aSize;
     m_aSizeFull = new SizeSpec (aSize.getWidth () +
-                                aElement.getMarginPlusPaddingXSum (),
-                                aSize.getHeight () + aElement.getMarginPlusPaddingYSum ());
+                                aElement.getFullXSum (),
+                                aSize.getHeight () + aElement.getFullYSum ());
   }
 
   /**

@@ -67,7 +67,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       final AbstractPLElement <?> aColumnElement = getColumnElementAtIndex (i);
       if (aColumnElement.isSplittable ())
       {
-        final float fColumnHeightFull = m_aPreparedColumnHeight[i] + aColumnElement.getMarginPlusPaddingYSum ();
+        final float fColumnHeightFull = m_aPreparedColumnHeight[i] + aColumnElement.getFullYSum ();
         if (fColumnHeightFull > fAvailableHeight)
         {
           bAnySplittingPossible = true;
@@ -123,9 +123,9 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       final boolean bIsSplittable = aColumnElement.isSplittable ();
       final float fColumnWidth = m_aPreparedColumnWidth[nCol];
       @SuppressWarnings ("unused")
-      final float fColumnWidthFull = fColumnWidth + aColumnElement.getMarginPlusPaddingXSum ();
+      final float fColumnWidthFull = fColumnWidth + aColumnElement.getFullXSum ();
       final float fColumnHeight = m_aPreparedColumnHeight[nCol];
-      final float fColumnHeightFull = fColumnHeight + aColumnElement.getMarginPlusPaddingYSum ();
+      final float fColumnHeightFull = fColumnHeight + aColumnElement.getFullYSum ();
 
       boolean bDidSplitColumn = false;
       if (fColumnHeightFull > fAvailableHeight && bIsSplittable)
@@ -143,7 +143,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
         final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ()
                                                          .splitElements (fColumnWidth,
                                                                          fAvailableHeight -
-                                                                                       aColumnElement.getMarginPlusPaddingYSum ());
+                                                                                       aColumnElement.getFullYSum ());
 
         if (aSplitResult != null)
         {
@@ -171,21 +171,21 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
                                       " (" +
                                       aSplitResult.getFirstElement ().getWidth () +
                                       "+" +
-                                      aHBox1Element.getMarginPlusPaddingXSum () +
+                                      aHBox1Element.getFullXSum () +
                                       " & " +
                                       aSplitResult.getFirstElement ().getHeight () +
                                       "+" +
-                                      aHBox1Element.getMarginPlusPaddingYSum () +
+                                      aHBox1Element.getFullYSum () +
                                       ") and " +
                                       aHBox2Element.getDebugID () +
                                       " (" +
                                       aSplitResult.getSecondElement ().getWidth () +
                                       "+" +
-                                      aHBox2Element.getMarginPlusPaddingXSum () +
+                                      aHBox2Element.getFullXSum () +
                                       " & " +
                                       aSplitResult.getSecondElement ().getHeight () +
                                       "+" +
-                                      aHBox2Element.getMarginPlusPaddingYSum () +
+                                      aHBox2Element.getFullYSum () +
                                       ") for available height " +
                                       fAvailableHeight);
         }

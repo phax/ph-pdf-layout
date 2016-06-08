@@ -54,7 +54,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-  protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
+  protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
   private BorderSpec m_aRowBorder = BorderSpec.BORDER0;
   private Color m_aRowFillColor = null;
   /** prepare width (without padding and margin) */
@@ -273,7 +273,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
   /**
    * Set the border around each contained row.
-   * 
+   *
    * @param aBorderTop
    *        The border to set for top. Maybe <code>null</code>.
    * @param aBorderRight
@@ -422,15 +422,14 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       // Full width of this element
       final float fRowElementWidthFull = fAvailableWidth;
       // Effective content width of this element
-      final float fRowElementWidth = fRowElementWidthFull - aRowElement.getMarginPlusPaddingXSum ();
+      final float fRowElementWidth = fRowElementWidthFull - aRowElement.getFullXSum ();
       // Prepare child element
       final float fRowElementHeight = aRowElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                    fRowElementWidth,
-                                                                                   fAvailableHeight -
-                                                                                                     aRowElement.getMarginPlusPaddingYSum ()))
+                                                                                   fAvailableHeight - aRowElement.getFullYSum ()))
                                                  .getHeight ();
 
-      final float fRowElementHeightFull = fRowElementHeight + aRowElement.getMarginPlusPaddingYSum ();
+      final float fRowElementHeightFull = fRowElementHeight + aRowElement.getFullYSum ();
       // Update used width and height
       fUsedWidthFull = Math.max (fUsedWidthFull, fRowElementWidthFull);
       fUsedHeightFull += fRowElementHeightFull;

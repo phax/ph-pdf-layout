@@ -21,8 +21,6 @@ import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
-import com.helger.commons.hashcode.HashCodeGenerator;
-import com.helger.commons.string.ToStringGenerator;
 
 /**
  * Defines a rectangular margin.
@@ -31,21 +29,13 @@ import com.helger.commons.string.ToStringGenerator;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public class MarginSpec
+public class MarginSpec extends AbstractRectSpec
 {
   public static final MarginSpec MARGIN0 = new MarginSpec (0, 0, 0, 0);
 
-  private final float m_fTop;
-  private final float m_fRight;
-  private final float m_fBottom;
-  private final float m_fLeft;
-  // Helper vars
-  private final float m_fXSum;
-  private final float m_fYSum;
-
   public MarginSpec (@Nonnull final MarginSpec aOther)
   {
-    this (aOther.m_fTop, aOther.m_fRight, aOther.m_fBottom, aOther.m_fLeft);
+    super (aOther);
   }
 
   public MarginSpec (final float f)
@@ -60,65 +50,7 @@ public class MarginSpec
 
   public MarginSpec (final float fTop, final float fRight, final float fBottom, final float fLeft)
   {
-    m_fTop = fTop;
-    m_fRight = fRight;
-    m_fBottom = fBottom;
-    m_fLeft = fLeft;
-    m_fXSum = fLeft + fRight;
-    m_fYSum = fTop + fBottom;
-  }
-
-  public boolean hasAnyMargin ()
-  {
-    return m_fTop != 0 || m_fRight != 0 || m_fBottom != 0 && m_fLeft != 0;
-  }
-
-  /**
-   * @return Top value
-   */
-  public float getTop ()
-  {
-    return m_fTop;
-  }
-
-  /**
-   * @return Right value
-   */
-  public float getRight ()
-  {
-    return m_fRight;
-  }
-
-  /**
-   * @return Bottom value
-   */
-  public float getBottom ()
-  {
-    return m_fBottom;
-  }
-
-  /**
-   * @return Left value
-   */
-  public float getLeft ()
-  {
-    return m_fLeft;
-  }
-
-  /**
-   * @return Left + right value
-   */
-  public float getXSum ()
-  {
-    return m_fXSum;
-  }
-
-  /**
-   * @return Top + bottom value
-   */
-  public float getYSum ()
-  {
-    return m_fYSum;
+    super (fTop, fRight, fBottom, fLeft);
   }
 
   @Nonnull
@@ -151,41 +83,5 @@ public class MarginSpec
     if (EqualsHelper.equals (fLeft, m_fLeft))
       return this;
     return new MarginSpec (m_fTop, m_fRight, m_fBottom, fLeft);
-  }
-
-  @Override
-  public boolean equals (final Object o)
-  {
-    if (this == o)
-      return true;
-    if (o == null || !getClass ().equals (o.getClass ()))
-      return false;
-    final MarginSpec rhs = (MarginSpec) o;
-    return EqualsHelper.equals (m_fTop, rhs.m_fTop) &&
-           EqualsHelper.equals (m_fRight, rhs.m_fRight) &&
-           EqualsHelper.equals (m_fBottom, rhs.m_fBottom) &&
-           EqualsHelper.equals (m_fLeft, rhs.m_fLeft);
-  }
-
-  @Override
-  public int hashCode ()
-  {
-    return new HashCodeGenerator (this).append (m_fTop)
-                                       .append (m_fRight)
-                                       .append (m_fBottom)
-                                       .append (m_fLeft)
-                                       .getHashCode ();
-  }
-
-  @Override
-  public String toString ()
-  {
-    return new ToStringGenerator (this).append ("marginTop", m_fTop)
-                                       .append ("marginRight", m_fRight)
-                                       .append ("marginBottom", m_fBottom)
-                                       .append ("marginLeft", m_fLeft)
-                                       .append ("XSum", m_fXSum)
-                                       .append ("YSum", m_fYSum)
-                                       .toString ();
   }
 }

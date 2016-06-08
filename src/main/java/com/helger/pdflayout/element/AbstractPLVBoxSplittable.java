@@ -93,9 +93,9 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     {
       final AbstractPLElement <?> aRowElement = getRowElementAtIndex (nRow);
       final float fRowWidth = m_aPreparedRowElementWidth[nRow];
-      final float fRowWidthFull = fRowWidth + aRowElement.getMarginPlusPaddingXSum ();
+      final float fRowWidthFull = fRowWidth + aRowElement.getFullXSum ();
       final float fRowHeight = m_aPreparedRowElementHeight[nRow];
-      final float fRowHeightFull = fRowHeight + aRowElement.getMarginPlusPaddingYSum ();
+      final float fRowHeightFull = fRowHeight + aRowElement.getFullYSum ();
 
       if (bOnTable1)
       {
@@ -125,7 +125,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
             final float fAvailableSplitWidth = fWidth;
             final float fAvailableSplitHeight = fAvailableHeight -
                                                 fUsedVBox1HeightFull -
-                                                aRowElement.getMarginPlusPaddingYSum ();
+                                                aRowElement.getFullYSum ();
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this,
                                   "Trying to split " +
@@ -146,7 +146,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
               fUsedVBox1Width = fWidth;
               fUsedVBox1WidthFull = fWidthFull;
               final float fVBox1RowHeight = aSplitResult.getFirstElement ().getHeight ();
-              final float fVBox1RowHeightFull = fVBox1RowHeight + aVBox1RowElement.getMarginPlusPaddingYSum ();
+              final float fVBox1RowHeightFull = fVBox1RowHeight + aVBox1RowElement.getFullYSum ();
               fUsedVBox1Height += fVBox1RowHeight;
               fUsedVBox1HeightFull += fVBox1RowHeightFull;
               aVBox1RowWidth.add (Float.valueOf (fWidth));
@@ -157,7 +157,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
               fUsedVBox2Width = fWidth;
               fUsedVBox2WidthFull = fWidthFull;
               final float fVBox2RowHeight = aSplitResult.getSecondElement ().getHeight ();
-              final float fVBox2RowHeightFull = fVBox2RowHeight + aVBox2RowElement.getMarginPlusPaddingYSum ();
+              final float fVBox2RowHeightFull = fVBox2RowHeight + aVBox2RowElement.getFullYSum ();
               fUsedVBox2Height += fVBox2RowHeight;
               fUsedVBox2HeightFull += fVBox2RowHeightFull;
               aVBox2RowWidth.add (Float.valueOf (fWidth));
@@ -174,21 +174,21 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
                                           " (" +
                                           aSplitResult.getFirstElement ().getWidth () +
                                           "+" +
-                                          aVBox1RowElement.getMarginPlusPaddingXSum () +
+                                          aVBox1RowElement.getFullXSum () +
                                           " & " +
                                           aSplitResult.getFirstElement ().getHeight () +
                                           "+" +
-                                          aVBox1RowElement.getMarginPlusPaddingYSum () +
+                                          aVBox1RowElement.getFullYSum () +
                                           ") and " +
                                           aVBox2RowElement.getDebugID () +
                                           " (" +
                                           aSplitResult.getSecondElement ().getWidth () +
                                           "+" +
-                                          aVBox2RowElement.getMarginPlusPaddingXSum () +
+                                          aVBox2RowElement.getFullXSum () +
                                           " & " +
                                           aSplitResult.getSecondElement ().getHeight () +
                                           "+" +
-                                          aVBox2RowElement.getMarginPlusPaddingYSum () +
+                                          aVBox2RowElement.getFullYSum () +
                                           ")");
               bSplittedRow = true;
             }
