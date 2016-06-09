@@ -1,0 +1,16 @@
+### Eclipse Workspace Patch 1.0
+#P fontbox
+Index: src/main/java/org/apache/fontbox/ttf/MemoryTTFDataStream.java
+===================================================================
+--- src/main/java/org/apache/fontbox/ttf/MemoryTTFDataStream.java	(revision 1742516)
++++ src/main/java/org/apache/fontbox/ttf/MemoryTTFDataStream.java	(working copy)
+@@ -146,7 +146,8 @@
+      */
+     public void close() throws IOException
+     {
+-        data = null;
++        // Allow for re-using the pre-parsed TTF (see PDFBOX-3337)
++        // data = null;
+     }
+     
+     /**
