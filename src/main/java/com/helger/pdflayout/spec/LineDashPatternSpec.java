@@ -72,7 +72,7 @@ public class LineDashPatternSpec
   public LineDashPatternSpec (@Nonnull final float [] aPattern, final float fPhase)
   {
     ValueEnforcer.notNull (aPattern, "Pattern");
-    ValueEnforcer.isTrue (aPattern.length <= 2, "Too many patterns provided");
+    ValueEnforcer.isTrue (aPattern.length <= 2, () -> "Too many patterns (" + aPattern.length + ") provided");
     for (final float fPatternValue : aPattern)
       ValueEnforcer.isGT0 (fPatternValue, "PatternValue");
 
