@@ -26,6 +26,8 @@ import org.junit.rules.TestRule;
 import com.helger.commons.CGlobal;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
+import com.helger.font.lato2.EFontResourceLato2;
+import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
@@ -167,10 +169,11 @@ public final class PLTextTest
   public void testCustomFontOpenSans () throws PDFCreationException
   {
     // Load TTF font
-    final PreloadFont aFont = PreloadFont.createEmbedding (com.helger.font.open_sans.EFontResource.OPEN_SANS_NORMAL.getFontResource ());
+    final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ());
 
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
-                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" + "Tataa: €";
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                     "Tataa: €";
     final FontSpec r10 = new FontSpec (aFont, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
@@ -186,10 +189,11 @@ public final class PLTextTest
   public void testCustomFontLato2 () throws PDFCreationException
   {
     // Load OTF font
-    final PreloadFont aFont = PreloadFont.createEmbedding (com.helger.font.lato2.EFontResource.LATO2_NORMAL.getFontResource ());
+    final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceLato2.LATO2_NORMAL.getFontResource ());
 
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
-                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" + "Tataa: €";
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                     "Tataa: €";
     final FontSpec r10 = new FontSpec (aFont, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);

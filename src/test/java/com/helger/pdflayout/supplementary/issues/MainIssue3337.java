@@ -27,14 +27,14 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 
-import com.helger.font.open_sans.EFontResource;
+import com.helger.font.open_sans.EFontResourceOpenSans;
 
 public final class MainIssue3337
 {
   public static void main (final String [] args) throws IOException
   {
-    final TrueTypeFont aTTF = new TTFParser ().parse (EFontResource.OPEN_SANS_NORMAL.getFontResource ()
-                                                                                    .getInputStream ());
+    final TrueTypeFont aTTF = new TTFParser ().parse (EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
+                                                                                            .getInputStream ());
 
     for (int i = 0; i < 2; ++i)
     {

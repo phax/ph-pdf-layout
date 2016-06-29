@@ -25,7 +25,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 
-import com.helger.font.open_sans.EFontResource;
+import com.helger.font.open_sans.EFontResourceOpenSans;
 
 public final class MainIssue3170
 {
@@ -44,7 +44,9 @@ public final class MainIssue3170
       final PDPage page = new PDPage (PDRectangle.A4);
       doc.addPage (page);
 
-      final PDFont font = PDType0Font.load (doc, EFontResource.OPEN_SANS_NORMAL.getFontResource ().getInputStream ());
+      final PDFont font = PDType0Font.load (doc,
+                                            EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
+                                                                                  .getInputStream ());
 
       try (final PDPageContentStream contents = new PDPageContentStream (doc, page))
       {
