@@ -27,6 +27,7 @@ import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLConvert;
 
 /**
  * This class defines a size.
@@ -122,5 +123,11 @@ public class SizeSpec
   public static SizeSpec create (@Nonnull final PDRectangle aRect)
   {
     return new SizeSpec (aRect.getWidth (), aRect.getHeight ());
+  }
+
+  @Nonnull
+  public static SizeSpec createMM (final float fWidth, final float fHeight)
+  {
+    return new SizeSpec (PLConvert.mm2units (fWidth), PLConvert.mm2units (fHeight));
   }
 }
