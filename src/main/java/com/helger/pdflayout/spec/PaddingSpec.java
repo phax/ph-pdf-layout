@@ -21,6 +21,7 @@ import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
+import com.helger.pdflayout.PLConvert;
 
 /**
  * Defines a rectangular padding.
@@ -83,5 +84,26 @@ public class PaddingSpec extends AbstractRectSpec
     if (EqualsHelper.equals (fLeft, m_fLeft))
       return this;
     return new PaddingSpec (m_fTop, m_fRight, m_fBottom, fLeft);
+  }
+
+  @Nonnull
+  public static PaddingSpec createMM (final float f)
+  {
+    return new PaddingSpec (PLConvert.mm2units (f));
+  }
+
+  @Nonnull
+  public static PaddingSpec createMM (final float fY, final float fX)
+  {
+    return new PaddingSpec (PLConvert.mm2units (fY), PLConvert.mm2units (fX));
+  }
+
+  @Nonnull
+  public static PaddingSpec createMM (final float fTop, final float fRight, final float fBottom, final float fLeft)
+  {
+    return new PaddingSpec (PLConvert.mm2units (fTop),
+                            PLConvert.mm2units (fRight),
+                            PLConvert.mm2units (fBottom),
+                            PLConvert.mm2units (fLeft));
   }
 }

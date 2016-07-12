@@ -21,6 +21,7 @@ import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
+import com.helger.pdflayout.PLConvert;
 
 /**
  * Defines a rectangular margin.
@@ -83,5 +84,26 @@ public class MarginSpec extends AbstractRectSpec
     if (EqualsHelper.equals (fLeft, m_fLeft))
       return this;
     return new MarginSpec (m_fTop, m_fRight, m_fBottom, fLeft);
+  }
+
+  @Nonnull
+  public static MarginSpec createMM (final float f)
+  {
+    return new MarginSpec (PLConvert.mm2units (f));
+  }
+
+  @Nonnull
+  public static MarginSpec createMM (final float fY, final float fX)
+  {
+    return new MarginSpec (PLConvert.mm2units (fY), PLConvert.mm2units (fX));
+  }
+
+  @Nonnull
+  public static MarginSpec createMM (final float fTop, final float fRight, final float fBottom, final float fLeft)
+  {
+    return new MarginSpec (PLConvert.mm2units (fTop),
+                           PLConvert.mm2units (fRight),
+                           PLConvert.mm2units (fBottom),
+                           PLConvert.mm2units (fLeft));
   }
 }
