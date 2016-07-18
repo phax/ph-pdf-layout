@@ -31,7 +31,6 @@
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
   <url>https://github.com/phax/ph-pdf-layout</url>
   <inceptionYear>2014</inceptionYear>
- 
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -39,7 +38,6 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-
   <repositories>
     <repository>
       <id>ApacheSnapshot</id>
@@ -50,19 +48,16 @@
       </snapshots>
     </repository>
   </repositories>
-
   <scm>
     <connection>scm:git:git@github.com:phax/ph-pdf-layout.git</connection>
     <developerConnection>scm:git:git@github.com:phax/ph-pdf-layout.git</developerConnection>
     <url>http://github.com/phax/ph-pdf-layout</url>
     <tag>HEAD</tag>
   </scm>
-
   <organization>
     <name>Philip Helger</name>
     <url>http://www.helger.com</url>
   </organization>
-
   <developers>
     <developer>
       <id>philip</id>
@@ -71,12 +66,10 @@
       <url>http://www.helger.com</url>
     </developer>
   </developers>
-  
   <properties>
     <!-- 2.0.1 and 2.0.2 don't work - see PDFBOX-3337 -->
     <pdfbox.version>2.0.3-SNAPSHOT</pdfbox.version>
   </properties>
-  
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -95,7 +88,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
   <dependencies>
     <dependency>
       <groupId>com.helger</groupId>
@@ -105,7 +97,6 @@
       <groupId>com.helger</groupId>
       <artifactId>ph-fonts-api</artifactId>
     </dependency>
-    
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox</artifactId>
@@ -115,7 +106,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
     </dependency>
-    
     <!-- For reading PDFs with contained JPEGs -->
     <dependency>
       <groupId>com.levigo.jbig2</groupId>
@@ -130,7 +120,6 @@
       <version>1.54</version>
       <optional>true</optional>
     </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -158,7 +147,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
   <build>
     <resources>
       <!-- Don't specify the targetPath because this leads to a broken JAR file 
@@ -178,7 +166,6 @@
         </excludes>
       </resource>
     </resources>
-    
     <plugins>
       <plugin>
         <groupId>org.apache.felix</groupId>
@@ -186,24 +173,15 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <!-- Split-packages must be the first statements -->
-            <Export-Package>
-              org.apache.pdfbox.pdmodel.font;-split-package:=first,
+            <Export-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*
-            </Export-Package>
-            <Private-Package>
-              <!-- Whysoever, the declaration of Export and private packages must be identical when
-              split packages are used.
-              Source: https://issues.apache.org/jira/browse/FELIX-3238 
-               -->
-              org.apache.pdfbox.pdmodel.font;-split-package:=first,
+              com.helger.pdflayout.*</Export-Package>
+            <Private-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*
-            </Private-Package>
-            <Import-Package>
-              !javax.annotation.*,*
-            </Import-Package>
+              com.helger.pdflayout.*</Private-Package>
+            <Import-Package>!javax.annotation.*,*</Import-Package>
+            <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"</Require-Capability>
+            <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.helger.pdflayout.config.ThirdPartyModuleProvider_ph_pdf_layout</Provide-Capability>
           </instructions>
         </configuration>
       </plugin>
