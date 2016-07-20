@@ -244,7 +244,7 @@ public final class PDPageContentStreamExt implements Closeable
     }
 
     // configure NumberFormat
-    formatDecimal.setMaximumFractionDigits (10);
+    formatDecimal.setMaximumFractionDigits (5);
     formatDecimal.setGroupingUsed (false);
   }
 
