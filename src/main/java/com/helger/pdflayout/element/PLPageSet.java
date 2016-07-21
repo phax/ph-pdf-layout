@@ -62,9 +62,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   public static final class PageSetPrepareResult
   {
     private float m_fHeaderHeight = Float.NaN;
-    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList <> ();
+    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList<> ();
     private float m_fFooterHeight = Float.NaN;
-    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList <> ();
+    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList<> ();
 
     PageSetPrepareResult ()
     {}
@@ -166,7 +166,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
   private final SizeSpec m_aPageSize;
   private AbstractPLElement <?> m_aPageHeader;
-  private final ICommonsList <AbstractPLElement <?>> m_aElements = new CommonsArrayList <> ();
+  private final ICommonsList <AbstractPLElement <?>> m_aElements = new CommonsArrayList<> ();
   private AbstractPLElement <?> m_aPageFooter;
   private IRenderingContextCustomizer m_aRCCustomizer;
 
@@ -311,7 +311,8 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     {
       // Page header does not care about page padding
       final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
-                                                              m_aPageSize.getWidth () - getMarginXSum () -
+                                                              m_aPageSize.getWidth () -
+                                                                          getMarginXSum () -
                                                                           m_aPageHeader.getFullXSum (),
                                                               getMarginTop () - m_aPageHeader.getFullYSum ());
       final SizeSpec aElementSize = m_aPageHeader.prepare (aRPC);
@@ -330,7 +331,8 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     {
       // Page footer does not care about page padding
       final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
-                                                              m_aPageSize.getWidth () - getMarginXSum () -
+                                                              m_aPageSize.getWidth () -
+                                                                          getMarginXSum () -
                                                                           m_aPageFooter.getFullXSum (),
                                                               getMarginBottom () - m_aPageFooter.getFullYSum ());
       final SizeSpec aElementSize = m_aPageFooter.prepare (aRPC);
@@ -345,8 +347,10 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     }
 
     if (getMarginYSum () > m_aPageSize.getHeight ())
-      throw new IllegalStateException ("Header and footer together (" + getMarginYSum () +
-                                       ") take more height than available on the page (" + m_aPageSize.getHeight () +
+      throw new IllegalStateException ("Header and footer together (" +
+                                       getMarginYSum () +
+                                       ") take more height than available on the page (" +
+                                       m_aPageSize.getHeight () +
                                        ")!");
 
     {
@@ -355,8 +359,14 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
       if (PLDebug.isDebugPrepare ())
         PLDebug.debugPrepare (this,
-                              "Start preparing elements on width=" + fAvailWidth + "+" + getFullXSum () +
-                                    " and height=" + fAvailHeight + "+" + getFullYSum ());
+                              "Start preparing elements on width=" +
+                                    fAvailWidth +
+                                    "+" +
+                                    getFullXSum () +
+                                    " and height=" +
+                                    fAvailHeight +
+                                    "+" +
+                                    getFullYSum ());
 
       // Prepare content elements
       // Must be done after header and footer, because the margins may got
@@ -382,7 +392,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
       if (PLDebug.isDebugSplit ())
         PLDebug.debugSplit (this, "Start splitting elements");
 
-      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList <> ();
+      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList<> ();
 
       // Start at the top
       float fCurY = fYTop;
@@ -414,8 +424,12 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
           {
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this,
-                                  "Trying to split " + aElement.getDebugID () + " into pieces for available width " +
-                                        fElementWidth + " and height " + fAvailableHeight);
+                                  "Trying to split " +
+                                        aElement.getDebugID () +
+                                        " into pieces for available width " +
+                                        fElementWidth +
+                                        " and height " +
+                                        fAvailableHeight);
 
             // split elements
             final PLSplitResult aSplitResult = aElement.getAsSplittable ()
@@ -431,24 +445,38 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
               if (PLDebug.isDebugSplit ())
               {
                 PLDebug.debugSplit (this,
-                                    "Split " + aElement.getDebugID () + " into pieces: " +
-                                          aSplitResult.getFirstElement ().getElement ().getDebugID () + " (" +
-                                          aSplitResult.getFirstElement ().getWidth () + "+" +
-                                          aSplitResult.getFirstElement ().getElement ().getFullXSum () + " & " +
-                                          aSplitResult.getFirstElement ().getHeight () + "+" +
-                                          aSplitResult.getFirstElement ().getElement ().getFullYSum () + ") and " +
-                                          aSplitResult.getSecondElement ().getElement ().getDebugID () + " (" +
-                                          aSplitResult.getSecondElement ().getWidth () + "+" +
-                                          aSplitResult.getSecondElement ().getElement ().getFullXSum () + " & " +
-                                          aSplitResult.getSecondElement ().getHeight () + "+" +
-                                          aSplitResult.getSecondElement ().getElement ().getFullYSum () + ")");
+                                    "Split " +
+                                          aElement.getDebugID () +
+                                          " into pieces: " +
+                                          aSplitResult.getFirstElement ().getElement ().getDebugID () +
+                                          " (" +
+                                          aSplitResult.getFirstElement ().getWidth () +
+                                          "+" +
+                                          aSplitResult.getFirstElement ().getElement ().getFullXSum () +
+                                          " & " +
+                                          aSplitResult.getFirstElement ().getHeight () +
+                                          "+" +
+                                          aSplitResult.getFirstElement ().getElement ().getFullYSum () +
+                                          ") and " +
+                                          aSplitResult.getSecondElement ().getElement ().getDebugID () +
+                                          " (" +
+                                          aSplitResult.getSecondElement ().getWidth () +
+                                          "+" +
+                                          aSplitResult.getSecondElement ().getElement ().getFullXSum () +
+                                          " & " +
+                                          aSplitResult.getSecondElement ().getHeight () +
+                                          "+" +
+                                          aSplitResult.getSecondElement ().getElement ().getFullYSum () +
+                                          ")");
               }
               continue;
             }
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this,
-                                  "The single element " + aElement.getDebugID () +
-                                        " does not fit onto a single page (" + fAvailableHeight +
+                                  "The single element " +
+                                        aElement.getDebugID () +
+                                        " does not fit onto a single page (" +
+                                        fAvailableHeight +
                                         ") even though it is splittable!");
           }
 
@@ -458,7 +486,9 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
             if (!bIsPagebreakDesired)
             {
               // one element too large for a page
-              s_aLogger.warn ("The single element " + aElement.getDebugID () + " does not fit onto a single page" +
+              s_aLogger.warn ("The single element " +
+                              aElement.getDebugID () +
+                              " does not fit onto a single page" +
                               (bIsSplittable ? " even though it is splittable!" : " and is not splittable!"));
             }
           }
@@ -470,14 +500,14 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
             if (PLDebug.isDebugPrepare ())
             {
-              final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
-                                                                                      x -> x.getElement ()
-                                                                                            .getDebugID ());
+              final ICommonsList <String> aLastPageContent = new CommonsArrayList<> (aCurPageElements,
+                                                                                     x -> x.getElement ()
+                                                                                           .getDebugID ());
               PLDebug.debugPrepare (this, "Finished page with: " + StringHelper.getImploded (aLastPageContent));
             }
 
             ret.addPerPageElements (aCurPageElements);
-            aCurPageElements = new CommonsArrayList <> ();
+            aCurPageElements = new CommonsArrayList<> ();
 
             // Start new page
             fCurY = fYTop;
@@ -530,14 +560,16 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
       {
         if (PLDebug.isDebugSplit ())
           PLDebug.debugSplit (this,
-                              "Finally adding " + aCurPageElements.size () + " elements to page " +
+                              "Finally adding " +
+                                    aCurPageElements.size () +
+                                    " elements to page " +
                                     ret.getPageNumber ());
         ret.addPerPageElements (aCurPageElements);
 
         if (PLDebug.isDebugSplit ())
         {
-          final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
-                                                                                  x -> x.getElement ().getDebugID ());
+          final ICommonsList <String> aLastPageContent = new CommonsArrayList<> (aCurPageElements,
+                                                                                 x -> x.getElement ().getDebugID ());
           PLDebug.debugSplit (this, "Finished last page with: " + StringHelper.getImploded (", ", aLastPageContent));
         }
       }
@@ -585,8 +617,12 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
     {
       if (PLDebug.isDebugRender ())
         PLDebug.debugRender (this,
-                             "Start rendering page index " + nPageIndex + " (" + (nTotalPageStartIndex + nPageIndex) +
-                                   ") with page size " + PLDebug.getWH (getPageWidth (), getPageHeight ()) +
+                             "Start rendering page index " +
+                                   nPageIndex +
+                                   " (" +
+                                   (nTotalPageStartIndex + nPageIndex) +
+                                   ") with page size " +
+                                   PLDebug.getWH (getPageWidth (), getPageHeight ()) +
                                    " and available size " +
                                    PLDebug.getWH (getAvailableWidth (), getAvailableHeight ()));
 
@@ -646,9 +682,13 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
                                                              aContentStream,
                                                              bDebug,
                                                              getMarginLeft () + m_aPageHeader.getMarginAndBorderLeft (),
-                                                             m_aPageSize.getHeight () - m_aPageHeader.getMarginAndBorderTop (),
-                                                             m_aPageSize.getWidth () - getMarginXSum () - m_aPageHeader.getMarginAndBorderXSum (),
-                                                             aPrepareResult.getHeaderHeight () + m_aPageHeader.getPaddingYSum ());
+                                                             m_aPageSize.getHeight () -
+                                                                                                                         m_aPageHeader.getMarginAndBorderTop (),
+                                                             m_aPageSize.getWidth () -
+                                                                                                                                                                 getMarginXSum () -
+                                                                                                                                                                 m_aPageHeader.getMarginAndBorderXSum (),
+                                                             aPrepareResult.getHeaderHeight () +
+                                                                                                                                                                                                          m_aPageHeader.getPaddingYSum ());
           aPageIndex.setPlaceholdersInRenderingContext (aRC);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderingContext (aRC);
@@ -661,7 +701,8 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
           final AbstractPLElement <?> aElement = aElementWithHeight.getElement ();
           // Get element height
           final float fThisHeight = aElementWithHeight.getHeight ();
-          final float fThisHeightWithPadding = fThisHeight + aElement.getBorderYSumWidth () +
+          final float fThisHeightWithPadding = fThisHeight +
+                                               aElement.getBorderYSumWidth () +
                                                aElement.getPaddingYSum ();
 
           final RenderingContext aRC = new RenderingContext (ERenderingElementType.CONTENT_ELEMENT,
