@@ -59,6 +59,7 @@ public class LoadedFont
   {
     private final int m_nCodePoint;
     private final byte [] m_aEncoded;
+    // Lazy inited
     private Integer m_aEncodedValue;
 
     private static int _toInt (@Nonnull final byte [] aEncoded)
@@ -163,10 +164,11 @@ public class LoadedFont
                                                               final int nCodepoint,
                                                               final int nFallbackCodepoint) throws IOException
   {
-    // multi-byte encoding with 1 to 4 bytes
     try
     {
-      return new EncodedCodePoint (nCodepoint, PDFontHelper.encode (aFont, nCodepoint));
+      // multi-byte encoding with 1 to 4 bytes
+      final byte [] aEncodedBytes = PDFontHelper.encode (aFont, nCodepoint);
+      return new EncodedCodePoint (nCodepoint, aEncodedBytes);
     }
     catch (final IllegalArgumentException ex)
     {
@@ -174,7 +176,8 @@ public class LoadedFont
         PLDebug.debugFont (aFont.toString (), "No code point " + nCodepoint + " in this font");
 
       // Use fallback code point
-      return new EncodedCodePoint (nFallbackCodepoint, PDFontHelper.encode (aFont, nFallbackCodepoint));
+      final byte [] aEncodedBytes = PDFontHelper.encode (aFont, nFallbackCodepoint);
+      return new EncodedCodePoint (nFallbackCodepoint, aEncodedBytes);
     }
   }
 
