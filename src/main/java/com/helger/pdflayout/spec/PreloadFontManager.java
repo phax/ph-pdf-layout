@@ -43,11 +43,21 @@ public class PreloadFontManager implements Serializable
   private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock ();
   private final ICommonsMap <String, PreloadFont> m_aMap = new CommonsHashMap<> ();
 
+  /**
+   * Default constructor which registers the standard 14 fonts.
+   */
   public PreloadFontManager ()
   {
     this (true);
   }
 
+  /**
+   * Constructor.
+   * 
+   * @param bRegisterStandardFonts
+   *        <code>true</code> to register the standard 14 fonts,
+   *        <code>false</code> to not do it.
+   */
   public PreloadFontManager (final boolean bRegisterStandardFonts)
   {
     if (bRegisterStandardFonts)
