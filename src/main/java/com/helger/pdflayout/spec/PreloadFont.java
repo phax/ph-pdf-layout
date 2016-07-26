@@ -83,31 +83,25 @@ public final class PreloadFont implements IHasID <String>
   private PreloadFont (@Nonnull final IFontResource aFontRes, final boolean bEmbed) throws IOException
   {
     ValueEnforcer.notNull (aFontRes, "FontResource");
-    m_sID = aFontRes.getFontName () +
-            ":" +
-            aFontRes.getFontType ().getID () +
-            ":" +
-            aFontRes.getFontStyle ().getID () +
-            ":" +
-            aFontRes.getFontWeight ().getWeight ();
+    m_sID = aFontRes.getID ();
     m_aFont = null;
     m_aFontRes = aFontRes;
     m_bEmbed = bEmbed;
     // Not loaded custom font
-    switch (m_aFontRes.getFontType ())
+    switch (aFontRes.getFontType ())
     {
       case TTF:
         if (PLDebug.isDebugFont ())
-          PLDebug.debugFont (m_aFontRes.toString (), "Loading TTF font");
-        m_aTTF = new TTFParser ().parse (m_aFontRes.getInputStream ());
+          PLDebug.debugFont (aFontRes.toString (), "Loading TTF font");
+        m_aTTF = new TTFParser ().parse (aFontRes.getInputStream ());
         break;
       case OTF:
         if (PLDebug.isDebugFont ())
-          PLDebug.debugFont (m_aFontRes.toString (), "Loading OTF font");
-        m_aOTF = new OTFParser ().parse (m_aFontRes.getInputStream ());
+          PLDebug.debugFont (aFontRes.toString (), "Loading OTF font");
+        m_aOTF = new OTFParser ().parse (aFontRes.getInputStream ());
         break;
       default:
-        throw new IllegalArgumentException ("Cannot parse font resources of type " + m_aFontRes.getFontType ());
+        throw new IllegalArgumentException ("Cannot parse font resources of type " + aFontRes.getFontType ());
     }
   }
 
@@ -183,6 +177,20 @@ public final class PreloadFont implements IHasID <String>
   {
     ValueEnforcer.notNull (aFont, "Font");
     return new PreloadFont (aFont);
+  }
+
+  @Nonnull
+  public static PreloadFont createNonEmbedding (@Nonnull final IFontResource aFontRes)
+  {
+    ValueEnforcer.notNull (aFontRes, "FontRes");
+    try
+    {
+      return new PreloadFont (aFontRes, false);
+    }
+    catch (final IOException ex)
+    {
+      throw new IllegalArgumentException ("Cannot use the passed font resource " + aFontRes, ex);
+    }
   }
 
   @Nonnull

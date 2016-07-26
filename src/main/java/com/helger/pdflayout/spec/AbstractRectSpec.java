@@ -19,6 +19,7 @@ package com.helger.pdflayout.spec;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
@@ -48,6 +49,10 @@ public abstract class AbstractRectSpec
 
   public AbstractRectSpec (final float fTop, final float fRight, final float fBottom, final float fLeft)
   {
+    ValueEnforcer.isFalse (Float.isNaN (fTop), "Top may not be NaN");
+    ValueEnforcer.isFalse (Float.isNaN (fRight), "Right may not be NaN");
+    ValueEnforcer.isFalse (Float.isNaN (fBottom), "Bottom may not be NaN");
+    ValueEnforcer.isFalse (Float.isNaN (fLeft), "Left may not be NaN");
     m_fTop = fTop;
     m_fRight = fRight;
     m_fBottom = fBottom;

@@ -55,6 +55,7 @@ public class FontSpec
                    @Nonnull final Color aColor)
   {
     ValueEnforcer.notNull (aPreloadFont, "Font");
+    ValueEnforcer.isFalse (Float.isNaN (fFontSize), "FontSize may not be NaN");
     ValueEnforcer.isGT0 (fFontSize, "FontSize");
     ValueEnforcer.notNull (aColor, "Color");
     m_aPreloadFont = aPreloadFont;

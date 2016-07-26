@@ -87,6 +87,7 @@ public class BorderStyleSpec
   {
     ValueEnforcer.notNull (aColor, "Color");
     ValueEnforcer.notNull (aLineDashPattern, "LineDashPattern");
+    ValueEnforcer.isFalse (Float.isNaN (fLineWidth), "LineWidth may not be NaN");
     ValueEnforcer.isGE0 (fLineWidth, "LineWidth");
 
     m_aColor = aColor;
@@ -126,7 +127,8 @@ public class BorderStyleSpec
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final BorderStyleSpec rhs = (BorderStyleSpec) o;
-    return m_aColor.equals (rhs.m_aColor) && m_aLineDashPattern.equals (rhs.m_aLineDashPattern) &&
+    return m_aColor.equals (rhs.m_aColor) &&
+           m_aLineDashPattern.equals (rhs.m_aLineDashPattern) &&
            EqualsHelper.equals (m_fLineWidth, rhs.m_fLineWidth);
   }
 

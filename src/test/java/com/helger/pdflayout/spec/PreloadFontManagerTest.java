@@ -16,10 +16,14 @@
  */
 package com.helger.pdflayout.spec;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
+
+import com.helger.font.api.IFontResource;
+import com.helger.font.lato2.EFontResourceLato2;
 
 /**
  * Test class for class {@link PreloadFontManager}.
@@ -32,8 +36,12 @@ public final class PreloadFontManagerTest
   public void testInit ()
   {
     final PreloadFontManager aMgr = new PreloadFontManager ();
-    assertNull (aMgr.getPreloadFontOfID (null));
+    assertNull (aMgr.getPreloadFontOfID ((IFontResource) null));
+    assertNull (aMgr.getPreloadFontOfID ((String) null));
     assertNull (aMgr.getPreloadFontOfID ("abc"));
     assertSame (PreloadFont.MONOSPACE, aMgr.getPreloadFontOfID (PreloadFont.MONOSPACE.getID ()));
+    assertNotNull (aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK));
+    assertSame (aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK),
+                aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK));
   }
 }

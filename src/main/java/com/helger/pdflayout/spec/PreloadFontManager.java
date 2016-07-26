@@ -31,6 +31,7 @@ import com.helger.commons.collection.ext.ICommonsMap;
 import com.helger.commons.concurrent.SimpleReadWriteLock;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.font.api.IFontResource;
+import com.helger.font.api.IHasFontResource;
 
 /**
  * A manager for maintaining {@link PreloadFont}s.
@@ -53,7 +54,7 @@ public class PreloadFontManager implements Serializable
 
   /**
    * Constructor.
-   * 
+   *
    * @param bRegisterStandardFonts
    *        <code>true</code> to register the standard 14 fonts,
    *        <code>false</code> to not do it.
@@ -99,7 +100,24 @@ public class PreloadFontManager implements Serializable
   }
 
   /**
-   * Create a new embedding {@link PreloadFont} and add it.
+   * Create and add a new embedding {@link PreloadFont} if it is not yet
+   * contained.
+   *
+   * @param aFontResProvider
+   *        The font resource provider to be added for embedding. May not be
+   *        <code>null</code>.
+   * @return The created {@link PreloadFont}. Never <code>null</code>.
+   */
+  @Nonnull
+  public PreloadFont getOrAddEmbeddingPreloadFont (@Nonnull final IHasFontResource aFontResProvider)
+  {
+    ValueEnforcer.notNull (aFontResProvider, "FontResProvider");
+    return getOrAddEmbeddingPreloadFont (aFontResProvider.getFontResource ());
+  }
+
+  /**
+   * Create and add a new embedding {@link PreloadFont} if it is not yet
+   * contained.
    *
    * @param aFontRes
    *        The font resource to be added for embedding. May not be
@@ -107,11 +125,24 @@ public class PreloadFontManager implements Serializable
    * @return The created {@link PreloadFont}. Never <code>null</code>.
    */
   @Nonnull
-  public PreloadFont addEmbeddingPreloadFont (@Nonnull final IFontResource aFontRes)
+  public PreloadFont getOrAddEmbeddingPreloadFont (@Nonnull final IFontResource aFontRes)
   {
-    final PreloadFont aPreloadFont = PreloadFont.createEmbedding (aFontRes);
-    addPreloadFont (aPreloadFont);
+    ValueEnforcer.notNull (aFontRes, "FontRes");
+    PreloadFont aPreloadFont = getPreloadFontOfID (aFontRes);
+    if (aPreloadFont == null)
+    {
+      aPreloadFont = PreloadFont.createEmbedding (aFontRes);
+      addPreloadFont (aPreloadFont);
+    }
     return aPreloadFont;
+  }
+
+  @Nullable
+  public PreloadFont getPreloadFontOfID (@Nullable final IFontResource aFontRes)
+  {
+    if (aFontRes == null)
+      return null;
+    return getPreloadFontOfID (aFontRes.getID ());
   }
 
   @Nullable
