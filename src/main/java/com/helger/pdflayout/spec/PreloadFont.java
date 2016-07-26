@@ -19,7 +19,6 @@ package com.helger.pdflayout.spec;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import org.apache.fontbox.ttf.OTFParser;
@@ -32,8 +31,10 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
+import com.helger.commons.id.IHasID;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.font.api.IFontResource;
 import com.helger.pdflayout.PLDebug;
@@ -45,7 +46,7 @@ import com.helger.pdflayout.PLDebug;
  * @author Philip Helger
  */
 @Immutable
-public final class PreloadFont
+public final class PreloadFont implements IHasID <String>
 {
   public static final PreloadFont REGULAR = PreloadFont.createPredefined (PDType1Font.HELVETICA);
   public static final PreloadFont REGULAR_BOLD = PreloadFont.createPredefined (PDType1Font.HELVETICA_BOLD);
@@ -62,6 +63,7 @@ public final class PreloadFont
   public static final PreloadFont SYMBOL = PreloadFont.createPredefined (PDType1Font.SYMBOL);
   public static final PreloadFont ZAPF_DINGBATS = PreloadFont.createPredefined (PDType1Font.ZAPF_DINGBATS);
 
+  private final String m_sID;
   private final PDFont m_aFont;
   private final IFontResource m_aFontRes;
   private final boolean m_bEmbed;
@@ -69,36 +71,51 @@ public final class PreloadFont
   private TrueTypeFont m_aTTF;
   private OpenTypeFont m_aOTF;
 
-  private PreloadFont (@Nullable final PDFont aFont, @Nullable final IFontResource aFontRes, final boolean bEmbed)
+  private PreloadFont (@Nonnull final PDFont aFont)
   {
-    ValueEnforcer.isFalse (aFont == null && aFontRes == null, "One param must be non-null");
-    ValueEnforcer.isFalse (aFont != null && aFontRes != null, "One param must be null");
+    ValueEnforcer.notNull (aFont, "Font");
+    m_sID = aFont.getName ();
     m_aFont = aFont;
-    m_aFontRes = aFontRes;
-    m_bEmbed = bEmbed;
+    m_aFontRes = null;
+    m_bEmbed = false;
   }
 
-  private void _parseFontResource () throws IOException
+  private PreloadFont (@Nonnull final IFontResource aFontRes, final boolean bEmbed) throws IOException
   {
-    if (m_aFontRes != null)
+    ValueEnforcer.notNull (aFontRes, "FontResource");
+    m_sID = aFontRes.getFontName () +
+            ":" +
+            aFontRes.getFontType ().getID () +
+            ":" +
+            aFontRes.getFontStyle ().getID () +
+            ":" +
+            aFontRes.getFontWeight ().getWeight ();
+    m_aFont = null;
+    m_aFontRes = aFontRes;
+    m_bEmbed = bEmbed;
+    // Not loaded custom font
+    switch (m_aFontRes.getFontType ())
     {
-      // Not loaded custom font
-      switch (m_aFontRes.getFontType ())
-      {
-        case TTF:
-          if (PLDebug.isDebugFont ())
-            PLDebug.debugFont (m_aFontRes.toString (), "Loading TTF font");
-          m_aTTF = new TTFParser ().parse (m_aFontRes.getInputStream ());
-          break;
-        case OTF:
-          if (PLDebug.isDebugFont ())
-            PLDebug.debugFont (m_aFontRes.toString (), "Loading OTF font");
-          m_aOTF = new OTFParser ().parse (m_aFontRes.getInputStream ());
-          break;
-        default:
-          throw new IllegalArgumentException ("Cannot parse font resources of type " + m_aFontRes.getFontType ());
-      }
+      case TTF:
+        if (PLDebug.isDebugFont ())
+          PLDebug.debugFont (m_aFontRes.toString (), "Loading TTF font");
+        m_aTTF = new TTFParser ().parse (m_aFontRes.getInputStream ());
+        break;
+      case OTF:
+        if (PLDebug.isDebugFont ())
+          PLDebug.debugFont (m_aFontRes.toString (), "Loading OTF font");
+        m_aOTF = new OTFParser ().parse (m_aFontRes.getInputStream ());
+        break;
+      default:
+        throw new IllegalArgumentException ("Cannot parse font resources of type " + m_aFontRes.getFontType ());
     }
+  }
+
+  @Nonnull
+  @Nonempty
+  public String getID ()
+  {
+    return m_sID;
   }
 
   /**
@@ -162,25 +179,23 @@ public final class PreloadFont
   }
 
   @Nonnull
-  public static PreloadFont createPredefined (@Nonnull final PDFont aFont)
+  public static PreloadFont createPredefined (@Nonnull final PDType1Font aFont)
   {
     ValueEnforcer.notNull (aFont, "Font");
-    return new PreloadFont (aFont, null, false);
+    return new PreloadFont (aFont);
   }
 
   @Nonnull
   public static PreloadFont createEmbedding (@Nonnull final IFontResource aFontRes)
   {
     ValueEnforcer.notNull (aFontRes, "FontRes");
-    final PreloadFont ret = new PreloadFont (null, aFontRes, true);
     try
     {
-      ret._parseFontResource ();
+      return new PreloadFont (aFontRes, true);
     }
     catch (final IOException ex)
     {
       throw new IllegalArgumentException ("Cannot use the passed font resource " + aFontRes, ex);
     }
-    return ret;
   }
 }
