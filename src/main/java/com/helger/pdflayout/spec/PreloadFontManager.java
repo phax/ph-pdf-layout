@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -32,10 +33,11 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.font.api.IFontResource;
 
 /**
- * A manager for maintaining preload fonts
+ * A manager for maintaining {@link PreloadFont}s.
  *
  * @author Philip Helger
  */
+@ThreadSafe
 public class PreloadFontManager implements Serializable
 {
   private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock ();
