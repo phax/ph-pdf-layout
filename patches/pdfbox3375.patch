@@ -1,0 +1,45 @@
+### Eclipse Workspace Patch 1.0
+#P pdfbox
+Index: src/main/java/org/apache/pdfbox/pdmodel/graphics/color/PDDeviceRGB.java
+===================================================================
+--- src/main/java/org/apache/pdfbox/pdmodel/graphics/color/PDDeviceRGB.java	(revision 1754163)
++++ src/main/java/org/apache/pdfbox/pdmodel/graphics/color/PDDeviceRGB.java	(working copy)
+@@ -23,6 +23,9 @@
+ import java.awt.image.ComponentColorModel;
+ import java.awt.image.WritableRaster;
+ import java.io.IOException;
++import java.util.concurrent.locks.Lock;
++import java.util.concurrent.locks.ReentrantLock;
++
+ import org.apache.pdfbox.cos.COSName;
+ 
+ /**
+@@ -38,6 +41,7 @@
+     public static final PDDeviceRGB INSTANCE = new PDDeviceRGB();
+     
+     private final PDColor initialColor = new PDColor(new float[] { 0, 0, 0 }, this);
++    private final Lock m_aRWLock = new ReentrantLock ();
+     private volatile ColorSpace awtColorSpace;
+     
+     private PDDeviceRGB()
+@@ -54,7 +58,8 @@
+         {
+             return;
+         }
+-        synchronized (this)
++        m_aRWLock.lock ();
++        try
+         {
+             // we might have been waiting for another thread, so check again
+             if (awtColorSpace != null)
+@@ -68,6 +73,10 @@
+             // an initial color conversion while we're still synchronized, see PDFBOX-2184
+             awtColorSpace.toRGB(new float[] { 0, 0, 0, 0 });
+         }
++        finally
++        {
++          m_aRWLock.unlock ();
++        }
+     }
+     
+     @Override
