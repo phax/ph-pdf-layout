@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.spec;
 
-import java.io.Serializable;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
@@ -39,7 +38,7 @@ import com.helger.font.api.IHasFontResource;
  * @author Philip Helger
  */
 @ThreadSafe
-public class PreloadFontManager implements Serializable
+public class PreloadFontManager implements IPreloadFontResolver
 {
   private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock ();
   private final ICommonsMap <String, PreloadFont> m_aMap = new CommonsHashMap<> ();
@@ -135,14 +134,6 @@ public class PreloadFontManager implements Serializable
       addPreloadFont (aPreloadFont);
     }
     return aPreloadFont;
-  }
-
-  @Nullable
-  public PreloadFont getPreloadFontOfID (@Nullable final IFontResource aFontRes)
-  {
-    if (aFontRes == null)
-      return null;
-    return getPreloadFontOfID (aFontRes.getID ());
   }
 
   @Nullable

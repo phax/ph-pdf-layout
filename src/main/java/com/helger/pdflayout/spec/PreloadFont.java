@@ -41,7 +41,8 @@ import com.helger.pdflayout.PLDebug;
 
 /**
  * Represents an abstract font that is potentially not yet loaded and can be
- * used in multiple documents.
+ * used in multiple documents.<br>
+ * Note: cannot be Serializable because {@link PDFont} is not Serializable.
  *
  * @author Philip Helger
  */
