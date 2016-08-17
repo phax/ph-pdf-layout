@@ -18,9 +18,13 @@ package com.helger.pdflayout;
 
 import java.io.IOException;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+
+import com.helger.commons.ValueEnforcer;
 
 /**
  * Callback interface for PDF customization
@@ -31,7 +35,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 public interface IPDDocumentCustomizer
 {
   /**
-   * Customize the passed PDDocument
+   * Customize the passed {@link PDDocument}.
    *
    * @param aDoc
    *        The document to be customized. Never <code>null</code>.
@@ -39,4 +43,50 @@ public interface IPDDocumentCustomizer
    *         in case something goes wrong
    */
   void customizeDocument (@Nonnull PDDocument aDoc) throws IOException;
+
+  /**
+   * Invoke this customizer and afterwards the provided customizer.
+   * 
+   * @param aNextCustomizer
+   *        The customizer to be invoked after this customizer. May not be
+   *        <code>null</code>.
+   * @return A new, non-<code>null</code> customizer.
+   */
+  @Nonnull
+  @CheckReturnValue
+  default IPDDocumentCustomizer and (@Nonnull final IPDDocumentCustomizer aNextCustomizer)
+  {
+    ValueEnforcer.notNull (aNextCustomizer, "NextCustomizer");
+    return aDoc -> {
+      this.customizeDocument (aDoc);
+      aNextCustomizer.customizeDocument (aDoc);
+    };
+  }
+
+  /**
+   * Create a customizer that invokes both customizers if they are
+   * non-<code>null</code>.
+   * 
+   * @param aCustomizer1
+   *        The first customizer to be invoked. May be <code>null</code>.
+   * @param aCustomizer2
+   *        The second customizer to be invoked after the first customizer (if
+   *        present). May be <code>null</code>.
+   * @return <code>null</code> if both parameters are <code>null</code>.
+   */
+  @Nullable
+  @CheckReturnValue
+  static IPDDocumentCustomizer and (@Nullable final IPDDocumentCustomizer aCustomizer1,
+                                    @Nullable final IPDDocumentCustomizer aCustomizer2)
+  {
+    if (aCustomizer1 != null)
+    {
+      if (aCustomizer2 != null)
+        return aCustomizer1.and (aCustomizer2);
+      return aCustomizer1;
+    }
+
+    // May be null
+    return aCustomizer2;
+  }
 }
