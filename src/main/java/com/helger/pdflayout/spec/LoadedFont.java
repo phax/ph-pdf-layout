@@ -281,8 +281,8 @@ public class LoadedFont
   }
 
   private void _getLineFitToWidthForward (@Nonnull final String sLine,
-                                          final float fFontSize,
-                                          final float fMaxWidth,
+                                          @Nonnegative final float fFontSize,
+                                          @Nonnegative final float fMaxWidth,
                                           @Nonnull final List <TextAndWidthSpec> ret) throws IOException
   {
     String sCurLine = sLine;
@@ -365,6 +365,9 @@ public class LoadedFont
                                                         @Nonnegative final float fFontSize,
                                                         @Nonnegative final float fMaxWidth) throws IOException
   {
+    ValueEnforcer.isGT0 (fFontSize, "FontSize");
+    ValueEnforcer.isGT0 (fMaxWidth, "MaxWidth");
+
     // First split by the contained line breaks
     // In the constructor we ensured that only "\n" is used
     final String [] aLines = StringHelper.getExplodedArray ('\n', sText);
