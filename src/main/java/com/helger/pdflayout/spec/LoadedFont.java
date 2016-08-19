@@ -284,9 +284,11 @@ public class LoadedFont
     String sCurLine = sLine;
     float fSumWidth = 0f;
     int nCPOfs = 0;
-
     float fSumWidthOfLastWS = 0f;
     int nCPOfsOfLastWS = 0;
+
+    int nIterations = 0;
+    final int nMaxIterations = sLine.length () * 3;
 
     // For each code point
     while (nCPOfs < sCurLine.length ())
@@ -297,7 +299,7 @@ public class LoadedFont
       if (Character.isWhitespace (nCP))
       {
         // Whitespace is considered a word break and allows us to break the line
-        // here, so remember it
+        // here, so remember it before the increment
         nCPOfsOfLastWS = nCPOfs;
         fSumWidthOfLastWS = fSumWidth;
       }
@@ -322,7 +324,7 @@ public class LoadedFont
           ret.add (new TextAndWidthSpec (sPart, fSumWidth));
         }
 
-        // Reset counter
+        // Reset counter for the rest of the line
         fSumWidth = 0f;
         nCPOfs = 0;
         fSumWidthOfLastWS = 0f;
@@ -333,6 +335,16 @@ public class LoadedFont
         // Add current char
         nCPOfs += Character.charCount (nCP);
         fSumWidth = fNewWidth;
+
+        ++nIterations;
+        if (nIterations > nMaxIterations)
+          throw new IllegalStateException ("Seems to be an endless loop (" +
+                                           nIterations +
+                                           " iterations). Input String (length " +
+                                           sLine.length () +
+                                           ")=<" +
+                                           sLine +
+                                           ">");
       }
     }
 
