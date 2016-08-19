@@ -31,6 +31,8 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontHelper;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
@@ -102,6 +104,8 @@ public class LoadedFont
       return m_aEncodedValue.intValue ();
     }
   }
+
+  private static final Logger s_aLogger = LoggerFactory.getLogger (LoadedFont.class);
 
   private final PDFont m_aFont;
   private final int m_nFallbackCodePoint;
@@ -286,9 +290,7 @@ public class LoadedFont
     int nCPOfs = 0;
     float fSumWidthOfLastWS = 0f;
     int nCPOfsOfLastWS = 0;
-
-    int nIterations = 0;
-    final int nMaxIterations = sLine.length () * 3;
+    boolean bWarnedOnTooSmallMaxWidth = false;
 
     // For each code point
     while (nCPOfs < sCurLine.length ())
@@ -305,7 +307,21 @@ public class LoadedFont
       }
 
       final float fNewWidth = fSumWidth + fCPWidth;
-      if (fNewWidth > fMaxWidth)
+
+      boolean bSplitNow = fNewWidth > fMaxWidth;
+      if (bSplitNow && nCPOfs == 0)
+      {
+        if (!bWarnedOnTooSmallMaxWidth)
+        {
+          s_aLogger.warn ("The provided max width (" +
+                          fMaxWidth +
+                          ") is too small to hold a single character! Will create an overlap!");
+          bWarnedOnTooSmallMaxWidth = true;
+        }
+        bSplitNow = false;
+      }
+
+      if (bSplitNow)
       {
         // Maximum width reached
         if (nCPOfsOfLastWS > 0)
@@ -335,16 +351,6 @@ public class LoadedFont
         // Add current char
         nCPOfs += Character.charCount (nCP);
         fSumWidth = fNewWidth;
-
-        ++nIterations;
-        if (nIterations > nMaxIterations)
-          throw new IllegalStateException ("Seems to be an endless loop (" +
-                                           nIterations +
-                                           " iterations). Input String (length " +
-                                           sLine.length () +
-                                           ")=<" +
-                                           sLine +
-                                           ">");
       }
     }
 
