@@ -315,7 +315,9 @@ public class LoadedFont
         {
           s_aLogger.warn ("The provided max width (" +
                           fMaxWidth +
-                          ") is too small to hold a single character! Will create an overlap!");
+                          ") is too small to hold a single character! Will create an overlap! Problem string=<" +
+                          sLine +
+                          ">");
           bWarnedOnTooSmallMaxWidth = true;
         }
         bSplitNow = false;
