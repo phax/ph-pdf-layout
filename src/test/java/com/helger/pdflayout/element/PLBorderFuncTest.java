@@ -38,7 +38,7 @@ import com.helger.pdflayout.spec.WidthSpec;
  *
  * @author Philip Helger
  */
-public final class PLBorderTest
+public final class PLBorderFuncTest
 {
   @Rule
   public final TestRule m_aRule = new DebugModeTestRule ();
