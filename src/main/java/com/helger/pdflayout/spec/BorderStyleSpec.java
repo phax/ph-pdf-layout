@@ -38,8 +38,6 @@ import com.helger.commons.string.ToStringGenerator;
 @MustImplementEqualsAndHashcode
 public class BorderStyleSpec
 {
-  public static final BorderStyleSpec EMPTY = new BorderStyleSpec ();
-
   /** The default border color: black */
   public static final Color DEFAULT_COLOR = Color.BLACK;
 
@@ -48,6 +46,8 @@ public class BorderStyleSpec
 
   /** Use the default line width if unspecified */
   public static final float DEFAULT_LINE_WIDTH = 0f;
+
+  public static final BorderStyleSpec EMPTY = new BorderStyleSpec ();
 
   private final Color m_aColor;
   private final LineDashPatternSpec m_aLineDashPattern;
