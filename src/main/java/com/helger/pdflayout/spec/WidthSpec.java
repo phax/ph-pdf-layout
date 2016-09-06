@@ -18,12 +18,16 @@ package com.helger.pdflayout.spec;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
+import com.helger.commons.id.IHasID;
+import com.helger.commons.lang.EnumHelper;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
@@ -42,11 +46,39 @@ import com.helger.commons.string.ToStringGenerator;
 @MustImplementEqualsAndHashcode
 public class WidthSpec
 {
-  public static enum EWidthType
+  /**
+   * Defines the type of width unit of measure used.
+   *
+   * @author Philip Helger
+   */
+  public static enum EWidthType implements IHasID <String>
   {
-    ABSOLUTE,
-    PERCENTAGE,
-    STAR;
+    /** Absolute value provided */
+    ABSOLUTE ("abs"),
+    /** Percentage value provided */
+    PERCENTAGE ("perc"),
+    /** * value provided */
+    STAR ("star");
+
+    private final String m_sID;
+
+    private EWidthType (@Nonnull @Nonempty final String sID)
+    {
+      m_sID = sID;
+    }
+
+    @Nonnull
+    @Nonempty
+    public String getID ()
+    {
+      return m_sID;
+    }
+
+    @Nullable
+    public static EWidthType getFromIDOrNull (@Nullable final String sID)
+    {
+      return EnumHelper.getFromIDOrNull (EWidthType.class, sID);
+    }
   }
 
   private final EWidthType m_eType;

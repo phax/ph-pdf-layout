@@ -16,21 +16,48 @@
  */
 package com.helger.pdflayout.spec;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.id.IHasID;
+import com.helger.commons.lang.EnumHelper;
+
 /**
  * Represents the possible vertical alignments.
  *
  * @author Philip Helger
  */
-public enum EVertAlignment
+public enum EVertAlignment implements IHasID <String>
 {
   /** Align top */
-  TOP,
+  TOP ("top"),
 
   /** Align middle */
-  MIDDLE,
+  MIDDLE ("middle"),
 
   /** Align bottom */
-  BOTTOM;
+  BOTTOM ("bottom");
 
   public static final EVertAlignment DEFAULT = TOP;
+
+  private final String m_sID;
+
+  private EVertAlignment (@Nonnull @Nonempty final String sID)
+  {
+    m_sID = sID;
+  }
+
+  @Nonnull
+  @Nonempty
+  public String getID ()
+  {
+    return m_sID;
+  }
+
+  @Nullable
+  public static EVertAlignment getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (EVertAlignment.class, sID);
+  }
 }

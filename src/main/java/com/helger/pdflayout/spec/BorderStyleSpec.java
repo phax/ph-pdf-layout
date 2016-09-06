@@ -38,6 +38,8 @@ import com.helger.commons.string.ToStringGenerator;
 @MustImplementEqualsAndHashcode
 public class BorderStyleSpec
 {
+  public static final BorderStyleSpec EMPTY = new BorderStyleSpec ();
+
   /** The default border color: black */
   public static final Color DEFAULT_COLOR = Color.BLACK;
 
@@ -117,6 +119,45 @@ public class BorderStyleSpec
   public float getLineWidth ()
   {
     return m_fLineWidth;
+  }
+
+  /**
+   * @return <code>true</code> if all values are set to default,
+   *         <code>false</code> otherwise.
+   */
+  public boolean isDefault ()
+  {
+    return m_aColor.equals (DEFAULT_COLOR) &&
+           m_aLineDashPattern.equals (DEFAULT_LINE_DASH_PATTERN) &&
+           EqualsHelper.equals (m_fLineWidth, DEFAULT_LINE_WIDTH);
+  }
+
+  @Nonnull
+  public BorderStyleSpec getCloneWithColor (@Nonnull final Color aNewColor)
+  {
+    ValueEnforcer.notNull (aNewColor, "NewColor");
+    if (aNewColor.equals (m_aColor))
+      return this;
+    return new BorderStyleSpec (aNewColor, m_aLineDashPattern, m_fLineWidth);
+  }
+
+  @Nonnull
+  public BorderStyleSpec getCloneWithLineDashPattern (@Nonnull final LineDashPatternSpec aNewLineDashPattern)
+  {
+    ValueEnforcer.notNull (aNewLineDashPattern, "NewLineDashPattern");
+    if (aNewLineDashPattern.equals (m_aLineDashPattern))
+      return this;
+    return new BorderStyleSpec (m_aColor, aNewLineDashPattern, m_fLineWidth);
+  }
+
+  @Nonnull
+  public BorderStyleSpec getCloneWithLineWidth (final float fNewLineWidth)
+  {
+    ValueEnforcer.isFalse (Float.isNaN (fNewLineWidth), "LineWidth may not be NaN");
+    ValueEnforcer.isGE0 (fNewLineWidth, "LineWidth");
+    if (EqualsHelper.equals (fNewLineWidth, m_fLineWidth))
+      return this;
+    return new BorderStyleSpec (m_aColor, m_aLineDashPattern, fNewLineWidth);
   }
 
   @Override

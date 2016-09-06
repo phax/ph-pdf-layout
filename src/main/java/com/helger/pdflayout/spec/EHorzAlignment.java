@@ -16,21 +16,48 @@
  */
 package com.helger.pdflayout.spec;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.id.IHasID;
+import com.helger.commons.lang.EnumHelper;
+
 /**
  * Represents the possible horizontal alignments.
  *
  * @author Philip Helger
  */
-public enum EHorzAlignment
+public enum EHorzAlignment implements IHasID <String>
 {
   /** Align left */
-  LEFT,
+  LEFT ("left"),
 
   /** Align center */
-  CENTER,
+  CENTER ("center"),
 
   /** Align right */
-  RIGHT;
+  RIGHT ("right");
 
   public static final EHorzAlignment DEFAULT = LEFT;
+
+  private final String m_sID;
+
+  private EHorzAlignment (@Nonnull @Nonempty final String sID)
+  {
+    m_sID = sID;
+  }
+
+  @Nonnull
+  @Nonempty
+  public String getID ()
+  {
+    return m_sID;
+  }
+
+  @Nullable
+  public static EHorzAlignment getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (EHorzAlignment.class, sID);
+  }
 }
