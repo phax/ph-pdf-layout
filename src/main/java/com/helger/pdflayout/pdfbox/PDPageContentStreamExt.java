@@ -59,6 +59,7 @@ import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceStream;
 import org.apache.pdfbox.util.Charsets;
 import org.apache.pdfbox.util.Matrix;
+import org.apache.pdfbox.util.NumberFormatUtil;
 
 import com.helger.commons.annotation.CodingStyleguideUnaware;
 import com.helger.commons.collection.impl.NonBlockingStack;
@@ -92,6 +93,7 @@ public final class PDPageContentStreamExt implements Closeable
 
   // number format
   private final NumberFormat formatDecimal = NumberFormat.getNumberInstance (Locale.US);
+  private final byte [] formatBuffer = new byte [32];
 
   /**
    * Create a new PDPage content stream.
@@ -1531,7 +1533,19 @@ public final class PDPageContentStreamExt implements Closeable
    */
   protected void writeOperand (final float real) throws IOException
   {
-    write (formatDecimal.format (real));
+    final int byteCount = NumberFormatUtil.formatFloatFast (real,
+                                                            formatDecimal.getMaximumFractionDigits (),
+                                                            formatBuffer);
+
+    if (byteCount == -1)
+    {
+      // Fast formatting failed
+      write (formatDecimal.format (real));
+    }
+    else
+    {
+      m_aOS.write (formatBuffer, 0, byteCount);
+    }
     m_aOS.write (' ');
   }
 
