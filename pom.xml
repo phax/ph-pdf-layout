@@ -105,6 +105,11 @@
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-xml</artifactId>
+      <optional>true</optional>
+    </dependency>
     <!-- For reading PDFs with contained JPEGs -->
     <dependency>
       <groupId>com.levigo.jbig2</groupId>

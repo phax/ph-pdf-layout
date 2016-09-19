@@ -101,6 +101,16 @@ public class WidthSpec
   }
 
   /**
+   * @return The ID of the width type. Never <code>null</code>.
+   */
+  @Nonnull
+  @Nonempty
+  public String getTypeID ()
+  {
+    return m_eType.getID ();
+  }
+
+  /**
    * @return <code>true</code> if type is 'star'.
    */
   public boolean isStar ()

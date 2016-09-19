@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout.spec;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -85,24 +86,28 @@ public class SizeSpec
   }
 
   @Nonnull
+  @CheckReturnValue
   public SizeSpec plus (final float fWidth, final float fHeight)
   {
     return new SizeSpec (m_fWidth + fWidth, m_fHeight + fHeight);
   }
 
   @Nonnull
+  @CheckReturnValue
   public SizeSpec plus (@Nonnull final SizeSpec aOther)
   {
     return plus (aOther.m_fWidth, aOther.m_fHeight);
   }
 
   @Nonnull
+  @CheckReturnValue
   public SizeSpec minus (final float fWidth, final float fHeight)
   {
     return new SizeSpec (m_fWidth - fWidth, m_fHeight - fHeight);
   }
 
   @Nonnull
+  @CheckReturnValue
   public SizeSpec minus (@Nonnull final SizeSpec aOther)
   {
     return minus (aOther.m_fWidth, aOther.m_fHeight);

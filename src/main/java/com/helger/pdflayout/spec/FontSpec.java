@@ -24,6 +24,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
@@ -70,6 +71,16 @@ public class FontSpec
   public PreloadFont getPreloadFont ()
   {
     return m_aPreloadFont;
+  }
+
+  /**
+   * @return The ID of the font to use. Never <code>null</code>.
+   */
+  @Nonnull
+  @Nonempty
+  public String getPreloadFontID ()
+  {
+    return m_aPreloadFont.getID ();
   }
 
   /**
