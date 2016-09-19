@@ -24,11 +24,11 @@ import javax.annotation.Nonnull;
 import org.apache.pdfbox.pdfwriter.COSWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
-import com.helger.pdflayout.pdfbox.PDPageContentStreamExt.EAppendMode;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.pdflayout.spec.LoadedFont;
@@ -55,7 +55,7 @@ public class PDPageContentStreamWithCache
 
   public PDPageContentStreamWithCache (@Nonnull final PDDocument aDocument,
                                        @Nonnull final PDPage aSourcePage,
-                                       final EAppendMode bAppendContent,
+                                       final PDPageContentStream.AppendMode bAppendContent,
                                        final boolean bCompress) throws IOException
   {
     m_aDocument = aDocument;

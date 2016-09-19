@@ -37,6 +37,7 @@ import org.apache.pdfbox.pdfwriter.COSWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentHelper;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.documentinterchange.markedcontent.PDPropertyList;
@@ -77,23 +78,6 @@ import com.helger.commons.collection.impl.NonBlockingStack;
 @NotThreadSafe
 public final class PDPageContentStreamExt implements Closeable
 {
-  public static enum EAppendMode
-  {
-    OVERWRITE,
-    APPEND,
-    PREPEND;
-
-    public boolean isNotOverwrite ()
-    {
-      return this != OVERWRITE;
-    }
-
-    public boolean isPrepend ()
-    {
-      return this == PREPEND;
-    }
-  }
-
   private static final Log s_aLogger = LogFactory.getLog (PDPageContentStreamExt.class);
 
   private final PDDocument m_aDoc;
@@ -121,7 +105,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public PDPageContentStreamExt (final PDDocument document, final PDPage sourcePage) throws IOException
   {
-    this (document, sourcePage, EAppendMode.OVERWRITE, true);
+    this (document, sourcePage, PDPageContentStream.AppendMode.OVERWRITE, true);
   }
 
   /**
@@ -141,7 +125,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public PDPageContentStreamExt (final PDDocument document,
                                  final PDPage sourcePage,
-                                 final EAppendMode appendContent,
+                                 final PDPageContentStream.AppendMode appendContent,
                                  final boolean compress) throws IOException
   {
     this (document, sourcePage, appendContent, compress, false);
@@ -166,7 +150,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public PDPageContentStreamExt (final PDDocument document,
                                  final PDPage sourcePage,
-                                 final EAppendMode appendContent,
+                                 final PDPageContentStream.AppendMode appendContent,
                                  final boolean compress,
                                  final boolean resetContext) throws IOException
   {
@@ -174,7 +158,7 @@ public final class PDPageContentStreamExt implements Closeable
     final COSName filter = compress ? COSName.FLATE_DECODE : null;
 
     // If request specifies the need to append to the document
-    if (appendContent.isNotOverwrite () && sourcePage.hasContents ())
+    if (!appendContent.isOverwrite () && sourcePage.hasContents ())
     {
       // Create a stream to append new content
       final PDStream contentsToAppend = new PDStream (document);

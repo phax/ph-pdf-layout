@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,6 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.pdfbox.PDPageContentStreamExt.EAppendMode;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.ERenderingElementType;
 import com.helger.pdflayout.render.IRenderingContextCustomizer;
@@ -648,7 +648,7 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
 
       final PDPageContentStreamWithCache aContentStream = new PDPageContentStreamWithCache (aDoc,
                                                                                             aPage,
-                                                                                            EAppendMode.OVERWRITE,
+                                                                                            PDPageContentStream.AppendMode.OVERWRITE,
                                                                                             bCompressPDF);
       try
       {
