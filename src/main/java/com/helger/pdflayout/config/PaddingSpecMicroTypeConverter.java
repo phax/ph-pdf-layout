@@ -27,6 +27,7 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
 /**
  * Micro type converter for class {@link PaddingSpec}.
  *
+ * @author Saskia Reimerth
  * @author Philip Helger
  */
 public final class PaddingSpecMicroTypeConverter implements IMicroTypeConverter

@@ -28,7 +28,8 @@ import com.helger.xml.microdom.convert.MicroTypeConverter;
 
 /**
  * Micro type converter for class {@link BorderSpec}.
- * 
+ *
+ * @author Saskia Reimerth
  * @author Philip Helger
  */
 public final class BorderSpecMicroTypeConverter implements IMicroTypeConverter

@@ -27,6 +27,7 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
 /**
  * Micro type converter for class {@link MarginSpec}.
  *
+ * @author Saskia Reimerth
  * @author Philip Helger
  */
 public final class MarginSpecMicroTypeConverter implements IMicroTypeConverter

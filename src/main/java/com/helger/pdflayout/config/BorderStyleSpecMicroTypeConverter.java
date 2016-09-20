@@ -31,6 +31,7 @@ import com.helger.xml.microdom.convert.MicroTypeConverter;
 /**
  * Micro type converter for class {@link BorderStyleSpec}.
  *
+ * @author Saskia Reimerth
  * @author Philip Helger
  */
 public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConverter

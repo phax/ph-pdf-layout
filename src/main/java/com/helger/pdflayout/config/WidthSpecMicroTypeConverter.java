@@ -28,6 +28,7 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
 /**
  * Micro type converter for class {@link WidthSpec}.
  *
+ * @author Saskia Reimerth
  * @author Philip Helger
  */
 public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter
