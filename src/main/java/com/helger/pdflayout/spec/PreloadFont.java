@@ -49,19 +49,33 @@ import com.helger.pdflayout.PLDebug;
 @Immutable
 public final class PreloadFont implements IHasID <String>
 {
+  /** PDF built-in font Helvetica regular */
   public static final PreloadFont REGULAR = PreloadFont.createPredefined (PDType1Font.HELVETICA);
+  /** PDF built-in font Helvetica bold */
   public static final PreloadFont REGULAR_BOLD = PreloadFont.createPredefined (PDType1Font.HELVETICA_BOLD);
+  /** PDF built-in font Helvetica italic */
   public static final PreloadFont REGULAR_ITALIC = PreloadFont.createPredefined (PDType1Font.HELVETICA_OBLIQUE);
+  /** PDF built-in font Helvetica bold and italic */
   public static final PreloadFont REGULAR_BOLD_ITALIC = PreloadFont.createPredefined (PDType1Font.HELVETICA_BOLD_OBLIQUE);
+  /** PDF built-in font Courier regular */
   public static final PreloadFont MONOSPACE = PreloadFont.createPredefined (PDType1Font.COURIER);
+  /** PDF built-in font Courier bold */
   public static final PreloadFont MONOSPACE_BOLD = PreloadFont.createPredefined (PDType1Font.COURIER_BOLD);
+  /** PDF built-in font Courier italic */
   public static final PreloadFont MONOSPACE_ITALIC = PreloadFont.createPredefined (PDType1Font.COURIER_OBLIQUE);
+  /** PDF built-in font Courier bold and italic */
   public static final PreloadFont MONOSPACE_BOLD_ITALIC = PreloadFont.createPredefined (PDType1Font.COURIER_BOLD_OBLIQUE);
+  /** PDF built-in font Times Roman regular */
   public static final PreloadFont TIMES = PreloadFont.createPredefined (PDType1Font.TIMES_ROMAN);
+  /** PDF built-in font Times Roman bold */
   public static final PreloadFont TIMES_BOLD = PreloadFont.createPredefined (PDType1Font.TIMES_BOLD);
+  /** PDF built-in font Times Roman italic */
   public static final PreloadFont TIMES_ITALIC = PreloadFont.createPredefined (PDType1Font.TIMES_ITALIC);
+  /** PDF built-in font Times Roman bold italic */
   public static final PreloadFont TIMES_BOLD_ITALIC = PreloadFont.createPredefined (PDType1Font.TIMES_BOLD_ITALIC);
+  /** PDF built-in font Symbol */
   public static final PreloadFont SYMBOL = PreloadFont.createPredefined (PDType1Font.SYMBOL);
+  /** PDF built-in font Zapf Dingbats */
   public static final PreloadFont ZAPF_DINGBATS = PreloadFont.createPredefined (PDType1Font.ZAPF_DINGBATS);
 
   private final String m_sID;
