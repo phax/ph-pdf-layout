@@ -23,15 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.OverrideOnDemand;
-import com.helger.commons.id.factory.GlobalIDFactory;
-import com.helger.commons.lang.ClassHelper;
-import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
@@ -49,12 +41,9 @@ import com.helger.pdflayout.spec.PaddingSpec;
  *        The implementation type of this class.
  */
 public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>>
+                                            extends AbstractPLObject <IMPLTYPE>
                                             implements IPLHasFillColor <IMPLTYPE>, IPLHasMarginBorderPadding <IMPLTYPE>
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLBaseElement.class);
-
-  private String m_sElementID;
-  private transient String m_sDebugID;
   private MarginSpec m_aMargin = MarginSpec.MARGIN0;
   private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
   private BorderSpec m_aBorder = BorderSpec.BORDER0;
@@ -63,61 +52,17 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public AbstractPLBaseElement ()
   {}
 
-  /**
-   * @return The unique element ID. Never <code>null</code>.
-   */
-  public final String getID ()
-  {
-    String ret = m_sElementID;
-    if (ret == null)
-      m_sElementID = ret = GlobalIDFactory.getNewStringID ();
-    return ret;
-  }
-
-  @Nonnull
-  public final IMPLTYPE setID (@Nonnull @Nonempty final String sID)
-  {
-    ValueEnforcer.notEmpty (sID, "ID");
-    if (StringHelper.hasText (m_sElementID))
-    {
-      s_aLogger.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
-      // Disable caching
-      m_sDebugID = null;
-    }
-    m_sElementID = sID;
-    return thisAsT ();
-  }
-
-  @Nonnull
-  @Nonempty
-  public final String getDebugID ()
-  {
-    String ret = m_sDebugID;
-    if (ret == null)
-      m_sDebugID = ret = "<" + ClassHelper.getClassLocalName (this) + "-" + getID () + ">";
-    return ret;
-  }
-
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLBaseElement <?> aSource)
   {
+    super.setBasicDataFrom (aSource);
     setMargin (aSource.m_aMargin);
     setPadding (aSource.m_aPadding);
     setBorder (aSource.m_aBorder);
     setFillColor (aSource.m_aFillColor);
     return thisAsT ();
   }
-
-  /**
-   * Throw an exception, if this object is already prepared.
-   *
-   * @throws IllegalStateException
-   *         if already prepared
-   */
-  @OverrideOnDemand
-  protected void internlCheckNotPrepared ()
-  {}
 
   /**
    * Set the margin values. This method may not be called after an element got
@@ -131,7 +76,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public final IMPLTYPE setMargin (@Nonnull final MarginSpec aMargin)
   {
     ValueEnforcer.notNull (aMargin, "Mergin");
-    internlCheckNotPrepared ();
+    internalCheckNotPrepared ();
     m_aMargin = aMargin;
     return thisAsT ();
   }
@@ -157,7 +102,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public final IMPLTYPE setPadding (@Nonnull final PaddingSpec aPadding)
   {
     ValueEnforcer.notNull (aPadding, "Padding");
-    internlCheckNotPrepared ();
+    internalCheckNotPrepared ();
     m_aPadding = aPadding;
     return thisAsT ();
   }
@@ -183,7 +128,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   public final IMPLTYPE setBorder (@Nonnull final BorderSpec aBorder)
   {
     ValueEnforcer.notNull (aBorder, "Border");
-    internlCheckNotPrepared ();
+    internalCheckNotPrepared ();
     m_aBorder = aBorder;
     return thisAsT ();
   }
@@ -368,11 +313,11 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("id", m_sElementID)
-                                       .append ("margin", m_aMargin)
-                                       .append ("padding", m_aPadding)
-                                       .append ("border", m_aBorder)
-                                       .appendIfNotNull ("fillColor", m_aFillColor)
-                                       .toString ();
+    return ToStringGenerator.getDerived (super.toString ())
+                            .append ("margin", m_aMargin)
+                            .append ("padding", m_aPadding)
+                            .append ("border", m_aBorder)
+                            .appendIfNotNull ("fillColor", m_aFillColor)
+                            .toString ();
   }
 }

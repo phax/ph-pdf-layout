@@ -51,10 +51,11 @@ import com.helger.pdflayout.spec.SizeSpec;
  *        Implementation type
  */
 public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
+                                     implements IPLHasRowBorder <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-  protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
+  protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
   private BorderSpec m_aRowBorder = BorderSpec.BORDER0;
   private Color m_aRowFillColor = null;
   /** prepare width (without padding and margin) */
@@ -182,7 +183,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nonnull
   public PLVBoxRow addAndReturnRow (@Nonnull final AbstractPLElement <?> aElement)
   {
-    internlCheckNotPrepared ();
+    internalCheckNotPrepared ();
     return _addAndReturnRow (-1, aElement);
   }
 
@@ -213,7 +214,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public PLVBoxRow addAndReturnRow (@Nonnegative final int nIndex, @Nonnull final AbstractPLElement <?> aElement)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
-    internlCheckNotPrepared ();
+    internalCheckNotPrepared ();
     return _addAndReturnRow (nIndex, aElement);
   }
 
@@ -237,60 +238,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public IMPLTYPE removeRow (@Nonnegative final int nIndex)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
-    internlCheckNotPrepared ();
+    internalCheckNotPrepared ();
     m_aRows.remove (nIndex);
     return thisAsT ();
-  }
-
-  /**
-   * Set the border around each contained row.
-   *
-   * @param aBorder
-   *        The border style to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setRowBorder (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setRowBorder (new BorderSpec (aBorder));
-  }
-
-  /**
-   * Set the border around each contained row.
-   *
-   * @param aBorderY
-   *        The border to set for top and bottom. Maybe <code>null</code>.
-   * @param aBorderX
-   *        The border to set for left and right. Maybe <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setRowBorder (@Nullable final BorderStyleSpec aBorderY,
-                                      @Nullable final BorderStyleSpec aBorderX)
-  {
-    return setRowBorder (new BorderSpec (aBorderY, aBorderX));
-  }
-
-  /**
-   * Set the border around each contained row.
-   *
-   * @param aBorderTop
-   *        The border to set for top. Maybe <code>null</code>.
-   * @param aBorderRight
-   *        The border to set for right. Maybe <code>null</code>.
-   * @param aBorderBottom
-   *        The border to set for bottom. Maybe <code>null</code>.
-   * @param aBorderLeft
-   *        The border to set for left. Maybe <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setRowBorder (@Nullable final BorderStyleSpec aBorderTop,
-                                      @Nullable final BorderStyleSpec aBorderRight,
-                                      @Nullable final BorderStyleSpec aBorderBottom,
-                                      @Nullable final BorderStyleSpec aBorderLeft)
-  {
-    return setRowBorder (new BorderSpec (aBorderTop, aBorderRight, aBorderBottom, aBorderLeft));
   }
 
   /**
@@ -304,65 +254,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public final IMPLTYPE setRowBorder (@Nonnull final BorderSpec aRowBorder)
   {
     ValueEnforcer.notNull (aRowBorder, "RowBorder");
-    internlCheckNotPrepared ();
+    internalCheckNotPrepared ();
     m_aRowBorder = aRowBorder;
     return thisAsT ();
-  }
-
-  /**
-   * Set the top border value around each contained row. This method may not be
-   * called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setRowBorderTop (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setRowBorder (m_aRowBorder.getCloneWithTop (aBorder));
-  }
-
-  /**
-   * Set the right border value around each contained row. This method may not
-   * be called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setRowBorderRight (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setRowBorder (m_aRowBorder.getCloneWithRight (aBorder));
-  }
-
-  /**
-   * Set the bottom border value around each contained row. This method may not
-   * be called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setRowBorderBottom (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setRowBorder (m_aRowBorder.getCloneWithBottom (aBorder));
-  }
-
-  /**
-   * Set the left border value around each contained row. This method may not be
-   * called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setRowBorderLeft (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setRowBorder (m_aRowBorder.getCloneWithLeft (aBorder));
   }
 
   /**
@@ -430,7 +324,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       // Prepare child element
       final float fRowElementHeight = aRowElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                    fRowElementWidth,
-                                                                                   fAvailableHeight - aRowElement.getFullYSum ()))
+                                                                                   fAvailableHeight -
+                                                                                                     aRowElement.getFullYSum ()))
                                                  .getHeight ();
 
       final float fRowElementHeightFull = fRowElementHeight + aRowElement.getFullYSum ();
@@ -450,11 +345,23 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidthFull - aCtx.getAvailableWidth () > 0.01)
-        s_aLogger.warn (getDebugID () + " " + PLDebug.getXMBP (this) + " uses more width (" + fUsedWidthFull +
-                        ") than available (" + aCtx.getAvailableWidth () + ")!");
+        s_aLogger.warn (getDebugID () +
+                        " " +
+                        PLDebug.getXMBP (this) +
+                        " uses more width (" +
+                        fUsedWidthFull +
+                        ") than available (" +
+                        aCtx.getAvailableWidth () +
+                        ")!");
       if (fUsedHeightFull - aCtx.getAvailableHeight () > 0.01 && !isSplittable ())
-        s_aLogger.warn (getDebugID () + " " + PLDebug.getYMBP (this) + " uses more height (" + fUsedHeightFull +
-                        ") than available (" + aCtx.getAvailableHeight () + ")!");
+        s_aLogger.warn (getDebugID () +
+                        " " +
+                        PLDebug.getYMBP (this) +
+                        " uses more height (" +
+                        fUsedHeightFull +
+                        ") than available (" +
+                        aCtx.getAvailableHeight () +
+                        ")!");
     }
 
     return new SizeSpec (fUsedWidthFull, fUsedHeightFull);

@@ -13,7 +13,7 @@ import com.helger.commons.traits.IGenericImplTrait;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>>
+public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
                             extends IHasID <String>, IGenericImplTrait <IMPLTYPE>
 {
   /**

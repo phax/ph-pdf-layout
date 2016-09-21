@@ -28,7 +28,7 @@ import com.helger.pdflayout.spec.EHorzAlignment;
  *        Implementation type
  */
 public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>>
-                                           extends IPLElement <IMPLTYPE>
+                                           extends IPLObject <IMPLTYPE>
 {
   /**
    * @return The horizontal alignment of this element. By default it is

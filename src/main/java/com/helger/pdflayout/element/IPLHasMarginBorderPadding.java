@@ -32,7 +32,7 @@ import com.helger.pdflayout.spec.PaddingSpec;
  *        Implementation type
  */
 public interface IPLHasMarginBorderPadding <IMPLTYPE extends IPLHasMarginBorderPadding <IMPLTYPE>>
-                                           extends IPLElement <IMPLTYPE>
+                                           extends IPLObject <IMPLTYPE>
 {
   /**
    * Set all margin values (left, top, right, bottom) to the same value. This

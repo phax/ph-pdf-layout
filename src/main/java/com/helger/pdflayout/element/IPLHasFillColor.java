@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> extends IPLElement <IMPLTYPE>
+public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> extends IPLObject <IMPLTYPE>
 {
   /**
    * Set the element fill color.

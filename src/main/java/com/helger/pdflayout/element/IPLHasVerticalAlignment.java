@@ -28,7 +28,7 @@ import com.helger.pdflayout.spec.EVertAlignment;
  *        Implementation type
  */
 public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignment <IMPLTYPE>>
-                                         extends IPLElement <IMPLTYPE>
+                                         extends IPLObject <IMPLTYPE>
 {
   /**
    * @return The vertical alignment of this element. By default it is

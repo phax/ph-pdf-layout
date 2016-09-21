@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLSplittableElement <IMPLTYPE extends IPLSplittableElement <IMPLTYPE>> extends IPLElement <IMPLTYPE>
+public interface IPLSplittableElement <IMPLTYPE extends IPLSplittableElement <IMPLTYPE>> extends IPLObject <IMPLTYPE>
 {
   /**
    * @return Always <code>true</code> for splittable elements
