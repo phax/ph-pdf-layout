@@ -7,7 +7,7 @@ import com.helger.commons.id.IHasID;
 import com.helger.commons.traits.IGenericImplTrait;
 
 /**
- * Base interface for a PDF layout element
+ * Base interface for a PDF layout object
  *
  * @author Philip Helger
  * @param <IMPLTYPE>

@@ -21,13 +21,13 @@ import java.io.IOException;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -39,39 +39,23 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRenderableElement <IMPLTYPE>>
-                                                  extends AbstractPLObject <IMPLTYPE>
+public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRenderableObject <IMPLTYPE>> extends
+                                                 AbstractPLObject <IMPLTYPE> implements IPLRenderableObject <IMPLTYPE>
 {
-  public static final SizeSpec DEFAULT_MIN_SIZE = SizeSpec.SIZE0;
-  public static final SizeSpec DEFAULT_MAX_SIZE = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
-
   private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
   private SizeSpec m_aMaxSize = DEFAULT_MAX_SIZE;
   private boolean m_bPrepared = false;
   private SizeSpec m_aPreparedSize;
 
-  public AbstractPLRenderableElement ()
+  public AbstractPLRenderableObject ()
   {}
 
-  /**
-   * @return The minimum size to be used. Excluding padding and margin. Never
-   *         <code>null</code>.
-   */
   @Nonnull
   public SizeSpec getMinSize ()
   {
     return m_aMinSize;
   }
 
-  /**
-   * Set the minimum size to be used. Excluding padding and margin.
-   *
-   * @param fMinWidth
-   *        Minimum width. Must be &ge; 0.
-   * @param fMinHeight
-   *        Minimum height. Must be &ge; 0.
-   * @return this
-   */
   @Nonnull
   public IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight)
   {
@@ -79,25 +63,12 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
     return thisAsT ();
   }
 
-  /**
-   * @return The maximum size to be used. Excluding padding and margin. Never
-   *         <code>null</code>.
-   */
   @Nonnull
   public SizeSpec getMaxSize ()
   {
     return m_aMaxSize;
   }
 
-  /**
-   * Set the maximum size to be used. Excluding padding and margin.
-   *
-   * @param fMaxWidth
-   *        Maximum width. Must be &ge; 0.
-   * @param fMaxHeight
-   *        Maximum height. Must be &ge; 0.
-   * @return this
-   */
   @Nonnull
   public IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight)
   {
@@ -106,29 +77,14 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
   }
 
   /**
-   * Set the exact size to be used. Excluding padding and margin. This is a
-   * shortcut for setting minimum and maximum size to the same values.
-   *
-   * @param fWidth
-   *        Width to use. Must be &ge; 0.
-   * @param fHeight
-   *        Height to use. Must be &ge; 0.
-   * @return this
-   */
-  @Nonnull
-  public IMPLTYPE setExactSize (@Nonnegative final float fWidth, @Nonnegative final float fHeight)
-  {
-    setMinSize (fWidth, fHeight);
-    return setMaxSize (fWidth, fHeight);
-  }
-
-  /**
    * Throw an exception, if this object is already prepared.
    *
    * @throws IllegalStateException
    *         if already prepared
    */
-  protected final void internalCheckNotPrepared ()
+  @OverrideOnDemand
+  @OverridingMethodsMustInvokeSuper
+  protected void internalCheckNotPrepared ()
   {
     if (isPrepared ())
       throw new IllegalStateException (getDebugID () +
@@ -205,16 +161,6 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
     }
   }
 
-  /**
-   * Prepare this element once for rendering.
-   *
-   * @param aCtx
-   *        The preparation context
-   * @return The net size of the rendered object without margin, border and
-   *         margin. May not be <code>null</code>.
-   * @throws IOException
-   *         if already prepared
-   */
   @Nonnull
   public final SizeSpec prepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
@@ -266,16 +212,6 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
   }
 
   /**
-   * Called after the page was created but before the content stream is created.
-   *
-   * @param aCtx
-   *        The current page setup context. Never <code>null</code>.
-   */
-  @OverrideOnDemand
-  public void doPageSetup (@Nonnull final PageSetupContext aCtx)
-  {}
-
-  /**
    * method to be implemented by subclasses. Should fill the surrounding and
    * create the border.
    *
@@ -299,14 +235,6 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
   @OverrideOnDemand
   protected abstract void onPerform (@Nonnull RenderingContext aCtx) throws IOException;
 
-  /**
-   * Second step: perform.
-   *
-   * @param aCtx
-   *        Rendering context
-   * @throws IOException
-   *         In case of a PDFBox error
-   */
   @Nonnegative
   public final void perform (@Nonnull final RenderingContext aCtx) throws IOException
   {

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.element.text;
 
 import java.util.List;
 
@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
 import com.helger.commons.collection.CollectionHelper;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.IPLSplittableObject;
+import com.helger.pdflayout.base.PLElementWithSize;
+import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.TextAndWidthSpec;

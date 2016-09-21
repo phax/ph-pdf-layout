@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.element.table;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,6 +34,14 @@ import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.IPLSplittableObject;
+import com.helger.pdflayout.base.PLElementWithSize;
+import com.helger.pdflayout.base.PLSplitResult;
+import com.helger.pdflayout.element.AbstractPLHBox;
+import com.helger.pdflayout.element.AbstractPLVBox;
+import com.helger.pdflayout.element.PLHBoxColumn;
+import com.helger.pdflayout.element.PLHBoxSplittable;
+import com.helger.pdflayout.element.PLVBoxRow;
+import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 import com.helger.pdflayout.spec.WidthSpec.EWidthType;

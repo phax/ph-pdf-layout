@@ -28,6 +28,8 @@ import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.IPLSplittableObject;
+import com.helger.pdflayout.base.PLElementWithSize;
+import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**

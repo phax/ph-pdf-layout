@@ -14,17 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Wraps an {@link AbstractPLElement} and stores the size.
+ * Wraps an {@link AbstractPLRenderableObject} and stores the size.
  *
  * @author Philip Helger
  */
@@ -44,13 +43,31 @@ public final class PLElementWithSize
    */
   public PLElementWithSize (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final SizeSpec aSize)
   {
+    this (aElement,
+          aSize,
+          new SizeSpec (aSize.getWidth () + aElement.getFullXSum (), aSize.getHeight () + aElement.getFullYSum ()));
+  }
+
+  /**
+   * Constructor
+   *
+   * @param aElement
+   *        Element itself.
+   * @param aSize
+   *        Size of the element without padding and margin
+   * @param aSizeFull
+   *        Size of the element with padding, border and margin
+   */
+  public PLElementWithSize (@Nonnull final AbstractPLElement <?> aElement,
+                            @Nonnull final SizeSpec aSize,
+                            @Nonnull final SizeSpec aSizeFull)
+  {
     ValueEnforcer.notNull (aElement, "Element");
     ValueEnforcer.notNull (aSize, "Size");
+    ValueEnforcer.notNull (aSizeFull, "SizeFull");
     m_aElement = aElement;
     m_aSize = aSize;
-    m_aSizeFull = new SizeSpec (aSize.getWidth () +
-                                aElement.getFullXSum (),
-                                aSize.getHeight () + aElement.getFullYSum ());
+    m_aSizeFull = aSizeFull;
   }
 
   /**

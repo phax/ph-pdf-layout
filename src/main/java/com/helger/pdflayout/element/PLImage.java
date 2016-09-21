@@ -30,16 +30,10 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.IHasInputStream;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
-import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
-import com.helger.pdflayout.base.IPLHasPadding;
-import com.helger.pdflayout.base.IPLHasVerticalAlignment;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
-import com.helger.pdflayout.spec.EHorzAlignment;
-import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -47,17 +41,12 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLImage extends AbstractPLElement <PLImage> implements
-                     IPLHasHorizontalAlignment <PLImage>,
-                     IPLHasVerticalAlignment <PLImage>,
-                     IPLHasPadding <PLImage>
+public class PLImage extends AbstractPLAlignedElement <PLImage>
 {
   private final BufferedImage m_aImage;
   private final IHasInputStream m_aIIS;
   private final float m_fWidth;
   private final float m_fHeight;
-  private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
-  private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
 
   // Status var
   private PDImageXObject m_aJpeg;
@@ -122,34 +111,6 @@ public class PLImage extends AbstractPLElement <PLImage> implements
   public PLImage setBasicDataFrom (@Nonnull final PLImage aSource)
   {
     super.setBasicDataFrom (aSource);
-    setHorzAlign (aSource.m_eHorzAlign);
-    setVertAlign (aSource.m_eVertAlign);
-    return this;
-  }
-
-  @Nonnull
-  public EHorzAlignment getHorzAlign ()
-  {
-    return m_eHorzAlign;
-  }
-
-  @Nonnull
-  public PLImage setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
-  {
-    m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
-    return this;
-  }
-
-  @Nonnull
-  public EVertAlignment getVertAlign ()
-  {
-    return m_eVertAlign;
-  }
-
-  @Nonnull
-  public PLImage setVertAlign (@Nonnull final EVertAlignment eVertAlign)
-  {
-    m_eVertAlign = ValueEnforcer.notNull (eVertAlign, "VertAlign");
     return this;
   }
 
@@ -191,7 +152,7 @@ public class PLImage extends AbstractPLElement <PLImage> implements
     final float fLeft = getPaddingLeft ();
     final float fUsableWidth = aCtx.getWidth () - getPaddingXSum ();
     float fIndentX;
-    switch (m_eHorzAlign)
+    switch (getHorzAlign ())
     {
       case LEFT:
         fIndentX = fLeft;
@@ -203,7 +164,7 @@ public class PLImage extends AbstractPLElement <PLImage> implements
         fIndentX = fLeft + fUsableWidth - m_fWidth;
         break;
       default:
-        throw new IllegalStateException ("Unsupported horizontal alignment " + m_eHorzAlign);
+        throw new IllegalStateException ("Unsupported horizontal alignment " + getHorzAlign ());
     }
 
     aContentStream.drawXObject (m_aJpeg,
@@ -220,8 +181,6 @@ public class PLImage extends AbstractPLElement <PLImage> implements
                             .append ("image", m_aImage)
                             .append ("width", m_fWidth)
                             .append ("height", m_fHeight)
-                            .append ("horzAlign", m_eHorzAlign)
-                            .append ("vertAlign", m_eVertAlign)
                             .toString ();
   }
 }

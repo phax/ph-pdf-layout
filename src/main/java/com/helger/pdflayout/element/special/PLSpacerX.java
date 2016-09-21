@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.element.special;
 
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -30,7 +30,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLSpacerX extends AbstractPLElement <PLSpacerX>
+public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
 {
   public PLSpacerX ()
   {}

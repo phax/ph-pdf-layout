@@ -14,22 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.element.text;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.annotation.OverrideOnDemand;
+import com.helger.commons.string.StringHelper;
+import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.FontSpec;
 
 /**
- * Render text
+ * Render text but before that replace all placeholders defined in the
+ * {@link RenderingContext}.
  *
  * @author Philip Helger
  */
-public class PLText extends AbstractPLText <PLText>
+public class PLTextWithPlaceholders extends PLText
 {
-  public PLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
+  public PLTextWithPlaceholders (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
   {
     super (sText, aFontSpec);
+  }
+
+  @Override
+  @OverrideOnDemand
+  protected String getTextToDraw (@Nonnull final String sText, @Nonnull final RenderingContext aCtx)
+  {
+    // Replace all at once
+    return StringHelper.replaceMultiple (sText, aCtx.getAllPlaceholders ());
   }
 }

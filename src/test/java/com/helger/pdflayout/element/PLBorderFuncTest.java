@@ -27,6 +27,8 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.element.special.PLSpacerY;
+import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.FontSpec;

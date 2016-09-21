@@ -19,8 +19,6 @@ package com.helger.pdflayout.base;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 
-import com.helger.pdflayout.element.PLSplitResult;
-
 /**
  * Base interface for a splittable element
  *
