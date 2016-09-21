@@ -571,7 +571,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       aElement.perform (aItemCtx);
 
       // Update X-pos
-      fCurX += fItemWidthWithPadding + aElement.getFullXSum () + fColumnBorderXSumWidth;
+      fCurX += fItemWidth + aElement.getFullXSum () + fColumnBorderXSumWidth;
       ++nIndex;
     }
   }
