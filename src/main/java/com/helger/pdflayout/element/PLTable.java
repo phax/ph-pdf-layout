@@ -225,7 +225,8 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   }
 
   /**
-   * Set the number of header rows in this table.
+   * Set the number of header rows in this table. Header rows get repeated on
+   * every page upon rendering.
    *
    * @param nHeaderRowCount
    *        The number of header rows, to be repeated by page. Must be &ge; 0.

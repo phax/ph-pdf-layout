@@ -30,8 +30,15 @@ import com.helger.commons.ValueEnforcer;
 @NotThreadSafe
 public class PLTableCell
 {
+  public static final int DEFAULT_COL_SPAN = 1;
+
   private final AbstractPLElement <?> m_aElement;
   private final int m_nColSpan;
+
+  public PLTableCell (@Nonnull final AbstractPLElement <?> aElement)
+  {
+    this (aElement, DEFAULT_COL_SPAN);
+  }
 
   public PLTableCell (@Nonnull final AbstractPLElement <?> aElement, @Nonnegative final int nColSpan)
   {
