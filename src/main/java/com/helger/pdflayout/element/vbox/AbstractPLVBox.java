@@ -215,7 +215,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return the created row
    */
   @Nonnull
-  public PLVBoxRow addAndReturnRow (@Nonnegative final int nIndex, @Nonnull final AbstractPLElement <?> aElement)
+  public PLVBoxRow addAndReturnRow (@Nonnegative final int nIndex, @Nonnull final IPLRenderableObject <?> aElement)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
     internalCheckNotPrepared ();
@@ -232,7 +232,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return this
    */
   @Nonnull
-  public IMPLTYPE addRow (@Nonnegative final int nIndex, @Nonnull final AbstractPLElement <?> aElement)
+  public IMPLTYPE addRow (@Nonnegative final int nIndex, @Nonnull final IPLRenderableObject <?> aElement)
   {
     addAndReturnRow (nIndex, aElement);
     return thisAsT ();

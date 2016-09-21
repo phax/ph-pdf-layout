@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLRenderableObject;
 
 /**
  * This class represents a single table cell within a table row.
@@ -36,16 +36,16 @@ public class PLTableCell
 {
   public static final int DEFAULT_COL_SPAN = 1;
 
-  private final AbstractPLElement <?> m_aElement;
+  private final IPLRenderableObject <?> m_aElement;
   private final int m_nColSpan;
   private Color m_aFillColor;
 
-  public PLTableCell (@Nonnull final AbstractPLElement <?> aElement)
+  public PLTableCell (@Nonnull final IPLRenderableObject <?> aElement)
   {
     this (aElement, DEFAULT_COL_SPAN);
   }
 
-  public PLTableCell (@Nonnull final AbstractPLElement <?> aElement, @Nonnegative final int nColSpan)
+  public PLTableCell (@Nonnull final IPLRenderableObject <?> aElement, @Nonnegative final int nColSpan)
   {
     ValueEnforcer.notNull (aElement, "Element");
     ValueEnforcer.isGT0 (nColSpan, "ColSpan");
@@ -54,7 +54,7 @@ public class PLTableCell
   }
 
   @Nonnull
-  public AbstractPLElement <?> getElement ()
+  public IPLRenderableObject <?> getElement ()
   {
     return m_aElement;
   }

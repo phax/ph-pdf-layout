@@ -144,7 +144,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   @Nonnull
   private PLHBoxColumn _addAndReturnColumn (@CheckForSigned final int nIndex,
-                                            @Nonnull final AbstractPLElement <?> aElement,
+                                            @Nonnull final IPLRenderableObject <?> aElement,
                                             @Nonnull final WidthSpec aWidth)
   {
     internalCheckNotPrepared ();
@@ -159,7 +159,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Nonnull
-  public PLHBoxColumn addAndReturnColumn (@Nonnull final AbstractPLElement <?> aElement,
+  public PLHBoxColumn addAndReturnColumn (@Nonnull final IPLRenderableObject <?> aElement,
                                           @Nonnull final WidthSpec aWidth)
   {
     internalCheckNotPrepared ();
@@ -167,7 +167,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Nonnull
-  public IMPLTYPE addColumn (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final WidthSpec aWidth)
+  public IMPLTYPE addColumn (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final WidthSpec aWidth)
   {
     addAndReturnColumn (aElement, aWidth);
     return thisAsT ();
@@ -175,7 +175,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   @Nonnull
   public PLHBoxColumn addAndReturnColumn (@Nonnegative final int nIndex,
-                                          @Nonnull final AbstractPLElement <?> aElement,
+                                          @Nonnull final IPLRenderableObject <?> aElement,
                                           @Nonnull final WidthSpec aWidth)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
@@ -185,7 +185,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   @Nonnull
   public IMPLTYPE addColumn (@Nonnegative final int nIndex,
-                             @Nonnull final AbstractPLElement <?> aElement,
+                             @Nonnull final IPLRenderableObject <?> aElement,
                              @Nonnull final WidthSpec aWidth)
   {
     addAndReturnColumn (nIndex, aElement, aWidth);
