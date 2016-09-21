@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.element.AbstractPLElement2;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -29,7 +30,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  */
 public final class PLElementWithSize
 {
-  private final AbstractPLElement <?> m_aElement;
+  private final IPLRenderableObject <?> m_aElement;
   private final SizeSpec m_aSize;
   private final SizeSpec m_aSizeFull;
 
@@ -41,7 +42,8 @@ public final class PLElementWithSize
    * @param aSize
    *        Size of the element without padding and margin
    */
-  public PLElementWithSize (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final SizeSpec aSize)
+  @Deprecated
+  public PLElementWithSize (@Nonnull final AbstractPLElement2 <?> aElement, @Nonnull final SizeSpec aSize)
   {
     this (aElement,
           aSize,
@@ -58,7 +60,7 @@ public final class PLElementWithSize
    * @param aSizeFull
    *        Size of the element with padding, border and margin
    */
-  public PLElementWithSize (@Nonnull final AbstractPLElement <?> aElement,
+  public PLElementWithSize (@Nonnull final IPLRenderableObject <?> aElement,
                             @Nonnull final SizeSpec aSize,
                             @Nonnull final SizeSpec aSizeFull)
   {
@@ -74,7 +76,7 @@ public final class PLElementWithSize
    * @return The contained element.
    */
   @Nonnull
-  public AbstractPLElement <?> getElement ()
+  public IPLRenderableObject <?> getElement ()
   {
     return m_aElement;
   }

@@ -31,6 +31,7 @@ import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.FontSpec;

@@ -25,13 +25,13 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
-import com.helger.pdflayout.element.PLHBox;
 import com.helger.pdflayout.element.PLPageSet;
-import com.helger.pdflayout.element.PLVBox;
+import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
+import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.render.RenderPageIndex;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;

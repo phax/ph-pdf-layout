@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.element.hbox;
 
 /**
- * Vertical box - groups several rows.
+ * Horizontal box - groups several columns.
  *
  * @author Philip Helger
  */
-public class PLVBoxSplittable extends AbstractPLVBoxSplittable <PLVBoxSplittable>
+public class PLHBoxSplittable extends AbstractPLHBoxSplittable <PLHBoxSplittable>
 {
-  public PLVBoxSplittable ()
+  public PLHBoxSplittable ()
   {}
 }

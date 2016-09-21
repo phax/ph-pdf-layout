@@ -35,6 +35,7 @@ import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.table.PLTable;
