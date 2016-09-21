@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.StringHelper;
@@ -84,7 +83,7 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
 
   /**
    * For copying stuff internally. Must always call super method
-   * 
+   *
    * @param aSource
    *        Source object to copy from. May not be <code>null</code>.
    * @return this for chaining
@@ -95,16 +94,6 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   {
     return thisAsT ();
   }
-
-  /**
-   * Throw an exception, if this object is already prepared.
-   *
-   * @throws IllegalStateException
-   *         if already prepared
-   */
-  @OverrideOnDemand
-  protected void internalCheckNotPrepared ()
-  {}
 
   @Override
   public String toString ()

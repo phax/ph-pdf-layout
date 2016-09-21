@@ -30,6 +30,8 @@ import javax.annotation.Nullable;
  */
 public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> extends IPLObject <IMPLTYPE>
 {
+  Color DEFAULT_FILL_COLOR = null;
+
   /**
    * Set the element fill color.
    *

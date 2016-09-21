@@ -30,6 +30,8 @@ import com.helger.pdflayout.spec.EHorzAlignment;
 public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>>
                                            extends IPLObject <IMPLTYPE>
 {
+  EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
+
   /**
    * @return The horizontal alignment of this element. By default it is
    *         {@link EHorzAlignment#DEFAULT}. Never <code>null</code>.

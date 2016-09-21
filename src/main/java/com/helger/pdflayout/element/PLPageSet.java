@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -61,7 +62,9 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMarginBorderPadding <PLPageSet>
+@NotThreadSafe
+public class PLPageSet extends AbstractPLObject <PLPageSet>
+                       implements IPLHasMarginBorderPadding <PLPageSet>, IPLHasFillColor <PLPageSet>
 {
   public static final class PageSetPrepareResult
   {
@@ -169,10 +172,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLPageSet.class);
 
   private final SizeSpec m_aPageSize;
-  private MarginSpec m_aMargin = MarginSpec.MARGIN0;
-  private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
-  private BorderSpec m_aBorder = BorderSpec.BORDER0;
-  private Color m_aFillColor = null;
+  private MarginSpec m_aMargin = DEFAULT_MARGIN;
+  private PaddingSpec m_aPadding = DEFAULT_PADDING;
+  private BorderSpec m_aBorder = DEFAULT_BORDER;
+  private Color m_aFillColor = DEFAULT_FILL_COLOR;
   private AbstractPLElement <?> m_aPageHeader;
   private final ICommonsList <AbstractPLElement <?>> m_aElements = new CommonsArrayList<> ();
   private AbstractPLElement <?> m_aPageFooter;
@@ -213,7 +216,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
   public final PLPageSet setMargin (@Nonnull final MarginSpec aMargin)
   {
     ValueEnforcer.notNull (aMargin, "Mergin");
-    internalCheckNotPrepared ();
     m_aMargin = aMargin;
     return this;
   }
@@ -228,7 +230,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
   public final PLPageSet setPadding (@Nonnull final PaddingSpec aPadding)
   {
     ValueEnforcer.notNull (aPadding, "Padding");
-    internalCheckNotPrepared ();
     m_aPadding = aPadding;
     return this;
   }
@@ -243,7 +244,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
   public final PLPageSet setBorder (@Nonnull final BorderSpec aBorder)
   {
     ValueEnforcer.notNull (aBorder, "Border");
-    internalCheckNotPrepared ();
     m_aBorder = aBorder;
     return this;
   }

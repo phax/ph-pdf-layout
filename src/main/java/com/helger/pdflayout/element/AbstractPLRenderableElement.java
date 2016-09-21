@@ -128,7 +128,6 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
    * @throws IllegalStateException
    *         if already prepared
    */
-  @Override
   protected final void internalCheckNotPrepared ()
   {
     if (isPrepared ())

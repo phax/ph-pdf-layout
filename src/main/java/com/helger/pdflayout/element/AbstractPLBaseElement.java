@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.MarginSpec;
@@ -36,14 +37,15 @@ import com.helger.pdflayout.spec.PaddingSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
+@Deprecated
 public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>>
                                             extends AbstractPLObject <IMPLTYPE>
                                             implements IPLHasFillColor <IMPLTYPE>, IPLHasMarginBorderPadding <IMPLTYPE>
 {
-  private MarginSpec m_aMargin = MarginSpec.MARGIN0;
-  private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
-  private BorderSpec m_aBorder = BorderSpec.BORDER0;
-  private Color m_aFillColor = null;
+  private MarginSpec m_aMargin = DEFAULT_MARGIN;
+  private PaddingSpec m_aPadding = DEFAULT_PADDING;
+  private BorderSpec m_aBorder = DEFAULT_BORDER;
+  private Color m_aFillColor = DEFAULT_FILL_COLOR;
 
   public AbstractPLBaseElement ()
   {}
@@ -59,6 +61,16 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     setFillColor (aSource.m_aFillColor);
     return thisAsT ();
   }
+
+  /**
+   * Throw an exception, if this object is already prepared.
+   *
+   * @throws IllegalStateException
+   *         if already prepared
+   */
+  @OverrideOnDemand
+  protected void internalCheckNotPrepared ()
+  {}
 
   @Nonnull
   public final IMPLTYPE setMargin (@Nonnull final MarginSpec aMargin)
@@ -108,6 +120,7 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
   @Nonnull
   public IMPLTYPE setFillColor (@Nullable final Color aFillColor)
   {
+    internalCheckNotPrepared ();
     m_aFillColor = aFillColor;
     return thisAsT ();
   }

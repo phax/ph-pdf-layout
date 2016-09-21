@@ -43,12 +43,11 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLImage extends AbstractPLElement <PLImage>
-                     implements IPLHasHorizontalAlignment <PLImage>, IPLHasVerticalAlignment <PLImage>
+public class PLImage extends AbstractPLElement <PLImage> implements
+                     IPLHasHorizontalAlignment <PLImage>,
+                     IPLHasVerticalAlignment <PLImage>,
+                     IPLHasPadding <PLImage>
 {
-  public static final EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
-  public static final EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
-
   private final BufferedImage m_aImage;
   private final IHasInputStream m_aIIS;
   private final float m_fWidth;

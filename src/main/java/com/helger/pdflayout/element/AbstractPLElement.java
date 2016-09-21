@@ -42,6 +42,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
+@Deprecated
 public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>>
                                         extends AbstractPLBaseElement <IMPLTYPE>
 {
@@ -273,7 +274,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
    * @throws IOException
    *         In case of a PDFBox error
    */
-  @Nonnegative
+  @OverrideOnDemand
   protected abstract void onPerform (@Nonnull RenderingContext aCtx) throws IOException;
 
   /**

@@ -30,6 +30,8 @@ import com.helger.pdflayout.spec.EVertAlignment;
 public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignment <IMPLTYPE>>
                                          extends IPLObject <IMPLTYPE>
 {
+  EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
+
   /**
    * @return The vertical alignment of this element. By default it is
    *         {@link EVertAlignment#DEFAULT}. Never <code>null</code>.
