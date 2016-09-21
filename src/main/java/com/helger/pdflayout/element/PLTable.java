@@ -170,6 +170,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
   {
     ValueEnforcer.notNull (aCells, "Cells");
 
+    // Small consistency check
     int nUsedCols = 0;
     for (final PLTableCell aCell : aCells)
       nUsedCols += aCell.getColSpan ();

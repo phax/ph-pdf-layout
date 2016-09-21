@@ -17,17 +17,25 @@
 package com.helger.pdflayout.element;
 
 import java.awt.Color;
+import java.util.function.Function;
+import java.util.function.IntFunction;
+
+import javax.annotation.Nonnull;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.ext.CommonsArrayList;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.render.RenderPageIndex;
+import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
@@ -136,5 +144,96 @@ public final class PLTableTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table.pdf"));
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public static <T> ICommonsList <T> createList (final int nCount, final IntFunction <T> aSupplier)
+  {
+    final ICommonsList <T> ret = new CommonsArrayList<> (nCount);
+    for (int i = 0; i < nCount; ++i)
+      ret.add (aSupplier.apply (i));
+    return ret;
+  }
+
+  @Test
+  public void testGrid () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final FontSpec r14b = new FontSpec (PreloadFont.REGULAR_BOLD, 14);
+    final MarginSpec aMargin = new MarginSpec (5);
+    final PaddingSpec aPadding = new PaddingSpec (2);
+    final Color aBGElement = Color.GREEN;
+    final Color aBGCell = Color.BLUE;
+    final Color aBGRow = Color.RED;
+    final Color aBGTable = Color.WHITE;
+    final BorderSpec aBorder = new BorderSpec (new BorderStyleSpec (1));
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30).setFillColor (aBGTable);
+
+    // Start table
+    final int nCols = 4;
+    final int nRepeats = 3;
+
+    final PLTable aTable = PLTable.createWithEvenlySizedColumns (nCols);
+
+    // Add header row
+    aTable.setHeaderRowCount (1);
+    aTable.addTableRow (createList (nCols, nIdx -> new PLText ("Col " + (nIdx + 1), r14b).setPadding (aPadding)));
+
+    final ICommonsList <Function <PLHBoxSplittable, PLHBoxSplittable>> aRowFcts;
+    aRowFcts = new CommonsArrayList<> (x -> x, x -> x.setColumnBorder (aBorder), x -> x.setFillColor (aBGRow));
+
+    final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
+    aCellFcts = new CommonsArrayList<> (x -> x);
+
+    final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts;
+    aElementFcts = new CommonsArrayList<> (x -> x,
+                                           x -> x.setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder),
+                                           x -> x.setBorder (aBorder).setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder)
+                                                 .setPadding (aPadding)
+                                                 .setMargin (aMargin)
+                                                 .setFillColor (aBGElement));
+
+    int nRowFunc = 0;
+    for (final Function <PLHBoxSplittable, PLHBoxSplittable> aRowFct : aRowFcts)
+    {
+      final int nCurRowFunc = nRowFunc;
+      int nCellFunc = 0;
+      for (final Function <PLTableCell, PLTableCell> aCellFct : aCellFcts)
+      {
+        final int nCurCellFunc = nCellFunc;
+        int nElementFunc = 0;
+        for (final Function <AbstractPLElement <?>, AbstractPLElement <?>> aElementFct : aElementFcts)
+        {
+          final int nCurElementFunc = nElementFunc;
+          for (int i = 0; i < nRepeats; ++i)
+            aRowFct.apply (aTable.addTableRowExt (createList (nCols,
+                                                              nIdx -> aCellFct.apply (new PLTableCell (aElementFct.apply (new PLText ("Cell " +
+                                                                                                                                      (nIdx +
+                                                                                                                                       1) +
+                                                                                                                                      " @ " +
+                                                                                                                                      nCurRowFunc +
+                                                                                                                                      "/" +
+                                                                                                                                      nCurCellFunc +
+                                                                                                                                      "/" +
+                                                                                                                                      nCurElementFunc,
+                                                                                                                                      r10)))))));
+          aTable.addTableRowExt (new PLTableCell (new PLSpacerY (5), nCols));
+          ++nElementFunc;
+        }
+        nCellFunc++;
+      }
+      nRowFunc++;
+    }
+
+    aPS1.addElement (aTable);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table-grid.pdf"));
   }
 }
