@@ -188,7 +188,8 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
       final int nCols = aCell.getColSpan ();
       if (nCols == 1)
       {
-        aHBox.addColumn (aCell.getElement (), m_aWidths.get (nWidthIndex));
+        aHBox.addAndReturnColumn (aCell.getElement (), m_aWidths.get (nWidthIndex))
+             .setFillColor (aCell.getFillColor ());
       }
       else
       {
@@ -208,7 +209,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableEl
             fWidth += aWidth.getValue ();
           aRealWidth = new WidthSpec (eWidthType, fWidth);
         }
-        aHBox.addColumn (aCell.getElement (), aRealWidth);
+        aHBox.addAndReturnColumn (aCell.getElement (), aRealWidth).setFillColor (aCell.getFillColor ());
       }
       nWidthIndex += nCols;
     }

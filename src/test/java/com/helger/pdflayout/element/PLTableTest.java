@@ -163,10 +163,10 @@ public final class PLTableTest
     final FontSpec r14b = new FontSpec (PreloadFont.REGULAR_BOLD, 14);
     final MarginSpec aMargin = new MarginSpec (5);
     final PaddingSpec aPadding = new PaddingSpec (2);
-    final Color aBGElement = Color.GREEN;
+    final Color aBGElement = Color.WHITE;
     final Color aBGCell = Color.BLUE;
     final Color aBGRow = Color.RED;
-    final Color aBGTable = Color.WHITE;
+    final Color aBGTable = Color.MAGENTA;
     final BorderSpec aBorder = new BorderSpec (new BorderStyleSpec (1));
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30).setFillColor (aBGTable);
@@ -179,13 +179,31 @@ public final class PLTableTest
 
     // Add header row
     aTable.setHeaderRowCount (1);
-    aTable.addTableRow (createList (nCols, nIdx -> new PLText ("Col " + (nIdx + 1), r14b).setPadding (aPadding)));
+    aTable.addTableRow (createList (nCols,
+                                    nIdx -> new PLText ("Col " +
+                                                        (nIdx + 1),
+                                                        r14b.getCloneWithDifferentColor (Color.GRAY)).setPadding (aPadding)))
+          .setFillColor (Color.YELLOW)
+          .setBorder (new BorderStyleSpec (Color.GRAY, 3));
 
     final ICommonsList <Function <PLHBoxSplittable, PLHBoxSplittable>> aRowFcts;
-    aRowFcts = new CommonsArrayList<> (x -> x, x -> x.setColumnBorder (aBorder), x -> x.setFillColor (aBGRow));
+    aRowFcts = new CommonsArrayList<> (x -> x,
+                                       x -> x.setColumnBorder (aBorder),
+                                       x -> x.setFillColor (aBGRow),
+                                       x -> x.setPadding (aPadding).setFillColor (aBGRow),
+                                       x -> x.setMargin (aMargin).setFillColor (aBGRow),
+                                       x -> x.setPadding (aPadding).setMargin (aMargin).setFillColor (aBGRow),
+                                       x -> x.setPadding (aPadding)
+                                             .setMargin (aMargin)
+                                             .setFillColor (aBGRow)
+                                             .setColumnBorder (aBorder));
 
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
-    aCellFcts = new CommonsArrayList<> (x -> x);
+    aCellFcts = new CommonsArrayList<> (x -> x,
+                                        x -> x.setFillColor (aBGCell),
+                                        x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2")
+                                                                                                         ? x.setFillColor (aBGCell)
+                                                                                                         : x);
 
     final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts;
     aElementFcts = new CommonsArrayList<> (x -> x,

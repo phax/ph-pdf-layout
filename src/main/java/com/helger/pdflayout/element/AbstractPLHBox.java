@@ -56,7 +56,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
+  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
   private int m_nStarWidthItems = 0;
   private BorderSpec m_aColumnBorder = BorderSpec.BORDER0;
   private Color m_aColumnFillColor = null;
@@ -473,12 +473,20 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidthFull - aCtx.getAvailableWidth () > 0.01)
-        s_aLogger.warn (getDebugID () + " uses more width (" + fUsedWidthFull + ") than available (" +
-                        aCtx.getAvailableWidth () + ")!");
+        s_aLogger.warn (getDebugID () +
+                        " uses more width (" +
+                        fUsedWidthFull +
+                        ") than available (" +
+                        aCtx.getAvailableWidth () +
+                        ")!");
       if (fUsedHeightFull - aCtx.getAvailableHeight () > 0.01)
         if (!isSplittable ())
-          s_aLogger.warn (getDebugID () + " uses more height (" + fUsedHeightFull + ") than available (" +
-                          aCtx.getAvailableHeight () + ")!");
+          s_aLogger.warn (getDebugID () +
+                          " uses more height (" +
+                          fUsedHeightFull +
+                          ") than available (" +
+                          aCtx.getAvailableHeight () +
+                          ")!");
     }
 
     return new SizeSpec (fUsedWidthFull, fUsedHeightFull);
@@ -522,9 +530,12 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         final float fHeight = fHBoxHeight;
 
         // Fill before border
-        if (m_aColumnFillColor != null)
+        Color aFillColor = aColumn.getFillColor ();
+        if (aFillColor == null)
+          aFillColor = m_aColumnFillColor;
+        if (aFillColor != null)
         {
-          aContentStream.setNonStrokingColor (m_aColumnFillColor);
+          aContentStream.setNonStrokingColor (aFillColor);
           aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
         }
 

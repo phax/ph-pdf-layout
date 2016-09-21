@@ -281,7 +281,7 @@ public class PLText extends AbstractPLElement <PLText>
   {
     if (m_aPreparedLinesUnmodified == null)
       throw new IllegalStateException ("Preparation is not yet done");
-    return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
+    return new CommonsArrayList<> (m_aPreparedLinesUnmodified);
   }
 
   /**
@@ -405,7 +405,7 @@ public class PLText extends AbstractPLElement <PLText>
     ValueEnforcer.notEmpty (aLines, "Lines");
 
     // Create a copy to be independent!
-    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList <> (aLines);
+    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList<> (aLines);
 
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));

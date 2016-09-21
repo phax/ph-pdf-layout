@@ -16,8 +16,11 @@
  */
 package com.helger.pdflayout.element;
 
+import java.awt.Color;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
@@ -34,6 +37,7 @@ public class PLTableCell
 
   private final AbstractPLElement <?> m_aElement;
   private final int m_nColSpan;
+  private Color m_aFillColor;
 
   public PLTableCell (@Nonnull final AbstractPLElement <?> aElement)
   {
@@ -58,5 +62,28 @@ public class PLTableCell
   public int getColSpan ()
   {
     return m_nColSpan;
+  }
+
+  /**
+   * Set the cell fill color.
+   *
+   * @param aFillColor
+   *        The fill color to use. May be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  public PLTableCell setFillColor (@Nullable final Color aFillColor)
+  {
+    m_aFillColor = aFillColor;
+    return this;
+  }
+
+  /**
+   * @return The current fill color. May be <code>null</code>.
+   */
+  @Nullable
+  public Color getFillColor ()
+  {
+    return m_aFillColor;
   }
 }
