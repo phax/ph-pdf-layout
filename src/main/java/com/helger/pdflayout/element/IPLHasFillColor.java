@@ -16,34 +16,38 @@
  */
 package com.helger.pdflayout.element;
 
-import javax.annotation.Nonnull;
+import java.awt.Color;
 
-import com.helger.pdflayout.spec.EVertAlignment;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * Base interface for objects with a vertical alignment
+ * Base interface for objects with a fill color
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignment <IMPLTYPE>>
-                                         extends IPLElement <IMPLTYPE>
+public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> extends IPLElement <IMPLTYPE>
 {
   /**
-   * @return The vertical alignment of this element. By default it is
-   *         {@link EVertAlignment#DEFAULT}. Never <code>null</code>.
-   */
-  @Nonnull
-  EVertAlignment getVertAlign ();
-
-  /**
-   * Set the vertical alignment of this element.
+   * Set the element fill color.
    *
-   * @param eVertAlign
-   *        The new vertical alignment. May not be <code>null</code>.
+   * @param aFillColor
+   *        The fill color to use. May be <code>null</code>.
    * @return this
    */
   @Nonnull
-  IMPLTYPE setVertAlign (@Nonnull EVertAlignment eVertAlign);
+  IMPLTYPE setFillColor (@Nullable Color aFillColor);
+
+  /**
+   * @return The current fill color. May be <code>null</code>.
+   */
+  @Nullable
+  Color getFillColor ();
+
+  default boolean hasFillColor ()
+  {
+    return getFillColor () != null;
+  }
 }
