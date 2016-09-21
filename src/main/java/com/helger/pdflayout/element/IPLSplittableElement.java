@@ -23,9 +23,19 @@ import javax.annotation.Nullable;
  * Base interface for a splittable element
  *
  * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
  */
-public interface IPLSplittableElement
+public interface IPLSplittableElement <IMPLTYPE extends IPLSplittableElement <IMPLTYPE>> extends IPLElement <IMPLTYPE>
 {
+  /**
+   * @return Always <code>true</code> for splittable elements
+   */
+  default boolean isSplittable ()
+  {
+    return true;
+  }
+
   /**
    * Split this element into sub-elements according to the available height.
    * Splitting is always done after preparation and must return prepared

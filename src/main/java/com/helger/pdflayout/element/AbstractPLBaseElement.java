@@ -29,12 +29,10 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.OverrideOnDemand;
-import com.helger.commons.id.IHasID;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.commons.traits.IGenericImplTrait;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.spec.BorderSpec;
@@ -51,7 +49,7 @@ import com.helger.pdflayout.spec.PaddingSpec;
  *        The implementation type of this class.
  */
 public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElement <IMPLTYPE>>
-                                            implements IHasID <String>, IGenericImplTrait <IMPLTYPE>
+                                            implements IPLElement <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLBaseElement.class);
 
@@ -90,9 +88,6 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     return thisAsT ();
   }
 
-  /**
-   * @return The debug ID of this element. Neither <code>null</code> nor empty.
-   */
   @Nonnull
   @Nonempty
   public final String getDebugID ()
@@ -112,17 +107,6 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
     setBorder (aSource.m_aBorder);
     setFillColor (aSource.m_aFillColor);
     return thisAsT ();
-  }
-
-  public final boolean isSplittable ()
-  {
-    return this instanceof IPLSplittableElement;
-  }
-
-  @Nonnull
-  public final IPLSplittableElement getAsSplittable ()
-  {
-    return (IPLSplittableElement) this;
   }
 
   /**
@@ -822,13 +806,16 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
 
       if (PLDebug.isDebugRender ())
         PLDebug.debugRender (this,
-                             "Border around " + PLDebug.getXYWH (fLeft, fTop, fWidth, fHeight) + " with line width " +
+                             "Border around " +
+                                   PLDebug.getXYWH (fLeft, fTop, fWidth, fHeight) +
+                                   " with line width " +
                                    fLineWidth);
 
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
       aContentStream.setLineWidth (fLineWidth);
-      aContentStream.addRect (fLeft - fHalfLineWidth,
+      aContentStream.addRect (fLeft -
+                              fHalfLineWidth,
                               fBottom - fHalfLineWidth,
                               fWidth + fLineWidth,
                               fHeight + fLineWidth);
@@ -850,7 +837,9 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         if (PLDebug.isDebugRender ())
           PLDebug.debugRender (this,
-                               "Border top " + PLDebug.getXYWH (fLeft, fTop, fWidth, 0) + " with line width " +
+                               "Border top " +
+                                     PLDebug.getXYWH (fLeft, fTop, fWidth, 0) +
+                                     " with line width " +
                                      fTopWidth);
 
         final float fDelta = fTopWidth / 2f;
@@ -864,7 +853,9 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         if (PLDebug.isDebugRender ())
           PLDebug.debugRender (this,
-                               "Border right " + PLDebug.getXYWH (fRight, fTop, 0, fHeight) + " with line width " +
+                               "Border right " +
+                                     PLDebug.getXYWH (fRight, fTop, 0, fHeight) +
+                                     " with line width " +
                                      fRightWidth);
 
         final float fDelta = fRightWidth / 2f;
@@ -878,7 +869,9 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         if (PLDebug.isDebugRender ())
           PLDebug.debugRender (this,
-                               "Border bottom " + PLDebug.getXYWH (fLeft, fBottom, fWidth, 0) + " with line width " +
+                               "Border bottom " +
+                                     PLDebug.getXYWH (fLeft, fBottom, fWidth, 0) +
+                                     " with line width " +
                                      fBottomWidth);
 
         final float fDelta = fBottomWidth / 2f;
@@ -892,7 +885,9 @@ public abstract class AbstractPLBaseElement <IMPLTYPE extends AbstractPLBaseElem
       {
         if (PLDebug.isDebugRender ())
           PLDebug.debugRender (this,
-                               "Border left " + PLDebug.getXYWH (fLeft, fTop, 0, fHeight) + " with line width " +
+                               "Border left " +
+                                     PLDebug.getXYWH (fLeft, fTop, 0, fHeight) +
+                                     " with line width " +
                                      fLeftWidth);
 
         final float fDelta = fLeftWidth / 2f;

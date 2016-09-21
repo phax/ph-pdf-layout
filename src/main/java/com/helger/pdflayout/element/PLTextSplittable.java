@@ -32,7 +32,8 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  *
  * @author Philip Helger
  */
-public class PLTextSplittable extends PLText implements IPLSplittableElement
+public class PLTextSplittable extends AbstractPLText <PLTextSplittable>
+                              implements IPLSplittableElement <PLTextSplittable>
 {
   public PLTextSplittable (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
   {
