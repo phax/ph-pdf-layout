@@ -218,6 +218,13 @@ public class PageLayoutPDF
   {
     ValueEnforcer.notNull (aOS, "OutputStream");
 
+    // Small consistency check to avoid creating empty, invalid PDFs
+    int nTotalElements = 0;
+    for (final PLPageSet aPageSet : m_aPageSets)
+      nTotalElements += aPageSet.getElementCount ();
+    if (nTotalElements == 0)
+      throw new PDFCreationException ("All page sets are empty!");
+
     // create a new document
     PDDocument aDoc = null;
 

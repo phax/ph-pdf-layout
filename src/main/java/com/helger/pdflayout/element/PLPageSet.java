@@ -17,6 +17,7 @@
 package com.helger.pdflayout.element;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -256,9 +257,21 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   }
 
   @Nonnull
+  @ReturnsMutableCopy
   public ICommonsList <? extends AbstractPLElement <?>> getAllElements ()
   {
     return m_aElements.getClone ();
+  }
+
+  @Nonnegative
+  public int getElementCount ()
+  {
+    return m_aElements.size ();
+  }
+
+  public void forEachElement (@Nonnull final Consumer <? super AbstractPLElement <?>> aConsumer)
+  {
+    m_aElements.forEach (aConsumer);
   }
 
   @Nonnull
