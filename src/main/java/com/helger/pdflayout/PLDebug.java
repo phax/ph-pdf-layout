@@ -24,7 +24,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.pdflayout.element.AbstractPLBaseElement;
+import com.helger.pdflayout.element.IPLHasMarginBorderPadding;
+import com.helger.pdflayout.element.IPLObject;
 
 @NotThreadSafe
 public final class PLDebug
@@ -61,7 +62,7 @@ public final class PLDebug
     s_bDebugText = bDebugText;
   }
 
-  public static void debugText (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
+  public static void debugText (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
     s_aLogger.info ("[Text] " + aElement.getDebugID () + " " + sMsg);
   }
@@ -91,7 +92,7 @@ public final class PLDebug
     s_bDebugSplit = bDebugSplit;
   }
 
-  public static void debugSplit (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
+  public static void debugSplit (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
     s_aLogger.info ("[Splitting] " + aElement.getDebugID () + " " + sMsg);
   }
@@ -106,7 +107,7 @@ public final class PLDebug
     s_bDebugPrepare = bDebugPrepare;
   }
 
-  public static void debugPrepare (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
+  public static void debugPrepare (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
     s_aLogger.info ("[Preparing] " + aElement.getDebugID () + " " + sMsg);
   }
@@ -121,7 +122,7 @@ public final class PLDebug
     s_bDebugRender = bDebugRender;
   }
 
-  public static void debugRender (@Nonnull final AbstractPLBaseElement <?> aElement, final String sMsg)
+  public static void debugRender (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
     s_aLogger.info ("[Rendering] " + aElement.getDebugID () + " " + sMsg);
   }
@@ -162,16 +163,30 @@ public final class PLDebug
   }
 
   @Nonnull
-  public static String getXMBP (final AbstractPLBaseElement <?> aElement)
+  public static String getXMBP (@Nonnull final IPLHasMarginBorderPadding <?> aElement)
   {
-    return "[X-MBP: " + aElement.getMarginXSum () + "/" + aElement.getBorderXSumWidth () + "/" +
-           aElement.getPaddingXSum () + "=" + aElement.getFullXSum () + "]";
+    return "[X-MBP: " +
+           aElement.getMarginXSum () +
+           "/" +
+           aElement.getBorderXSumWidth () +
+           "/" +
+           aElement.getPaddingXSum () +
+           "=" +
+           aElement.getFullXSum () +
+           "]";
   }
 
   @Nonnull
-  public static String getYMBP (final AbstractPLBaseElement <?> aElement)
+  public static String getYMBP (@Nonnull final IPLHasMarginBorderPadding <?> aElement)
   {
-    return "[Y-MBP: " + aElement.getMarginYSum () + "/" + aElement.getBorderYSumWidth () + "/" +
-           aElement.getPaddingYSum () + "=" + aElement.getFullYSum () + "]";
+    return "[Y-MBP: " +
+           aElement.getMarginYSum () +
+           "/" +
+           aElement.getBorderYSumWidth () +
+           "/" +
+           aElement.getPaddingYSum () +
+           "=" +
+           aElement.getFullYSum () +
+           "]";
   }
 }

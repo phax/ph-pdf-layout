@@ -540,10 +540,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         }
 
         BorderSpec aRealBorder = m_aColumnBorder;
-        if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
+        if (PLRenderHelper.shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
           aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_HBOX));
         if (aRealBorder.hasAnyBorder ())
-          renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
+          PLRenderHelper.renderBorder (this, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
       }
 
       // Perform contained element after border

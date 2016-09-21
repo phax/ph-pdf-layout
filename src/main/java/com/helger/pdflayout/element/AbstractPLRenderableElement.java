@@ -27,23 +27,20 @@ import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
-import com.helger.pdflayout.spec.BorderSpec;
-import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Abstract layout element that supports rendering.
+ * Abstract layout object that supports rendering.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>>
-                                        extends AbstractPLBaseElement <IMPLTYPE>
+public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRenderableElement <IMPLTYPE>>
+                                                  extends AbstractPLObject <IMPLTYPE>
 {
   public static final SizeSpec DEFAULT_MIN_SIZE = SizeSpec.SIZE0;
   public static final SizeSpec DEFAULT_MAX_SIZE = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
@@ -53,7 +50,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   private boolean m_bPrepared = false;
   private SizeSpec m_aPreparedSize;
 
-  public AbstractPLElement ()
+  public AbstractPLRenderableElement ()
   {}
 
   /**
@@ -193,13 +190,20 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     m_aPreparedSize = new SizeSpec (fRealWidth, fRealHeight);
 
     if (PLDebug.isDebugPrepare ())
+    {
+      String sSuffix = "";
+      if (this instanceof IPLHasMarginBorderPadding <?>)
+      {
+        sSuffix = " with " +
+                  PLDebug.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
+                  " and " +
+                  PLDebug.getYMBP ((IPLHasMarginBorderPadding <?>) this);
+      }
       PLDebug.debugPrepare (this,
                             "Prepared object: " +
                                   PLDebug.getWH (aPreparedSize.getWidth (), aPreparedSize.getHeight ()) +
-                                  " with " +
-                                  PLDebug.getXMBP (this) +
-                                  " and " +
-                                  PLDebug.getYMBP (this));
+                                  sSuffix);
+    }
   }
 
   /**
@@ -219,13 +223,20 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     internalCheckNotPrepared ();
 
     if (PLDebug.isDebugPrepare ())
+    {
+      String sSuffix = "";
+      if (this instanceof IPLHasMarginBorderPadding <?>)
+      {
+        sSuffix = " with " +
+                  PLDebug.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
+                  " and " +
+                  PLDebug.getYMBP ((IPLHasMarginBorderPadding <?>) this);
+      }
       PLDebug.debugPrepare (this,
                             "Preparing object for available " +
                                   PLDebug.getWH (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ()) +
-                                  " with " +
-                                  PLDebug.getXMBP (this) +
-                                  " and " +
-                                  PLDebug.getYMBP (this));
+                                  sSuffix);
+    }
 
     // Do prepare
     final SizeSpec aOnPrepareResult = onPrepare (aCtx);
@@ -266,6 +277,19 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   {}
 
   /**
+   * method to be implemented by subclasses. Should fill the surrounding and
+   * create the border.
+   *
+   * @param aCtx
+   *        Rendering context
+   * @throws IOException
+   *         In case of a PDFBox error
+   */
+  @OverrideOnDemand
+  protected void onPerformFillAndBorder (@Nonnull final RenderingContext aCtx) throws IOException
+  {}
+
+  /**
    * Abstract method to be implemented by subclasses.
    *
    * @param aCtx
@@ -273,7 +297,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
    * @throws IOException
    *         In case of a PDFBox error
    */
-  @Nonnegative
+  @OverrideOnDemand
   protected abstract void onPerform (@Nonnull RenderingContext aCtx) throws IOException;
 
   /**
@@ -298,27 +322,8 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
                                                   m_aPreparedSize.getWidth (),
                                                   m_aPreparedSize.getHeight ()));
 
-    // Render border - debug: green
-    {
-      final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
-      final float fLeft = aCtx.getStartLeft ();
-      final float fTop = aCtx.getStartTop ();
-      final float fWidth = m_aPreparedSize.getWidth () + getPaddingXSum ();
-      final float fHeight = m_aPreparedSize.getHeight () + getPaddingYSum ();
-
-      // Fill before border
-      if (getFillColor () != null)
-      {
-        aContentStream.setNonStrokingColor (getFillColor ());
-        aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
-      }
-
-      BorderSpec aRealBorder = getBorder ();
-      if (PLRenderHelper.shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
-        aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_ELEMENT));
-      if (aRealBorder.hasAnyBorder ())
-        PLRenderHelper.renderBorder (this, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
-    }
+    // Fill and render border
+    onPerformFillAndBorder (aCtx);
 
     // Main perform after border
     onPerform (aCtx);

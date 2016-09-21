@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout.element;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -50,6 +51,8 @@ import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EVertAlignment;
+import com.helger.pdflayout.spec.MarginSpec;
+import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -58,7 +61,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
+public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMarginBorderPadding <PLPageSet>
 {
   public static final class PageSetPrepareResult
   {
@@ -166,6 +169,10 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLPageSet.class);
 
   private final SizeSpec m_aPageSize;
+  private MarginSpec m_aMargin = MarginSpec.MARGIN0;
+  private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
+  private BorderSpec m_aBorder = BorderSpec.BORDER0;
+  private Color m_aFillColor = null;
   private AbstractPLElement <?> m_aPageHeader;
   private final ICommonsList <AbstractPLElement <?>> m_aElements = new CommonsArrayList<> ();
   private AbstractPLElement <?> m_aPageFooter;
@@ -200,6 +207,64 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
   public float getPageHeight ()
   {
     return m_aPageSize.getHeight ();
+  }
+
+  @Nonnull
+  public final PLPageSet setMargin (@Nonnull final MarginSpec aMargin)
+  {
+    ValueEnforcer.notNull (aMargin, "Mergin");
+    internalCheckNotPrepared ();
+    m_aMargin = aMargin;
+    return this;
+  }
+
+  @Nonnull
+  public final MarginSpec getMargin ()
+  {
+    return m_aMargin;
+  }
+
+  @Nonnull
+  public final PLPageSet setPadding (@Nonnull final PaddingSpec aPadding)
+  {
+    ValueEnforcer.notNull (aPadding, "Padding");
+    internalCheckNotPrepared ();
+    m_aPadding = aPadding;
+    return this;
+  }
+
+  @Nonnull
+  public final PaddingSpec getPadding ()
+  {
+    return m_aPadding;
+  }
+
+  @Nonnull
+  public final PLPageSet setBorder (@Nonnull final BorderSpec aBorder)
+  {
+    ValueEnforcer.notNull (aBorder, "Border");
+    internalCheckNotPrepared ();
+    m_aBorder = aBorder;
+    return this;
+  }
+
+  @Nonnull
+  public final BorderSpec getBorder ()
+  {
+    return m_aBorder;
+  }
+
+  @Nonnull
+  public PLPageSet setFillColor (@Nullable final Color aFillColor)
+  {
+    m_aFillColor = aFillColor;
+    return this;
+  }
+
+  @Nullable
+  public Color getFillColor ()
+  {
+    return m_aFillColor;
   }
 
   @Nullable
@@ -680,10 +745,10 @@ public class PLPageSet extends AbstractPLBaseElement <PLPageSet>
           }
 
           BorderSpec aRealBorder = getBorder ();
-          if (shouldApplyDebugBorder (aRealBorder, bDebug))
+          if (PLRenderHelper.shouldApplyDebugBorder (aRealBorder, bDebug))
             aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_PAGESET));
           if (aRealBorder.hasAnyBorder ())
-            renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
+            PLRenderHelper.renderBorder (this, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
         }
 
         // Start with the page rectangle

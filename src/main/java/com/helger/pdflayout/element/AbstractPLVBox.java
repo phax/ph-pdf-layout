@@ -417,10 +417,10 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         }
 
         BorderSpec aRealBorder = m_aRowBorder;
-        if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
+        if (PLRenderHelper.shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
           aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_VBOX));
         if (aRealBorder.hasAnyBorder ())
-          renderBorder (aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
+          PLRenderHelper.renderBorder (this, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
       }
 
       // Perform contained element after border
