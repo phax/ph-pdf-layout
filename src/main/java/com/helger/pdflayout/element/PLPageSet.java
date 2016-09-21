@@ -41,6 +41,7 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.AbstractPLObject;
 import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.IPLHasFillColor;
@@ -626,14 +627,15 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
             default:
               throw new IllegalStateException ("Unsupported vertical alignment: " + eVertAlignment);
           }
-          if (fPaddingTop != 0f)
+          if (fPaddingTop != 0f && aElement instanceof AbstractPLElement <?>)
           {
-            final SizeSpec aOldSize = aElement.getPreparedSize ();
-            aElement.internalMarkAsNotPrepared ();
-            aElement.setPaddingTop (aElement.getPaddingTop () + fPaddingTop);
+            final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
+            final SizeSpec aOldSize = aRealElement.getPreparedSize ();
+            aRealElement.internalMarkAsNotPrepared ();
+            aRealElement.setPaddingTop (aRealElement.getPaddingTop () + fPaddingTop);
             final SizeSpec aNewSize = new SizeSpec (aOldSize.getWidth (), aOldSize.getHeight () + fPaddingTop);
-            aElement.internalMarkAsPrepared (aNewSize);
-            aElementWithSize = new PLElementWithSize (aElement, aNewSize);
+            aRealElement.internalMarkAsPrepared (aNewSize);
+            aElementWithSize = new PLElementWithSize (aRealElement, aNewSize);
           }
         }
 
@@ -786,25 +788,33 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         for (final PLElementWithSize aElementWithHeight : aPerPage)
         {
           final IPLRenderableObject <?> aElement = aElementWithHeight.getElement ();
-          // Get element height
-          final float fThisHeight = aElementWithHeight.getHeight ();
-          final float fThisHeightWithPadding = fThisHeight +
-                                               aElement.getBorderYSumWidth () +
-                                               aElement.getPaddingYSum ();
+          // Get element extent
+          float fStartLeft = fXLeft;
+          float fStartTop = fCurY;
+          float fWidth = getAvailableWidth ();
+          float fHeight = aElementWithHeight.getHeight ();
+          if (aElement instanceof IPLElement <?>)
+          {
+            final IPLElement <?> aRealElement = (IPLElement <?>) aElement;
+            fStartLeft += aRealElement.getMarginAndBorderLeft ();
+            fStartTop -= aRealElement.getMarginAndBorderTop ();
+            fWidth -= aRealElement.getMarginAndBorderXSum ();
+            fHeight += aRealElement.getBorderYSumWidth () + aRealElement.getPaddingYSum ();
+          }
 
           final RenderingContext aRC = new RenderingContext (ERenderingElementType.CONTENT_ELEMENT,
                                                              aContentStream,
                                                              bDebug,
-                                                             fXLeft + aElement.getMarginAndBorderLeft (),
-                                                             fCurY - aElement.getMarginAndBorderTop (),
-                                                             getAvailableWidth () - aElement.getMarginAndBorderXSum (),
-                                                             fThisHeightWithPadding);
+                                                             fStartLeft,
+                                                             fStartTop,
+                                                             fWidth,
+                                                             fHeight);
           aPageIndex.setPlaceholdersInRenderingContext (aRC);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderingContext (aRC);
           aElement.perform (aRC);
 
-          fCurY -= fThisHeightWithPadding + aElement.getMarginYSum ();
+          fCurY -= fHeight + aElement.getFullYSum ();
         }
 
         if (m_aPageFooter != null)
