@@ -36,6 +36,8 @@ import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLElement;
+import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
@@ -136,7 +138,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return <code>null</code> if an invalid index was provided.
    */
   @Nullable
-  public AbstractPLElement <?> getRowElementAtIndex (@Nonnegative final int nIndex)
+  public IPLRenderableObject <?> getRowElementAtIndex (@Nonnegative final int nIndex)
   {
     final PLVBoxRow aRow = getRowAtIndex (nIndex);
     return aRow == null ? null : aRow.getElement ();
@@ -147,7 +149,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *         present.
    */
   @Nullable
-  public AbstractPLElement <?> getFirstRowElement ()
+  public IPLRenderableObject <?> getFirstRowElement ()
   {
     final PLVBoxRow aRow = getFirstRow ();
     return aRow == null ? null : aRow.getElement ();
@@ -158,14 +160,14 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *         present.
    */
   @Nullable
-  public AbstractPLElement <?> getLastRowElement ()
+  public IPLRenderableObject <?> getLastRowElement ()
   {
     final PLVBoxRow aRow = getLastRow ();
     return aRow == null ? null : aRow.getElement ();
   }
 
   @Nonnull
-  private PLVBoxRow _addAndReturnRow (@CheckForSigned final int nIndex, @Nonnull final AbstractPLElement <?> aElement)
+  private PLVBoxRow _addAndReturnRow (@CheckForSigned final int nIndex, @Nonnull final IPLRenderableObject <?> aElement)
   {
     final PLVBoxRow aItem = new PLVBoxRow (aElement);
     if (nIndex < 0 || nIndex >= m_aRows.size ())
@@ -183,7 +185,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return the created row
    */
   @Nonnull
-  public PLVBoxRow addAndReturnRow (@Nonnull final AbstractPLElement <?> aElement)
+  public PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement)
   {
     internalCheckNotPrepared ();
     return _addAndReturnRow (-1, aElement);
@@ -197,7 +199,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return this
    */
   @Nonnull
-  public IMPLTYPE addRow (@Nonnull final AbstractPLElement <?> aElement)
+  public IMPLTYPE addRow (@Nonnull final IPLRenderableObject <?> aElement)
   {
     addAndReturnRow (aElement);
     return thisAsT ();
@@ -318,7 +320,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     int nIndex = 0;
     for (final PLVBoxRow aRow : m_aRows)
     {
-      final AbstractPLElement <?> aRowElement = aRow.getElement ();
+      final IPLRenderableObject <?> aRowElement = aRow.getElement ();
       // Full width of this element
       final float fRowElementWidthFull = fAvailableWidth;
       // Effective content width of this element
@@ -393,23 +395,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     int nIndex = 0;
     for (final PLVBoxRow aRow : m_aRows)
     {
-      final AbstractPLElement <?> aRowElement = aRow.getElement ();
+      final IPLRenderableObject <?> aRowElement = aRow.getElement ();
       final float fRowElementWidth = m_aPreparedRowElementWidth[nIndex];
-      final float fRowElementWidthWithPadding = fRowElementWidth + aRowElement.getPaddingXSum ();
       final float fRowElementHeight = m_aPreparedRowElementHeight[nIndex];
-      final float fRowElementHeightWithPadding = fRowElementHeight + aRowElement.getPaddingYSum ();
-      final RenderingContext aRowElementCtx = new RenderingContext (aCtx,
-                                                                    fCurX + aRowElement.getMarginAndBorderLeft (),
-                                                                    fCurY - aRowElement.getMarginAndBorderTop (),
-                                                                    fRowElementWidthWithPadding,
-                                                                    fRowElementHeightWithPadding);
 
       // apply special row borders - debug: pink
       {
         final float fLeft = fCurX;
         final float fTop = fCurY;
         final float fWidth = fVBoxWidth;
-        final float fHeight = fRowElementHeightWithPadding + aRowElement.getMarginAndBorderYSum ();
+        final float fHeight = fRowElementHeight + aRowElement.getFullYSum ();
 
         // Fill before border
         if (m_aRowFillColor != null)
@@ -426,10 +421,28 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       }
 
       // Perform contained element after border
+      float fStartLeft = fCurX;
+      float fStartTop = fCurY;
+      float fRowElementWidthWithPadding = fRowElementWidth;
+      float fRowElementHeightWithPadding = fRowElementHeight;
+      if (aRowElement instanceof IPLElement <?>)
+      {
+        final IPLElement <?> aRealElement = (IPLElement <?>) aRowElement;
+        fStartLeft += aRealElement.getMarginAndBorderLeft ();
+        fStartTop -= aRealElement.getMarginAndBorderTop ();
+        fRowElementWidthWithPadding += aRealElement.getPaddingXSum ();
+        fRowElementHeightWithPadding += aRealElement.getPaddingYSum ();
+      }
+
+      final RenderingContext aRowElementCtx = new RenderingContext (aCtx,
+                                                                    fStartLeft,
+                                                                    fStartTop,
+                                                                    fRowElementWidthWithPadding,
+                                                                    fRowElementHeightWithPadding);
       aRowElement.perform (aRowElementCtx);
 
       // Update Y-pos
-      fCurY -= fRowElementHeightWithPadding + aRowElement.getMarginAndBorderYSum () + fRowBorderYSumWidth;
+      fCurY -= fRowElementHeight + aRowElement.getFullYSum () + fRowBorderYSumWidth;
       ++nIndex;
     }
   }

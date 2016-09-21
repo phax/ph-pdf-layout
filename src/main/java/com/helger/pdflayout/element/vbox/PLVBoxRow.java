@@ -21,7 +21,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLRenderableObject;
 
 /**
  * This class represents a single row within a VBox. This is a pseudo element
@@ -32,21 +32,21 @@ import com.helger.pdflayout.base.AbstractPLElement;
 @NotThreadSafe
 public final class PLVBoxRow
 {
-  private AbstractPLElement <?> m_aElement;
+  private IPLRenderableObject <?> m_aElement;
 
-  public PLVBoxRow (@Nonnull final AbstractPLElement <?> aElement)
+  public PLVBoxRow (@Nonnull final IPLRenderableObject <?> aElement)
   {
     setElement (aElement);
   }
 
   @Nonnull
-  public AbstractPLElement <?> getElement ()
+  public IPLRenderableObject <?> getElement ()
   {
     return m_aElement;
   }
 
   @Nonnull
-  PLVBoxRow setElement (@Nonnull final AbstractPLElement <?> aElement)
+  PLVBoxRow setElement (@Nonnull final IPLRenderableObject <?> aElement)
   {
     m_aElement = ValueEnforcer.notNull (aElement, "Element");
     return this;

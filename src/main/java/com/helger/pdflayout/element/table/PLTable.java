@@ -33,6 +33,7 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
@@ -264,7 +265,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
    * @since 3.0.4
    */
   @Nullable
-  public AbstractPLElement <?> getCellElement (@Nonnegative final int nRowIndex, @Nonnegative final int nColumnIndex)
+  public IPLRenderableObject <?> getCellElement (@Nonnegative final int nRowIndex, @Nonnegative final int nColumnIndex)
   {
     final PLVBoxRow aRow = getRowAtIndex (nRowIndex);
     if (aRow != null)
@@ -305,7 +306,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
     float fUsedTable1HeightFull = 0;
     for (int nRow = 0; nRow < m_nHeaderRowCount; ++nRow)
     {
-      final AbstractPLElement <?> aHeaderRowElement = getRowElementAtIndex (nRow);
+      final IPLRenderableObject <?> aHeaderRowElement = getRowElementAtIndex (nRow);
       aTable1.addRow (aHeaderRowElement);
       aTable2.addRow (aHeaderRowElement);
 
@@ -334,7 +335,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
 
     for (int nRow = m_nHeaderRowCount; nRow < nTotalRows; ++nRow)
     {
-      final AbstractPLElement <?> aRowElement = getRowElementAtIndex (nRow);
+      final IPLRenderableObject <?> aRowElement = getRowElementAtIndex (nRow);
       final float fRowWidth = m_aPreparedRowElementWidth[nRow];
       final float fRowWidthFull = fRowWidth + aRowElement.getFullXSum ();
       final float fRowHeight = m_aPreparedRowElementHeight[nRow];
@@ -384,7 +385,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
 
             if (aSplitResult != null)
             {
-              final AbstractPLElement <?> aTable1RowElement = aSplitResult.getFirstElement ().getElement ();
+              final IPLRenderableObject <?> aTable1RowElement = aSplitResult.getFirstElement ().getElement ();
               aTable1.addRow (aTable1RowElement);
               fUsedTable1Width = fWidth;
               fUsedTable1WidthFull = fWidthFull;
@@ -394,7 +395,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
               aTable1RowWidth.add (Float.valueOf (fWidth));
               aTable1RowHeight.add (Float.valueOf (fTable1RowHeight));
 
-              final AbstractPLElement <?> aTable2RowElement = aSplitResult.getSecondElement ().getElement ();
+              final IPLRenderableObject <?> aTable2RowElement = aSplitResult.getSecondElement ().getElement ();
               aTable2.addRow (aTable2RowElement);
               fUsedTable2Width = fWidth;
               final float fTable2RowHeight = aSplitResult.getSecondElement ().getHeight ();

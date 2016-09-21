@@ -36,7 +36,9 @@ import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.IPLHasVerticalAlignment;
+import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
@@ -120,21 +122,21 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Nullable
-  public AbstractPLElement <?> getColumnElementAtIndex (@Nonnegative final int nIndex)
+  public IPLRenderableObject <?> getColumnElementAtIndex (@Nonnegative final int nIndex)
   {
     final PLHBoxColumn aColumn = getColumnAtIndex (nIndex);
     return aColumn == null ? null : aColumn.getElement ();
   }
 
   @Nullable
-  public AbstractPLElement <?> getFirstColumnElement ()
+  public IPLRenderableObject <?> getFirstColumnElement ()
   {
     final PLHBoxColumn aColumn = getFirstColumn ();
     return aColumn == null ? null : aColumn.getElement ();
   }
 
   @Nullable
-  public AbstractPLElement <?> getLastColumnElement ()
+  public IPLRenderableObject <?> getLastColumnElement ()
   {
     final PLHBoxColumn aColumn = getLastColumn ();
     return aColumn == null ? null : aColumn.getElement ();
@@ -385,7 +387,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     {
       if (!aColumn.getWidth ().isStar ())
       {
-        final AbstractPLElement <?> aElement = aColumn.getElement ();
+        final IPLRenderableObject <?> aElement = aColumn.getElement ();
         // Full width of this element
         final float fItemWidthFull = aColumn.getWidth ().getEffectiveValue (fAvailableWidth);
         // Effective content width of this element
@@ -412,7 +414,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     {
       if (aColumn.getWidth ().isStar ())
       {
-        final AbstractPLElement <?> aElement = aColumn.getElement ();
+        final IPLRenderableObject <?> aElement = aColumn.getElement ();
         // Full width of this element
         final float fItemWidthFull = fRestWidth / m_nStarWidthItems;
         // Effective content width of this element
@@ -438,7 +440,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       nIndex = 0;
       for (final PLHBoxColumn aColumn : m_aColumns)
       {
-        final AbstractPLElement <?> aElement = aColumn.getElement ();
+        final IPLRenderableObject <?> aElement = aColumn.getElement ();
         if (aElement instanceof IPLHasVerticalAlignment <?>)
         {
           final EVertAlignment eVertAlignment = ((IPLHasVerticalAlignment <?>) aElement).getVertAlign ();
@@ -457,12 +459,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
             default:
               throw new IllegalStateException ("Unsupported vertical alignment: " + eVertAlignment);
           }
-          if (fPaddingTop != 0f)
+          if (fPaddingTop != 0f && aElement instanceof AbstractPLElement <?>)
           {
-            aElement.internalMarkAsNotPrepared ();
-            aElement.setPaddingTop (aElement.getPaddingTop () + fPaddingTop);
-            aElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex],
-                                                           m_aPreparedColumnHeight[nIndex] + fPaddingTop));
+            final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
+            aRealElement.internalMarkAsNotPrepared ();
+            aRealElement.setPaddingTop (aRealElement.getPaddingTop () + fPaddingTop);
+            aRealElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex],
+                                                               m_aPreparedColumnHeight[nIndex] + fPaddingTop));
           }
         }
         ++nIndex;
@@ -518,18 +521,16 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     int nIndex = 0;
     for (final PLHBoxColumn aColumn : m_aColumns)
     {
-      final AbstractPLElement <?> aElement = aColumn.getElement ();
+      final IPLRenderableObject <?> aElement = aColumn.getElement ();
       final float fItemWidth = m_aPreparedColumnWidth[nIndex];
-      final float fItemWidthWithPadding = fItemWidth + aElement.getPaddingXSum ();
       final float fItemHeight = m_aPreparedColumnHeight[nIndex];
-      final float fItemHeightWithPadding = fItemHeight + aElement.getPaddingYSum ();
 
       // apply special column borders - debug: blue
       {
         // Disregard the padding of this HBox!!!
         final float fLeft = fCurX;
         final float fTop = fCurY;
-        final float fWidth = fItemWidthWithPadding + aElement.getMarginAndBorderXSum ();
+        final float fWidth = fItemWidth + aElement.getFullXSum ();
         final float fHeight = fHBoxHeight;
 
         // Fill before border
@@ -550,15 +551,27 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
 
       // Perform contained element after border
+      float fStartLeft = fCurX;
+      float fStartTop = fCurY;
+      float fItemWidthWithPadding = fItemWidth;
+      float fItemHeightWithPadding = fItemHeight;
+      if (aElement instanceof IPLElement <?>)
+      {
+        final IPLElement <?> aRealElement = (IPLElement <?>) aElement;
+        fStartLeft += aRealElement.getMarginAndBorderLeft ();
+        fStartTop -= aRealElement.getMarginAndBorderTop ();
+        fItemWidthWithPadding += aRealElement.getPaddingXSum ();
+        fItemHeightWithPadding += aRealElement.getPaddingYSum ();
+      }
       final RenderingContext aItemCtx = new RenderingContext (aCtx,
-                                                              fCurX + aElement.getMarginAndBorderLeft (),
-                                                              fCurY - aElement.getMarginAndBorderTop (),
+                                                              fStartLeft,
+                                                              fStartTop,
                                                               fItemWidthWithPadding,
                                                               fItemHeightWithPadding);
       aElement.perform (aItemCtx);
 
       // Update X-pos
-      fCurX += fItemWidthWithPadding + aElement.getMarginAndBorderXSum () + fColumnBorderXSumWidth;
+      fCurX += fItemWidthWithPadding + aElement.getFullXSum () + fColumnBorderXSumWidth;
       ++nIndex;
     }
   }

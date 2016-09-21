@@ -26,7 +26,7 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
@@ -95,7 +95,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
 
     for (int nRow = 0; nRow < nTotalRows; ++nRow)
     {
-      final AbstractPLElement <?> aRowElement = getRowElementAtIndex (nRow);
+      final IPLRenderableObject <?> aRowElement = getRowElementAtIndex (nRow);
       final float fRowWidth = m_aPreparedRowElementWidth[nRow];
       final float fRowWidthFull = fRowWidth + aRowElement.getFullXSum ();
       final float fRowHeight = m_aPreparedRowElementHeight[nRow];
@@ -141,7 +141,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
 
             if (aSplitResult != null)
             {
-              final AbstractPLElement <?> aVBox1RowElement = aSplitResult.getFirstElement ().getElement ();
+              final IPLRenderableObject <?> aVBox1RowElement = aSplitResult.getFirstElement ().getElement ();
               aVBox1.addRow (aVBox1RowElement);
               fUsedVBox1Width = fWidth;
               fUsedVBox1WidthFull = fWidthFull;
@@ -152,7 +152,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
               aVBox1RowWidth.add (Float.valueOf (fWidth));
               aVBox1RowHeight.add (Float.valueOf (fVBox1RowHeight));
 
-              final AbstractPLElement <?> aVBox2RowElement = aSplitResult.getSecondElement ().getElement ();
+              final IPLRenderableObject <?> aVBox2RowElement = aSplitResult.getSecondElement ().getElement ();
               aVBox2.addRow (aVBox2RowElement);
               fUsedVBox2Width = fWidth;
               fUsedVBox2WidthFull = fWidthFull;

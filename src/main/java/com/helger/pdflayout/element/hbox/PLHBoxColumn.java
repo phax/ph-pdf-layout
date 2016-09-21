@@ -24,7 +24,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.spec.WidthSpec;
 
 /**
@@ -36,24 +36,24 @@ import com.helger.pdflayout.spec.WidthSpec;
 @NotThreadSafe
 public final class PLHBoxColumn
 {
-  private AbstractPLElement <?> m_aElement;
+  private IPLRenderableObject <?> m_aElement;
   private final WidthSpec m_aWidth;
   private Color m_aFillColor;
 
-  public PLHBoxColumn (@Nonnull final AbstractPLElement <?> aElement, @Nonnull final WidthSpec aWidth)
+  public PLHBoxColumn (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final WidthSpec aWidth)
   {
     setElement (aElement);
     m_aWidth = ValueEnforcer.notNull (aWidth, "Width");
   }
 
   @Nonnull
-  public AbstractPLElement <?> getElement ()
+  public IPLRenderableObject <?> getElement ()
   {
     return m_aElement;
   }
 
   @Nonnull
-  PLHBoxColumn setElement (@Nonnull final AbstractPLElement <?> aElement)
+  PLHBoxColumn setElement (@Nonnull final IPLRenderableObject <?> aElement)
   {
     m_aElement = ValueEnforcer.notNull (aElement, "Element");
     return this;

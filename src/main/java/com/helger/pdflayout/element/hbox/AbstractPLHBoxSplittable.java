@@ -20,7 +20,8 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLElement;
+import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
@@ -66,7 +67,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
     for (int i = 0; i < nCols; ++i)
     {
       // Is the current element higher and splittable?
-      final AbstractPLElement <?> aColumnElement = getColumnElementAtIndex (i);
+      final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (i);
       if (aColumnElement.isSplittable ())
       {
         final float fColumnHeightFull = m_aPreparedColumnHeight[i] + aColumnElement.getFullYSum ();
@@ -99,13 +100,17 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
     {
       final PLHBoxColumn aColumn = getColumnAtIndex (i);
       final WidthSpec aColumnWidth = aColumn.getWidth ();
-      final AbstractPLElement <?> aColumnElement = aColumn.getElement ();
+      final IPLRenderableObject <?> aColumnElement = aColumn.getElement ();
 
       // Create empty element with the same padding and margin as the original
       // element
       final PLSpacerX aEmptyElement = new PLSpacerX ();
-      aEmptyElement.setPadding (aColumnElement.getPadding ());
-      aEmptyElement.setMargin (aColumnElement.getMargin ());
+      if (aColumnElement instanceof IPLElement <?>)
+      {
+        final IPLElement <?> aRealElement = (IPLElement <?>) aColumnElement;
+        aEmptyElement.setPadding (aRealElement.getPadding ());
+        aEmptyElement.setMargin (aRealElement.getMargin ());
+      }
       aEmptyElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnWidth[i], 0));
 
       aHBox1.addColumn (aEmptyElement, aColumnWidth);
@@ -121,7 +126,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
     boolean bDidSplitAnyColumn = false;
     for (int nCol = 0; nCol < nCols; nCol++)
     {
-      final AbstractPLElement <?> aColumnElement = getColumnElementAtIndex (nCol);
+      final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (nCol);
       final boolean bIsSplittable = aColumnElement.isSplittable ();
       final float fColumnWidth = m_aPreparedColumnWidth[nCol];
       @SuppressWarnings ("unused")
@@ -147,10 +152,10 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
         if (aSplitResult != null)
         {
-          final AbstractPLElement <?> aHBox1Element = aSplitResult.getFirstElement ().getElement ();
+          final IPLRenderableObject <?> aHBox1Element = aSplitResult.getFirstElement ().getElement ();
           aHBox1.getColumnAtIndex (nCol).setElement (aHBox1Element);
 
-          final AbstractPLElement <?> aHBox2Element = aSplitResult.getSecondElement ().getElement ();
+          final IPLRenderableObject <?> aHBox2Element = aSplitResult.getSecondElement ().getElement ();
           aHBox2.getColumnAtIndex (nCol).setElement (aHBox2Element);
 
           // Use the full height, because the column itself has no padding or

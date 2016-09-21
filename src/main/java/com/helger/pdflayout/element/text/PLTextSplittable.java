@@ -114,8 +114,8 @@ public class PLTextSplittable extends AbstractPLText <PLTextSplittable>
     final PLElementWithSize aText2 = getCopy (fElementWidth, aLines.subList (nLines, aLines.size ()), true);
 
     // Important: vertical alignment is in case of splitting always "TOP"
-    ((PLText) aText1.getElement ()).setVertAlign (EVertAlignment.TOP);
-    ((PLText) aText2.getElement ()).setVertAlign (EVertAlignment.TOP);
+    ((AbstractPLText <?>) aText1.getElement ()).setVertAlign (EVertAlignment.TOP);
+    ((AbstractPLText <?>) aText2.getElement ()).setVertAlign (EVertAlignment.TOP);
 
     return new PLSplitResult (aText1, aText2);
   }
