@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.base;
 
 import java.awt.Color;
 
@@ -24,10 +24,9 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.IPLHasFillColor;
-import com.helger.pdflayout.base.IPLHasMarginBorderPadding;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.MarginSpec;
+import com.helger.pdflayout.spec.PaddingSpec;
 
 /**
  * Abstract renderable PL element having a padding only
@@ -36,24 +35,25 @@ import com.helger.pdflayout.spec.MarginSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement2 <IMPLTYPE extends AbstractPLElement2 <IMPLTYPE>>
-                                         extends AbstractPLElementWithPadding <IMPLTYPE>
-                                         implements IPLHasMarginBorderPadding <IMPLTYPE>, IPLHasFillColor <IMPLTYPE>
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>>
+                                        extends AbstractPLRenderableObject <IMPLTYPE> implements IPLElement <IMPLTYPE>
 {
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
+  private PaddingSpec m_aPadding = DEFAULT_PADDING;
   private Color m_aFillColor = DEFAULT_FILL_COLOR;
 
-  public AbstractPLElement2 ()
+  public AbstractPLElement ()
   {}
 
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLElement2 <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLElement <?> aSource)
   {
     super.setBasicDataFrom (aSource);
     setMargin (aSource.m_aMargin);
     setBorder (aSource.m_aBorder);
+    setPadding (aSource.m_aPadding);
     setFillColor (aSource.m_aFillColor);
     return thisAsT ();
   }
@@ -89,6 +89,21 @@ public abstract class AbstractPLElement2 <IMPLTYPE extends AbstractPLElement2 <I
   }
 
   @Nonnull
+  public final IMPLTYPE setPadding (@Nonnull final PaddingSpec aPadding)
+  {
+    ValueEnforcer.notNull (aPadding, "Padding");
+    internalCheckNotPrepared ();
+    m_aPadding = aPadding;
+    return thisAsT ();
+  }
+
+  @Nonnull
+  public final PaddingSpec getPadding ()
+  {
+    return m_aPadding;
+  }
+
+  @Nonnull
   public IMPLTYPE setFillColor (@Nullable final Color aFillColor)
   {
     internalCheckNotPrepared ();
@@ -108,6 +123,7 @@ public abstract class AbstractPLElement2 <IMPLTYPE extends AbstractPLElement2 <I
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("margin", m_aMargin)
                             .append ("border", m_aBorder)
+                            .append ("padding", m_aPadding)
                             .appendIfNotNull ("fillColor", m_aFillColor)
                             .toString ();
   }

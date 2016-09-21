@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import com.helger.pdflayout.base.AbstractPLRenderableObject;
+import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -30,7 +30,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
+public class PLSpacerX extends AbstractPLElement <PLSpacerX>
 {
   public PLSpacerX ()
   {}

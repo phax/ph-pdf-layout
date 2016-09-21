@@ -14,15 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
-import com.helger.pdflayout.base.IPLHasVerticalAlignment;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
 
@@ -35,7 +33,7 @@ import com.helger.pdflayout.spec.EVertAlignment;
  *        The implementation type of this class.
  */
 public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlignedElement <IMPLTYPE>>
-                                               extends AbstractPLElement2 <IMPLTYPE> implements
+                                               extends AbstractPLElement <IMPLTYPE> implements
                                                IPLHasHorizontalAlignment <IMPLTYPE>,
                                                IPLHasVerticalAlignment <IMPLTYPE>
 {

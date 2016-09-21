@@ -17,10 +17,10 @@
 package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.element.AbstractPLElement2;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -28,6 +28,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
+@Immutable
 public final class PLElementWithSize
 {
   private final IPLRenderableObject <?> m_aElement;
@@ -42,8 +43,7 @@ public final class PLElementWithSize
    * @param aSize
    *        Size of the element without padding and margin
    */
-  @Deprecated
-  public PLElementWithSize (@Nonnull final AbstractPLElement2 <?> aElement, @Nonnull final SizeSpec aSize)
+  public PLElementWithSize (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final SizeSpec aSize)
   {
     this (aElement,
           aSize,

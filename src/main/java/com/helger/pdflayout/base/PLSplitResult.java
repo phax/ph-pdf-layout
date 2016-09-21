@@ -17,6 +17,7 @@
 package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
@@ -27,6 +28,7 @@ import com.helger.commons.string.ToStringGenerator;
  *
  * @author Philip Helger
  */
+@Immutable
 public final class PLSplitResult
 {
   private final PLElementWithSize m_aFirstElement;

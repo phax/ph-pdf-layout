@@ -96,7 +96,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @return <code>true</code> if this object was already prepared,
    *         <code>false</code> otherwise.
    */
-  protected final boolean isPrepared ()
+  public final boolean isPrepared ()
   {
     return m_bPrepared;
   }
@@ -106,7 +106,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *         prepared.
    */
   @Nullable
-  protected final SizeSpec getPreparedSize ()
+  public final SizeSpec getPreparedSize ()
   {
     return m_aPreparedSize;
   }
@@ -117,8 +117,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *
    * @param aCtx
    *        Preparation context. Never <code>null</code>.
-   * @return The size of the rendered element without padding or margin. May not
-   *         be <code>null</code>.
+   * @return The size of the rendered element without padding, border and
+   *         margin. May not be <code>null</code>.
    * @throws IOException
    *         on error
    */
@@ -190,7 +190,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return m_aPreparedSize;
   }
 
-  protected final void internalMarkAsNotPrepared ()
+  public final void internalMarkAsNotPrepared ()
   {
     m_aPreparedSize = null;
     m_bPrepared = false;
@@ -202,7 +202,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @return this
    */
   @Nonnull
-  protected final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
+  public final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
   {
     // Prepare only once!
     internalCheckNotPrepared ();

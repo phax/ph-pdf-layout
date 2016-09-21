@@ -26,7 +26,8 @@ package com.helger.pdflayout.base;
 public interface IPLHasMarginBorderPadding <IMPLTYPE extends IPLHasMarginBorderPadding <IMPLTYPE>> extends
                                            IPLHasMargin <IMPLTYPE>,
                                            IPLHasPadding <IMPLTYPE>,
-                                           IPLHasBorder <IMPLTYPE>
+                                           IPLHasBorder <IMPLTYPE>,
+                                           IPLHasOutline
 {
   default float getMarginAndBorderTop ()
   {

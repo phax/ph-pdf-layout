@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.base;
+package com.helger.pdflayout.element.vbox;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.pdflayout.base.IPLObject;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 

@@ -30,6 +30,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.IHasInputStream;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.base.AbstractPLAlignedElement;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;

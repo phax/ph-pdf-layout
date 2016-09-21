@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
@@ -17,7 +18,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPLTYPE>> extends IPLObject <IMPLTYPE>
+public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPLTYPE>>
+                                     extends IPLObject <IMPLTYPE>, IPLHasOutline
 {
   SizeSpec DEFAULT_MIN_SIZE = SizeSpec.SIZE0;
   SizeSpec DEFAULT_MAX_SIZE = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
@@ -76,6 +78,20 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
     setMinSize (fWidth, fHeight);
     return setMaxSize (fWidth, fHeight);
   }
+
+  /**
+   * @return <code>true</code> if this object was already prepared,
+   *         <code>false</code> otherwise.
+   */
+  boolean isPrepared ();
+
+  /**
+   * @return The prepared size or <code>null</code> if this object was not yet
+   *         prepared.
+   * @see #isPrepared()
+   */
+  @Nullable
+  SizeSpec getPreparedSize ();
 
   /**
    * Prepare this element once for rendering.

@@ -41,11 +41,12 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.AbstractPLObject;
+import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.IPLHasFillColor;
 import com.helger.pdflayout.base.IPLHasMarginBorderPadding;
 import com.helger.pdflayout.base.IPLHasVerticalAlignment;
+import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.element.special.PLPageBreak;
@@ -184,9 +185,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   private PaddingSpec m_aPadding = DEFAULT_PADDING;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private Color m_aFillColor = DEFAULT_FILL_COLOR;
-  private AbstractPLElement <?> m_aPageHeader;
-  private final ICommonsList <AbstractPLElement <?>> m_aElements = new CommonsArrayList<> ();
-  private AbstractPLElement <?> m_aPageFooter;
+  private IPLElement <?> m_aPageHeader;
+  private final ICommonsList <IPLRenderableObject <?>> m_aElements = new CommonsArrayList<> ();
+  private IPLElement <?> m_aPageFooter;
   private IRenderingContextCustomizer m_aRCCustomizer;
 
   public PLPageSet (@Nonnull final PDRectangle aPageRect)
@@ -310,7 +311,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    * @return The global page header. May be <code>null</code>.
    */
   @Nullable
-  public AbstractPLElement <?> getPageHeader ()
+  public IPLElement <?> getPageHeader ()
   {
     return m_aPageHeader;
   }
@@ -323,7 +324,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    * @return this
    */
   @Nonnull
-  public PLPageSet setPageHeader (@Nullable final AbstractPLElement <?> aPageHeader)
+  public PLPageSet setPageHeader (@Nullable final IPLElement <?> aPageHeader)
   {
     m_aPageHeader = aPageHeader;
     return this;
@@ -331,7 +332,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
 
   @Nonnull
   @ReturnsMutableCopy
-  public ICommonsList <? extends AbstractPLElement <?>> getAllElements ()
+  public ICommonsList <? extends IPLRenderableObject <?>> getAllElements ()
   {
     return m_aElements.getClone ();
   }
@@ -342,13 +343,13 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
     return m_aElements.size ();
   }
 
-  public void forEachElement (@Nonnull final Consumer <? super AbstractPLElement <?>> aConsumer)
+  public void forEachElement (@Nonnull final Consumer <? super IPLRenderableObject <?>> aConsumer)
   {
     m_aElements.forEach (aConsumer);
   }
 
   @Nonnull
-  public PLPageSet addElement (@Nonnull final AbstractPLElement <?> aElement)
+  public PLPageSet addElement (@Nonnull final IPLRenderableObject <?> aElement)
   {
     ValueEnforcer.notNull (aElement, "Element");
     m_aElements.add (aElement);
@@ -359,7 +360,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    * @return The global page footer. May be <code>null</code>.
    */
   @Nullable
-  public AbstractPLElement <?> getPageFooter ()
+  public IPLElement <?> getPageFooter ()
   {
     return m_aPageFooter;
   }
@@ -372,7 +373,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    * @return this
    */
   @Nonnull
-  public PLPageSet setPageFooter (@Nullable final AbstractPLElement <?> aPageFooter)
+  public PLPageSet setPageFooter (@Nullable final IPLElement <?> aPageFooter)
   {
     m_aPageFooter = aPageFooter;
     return this;
@@ -457,7 +458,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       // Prepare content elements
       // Must be done after header and footer, because the margins may got
       // adopted!
-      for (final AbstractPLElement <?> aElement : m_aElements)
+      for (final IPLRenderableObject <?> aElement : m_aElements)
       {
         final float fAvailableWidth = fAvailWidth - aElement.getFullXSum ();
         final float fAvailableHeight = fAvailHeight - aElement.getFullYSum ();
@@ -489,7 +490,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       {
         // Use the first element
         PLElementWithSize aElementWithSize = aElementsWithSize.remove (0);
-        final AbstractPLElement <?> aElement = aElementWithSize.getElement ();
+        final IPLRenderableObject <?> aElement = aElementWithSize.getElement ();
 
         boolean bIsPagebreakDesired = aElement instanceof PLPageBreak;
         if (bIsPagebreakDesired && aCurPageElements.isEmpty () && !((PLPageBreak) aElement).isForcePageBreak ())
@@ -784,7 +785,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         float fCurY = fYTop;
         for (final PLElementWithSize aElementWithHeight : aPerPage)
         {
-          final AbstractPLElement <?> aElement = aElementWithHeight.getElement ();
+          final IPLRenderableObject <?> aElement = aElementWithHeight.getElement ();
           // Get element height
           final float fThisHeight = aElementWithHeight.getHeight ();
           final float fThisHeightWithPadding = fThisHeight +
