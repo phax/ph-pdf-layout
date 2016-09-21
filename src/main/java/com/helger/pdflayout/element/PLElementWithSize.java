@@ -20,10 +20,11 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Wraps an {@link AbstractPLElement} and stores the height.
+ * Wraps an {@link AbstractPLElement} and stores the size.
  *
  * @author Philip Helger
  */

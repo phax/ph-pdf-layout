@@ -32,6 +32,8 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 import com.helger.pdflayout.spec.WidthSpec.EWidthType;
@@ -41,7 +43,7 @@ import com.helger.pdflayout.spec.WidthSpec.EWidthType;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableElement <PLTable>
+public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableObject <PLTable>
 {
   private final ICommonsList <WidthSpec> m_aWidths;
   private int m_nHeaderRowCount = 0;

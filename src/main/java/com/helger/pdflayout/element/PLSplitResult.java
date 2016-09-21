@@ -20,10 +20,11 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.base.IPLSplittableObject;
 
 /**
  * This class represents the result of splitting as defined in
- * {@link IPLSplittableElement}.
+ * {@link IPLSplittableObject}.
  *
  * @author Philip Helger
  */

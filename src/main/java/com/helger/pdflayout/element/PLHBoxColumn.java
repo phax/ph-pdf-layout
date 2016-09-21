@@ -24,6 +24,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.spec.WidthSpec;
 
 /**

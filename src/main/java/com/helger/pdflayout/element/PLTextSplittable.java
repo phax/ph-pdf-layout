@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.collection.CollectionHelper;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.TextAndWidthSpec;
@@ -33,7 +34,7 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  * @author Philip Helger
  */
 public class PLTextSplittable extends AbstractPLText <PLTextSplittable>
-                              implements IPLSplittableElement <PLTextSplittable>
+                              implements IPLSplittableObject <PLTextSplittable>
 {
   public PLTextSplittable (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
   {

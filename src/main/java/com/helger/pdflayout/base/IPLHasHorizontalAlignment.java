@@ -14,38 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
 
-import com.helger.pdflayout.spec.EVertAlignment;
+import com.helger.pdflayout.spec.EHorzAlignment;
 
 /**
- * Base interface for objects with a vertical alignment
+ * Base interface for objects with a horizontal alignment
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignment <IMPLTYPE>>
-                                         extends IPLObject <IMPLTYPE>
+public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>>
+                                           extends IPLObject <IMPLTYPE>
 {
-  EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
+  EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
 
   /**
-   * @return The vertical alignment of this element. By default it is
-   *         {@link EVertAlignment#DEFAULT}. Never <code>null</code>.
+   * @return The horizontal alignment of this element. By default it is
+   *         {@link EHorzAlignment#DEFAULT}. Never <code>null</code>.
    */
   @Nonnull
-  EVertAlignment getVertAlign ();
+  EHorzAlignment getHorzAlign ();
 
   /**
-   * Set the vertical alignment of this element.
+   * Set the horizontal alignment of this element.
    *
-   * @param eVertAlign
-   *        The new vertical alignment. May not be <code>null</code>.
+   * @param eHorzAlign
+   *        The new horizontal alignment. May not be <code>null</code>.
    * @return this
    */
   @Nonnull
-  IMPLTYPE setVertAlign (@Nonnull EVertAlignment eVertAlign);
+  IMPLTYPE setHorzAlign (@Nonnull EHorzAlignment eHorzAlign);
 }

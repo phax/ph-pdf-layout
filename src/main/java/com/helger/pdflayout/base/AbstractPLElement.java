@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.base;
 
 import java.io.IOException;
 
@@ -27,20 +27,25 @@ import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.element.PLRenderHelper;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.spec.BorderSpec;
+import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Abstract layout object that supports rendering.
+ * Abstract layout element that supports rendering.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRenderableElement <IMPLTYPE>>
-                                                  extends AbstractPLObject <IMPLTYPE>
+@Deprecated
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>>
+                                        extends AbstractPLBaseElement <IMPLTYPE>
 {
   public static final SizeSpec DEFAULT_MIN_SIZE = SizeSpec.SIZE0;
   public static final SizeSpec DEFAULT_MAX_SIZE = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
@@ -50,7 +55,7 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
   private boolean m_bPrepared = false;
   private SizeSpec m_aPreparedSize;
 
-  public AbstractPLRenderableElement ()
+  public AbstractPLElement ()
   {}
 
   /**
@@ -128,6 +133,7 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
    * @throws IllegalStateException
    *         if already prepared
    */
+  @Override
   protected final void internalCheckNotPrepared ()
   {
     if (isPrepared ())
@@ -150,7 +156,7 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
    *         prepared.
    */
   @Nullable
-  protected final SizeSpec getPreparedSize ()
+  public final SizeSpec getPreparedSize ()
   {
     return m_aPreparedSize;
   }
@@ -189,20 +195,13 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
     m_aPreparedSize = new SizeSpec (fRealWidth, fRealHeight);
 
     if (PLDebug.isDebugPrepare ())
-    {
-      String sSuffix = "";
-      if (this instanceof IPLHasMarginBorderPadding <?>)
-      {
-        sSuffix = " with " +
-                  PLDebug.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
-                  " and " +
-                  PLDebug.getYMBP ((IPLHasMarginBorderPadding <?>) this);
-      }
       PLDebug.debugPrepare (this,
                             "Prepared object: " +
                                   PLDebug.getWH (aPreparedSize.getWidth (), aPreparedSize.getHeight ()) +
-                                  sSuffix);
-    }
+                                  " with " +
+                                  PLDebug.getXMBP (this) +
+                                  " and " +
+                                  PLDebug.getYMBP (this));
   }
 
   /**
@@ -222,20 +221,13 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
     internalCheckNotPrepared ();
 
     if (PLDebug.isDebugPrepare ())
-    {
-      String sSuffix = "";
-      if (this instanceof IPLHasMarginBorderPadding <?>)
-      {
-        sSuffix = " with " +
-                  PLDebug.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
-                  " and " +
-                  PLDebug.getYMBP ((IPLHasMarginBorderPadding <?>) this);
-      }
       PLDebug.debugPrepare (this,
                             "Preparing object for available " +
                                   PLDebug.getWH (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ()) +
-                                  sSuffix);
-    }
+                                  " with " +
+                                  PLDebug.getXMBP (this) +
+                                  " and " +
+                                  PLDebug.getYMBP (this));
 
     // Do prepare
     final SizeSpec aOnPrepareResult = onPrepare (aCtx);
@@ -244,7 +236,7 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
     return m_aPreparedSize;
   }
 
-  protected final void internalMarkAsNotPrepared ()
+  public final void internalMarkAsNotPrepared ()
   {
     m_aPreparedSize = null;
     m_bPrepared = false;
@@ -256,7 +248,7 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
    * @return this
    */
   @Nonnull
-  protected final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
+  public final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
   {
     // Prepare only once!
     internalCheckNotPrepared ();
@@ -273,19 +265,6 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
    */
   @OverrideOnDemand
   public void doPageSetup (@Nonnull final PageSetupContext aCtx)
-  {}
-
-  /**
-   * method to be implemented by subclasses. Should fill the surrounding and
-   * create the border.
-   *
-   * @param aCtx
-   *        Rendering context
-   * @throws IOException
-   *         In case of a PDFBox error
-   */
-  @OverrideOnDemand
-  protected void onPerformFillAndBorder (@Nonnull final RenderingContext aCtx) throws IOException
   {}
 
   /**
@@ -321,8 +300,27 @@ public abstract class AbstractPLRenderableElement <IMPLTYPE extends AbstractPLRe
                                                   m_aPreparedSize.getWidth (),
                                                   m_aPreparedSize.getHeight ()));
 
-    // Fill and render border
-    onPerformFillAndBorder (aCtx);
+    // Render border - debug: green
+    {
+      final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
+      final float fLeft = aCtx.getStartLeft ();
+      final float fTop = aCtx.getStartTop ();
+      final float fWidth = m_aPreparedSize.getWidth () + getPaddingXSum ();
+      final float fHeight = m_aPreparedSize.getHeight () + getPaddingYSum ();
+
+      // Fill before border
+      if (getFillColor () != null)
+      {
+        aContentStream.setNonStrokingColor (getFillColor ());
+        aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
+      }
+
+      BorderSpec aRealBorder = getBorder ();
+      if (PLRenderHelper.shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
+        aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_ELEMENT));
+      if (aRealBorder.hasAnyBorder ())
+        PLRenderHelper.renderBorder (this, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
+    }
 
     // Main perform after border
     onPerform (aCtx);

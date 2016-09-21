@@ -24,8 +24,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.pdflayout.element.IPLHasMarginBorderPadding;
-import com.helger.pdflayout.element.IPLObject;
+import com.helger.pdflayout.base.IPLHasMarginBorderPadding;
+import com.helger.pdflayout.base.IPLObject;
 
 @NotThreadSafe
 public final class PLDebug

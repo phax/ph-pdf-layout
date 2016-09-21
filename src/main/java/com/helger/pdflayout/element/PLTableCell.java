@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.pdflayout.base.AbstractPLElement;
 
 /**
  * This class represents a single table cell within a table row.

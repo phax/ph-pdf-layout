@@ -26,6 +26,8 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -36,7 +38,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  *        Implementation type
  */
 public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxSplittable <IMPLTYPE>> extends
-                                               AbstractPLVBox <IMPLTYPE> implements IPLSplittableElement <IMPLTYPE>
+                                               AbstractPLVBox <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
 {
   public AbstractPLVBoxSplittable ()
   {}

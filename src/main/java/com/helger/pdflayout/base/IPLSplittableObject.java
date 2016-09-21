@@ -14,10 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
+
+import com.helger.pdflayout.element.PLSplitResult;
 
 /**
  * Base interface for a splittable element
@@ -26,7 +28,7 @@ import javax.annotation.Nullable;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLSplittableElement <IMPLTYPE extends IPLSplittableElement <IMPLTYPE>> extends IPLObject <IMPLTYPE>
+public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPLTYPE>> extends IPLObject <IMPLTYPE>
 {
   /**
    * @return Always <code>true</code> for splittable elements

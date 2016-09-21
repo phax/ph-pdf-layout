@@ -57,6 +57,7 @@ public class BorderSpec
 
   /**
    * Constructor.
+   * 
    * @param aBorderY
    *        The border to set for top and bottom. Maybe <code>null</code>.
    * @param aBorderX

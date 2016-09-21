@@ -20,6 +20,8 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
@@ -31,7 +33,7 @@ import com.helger.pdflayout.spec.WidthSpec;
  *        Implementation type
  */
 public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxSplittable <IMPLTYPE>> extends
-                                               AbstractPLHBox <IMPLTYPE> implements IPLSplittableElement <IMPLTYPE>
+                                               AbstractPLHBox <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
 {
   public AbstractPLHBoxSplittable ()
   {}

@@ -36,6 +36,10 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
+import com.helger.pdflayout.base.IPLHasPadding;
+import com.helger.pdflayout.base.IPLHasVerticalAlignment;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
@@ -54,10 +58,11 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  *        Implementation type
  */
 public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
-                                     implements IPLHasHorizontalAlignment <IMPLTYPE>, IPLHasVerticalAlignment <IMPLTYPE>
+                                     implements
+                                     IPLHasHorizontalAlignment <IMPLTYPE>,
+                                     IPLHasVerticalAlignment <IMPLTYPE>,
+                                     IPLHasPadding <IMPLTYPE>
 {
-  public static final EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
-  public static final EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
   public static final boolean DEFAULT_TOP_DOWN = true;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
 

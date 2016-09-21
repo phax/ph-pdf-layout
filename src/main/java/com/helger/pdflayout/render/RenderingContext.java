@@ -45,7 +45,7 @@ public final class RenderingContext
   private final float m_fStartTop;
   private final float m_fWidth;
   private final float m_fHeight;
-  private final ICommonsOrderedMap <String, String> m_aPlaceholders = new CommonsLinkedHashMap <> ();
+  private final ICommonsOrderedMap <String, String> m_aPlaceholders = new CommonsLinkedHashMap<> ();
 
   /**
    * @param aCtx

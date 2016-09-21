@@ -1,4 +1,4 @@
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
 
@@ -13,11 +13,12 @@ import com.helger.commons.traits.IGenericImplTrait;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
-                            extends IHasID <String>, IGenericImplTrait <IMPLTYPE>
+public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends IHasID <String>, IGenericImplTrait <IMPLTYPE>
 {
   /**
    * @return The debug ID of this element. Neither <code>null</code> nor empty.
+   *         The debug ID is usually automatically created automatically from
+   *         the ID.
    */
   @Nonnull
   @Nonempty
@@ -29,12 +30,12 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
    */
   default boolean isSplittable ()
   {
-    return this instanceof IPLSplittableElement;
+    return this instanceof IPLSplittableObject <?>;
   }
 
   @Nonnull
-  default IPLSplittableElement <?> getAsSplittable ()
+  default IPLSplittableObject <?> getAsSplittable ()
   {
-    return (IPLSplittableElement <?>) this;
+    return (IPLSplittableObject <?>) this;
   }
 }
