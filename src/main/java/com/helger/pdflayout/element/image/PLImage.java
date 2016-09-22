@@ -39,7 +39,7 @@ import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Render an image
+ * Represent a static image based on {@link BufferedImage}.
  *
  * @author Philip Helger
  */
@@ -47,8 +47,8 @@ public class PLImage extends AbstractPLElement <PLImage>
 {
   private final BufferedImage m_aImage;
   private final IHasInputStream m_aIIS;
-  private final float m_fWidth;
-  private final float m_fHeight;
+  private final float m_fImageWidth;
+  private final float m_fImageHeight;
 
   // Status var
   private PDImageXObject m_aJpeg;
@@ -68,8 +68,8 @@ public class PLImage extends AbstractPLElement <PLImage>
 
     m_aImage = aImage;
     m_aIIS = null;
-    m_fWidth = fWidth;
-    m_fHeight = fHeight;
+    m_fImageWidth = fWidth;
+    m_fImageHeight = fHeight;
   }
 
   public PLImage (@Nonnull final IHasInputStream aImage,
@@ -82,8 +82,8 @@ public class PLImage extends AbstractPLElement <PLImage>
 
     m_aImage = null;
     m_aIIS = aImage;
-    m_fWidth = fWidth;
-    m_fHeight = fHeight;
+    m_fImageWidth = fWidth;
+    m_fImageHeight = fHeight;
   }
 
   @Nonnull
@@ -108,18 +108,18 @@ public class PLImage extends AbstractPLElement <PLImage>
 
   public float getWidth ()
   {
-    return m_fWidth;
+    return m_fImageWidth;
   }
 
   public float getHeight ()
   {
-    return m_fHeight;
+    return m_fImageHeight;
   }
 
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
-    return new SizeSpec (m_fWidth, m_fHeight);
+    return new SizeSpec (m_fImageWidth, m_fImageHeight);
   }
 
   @Override
@@ -155,9 +155,9 @@ public class PLImage extends AbstractPLElement <PLImage>
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     aContentStream.drawXObject (m_aJpeg,
                                 aCtx.getStartLeft () + getFullLeft (),
-                                aCtx.getStartTop () - getFullTop () - m_fHeight,
-                                m_fWidth,
-                                m_fHeight);
+                                aCtx.getStartTop () - getFullTop () - m_fImageHeight,
+                                m_fImageWidth,
+                                m_fImageHeight);
   }
 
   @Override
@@ -166,8 +166,8 @@ public class PLImage extends AbstractPLElement <PLImage>
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("Image", m_aImage)
                             .append ("IIS", m_aIIS)
-                            .append ("Width", m_fWidth)
-                            .append ("Height", m_fHeight)
+                            .append ("ImageWidth", m_fImageWidth)
+                            .append ("ImageHeight", m_fImageHeight)
                             .toString ();
   }
 }

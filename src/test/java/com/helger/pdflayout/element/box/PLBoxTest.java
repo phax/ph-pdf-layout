@@ -128,18 +128,18 @@ public final class PLBoxTest
                                                                                                               5))
                                                                              .setFillColor (Color.GRAY));
 
-    final BorderStyleSpec aBSS = new BorderStyleSpec (Color.BLACK);
+    final BorderStyleSpec aBSS = new BorderStyleSpec (Color.BLACK, 1);
     aPS1.addElement (new PLBox (new PLText ("Table cell example",
                                             r10).setBorder (Color.RED)
                                                 .setPadding (5)
                                                 .setFillColor (Color.PINK)).setPadding (2)
-                                                                           .setMinSize (200, 0)
+                                                                           .setMinWidth (200)
                                                                            .setBorder (aBSS)
                                                                            .setFillColor (Color.YELLOW));
     aPS1.addElement (new PLBox (new PLText ("Next row", r10).setBorder (Color.RED)
                                                             .setPadding (5)
                                                             .setFillColor (Color.PINK)).setPadding (2)
-                                                                                       .setMinSize (200, 0)
+                                                                                       .setMinWidth (200)
                                                                                        .setBorder (null,
                                                                                                    aBSS,
                                                                                                    aBSS,
@@ -150,10 +150,10 @@ public final class PLBoxTest
                                                              .setPadding (5)
                                                              .setFillColor (Color.PINK)
                                                              .setHorzAlign (EHorzAlignment.RIGHT)
-                                                             .setMinSize (150, 0)).setPadding (2)
-                                                                                  .setMinSize (200, 0)
-                                                                                  .setBorder (null, aBSS, aBSS, aBSS)
-                                                                                  .setFillColor (Color.YELLOW));
+                                                             .setMinWidth (150)).setPadding (2)
+                                                                                .setMinWidth (200)
+                                                                                .setBorder (null, aBSS, aBSS, aBSS)
+                                                                                .setFillColor (Color.YELLOW));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);

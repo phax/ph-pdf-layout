@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLVisitor;
@@ -69,6 +70,12 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
       m_aElement.visit (aVisitor);
   }
 
+  @Nullable
+  protected final SizeSpec getElementPreparedSize ()
+  {
+    return m_aElementPreparedSize;
+  }
+
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
@@ -100,5 +107,14 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
                                                                    getPreparedHeight ());
       m_aElement.perform (aElementCtx);
     }
+  }
+
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ())
+                            .appendIfNotNull ("Element", m_aElement)
+                            .appendIfNotNull ("ElementPreparedSize", m_aElementPreparedSize)
+                            .toString ();
   }
 }
