@@ -145,6 +145,15 @@ public final class PLBoxTest
                                                                                                    aBSS,
                                                                                                    aBSS)
                                                                                        .setFillColor (Color.YELLOW));
+    // Use min size on text as well
+    aPS1.addElement (new PLBox (new PLText ("Third row", r10).setBorder (Color.RED)
+                                                             .setPadding (5)
+                                                             .setFillColor (Color.PINK)
+                                                             .setHorzAlign (EHorzAlignment.RIGHT)
+                                                             .setMinSize (150, 0)).setPadding (2)
+                                                                                  .setMinSize (200, 0)
+                                                                                  .setBorder (null, aBSS, aBSS, aBSS)
+                                                                                  .setFillColor (Color.YELLOW));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
