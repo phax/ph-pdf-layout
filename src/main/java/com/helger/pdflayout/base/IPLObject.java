@@ -1,5 +1,7 @@
 package com.helger.pdflayout.base;
 
+import java.io.Serializable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -15,7 +17,7 @@ import com.helger.commons.traits.IGenericImplTrait;
  *        Implementation type
  */
 public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
-                           extends IHasID <String>, IGenericImplTrait <IMPLTYPE>, IPLVisitable
+                           extends IHasID <String>, IGenericImplTrait <IMPLTYPE>, IPLVisitable, Serializable
 {
   default boolean hasID (@Nullable final String sID)
   {
