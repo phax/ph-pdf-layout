@@ -31,6 +31,7 @@ import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
 import com.helger.pdflayout.render.PagePreRenderContext;
+import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
@@ -235,5 +236,26 @@ public final class PLPageSetTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-multiple-pages.pdf"));
+  }
+
+  @Test
+  public void testFillColor () throws PDFCreationException
+  {
+    final String sHeader = "This is a page header that is repeated on every page.\nIt can have multiple lines etc.\n";
+    final String sFooter = "This is a page footer that is repeated on every page.\nIt can have multiple lines etc.\n";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (5)
+                                                         .setPadding (5)
+                                                         .setBorder (new BorderStyleSpec (5))
+                                                         .setFillColor (Color.ORANGE);
+
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10));
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10));
+    aPS1.addElement (new PLText ("First body line in orange area", r10));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-fillcolor.pdf"));
   }
 }
