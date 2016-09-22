@@ -146,6 +146,34 @@ public final class PLPageSetTest
   }
 
   @Test
+  public void testBothStyled () throws PDFCreationException
+  {
+    final String sHeader = "This is a page header that is repeated on every page.\nIt can have multiple lines etc.\n";
+    final String sFooter = "This is a page footer that is repeated on every page.\nIt can have multiple lines etc.\n";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED)
+                                                                                   .setHorzAlign (EHorzAlignment.CENTER)
+                                                                                   .setPadding (5)
+                                                                                   .setMargin (5)
+                                                                                   .setFillColor (Color.YELLOW));
+    aPS1.setPageFooter (new PLText (sFooter +
+                                    sFooter +
+                                    "last line of footer",
+                                    r10).setPadding (5)
+                                        .setMargin (5)
+                                        .setFillColor (Color.PINK)
+                                        .setHorzAlign (EHorzAlignment.RIGHT));
+    aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-both-styled.pdf"));
+  }
+
+  @Test
   public void testWithPlaceholder () throws PDFCreationException
   {
     final String sHeader = "This is a page header that is repeated on every page.";

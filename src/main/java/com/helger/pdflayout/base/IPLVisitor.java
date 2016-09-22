@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.ValueEnforcer;
+import com.helger.commons.function.IThrowingConsumer;
+
 /**
  * Visitor callback
  *
@@ -44,4 +47,27 @@ public interface IPLVisitor
    */
   default void onPageSetEnd (@Nonnull final PLPageSet aPageSet) throws IOException
   {}
+
+  /**
+   * Special visitor method that visits only elements of this objects and
+   * ignores the others objects.
+   *
+   * @param aElementConsumer
+   *        The consumer to use. May not be <code>null</code>.
+   * @return The new element visitor to use
+   * @throws IOException
+   *         on PDFBox error
+   */
+  @Nonnull
+  static IPLVisitor createElementVisitor (@Nonnull final IThrowingConsumer <? super IPLRenderableObject <?>, IOException> aElementConsumer) throws IOException
+  {
+    ValueEnforcer.notNull (aElementConsumer, "ElementConsumer");
+    return new IPLVisitor ()
+    {
+      public void onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
+      {
+        aElementConsumer.accept (aElement);
+      }
+    };
+  }
 }

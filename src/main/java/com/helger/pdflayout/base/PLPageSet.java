@@ -779,7 +779,13 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         if (m_aPRCCustomizer != null)
           m_aPRCCustomizer.customizePreRenderContext (aPreRenderCtx);
 
-        visitElement (x -> x.beforeRender (aPreRenderCtx));
+        final IPLVisitor aVisitor = IPLVisitor.createElementVisitor (x -> x.beforeRender (aPreRenderCtx));
+        if (m_aPageHeader != null)
+          m_aPageHeader.visit (aVisitor);
+        if (m_aPageFooter != null)
+          m_aPageFooter.visit (aVisitor);
+        for (final PLElementWithSize aElementWithHeight : aPerPage)
+          aElementWithHeight.getElement ().visit (aVisitor);
       }
 
       final PDPageContentStreamWithCache aContentStream = new PDPageContentStreamWithCache (aDoc,

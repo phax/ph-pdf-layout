@@ -60,6 +60,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
 
   private String m_sText;
+  private String m_sDisplayText;
   private final FontSpec m_aFontSpec;
   private boolean m_bTopDown = DEFAULT_TOP_DOWN;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
@@ -86,6 +87,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       sCleaned = StringHelper.replaceAll (sCleaned, '\r', '\n');
       m_sText = sCleaned;
     }
+    m_sDisplayText = sText;
     m_aFontSpec = ValueEnforcer.notNull (aFontSpec, "FontSpec");
   }
 
@@ -99,6 +101,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return thisAsT ();
   }
 
+  /**
+   * @return The original text provided in the constructor.
+   */
   @Nonnull
   public String getText ()
   {
@@ -235,7 +240,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // Split text into rows
-    internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sText, fFontSize, fAvailableWidth));
+    internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sDisplayText, fFontSize, fAvailableWidth));
 
     // Determine max width of all prepared lines
     float fMaxWidth = Float.MIN_VALUE;
@@ -254,11 +259,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return _prepareText (aCtx.getAvailableWidth () - getFullXSum ());
   }
 
-  protected final void setNewTextAfterPrepare (@Nonnull final String sNewText,
-                                               final float fAvailableWidth) throws IOException
+  protected final void setDisplayTextAfterPrepare (@Nonnull final String sNewText,
+                                                   final float fAvailableWidth) throws IOException
   {
     internalMarkAsNotPrepared ();
-    m_sText = sNewText;
+    m_sDisplayText = sNewText;
     final SizeSpec aOnPrepareResult = _prepareText (fAvailableWidth);
     internalMarkAsPrepared (aOnPrepareResult);
   }
@@ -398,6 +403,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("Text", m_sText)
+                            .append ("DisplayText", m_sDisplayText)
                             .append ("FontSpec", m_aFontSpec)
                             .append ("TopDown", m_bTopDown)
                             .append ("MaxRows", m_nMaxRows)

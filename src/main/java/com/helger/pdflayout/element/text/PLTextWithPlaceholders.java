@@ -43,10 +43,10 @@ public class PLTextWithPlaceholders extends AbstractPLText <PLTextWithPlaceholde
   public void beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
   {
     final String sOrigText = getText ();
-    final String sRealText = StringHelper.replaceMultiple (getText (), aCtx.getAllPlaceholders ());
-    if (!sOrigText.equals (sRealText))
+    final String sDisplayText = StringHelper.replaceMultiple (sOrigText, aCtx.getAllPlaceholders ());
+    if (!sOrigText.equals (sDisplayText))
     {
-      setNewTextAfterPrepare (sRealText, getPrepareAvailableSize ().getWidth ());
+      setDisplayTextAfterPrepare (sDisplayText, getPrepareAvailableSize ().getWidth ());
     }
   }
 }
