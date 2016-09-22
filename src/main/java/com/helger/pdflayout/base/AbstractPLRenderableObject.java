@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.OverrideOnDemand;
@@ -75,6 +76,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return thisAsT ();
   }
 
+  @OverrideOnDemand
+  @OverridingMethodsMustInvokeSuper
   public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
     aVisitor.onElement (this);
@@ -154,7 +157,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   /**
    * Set the prepared size of this object. This method also handles min and max
    * size
-   * 
+   *
    * @param aPreparedSize
    *        Prepared size without padding and margin.
    */
