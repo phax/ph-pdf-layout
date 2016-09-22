@@ -33,7 +33,7 @@ import com.helger.pdflayout.spec.EVertAlignment;
  */
 public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlignedElement <IMPLTYPE>>
                                                extends AbstractPLHorzAlignedElement <IMPLTYPE>
-                                               implements IPLHasVerticalAlignment <IMPLTYPE>
+                                               implements IPLVertAlignedElement <IMPLTYPE>
 {
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
 
@@ -60,44 +60,6 @@ public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlign
   {
     m_eVertAlign = ValueEnforcer.notNull (eVertAlign, "VertAlign");
     return thisAsT ();
-  }
-
-  /**
-   * Get the indentation for a certain vertical alignment. This method uses the
-   * prepared height as the basis for alignment.
-   *
-   * @param fAvailableHeight
-   *        The available height of the surrounding element.
-   * @return The indentation offset
-   */
-  protected float getIndentY (final float fAvailableHeight)
-  {
-    return getIndentY (fAvailableHeight, getPreparedHeight ());
-  }
-
-  /**
-   * Get the indentation for a certain vertical alignment. This method uses the
-   * provided element height as the basis for alignment.
-   *
-   * @param fAvailableHeight
-   *        The available height of the surrounding element.
-   * @param fElementHeight
-   *        The height of the element to align
-   * @return The indentation offset
-   */
-  protected float getIndentY (final float fAvailableHeight, final float fElementHeight)
-  {
-    switch (m_eVertAlign)
-    {
-      case TOP:
-        return 0f;
-      case MIDDLE:
-        return (fAvailableHeight - fElementHeight) / 2f;
-      case BOTTOM:
-        return fAvailableHeight - fElementHeight;
-      default:
-        throw new IllegalStateException ("Unsupported vertical alignment " + m_eVertAlign);
-    }
   }
 
   @Override

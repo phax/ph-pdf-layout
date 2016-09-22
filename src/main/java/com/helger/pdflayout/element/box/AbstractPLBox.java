@@ -89,6 +89,9 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
                                                                    fElementWidth,
                                                                    fElementHeight);
     m_aElementPreparedSize = m_aElement.prepare (aElementCtx);
+
+    // Add the outer stuff of the contained element as this elements prepared
+    // size
     return m_aElementPreparedSize.plus (m_aElement.getFullXSum (), m_aElement.getFullYSum ());
   }
 
