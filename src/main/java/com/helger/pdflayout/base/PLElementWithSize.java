@@ -24,7 +24,7 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Wraps an {@link AbstractPLRenderableObject} and stores the size.
+ * Wraps an {@link IPLRenderableObject} together with a size.
  *
  * @author Philip Helger
  */

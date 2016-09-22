@@ -16,12 +16,11 @@
  */
 package com.helger.pdflayout.element.text;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLElementWithSize;
@@ -51,8 +50,8 @@ public class PLTextSplittable extends AbstractPLText <PLTextSplittable>
     final float fLineHeight = m_fLineHeight;
 
     // Get the lines in the correct order from top to bottom
-    final List <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines
-                                                        : CollectionHelper.getReverseList (m_aPreparedLines);
+    final ICommonsList <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines
+                                                                : CollectionHelper.getReverseList (m_aPreparedLines);
 
     int nLines = (int) (fAvailableHeight / fLineHeight);
     if (nLines <= 0)

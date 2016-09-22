@@ -46,8 +46,7 @@ public final class PLVBoxTest
 
   static
   {
-    if (false)
-      PLDebug.setDebugAll (true);
+    PLDebug.setDebugAll (false);
   }
 
   @Test
@@ -56,7 +55,7 @@ public final class PLVBoxTest
     final String s = "This is a test String";
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLVBox aVBox = new PLVBox ();
     aVBox.addRow (new PLText (s, r10).setBorder (Color.RED));
@@ -79,6 +78,6 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-vbox-basic.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-basic.pdf"));
   }
 }

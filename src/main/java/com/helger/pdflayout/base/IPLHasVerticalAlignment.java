@@ -28,7 +28,7 @@ import com.helger.pdflayout.spec.EVertAlignment;
  *        Implementation type
  */
 public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignment <IMPLTYPE>>
-                                         extends IPLObject <IMPLTYPE>
+                                         extends IPLRenderableObject <IMPLTYPE>
 {
   EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
 
@@ -48,4 +48,42 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
    */
   @Nonnull
   IMPLTYPE setVertAlign (@Nonnull EVertAlignment eVertAlign);
+
+  /**
+   * Get the indentation for a certain vertical alignment. This method uses the
+   * prepared height as the basis for alignment.
+   *
+   * @param fAvailableHeight
+   *        The available height of the surrounding element.
+   * @return The indentation offset
+   */
+  default float getIndentY (final float fAvailableHeight)
+  {
+    return getIndentY (fAvailableHeight, getPreparedHeight ());
+  }
+
+  /**
+   * Get the indentation for a certain vertical alignment. This method uses the
+   * provided element height as the basis for alignment.
+   *
+   * @param fAvailableHeight
+   *        The available height of the surrounding element.
+   * @param fElementHeight
+   *        The height of the element to align
+   * @return The indentation offset
+   */
+  default float getIndentY (final float fAvailableHeight, final float fElementHeight)
+  {
+    switch (getVertAlign ())
+    {
+      case TOP:
+        return 0f;
+      case MIDDLE:
+        return (fAvailableHeight - fElementHeight) / 2f;
+      case BOTTOM:
+        return fAvailableHeight - fElementHeight;
+      default:
+        throw new IllegalStateException ("Unsupported vertical alignment " + getVertAlign ());
+    }
+  }
 }

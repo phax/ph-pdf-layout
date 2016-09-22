@@ -33,7 +33,7 @@ import com.helger.pdflayout.spec.EVertAlignment;
  */
 public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlignedElement <IMPLTYPE>>
                                                extends AbstractPLHorzAlignedElement <IMPLTYPE>
-                                               implements IPLVertAlignedElement <IMPLTYPE>
+                                               implements IPLHasVerticalAlignment <IMPLTYPE>
 {
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
 

@@ -376,9 +376,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Nonnull
-  public PLElementWithSize getCopy (final float fElementWidth,
-                                    @Nonnull @Nonempty final List <TextAndWidthSpec> aLines,
-                                    final boolean bSplittableCopy)
+  protected final PLElementWithSize getCopy (final float fElementWidth,
+                                             @Nonnull @Nonempty final List <TextAndWidthSpec> aLines,
+                                             final boolean bSplittableCopy)
   {
     ValueEnforcer.notEmpty (aLines, "Lines");
 

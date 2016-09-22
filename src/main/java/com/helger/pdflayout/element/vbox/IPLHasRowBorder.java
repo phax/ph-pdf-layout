@@ -19,7 +19,7 @@ package com.helger.pdflayout.element.vbox;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.pdflayout.base.IPLObject;
+import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 
@@ -30,7 +30,7 @@ import com.helger.pdflayout.spec.BorderStyleSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasRowBorder <IMPLTYPE extends IPLHasRowBorder <IMPLTYPE>> extends IPLObject <IMPLTYPE>
+public interface IPLHasRowBorder <IMPLTYPE extends IPLHasRowBorder <IMPLTYPE>> extends IPLRenderableObject <IMPLTYPE>
 {
   /**
    * Set the border around each contained row.

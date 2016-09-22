@@ -33,7 +33,7 @@ import com.helger.pdflayout.spec.EHorzAlignment;
  */
 public abstract class AbstractPLHorzAlignedElement <IMPLTYPE extends AbstractPLHorzAlignedElement <IMPLTYPE>>
                                                    extends AbstractPLElement <IMPLTYPE>
-                                                   implements IPLHorzAlignedElement <IMPLTYPE>
+                                                   implements IPLHasHorizontalAlignment <IMPLTYPE>
 {
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
 

@@ -28,7 +28,7 @@ import com.helger.pdflayout.spec.EHorzAlignment;
  *        Implementation type
  */
 public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>>
-                                           extends IPLObject <IMPLTYPE>
+                                           extends IPLRenderableObject <IMPLTYPE>
 {
   EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
 
@@ -48,4 +48,42 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
    */
   @Nonnull
   IMPLTYPE setHorzAlign (@Nonnull EHorzAlignment eHorzAlign);
+
+  /**
+   * Get the indentation for a certain horizontal alignment. This method uses
+   * the prepared width as the basis for alignment.
+   *
+   * @param fAvailableWidth
+   *        The available width of the surrounding element.
+   * @return The indentation offset
+   */
+  default float getIndentX (final float fAvailableWidth)
+  {
+    return getIndentX (fAvailableWidth, getPreparedWidth ());
+  }
+
+  /**
+   * Get the indentation for a certain horizontal alignment. This method uses
+   * the provided element width as the basis for alignment.
+   *
+   * @param fAvailableWidth
+   *        The available width of the surrounding element.
+   * @param fElementWidth
+   *        The width of the element to align
+   * @return The indentation offset
+   */
+  default float getIndentX (final float fAvailableWidth, final float fElementWidth)
+  {
+    switch (getHorzAlign ())
+    {
+      case LEFT:
+        return 0f;
+      case CENTER:
+        return (fAvailableWidth - fElementWidth) / 2;
+      case RIGHT:
+        return fAvailableWidth - fElementWidth;
+      default:
+        throw new IllegalStateException ("Unsupported horizontal alignment " + getHorzAlign ());
+    }
+  }
 }
