@@ -35,13 +35,12 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
-import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
+import com.helger.pdflayout.base.AbstractPLAlignedElement;
 import com.helger.pdflayout.base.PLElementWithSize;
+import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
-import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -54,8 +53,8 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
-                                     implements IPLHasHorizontalAlignment <IMPLTYPE>
+public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>>
+                                     extends AbstractPLAlignedElement <IMPLTYPE>
 {
   public static final boolean DEFAULT_TOP_DOWN = true;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
@@ -64,7 +63,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private final FontSpec m_aFontSpec;
   private boolean m_bTopDown = DEFAULT_TOP_DOWN;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
-  private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
 
   // prepare result
   private LoadedFont m_aLoadedFont;
@@ -98,7 +96,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     super.setBasicDataFrom (aSource);
     setTopDown (aSource.m_bTopDown);
     setMaxRows (aSource.m_nMaxRows);
-    setHorzAlign (aSource.m_eHorzAlign);
     return thisAsT ();
   }
 
@@ -171,19 +168,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public IMPLTYPE setMaxRows (final int nMaxRows)
   {
     m_nMaxRows = nMaxRows;
-    return thisAsT ();
-  }
-
-  @Nonnull
-  public EHorzAlignment getHorzAlign ()
-  {
-    return m_eHorzAlign;
-  }
-
-  @Nonnull
-  public IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
-  {
-    m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
     return thisAsT ();
   }
 
@@ -304,8 +288,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
     {
       // Align border on context width
-      final float fIndentX = getIndentX (m_eHorzAlign, aCtx.getWidth ());
-      performRenderFillAndBorder (aCtx, fIndentX);
+      final float fIndentX = getIndentX (getHorzAlign (), aCtx.getWidth ());
+      final float fIndentY = getIndentY (getVertAlign (), aCtx.getHeight ());
+      PLRenderHelper.fillAndRenderBorder (this, aCtx, fIndentX, fIndentY);
     }
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
@@ -336,7 +321,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       }
 
       // Align text line by line
-      final float fIndentX = getIndentX (m_eHorzAlign, aCtx.getWidth (), fTextWidth);
+      final float fIndentX = getIndentX (getHorzAlign (), aCtx.getWidth (), fTextWidth);
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
@@ -411,7 +396,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("FontSpec", m_aFontSpec)
                             .append ("TopDown", m_bTopDown)
                             .append ("MaxRows", m_nMaxRows)
-                            .append ("HorzAlign", m_eHorzAlign)
                             .toString ();
   }
 }

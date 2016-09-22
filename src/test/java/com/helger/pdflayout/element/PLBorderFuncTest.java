@@ -28,6 +28,7 @@ import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.hbox.PLHBox;
+import com.helger.pdflayout.element.image.PLImage;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.vbox.PLVBox;

@@ -17,7 +17,6 @@
 package com.helger.pdflayout.base;
 
 import java.awt.Color;
-import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,13 +24,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.element.PLRenderHelper;
-import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
-import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.BorderSpec;
-import com.helger.pdflayout.spec.BorderStyleSpec;
-import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 
@@ -122,77 +115,6 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public Color getFillColor ()
   {
     return m_aFillColor;
-  }
-
-  /**
-   * Get the indentation for a certain horizontal alignment. This method uses
-   * the prepared width as the basis for alignment.
-   * 
-   * @param eHorzAlign
-   *        Horizontal alignment. May not be <code>null</code>.
-   * @param fAvailableWidth
-   *        The available width of the surrounding element.
-   * @return The left margin of this object plus the indentation offset
-   */
-  protected float getIndentX (@Nonnull final EHorzAlignment eHorzAlign, final float fAvailableWidth)
-  {
-    return getIndentX (eHorzAlign, fAvailableWidth, getPreparedSize ().getWidth ());
-  }
-
-  /**
-   * Get the indentation for a certain horizontal alignment. This method uses
-   * the provided element width as the basis for alignment.
-   * 
-   * @param eHorzAlign
-   *        Horizontal alignment. May not be <code>null</code>.
-   * @param fAvailableWidth
-   *        The available width of the surrounding element.
-   * @param fElementWidth
-   *        The width of the element to align
-   * @return The left margin of this object plus the indentation offset
-   */
-  protected float getIndentX (@Nonnull final EHorzAlignment eHorzAlign,
-                              final float fAvailableWidth,
-                              final float fElementWidth)
-  {
-    final float fLeft = getMarginLeft ();
-    final float fUsableWidth = fAvailableWidth - getMarginXSum ();
-
-    switch (eHorzAlign)
-    {
-      case LEFT:
-        return fLeft;
-      case CENTER:
-        return fLeft + (fUsableWidth - fElementWidth) / 2;
-      case RIGHT:
-        return fLeft + fUsableWidth - fElementWidth;
-      default:
-        throw new IllegalStateException ("Unsupported horizontal alignment " + eHorzAlign);
-    }
-  }
-
-  protected void performRenderFillAndBorder (@Nonnull final RenderingContext aCtx,
-                                             final float fIndentX) throws IOException
-  {
-    final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
-
-    final float fLeft = aCtx.getStartLeft () + getMarginLeft () + fIndentX;
-    final float fTop = aCtx.getStartTop () - getMarginTop ();
-    final float fWidth = getPreparedSize ().getWidth ();
-    final float fHeight = getPreparedSize ().getHeight ();
-
-    // Fill before border
-    if (m_aFillColor != null)
-    {
-      aContentStream.setNonStrokingColor (m_aFillColor);
-      aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
-    }
-
-    BorderSpec aRealBorder = m_aBorder;
-    if (PLRenderHelper.shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
-      aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_ELEMENT));
-    if (aRealBorder.hasAnyBorder ())
-      PLRenderHelper.renderBorder (this, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
   }
 
   @Override

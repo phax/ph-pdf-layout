@@ -1,13 +1,16 @@
 package com.helger.pdflayout.element;
 
+import java.awt.Color;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.IPLObject;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
+import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 
@@ -163,5 +166,32 @@ public final class PLRenderHelper
         aContentStream.drawLine (fLeft - fDelta, fTop + fTopWidth, fLeft - fDelta, fBottom);
       }
     }
+  }
+
+  public static void fillAndRenderBorder (@Nonnull final IPLElement <?> aElement,
+                                          @Nonnull final RenderingContext aCtx,
+                                          final float fIndentX,
+                                          final float fIndentY) throws IOException
+  {
+    final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
+
+    final float fLeft = aCtx.getStartLeft () + aElement.getMarginLeft () + fIndentX;
+    final float fTop = aCtx.getStartTop () - aElement.getMarginTop () - fIndentY;
+    final float fWidth = aElement.getPreparedSize ().getWidth ();
+    final float fHeight = aElement.getPreparedSize ().getHeight ();
+
+    // Fill before border
+    final Color aFillColor = aElement.getFillColor ();
+    if (aFillColor != null)
+    {
+      aContentStream.setNonStrokingColor (aFillColor);
+      aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
+    }
+
+    BorderSpec aRealBorder = aElement.getBorder ();
+    if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
+      aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_ELEMENT));
+    if (aRealBorder.hasAnyBorder ())
+      renderBorder (aElement, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
   }
 }

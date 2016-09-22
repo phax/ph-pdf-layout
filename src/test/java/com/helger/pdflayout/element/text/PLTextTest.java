@@ -33,13 +33,11 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.PLPageSet;
-import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
-import com.helger.pdflayout.element.text.PLText;
-import com.helger.pdflayout.element.text.PLTextSplittable;
 import com.helger.pdflayout.element.vbox.PLVBoxSplittable;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
+import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -172,20 +170,18 @@ public final class PLTextTest
   @Test
   public void testVerticalAlign () throws PDFCreationException
   {
-    final String s = "Test text for vertical align";
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
-    if (false)
-      System.out.println ("Available size: " + aPS1.getAvailableWidth () + "x" + aPS1.getAvailableHeight ());
 
-    final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100), WidthSpec.star ());
-    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100), WidthSpec.star ());
-    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100), WidthSpec.star ());
-    aPS1.addElement (aHBox);
+    aPS1.addElement (new PLText ("Top aligned", r10).setVertAlign (EVertAlignment.TOP)
+                                                    .setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLText ("Middle aligned", r10).setVertAlign (EVertAlignment.MIDDLE)
+                                                       .setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLText ("Bottom aligned", r10).setVertAlign (EVertAlignment.BOTTOM)
+                                                       .setBorder (new BorderStyleSpec (Color.RED)));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-vertical-align.pdf"));
   }

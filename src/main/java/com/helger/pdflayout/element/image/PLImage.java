@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.element.image;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -30,13 +30,12 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.IHasInputStream;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
-import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
+import com.helger.pdflayout.base.AbstractPLAlignedElement;
+import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
-import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -44,13 +43,12 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizontalAlignment <PLImage>
+public class PLImage extends AbstractPLAlignedElement <PLImage>
 {
   private final BufferedImage m_aImage;
   private final IHasInputStream m_aIIS;
   private final float m_fWidth;
   private final float m_fHeight;
-  private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
 
   // Status var
   private PDImageXObject m_aJpeg;
@@ -93,7 +91,6 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
   public PLImage setBasicDataFrom (@Nonnull final PLImage aSource)
   {
     super.setBasicDataFrom (aSource);
-    setHorzAlign (aSource.m_eHorzAlign);
     return this;
   }
 
@@ -119,23 +116,10 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
     return m_fHeight;
   }
 
-  @Nonnull
-  public EHorzAlignment getHorzAlign ()
-  {
-    return m_eHorzAlign;
-  }
-
-  @Nonnull
-  public PLImage setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
-  {
-    m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
-    return this;
-  }
-
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
-    return new SizeSpec (aCtx.getAvailableWidth (), m_fHeight);
+    return new SizeSpec (m_fWidth, m_fHeight);
   }
 
   @Override
@@ -167,8 +151,9 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
   {
     {
       // Align border on context width
-      final float fIndentX = getIndentX (m_eHorzAlign, aCtx.getWidth ());
-      performRenderFillAndBorder (aCtx, fIndentX);
+      final float fIndentX = getIndentX (getHorzAlign (), aCtx.getWidth ());
+      final float fIndentY = getIndentY (getVertAlign (), aCtx.getHeight ());
+      PLRenderHelper.fillAndRenderBorder (this, aCtx, fIndentX, fIndentY);
     }
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
@@ -187,7 +172,6 @@ public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizo
                             .append ("IIS", m_aIIS)
                             .append ("Width", m_fWidth)
                             .append ("Height", m_fHeight)
-                            .append ("HorzAlign", m_eHorzAlign)
                             .toString ();
   }
 }

@@ -79,6 +79,100 @@ public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlign
     return thisAsT ();
   }
 
+  /**
+   * Get the indentation for a certain horizontal alignment. This method uses
+   * the prepared width as the basis for alignment.
+   *
+   * @param eHorzAlign
+   *        Horizontal alignment. May not be <code>null</code>.
+   * @param fAvailableWidth
+   *        The available width of the surrounding element.
+   * @return The left margin of this object plus the indentation offset
+   */
+  protected float getIndentX (@Nonnull final EHorzAlignment eHorzAlign, final float fAvailableWidth)
+  {
+    return getIndentX (eHorzAlign, fAvailableWidth, getPreparedSize ().getWidth ());
+  }
+
+  /**
+   * Get the indentation for a certain horizontal alignment. This method uses
+   * the provided element width as the basis for alignment.
+   *
+   * @param eHorzAlign
+   *        Horizontal alignment. May not be <code>null</code>.
+   * @param fAvailableWidth
+   *        The available width of the surrounding element.
+   * @param fElementWidth
+   *        The width of the element to align
+   * @return The left margin of this object plus the indentation offset
+   */
+  protected float getIndentX (@Nonnull final EHorzAlignment eHorzAlign,
+                              final float fAvailableWidth,
+                              final float fElementWidth)
+  {
+    final float fLeft = getMarginLeft ();
+    final float fUsableWidth = fAvailableWidth - getMarginXSum ();
+
+    switch (eHorzAlign)
+    {
+      case LEFT:
+        return fLeft;
+      case CENTER:
+        return fLeft + (fUsableWidth - fElementWidth) / 2;
+      case RIGHT:
+        return fLeft + fUsableWidth - fElementWidth;
+      default:
+        throw new IllegalStateException ("Unsupported horizontal alignment " + eHorzAlign);
+    }
+  }
+
+  /**
+   * Get the indentation for a certain vertical alignment. This method uses the
+   * prepared height as the basis for alignment.
+   *
+   * @param eVertAlign
+   *        Vertical alignment. May not be <code>null</code>.
+   * @param fAvailableHeight
+   *        The available height of the surrounding element.
+   * @return The top margin of this object plus the indentation offset
+   */
+  protected float getIndentY (@Nonnull final EVertAlignment eVertAlign, final float fAvailableHeight)
+  {
+    return getIndentY (eVertAlign, fAvailableHeight, getPreparedSize ().getHeight ());
+  }
+
+  /**
+   * Get the indentation for a certain vertical alignment. This method uses the
+   * provided element height as the basis for alignment.
+   *
+   * @param eVertAlign
+   *        Vertical alignment. May not be <code>null</code>.
+   * @param fAvailableHeight
+   *        The available height of the surrounding element.
+   * @param fElementHeight
+   *        The height of the element to align
+   * @return The top margin of this object plus the indentation offset
+   */
+  protected float getIndentY (@Nonnull final EVertAlignment eVertAlign,
+                              final float fAvailableHeight,
+                              final float fElementHeight)
+  {
+    final float fTop = getMarginTop ();
+    final float fUsableHeight = fAvailableHeight - getMarginYSum ();
+
+    switch (eVertAlign)
+    {
+      case TOP:
+        return fTop;
+      case MIDDLE:
+        return fTop + (fUsableHeight - fElementHeight) / 2;
+      case BOTTOM:
+        return fTop + fUsableHeight - fElementHeight;
+      default:
+        throw new IllegalStateException ("Unsupported vertical alignment " + eVertAlign);
+    }
+  }
+
   @Override
   public String toString ()
   {
