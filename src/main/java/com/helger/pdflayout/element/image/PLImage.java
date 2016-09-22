@@ -154,8 +154,8 @@ public class PLImage extends AbstractPLElement <PLImage>
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     aContentStream.drawXObject (m_aJpeg,
-                                aCtx.getStartLeft () + getMarginLeft (),
-                                aCtx.getStartTop () - getMarginTop () - m_fHeight,
+                                aCtx.getStartLeft () + getFullLeft (),
+                                aCtx.getStartTop () - getFullTop () - m_fHeight,
                                 m_fWidth,
                                 m_fHeight);
   }
