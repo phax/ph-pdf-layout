@@ -51,17 +51,13 @@ public final class RenderingContext
    * @param aCtx
    *        Context to copy settings from. May not be <code>null</code>.
    * @param fStartLeft
-   *        Absolute page x-start position with element x-margin but without
-   *        element x-padding
+   *        Absolute page x-start position of the element
    * @param fStartTop
-   *        Absolute page y-start position with element y-margin but without
-   *        element y-padding
+   *        Absolute page y-start position of the element
    * @param fWidth
-   *        width without margin but including x-padding of the surrounding
-   *        element
+   *        available width determined from the surrounding element
    * @param fHeight
-   *        height without margin but including y-padding of the surrounding
-   *        element
+   *        available height determined from the surrounding element
    */
   public RenderingContext (@Nonnull final RenderingContext aCtx,
                            final float fStartLeft,
@@ -87,17 +83,13 @@ public final class RenderingContext
    * @param bDebugMode
    *        debug mode?
    * @param fStartLeft
-   *        Absolute page x-start position with element x-margin and x-border
-   *        but without element x-padding
+   *        Absolute page x-start position of the element
    * @param fStartTop
-   *        Absolute page y-start position with element y-margin and y-border
-   *        but without element y-padding
+   *        Absolute page y-start position of the element
    * @param fWidth
-   *        width without margin and border but including padding of the
-   *        surrounding element
+   *        available width determined from the surrounding element
    * @param fHeight
-   *        width without margin and border but including padding of the
-   *        surrounding element
+   *        available height determined from the surrounding element
    */
   public RenderingContext (@Nonnull final ERenderingElementType eElementType,
                            @Nonnull final PDPageContentStreamWithCache aCS,
@@ -196,8 +188,7 @@ public final class RenderingContext
   }
 
   /**
-   * @return Absolute page x-start position with element x-margin but without
-   *         element x-padding
+   * @return Absolute page x-start position
    */
   public float getStartLeft ()
   {
@@ -205,8 +196,7 @@ public final class RenderingContext
   }
 
   /**
-   * @return Absolute page y-start position with element y-margin but without
-   *         element y-padding
+   * @return Absolute page y-start position
    */
   public float getStartTop ()
   {
@@ -214,8 +204,7 @@ public final class RenderingContext
   }
 
   /**
-   * @return width without margin but including padding of the surrounding
-   *         element
+   * @return available width determined from the surrounding element
    */
   public float getWidth ()
   {
@@ -223,8 +212,7 @@ public final class RenderingContext
   }
 
   /**
-   * @return width without margin but including padding of the surrounding
-   *         element
+   * @return available height determined from the surrounding element
    */
   public float getHeight ()
   {

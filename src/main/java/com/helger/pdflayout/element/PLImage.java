@@ -30,11 +30,13 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.IHasInputStream;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLAlignedElement;
+import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -42,12 +44,13 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLImage extends AbstractPLAlignedElement <PLImage>
+public class PLImage extends AbstractPLElement <PLImage> implements IPLHasHorizontalAlignment <PLImage>
 {
   private final BufferedImage m_aImage;
   private final IHasInputStream m_aIIS;
   private final float m_fWidth;
   private final float m_fHeight;
+  private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
 
   // Status var
   private PDImageXObject m_aJpeg;
@@ -85,6 +88,15 @@ public class PLImage extends AbstractPLAlignedElement <PLImage>
     m_fHeight = fHeight;
   }
 
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public PLImage setBasicDataFrom (@Nonnull final PLImage aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    setHorzAlign (aSource.m_eHorzAlign);
+    return this;
+  }
+
   @Nullable
   public BufferedImage getImage ()
   {
@@ -108,10 +120,15 @@ public class PLImage extends AbstractPLAlignedElement <PLImage>
   }
 
   @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public PLImage setBasicDataFrom (@Nonnull final PLImage aSource)
+  public EHorzAlignment getHorzAlign ()
   {
-    super.setBasicDataFrom (aSource);
+    return m_eHorzAlign;
+  }
+
+  @Nonnull
+  public PLImage setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
+  {
+    m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
     return this;
   }
 
@@ -148,29 +165,16 @@ public class PLImage extends AbstractPLAlignedElement <PLImage>
   @Override
   protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
   {
-    final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
-
-    final float fLeft = getPaddingLeft ();
-    final float fUsableWidth = aCtx.getWidth () - getPaddingXSum ();
-    float fIndentX;
-    switch (getHorzAlign ())
     {
-      case LEFT:
-        fIndentX = fLeft;
-        break;
-      case CENTER:
-        fIndentX = fLeft + (fUsableWidth - m_fWidth) / 2;
-        break;
-      case RIGHT:
-        fIndentX = fLeft + fUsableWidth - m_fWidth;
-        break;
-      default:
-        throw new IllegalStateException ("Unsupported horizontal alignment " + getHorzAlign ());
+      // Align border on context width
+      final float fIndentX = getIndentX (m_eHorzAlign, aCtx.getWidth ());
+      performRenderFillAndBorder (aCtx, fIndentX);
     }
 
+    final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     aContentStream.drawXObject (m_aJpeg,
-                                aCtx.getStartLeft () + fIndentX,
-                                aCtx.getStartTop () - getPaddingTop () - m_fHeight,
+                                aCtx.getStartLeft () + getMarginLeft (),
+                                aCtx.getStartTop () - getMarginTop () - m_fHeight,
                                 m_fWidth,
                                 m_fHeight);
   }
@@ -179,9 +183,11 @@ public class PLImage extends AbstractPLAlignedElement <PLImage>
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("image", m_aImage)
-                            .append ("width", m_fWidth)
-                            .append ("height", m_fHeight)
+                            .append ("Image", m_aImage)
+                            .append ("IIS", m_aIIS)
+                            .append ("Width", m_fWidth)
+                            .append ("Height", m_fHeight)
+                            .append ("HorzAlign", m_eHorzAlign)
                             .toString ();
   }
 }

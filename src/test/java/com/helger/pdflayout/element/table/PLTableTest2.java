@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.element.table;
 
 import java.awt.Color;
 
@@ -27,6 +27,7 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.element.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.table.PLTable;
 import com.helger.pdflayout.element.table.PLTableCell;

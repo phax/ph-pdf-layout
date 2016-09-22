@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.element.text;
 
 import java.awt.Color;
 
@@ -26,19 +26,20 @@ import org.junit.rules.TestRule;
 import com.helger.commons.CGlobal;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
+import com.helger.commons.random.RandomHelper;
 import com.helger.font.lato2.EFontResourceLato2;
 import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.element.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
-import com.helger.pdflayout.element.table.PLTable;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.text.PLTextSplittable;
 import com.helger.pdflayout.element.vbox.PLVBoxSplittable;
 import com.helger.pdflayout.spec.BorderStyleSpec;
-import com.helger.pdflayout.spec.EVertAlignment;
+import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -65,19 +66,34 @@ public final class PLTextTest
     final String s = "{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}{\\f1 Verdana;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1\\f1\\fs20 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql{\\f1\\fs20\\cf0 vielen Dank f\\u252\\'fcr Ihre Bestellung.}\\f1\\fs20\\cf0\\par}{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql\\par}";
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
-    final PLTable aTable = PLTable.createWithPercentage (50, 50);
-    final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setBorder (new BorderStyleSpec (Color.RED)), WidthSpec.star ());
-    aTable.addRow (aHBox);
-    aPS1.addElement (aTable);
+
+    aPS1.addElement (new PLText (s, r10).setBorder (new BorderStyleSpec (Color.RED)));
 
     // All chars from 32-127
     final StringBuilder aSB = new StringBuilder ();
     for (int i = 32; i <= 0x7e; ++i)
       aSB.append ((char) i);
-    aPS1.addElement (new PLText ("Chars 32-127: " + aSB.toString (), r10));
+    aPS1.addElement (new PLText ("Chars 32-127: " +
+                                 aSB.toString (),
+                                 r10).setBorder (new BorderStyleSpec (Color.GREEN)));
+
+    // Check horizontal alignment
+    aPS1.addElement (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT)
+                                             .setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLText ("Left\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
+                                                              .setBorder (new BorderStyleSpec (Color.RED))
+                                                              .setFillColor (Color.PINK));
+    aPS1.addElement (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER)
+                                               .setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLText ("Center\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                                  .setBorder (new BorderStyleSpec (Color.RED))
+                                                                  .setFillColor (Color.PINK));
+    aPS1.addElement (new PLText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                              .setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLText ("Right\nRight but longer", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                .setBorder (new BorderStyleSpec (Color.RED))
+                                                                .setFillColor (Color.PINK));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
@@ -95,6 +111,9 @@ public final class PLTextTest
       if (false)
         if ((i % 100) == 0)
           aSB.append ('\n');
+      if ((i % 100) == 0)
+        aSB.append ((char) ('a' + RandomHelper.getRandom ().nextInt (26)))
+           .append ((char) ('a' + RandomHelper.getRandom ().nextInt (26)));
       aSB.append ("This is a dummy");
     }
 
@@ -161,9 +180,9 @@ public final class PLTextTest
       System.out.println ("Available size: " + aPS1.getAvailableWidth () + "x" + aPS1.getAvailableHeight ());
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100).setVertAlign (EVertAlignment.TOP), WidthSpec.star ());
-    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100).setVertAlign (EVertAlignment.MIDDLE), WidthSpec.star ());
-    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100).setVertAlign (EVertAlignment.BOTTOM), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setMinSize (0, 100), WidthSpec.star ());
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);

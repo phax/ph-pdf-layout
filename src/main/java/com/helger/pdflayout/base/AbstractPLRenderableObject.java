@@ -104,6 +104,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   /**
    * @return The prepared size or <code>null</code> if this object was not yet
    *         prepared.
+   * @see #isPrepared()
    */
   @Nullable
   public final SizeSpec getPreparedSize ()

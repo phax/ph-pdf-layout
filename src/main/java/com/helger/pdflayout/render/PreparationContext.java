@@ -40,13 +40,12 @@ public final class PreparationContext
    * Constructor
    *
    * @param aGlobalCtx
-   *        The global preparation context worked upon
+   *        The global preparation context worked upon. May not be
+   *        <code>null</code>.
    * @param fAvailableWidth
-   *        The available width for an element, without the element's margin and
-   *        padding. Should be &gt; 0.
+   *        The available width of the surrounding element. Should be &gt; 0.
    * @param fAvailableHeight
-   *        The available height for an element, without the element's margin
-   *        and padding. Should be &gt; 0.
+   *        The available height of the surrounding element. Should be &gt; 0.
    */
   public PreparationContext (@Nonnull final PreparationContextGlobal aGlobalCtx,
                              @Nonnegative final float fAvailableWidth,
@@ -64,8 +63,7 @@ public final class PreparationContext
   }
 
   /**
-   * @return The available width for an element, without the element's margin
-   *         and padding. Should be &gt; 0.
+   * @return The available width of the surrounding element. Should be &gt; 0.
    */
   public float getAvailableWidth ()
   {
@@ -73,8 +71,7 @@ public final class PreparationContext
   }
 
   /**
-   * @return The available height for an element, without the element's margin
-   *         and padding. Should be &gt; 0.
+   * @return The available height of the surrounding element. Should be &gt; 0.
    */
   public float getAvailableHeight ()
   {
@@ -84,8 +81,9 @@ public final class PreparationContext
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("availableWidth", m_fAvailableWidth)
-                                       .append ("availableHeight", m_fAvailableHeight)
+    return new ToStringGenerator (this).append ("GlobalCtx", m_aGlobalCtx)
+                                       .append ("AvailableWidth", m_fAvailableWidth)
+                                       .append ("AvailableHeight", m_fAvailableHeight)
                                        .toString ();
   }
 }

@@ -83,8 +83,8 @@ public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlign
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("horzAlign", m_eHorzAlign)
-                            .append ("vertAlign", m_eVertAlign)
+                            .append ("HorzAlign", m_eHorzAlign)
+                            .append ("VertAlign", m_eVertAlign)
                             .toString ();
   }
 }

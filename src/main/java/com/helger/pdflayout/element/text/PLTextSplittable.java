@@ -26,7 +26,6 @@ import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
-import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.TextAndWidthSpec;
 
@@ -112,10 +111,6 @@ public class PLTextSplittable extends AbstractPLText <PLTextSplittable>
     final PLElementWithSize aText1 = getCopy (fElementWidth, aLines.subList (0, nLines), false);
     // Second element may need additional splitting
     final PLElementWithSize aText2 = getCopy (fElementWidth, aLines.subList (nLines, aLines.size ()), true);
-
-    // Important: vertical alignment is in case of splitting always "TOP"
-    ((AbstractPLText <?>) aText1.getElement ()).setVertAlign (EVertAlignment.TOP);
-    ((AbstractPLText <?>) aText2.getElement ()).setVertAlign (EVertAlignment.TOP);
 
     return new PLSplitResult (aText1, aText2);
   }

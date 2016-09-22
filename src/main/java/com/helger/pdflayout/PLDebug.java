@@ -31,16 +31,16 @@ import com.helger.pdflayout.base.IPLObject;
 public final class PLDebug
 {
   /** red */
-  public static final Color BORDER_COLOR_PAGESET = new Color (255, 0, 0);
+  public static final Color BORDER_COLOR_PAGESET = Color.RED;
 
   /** green */
-  public static final Color BORDER_COLOR_ELEMENT = new Color (0, 255, 0);
+  public static final Color BORDER_COLOR_ELEMENT = Color.GREEN;
 
   /** blue */
-  public static final Color BORDER_COLOR_HBOX = new Color (0, 0, 255);
+  public static final Color BORDER_COLOR_HBOX = Color.BLUE;
 
   /** pink */
-  public static final Color BORDER_COLOR_VBOX = new Color (255, 0, 255);
+  public static final Color BORDER_COLOR_VBOX = Color.PINK;
 
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLDebug.class);
   private static boolean s_bDebugText = false;

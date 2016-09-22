@@ -28,7 +28,6 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.CodingStyleguideUnaware;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -36,11 +35,13 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLAlignedElement;
+import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -53,8 +54,8 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>>
-                                     extends AbstractPLAlignedElement <IMPLTYPE>
+public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
+                                     implements IPLHasHorizontalAlignment <IMPLTYPE>
 {
   public static final boolean DEFAULT_TOP_DOWN = true;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
@@ -63,13 +64,13 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private final FontSpec m_aFontSpec;
   private boolean m_bTopDown = DEFAULT_TOP_DOWN;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
+  private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
 
   // prepare result
   private LoadedFont m_aLoadedFont;
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLinesUnmodified;
-  @CodingStyleguideUnaware
-  protected List <TextAndWidthSpec> m_aPreparedLines;
+  protected ICommonsList <TextAndWidthSpec> m_aPreparedLines;
   protected float m_fLineHeight;
 
   public AbstractPLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
@@ -88,6 +89,17 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       m_sText = sCleaned;
     }
     m_aFontSpec = ValueEnforcer.notNull (aFontSpec, "FontSpec");
+  }
+
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLText <?> aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    setTopDown (aSource.m_bTopDown);
+    setMaxRows (aSource.m_nMaxRows);
+    setHorzAlign (aSource.m_eHorzAlign);
+    return thisAsT ();
   }
 
   @Nonnull
@@ -110,16 +122,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public FontSpec getFontSpec ()
   {
     return m_aFontSpec;
-  }
-
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLText <?> aSource)
-  {
-    super.setBasicDataFrom (aSource);
-    setTopDown (aSource.m_bTopDown);
-    setMaxRows (aSource.m_nMaxRows);
-    return thisAsT ();
   }
 
   /**
@@ -172,6 +174,19 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return thisAsT ();
   }
 
+  @Nonnull
+  public EHorzAlignment getHorzAlign ()
+  {
+    return m_eHorzAlign;
+  }
+
+  @Nonnull
+  public IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
+  {
+    m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
+    return thisAsT ();
+  }
+
   final void internalSetPreparedLines (@Nonnull final ICommonsList <TextAndWidthSpec> aLines)
   {
     final int nLines = aLines.size ();
@@ -192,8 +207,10 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       }
       else
       {
-        // Maximum number of lines exceeded
-        m_aPreparedLines = aLines.subList (0, m_nMaxRows);
+        // Maximum number of lines exceeded - copy only the relevant lines
+        m_aPreparedLines = new CommonsArrayList<> (m_nMaxRows);
+        for (int i = 0; i < m_nMaxRows; ++i)
+          m_aPreparedLines.add (aLines.get (i));
       }
     }
 
@@ -229,8 +246,13 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Split text into rows
     internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sText, fFontSize, aCtx.getAvailableWidth ()));
 
+    // Determine max width of all prepared lines
+    float fMaxWidth = Float.MIN_VALUE;
+    for (final TextAndWidthSpec aTWS : m_aPreparedLines)
+      fMaxWidth = Math.max (fMaxWidth, aTWS.getWidth ());
+
     // Determine height by number of lines
-    return new SizeSpec (aCtx.getAvailableWidth (), m_aPreparedLines.size () * m_fLineHeight);
+    return new SizeSpec (fMaxWidth, m_aPreparedLines.size () * m_fLineHeight);
   }
 
   /**
@@ -280,7 +302,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       return;
     }
 
+    {
+      // Align border on context width
+      final float fIndentX = getIndentX (m_eHorzAlign, aCtx.getWidth ());
+      performRenderFillAndBorder (aCtx, fIndentX);
+    }
+
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
+
     aContentStream.beginText ();
 
     // Set font if changed
@@ -289,15 +318,13 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final float fFontSize = m_aFontSpec.getFontSize ();
     final float fLineHeight = m_fLineHeight;
 
-    final float fLeft = getPaddingLeft ();
-    final float fUsableWidth = aCtx.getWidth () - getPaddingXSum ();
-    final float fTop = getPaddingTop ();
+    final float fTop = getMarginTop ();
     int nIndex = 0;
     final int nMax = m_aPreparedLines.size ();
     for (final TextAndWidthSpec aTW : m_aPreparedLines)
     {
       // Replace text (if any)
-      float fWidth = aTW.getWidth ();
+      float fTextWidth = aTW.getWidth ();
       final String sOrigText = aTW.getText ();
 
       // get the real text to draw
@@ -305,25 +332,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       if (!sOrigText.equals (sDrawText))
       {
         // Text changed - recalculate width!
-        fWidth = m_aLoadedFont.getStringWidth (sDrawText, fFontSize);
+        fTextWidth = m_aLoadedFont.getStringWidth (sDrawText, fFontSize);
       }
 
-      float fIndentX;
-      switch (getHorzAlign ())
-      {
-        case LEFT:
-          fIndentX = fLeft;
-          break;
-        case CENTER:
-          fIndentX = fLeft + (fUsableWidth - fWidth) / 2;
-          break;
-        case RIGHT:
-          fIndentX = fLeft + fUsableWidth - fWidth;
-          break;
-        default:
-          throw new IllegalStateException ("Unsupported horizontal alignment " + getHorzAlign ());
-      }
-
+      // Align text line by line
+      final float fIndentX = getIndentX (m_eHorzAlign, aCtx.getWidth (), fTextWidth);
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
@@ -398,6 +411,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("FontSpec", m_aFontSpec)
                             .append ("TopDown", m_bTopDown)
                             .append ("MaxRows", m_nMaxRows)
+                            .append ("HorzAlign", m_eHorzAlign)
                             .toString ();
   }
 }

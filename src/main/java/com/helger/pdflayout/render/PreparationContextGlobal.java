@@ -33,7 +33,8 @@ import com.helger.pdflayout.spec.PreloadFont;
 
 /**
  * The current global context for preparing an element. This object must be the
- * same for all prepared elements.
+ * same for all prepared elements. It keeps all loaded fonts so that they are
+ * not included more than once.
  *
  * @author Philip Helger
  */

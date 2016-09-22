@@ -34,6 +34,7 @@ import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.BorderStyleSpec;
+import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -54,17 +55,24 @@ public final class PLImageTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
-    aPS1.addElement (new PLText ("First line", r10).setBorder (new BorderStyleSpec (Color.RED)));
+
+    aPS1.addElement (new PLText ("First line - left image below", r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                                      .setBorder (new BorderStyleSpec (Color.RED)));
     aPS1.addElement (new PLImage (ImageIO.read (ClassPathResource.getInputStream ("images/test1.jpg")), 50, 50));
-    aPS1.addElement (new PLText ("Second line", r10).setBorder (new BorderStyleSpec (Color.BLUE)));
+
+    aPS1.addElement (new PLText ("Second line - table with 5 columns below",
+                                 r10).setHorzAlign (EHorzAlignment.CENTER)
+                                     .setBorder (new BorderStyleSpec (Color.BLUE)));
     final PLHBox aHBox = new PLHBox ();
     aHBox.addColumn (new PLText ("Col1", r10), WidthSpec.perc (10));
     aHBox.addColumn (new PLImage (new ClassPathResource ("images/test1.jpg"), 50, 50), WidthSpec.abs (50));
-    aHBox.addColumn (new PLText ("Col2", r10), WidthSpec.star ());
+    aHBox.addColumn (new PLText ("Col2", r10).setHorzAlign (EHorzAlignment.CENTER), WidthSpec.star ());
     aHBox.addColumn (new PLImage (new ClassPathResource ("images/test1.jpg"), 50, 50), WidthSpec.abs (50));
     aHBox.addColumn (new PLText ("Col3", r10), WidthSpec.perc (10));
     aPS1.addElement (aHBox);
-    aPS1.addElement (new PLText ("Third line", r10).setBorder (new BorderStyleSpec (Color.GREEN)));
+
+    aPS1.addElement (new PLText ("Last line", r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                  .setBorder (new BorderStyleSpec (Color.GREEN)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);

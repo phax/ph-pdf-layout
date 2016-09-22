@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.element.table;
 
 import java.awt.Color;
 import java.util.function.Function;
@@ -35,6 +35,7 @@ import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.element.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
@@ -46,7 +47,6 @@ import com.helger.pdflayout.render.RenderPageIndex;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
-import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
@@ -116,9 +116,7 @@ public final class PLTableTest
     for (int i = 0; i < 184; ++i)
     {
       // Width is determined by the width passed to the table creating method
-      aRow = aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding)
-                                                                       .setMargin (aMargin)
-                                                                       .setVertAlign (EVertAlignment.BOTTOM),
+      aRow = aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin),
                                  new PLText ("Name " +
                                              i +
                                              (i == 2 ? " this is extra text for row 2 that makes this line longer"
@@ -129,8 +127,7 @@ public final class PLTableTest
                                                                                                    .setMargin (aMargin),
                                  new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
                                                                            .setMargin (aMargin)
-                                                                           .setHorzAlign (EHorzAlignment.CENTER)
-                                                                           .setVertAlign (EVertAlignment.MIDDLE),
+                                                                           .setHorzAlign (EHorzAlignment.CENTER),
                                  new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
                                                                            .setMargin (aMargin)
                                                                            .setHorzAlign (EHorzAlignment.RIGHT));
@@ -142,7 +139,7 @@ public final class PLTableTest
 
     // Start a new page
     aPS1.addElement (new PLPageBreak (false));
-    aPS1.addElement (new PLText ("First line on bottom of new page", r10).setVertAlign (EVertAlignment.BOTTOM));
+    aPS1.addElement (new PLText ("First line on bottom of new page", r10));
     // Next page
     aPS1.addElement (new PLPageBreak (false));
     // empty page by using forced page break
