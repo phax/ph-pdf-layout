@@ -196,6 +196,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return m_aPreparedSize;
   }
 
+  // TODO should be protected only
   public final void internalMarkAsNotPrepared ()
   {
     m_aPreparedSize = null;
@@ -207,6 +208,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *        The new prepared size without padding or margin.
    * @return this
    */
+  // TODO should be protected only
   @Nonnull
   public final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
   {

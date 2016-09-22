@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.base;
 
 import java.awt.Color;
 
@@ -28,7 +28,6 @@ import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
-import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
 import com.helger.pdflayout.render.PageRenderContext;
@@ -156,20 +155,19 @@ public final class PLPageSetTest
 
     aPS1.setPageHeader (new PLText (sHeader, r10).setBorder (Color.RED));
     aPS1.setPageFooter (new PLTextWithPlaceholders (PageRenderContext.PLACEHOLDER_PAGESET_INDEX +
-                                                    "/" +
+                                                    " / " +
                                                     PageRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
-                                                    "/" +
+                                                    " / " +
                                                     PageRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
-                                                    "/" +
+                                                    " / " +
                                                     PageRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
-                                                    "/" +
+                                                    " / " +
                                                     PageRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
-                                                    "/" +
+                                                    " / " +
                                                     PageRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
-                                                    "/" +
+                                                    " / " +
                                                     PageRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
-                                                    "/" +
-                                                    "${custom-var}",
+                                                    " / ${custom-var}",
                                                     r10).setFillColor (Color.PINK)
                                                         .setHorzAlign (EHorzAlignment.CENTER));
 

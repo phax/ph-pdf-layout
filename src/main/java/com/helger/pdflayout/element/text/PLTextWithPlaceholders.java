@@ -30,7 +30,7 @@ import com.helger.pdflayout.spec.FontSpec;
  *
  * @author Philip Helger
  */
-public class PLTextWithPlaceholders extends PLText
+public class PLTextWithPlaceholders extends AbstractPLText <PLTextWithPlaceholders>
 {
   public PLTextWithPlaceholders (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
   {

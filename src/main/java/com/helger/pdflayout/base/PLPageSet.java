@@ -590,12 +590,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
               continue;
             }
             if (PLDebug.isDebugSplit ())
+            {
               PLDebug.debugSplit (this,
                                   "The single element " +
                                         aElement.getDebugID () +
                                         " does not fit onto a single page (" +
                                         fAvailableHeight +
                                         ") even though it is splittable!");
+            }
           }
 
           // Next page
