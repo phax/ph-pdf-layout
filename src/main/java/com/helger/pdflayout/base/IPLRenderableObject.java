@@ -7,12 +7,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.pdflayout.render.PagePreRenderContext;
-import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Base interface for a renderable PDF layout object
+ * Base interface for a renderable PDF layout object.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
@@ -92,6 +92,16 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    */
   @Nullable
   SizeSpec getPreparedSize ();
+
+  default float getPreparedWidth ()
+  {
+    return getPreparedSize ().getWidth ();
+  }
+
+  default float getPreparedHeight ()
+  {
+    return getPreparedSize ().getHeight ();
+  }
 
   /**
    * Prepare this element once for rendering.

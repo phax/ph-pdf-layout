@@ -17,7 +17,9 @@
 package com.helger.pdflayout.base;
 
 /**
- * Base interface for renderable objects having a margin, a border and a padding
+ * Base interface for renderable objects having a margin, a border and a
+ * padding<br>
+ * Each object is self-responsible for handling its margin, border and padding!
  *
  * @author Philip Helger
  * @param <IMPLTYPE>

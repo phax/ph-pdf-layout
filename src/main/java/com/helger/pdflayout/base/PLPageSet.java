@@ -836,18 +836,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         {
           final IPLRenderableObject <?> aElement = aElementWithHeight.getElement ();
           // Get element extent
-          float fStartLeft = fXLeft;
-          float fStartTop = fCurY;
-          float fWidth = getAvailableWidth ();
-          float fHeight = aElementWithHeight.getHeightFull ();
-          if (aElement instanceof IPLElement <?>)
-          {
-            final IPLElement <?> aRealElement = (IPLElement <?>) aElement;
-            fStartLeft += aRealElement.getMarginLeft ();
-            fStartTop -= aRealElement.getMarginTop ();
-            fWidth -= aRealElement.getMarginXSum ();
-            fHeight -= aRealElement.getMarginYSum ();
-          }
+          final float fStartLeft = fXLeft;
+          final float fStartTop = fCurY;
+          final float fWidth = getAvailableWidth ();
+          final float fHeight = aElementWithHeight.getHeightFull ();
 
           final PageRenderContext aRCtx = new PageRenderContext (ERenderingElementType.CONTENT_ELEMENT,
                                                                  aContentStream,

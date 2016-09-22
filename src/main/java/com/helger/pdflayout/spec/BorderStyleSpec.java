@@ -44,8 +44,11 @@ public class BorderStyleSpec
   /** The default border style: solid */
   public static final LineDashPatternSpec DEFAULT_LINE_DASH_PATTERN = LineDashPatternSpec.SOLID;
 
-  /** Use the default line width if unspecified */
-  public static final float DEFAULT_LINE_WIDTH = 0f;
+  /**
+   * Use the default line width if unspecified. A width of 0 is also valid and
+   * would create a hair line
+   */
+  public static final float DEFAULT_LINE_WIDTH = 1f;
 
   public static final BorderStyleSpec EMPTY = new BorderStyleSpec ();
 

@@ -159,7 +159,8 @@ public class PDPageContentStreamWithCache
 
   public void moveTextPositionByAmount (final float tx, final float ty) throws IOException
   {
-    m_aStream.newLineAtOffset (tx, ty);
+    if (tx != 0 || ty != 0)
+      m_aStream.newLineAtOffset (tx, ty);
   }
 
   public void stroke () throws IOException

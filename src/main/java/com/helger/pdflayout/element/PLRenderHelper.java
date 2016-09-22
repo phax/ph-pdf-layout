@@ -83,11 +83,11 @@ public final class PLRenderHelper
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
       aContentStream.setLineWidth (fLineWidth);
-      aContentStream.addRect (fLeft -
+      aContentStream.addRect (fLeft +
                               fHalfLineWidth,
-                              fBottom - fHalfLineWidth,
-                              fWidth + fLineWidth,
-                              fHeight + fLineWidth);
+                              fBottom + fHalfLineWidth,
+                              fWidth - fLineWidth,
+                              fHeight - fLineWidth);
       aContentStream.stroke ();
     }
     else
@@ -115,7 +115,7 @@ public final class PLRenderHelper
         aContentStream.setStrokingColor (aTop.getColor ());
         aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
         aContentStream.setLineWidth (fTopWidth);
-        aContentStream.drawLine (fLeft, fTop + fDelta, fRight + fRightWidth, fTop + fDelta);
+        aContentStream.drawLine (fLeft, fTop - fDelta, fRight - fRightWidth, fTop - fDelta);
       }
 
       if (aRight != null)
@@ -131,7 +131,7 @@ public final class PLRenderHelper
         aContentStream.setStrokingColor (aRight.getColor ());
         aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
         aContentStream.setLineWidth (fRightWidth);
-        aContentStream.drawLine (fRight + fDelta, fTop, fRight + fDelta, fBottom - fBottomWidth);
+        aContentStream.drawLine (fRight - fDelta, fTop, fRight - fDelta, fBottom + fBottomWidth);
       }
 
       if (aBottom != null)
@@ -147,7 +147,7 @@ public final class PLRenderHelper
         aContentStream.setStrokingColor (aBottom.getColor ());
         aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
         aContentStream.setLineWidth (fBottomWidth);
-        aContentStream.drawLine (fLeft - fLeftWidth, fBottom - fDelta, fRight, fBottom - fDelta);
+        aContentStream.drawLine (fLeft + fLeftWidth, fBottom + fDelta, fRight, fBottom + fDelta);
       }
 
       if (aLeft != null)
@@ -163,7 +163,7 @@ public final class PLRenderHelper
         aContentStream.setStrokingColor (aLeft.getColor ());
         aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
         aContentStream.setLineWidth (fLeftWidth);
-        aContentStream.drawLine (fLeft - fDelta, fTop + fTopWidth, fLeft - fDelta, fBottom);
+        aContentStream.drawLine (fLeft + fDelta, fTop - fTopWidth, fLeft + fDelta, fBottom);
       }
     }
   }
@@ -175,10 +175,11 @@ public final class PLRenderHelper
   {
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
 
+    // Border starts after margin
     final float fLeft = aCtx.getStartLeft () + aElement.getMarginLeft () + fIndentX;
     final float fTop = aCtx.getStartTop () - aElement.getMarginTop () - fIndentY;
-    final float fWidth = aElement.getPreparedSize ().getWidth ();
-    final float fHeight = aElement.getPreparedSize ().getHeight ();
+    final float fWidth = aElement.getPreparedWidth () + aElement.getBorderXSumWidth () + aElement.getPaddingXSum ();
+    final float fHeight = aElement.getPreparedHeight () + aElement.getBorderYSumWidth () + aElement.getPaddingYSum ();
 
     // Fill before border
     final Color aFillColor = aElement.getFillColor ();
@@ -189,7 +190,7 @@ public final class PLRenderHelper
     }
 
     // Border draws over fill, to avoid nasty display problems if the background
-    // shimmers through
+    // is visible between them
     BorderSpec aRealBorder = aElement.getBorder ();
     if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
       aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_ELEMENT));

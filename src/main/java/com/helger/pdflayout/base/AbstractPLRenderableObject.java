@@ -24,11 +24,10 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.OverrideOnDemand;
-import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -245,19 +244,6 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
-   * method to be implemented by subclasses. Should fill the surrounding and
-   * create the border.
-   *
-   * @param aCtx
-   *        Rendering context
-   * @throws IOException
-   *         In case of a PDFBox error
-   */
-  @OverrideOnDemand
-  protected void onPerformFillAndBorder (@Nonnull final PageRenderContext aCtx) throws IOException
-  {}
-
-  /**
    * Abstract method to be implemented by subclasses.
    *
    * @param aCtx
@@ -271,19 +257,15 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   @Nonnegative
   public final void perform (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    if (!m_bPrepared)
-      throw new IllegalStateException ("Element " + ClassHelper.getClassLocalName (this) + " was never prepared!");
+    internalCheckAlreadyPrepared ();
 
     if (PLDebug.isDebugRender ())
       PLDebug.debugRender (this,
                            "Rendering at " +
                                  PLDebug.getXYWH (aCtx.getStartLeft (),
                                                   aCtx.getStartTop (),
-                                                  m_aPreparedSize.getWidth (),
-                                                  m_aPreparedSize.getHeight ()));
-
-    // Fill and render border
-    onPerformFillAndBorder (aCtx);
+                                                  aCtx.getWidth (),
+                                                  aCtx.getHeight ()));
 
     // Main perform after border
     onPerform (aCtx);
@@ -293,10 +275,11 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("minSize", m_aMinSize)
-                            .append ("maxSize", m_aMaxSize)
-                            .append ("prepared", m_bPrepared)
-                            .appendIfNotNull ("preparedSize", m_aPreparedSize)
+                            .append ("MinSize", m_aMinSize)
+                            .append ("MaxSize", m_aMaxSize)
+                            .append ("Prepared", m_bPrepared)
+                            .appendIfNotNull ("PrepareAvailableSize", m_aPrepareAvailableSize)
+                            .appendIfNotNull ("PreparedSize", m_aPreparedSize)
                             .toString ();
   }
 }

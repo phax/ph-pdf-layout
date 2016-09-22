@@ -41,13 +41,11 @@ public final class PLElementWithSize
    * @param aElement
    *        Element itself.
    * @param aSize
-   *        Size of the element without padding and margin
+   *        Size of the element without padding, border and margin
    */
   public PLElementWithSize (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final SizeSpec aSize)
   {
-    this (aElement,
-          aSize,
-          new SizeSpec (aSize.getWidth () + aElement.getFullXSum (), aSize.getHeight () + aElement.getFullYSum ()));
+    this (aElement, aSize, aSize.plus (aElement.getFullXSum (), aElement.getFullYSum ()));
   }
 
   /**

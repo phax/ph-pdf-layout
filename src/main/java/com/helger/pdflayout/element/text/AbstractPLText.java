@@ -34,6 +34,7 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLHorzAlignedElement;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.element.PLRenderHelper;
@@ -250,7 +251,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   {
     // Load font into document
     m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
-    return _prepareText (aCtx.getAvailableWidth ());
+    return _prepareText (aCtx.getAvailableWidth () - getFullXSum ());
   }
 
   protected final void setNewTextAfterPrepare (@Nonnull final String sNewText,
@@ -295,6 +296,17 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Fill and border
     PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
 
+    final float fRenderLeft = aCtx.getStartLeft () + getFullLeft ();
+    final float fRenderTop = aCtx.getStartTop () - getFullTop ();
+
+    if (PLDebug.isDebugRender ())
+      PLDebug.debugRender (this,
+                           "Display at " +
+                                 PLDebug.getXYWH (fRenderLeft, fRenderTop, getPreparedWidth (), getPreparedHeight ()) +
+                                 " with " +
+                                 m_aPreparedLines.size () +
+                                 " lines");
+
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
 
     aContentStream.beginText ();
@@ -303,10 +315,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     aContentStream.setFont (m_aLoadedFont, m_aFontSpec);
 
     final float fLineHeight = m_fLineHeight;
-    final float fPreparedWidth = getPreparedSize ().getWidth ();
-
-    final float fLeft = getBorderLeftWidth () + getPaddingLeft ();
-    final float fTop = getBorderTopWidth () + getPaddingTop ();
+    final float fPreparedWidth = getPreparedWidth ();
 
     int nIndex = 0;
     final int nMax = m_aPreparedLines.size ();
@@ -317,13 +326,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       final String sDrawText = aTW.getText ();
 
       // Align text line by overall block width
-      final float fIndentX = fLeft + getIndentX (fPreparedWidth, fTextWidth);
+      final float fIndentX = getIndentX (fPreparedWidth, fTextWidth);
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
-        aContentStream.moveTextPositionByAmount (aCtx.getStartLeft () +
-                                                 fIndentX,
-                                                 aCtx.getStartTop () - fTop - (fLineHeight * 0.75f));
+        aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX, fRenderTop - (fLineHeight * 0.75f));
       }
       else
         if (fIndentX != 0)
@@ -337,6 +344,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       ++nIndex;
 
       // Goto next line
+      // Handle indent per-line as when right alignment is used, the indentX may
+      // differ from line to line
       if (nIndex < nMax)
       {
         if (m_bTopDown)

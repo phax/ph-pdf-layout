@@ -44,9 +44,11 @@ public final class PageRenderContext
    * @param aCtx
    *        Context to copy settings from. May not be <code>null</code>.
    * @param fStartLeft
-   *        Absolute page x-start position of the element
+   *        Absolute page x-start position of the element. Does not contain
+   *        margin, padding or border of the element to be rendered.
    * @param fStartTop
-   *        Absolute page y-start position of the element
+   *        Absolute page y-start position of the element. Does not contain
+   *        margin, padding or border of the element to be rendered.
    * @param fWidth
    *        available width determined from the surrounding element
    * @param fHeight
@@ -75,9 +77,11 @@ public final class PageRenderContext
    * @param bDebugMode
    *        debug mode?
    * @param fStartLeft
-   *        Absolute page x-start position of the element
+   *        Absolute page x-start position of the element. Does not contain
+   *        margin, padding or border of the element to be rendered.
    * @param fStartTop
-   *        Absolute page y-start position of the element
+   *        Absolute page y-start position of the element. Does not contain
+   *        margin, padding or border of the element to be rendered.
    * @param fWidth
    *        available width determined from the surrounding element
    * @param fHeight
@@ -140,7 +144,8 @@ public final class PageRenderContext
   }
 
   /**
-   * @return Absolute page x-start position
+   * @return Absolute page x-start position. Does not contain margin, padding or
+   *         border of the element to be rendered.
    */
   public float getStartLeft ()
   {
@@ -148,7 +153,8 @@ public final class PageRenderContext
   }
 
   /**
-   * @return Absolute page y-start position
+   * @return Absolute page y-start position. Does not contain margin, padding or
+   *         border of the element to be rendered.
    */
   public float getStartTop ()
   {
