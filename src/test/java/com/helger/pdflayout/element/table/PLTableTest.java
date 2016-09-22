@@ -138,7 +138,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable.pdf"));
   }
 
   @Nonnull
@@ -236,6 +236,6 @@ public final class PLTableTest
     aPS1.addElement (aTable);
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table-grid.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-grid.pdf"));
   }
 }
