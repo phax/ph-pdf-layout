@@ -28,9 +28,10 @@ import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
-import com.helger.pdflayout.render.RenderPageIndex;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
@@ -154,19 +155,19 @@ public final class PLPageSetTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
     aPS1.setPageHeader (new PLText (sHeader, r10).setBorder (Color.RED));
-    aPS1.setPageFooter (new PLTextWithPlaceholders (RenderPageIndex.PLACEHOLDER_PAGESET_INDEX +
+    aPS1.setPageFooter (new PLTextWithPlaceholders (PageRenderContext.PLACEHOLDER_PAGESET_INDEX +
                                                     "/" +
-                                                    RenderPageIndex.PLACEHOLDER_PAGESET_PAGE_INDEX +
+                                                    PageRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
                                                     "/" +
-                                                    RenderPageIndex.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                                    PageRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
                                                     "/" +
-                                                    RenderPageIndex.PLACEHOLDER_PAGESET_PAGE_COUNT +
+                                                    PageRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
                                                     "/" +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_INDEX +
+                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
                                                     "/" +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
                                                     "/" +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_COUNT +
+                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
                                                     "/" +
                                                     "${custom-var}",
                                                     r10).setFillColor (Color.PINK)

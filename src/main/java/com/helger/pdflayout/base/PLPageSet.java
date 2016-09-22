@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.element;
+package com.helger.pdflayout.base;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -41,23 +41,14 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.base.AbstractPLElement;
-import com.helger.pdflayout.base.AbstractPLObject;
-import com.helger.pdflayout.base.IPLElement;
-import com.helger.pdflayout.base.IPLHasFillColor;
-import com.helger.pdflayout.base.IPLHasMarginBorderPadding;
-import com.helger.pdflayout.base.IPLHasVerticalAlignment;
-import com.helger.pdflayout.base.IPLRenderableObject;
-import com.helger.pdflayout.base.PLElementWithSize;
-import com.helger.pdflayout.base.PLSplitResult;
+import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.ERenderingElementType;
 import com.helger.pdflayout.render.IRenderingContextCustomizer;
-import com.helger.pdflayout.render.PageSetupContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PreparationContextGlobal;
-import com.helger.pdflayout.render.RenderPageIndex;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
@@ -186,9 +177,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   private PaddingSpec m_aPadding = DEFAULT_PADDING;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private Color m_aFillColor = DEFAULT_FILL_COLOR;
-  private IPLElement <?> m_aPageHeader;
+  private IPLRenderableObject <?> m_aPageHeader;
   private final ICommonsList <IPLRenderableObject <?>> m_aElements = new CommonsArrayList<> ();
-  private IPLElement <?> m_aPageFooter;
+  private IPLRenderableObject <?> m_aPageFooter;
   private IRenderingContextCustomizer m_aRCCustomizer;
 
   public PLPageSet (@Nonnull final PDRectangle aPageRect)
@@ -314,7 +305,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    * @return The global page header. May be <code>null</code>.
    */
   @Nullable
-  public IPLElement <?> getPageHeader ()
+  public IPLRenderableObject <?> getPageHeader ()
   {
     return m_aPageHeader;
   }
@@ -336,7 +327,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    * @return this
    */
   @Nonnull
-  public PLPageSet setPageHeader (@Nullable final IPLElement <?> aPageHeader)
+  public PLPageSet setPageHeader (@Nullable final IPLRenderableObject <?> aPageHeader)
   {
     m_aPageHeader = aPageHeader;
     return this;
@@ -372,7 +363,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    * @return The global page footer. May be <code>null</code>.
    */
   @Nullable
-  public IPLElement <?> getPageFooter ()
+  public IPLRenderableObject <?> getPageFooter ()
   {
     return m_aPageFooter;
   }
@@ -394,7 +385,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    * @return this
    */
   @Nonnull
-  public PLPageSet setPageFooter (@Nullable final IPLElement <?> aPageFooter)
+  public PLPageSet setPageFooter (@Nullable final IPLRenderableObject <?> aPageFooter)
   {
     m_aPageFooter = aPageFooter;
     return this;
@@ -407,6 +398,18 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   public float getYTop ()
   {
     return m_aPageSize.getHeight () - getFullTop ();
+  }
+
+  public void visit (@Nonnull final IPLVisitor aVisitor)
+  {
+    aVisitor.onPageSetStart (this);
+    if (m_aPageHeader != null)
+      m_aPageHeader.visit (aVisitor);
+    if (m_aPageFooter != null)
+      m_aPageFooter.visit (aVisitor);
+    for (final IPLRenderableObject <?> aElement : m_aElements)
+      aElement.visit (aVisitor);
+    aVisitor.onPageSetEnd (this);
   }
 
   @Nonnull
@@ -742,25 +745,18 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                    " and available size " +
                                    PLDebug.getWH (getAvailableWidth (), getAvailableHeight ()));
 
-      final RenderPageIndex aPageIndex = new RenderPageIndex (nPageSetIndex,
-                                                              nPageIndex,
-                                                              nPageCount,
-                                                              nTotalPageStartIndex + nPageIndex,
-                                                              nTotalPageCount);
-
       // Layout in memory
       final PDPage aPage = new PDPage (m_aPageSize.getAsRectangle ());
       aDoc.addPage (aPage);
 
-      {
-        final PageSetupContext aCtx = new PageSetupContext (aDoc, aPage);
-        if (m_aPageHeader != null)
-          m_aPageHeader.doPageSetup (aCtx);
-        for (final PLElementWithSize aElement : aPerPage)
-          aElement.getElement ().doPageSetup (aCtx);
-        if (m_aPageFooter != null)
-          m_aPageFooter.doPageSetup (aCtx);
-      }
+      final PageRenderContext aPageRenderCtx = new PageRenderContext (aDoc,
+                                                                      aPage,
+                                                                      nPageSetIndex,
+                                                                      nPageIndex,
+                                                                      nPageCount,
+                                                                      nTotalPageStartIndex + nPageIndex,
+                                                                      nTotalPageCount);
+      visitElement (x -> x.doPageSetup (aPageRenderCtx));
 
       final PDPageContentStreamWithCache aContentStream = new PDPageContentStreamWithCache (aDoc,
                                                                                             aPage,
@@ -795,14 +791,18 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         {
           // Page header does not care about page padding
           // header top-left
+          final float fStartLeft = getMarginLeft ();
+          final float fStartTop = m_aPageSize.getHeight ();
+          final float fWidth = m_aPageSize.getWidth () - getMarginXSum ();
+          final float fHeight = aPrepareResult.getHeaderHeight ();
           final RenderingContext aRC = new RenderingContext (ERenderingElementType.PAGE_HEADER,
                                                              aContentStream,
                                                              bDebug,
-                                                             getMarginLeft (),
-                                                             m_aPageSize.getHeight (),
-                                                             m_aPageSize.getWidth () - getMarginXSum (),
-                                                             aPrepareResult.getHeaderHeight ());
-          aPageIndex.setPlaceholdersInRenderingContext (aRC);
+                                                             fStartLeft,
+                                                             fStartTop,
+                                                             fWidth,
+                                                             fHeight);
+          aPageRenderCtx.setPlaceholdersInRenderingContext (aRC);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderingContext (aRC);
           m_aPageHeader.perform (aRC);
@@ -833,7 +833,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                                              fStartTop,
                                                              fWidth,
                                                              fHeight);
-          aPageIndex.setPlaceholdersInRenderingContext (aRC);
+          aPageRenderCtx.setPlaceholdersInRenderingContext (aRC);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderingContext (aRC);
           aElement.perform (aRC);
@@ -845,10 +845,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         {
           // Page footer does not care about page padding
           // footer top-left
-          final float fStartLeft = getMarginLeft () + m_aPageFooter.getMarginAndBorderLeft ();
-          final float fStartTop = getMarginBottom () - m_aPageFooter.getMarginAndBorderTop ();
-          final float fWidth = m_aPageSize.getWidth () - getMarginXSum () - m_aPageFooter.getMarginAndBorderXSum ();
-          final float fHeight = aPrepareResult.getFooterHeight () + m_aPageFooter.getPaddingYSum ();
+          final float fStartLeft = getMarginLeft ();
+          final float fStartTop = getMarginBottom ();
+          final float fWidth = m_aPageSize.getWidth () - getMarginXSum ();
+          final float fHeight = aPrepareResult.getFooterHeight ();
           final RenderingContext aRC = new RenderingContext (ERenderingElementType.PAGE_FOOTER,
                                                              aContentStream,
                                                              bDebug,
@@ -856,7 +856,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                                              fStartTop,
                                                              fWidth,
                                                              fHeight);
-          aPageIndex.setPlaceholdersInRenderingContext (aRC);
+          aPageRenderCtx.setPlaceholdersInRenderingContext (aRC);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderingContext (aRC);
           m_aPageFooter.perform (aRC);

@@ -25,14 +25,14 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
-import com.helger.pdflayout.element.PLPageSet;
+import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
 import com.helger.pdflayout.element.vbox.PLVBox;
-import com.helger.pdflayout.render.RenderPageIndex;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
@@ -59,9 +59,9 @@ public final class PageLayoutPDFTest
     aPS1.setPageHeader (new PLText ("Das ist die Kopfzeile", r10).setBorderBottom (new BorderStyleSpec (Color.BLACK))
                                                                  .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLTextWithPlaceholders ("Das ist die Fusszeile, Seite " +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
                                                     " von " +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_COUNT,
+                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
                                                     r10).setBorderTop (new BorderStyleSpec (Color.BLACK))
                                                         .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.addElement (new PLText ("Zeile 1", r10));
@@ -145,19 +145,19 @@ public final class PageLayoutPDFTest
     final PLPageSet aPS3 = new PLPageSet (PDRectangle.A4.getHeight (), PDRectangle.A4.getWidth ()).setMargin (50, 30)
                                                                                                   .setPadding (15);
     aPS3.setRenderingContextCustomizer (aRC -> {
-      final int nTotal = aRC.getPlaceholderAsInt (RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_COUNT, -1);
+      final int nTotal = aRC.getPlaceholderAsInt (PageRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT, -1);
       aRC.setPlaceholder ("${pages-1}", nTotal - 1);
     });
     aPS3.setPageHeader (new PLText ("Das ist die Kopfzeile3", r10).setBorderBottom (new BorderStyleSpec (Color.BLACK))
                                                                   .setHorzAlign (EHorzAlignment.CENTER));
     aPS3.setPageFooter (new PLTextWithPlaceholders ("Das ist die Fusszeile3, Seite " +
-                                                    RenderPageIndex.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                                    PageRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
                                                     " von " +
-                                                    RenderPageIndex.PLACEHOLDER_PAGESET_PAGE_COUNT +
+                                                    PageRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
                                                     " bzw. " +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
                                                     " von " +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_COUNT +
+                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
                                                     "; my value: ${pages-1}",
                                                     r10).setBorderTop (new BorderStyleSpec (Color.BLACK))
                                                         .setHorzAlign (EHorzAlignment.CENTER));
@@ -199,9 +199,9 @@ public final class PageLayoutPDFTest
                                                     .setPadding (4, 0)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLTextWithPlaceholders ("Page " +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
                                                     " of " +
-                                                    RenderPageIndex.PLACEHOLDER_TOTAL_PAGE_COUNT,
+                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
                                                     r10).setBorder (new BorderStyleSpec (Color.BLACK))
                                                         .setMarginTop (10)
                                                         .setPadding (4, 10)

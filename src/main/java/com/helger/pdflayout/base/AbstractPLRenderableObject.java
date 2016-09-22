@@ -76,6 +76,11 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return thisAsT ();
   }
 
+  public void visit (@Nonnull final IPLVisitor aVisitor)
+  {
+    aVisitor.onElement (this);
+  }
+
   /**
    * Throw an exception, if this object is already prepared.
    *

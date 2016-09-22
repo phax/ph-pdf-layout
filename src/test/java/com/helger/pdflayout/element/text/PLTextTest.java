@@ -32,7 +32,7 @@ import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
-import com.helger.pdflayout.element.PLPageSet;
+import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.vbox.PLVBoxSplittable;
 import com.helger.pdflayout.spec.BorderStyleSpec;

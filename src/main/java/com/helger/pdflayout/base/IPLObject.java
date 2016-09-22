@@ -13,7 +13,8 @@ import com.helger.commons.traits.IGenericImplTrait;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends IHasID <String>, IGenericImplTrait <IMPLTYPE>
+public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
+                           extends IHasID <String>, IGenericImplTrait <IMPLTYPE>, IPLVisitable
 {
   /**
    * @return The debug ID of this element. Neither <code>null</code> nor empty.

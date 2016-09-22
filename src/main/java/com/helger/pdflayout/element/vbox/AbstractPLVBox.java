@@ -38,9 +38,9 @@ import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.IPLRenderableObject;
+import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
-import com.helger.pdflayout.render.PageSetupContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.BorderSpec;
@@ -304,6 +304,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   @Override
+  public void visit (@Nonnull final IPLVisitor aVisitor)
+  {
+    for (final PLVBoxRow aRow : m_aRows)
+      aRow.getElement ().visit (aVisitor);
+  }
+
+  @Override
   @OverridingMethodsMustInvokeSuper
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
@@ -369,13 +376,6 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     return new SizeSpec (fUsedWidthFull, fUsedHeightFull);
-  }
-
-  @Override
-  public void doPageSetup (@Nonnull final PageSetupContext aCtx)
-  {
-    for (final PLVBoxRow aRow : m_aRows)
-      aRow.getElement ().doPageSetup (aCtx);
   }
 
   @Override

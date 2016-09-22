@@ -6,7 +6,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.pdflayout.render.PageSetupContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -112,9 +112,9 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    * This is e.g. used for images to create their XObjects upfront.
    *
    * @param aCtx
-   *        The current page setup context. Never <code>null</code>.
+   *        The current page render context. Never <code>null</code>.
    */
-  default void doPageSetup (@Nonnull final PageSetupContext aCtx)
+  default void doPageSetup (@Nonnull final PageRenderContext aCtx)
   {}
 
   /**

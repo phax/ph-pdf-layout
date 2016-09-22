@@ -38,8 +38,10 @@ import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.vendor.VendorInfo;
-import com.helger.pdflayout.element.PLPageSet;
-import com.helger.pdflayout.element.PLPageSet.PageSetPrepareResult;
+import com.helger.pdflayout.base.IPLVisitable;
+import com.helger.pdflayout.base.IPLVisitor;
+import com.helger.pdflayout.base.PLPageSet;
+import com.helger.pdflayout.base.PLPageSet.PageSetPrepareResult;
 import com.helger.pdflayout.render.PreparationContextGlobal;
 
 /**
@@ -50,7 +52,7 @@ import com.helger.pdflayout.render.PreparationContextGlobal;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class PageLayoutPDF
+public class PageLayoutPDF implements IPLVisitable
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (PageLayoutPDF.class);
 
@@ -185,6 +187,12 @@ public class PageLayoutPDF
   public EChange removePageSet (@Nullable final PLPageSet aPageSet)
   {
     return m_aPageSets.removeObject (aPageSet);
+  }
+
+  public void visit (@Nonnull final IPLVisitor aVisitor)
+  {
+    for (final PLPageSet aPageSet : m_aPageSets)
+      aPageSet.visit (aVisitor);
   }
 
   /**

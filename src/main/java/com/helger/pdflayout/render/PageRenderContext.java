@@ -19,6 +19,9 @@ package com.helger.pdflayout.render;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 
@@ -27,7 +30,7 @@ import com.helger.commons.string.ToStringGenerator;
  *
  * @author Philip Helger
  */
-public class RenderPageIndex
+public class PageRenderContext
 {
   public static final String PLACEHOLDER_PAGESET_INDEX = "${pageset-index}";
   public static final String PLACEHOLDER_PAGESET_PAGE_INDEX = "${pageset-page-index}";
@@ -37,30 +40,56 @@ public class RenderPageIndex
   public static final String PLACEHOLDER_TOTAL_PAGE_NUMBER = "${total-page-number}";
   public static final String PLACEHOLDER_TOTAL_PAGE_COUNT = "${total-page-count}";
 
+  private final PDDocument m_aDoc;
+  private final PDPage m_aPage;
   private final int m_nPageSetIndex;
   private final int m_nPageSetPageIndex;
   private final int m_nPageSetPageCount;
   private final int m_nTotalPageIndex;
   private final int m_nTotalPageCount;
 
-  public RenderPageIndex (@Nonnegative final int nPageSetIndex,
-                          @Nonnegative final int nPageSetPageIndex,
-                          @Nonnegative final int nPageSetPageCount,
-                          @Nonnegative final int nTotalPageIndex,
-                          @Nonnegative final int nTotalPageCount)
+  public PageRenderContext (@Nonnull final PDDocument aDoc,
+                            @Nonnull final PDPage aPage,
+                            @Nonnegative final int nPageSetIndex,
+                            @Nonnegative final int nPageSetPageIndex,
+                            @Nonnegative final int nPageSetPageCount,
+                            @Nonnegative final int nTotalPageIndex,
+                            @Nonnegative final int nTotalPageCount)
 
   {
+    ValueEnforcer.notNull (aDoc, "Document");
+    ValueEnforcer.notNull (aPage, "Page");
     ValueEnforcer.isGE0 (nPageSetIndex, "PageSetIndex");
     ValueEnforcer.isGE0 (nPageSetPageIndex, "PageSetPageIndex");
     ValueEnforcer.isGE0 (nPageSetPageCount, "PageSetPageCount");
     ValueEnforcer.isGE0 (nTotalPageIndex, "TotalPageIndex");
     ValueEnforcer.isGE0 (nTotalPageCount, "TotalPageCount");
 
+    m_aDoc = aDoc;
+    m_aPage = aPage;
     m_nPageSetIndex = nPageSetIndex;
     m_nPageSetPageIndex = nPageSetPageIndex;
     m_nPageSetPageCount = nPageSetPageCount;
     m_nTotalPageIndex = nTotalPageIndex;
     m_nTotalPageCount = nTotalPageCount;
+  }
+
+  /**
+   * @return the document
+   */
+  @Nonnull
+  public PDDocument getDocument ()
+  {
+    return m_aDoc;
+  }
+
+  /**
+   * @return the new page
+   */
+  @Nonnull
+  public PDPage getPage ()
+  {
+    return m_aPage;
   }
 
   /**
@@ -142,11 +171,13 @@ public class RenderPageIndex
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("pageSetIndex", m_nPageSetIndex)
-                                       .append ("pageSetPageIndex", m_nPageSetPageIndex)
-                                       .append ("pageSetPageCount", m_nPageSetPageCount)
-                                       .append ("totalPageIndex", m_nTotalPageIndex)
-                                       .append ("totalPageCount", m_nTotalPageCount)
+    return new ToStringGenerator (this).append ("PDDoc", m_aDoc)
+                                       .append ("PDPage", m_aPage)
+                                       .append ("PageSetIndex", m_nPageSetIndex)
+                                       .append ("PageSetPageIndex", m_nPageSetPageIndex)
+                                       .append ("PageSetPageCount", m_nPageSetPageCount)
+                                       .append ("TotalPageIndex", m_nTotalPageIndex)
+                                       .append ("TotalPageCount", m_nTotalPageCount)
                                        .toString ();
   }
 }
