@@ -39,8 +39,6 @@ import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
-import com.helger.pdflayout.element.table.PLTable;
-import com.helger.pdflayout.element.table.PLTableCell;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
 import com.helger.pdflayout.render.PagePreRenderContext;
@@ -97,20 +95,15 @@ public final class PLTableTest
                                                                          .setHorzAlign (EHorzAlignment.CENTER),
                                                 new PLText ("Sum2", r14b).setPadding (aPadding)
                                                                          .setHorzAlign (EHorzAlignment.RIGHT));
-    aRow.setColumnBorder (new BorderStyleSpec (Color.GRAY)).setFillColor (Color.WHITE);
 
     // Test colspan
     aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 2a", r10), 2),
-                           new PLTableCell (new PLText ("Colspan 2b", r10), 2))
-          .setColumnBorder (new BorderStyleSpec (Color.BLACK));
+                           new PLTableCell (new PLText ("Colspan 2b", r10), 2));
     aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 3a", r10), 3),
-                           new PLTableCell (new PLText ("Colspan 1b", r10), 1))
-          .setColumnBorder (new BorderStyleSpec (Color.BLACK));
+                           new PLTableCell (new PLText ("Colspan 1b", r10), 1));
     aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 1a", r10), 1),
-                           new PLTableCell (new PLText ("Colspan 3b", r10), 3))
-          .setColumnBorder (new BorderStyleSpec (Color.BLACK));
-    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 4", r10), 4))
-          .setColumnBorder (new BorderStyleSpec (Color.BLACK));
+                           new PLTableCell (new PLText ("Colspan 3b", r10), 3));
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 4", r10), 4));
 
     // Add content lines
     for (int i = 0; i < 184; ++i)
@@ -131,9 +124,6 @@ public final class PLTableTest
                                  new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
                                                                            .setMargin (aMargin)
                                                                            .setHorzAlign (EHorzAlignment.RIGHT));
-      aRow.setPadding (aPadding).setMargin (aMargin);
-      if ((i % 4) == 0)
-        aRow.setColumnBorder (new BorderStyleSpec (Color.GREEN)).setColumnBorderTop (null);
     }
     aPS1.addElement (aTable);
 
@@ -187,21 +177,10 @@ public final class PLTableTest
     aTable.addTableRow (createList (nCols,
                                     nIdx -> new PLText ("Col " +
                                                         (nIdx + 1),
-                                                        r14b.getCloneWithDifferentColor (Color.GRAY)).setPadding (aPadding)))
-          .setFillColor (Color.YELLOW)
-          .setBorder (new BorderStyleSpec (Color.GRAY, 3));
+                                                        r14b.getCloneWithDifferentColor (Color.GRAY)).setPadding (aPadding)));
 
     final ICommonsList <Function <PLHBoxSplittable, PLHBoxSplittable>> aRowFcts;
-    aRowFcts = new CommonsArrayList<> (x -> x,
-                                       x -> x.setColumnBorder (aBorder),
-                                       x -> x.setFillColor (aBGRow),
-                                       x -> x.setPadding (aPadding).setFillColor (aBGRow),
-                                       x -> x.setMargin (aMargin).setFillColor (aBGRow),
-                                       x -> x.setPadding (aPadding).setMargin (aMargin).setFillColor (aBGRow),
-                                       x -> x.setPadding (aPadding)
-                                             .setMargin (aMargin)
-                                             .setFillColor (aBGRow)
-                                             .setColumnBorder (aBorder));
+    aRowFcts = new CommonsArrayList<> (x -> x);
 
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
     aCellFcts = new CommonsArrayList<> (x -> x,

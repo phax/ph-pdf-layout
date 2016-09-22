@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.element.hbox;
 
-import java.awt.Color;
 import java.io.IOException;
 
 import javax.annotation.CheckForSigned;
@@ -34,18 +33,13 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLElement;
-import com.helger.pdflayout.base.IPLElement;
+import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLHasVerticalAlignment;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLVisitor;
-import com.helger.pdflayout.element.PLRenderHelper;
-import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
-import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PageRenderContext;
-import com.helger.pdflayout.spec.BorderSpec;
-import com.helger.pdflayout.spec.BorderStyleSpec;
+import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -57,14 +51,13 @@ import com.helger.pdflayout.spec.WidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
+public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>>
+                                     extends AbstractPLRenderableObject <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
   protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
   private int m_nStarWidthItems = 0;
-  private BorderSpec m_aColumnBorder = BorderSpec.BORDER0;
-  private Color m_aColumnFillColor = null;
 
   /** prepare width (without padding and margin) */
   protected float [] m_aPreparedColumnWidth;
@@ -79,8 +72,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLHBox <?> aSource)
   {
     super.setBasicDataFrom (aSource);
-    setColumnBorder (aSource.m_aColumnBorder);
-    setColumnFillColor (aSource.m_aColumnFillColor);
     return thisAsT ();
   }
 
@@ -203,169 +194,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     return thisAsT ();
   }
 
-  /**
-   * Set the border around each contained column.
-   *
-   * @param aBorder
-   *        The border style to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setColumnBorder (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setColumnBorder (new BorderSpec (aBorder));
-  }
-
-  /**
-   * Set the border around each contained column.
-   *
-   * @param aBorderY
-   *        The border to set for top and bottom. Maybe <code>null</code>.
-   * @param aBorderX
-   *        The border to set for left and right. Maybe <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setColumnBorder (@Nullable final BorderStyleSpec aBorderY,
-                                         @Nullable final BorderStyleSpec aBorderX)
-  {
-    return setColumnBorder (new BorderSpec (aBorderY, aBorderX));
-  }
-
-  /**
-   * Set the border around each contained column.
-   *
-   * @param aBorderTop
-   *        The border to set for top. Maybe <code>null</code>.
-   * @param aBorderRight
-   *        The border to set for right. Maybe <code>null</code>.
-   * @param aBorderBottom
-   *        The border to set for bottom. Maybe <code>null</code>.
-   * @param aBorderLeft
-   *        The border to set for left. Maybe <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setColumnBorder (@Nullable final BorderStyleSpec aBorderTop,
-                                         @Nullable final BorderStyleSpec aBorderRight,
-                                         @Nullable final BorderStyleSpec aBorderBottom,
-                                         @Nullable final BorderStyleSpec aBorderLeft)
-  {
-    return setColumnBorder (new BorderSpec (aBorderTop, aBorderRight, aBorderBottom, aBorderLeft));
-  }
-
-  /**
-   * Set the border around each contained column.
-   *
-   * @param aBorder
-   *        The border to set. May not be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setColumnBorder (@Nonnull final BorderSpec aBorder)
-  {
-    ValueEnforcer.notNull (aBorder, "ColumnBorder");
-    internalCheckNotPrepared ();
-    m_aColumnBorder = aBorder;
-    return thisAsT ();
-  }
-
-  /**
-   * Set the top border value around each contained column. This method may not
-   * be called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setColumnBorderTop (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setColumnBorder (m_aColumnBorder.getCloneWithTop (aBorder));
-  }
-
-  /**
-   * Set the right border value around each contained column. This method may
-   * not be called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setColumnBorderRight (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setColumnBorder (m_aColumnBorder.getCloneWithRight (aBorder));
-  }
-
-  /**
-   * Set the bottom border value around each contained column. This method may
-   * not be called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setColumnBorderBottom (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setColumnBorder (m_aColumnBorder.getCloneWithBottom (aBorder));
-  }
-
-  /**
-   * Set the left border value around each contained column. This method may not
-   * be called after an element got prepared!
-   *
-   * @param aBorder
-   *        The value to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public final IMPLTYPE setColumnBorderLeft (@Nullable final BorderStyleSpec aBorder)
-  {
-    return setColumnBorder (m_aColumnBorder.getCloneWithLeft (aBorder));
-  }
-
-  /**
-   * Get the border around each contained column. By default
-   * {@link BorderSpec#BORDER0} which means no border is used.
-   *
-   * @return Never <code>null</code>.
-   */
-  @Nonnull
-  public final BorderSpec getColumnBorder ()
-  {
-    return m_aColumnBorder;
-  }
-
-  /**
-   * Set the fill color to be used to fill the whole column. <code>null</code>
-   * means no fill color.
-   *
-   * @param aColumnFillColor
-   *        The fill color to use. May be <code>null</code> to indicate no fill
-   *        color (which is also the default).
-   * @return this
-   */
-  @Nonnull
-  public IMPLTYPE setColumnFillColor (@Nullable final Color aColumnFillColor)
-  {
-    m_aColumnFillColor = aColumnFillColor;
-    return thisAsT ();
-  }
-
-  /**
-   * Get the fill color to be used to fill the whole column. <code>null</code>
-   * means no fill color.
-   *
-   * @return May be <code>null</code>.
-   */
-  @Nullable
-  public Color getColumnFillColor ()
-  {
-    return m_aColumnFillColor;
-  }
-
   @Override
   public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
@@ -379,13 +207,11 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   {
     m_aPreparedColumnWidth = new float [m_aColumns.size ()];
     m_aPreparedColumnHeight = new float [m_aColumns.size ()];
-    final float fColumnBorderXSumWidth = m_aColumnBorder.getXSumWidth ();
-    final float fColumnBorderYSumWidth = m_aColumnBorder.getYSumWidth ();
 
-    float fUsedWidthFull = fColumnBorderXSumWidth * m_aColumns.size ();
-    float fUsedHeightFull = 0;
-    final float fAvailableWidth = aCtx.getAvailableWidth () - fUsedWidthFull;
+    final float fAvailableWidth = aCtx.getAvailableWidth ();
     final float fAvailableHeight = aCtx.getAvailableHeight ();
+    float fUsedWidthFull = 0;
+    float fUsedHeightFull = 0;
 
     int nIndex = 0;
     float fRestWidth = fAvailableWidth;
@@ -479,9 +305,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
     }
 
-    // Add at the end, because previously only the max was used
-    fUsedHeightFull += fColumnBorderYSumWidth;
-
     // Small consistency check (with rounding included)
     if (GlobalDebug.isDebugMode ())
     {
@@ -508,15 +331,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   @Override
   protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
-    final float fColumnBorderTopWidth = m_aColumnBorder.getTopWidth ();
-    final float fColumnBorderLeftWidth = m_aColumnBorder.getLeftWidth ();
-    final float fColumnBorderXSumWidth = m_aColumnBorder.getXSumWidth ();
-    final float fColumnBorderYSumWidth = m_aColumnBorder.getYSumWidth ();
-
-    float fCurX = aCtx.getStartLeft () + getPaddingLeft () + fColumnBorderLeftWidth;
-    final float fCurY = aCtx.getStartTop () - getPaddingTop () - fColumnBorderTopWidth;
-    final float fHBoxHeight = aCtx.getHeight () - getPaddingYSum () - fColumnBorderYSumWidth;
+    float fCurX = aCtx.getStartLeft ();
+    final float fStartY = aCtx.getStartTop ();
 
     int nIndex = 0;
     for (final PLHBoxColumn aColumn : m_aColumns)
@@ -525,53 +341,11 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       final float fItemWidth = m_aPreparedColumnWidth[nIndex];
       final float fItemHeight = m_aPreparedColumnHeight[nIndex];
 
-      // apply special column borders - debug: blue
-      {
-        // Disregard the padding of this HBox!!!
-        final float fLeft = fCurX;
-        final float fTop = fCurY;
-        final float fWidth = fItemWidth + aElement.getFullXSum ();
-        final float fHeight = fHBoxHeight;
-
-        // Fill before border
-        Color aFillColor = aColumn.getFillColor ();
-        if (aFillColor == null)
-          aFillColor = m_aColumnFillColor;
-        if (aFillColor != null)
-        {
-          aContentStream.setNonStrokingColor (aFillColor);
-          aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
-        }
-
-        BorderSpec aRealBorder = m_aColumnBorder;
-        if (PLRenderHelper.shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
-          aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_HBOX));
-        if (aRealBorder.hasAnyBorder ())
-          PLRenderHelper.renderBorder (this, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
-      }
-
-      // Perform contained element after border
-      float fStartLeft = fCurX;
-      float fStartTop = fCurY;
-      float fItemWidthWithPadding = fItemWidth;
-      float fItemHeightWithPadding = fItemHeight;
-      if (aElement instanceof IPLElement <?>)
-      {
-        final IPLElement <?> aRealElement = (IPLElement <?>) aElement;
-        fStartLeft += aRealElement.getMarginAndBorderLeft ();
-        fStartTop -= aRealElement.getMarginAndBorderTop ();
-        fItemWidthWithPadding += aRealElement.getPaddingXSum ();
-        fItemHeightWithPadding += aRealElement.getPaddingYSum ();
-      }
-      final PageRenderContext aItemCtx = new PageRenderContext (aCtx,
-                                                              fStartLeft,
-                                                              fStartTop,
-                                                              fItemWidthWithPadding,
-                                                              fItemHeightWithPadding);
+      final PageRenderContext aItemCtx = new PageRenderContext (aCtx, fCurX, fStartY, fItemWidth, fItemHeight);
       aElement.perform (aItemCtx);
 
       // Update X-pos
-      fCurX += fItemWidth + aElement.getFullXSum () + fColumnBorderXSumWidth;
+      fCurX += fItemWidth + aElement.getFullXSum ();
       ++nIndex;
     }
   }
@@ -582,8 +356,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("columns", m_aColumns)
                             .append ("startWidthItems", m_nStarWidthItems)
-                            .append ("columnBorder", m_aColumnBorder)
-                            .appendIfNotNull ("columnFillColor", m_aColumnFillColor)
                             .appendIfNotNull ("preparedWidth", m_aPreparedColumnWidth)
                             .appendIfNotNull ("preparedHeight", m_aPreparedColumnHeight)
                             .toString ();

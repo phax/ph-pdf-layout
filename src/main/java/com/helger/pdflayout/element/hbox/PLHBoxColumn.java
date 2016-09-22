@@ -16,10 +16,7 @@
  */
 package com.helger.pdflayout.element.hbox;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
@@ -38,7 +35,6 @@ public final class PLHBoxColumn
 {
   private IPLRenderableObject <?> m_aElement;
   private final WidthSpec m_aWidth;
-  private Color m_aFillColor;
 
   public PLHBoxColumn (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final WidthSpec aWidth)
   {
@@ -65,35 +61,9 @@ public final class PLHBoxColumn
     return m_aWidth;
   }
 
-  /**
-   * Set the cell fill color.
-   *
-   * @param aFillColor
-   *        The fill color to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public PLHBoxColumn setFillColor (@Nullable final Color aFillColor)
-  {
-    m_aFillColor = aFillColor;
-    return this;
-  }
-
-  /**
-   * @return The current fill color. May be <code>null</code>.
-   */
-  @Nullable
-  public Color getFillColor ()
-  {
-    return m_aFillColor;
-  }
-
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("element", m_aElement)
-                                       .append ("width", m_aWidth)
-                                       .append ("fillColor", m_aFillColor)
-                                       .toString ();
+    return new ToStringGenerator (this).append ("Element", m_aElement).append ("Width", m_aWidth).toString ();
   }
 }
