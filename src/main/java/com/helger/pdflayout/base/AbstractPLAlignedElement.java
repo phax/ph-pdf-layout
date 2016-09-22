@@ -72,7 +72,7 @@ public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlign
    */
   protected float getIndentY (final float fAvailableHeight)
   {
-    return getIndentY (fAvailableHeight, getPreparedSize ().getHeight ());
+    return getIndentY (fAvailableHeight, getPreparedHeight ());
   }
 
   /**

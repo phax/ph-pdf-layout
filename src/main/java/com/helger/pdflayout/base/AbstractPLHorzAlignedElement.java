@@ -72,7 +72,7 @@ public abstract class AbstractPLHorzAlignedElement <IMPLTYPE extends AbstractPLH
    */
   protected float getIndentX (final float fAvailableWidth)
   {
-    return getIndentX (fAvailableWidth, getPreparedSize ().getWidth ());
+    return getIndentX (fAvailableWidth, getPreparedWidth ());
   }
 
   /**
