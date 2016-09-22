@@ -1,6 +1,7 @@
 package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.id.IHasID;
@@ -16,6 +17,11 @@ import com.helger.commons.traits.IGenericImplTrait;
 public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
                            extends IHasID <String>, IGenericImplTrait <IMPLTYPE>, IPLVisitable
 {
+  default boolean hasID (@Nullable final String sID)
+  {
+    return getID ().equals (sID);
+  }
+
   /**
    * @return The debug ID of this element. Neither <code>null</code> nor empty.
    *         The debug ID is usually automatically created automatically from

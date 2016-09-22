@@ -6,9 +6,9 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
-import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -102,7 +102,7 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    *         margin. May not be <code>null</code>.
    * @throws IOException
    *         if already prepared
-   * @see #perform(RenderingContext)
+   * @see #perform(PageRenderContext)
    */
   @Nonnull
   SizeSpec prepare (@Nonnull final PreparationContext aCtx) throws IOException;
@@ -116,7 +116,7 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    * @throws IOException
    *         In case of a PDFBox error
    */
-  default void doPageSetup (@Nonnull final PageRenderContext aCtx) throws IOException
+  default void beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
   {}
 
   /**
@@ -130,5 +130,5 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    * @see #prepare(PreparationContext)
    */
   @Nonnegative
-  void perform (@Nonnull final RenderingContext aCtx) throws IOException;
+  void perform (@Nonnull final PageRenderContext aCtx) throws IOException;
 }

@@ -33,9 +33,9 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLAlignedElement;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
-import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
-import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -123,7 +123,7 @@ public class PLImage extends AbstractPLAlignedElement <PLImage>
   }
 
   @Override
-  public void doPageSetup (@Nonnull final PageRenderContext aCtx)
+  public void beforeRender (@Nonnull final PagePreRenderContext aCtx)
   {
     // It is very important that the PDJpeg is created BEFORE the page content
     // stream is created.
@@ -147,7 +147,7 @@ public class PLImage extends AbstractPLAlignedElement <PLImage>
   }
 
   @Override
-  protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
+  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     {
       // Align border on context width

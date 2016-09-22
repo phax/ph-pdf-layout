@@ -16,197 +16,158 @@
  */
 package com.helger.pdflayout.render;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.ext.CommonsLinkedHashMap;
-import com.helger.commons.collection.ext.ICommonsOrderedMap;
-import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.PLPageSet;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 
 /**
- * This class describes the index of the current page.
+ * This class contains the context for rendering a single element onto the PDF.
  *
  * @author Philip Helger
  */
-@Immutable
-public class PageRenderContext
+@NotThreadSafe
+public final class PageRenderContext
 {
-  public static final String PLACEHOLDER_PAGESET_INDEX = "${pageset-index}";
-  public static final String PLACEHOLDER_PAGESET_PAGE_INDEX = "${pageset-page-index}";
-  public static final String PLACEHOLDER_PAGESET_PAGE_NUMBER = "${pageset-page-number}";
-  public static final String PLACEHOLDER_PAGESET_PAGE_COUNT = "${pageset-page-count}";
-  public static final String PLACEHOLDER_TOTAL_PAGE_INDEX = "${total-page-index}";
-  public static final String PLACEHOLDER_TOTAL_PAGE_NUMBER = "${total-page-number}";
-  public static final String PLACEHOLDER_TOTAL_PAGE_COUNT = "${total-page-count}";
+  private final ERenderingElementType m_eElementType;
+  private final PDPageContentStreamWithCache m_aCS;
+  private final boolean m_bDebugMode;
+  private final float m_fStartLeft;
+  private final float m_fStartTop;
+  private final float m_fWidth;
+  private final float m_fHeight;
 
-  private final PLPageSet m_aPageSet;
-  private final PDDocument m_aDoc;
-  private final PDPage m_aPage;
-  private final int m_nPageSetIndex;
-  private final int m_nPageSetPageIndex;
-  private final int m_nPageSetPageCount;
-  private final int m_nTotalPageIndex;
-  private final int m_nTotalPageCount;
-
-  public PageRenderContext (@Nonnull final PLPageSet aPageSet,
-                            @Nonnull final PDDocument aDoc,
-                            @Nonnull final PDPage aPage,
-                            @Nonnegative final int nPageSetIndex,
-                            @Nonnegative final int nPageSetPageIndex,
-                            @Nonnegative final int nPageSetPageCount,
-                            @Nonnegative final int nTotalPageIndex,
-                            @Nonnegative final int nTotalPageCount)
-
+  /**
+   * @param aCtx
+   *        Context to copy settings from. May not be <code>null</code>.
+   * @param fStartLeft
+   *        Absolute page x-start position of the element
+   * @param fStartTop
+   *        Absolute page y-start position of the element
+   * @param fWidth
+   *        available width determined from the surrounding element
+   * @param fHeight
+   *        available height determined from the surrounding element
+   */
+  public PageRenderContext (@Nonnull final PageRenderContext aCtx,
+                            final float fStartLeft,
+                            final float fStartTop,
+                            final float fWidth,
+                            final float fHeight)
   {
-    ValueEnforcer.notNull (aPageSet, "PageSet");
-    ValueEnforcer.notNull (aDoc, "Document");
-    ValueEnforcer.notNull (aPage, "Page");
-    ValueEnforcer.isGE0 (nPageSetIndex, "PageSetIndex");
-    ValueEnforcer.isGE0 (nPageSetPageIndex, "PageSetPageIndex");
-    ValueEnforcer.isGE0 (nPageSetPageCount, "PageSetPageCount");
-    ValueEnforcer.isGE0 (nTotalPageIndex, "TotalPageIndex");
-    ValueEnforcer.isGE0 (nTotalPageCount, "TotalPageCount");
-
-    m_aPageSet = aPageSet;
-    m_aDoc = aDoc;
-    m_aPage = aPage;
-    m_nPageSetIndex = nPageSetIndex;
-    m_nPageSetPageIndex = nPageSetPageIndex;
-    m_nPageSetPageCount = nPageSetPageCount;
-    m_nTotalPageIndex = nTotalPageIndex;
-    m_nTotalPageCount = nTotalPageCount;
+    this (aCtx.getElementType (),
+          aCtx.getContentStream (),
+          aCtx.isDebugMode (),
+          fStartLeft,
+          fStartTop,
+          fWidth,
+          fHeight);
   }
 
   /**
-   * @return the document
+   * @param eElementType
+   *        Element type. May not be <code>null</code>.
+   * @param aCS
+   *        Page content stream. May not be <code>null</code>.
+   * @param bDebugMode
+   *        debug mode?
+   * @param fStartLeft
+   *        Absolute page x-start position of the element
+   * @param fStartTop
+   *        Absolute page y-start position of the element
+   * @param fWidth
+   *        available width determined from the surrounding element
+   * @param fHeight
+   *        available height determined from the surrounding element
+   */
+  public PageRenderContext (@Nonnull final ERenderingElementType eElementType,
+                            @Nonnull final PDPageContentStreamWithCache aCS,
+                            final boolean bDebugMode,
+                            final float fStartLeft,
+                            final float fStartTop,
+                            final float fWidth,
+                            final float fHeight)
+  {
+    ValueEnforcer.notNull (eElementType, "ElementType");
+    ValueEnforcer.notNull (aCS, "ContentStream");
+    m_eElementType = eElementType;
+    m_aCS = aCS;
+    m_bDebugMode = bDebugMode;
+    m_fStartLeft = fStartLeft;
+    m_fStartTop = fStartTop;
+    m_fWidth = fWidth;
+    m_fHeight = fHeight;
+  }
+
+  /**
+   * @return The type of the element currently rendered. Never <code>null</code>
+   *         .
    */
   @Nonnull
-  public PLPageSet getPageSet ()
+  public ERenderingElementType getElementType ()
   {
-    return m_aPageSet;
+    return m_eElementType;
   }
 
   /**
-   * @return the PDFBox document
+   * @return The current content stream to write to. Never <code>null</code>.
+   */
+  @Nonnull
+  public PDPageContentStreamWithCache getContentStream ()
+  {
+    return m_aCS;
+  }
+
+  /**
+   * @return The underlying PDF document. Never <code>null</code>.
    */
   @Nonnull
   public PDDocument getDocument ()
   {
-    return m_aDoc;
+    return m_aCS.getDocument ();
   }
 
   /**
-   * @return the new PDFBox page
+   * @return <code>true</code> if debug output should be emitted into the PDF,
+   *         <code>false</code> otherwise.
    */
-  @Nonnull
-  public PDPage getPage ()
+  public boolean isDebugMode ()
   {
-    return m_aPage;
+    return m_bDebugMode;
   }
 
   /**
-   * @return The index of the current page set. 0-based. Always &ge; 0.
+   * @return Absolute page x-start position
    */
-  @Nonnegative
-  public int getPageSetIndex ()
+  public float getStartLeft ()
   {
-    return m_nPageSetIndex;
+    return m_fStartLeft;
   }
 
   /**
-   * @return The index of the page in the current page set. 0-based. Always &ge;
-   *         0.
+   * @return Absolute page y-start position
    */
-  @Nonnegative
-  public int getPageSetPageIndex ()
+  public float getStartTop ()
   {
-    return m_nPageSetPageIndex;
+    return m_fStartTop;
   }
 
   /**
-   * @return The number of the page in the current page set. 1-based. Always
-   *         &ge; 1.
+   * @return available width determined from the surrounding element
    */
-  @Nonnegative
-  public int getPageSetPageNumber ()
+  public float getWidth ()
   {
-    return m_nPageSetPageIndex + 1;
+    return m_fWidth;
   }
 
   /**
-   * @return The total number of pages in the current page set. Always &ge; 0.
+   * @return available height determined from the surrounding element
    */
-  @Nonnegative
-  public int getPageSetPageCount ()
+  public float getHeight ()
   {
-    return m_nPageSetPageCount;
-  }
-
-  /**
-   * @return The index of the page over all page sets. 0-based. Always &ge; 0.
-   */
-  @Nonnegative
-  public int getTotalPageIndex ()
-  {
-    return m_nTotalPageIndex;
-  }
-
-  /**
-   * @return The number of the page over all page sets. 1-based. Always &ge; 1.
-   */
-  @Nonnegative
-  public int getTotalPageNumber ()
-  {
-    return m_nTotalPageIndex + 1;
-  }
-
-  /**
-   * @return The overall number of pages. Always &ge; 0.
-   */
-  @Nonnegative
-  public int getTotalPageCount ()
-  {
-    return m_nTotalPageCount;
-  }
-
-  @Nonnull
-  @ReturnsMutableCopy
-  public ICommonsOrderedMap <String, String> getAllPlaceholders ()
-  {
-    final ICommonsOrderedMap <String, String> ret = new CommonsLinkedHashMap<> ();
-    ret.put (PLACEHOLDER_PAGESET_INDEX, Integer.toString (getPageSetIndex ()));
-    ret.put (PLACEHOLDER_PAGESET_PAGE_INDEX, Integer.toString (getPageSetPageIndex ()));
-    ret.put (PLACEHOLDER_PAGESET_PAGE_NUMBER, Integer.toString (getPageSetPageNumber ()));
-    ret.put (PLACEHOLDER_PAGESET_PAGE_COUNT, Integer.toString (getPageSetPageCount ()));
-    ret.put (PLACEHOLDER_TOTAL_PAGE_INDEX, Integer.toString (getTotalPageIndex ()));
-    ret.put (PLACEHOLDER_TOTAL_PAGE_NUMBER, Integer.toString (getTotalPageNumber ()));
-    ret.put (PLACEHOLDER_TOTAL_PAGE_COUNT, Integer.toString (getTotalPageCount ()));
-    return ret;
-  }
-
-  public void setPlaceholdersInRenderingContext (@Nonnull final RenderingContext aRC)
-  {
-    aRC.addPlaceholders (getAllPlaceholders ());
-  }
-
-  @Override
-  public String toString ()
-  {
-    return new ToStringGenerator (this).append ("PageSet", m_aPageSet)
-                                       .append ("PDDoc", m_aDoc)
-                                       .append ("PDPage", m_aPage)
-                                       .append ("PageSetIndex", m_nPageSetIndex)
-                                       .append ("PageSetPageIndex", m_nPageSetPageIndex)
-                                       .append ("PageSetPageCount", m_nPageSetPageCount)
-                                       .append ("TotalPageIndex", m_nTotalPageIndex)
-                                       .append ("TotalPageCount", m_nTotalPageCount)
-                                       .toString ();
+    return m_fHeight;
   }
 }

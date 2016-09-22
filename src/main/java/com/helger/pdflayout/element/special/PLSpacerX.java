@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.render.PreparationContext;
-import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -43,7 +43,7 @@ public class PLSpacerX extends AbstractPLElement <PLSpacerX>
   }
 
   @Override
-  protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
+  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 
   @Nonnull

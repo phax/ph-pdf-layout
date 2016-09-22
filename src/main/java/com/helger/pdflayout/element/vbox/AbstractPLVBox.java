@@ -42,7 +42,7 @@ import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PreparationContext;
-import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -379,7 +379,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   @Override
-  protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
+  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     final float fRowBorderTopWidth = m_aRowBorder.getTopWidth ();
@@ -434,7 +434,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         fRowElementHeightWithPadding += aRealElement.getPaddingYSum ();
       }
 
-      final RenderingContext aRowElementCtx = new RenderingContext (aCtx,
+      final PageRenderContext aRowElementCtx = new PageRenderContext (aCtx,
                                                                     fStartLeft,
                                                                     fStartTop,
                                                                     fRowElementWidthWithPadding,

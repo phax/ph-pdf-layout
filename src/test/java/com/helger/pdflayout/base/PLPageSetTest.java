@@ -30,7 +30,7 @@ import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
-import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
@@ -154,19 +154,19 @@ public final class PLPageSetTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
     aPS1.setPageHeader (new PLText (sHeader, r10).setBorder (Color.RED));
-    aPS1.setPageFooter (new PLTextWithPlaceholders (PageRenderContext.PLACEHOLDER_PAGESET_INDEX +
+    aPS1.setPageFooter (new PLTextWithPlaceholders (PagePreRenderContext.PLACEHOLDER_PAGESET_INDEX +
                                                     " / " +
-                                                    PageRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
+                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
                                                     " / " +
-                                                    PageRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
                                                     " / " +
-                                                    PageRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
+                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
                                                     " / " +
-                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
+                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
                                                     " / " +
-                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
                                                     " / " +
-                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
+                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
                                                     " / ${custom-var}",
                                                     r10).setFillColor (Color.PINK)
                                                         .setHorzAlign (EHorzAlignment.CENTER));
@@ -174,8 +174,8 @@ public final class PLPageSetTest
     for (int i = 0; i < 80; ++i)
       aPS1.addElement (new PLText ("Line " + i, r10));
 
-    aPS1.setRenderingContextCustomizer (aRC -> {
-      aRC.setPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)");
+    aPS1.setPreRenderContextCustomizer (aCtx -> {
+      aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)");
     });
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);

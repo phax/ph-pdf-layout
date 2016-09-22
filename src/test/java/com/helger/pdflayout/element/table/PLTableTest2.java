@@ -33,7 +33,7 @@ import com.helger.pdflayout.element.table.PLTable;
 import com.helger.pdflayout.element.table.PLTableCell;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
-import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
@@ -64,9 +64,9 @@ public final class PLTableTest2
                                                     .setPadding (4, 0)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLTextWithPlaceholders ("Page " +
-                                                    PageRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
                                                     "/" +
-                                                    PageRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
+                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
                                                     r10).setBorder (new BorderStyleSpec (Color.RED))
                                                         .setPadding (4, 0)
                                                         .setHorzAlign (EHorzAlignment.CENTER));

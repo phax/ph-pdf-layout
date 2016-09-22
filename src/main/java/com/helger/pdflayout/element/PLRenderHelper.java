@@ -10,7 +10,7 @@ import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.IPLObject;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
-import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 
@@ -169,7 +169,7 @@ public final class PLRenderHelper
   }
 
   public static void fillAndRenderBorder (@Nonnull final IPLElement <?> aElement,
-                                          @Nonnull final RenderingContext aCtx,
+                                          @Nonnull final PageRenderContext aCtx,
                                           final float fIndentX,
                                           final float fIndentY) throws IOException
   {

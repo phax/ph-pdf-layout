@@ -43,7 +43,7 @@ import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PreparationContext;
-import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EVertAlignment;
@@ -506,7 +506,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Override
-  protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
+  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     final float fColumnBorderTopWidth = m_aColumnBorder.getTopWidth ();
@@ -563,7 +563,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         fItemWidthWithPadding += aRealElement.getPaddingXSum ();
         fItemHeightWithPadding += aRealElement.getPaddingYSum ();
       }
-      final RenderingContext aItemCtx = new RenderingContext (aCtx,
+      final PageRenderContext aItemCtx = new PageRenderContext (aCtx,
                                                               fStartLeft,
                                                               fStartTop,
                                                               fItemWidthWithPadding,

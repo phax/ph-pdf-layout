@@ -45,11 +45,12 @@ import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.ERenderingElementType;
-import com.helger.pdflayout.render.IRenderingContextCustomizer;
+import com.helger.pdflayout.render.IPreRenderContextCustomizer;
+import com.helger.pdflayout.render.IRenderContextCustomizer;
+import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PreparationContextGlobal;
-import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EVertAlignment;
@@ -180,7 +181,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   private IPLRenderableObject <?> m_aPageHeader;
   private final ICommonsList <IPLRenderableObject <?>> m_aElements = new CommonsArrayList<> ();
   private IPLRenderableObject <?> m_aPageFooter;
-  private IRenderingContextCustomizer m_aRCCustomizer;
+  private IPreRenderContextCustomizer m_aPRCCustomizer;
+  private IRenderContextCustomizer m_aRCCustomizer;
 
   public PLPageSet (@Nonnull final PDRectangle aPageRect)
   {
@@ -269,13 +271,26 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   }
 
   @Nullable
-  public IRenderingContextCustomizer getRenderingContextCustomizer ()
+  public IPreRenderContextCustomizer getPreRenderContextCustomizer ()
+  {
+    return m_aPRCCustomizer;
+  }
+
+  @Nonnull
+  public PLPageSet setPreRenderContextCustomizer (@Nullable final IPreRenderContextCustomizer aPRCCustomizer)
+  {
+    m_aPRCCustomizer = aPRCCustomizer;
+    return this;
+  }
+
+  @Nullable
+  public IRenderContextCustomizer getRenderContextCustomizer ()
   {
     return m_aRCCustomizer;
   }
 
   @Nonnull
-  public PLPageSet setRenderingContextCustomizer (@Nullable final IRenderingContextCustomizer aRCCustomizer)
+  public PLPageSet setRenderContextCustomizer (@Nullable final IRenderContextCustomizer aRCCustomizer)
   {
     m_aRCCustomizer = aRCCustomizer;
     return this;
@@ -751,15 +766,20 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       final PDPage aPage = new PDPage (m_aPageSize.getAsRectangle ());
       aDoc.addPage (aPage);
 
-      final PageRenderContext aPageRenderCtx = new PageRenderContext (this,
-                                                                      aDoc,
-                                                                      aPage,
-                                                                      nPageSetIndex,
-                                                                      nPageIndex,
-                                                                      nPageCount,
-                                                                      nTotalPageStartIndex + nPageIndex,
-                                                                      nTotalPageCount);
-      visitElement (x -> x.doPageSetup (aPageRenderCtx));
+      {
+        final PagePreRenderContext aPreRenderCtx = new PagePreRenderContext (this,
+                                                                             aDoc,
+                                                                             aPage,
+                                                                             nPageSetIndex,
+                                                                             nPageIndex,
+                                                                             nPageCount,
+                                                                             nTotalPageStartIndex + nPageIndex,
+                                                                             nTotalPageCount);
+        if (m_aPRCCustomizer != null)
+          m_aPRCCustomizer.customizePreRenderContext (aPreRenderCtx);
+
+        visitElement (x -> x.beforeRender (aPreRenderCtx));
+      }
 
       final PDPageContentStreamWithCache aContentStream = new PDPageContentStreamWithCache (aDoc,
                                                                                             aPage,
@@ -798,17 +818,16 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           final float fStartTop = m_aPageSize.getHeight ();
           final float fWidth = m_aPageSize.getWidth () - getMarginXSum ();
           final float fHeight = aPrepareResult.getHeaderHeight ();
-          final RenderingContext aRC = new RenderingContext (ERenderingElementType.PAGE_HEADER,
-                                                             aContentStream,
-                                                             bDebug,
-                                                             fStartLeft,
-                                                             fStartTop,
-                                                             fWidth,
-                                                             fHeight);
-          aPageRenderCtx.setPlaceholdersInRenderingContext (aRC);
+          final PageRenderContext aRCtx = new PageRenderContext (ERenderingElementType.PAGE_HEADER,
+                                                                 aContentStream,
+                                                                 bDebug,
+                                                                 fStartLeft,
+                                                                 fStartTop,
+                                                                 fWidth,
+                                                                 fHeight);
           if (m_aRCCustomizer != null)
-            m_aRCCustomizer.customizeRenderingContext (aRC);
-          m_aPageHeader.perform (aRC);
+            m_aRCCustomizer.customizeRenderContext (aRCtx);
+          m_aPageHeader.perform (aRCtx);
         }
 
         float fCurY = fYTop;
@@ -829,17 +848,16 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
             fHeight += aRealElement.getBorderYSumWidth () + aRealElement.getPaddingYSum ();
           }
 
-          final RenderingContext aRC = new RenderingContext (ERenderingElementType.CONTENT_ELEMENT,
-                                                             aContentStream,
-                                                             bDebug,
-                                                             fStartLeft,
-                                                             fStartTop,
-                                                             fWidth,
-                                                             fHeight);
-          aPageRenderCtx.setPlaceholdersInRenderingContext (aRC);
+          final PageRenderContext aRCtx = new PageRenderContext (ERenderingElementType.CONTENT_ELEMENT,
+                                                                 aContentStream,
+                                                                 bDebug,
+                                                                 fStartLeft,
+                                                                 fStartTop,
+                                                                 fWidth,
+                                                                 fHeight);
           if (m_aRCCustomizer != null)
-            m_aRCCustomizer.customizeRenderingContext (aRC);
-          aElement.perform (aRC);
+            m_aRCCustomizer.customizeRenderContext (aRCtx);
+          aElement.perform (aRCtx);
 
           fCurY -= fHeight + aElement.getFullYSum ();
         }
@@ -852,17 +870,16 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           final float fStartTop = getMarginBottom ();
           final float fWidth = m_aPageSize.getWidth () - getMarginXSum ();
           final float fHeight = aPrepareResult.getFooterHeight ();
-          final RenderingContext aRC = new RenderingContext (ERenderingElementType.PAGE_FOOTER,
-                                                             aContentStream,
-                                                             bDebug,
-                                                             fStartLeft,
-                                                             fStartTop,
-                                                             fWidth,
-                                                             fHeight);
-          aPageRenderCtx.setPlaceholdersInRenderingContext (aRC);
+          final PageRenderContext aRCtx = new PageRenderContext (ERenderingElementType.PAGE_FOOTER,
+                                                                 aContentStream,
+                                                                 bDebug,
+                                                                 fStartLeft,
+                                                                 fStartTop,
+                                                                 fWidth,
+                                                                 fHeight);
           if (m_aRCCustomizer != null)
-            m_aRCCustomizer.customizeRenderingContext (aRC);
-          m_aPageFooter.perform (aRC);
+            m_aRCCustomizer.customizeRenderContext (aRCtx);
+          m_aPageFooter.perform (aRCtx);
         }
       }
       finally

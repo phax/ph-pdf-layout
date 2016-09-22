@@ -28,7 +28,7 @@ import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.render.PreparationContext;
-import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -254,7 +254,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *         In case of a PDFBox error
    */
   @OverrideOnDemand
-  protected void onPerformFillAndBorder (@Nonnull final RenderingContext aCtx) throws IOException
+  protected void onPerformFillAndBorder (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 
   /**
@@ -266,10 +266,10 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *         In case of a PDFBox error
    */
   @OverrideOnDemand
-  protected abstract void onPerform (@Nonnull RenderingContext aCtx) throws IOException;
+  protected abstract void onPerform (@Nonnull PageRenderContext aCtx) throws IOException;
 
   @Nonnegative
-  public final void perform (@Nonnull final RenderingContext aCtx) throws IOException
+  public final void perform (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     if (!m_bPrepared)
       throw new IllegalStateException ("Element " + ClassHelper.getClassLocalName (this) + " was never prepared!");

@@ -24,7 +24,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.render.PreparationContext;
-import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -70,7 +70,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
   }
 
   @Override
-  protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
+  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 
   @Override

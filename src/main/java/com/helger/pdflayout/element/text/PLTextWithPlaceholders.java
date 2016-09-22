@@ -23,13 +23,13 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.string.StringHelper;
+import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PageRenderContext;
-import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.FontSpec;
 
 /**
  * Render text but before that replace all placeholders defined in the
- * {@link RenderingContext}.
+ * {@link PageRenderContext}.
  *
  * @author Philip Helger
  */
@@ -41,7 +41,7 @@ public class PLTextWithPlaceholders extends AbstractPLText <PLTextWithPlaceholde
   }
 
   @Override
-  public void doPageSetup (@Nonnull final PageRenderContext aCtx) throws IOException
+  public void beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
   {
     final String sOrigText = getText ();
     final String sRealText = StringHelper.replaceMultiple (getText (), aCtx.getAllPlaceholders ());
@@ -53,11 +53,8 @@ public class PLTextWithPlaceholders extends AbstractPLText <PLTextWithPlaceholde
 
   @Override
   @OverrideOnDemand
-  protected String getTextToDraw (@Nonnull final String sText, @Nonnull final RenderingContext aCtx)
+  protected String getTextToDraw (@Nonnull final String sText, @Nonnull final PageRenderContext aCtx)
   {
-    // Replace all at once
-    if (true)
-      return sText;
-    return StringHelper.replaceMultiple (sText, aCtx.getAllPlaceholders ());
+    return sText;
   }
 }

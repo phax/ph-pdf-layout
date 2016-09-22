@@ -40,7 +40,7 @@ import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PreparationContext;
-import com.helger.pdflayout.render.RenderingContext;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -296,13 +296,13 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    */
   @Nonnull
   @OverrideOnDemand
-  protected String getTextToDraw (@Nonnull final String sText, @Nonnull final RenderingContext aCtx)
+  protected String getTextToDraw (@Nonnull final String sText, @Nonnull final PageRenderContext aCtx)
   {
     return sText;
   }
 
   @Override
-  protected void onPerform (@Nonnull final RenderingContext aCtx) throws IOException
+  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     if (hasNoText ())
     {
