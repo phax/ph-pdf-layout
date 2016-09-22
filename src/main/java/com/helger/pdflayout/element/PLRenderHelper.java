@@ -188,6 +188,8 @@ public final class PLRenderHelper
       aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
     }
 
+    // Border draws over fill, to avoid nasty display problems if the background
+    // shimmers through
     BorderSpec aRealBorder = aElement.getBorder ();
     if (shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
       aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_ELEMENT));

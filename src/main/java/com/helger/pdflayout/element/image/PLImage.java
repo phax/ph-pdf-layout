@@ -30,12 +30,12 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.IHasInputStream;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLAlignedElement;
+import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PagePreRenderContext;
-import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -43,7 +43,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
-public class PLImage extends AbstractPLAlignedElement <PLImage>
+public class PLImage extends AbstractPLElement <PLImage>
 {
   private final BufferedImage m_aImage;
   private final IHasInputStream m_aIIS;
@@ -149,12 +149,8 @@ public class PLImage extends AbstractPLAlignedElement <PLImage>
   @Override
   protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    {
-      // Align border on context width
-      final float fIndentX = getIndentX (getHorzAlign (), aCtx.getWidth ());
-      final float fIndentY = getIndentY (getVertAlign (), aCtx.getHeight ());
-      PLRenderHelper.fillAndRenderBorder (this, aCtx, fIndentX, fIndentY);
-    }
+    // Fill and border
+    PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     aContentStream.drawXObject (m_aJpeg,

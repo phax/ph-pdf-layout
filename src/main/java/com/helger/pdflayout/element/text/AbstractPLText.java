@@ -35,12 +35,12 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLAlignedElement;
+import com.helger.pdflayout.base.AbstractPLHorzAlignedElement;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
-import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -54,7 +54,7 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  *        Implementation type
  */
 public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>>
-                                     extends AbstractPLAlignedElement <IMPLTYPE>
+                                     extends AbstractPLHorzAlignedElement <IMPLTYPE>
 {
   public static final boolean DEFAULT_TOP_DOWN = true;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
@@ -310,12 +310,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       return;
     }
 
-    {
-      // Align border on context width
-      final float fIndentX = getIndentX (getHorzAlign (), aCtx.getWidth ());
-      final float fIndentY = getIndentY (getVertAlign (), aCtx.getHeight ());
-      PLRenderHelper.fillAndRenderBorder (this, aCtx, fIndentX, fIndentY);
-    }
+    // Fill and border
+    PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
 
@@ -344,8 +340,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
         fTextWidth = m_aLoadedFont.getStringWidth (sDrawText, fFontSize);
       }
 
-      // Align text line by line
-      final float fIndentX = getIndentX (getHorzAlign (), aCtx.getWidth (), fTextWidth);
+      // Align text line by overall block width
+      final float fIndentX = getIndentX (aCtx.getWidth (), fTextWidth);
       if (nIndex == 0)
       {
         // Initial move - only partial line height!

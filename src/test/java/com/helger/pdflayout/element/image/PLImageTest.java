@@ -69,7 +69,8 @@ public final class PLImageTest
     aHBox.addColumn (new PLImage (new ClassPathResource ("images/test1.jpg"), 50, 50).setFillColor (Color.BLUE),
                      WidthSpec.abs (50));
     aHBox.addColumn (new PLText ("Col2", r10).setHorzAlign (EHorzAlignment.CENTER), WidthSpec.star ());
-    aHBox.addColumn (new PLImage (new ClassPathResource ("images/test1.jpg"), 50, 50).setFillColor (Color.RED),
+    aHBox.addColumn (new PLImage (new ClassPathResource ("images/test1.jpg"), 50, 50).setFillColor (Color.RED)
+                                                                                     .setBorder (Color.PINK),
                      WidthSpec.abs (50));
     aHBox.addColumn (new PLText ("Col3", r10), WidthSpec.perc (10));
     aPS1.addElement (aHBox);
