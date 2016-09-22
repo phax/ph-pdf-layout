@@ -152,6 +152,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException;
 
   /**
+   * Set the prepared size of this object. This method also handles min and max
+   * size
+   * 
    * @param aPreparedSize
    *        Prepared size without padding and margin.
    */

@@ -118,7 +118,33 @@ public final class PLBoxTest
                                                 .setPadding (5)
                                                 .setFillColor (Color.YELLOW)).setPadding (2)
                                                                              .setMargin (5)
+                                                                             .setBorder (new BorderStyleSpec (Color.GREEN,
+                                                                                                              5),
+                                                                                         new BorderStyleSpec (Color.BLUE,
+                                                                                                              5),
+                                                                                         new BorderStyleSpec (Color.MAGENTA,
+                                                                                                              5),
+                                                                                         new BorderStyleSpec (Color.RED,
+                                                                                                              5))
                                                                              .setFillColor (Color.GRAY));
+
+    final BorderStyleSpec aBSS = new BorderStyleSpec (Color.BLACK);
+    aPS1.addElement (new PLBox (new PLText ("Table cell example",
+                                            r10).setBorder (Color.RED)
+                                                .setPadding (5)
+                                                .setFillColor (Color.PINK)).setPadding (2)
+                                                                           .setMinSize (200, 0)
+                                                                           .setBorder (aBSS)
+                                                                           .setFillColor (Color.YELLOW));
+    aPS1.addElement (new PLBox (new PLText ("Next row", r10).setBorder (Color.RED)
+                                                            .setPadding (5)
+                                                            .setFillColor (Color.PINK)).setPadding (2)
+                                                                                       .setMinSize (200, 0)
+                                                                                       .setBorder (null,
+                                                                                                   aBSS,
+                                                                                                   aBSS,
+                                                                                                   aBSS)
+                                                                                       .setFillColor (Color.YELLOW));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
