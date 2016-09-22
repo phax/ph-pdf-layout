@@ -29,7 +29,6 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
@@ -284,23 +283,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return new CommonsArrayList<> (m_aPreparedLinesUnmodified);
   }
 
-  /**
-   * Get the text to draw, in case it is different from the stored text (e.g.
-   * for page numbers in {@link PLTextWithPlaceholders})
-   *
-   * @param sText
-   *        Original text. Never <code>null</code>.
-   * @param aCtx
-   *        The current rendering context. Never <code>null</code>.
-   * @return The real text to draw. May not be <code>null</code>.
-   */
-  @Nonnull
-  @OverrideOnDemand
-  protected String getTextToDraw (@Nonnull final String sText, @Nonnull final PageRenderContext aCtx)
-  {
-    return sText;
-  }
-
   @Override
   protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
   {
@@ -320,28 +302,22 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Set font if changed
     aContentStream.setFont (m_aLoadedFont, m_aFontSpec);
 
-    final float fFontSize = m_aFontSpec.getFontSize ();
     final float fLineHeight = m_fLineHeight;
+    final float fPreparedWidth = getPreparedSize ().getWidth ();
 
-    final float fTop = getMarginTop ();
+    final float fLeft = getBorderLeftWidth () + getPaddingLeft ();
+    final float fTop = getBorderTopWidth () + getPaddingTop ();
+
     int nIndex = 0;
     final int nMax = m_aPreparedLines.size ();
     for (final TextAndWidthSpec aTW : m_aPreparedLines)
     {
       // Replace text (if any)
-      float fTextWidth = aTW.getWidth ();
-      final String sOrigText = aTW.getText ();
-
-      // get the real text to draw
-      final String sDrawText = getTextToDraw (sOrigText, aCtx);
-      if (!sOrigText.equals (sDrawText))
-      {
-        // Text changed - recalculate width!
-        fTextWidth = m_aLoadedFont.getStringWidth (sDrawText, fFontSize);
-      }
+      final float fTextWidth = aTW.getWidth ();
+      final String sDrawText = aTW.getText ();
 
       // Align text line by overall block width
-      final float fIndentX = getIndentX (aCtx.getWidth (), fTextWidth);
+      final float fIndentX = fLeft + getIndentX (fPreparedWidth, fTextWidth);
       if (nIndex == 0)
       {
         // Initial move - only partial line height!

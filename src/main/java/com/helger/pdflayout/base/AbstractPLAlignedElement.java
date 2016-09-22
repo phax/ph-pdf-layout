@@ -68,7 +68,7 @@ public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlign
    *
    * @param fAvailableHeight
    *        The available height of the surrounding element.
-   * @return The top margin of this object plus the indentation offset
+   * @return The indentation offset
    */
   protected float getIndentY (final float fAvailableHeight)
   {
@@ -83,21 +83,18 @@ public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlign
    *        The available height of the surrounding element.
    * @param fElementHeight
    *        The height of the element to align
-   * @return The top margin of this object plus the indentation offset
+   * @return The indentation offset
    */
   protected float getIndentY (final float fAvailableHeight, final float fElementHeight)
   {
-    final float fTop = getMarginTop ();
-    final float fUsableHeight = fAvailableHeight - getMarginYSum ();
-
     switch (m_eVertAlign)
     {
       case TOP:
-        return fTop;
+        return 0f;
       case MIDDLE:
-        return fTop + (fUsableHeight - fElementHeight) / 2;
+        return (fAvailableHeight - fElementHeight) / 2f;
       case BOTTOM:
-        return fTop + fUsableHeight - fElementHeight;
+        return fAvailableHeight - fElementHeight;
       default:
         throw new IllegalStateException ("Unsupported vertical alignment " + m_eVertAlign);
     }

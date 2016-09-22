@@ -68,7 +68,7 @@ public abstract class AbstractPLHorzAlignedElement <IMPLTYPE extends AbstractPLH
    *
    * @param fAvailableWidth
    *        The available width of the surrounding element.
-   * @return The left margin of this object plus the indentation offset
+   * @return The indentation offset
    */
   protected float getIndentX (final float fAvailableWidth)
   {
@@ -83,21 +83,18 @@ public abstract class AbstractPLHorzAlignedElement <IMPLTYPE extends AbstractPLH
    *        The available width of the surrounding element.
    * @param fElementWidth
    *        The width of the element to align
-   * @return The left margin of this object plus the indentation offset
+   * @return The indentation offset
    */
   protected float getIndentX (final float fAvailableWidth, final float fElementWidth)
   {
-    final float fLeft = getMarginLeft ();
-    final float fUsableWidth = fAvailableWidth - getMarginXSum ();
-
     switch (m_eHorzAlign)
     {
       case LEFT:
-        return fLeft;
+        return 0f;
       case CENTER:
-        return fLeft + (fUsableWidth - fElementWidth) / 2;
+        return (fAvailableWidth - fElementWidth) / 2;
       case RIGHT:
-        return fLeft + fUsableWidth - fElementWidth;
+        return fAvailableWidth - fElementWidth;
       default:
         throw new IllegalStateException ("Unsupported horizontal alignment " + m_eHorzAlign);
     }

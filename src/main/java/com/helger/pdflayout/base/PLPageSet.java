@@ -656,35 +656,36 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         }
 
         // Handle vertical alignment of top-level elements
-        if (aElement instanceof IPLHasVerticalAlignment <?>)
-        {
-          final EVertAlignment eVertAlignment = ((IPLHasVerticalAlignment <?>) aElement).getVertAlign ();
-          float fPaddingTop;
-          switch (eVertAlignment)
+        if (false)
+          if (aElement instanceof IPLHasVerticalAlignment <?>)
           {
-            case TOP:
-              fPaddingTop = 0f;
-              break;
-            case MIDDLE:
-              fPaddingTop = (fAvailableHeight - fElementHeightFull) / 2;
-              break;
-            case BOTTOM:
-              fPaddingTop = fAvailableHeight - fElementHeightFull;
-              break;
-            default:
-              throw new IllegalStateException ("Unsupported vertical alignment: " + eVertAlignment);
+            final EVertAlignment eVertAlignment = ((IPLHasVerticalAlignment <?>) aElement).getVertAlign ();
+            float fPaddingTop;
+            switch (eVertAlignment)
+            {
+              case TOP:
+                fPaddingTop = 0f;
+                break;
+              case MIDDLE:
+                fPaddingTop = (fAvailableHeight - fElementHeightFull) / 2;
+                break;
+              case BOTTOM:
+                fPaddingTop = fAvailableHeight - fElementHeightFull;
+                break;
+              default:
+                throw new IllegalStateException ("Unsupported vertical alignment: " + eVertAlignment);
+            }
+            if (fPaddingTop != 0f && aElement instanceof AbstractPLElement <?>)
+            {
+              final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
+              final SizeSpec aOldSize = aRealElement.getPreparedSize ();
+              aRealElement.internalMarkAsNotPrepared ();
+              aRealElement.setPaddingTop (aRealElement.getPaddingTop () + fPaddingTop);
+              final SizeSpec aNewSize = new SizeSpec (aOldSize.getWidth (), aOldSize.getHeight () + fPaddingTop);
+              aRealElement.internalMarkAsPrepared (aNewSize);
+              aElementWithSize = new PLElementWithSize (aRealElement, aNewSize);
+            }
           }
-          if (fPaddingTop != 0f && aElement instanceof AbstractPLElement <?>)
-          {
-            final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
-            final SizeSpec aOldSize = aRealElement.getPreparedSize ();
-            aRealElement.internalMarkAsNotPrepared ();
-            aRealElement.setPaddingTop (aRealElement.getPaddingTop () + fPaddingTop);
-            final SizeSpec aNewSize = new SizeSpec (aOldSize.getWidth (), aOldSize.getHeight () + fPaddingTop);
-            aRealElement.internalMarkAsPrepared (aNewSize);
-            aElementWithSize = new PLElementWithSize (aRealElement, aNewSize);
-          }
-        }
 
         // Add element to current page (may also be a page break)
         aCurPageElements.add (aElementWithSize);
@@ -838,14 +839,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           float fStartLeft = fXLeft;
           float fStartTop = fCurY;
           float fWidth = getAvailableWidth ();
-          float fHeight = aElementWithHeight.getHeight ();
+          float fHeight = aElementWithHeight.getHeightFull ();
           if (aElement instanceof IPLElement <?>)
           {
             final IPLElement <?> aRealElement = (IPLElement <?>) aElement;
-            fStartLeft += aRealElement.getMarginAndBorderLeft ();
-            fStartTop -= aRealElement.getMarginAndBorderTop ();
-            fWidth -= aRealElement.getMarginAndBorderXSum ();
-            fHeight += aRealElement.getBorderYSumWidth () + aRealElement.getPaddingYSum ();
+            fStartLeft += aRealElement.getMarginLeft ();
+            fStartTop -= aRealElement.getMarginTop ();
+            fWidth -= aRealElement.getMarginXSum ();
+            fHeight -= aRealElement.getMarginYSum ();
           }
 
           final PageRenderContext aRCtx = new PageRenderContext (ERenderingElementType.CONTENT_ELEMENT,
@@ -859,7 +860,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
             m_aRCCustomizer.customizeRenderContext (aRCtx);
           aElement.perform (aRCtx);
 
-          fCurY -= fHeight + aElement.getFullYSum ();
+          // In
+          fCurY -= aElementWithHeight.getHeightFull ();
         }
 
         if (m_aPageFooter != null)

@@ -21,7 +21,6 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PageRenderContext;
@@ -49,12 +48,5 @@ public class PLTextWithPlaceholders extends AbstractPLText <PLTextWithPlaceholde
     {
       setNewTextAfterPrepare (sRealText, getPrepareAvailableSize ().getWidth ());
     }
-  }
-
-  @Override
-  @OverrideOnDemand
-  protected String getTextToDraw (@Nonnull final String sText, @Nonnull final PageRenderContext aCtx)
-  {
-    return sText;
   }
 }

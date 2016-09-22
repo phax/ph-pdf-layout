@@ -35,7 +35,6 @@ import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.vbox.PLVBoxSplittable;
-import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
@@ -58,38 +57,41 @@ public final class PLTextTest
   }
 
   @Test
-  public void testWithWordBreak () throws PDFCreationException
+  public void testBasic () throws PDFCreationException
   {
     final String s = "{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}{\\f1 Verdana;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1\\f1\\fs20 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql{\\f1\\fs20\\cf0 vielen Dank f\\u252\\'fcr Ihre Bestellung.}\\f1\\fs20\\cf0\\par}{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql\\par}";
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.addElement (new PLText (s, r10).setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLText (s, r10).setBorder (Color.RED));
 
     // All chars from 32-127
     final StringBuilder aSB = new StringBuilder ();
     for (int i = 32; i <= 0x7e; ++i)
       aSB.append ((char) i);
-    aPS1.addElement (new PLText ("Chars 32-127: " +
-                                 aSB.toString (),
-                                 r10).setBorder (new BorderStyleSpec (Color.GREEN)));
+    aPS1.addElement (new PLText ("Chars 32-127: " + aSB.toString (), r10).setBorder (Color.GREEN));
 
     // Check horizontal alignment
-    aPS1.addElement (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT)
-                                             .setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (Color.RED));
     aPS1.addElement (new PLText ("Left\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
-                                                              .setBorder (new BorderStyleSpec (Color.RED))
+                                                              .setBorder (Color.RED)
                                                               .setFillColor (Color.PINK));
-    aPS1.addElement (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                               .setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (Color.RED));
     aPS1.addElement (new PLText ("Center\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                                                  .setBorder (new BorderStyleSpec (Color.RED))
+                                                                  .setBorder (Color.RED)
                                                                   .setFillColor (Color.PINK));
-    aPS1.addElement (new PLText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                              .setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT).setBorder (Color.RED));
     aPS1.addElement (new PLText ("Right\nRight but longer", r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                .setBorder (new BorderStyleSpec (Color.RED))
+                                                                .setBorder (Color.RED)
+                                                                .setFillColor (Color.PINK));
+    aPS1.addElement (new PLText ("Right\nRight with padding", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                  .setBorder (Color.RED)
+                                                                  .setPadding (5)
+                                                                  .setFillColor (Color.PINK));
+    aPS1.addElement (new PLText ("Right\nRight but margin", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                .setBorder (Color.RED)
+                                                                .setMargin (5)
                                                                 .setFillColor (Color.PINK));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
@@ -117,7 +119,7 @@ public final class PLTextTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
-    aPS1.addElement (new PLTextSplittable (aSB.toString (), r10).setBorder (new BorderStyleSpec (Color.RED)));
+    aPS1.addElement (new PLTextSplittable (aSB.toString (), r10).setBorder (Color.RED));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
@@ -133,13 +135,11 @@ public final class PLTextTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
     final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
     for (int i = 0; i < 3; ++i)
-      aHBox.addColumn (new PLTextSplittable (s + s, r10).setMargin (10)
-                                                        .setPadding (5)
-                                                        .setBorder (new BorderStyleSpec (Color.GRAY)),
+      aHBox.addColumn (new PLTextSplittable (s + s, r10).setMargin (10).setPadding (5).setBorder (Color.GRAY),
                        WidthSpec.star ());
     aPS1.addElement (aHBox);
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split-hbox.pdf"));
   }
@@ -156,12 +156,10 @@ public final class PLTextTest
 
     final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
     for (int i = 0; i < 3; ++i)
-      aVBox.addRow (new PLTextSplittable (s, r10).setMargin (20)
-                                                 .setPadding (5)
-                                                 .setBorder (new BorderStyleSpec (Color.GRAY)));
+      aVBox.addRow (new PLTextSplittable (s, r10).setMargin (20).setPadding (5).setBorder (Color.GRAY));
     aPS1.addElement (aVBox);
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split-vbox.pdf"));
   }
@@ -181,7 +179,7 @@ public final class PLTextTest
 
     aPS1.addElement (new PLText (s, r10));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-open-sans.pdf"));
   }
@@ -201,7 +199,7 @@ public final class PLTextTest
 
     aPS1.addElement (new PLText (s, r10));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-lato2.pdf"));
   }
