@@ -189,7 +189,7 @@ public class PageLayoutPDF implements IPLVisitable
     return m_aPageSets.removeObject (aPageSet);
   }
 
-  public void visit (@Nonnull final IPLVisitor aVisitor)
+  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
     for (final PLPageSet aPageSet : m_aPageSets)
       aPageSet.visit (aVisitor);
@@ -262,13 +262,13 @@ public class PageLayoutPDF implements IPLVisitable
       }
 
       // Prepare all page sets
-      final PreparationContextGlobal aGlobalCtx = new PreparationContextGlobal (aDoc);
+      final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal (aDoc);
       final PageSetPrepareResult [] aPRs = new PageSetPrepareResult [m_aPageSets.size ()];
       int nPageSetIndex = 0;
       int nTotalPageCount = 0;
       for (final PLPageSet aPageSet : m_aPageSets)
       {
-        final PageSetPrepareResult aPR = aPageSet.prepareAllPages (aGlobalCtx);
+        final PageSetPrepareResult aPR = aPageSet.prepareAllPages (aGlobalPrepareCtx);
         aPRs[nPageSetIndex] = aPR;
         nTotalPageCount += aPR.getPageCount ();
         nPageSetIndex++;

@@ -367,7 +367,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor)
+  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
     for (final PLHBoxColumn aColumn : m_aColumns)
       aColumn.getElement ().visit (aVisitor);

@@ -18,18 +18,24 @@ package com.helger.pdflayout.render;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.ext.CommonsLinkedHashMap;
+import com.helger.commons.collection.ext.ICommonsOrderedMap;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.base.PLPageSet;
 
 /**
  * This class describes the index of the current page.
  *
  * @author Philip Helger
  */
+@Immutable
 public class PageRenderContext
 {
   public static final String PLACEHOLDER_PAGESET_INDEX = "${pageset-index}";
@@ -40,6 +46,7 @@ public class PageRenderContext
   public static final String PLACEHOLDER_TOTAL_PAGE_NUMBER = "${total-page-number}";
   public static final String PLACEHOLDER_TOTAL_PAGE_COUNT = "${total-page-count}";
 
+  private final PLPageSet m_aPageSet;
   private final PDDocument m_aDoc;
   private final PDPage m_aPage;
   private final int m_nPageSetIndex;
@@ -48,7 +55,8 @@ public class PageRenderContext
   private final int m_nTotalPageIndex;
   private final int m_nTotalPageCount;
 
-  public PageRenderContext (@Nonnull final PDDocument aDoc,
+  public PageRenderContext (@Nonnull final PLPageSet aPageSet,
+                            @Nonnull final PDDocument aDoc,
                             @Nonnull final PDPage aPage,
                             @Nonnegative final int nPageSetIndex,
                             @Nonnegative final int nPageSetPageIndex,
@@ -57,6 +65,7 @@ public class PageRenderContext
                             @Nonnegative final int nTotalPageCount)
 
   {
+    ValueEnforcer.notNull (aPageSet, "PageSet");
     ValueEnforcer.notNull (aDoc, "Document");
     ValueEnforcer.notNull (aPage, "Page");
     ValueEnforcer.isGE0 (nPageSetIndex, "PageSetIndex");
@@ -65,6 +74,7 @@ public class PageRenderContext
     ValueEnforcer.isGE0 (nTotalPageIndex, "TotalPageIndex");
     ValueEnforcer.isGE0 (nTotalPageCount, "TotalPageCount");
 
+    m_aPageSet = aPageSet;
     m_aDoc = aDoc;
     m_aPage = aPage;
     m_nPageSetIndex = nPageSetIndex;
@@ -78,13 +88,22 @@ public class PageRenderContext
    * @return the document
    */
   @Nonnull
+  public PLPageSet getPageSet ()
+  {
+    return m_aPageSet;
+  }
+
+  /**
+   * @return the PDFBox document
+   */
+  @Nonnull
   public PDDocument getDocument ()
   {
     return m_aDoc;
   }
 
   /**
-   * @return the new page
+   * @return the new PDFBox page
    */
   @Nonnull
   public PDPage getPage ()
@@ -157,21 +176,31 @@ public class PageRenderContext
     return m_nTotalPageCount;
   }
 
+  @Nonnull
+  @ReturnsMutableCopy
+  public ICommonsOrderedMap <String, String> getAllPlaceholders ()
+  {
+    final ICommonsOrderedMap <String, String> ret = new CommonsLinkedHashMap<> ();
+    ret.put (PLACEHOLDER_PAGESET_INDEX, Integer.toString (getPageSetIndex ()));
+    ret.put (PLACEHOLDER_PAGESET_PAGE_INDEX, Integer.toString (getPageSetPageIndex ()));
+    ret.put (PLACEHOLDER_PAGESET_PAGE_NUMBER, Integer.toString (getPageSetPageNumber ()));
+    ret.put (PLACEHOLDER_PAGESET_PAGE_COUNT, Integer.toString (getPageSetPageCount ()));
+    ret.put (PLACEHOLDER_TOTAL_PAGE_INDEX, Integer.toString (getTotalPageIndex ()));
+    ret.put (PLACEHOLDER_TOTAL_PAGE_NUMBER, Integer.toString (getTotalPageNumber ()));
+    ret.put (PLACEHOLDER_TOTAL_PAGE_COUNT, Integer.toString (getTotalPageCount ()));
+    return ret;
+  }
+
   public void setPlaceholdersInRenderingContext (@Nonnull final RenderingContext aRC)
   {
-    aRC.setPlaceholder (PLACEHOLDER_PAGESET_INDEX, getPageSetIndex ());
-    aRC.setPlaceholder (PLACEHOLDER_PAGESET_PAGE_INDEX, getPageSetPageIndex ());
-    aRC.setPlaceholder (PLACEHOLDER_PAGESET_PAGE_NUMBER, getPageSetPageNumber ());
-    aRC.setPlaceholder (PLACEHOLDER_PAGESET_PAGE_COUNT, getPageSetPageCount ());
-    aRC.setPlaceholder (PLACEHOLDER_TOTAL_PAGE_INDEX, getTotalPageIndex ());
-    aRC.setPlaceholder (PLACEHOLDER_TOTAL_PAGE_NUMBER, getTotalPageNumber ());
-    aRC.setPlaceholder (PLACEHOLDER_TOTAL_PAGE_COUNT, getTotalPageCount ());
+    aRC.addPlaceholders (getAllPlaceholders ());
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("PDDoc", m_aDoc)
+    return new ToStringGenerator (this).append ("PageSet", m_aPageSet)
+                                       .append ("PDDoc", m_aDoc)
                                        .append ("PDPage", m_aPage)
                                        .append ("PageSetIndex", m_nPageSetIndex)
                                        .append ("PageSetPageIndex", m_nPageSetPageIndex)

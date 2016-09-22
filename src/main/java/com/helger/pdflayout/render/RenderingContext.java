@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout.render;
 
+import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -184,6 +186,14 @@ public final class RenderingContext
     ValueEnforcer.notEmpty (sName, "Name");
     ValueEnforcer.notNull (sValue, "Value");
     m_aPlaceholders.put (sName, sValue);
+    return this;
+  }
+
+  @Nonnull
+  public RenderingContext addPlaceholders (@Nullable final Map <String, String> aMap)
+  {
+    if (aMap != null)
+      aMap.forEach ( (k, v) -> setPlaceholder (k, v));
     return this;
   }
 

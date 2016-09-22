@@ -113,8 +113,10 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    *
    * @param aCtx
    *        The current page render context. Never <code>null</code>.
+   * @throws IOException
+   *         In case of a PDFBox error
    */
-  default void doPageSetup (@Nonnull final PageRenderContext aCtx)
+  default void doPageSetup (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 
   /**

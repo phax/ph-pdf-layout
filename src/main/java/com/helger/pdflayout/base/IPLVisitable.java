@@ -1,10 +1,11 @@
 package com.helger.pdflayout.base;
 
-import java.util.function.Consumer;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.function.IThrowingConsumer;
 
 /**
  * Base interface for visitable objects.
@@ -18,8 +19,10 @@ public interface IPLVisitable
    *
    * @param aVisitor
    *        The visitor to use. May not be <code>null</code>.
+   * @throws IOException
+   *         on PDFBox error
    */
-  void visit (@Nonnull IPLVisitor aVisitor);
+  void visit (@Nonnull IPLVisitor aVisitor) throws IOException;
 
   /**
    * Special visitor method that visits only elements of this objects and
@@ -27,14 +30,16 @@ public interface IPLVisitable
    *
    * @param aElementConsumer
    *        The consumer to use. May not be <code>null</code>.
+   * @throws IOException
+   *         on PDFBox error
    * @see #visit(IPLVisitor)
    */
-  default void visitElement (@Nonnull final Consumer <? super IPLRenderableObject <?>> aElementConsumer)
+  default void visitElement (@Nonnull final IThrowingConsumer <? super IPLRenderableObject <?>, IOException> aElementConsumer) throws IOException
   {
     ValueEnforcer.notNull (aElementConsumer, "ElementConsumer");
     visit (new IPLVisitor ()
     {
-      public void onElement (@Nonnull final IPLRenderableObject <?> aElement)
+      public void onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
       {
         aElementConsumer.accept (aElement);
       }

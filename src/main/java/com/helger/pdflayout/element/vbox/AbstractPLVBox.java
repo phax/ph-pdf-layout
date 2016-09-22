@@ -304,7 +304,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor)
+  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
     for (final PLVBoxRow aRow : m_aRows)
       aRow.getElement ().visit (aVisitor);

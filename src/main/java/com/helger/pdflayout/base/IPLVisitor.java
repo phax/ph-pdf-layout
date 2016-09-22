@@ -1,5 +1,7 @@
 package com.helger.pdflayout.base;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -14,8 +16,10 @@ public interface IPLVisitor
    *
    * @param aPageSet
    *        The current page set. Never <code>null</code>.
+   * @throws IOException
+   *         on PDFBox error
    */
-  default void onPageSetStart (@Nonnull final PLPageSet aPageSet)
+  default void onPageSetStart (@Nonnull final PLPageSet aPageSet) throws IOException
   {}
 
   /**
@@ -24,8 +28,10 @@ public interface IPLVisitor
    *
    * @param aElement
    *        The current element. Never <code>null</code>.
+   * @throws IOException
+   *         on PDFBox error
    */
-  default void onElement (@Nonnull final IPLRenderableObject <?> aElement)
+  default void onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
   {}
 
   /**
@@ -33,7 +39,9 @@ public interface IPLVisitor
    *
    * @param aPageSet
    *        The current page set.
+   * @throws IOException
+   *         on PDFBox error
    */
-  default void onPageSetEnd (@Nonnull final PLPageSet aPageSet)
+  default void onPageSetEnd (@Nonnull final PLPageSet aPageSet) throws IOException
   {}
 }

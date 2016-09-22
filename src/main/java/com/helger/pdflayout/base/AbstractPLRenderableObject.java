@@ -21,7 +21,6 @@ import java.io.IOException;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.OverrideOnDemand;
@@ -45,6 +44,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
   private SizeSpec m_aMaxSize = DEFAULT_MAX_SIZE;
   private boolean m_bPrepared = false;
+  private SizeSpec m_aPrepareAvailableSize;
   private SizeSpec m_aPreparedSize;
 
   public AbstractPLRenderableObject ()
@@ -76,9 +76,21 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return thisAsT ();
   }
 
-  public void visit (@Nonnull final IPLVisitor aVisitor)
+  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
     aVisitor.onElement (this);
+  }
+
+  /**
+   * Throw an exception, if this object was not yet prepared.
+   *
+   * @throws IllegalStateException
+   *         if not yet prepared
+   */
+  protected final void internalCheckAlreadyPrepared ()
+  {
+    if (!isPrepared ())
+      throw new IllegalStateException (getDebugID () + " was not yet prepared: " + toString ());
   }
 
   /**
@@ -87,9 +99,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @throws IllegalStateException
    *         if already prepared
    */
-  @OverrideOnDemand
-  @OverridingMethodsMustInvokeSuper
-  protected void internalCheckNotPrepared ()
+  protected final void internalCheckNotPrepared ()
   {
     if (isPrepared ())
       throw new IllegalStateException (getDebugID () +
@@ -118,6 +128,17 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
+   * @return The size used to perform the preparation. Is <code>null</code> if
+   *         this object was not yet prepared. This is required, if a text needs
+   *         to be prepared more than once (e.g. text with placeholders).
+   */
+  @Nullable
+  protected final SizeSpec getPrepareAvailableSize ()
+  {
+    return m_aPrepareAvailableSize;
+  }
+
+  /**
    * The abstract method that must be implemented by all subclasses. It is
    * ensured that this method is called only once per instance!
    *
@@ -126,7 +147,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @return The size of the rendered element without padding, border and
    *         margin. May not be <code>null</code>.
    * @throws IOException
-   *         on error
+   *         on PDFBox error
    */
   @Nonnull
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException;
@@ -193,12 +214,16 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     final SizeSpec aOnPrepareResult = onPrepare (aCtx);
     _setPreparedSize (aOnPrepareResult);
 
+    // Remember original
+    m_aPrepareAvailableSize = new SizeSpec (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ());
+
     return m_aPreparedSize;
   }
 
   // TODO should be protected only
   public final void internalMarkAsNotPrepared ()
   {
+    internalCheckAlreadyPrepared ();
     m_aPreparedSize = null;
     m_bPrepared = false;
   }

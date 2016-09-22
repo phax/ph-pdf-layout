@@ -59,7 +59,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public static final boolean DEFAULT_TOP_DOWN = true;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
 
-  private final String m_sText;
+  private String m_sText;
   private final FontSpec m_aFontSpec;
   private boolean m_bTopDown = DEFAULT_TOP_DOWN;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
@@ -212,11 +212,18 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     m_fLineHeight = fLineHeight;
   }
 
-  @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
+  /**
+   * This method can only be called after loadedFont member was set!
+   *
+   * @param fAvailableWidth
+   *        Available with
+   * @return The new preparation size
+   * @throws IOException
+   *         On PDFBox error
+   */
+  @Nonnull
+  private SizeSpec _prepareText (final float fAvailableWidth) throws IOException
   {
-    // Load font into document
-    m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
     final float fFontSize = m_aFontSpec.getFontSize ();
     m_fLineHeight = m_aLoadedFont.getLineHeight (fFontSize);
 
@@ -228,7 +235,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // Split text into rows
-    internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sText, fFontSize, aCtx.getAvailableWidth ()));
+    internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sText, fFontSize, fAvailableWidth));
 
     // Determine max width of all prepared lines
     float fMaxWidth = Float.MIN_VALUE;
@@ -237,6 +244,23 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
     // Determine height by number of lines
     return new SizeSpec (fMaxWidth, m_aPreparedLines.size () * m_fLineHeight);
+  }
+
+  @Override
+  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
+  {
+    // Load font into document
+    m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
+    return _prepareText (aCtx.getAvailableWidth ());
+  }
+
+  protected final void setNewTextAfterPrepare (@Nonnull final String sNewText,
+                                               final float fAvailableWidth) throws IOException
+  {
+    internalMarkAsNotPrepared ();
+    m_sText = sNewText;
+    final SizeSpec aOnPrepareResult = _prepareText (fAvailableWidth);
+    internalMarkAsPrepared (aOnPrepareResult);
   }
 
   /**

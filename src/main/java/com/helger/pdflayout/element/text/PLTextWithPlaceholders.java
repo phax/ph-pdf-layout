@@ -16,11 +16,14 @@
  */
 package com.helger.pdflayout.element.text;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.string.StringHelper;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.FontSpec;
 
@@ -38,10 +41,23 @@ public class PLTextWithPlaceholders extends AbstractPLText <PLTextWithPlaceholde
   }
 
   @Override
+  public void doPageSetup (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    final String sOrigText = getText ();
+    final String sRealText = StringHelper.replaceMultiple (getText (), aCtx.getAllPlaceholders ());
+    if (!sOrigText.equals (sRealText))
+    {
+      setNewTextAfterPrepare (sRealText, getPrepareAvailableSize ().getWidth ());
+    }
+  }
+
+  @Override
   @OverrideOnDemand
   protected String getTextToDraw (@Nonnull final String sText, @Nonnull final RenderingContext aCtx)
   {
     // Replace all at once
+    if (true)
+      return sText;
     return StringHelper.replaceMultiple (sText, aCtx.getAllPlaceholders ());
   }
 }

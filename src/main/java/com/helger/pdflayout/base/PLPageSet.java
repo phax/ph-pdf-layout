@@ -400,7 +400,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
     return m_aPageSize.getHeight () - getFullTop ();
   }
 
-  public void visit (@Nonnull final IPLVisitor aVisitor)
+  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
     aVisitor.onPageSetStart (this);
     if (m_aPageHeader != null)
@@ -751,7 +751,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       final PDPage aPage = new PDPage (m_aPageSize.getAsRectangle ());
       aDoc.addPage (aPage);
 
-      final PageRenderContext aPageRenderCtx = new PageRenderContext (aDoc,
+      final PageRenderContext aPageRenderCtx = new PageRenderContext (this,
+                                                                      aDoc,
                                                                       aPage,
                                                                       nPageSetIndex,
                                                                       nPageIndex,
