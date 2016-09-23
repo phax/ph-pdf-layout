@@ -154,6 +154,22 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   @Nonnull
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException;
 
+  @Nonnull
+  protected final SizeSpec getWithMinMaxSize (@Nonnull final SizeSpec aSize)
+  {
+    ValueEnforcer.notNull (aSize, "Size");
+
+    // Consider min size here
+    float fRealWidth = Math.max (m_aMinSize.getWidth (), aSize.getWidth ());
+    float fRealHeight = Math.max (m_aMinSize.getHeight (), aSize.getHeight ());
+
+    // Consider max size here
+    fRealWidth = Math.min (m_aMaxSize.getWidth (), fRealWidth);
+    fRealHeight = Math.min (m_aMaxSize.getHeight (), fRealHeight);
+
+    return new SizeSpec (fRealWidth, fRealHeight);
+  }
+
   /**
    * Set the prepared size of this object. This method also handles min and max
    * size
@@ -165,16 +181,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   {
     ValueEnforcer.notNull (aPreparedSize, "PreparedSize");
 
-    // Consider min size here
-    float fRealWidth = Math.max (m_aMinSize.getWidth (), aPreparedSize.getWidth ());
-    float fRealHeight = Math.max (m_aMinSize.getHeight (), aPreparedSize.getHeight ());
-
-    // Consider max size here
-    fRealWidth = Math.min (m_aMaxSize.getWidth (), fRealWidth);
-    fRealHeight = Math.min (m_aMaxSize.getHeight (), fRealHeight);
-
     m_bPrepared = true;
-    m_aPreparedSize = new SizeSpec (fRealWidth, fRealHeight);
+    m_aPreparedSize = getWithMinMaxSize (aPreparedSize);
 
     if (PLDebug.isDebugPrepare ())
     {
