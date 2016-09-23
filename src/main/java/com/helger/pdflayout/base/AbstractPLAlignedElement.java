@@ -24,8 +24,8 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.spec.EVertAlignment;
 
 /**
- * Base class for text and image elements - so elements only having a padding
- * but no border themselves.
+ * Base class for objects having a horizontal and a vertical alignment.<br>
+ * The alignment is always applied to the contained objects but not this object!
  *
  * @author Philip Helger
  * @param <IMPLTYPE>

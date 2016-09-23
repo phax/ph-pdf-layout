@@ -24,8 +24,11 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.spec.EHorzAlignment;
 
 /**
- * Base class for text and image elements - so elements only having a padding
- * but no border themselves.
+ * Base class for objects having a horizontal alignment.<br>
+ * The horizontal alignment is always applied to the contained objects but not
+ * this object! E.g. for a text node, this applies to the different lines of a
+ * text element, whereas within a box, this applies to the context of the box
+ * which is aligned relative to the box.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
