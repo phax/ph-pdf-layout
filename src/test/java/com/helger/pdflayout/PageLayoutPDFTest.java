@@ -97,7 +97,7 @@ public final class PageLayoutPDFTest
       final PLHBox h = new PLHBox ();
       h.addColumn (new PLText ("Column 1", r10.getCloneWithDifferentFontSize (24)).setHorzAlign (EHorzAlignment.CENTER),
                    WidthSpec.star ());
-      final PLVBox v = new PLVBox ().setRowBorder (new BorderStyleSpec (Color.GREEN));
+      final PLVBox v = new PLVBox ();
       v.addRow (new PLText ("Column 2, Row 1", r10));
       v.addRow (new PLText ("Column 2, Row 2",
                             r12.getCloneWithDifferentColor (Color.RED)).setFillColor (new Color (0xdddddd)));
@@ -210,9 +210,7 @@ public final class PageLayoutPDFTest
 
       h.addColumn (new PLText (sLID, r10).setHorzAlign (EHorzAlignment.CENTER).setPadding (0, 20), WidthSpec.star ());
 
-      final PLVBox v1 = new PLVBox ().setPadding (5).setFillColor (new Color (0xabcdef));
-      if (false)
-        v1.setBorder (new BorderStyleSpec (Color.RED)).setRowBorder (new BorderStyleSpec (Color.GREEN));
+      final PLVBox v1 = new PLVBox ();
       v1.addRow (new PLText (sLIDShort, r10).setMargin (0)
                                             .setPadding (10)
                                             .setBorder (new BorderStyleSpec (Color.BLUE)));

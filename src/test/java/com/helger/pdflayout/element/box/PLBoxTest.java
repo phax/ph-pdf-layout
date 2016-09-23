@@ -47,8 +47,7 @@ public final class PLBoxTest
 
   static
   {
-    if (true)
-      PLDebug.setDebugAll (true);
+    PLDebug.setDebugAll (false);
   }
 
   @Test

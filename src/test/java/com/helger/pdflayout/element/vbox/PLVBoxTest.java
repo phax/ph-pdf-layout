@@ -62,12 +62,10 @@ public final class PLVBoxTest
 
     // Check horizontal alignment
     aVBox.addRow (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (Color.RED));
-    aVBox.addRow (new PLText ("Left\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (Color.RED))
-         .setFillColor (Color.PINK);
+    aVBox.addRow (new PLText ("Left\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (Color.RED));
     aVBox.addRow (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (Color.RED));
     aVBox.addRow (new PLText ("Center\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                                               .setBorder (Color.RED))
-         .setFillColor (Color.PINK);
+                                                               .setBorder (Color.RED));
     aVBox.addRow (new PLText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT).setBorder (Color.RED));
     aVBox.addRow (new PLText ("Right\nRight but longer", r10).setHorzAlign (EHorzAlignment.RIGHT)
                                                              .setBorder (Color.RED)
