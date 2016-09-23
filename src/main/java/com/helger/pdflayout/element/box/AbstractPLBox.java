@@ -42,12 +42,12 @@ import com.helger.pdflayout.spec.SizeSpec;
 public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
                                     extends AbstractPLAlignedElement <IMPLTYPE>
 {
-  private final IPLRenderableObject <?> m_aElement;
+  private IPLRenderableObject <?> m_aElement;
   private SizeSpec m_aElementPreparedSize;
 
   public AbstractPLBox (@Nullable final IPLRenderableObject <?> aElement)
   {
-    m_aElement = aElement;
+    setElement (aElement);
   }
 
   /**
@@ -62,6 +62,13 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   public boolean hasElement ()
   {
     return m_aElement != null;
+  }
+
+  @Nonnull
+  public final IMPLTYPE setElement (@Nullable final IPLRenderableObject <?> aElement)
+  {
+    m_aElement = aElement;
+    return thisAsT ();
   }
 
   @Override

@@ -31,61 +31,61 @@ public interface IPLHasMarginBorderPadding <IMPLTYPE extends IPLHasMarginBorderP
 {
   default float getMarginAndBorderTop ()
   {
-    return getMargin ().getTop () + getBorder ().getTopWidth ();
+    return getMarginTop () + getBorderTopWidth ();
   }
 
   default float getMarginAndBorderRight ()
   {
-    return getMargin ().getRight () + getBorder ().getRightWidth ();
+    return getMarginRight () + getBorderRightWidth ();
   }
 
   default float getMarginAndBorderBottom ()
   {
-    return getMargin ().getBottom () + getBorder ().getBottomWidth ();
+    return getMarginBottom () + getBorderBottomWidth ();
   }
 
   default float getMarginAndBorderLeft ()
   {
-    return getMargin ().getLeft () + getBorder ().getLeftWidth ();
+    return getMarginLeft () + getBorderLeftWidth ();
   }
 
   default float getMarginAndBorderXSum ()
   {
-    return getMargin ().getXSum () + getBorder ().getXSumWidth ();
+    return getMarginXSum () + getBorderXSumWidth ();
   }
 
   default float getMarginAndBorderYSum ()
   {
-    return getMargin ().getYSum () + getBorder ().getYSumWidth ();
+    return getMarginYSum () + getBorderYSumWidth ();
   }
 
   default float getFullTop ()
   {
-    return getMargin ().getTop () + getBorder ().getTopWidth () + getPadding ().getTop ();
+    return getMarginTop () + getBorderTopWidth () + getPaddingTop ();
   }
 
   default float getFullRight ()
   {
-    return getMargin ().getRight () + getBorder ().getRightWidth () + getPadding ().getRight ();
+    return getMarginRight () + getBorderRightWidth () + getPaddingRight ();
   }
 
   default float getFullBottom ()
   {
-    return getMargin ().getBottom () + getBorder ().getBottomWidth () + getPadding ().getBottom ();
+    return getMarginBottom () + getBorderBottomWidth () + getPaddingBottom ();
   }
 
   default float getFullLeft ()
   {
-    return getMargin ().getLeft () + getBorder ().getLeftWidth () + getPadding ().getLeft ();
+    return getMarginLeft () + getBorderLeftWidth () + getPaddingLeft ();
   }
 
   default float getFullXSum ()
   {
-    return getMargin ().getXSum () + getBorder ().getXSumWidth () + getPadding ().getXSum ();
+    return getMarginXSum () + getBorderXSumWidth () + getPaddingXSum ();
   }
 
   default float getFullYSum ()
   {
-    return getMargin ().getYSum () + getBorder ().getYSumWidth () + getPadding ().getYSum ();
+    return getMarginYSum () + getBorderYSumWidth () + getPaddingYSum ();
   }
 }

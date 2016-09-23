@@ -33,8 +33,8 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
+import com.helger.pdflayout.base.IPLHasMargin;
 import com.helger.pdflayout.base.IPLHasVerticalAlignment;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLVisitor;
@@ -276,19 +276,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       for (final PLHBoxColumn aColumn : m_aColumns)
       {
         final IPLRenderableObject <?> aElement = aColumn.getElement ();
-        if (aElement instanceof IPLHasVerticalAlignment <?> && aElement instanceof AbstractPLElement <?>)
+        if (aElement instanceof IPLHasVerticalAlignment <?> && aElement instanceof IPLHasMargin <?>)
         {
           final float fMarginTop = ((IPLHasVerticalAlignment <?>) aElement).getIndentY (fUsedHeightFull,
-                                                                                         m_aPreparedColumnHeight[nIndex] +
-                                                                                                          aElement.getFullYSum ());
+                                                                                        m_aPreparedColumnHeight[nIndex] +
+                                                                                                         aElement.getFullYSum ());
           if (fMarginTop != 0f)
-          {
-            final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
-            aRealElement.internalMarkAsNotPrepared ();
-            aRealElement.setMarginTop (aRealElement.getMarginTop () + fMarginTop);
-            aRealElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnWidth[nIndex],
-                                                               m_aPreparedColumnHeight[nIndex] + fMarginTop));
-          }
+            ((IPLHasMargin <?>) aElement).addMarginTop (fMarginTop);
         }
         ++nIndex;
       }

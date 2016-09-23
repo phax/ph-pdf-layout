@@ -53,7 +53,6 @@ import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PreparationContextGlobal;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
-import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -535,7 +534,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       while (!aElementsWithSize.isEmpty ())
       {
         // Use the first element
-        PLElementWithSize aElementWithSize = aElementsWithSize.remove (0);
+        final PLElementWithSize aElementWithSize = aElementsWithSize.remove (0);
         final IPLRenderableObject <?> aElement = aElementWithSize.getElement ();
 
         boolean bIsPagebreakDesired = aElement instanceof PLPageBreak;
@@ -654,38 +653,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
             continue;
           }
         }
-
-        // Handle vertical alignment of top-level elements
-        if (false)
-          if (aElement instanceof IPLHasVerticalAlignment <?>)
-          {
-            final EVertAlignment eVertAlignment = ((IPLHasVerticalAlignment <?>) aElement).getVertAlign ();
-            float fPaddingTop;
-            switch (eVertAlignment)
-            {
-              case TOP:
-                fPaddingTop = 0f;
-                break;
-              case MIDDLE:
-                fPaddingTop = (fAvailableHeight - fElementHeightFull) / 2;
-                break;
-              case BOTTOM:
-                fPaddingTop = fAvailableHeight - fElementHeightFull;
-                break;
-              default:
-                throw new IllegalStateException ("Unsupported vertical alignment: " + eVertAlignment);
-            }
-            if (fPaddingTop != 0f && aElement instanceof AbstractPLElement <?>)
-            {
-              final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
-              final SizeSpec aOldSize = aRealElement.getPreparedSize ();
-              aRealElement.internalMarkAsNotPrepared ();
-              aRealElement.setPaddingTop (aRealElement.getPaddingTop () + fPaddingTop);
-              final SizeSpec aNewSize = new SizeSpec (aOldSize.getWidth (), aOldSize.getHeight () + fPaddingTop);
-              aRealElement.internalMarkAsPrepared (aNewSize);
-              aElementWithSize = new PLElementWithSize (aRealElement, aNewSize);
-            }
-          }
 
         // Add element to current page (may also be a page break)
         aCurPageElements.add (aElementWithSize);

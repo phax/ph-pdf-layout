@@ -32,8 +32,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   PaddingSpec DEFAULT_PADDING = PaddingSpec.PADDING0;
 
   /**
-   * Set all padding values (left, top, right, bottom) to the same value. This
-   * method may not be called after an element got prepared!
+   * Set all padding values (left, top, right, bottom) to the same value.
    *
    * @param fPadding
    *        The value to use.
@@ -46,8 +45,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   }
 
   /**
-   * Set all padding values. This method may not be called after an element got
-   * prepared!
+   * Set all padding values.
    *
    * @param fPaddingY
    *        The Y-value to use (for top and bottom).
@@ -62,8 +60,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   }
 
   /**
-   * Set all padding values to potentially different values. This method may not
-   * be called after an element got prepared!
+   * Set all padding values to potentially different values.
    *
    * @param fPaddingTop
    *        Top
@@ -85,8 +82,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   }
 
   /**
-   * Set the padding values. This method may not be called after an element got
-   * prepared!
+   * Set the padding values.
    *
    * @param aPadding
    *        Padding to use. May not be <code>null</code>.
@@ -96,8 +92,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   IMPLTYPE setPadding (@Nonnull PaddingSpec aPadding);
 
   /**
-   * Set the top padding value. This method may not be called after an element
-   * got prepared!
+   * Set the top padding value.
    *
    * @param fPadding
    *        The value to use.
@@ -110,8 +105,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   }
 
   /**
-   * Set the right padding value. This method may not be called after an element
-   * got prepared!
+   * Set the right padding value.
    *
    * @param fPadding
    *        The value to use.
@@ -124,8 +118,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   }
 
   /**
-   * Set the bottom padding value. This method may not be called after an
-   * element got prepared!
+   * Set the bottom padding value.
    *
    * @param fPadding
    *        The value to use.
@@ -138,8 +131,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   }
 
   /**
-   * Set the left padding value. This method may not be called after an element
-   * got prepared!
+   * Set the left padding value.
    *
    * @param fPadding
    *        The value to use.
@@ -149,6 +141,58 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   default IMPLTYPE setPaddingLeft (final float fPadding)
   {
     return setPadding (getPadding ().getCloneWithLeft (fPadding));
+  }
+
+  /**
+   * Add to the top padding value.
+   *
+   * @param fPadding
+   *        The value to add.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE addPaddingTop (final float fPadding)
+  {
+    return setPaddingTop (getPaddingTop () + fPadding);
+  }
+
+  /**
+   * Add to the right padding value.
+   *
+   * @param fPadding
+   *        The value to add.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE addPaddingRight (final float fPadding)
+  {
+    return setPaddingRight (getPaddingRight () + fPadding);
+  }
+
+  /**
+   * Add to the bottom padding value.
+   *
+   * @param fPadding
+   *        The value to add.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE addPaddingBottom (final float fPadding)
+  {
+    return setPaddingBottom (getPaddingBottom () + fPadding);
+  }
+
+  /**
+   * Add to the left padding value.
+   *
+   * @param fPadding
+   *        The value to add.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE addPaddingLeft (final float fPadding)
+  {
+    return setPaddingLeft (getPaddingLeft () + fPadding);
   }
 
   /**

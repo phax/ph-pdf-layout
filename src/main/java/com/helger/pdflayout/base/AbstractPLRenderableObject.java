@@ -155,7 +155,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException;
 
   @Nonnull
-  protected final SizeSpec getWithMinMaxSize (@Nonnull final SizeSpec aSize)
+  protected final SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aSize)
   {
     ValueEnforcer.notNull (aSize, "Size");
 
@@ -177,12 +177,12 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @param aPreparedSize
    *        Prepared size without padding and margin.
    */
-  private final void _setPreparedSize (@Nonnull final SizeSpec aPreparedSize)
+  private void _setPreparedSize (@Nonnull final SizeSpec aPreparedSize)
   {
     ValueEnforcer.notNull (aPreparedSize, "PreparedSize");
 
     m_bPrepared = true;
-    m_aPreparedSize = getWithMinMaxSize (aPreparedSize);
+    m_aPreparedSize = adoptPreparedSize (aPreparedSize);
 
     if (PLDebug.isDebugPrepare ())
     {
@@ -224,12 +224,12 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     }
 
     // Do prepare
-    final SizeSpec aOnPrepareResult = onPrepare (aCtx);
-    _setPreparedSize (aOnPrepareResult);
+    _setPreparedSize (onPrepare (aCtx));
 
     // Remember original
     m_aPrepareAvailableSize = new SizeSpec (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ());
 
+    // Return the prepared size
     return m_aPreparedSize;
   }
 

@@ -38,7 +38,7 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
                                      extends IPLObject <IMPLTYPE>, IPLHasOutline
 {
   SizeSpec DEFAULT_MIN_SIZE = SizeSpec.SIZE0;
-  SizeSpec DEFAULT_MAX_SIZE = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
+  SizeSpec DEFAULT_MAX_SIZE = SizeSpec.SIZE_MAX;
 
   /**
    * @return The minimum size to be used. Excluding padding and margin. Never

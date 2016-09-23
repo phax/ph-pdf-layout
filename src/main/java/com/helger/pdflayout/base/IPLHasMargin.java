@@ -32,8 +32,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   MarginSpec DEFAULT_MARGIN = MarginSpec.MARGIN0;
 
   /**
-   * Set all margin values (left, top, right, bottom) to the same value. This
-   * method may not be called after an element got prepared!
+   * Set all margin values (left, top, right, bottom) to the same value.
    *
    * @param fMargin
    *        The value to use.
@@ -46,8 +45,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   }
 
   /**
-   * Set all margin values. This method may not be called after an element got
-   * prepared!
+   * Set all margin values.
    *
    * @param fMarginY
    *        The Y-value to use (for top and bottom).
@@ -62,8 +60,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   }
 
   /**
-   * Set all margin values to potentially different values. This method may not
-   * be called after an element got prepared!
+   * Set all margin values to potentially different values.
    *
    * @param fMarginTop
    *        Top
@@ -85,8 +82,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   }
 
   /**
-   * Set the margin values. This method may not be called after an element got
-   * prepared!
+   * Set the margin values.
    *
    * @param aMargin
    *        Margin to use. May not be <code>null</code>.
@@ -96,8 +92,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   IMPLTYPE setMargin (@Nonnull MarginSpec aMargin);
 
   /**
-   * Set the top margin value. This method may not be called after an element
-   * got prepared!
+   * Set the top margin value.
    *
    * @param fMargin
    *        The value to use.
@@ -110,8 +105,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   }
 
   /**
-   * Set the right margin value. This method may not be called after an element
-   * got prepared!
+   * Set the right margin value.
    *
    * @param fMargin
    *        The value to use.
@@ -124,8 +118,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   }
 
   /**
-   * Set the bottom margin value. This method may not be called after an element
-   * got prepared!
+   * Set the bottom margin value.
    *
    * @param fMargin
    *        The value to use.
@@ -138,8 +131,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   }
 
   /**
-   * Set the left margin value. This method may not be called after an element
-   * got prepared!
+   * Set the left margin value.
    *
    * @param fMargin
    *        The value to use.
@@ -149,6 +141,58 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   default IMPLTYPE setMarginLeft (final float fMargin)
   {
     return setMargin (getMargin ().getCloneWithLeft (fMargin));
+  }
+
+  /**
+   * Add to the top margin value.
+   *
+   * @param fMargin
+   *        The value to add.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE addMarginTop (final float fMargin)
+  {
+    return setMarginTop (getMarginTop () + fMargin);
+  }
+
+  /**
+   * Add to the right margin value.
+   *
+   * @param fMargin
+   *        The value to add.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE addMarginRight (final float fMargin)
+  {
+    return setMarginRight (getMarginRight () + fMargin);
+  }
+
+  /**
+   * Add to the bottom margin value.
+   *
+   * @param fMargin
+   *        The value to add.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE addMarginBottom (final float fMargin)
+  {
+    return setMarginBottom (getMarginBottom () + fMargin);
+  }
+
+  /**
+   * Add to the left margin value.
+   *
+   * @param fMargin
+   *        The value to add.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE addMarginLeft (final float fMargin)
+  {
+    return setMarginLeft (getMarginLeft () + fMargin);
   }
 
   /**

@@ -40,6 +40,7 @@ import com.helger.pdflayout.PLConvert;
 public class SizeSpec
 {
   public static final SizeSpec SIZE0 = new SizeSpec (0, 0);
+  public static final SizeSpec SIZE_MAX = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
 
   private final float m_fWidth;
   private final float m_fHeight;
