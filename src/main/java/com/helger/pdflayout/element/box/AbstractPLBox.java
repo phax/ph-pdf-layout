@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.AbstractPLAlignedElement;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.element.PLRenderHelper;
@@ -32,13 +32,15 @@ import com.helger.pdflayout.spec.SizeSpec;
 
 /**
  * A box is a simple element that encapsulates another element and has a
- * padding, border and margin itself
+ * padding, border and margin itself as well as it can align the contained
+ * element.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
+public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
+                                    extends AbstractPLAlignedElement <IMPLTYPE>
 {
   private final IPLRenderableObject <?> m_aElement;
   private SizeSpec m_aElementPreparedSize;

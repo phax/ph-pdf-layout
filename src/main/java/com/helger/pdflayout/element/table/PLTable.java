@@ -134,7 +134,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
    * @return this
    */
   @Nonnull
-  public PLHBoxSplittable addTableRow (@Nonnull final Collection <? extends AbstractPLElement <?>> aElements)
+  public PLHBoxSplittable addTableRow (@Nonnull final Collection <? extends IPLRenderableObject <?>> aElements)
   {
     ValueEnforcer.notNull (aElements, "Elements");
     if (aElements.size () > m_aWidths.size ())
@@ -146,7 +146,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
 
     final PLHBoxSplittable aRowHBox = new PLHBoxSplittable ();
     int nWidthIndex = 0;
-    for (AbstractPLElement <?> aElement : aElements)
+    for (IPLRenderableObject <?> aElement : aElements)
     {
       if (aElement == null)
       {

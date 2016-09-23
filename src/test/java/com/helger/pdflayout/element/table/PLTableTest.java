@@ -89,12 +89,10 @@ public final class PLTableTest
     aTable.setHeaderRowCount (1);
 
     // Add row
-    PLHBoxSplittable aRow = aTable.addTableRow (new PLText ("ID", r14b).setPadding (aPadding),
-                                                new PLText ("Name", r14b).setPadding (aPadding),
-                                                new PLText ("Sum1", r14b).setPadding (aPadding)
-                                                                         .setHorzAlign (EHorzAlignment.CENTER),
-                                                new PLText ("Sum2", r14b).setPadding (aPadding)
-                                                                         .setHorzAlign (EHorzAlignment.RIGHT));
+    aTable.addTableRow (new PLText ("ID", r14b).setPadding (aPadding),
+                        new PLText ("Name", r14b).setPadding (aPadding),
+                        new PLText ("Sum1", r14b).setPadding (aPadding).setHorzAlign (EHorzAlignment.CENTER),
+                        new PLText ("Sum2", r14b).setPadding (aPadding).setHorzAlign (EHorzAlignment.RIGHT));
 
     // Test colspan
     aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 2a", r10), 2),
@@ -109,21 +107,19 @@ public final class PLTableTest
     for (int i = 0; i < 184; ++i)
     {
       // Width is determined by the width passed to the table creating method
-      aRow = aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin),
-                                 new PLText ("Name " +
-                                             i +
-                                             (i == 2 ? " this is extra text for row 2 that makes this line longer"
-                                                     : ""),
-                                             r10.getCloneWithDifferentColor (i %
-                                                                             3 == 0 ? Color.RED
-                                                                                    : Color.BLACK)).setPadding (aPadding)
-                                                                                                   .setMargin (aMargin),
-                                 new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
-                                                                           .setMargin (aMargin)
-                                                                           .setHorzAlign (EHorzAlignment.CENTER),
-                                 new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
-                                                                           .setMargin (aMargin)
-                                                                           .setHorzAlign (EHorzAlignment.RIGHT));
+      aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin),
+                          new PLText ("Name " +
+                                      i +
+                                      (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
+                                      r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED
+                                                                                 : Color.BLACK)).setPadding (aPadding)
+                                                                                                .setMargin (aMargin),
+                          new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
+                                                                    .setMargin (aMargin)
+                                                                    .setHorzAlign (EHorzAlignment.CENTER),
+                          new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
+                                                                    .setMargin (aMargin)
+                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
     }
     aPS1.addElement (aTable);
 
@@ -160,7 +156,6 @@ public final class PLTableTest
     final PaddingSpec aPadding = new PaddingSpec (2);
     final Color aBGElement = Color.WHITE;
     final Color aBGCell = Color.BLUE;
-    final Color aBGRow = Color.RED;
     final Color aBGTable = Color.MAGENTA;
     final BorderSpec aBorder = new BorderSpec (new BorderStyleSpec (1));
 

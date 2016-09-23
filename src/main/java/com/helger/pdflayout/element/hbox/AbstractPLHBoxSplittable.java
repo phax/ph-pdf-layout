@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLElementWithSize;
@@ -100,17 +99,18 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
     {
       final PLHBoxColumn aColumn = getColumnAtIndex (i);
       final WidthSpec aColumnWidth = aColumn.getWidth ();
-      final IPLRenderableObject <?> aColumnElement = aColumn.getElement ();
 
       // Create empty element with the same padding and margin as the original
       // element
+      // TODO still needed?
       final PLSpacerX aEmptyElement = new PLSpacerX ();
-      if (aColumnElement instanceof IPLElement <?>)
-      {
-        final IPLElement <?> aRealElement = (IPLElement <?>) aColumnElement;
-        aEmptyElement.setPadding (aRealElement.getPadding ());
-        aEmptyElement.setMargin (aRealElement.getMargin ());
-      }
+      // final IPLRenderableObject <?> aColumnElement = aColumn.getElement ();
+      // if (aColumnElement instanceof IPLElement <?>)
+      // {
+      // final IPLElement <?> aRealElement = (IPLElement <?>) aColumnElement;
+      // aEmptyElement.setPadding (aRealElement.getPadding ());
+      // aEmptyElement.setMargin (aRealElement.getMargin ());
+      // }
       aEmptyElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnWidth[i], 0));
 
       aHBox1.addColumn (aEmptyElement, aColumnWidth);
