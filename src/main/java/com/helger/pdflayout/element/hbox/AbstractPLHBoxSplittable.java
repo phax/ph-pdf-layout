@@ -46,7 +46,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
   }
 
   @Nullable
-  public PLSplitResult splitElements (final float fElementWidth, final float fAvailableHeight)
+  public PLSplitResult splitElements (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
       return null;
@@ -112,8 +112,10 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
     float fHBox1MaxHeight = 0;
     float fHBox2MaxHeight = 0;
-    final SizeSpec [] fHBox1Sizes = new SizeSpec [m_aPreparedColumnSize.length];
-    final SizeSpec [] fHBox2Sizes = new SizeSpec [m_aPreparedColumnSize.length];
+    final SizeSpec [] fHBox1ColumnSizes = new SizeSpec [m_aPreparedColumnSize.length];
+    final SizeSpec [] fHBox2ColumnSizes = new SizeSpec [m_aPreparedColumnSize.length];
+    final SizeSpec [] fHBox1ElementSizes = new SizeSpec [m_aPreparedElementSize.length];
+    final SizeSpec [] fHBox2ElementSizes = new SizeSpec [m_aPreparedElementSize.length];
 
     // Start splitting columns
     boolean bDidSplitAnyColumn = false;
@@ -122,8 +124,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (nCol);
       final boolean bIsSplittable = aColumnElement.isSplittable ();
       final float fColumnWidth = m_aPreparedColumnSize[nCol].getWidth ();
-      @SuppressWarnings ("unused")
-      final float fColumnWidthFull = fColumnWidth + aColumnElement.getFullXSum ();
+      final float fElementWidth = m_aPreparedElementSize[nCol].getWidth ();
       final float fColumnHeight = m_aPreparedColumnSize[nCol].getHeight ();
       final float fColumnHeightFull = fColumnHeight + aColumnElement.getFullYSum ();
 
@@ -139,9 +140,9 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
         // Use width and height without padding and margin!
         final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ()
-                                                         .splitElements (fColumnWidth,
+                                                         .splitElements (fElementWidth,
                                                                          fAvailableHeight -
-                                                                                       aColumnElement.getFullYSum ());
+                                                                                        aColumnElement.getFullYSum ());
 
         if (aSplitResult != null)
         {
@@ -153,8 +154,10 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
           // Use the full height, because the column itself has no padding or
           // margin!
-          fHBox1Sizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getFirstElement ().getHeightFull ());
-          fHBox2Sizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getSecondElement ().getHeightFull ());
+          fHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getFirstElement ().getHeightFull ());
+          fHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getSecondElement ().getHeightFull ());
+          fHBox1ElementSizes[nCol] = new SizeSpec (fElementWidth, aSplitResult.getFirstElement ().getHeight ());
+          fHBox2ElementSizes[nCol] = new SizeSpec (fElementWidth, aSplitResult.getSecondElement ().getHeight ());
           bDidSplitColumn = true;
           bDidSplitAnyColumn = true;
 
@@ -244,13 +247,15 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
         // Use the full height, because the column itself has no padding or
         // margin!
-        fHBox1Sizes[nCol] = new SizeSpec (fColumnWidth, Math.min (fColumnHeightFull, fAvailableHeight));
-        fHBox2Sizes[nCol] = new SizeSpec (fColumnWidth, 0);
+        fHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, Math.min (fColumnHeightFull, fAvailableHeight));
+        fHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, 0);
+        fHBox1ElementSizes[nCol] = new SizeSpec (fColumnWidth, Math.min (fColumnHeight, fAvailableHeight));
+        fHBox2ElementSizes[nCol] = new SizeSpec (fColumnWidth, 0);
       }
 
       // calculate max column height
-      fHBox1MaxHeight = Math.max (fHBox1MaxHeight, fHBox1Sizes[nCol].getHeight ());
-      fHBox2MaxHeight = Math.max (fHBox2MaxHeight, fHBox2Sizes[nCol].getHeight ());
+      fHBox1MaxHeight = Math.max (fHBox1MaxHeight, fHBox1ColumnSizes[nCol].getHeight ());
+      fHBox2MaxHeight = Math.max (fHBox2MaxHeight, fHBox2ColumnSizes[nCol].getHeight ());
     }
 
     if (!bDidSplitAnyColumn)
@@ -262,13 +267,16 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
     }
 
     // mark new hboxes as prepared
-    aHBox1.internalMarkAsPrepared (new SizeSpec (fElementWidth, fHBox1MaxHeight));
-    aHBox2.internalMarkAsPrepared (new SizeSpec (fElementWidth, fHBox2MaxHeight));
+    aHBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fHBox1MaxHeight));
+    aHBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fHBox2MaxHeight));
     // set prepared column sizes
-    aHBox1.m_aPreparedColumnSize = fHBox1Sizes;
-    aHBox2.m_aPreparedColumnSize = fHBox2Sizes;
+    aHBox1.m_aPreparedColumnSize = fHBox1ColumnSizes;
+    aHBox2.m_aPreparedColumnSize = fHBox2ColumnSizes;
+    // set prepared element sizes
+    aHBox1.m_aPreparedElementSize = fHBox1ElementSizes;
+    aHBox2.m_aPreparedElementSize = fHBox2ElementSizes;
 
-    return new PLSplitResult (new PLElementWithSize (aHBox1, new SizeSpec (fElementWidth, fHBox1MaxHeight)),
-                              new PLElementWithSize (aHBox2, new SizeSpec (fElementWidth, fHBox2MaxHeight)));
+    return new PLSplitResult (new PLElementWithSize (aHBox1, new SizeSpec (fAvailableWidth, fHBox1MaxHeight)),
+                              new PLElementWithSize (aHBox2, new SizeSpec (fAvailableWidth, fHBox2MaxHeight)));
   }
 }
