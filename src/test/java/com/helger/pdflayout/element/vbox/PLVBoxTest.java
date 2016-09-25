@@ -29,10 +29,12 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLPageSet;
+import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
+import com.helger.pdflayout.spec.WidthSpec;
 
 /**
  * Test class for {@link PLVBox}
@@ -77,5 +79,54 @@ public final class PLVBoxTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-basic.pdf"));
+  }
+
+  @Test
+  public void testSplittableContentSplittable () throws PDFCreationException
+  {
+    final String s = "This is a test String\nwith 2 lines";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
+    for (int i = 0; i < 40; ++i)
+    {
+      final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
+      for (int j = 0; j < 10; ++j)
+        aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20)),
+                         WidthSpec.star ());
+      aVBox.addRow (aHBox);
+    }
+    aPS1.addElement (aVBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-splittable-content-splittable.pdf"));
+  }
+
+  @Test
+  public void testSplittableContentFixed () throws PDFCreationException
+  {
+    final String s = "This is a test String\nwith 2 lines";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
+    for (int i = 0; i < 40; ++i)
+    {
+      final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
+      for (int j = 0; j < 10; ++j)
+        aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20))
+                                                                .setSplittable (false),
+                         WidthSpec.star ());
+      aVBox.addRow (aHBox);
+    }
+    aPS1.addElement (aVBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-splittable-content-fixed.pdf"));
   }
 }
