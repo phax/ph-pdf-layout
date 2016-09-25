@@ -153,6 +153,8 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   @Nonnull
   default IMPLTYPE addMarginTop (final float fMargin)
   {
+    if (fMargin == 0f)
+      return thisAsT ();
     return setMarginTop (getMarginTop () + fMargin);
   }
 
@@ -166,6 +168,8 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   @Nonnull
   default IMPLTYPE addMarginRight (final float fMargin)
   {
+    if (fMargin == 0f)
+      return thisAsT ();
     return setMarginRight (getMarginRight () + fMargin);
   }
 
@@ -179,6 +183,8 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   @Nonnull
   default IMPLTYPE addMarginBottom (final float fMargin)
   {
+    if (fMargin == 0f)
+      return thisAsT ();
     return setMarginBottom (getMarginBottom () + fMargin);
   }
 
@@ -192,6 +198,8 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   @Nonnull
   default IMPLTYPE addMarginLeft (final float fMargin)
   {
+    if (fMargin == 0f)
+      return thisAsT ();
     return setMarginLeft (getMarginLeft () + fMargin);
   }
 

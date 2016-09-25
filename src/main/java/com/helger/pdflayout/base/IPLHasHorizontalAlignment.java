@@ -34,13 +34,15 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
 
   /**
    * @return The horizontal alignment of this element. By default it is
-   *         {@link EHorzAlignment#DEFAULT}. Never <code>null</code>.
+   *         {@link EHorzAlignment#DEFAULT}. Never <code>null</code>. The
+   *         horizontal alignment may only be applied to contained children!
    */
   @Nonnull
   EHorzAlignment getHorzAlign ();
 
   /**
-   * Set the horizontal alignment of this element.
+   * Set the horizontal alignment of this element. The horizontal alignment may
+   * only be applied to contained children!
    *
    * @param eHorzAlign
    *        The new horizontal alignment. May not be <code>null</code>.

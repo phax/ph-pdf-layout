@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLBlockElement;
+import com.helger.pdflayout.base.IPLHasMargin;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.element.PLRenderHelper;
@@ -101,7 +102,20 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
     // Add the outer stuff of the contained element as this elements prepared
     // size
-    return m_aElementPreparedSize.plus (m_aElement.getFullXSum (), m_aElement.getFullYSum ());
+    final SizeSpec ret = m_aElementPreparedSize.plus (m_aElement.getFullXSum (), m_aElement.getFullYSum ());
+
+    if (m_aElement instanceof IPLHasMargin <?>)
+    {
+      // Add margin to the child element for alignment
+      final IPLHasMargin <?> aEl = (IPLHasMargin <?>) m_aElement;
+
+      // Calculate how big this box would be with min/max size
+      final SizeSpec aRealSize = adoptPreparedSize (ret);
+      aEl.addMarginLeft (getIndentX (aRealSize.getWidth (), ret.getWidth ()));
+      aEl.addMarginTop (getIndentY (aRealSize.getHeight (), ret.getHeight ()));
+    }
+
+    return ret;
   }
 
   @Override

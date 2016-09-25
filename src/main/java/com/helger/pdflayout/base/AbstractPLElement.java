@@ -92,7 +92,6 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public final IMPLTYPE setMargin (@Nonnull final MarginSpec aMargin)
   {
     ValueEnforcer.notNull (aMargin, "Mergin");
-    internalCheckNotPrepared ();
     m_aMargin = aMargin;
     return thisAsT ();
   }
@@ -107,7 +106,6 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public final IMPLTYPE setBorder (@Nonnull final BorderSpec aBorder)
   {
     ValueEnforcer.notNull (aBorder, "Border");
-    internalCheckNotPrepared ();
     m_aBorder = aBorder;
     return thisAsT ();
   }
@@ -122,7 +120,6 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public final IMPLTYPE setPadding (@Nonnull final PaddingSpec aPadding)
   {
     ValueEnforcer.notNull (aPadding, "Padding");
-    internalCheckNotPrepared ();
     m_aPadding = aPadding;
     return thisAsT ();
   }
@@ -136,7 +133,6 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   @Nonnull
   public IMPLTYPE setFillColor (@Nullable final Color aFillColor)
   {
-    internalCheckNotPrepared ();
     m_aFillColor = aFillColor;
     return thisAsT ();
   }
@@ -147,9 +143,8 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     return m_aFillColor;
   }
 
-  @Override
   @Nonnull
-  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aSize)
+  protected SizeSpec getWithMinMaxApplied (@Nonnull final SizeSpec aSize)
   {
     ValueEnforcer.notNull (aSize, "Size");
 
@@ -162,6 +157,13 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     fRealHeight = Math.min (m_aMaxSize.getHeight (), fRealHeight);
 
     return new SizeSpec (fRealWidth, fRealHeight);
+  }
+
+  @Override
+  @Nonnull
+  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aSize)
+  {
+    return getWithMinMaxApplied (aSize);
   }
 
   @Override

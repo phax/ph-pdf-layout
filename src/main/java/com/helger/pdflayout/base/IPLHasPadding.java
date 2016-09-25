@@ -153,6 +153,8 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   @Nonnull
   default IMPLTYPE addPaddingTop (final float fPadding)
   {
+    if (fPadding == 0f)
+      return thisAsT ();
     return setPaddingTop (getPaddingTop () + fPadding);
   }
 
@@ -166,6 +168,8 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   @Nonnull
   default IMPLTYPE addPaddingRight (final float fPadding)
   {
+    if (fPadding == 0f)
+      return thisAsT ();
     return setPaddingRight (getPaddingRight () + fPadding);
   }
 
@@ -179,6 +183,8 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   @Nonnull
   default IMPLTYPE addPaddingBottom (final float fPadding)
   {
+    if (fPadding == 0f)
+      return thisAsT ();
     return setPaddingBottom (getPaddingBottom () + fPadding);
   }
 
@@ -192,6 +198,8 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   @Nonnull
   default IMPLTYPE addPaddingLeft (final float fPadding)
   {
+    if (fPadding == 0f)
+      return thisAsT ();
     return setPaddingLeft (getPaddingLeft () + fPadding);
   }
 

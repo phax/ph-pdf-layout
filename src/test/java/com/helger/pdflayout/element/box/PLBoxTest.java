@@ -32,6 +32,7 @@ import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
+import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 
@@ -157,5 +158,53 @@ public final class PLBoxTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-basic.pdf"));
+  }
+
+  @Test
+  public void testAlignment () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (10);
+
+    for (final EHorzAlignment eH : EHorzAlignment.values ())
+      for (final EVertAlignment eV : EVertAlignment.values ())
+        aPS1.addElement (new PLBox (new PLText ("Text " +
+                                                eH.getID () +
+                                                " / " +
+                                                eV.getID (),
+                                                r10).setFillColor (Color.PINK)).setFillColor (Color.YELLOW)
+                                                                               .setExactSize (150, 30)
+                                                                               .setHorzAlign (eH)
+                                                                               .setVertAlign (eV)
+                                                                               .setBorder (Color.BLACK));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-alignment.pdf"));
+  }
+
+  @Test
+  public void testNestedAlignment () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (10);
+
+    for (final EHorzAlignment eH : EHorzAlignment.values ())
+      for (final EVertAlignment eV : EVertAlignment.values ())
+        aPS1.addElement (new PLBox (new PLText ("Text " +
+                                                eH.getID () +
+                                                " / " +
+                                                eV.getID () +
+                                                "\nText is always centered\nLine 3",
+                                                r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                    .setFillColor (Color.PINK)).setFillColor (Color.YELLOW)
+                                                                               .setExactSize (150, 50)
+                                                                               .setHorzAlign (eH)
+                                                                               .setVertAlign (eV)
+                                                                               .setBorder (Color.BLACK));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-alignment-nested.pdf"));
   }
 }

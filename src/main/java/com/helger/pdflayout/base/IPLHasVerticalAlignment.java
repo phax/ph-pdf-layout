@@ -34,13 +34,15 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
 
   /**
    * @return The vertical alignment of this element. By default it is
-   *         {@link EVertAlignment#DEFAULT}. Never <code>null</code>.
+   *         {@link EVertAlignment#DEFAULT}. Never <code>null</code>. The
+   *         vertical alignment may only be applied to contained children!
    */
   @Nonnull
   EVertAlignment getVertAlign ();
 
   /**
-   * Set the vertical alignment of this element.
+   * Set the vertical alignment of this element. The vertical alignment may only
+   * be applied to contained children!
    *
    * @param eVertAlign
    *        The new vertical alignment. May not be <code>null</code>.
