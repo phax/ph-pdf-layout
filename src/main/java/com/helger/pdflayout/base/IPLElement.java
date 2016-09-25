@@ -16,6 +16,11 @@
  */
 package com.helger.pdflayout.base;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
+import com.helger.pdflayout.spec.SizeSpec;
+
 /**
  * Base interface for renderable objects having a margin, a border and a
  * padding<br>
@@ -30,5 +35,163 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
                             IPLHasMarginBorderPadding <IMPLTYPE>,
                             IPLHasFillColor <IMPLTYPE>
 {
-  /* empty */
+  SizeSpec DEFAULT_MIN_SIZE = SizeSpec.SIZE0;
+  SizeSpec DEFAULT_MAX_SIZE = SizeSpec.SIZE_MAX;
+
+  /**
+   * @return The minimum size to be used. Excluding padding and margin. Never
+   *         <code>null</code>.
+   */
+  @Nonnull
+  SizeSpec getMinSize ();
+
+  default float getMinWidth ()
+  {
+    return getMinSize ().getWidth ();
+  }
+
+  default float getMinHeight ()
+  {
+    return getMinSize ().getHeight ();
+  }
+
+  /**
+   * Set the minimum size to be used. Excluding padding and margin.
+   *
+   * @param fMinWidth
+   *        Minimum width. Must be &ge; 0.
+   * @param fMinHeight
+   *        Minimum height. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight);
+
+  /**
+   * Set the minimum width to be used. Excluding padding and margin.
+   *
+   * @param fMinWidth
+   *        Minimum width. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE setMinWidth (@Nonnegative final float fMinWidth)
+  {
+    return setMinSize (fMinWidth, getMinHeight ());
+  }
+
+  /**
+   * Set the minimum height to be used. Excluding padding and margin.
+   *
+   * @param fMinHeight
+   *        Minimum height. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE setMinHeight (@Nonnegative final float fMinHeight)
+  {
+    return setMinSize (getMinWidth (), fMinHeight);
+  }
+
+  /**
+   * @return The maximum size to be used. Excluding padding and margin. Never
+   *         <code>null</code>.
+   */
+  @Nonnull
+  SizeSpec getMaxSize ();
+
+  default float getMaxWidth ()
+  {
+    return getMaxSize ().getWidth ();
+  }
+
+  default float getMaxHeight ()
+  {
+    return getMaxSize ().getHeight ();
+  }
+
+  /**
+   * Set the maximum size to be used. Excluding padding and margin.
+   *
+   * @param fMaxWidth
+   *        Maximum width. Must be &ge; 0.
+   * @param fMaxHeight
+   *        Maximum height. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight);
+
+  /**
+   * Set the maximum width to be used. Excluding padding and margin.
+   *
+   * @param fMaxWidth
+   *        Maximum width. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE setMaxWidth (@Nonnegative final float fMaxWidth)
+  {
+    return setMaxSize (fMaxWidth, getMaxHeight ());
+  }
+
+  /**
+   * Set the maximum height to be used. Excluding padding and margin.
+   *
+   * @param fMaxHeight
+   *        Maximum height. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE setMaxHeight (@Nonnegative final float fMaxHeight)
+  {
+    return setMaxSize (getMaxWidth (), fMaxHeight);
+  }
+
+  /**
+   * Set the exact size to be used. Excluding padding and margin. This is a
+   * shortcut for setting minimum and maximum size to the same values.
+   *
+   * @param fWidth
+   *        Width to use. Must be &ge; 0.
+   * @param fHeight
+   *        Height to use. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE setExactSize (@Nonnegative final float fWidth, @Nonnegative final float fHeight)
+  {
+    setMinSize (fWidth, fHeight);
+    return setMaxSize (fWidth, fHeight);
+  }
+
+  /**
+   * Set the exact width to be used. Excluding padding and margin. This is a
+   * shortcut for setting minimum and maximum width to the same values.
+   *
+   * @param fWidth
+   *        Width to use. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE setExactWidth (@Nonnegative final float fWidth)
+  {
+    setMinWidth (fWidth);
+    return setMaxWidth (fWidth);
+  }
+
+  /**
+   * Set the exact height to be used. Excluding padding and margin. This is a
+   * shortcut for setting minimum and maximum height to the same values.
+   *
+   * @param fHeight
+   *        Height to use. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE setExactHeight (@Nonnegative final float fHeight)
+  {
+    setMinHeight (fHeight);
+    return setMaxHeight (fHeight);
+  }
 }

@@ -41,40 +41,12 @@ import com.helger.pdflayout.spec.SizeSpec;
 public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRenderableObject <IMPLTYPE>> extends
                                                  AbstractPLObject <IMPLTYPE> implements IPLRenderableObject <IMPLTYPE>
 {
-  private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
-  private SizeSpec m_aMaxSize = DEFAULT_MAX_SIZE;
   private boolean m_bPrepared = false;
   private SizeSpec m_aPrepareAvailableSize;
   private SizeSpec m_aPreparedSize;
 
   public AbstractPLRenderableObject ()
   {}
-
-  @Nonnull
-  public SizeSpec getMinSize ()
-  {
-    return m_aMinSize;
-  }
-
-  @Nonnull
-  public IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight)
-  {
-    m_aMinSize = new SizeSpec (fMinWidth, fMinHeight);
-    return thisAsT ();
-  }
-
-  @Nonnull
-  public SizeSpec getMaxSize ()
-  {
-    return m_aMaxSize;
-  }
-
-  @Nonnull
-  public IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight)
-  {
-    m_aMaxSize = new SizeSpec (fMaxWidth, fMaxHeight);
-    return thisAsT ();
-  }
 
   @OverrideOnDemand
   @OverridingMethodsMustInvokeSuper
@@ -155,19 +127,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException;
 
   @Nonnull
-  protected final SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aSize)
+  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aSize)
   {
-    ValueEnforcer.notNull (aSize, "Size");
-
-    // Consider min size here
-    float fRealWidth = Math.max (m_aMinSize.getWidth (), aSize.getWidth ());
-    float fRealHeight = Math.max (m_aMinSize.getHeight (), aSize.getHeight ());
-
-    // Consider max size here
-    fRealWidth = Math.min (m_aMaxSize.getWidth (), fRealWidth);
-    fRealHeight = Math.min (m_aMaxSize.getHeight (), fRealHeight);
-
-    return new SizeSpec (fRealWidth, fRealHeight);
+    return aSize;
   }
 
   /**
@@ -289,8 +251,6 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("MinSize", m_aMinSize)
-                            .append ("MaxSize", m_aMaxSize)
                             .append ("Prepared", m_bPrepared)
                             .appendIfNotNull ("PrepareAvailableSize", m_aPrepareAvailableSize)
                             .appendIfNotNull ("PreparedSize", m_aPreparedSize)

@@ -32,20 +32,20 @@ import com.helger.pdflayout.spec.EVertAlignment;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlignedElement <IMPLTYPE>>
-                                               extends AbstractPLElement <IMPLTYPE> implements
-                                               IPLHasHorizontalAlignment <IMPLTYPE>,
-                                               IPLHasVerticalAlignment <IMPLTYPE>
+public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>>
+                                             extends AbstractPLElement <IMPLTYPE> implements
+                                             IPLHasHorizontalAlignment <IMPLTYPE>,
+                                             IPLHasVerticalAlignment <IMPLTYPE>
 {
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
 
-  public AbstractPLAlignedElement ()
+  public AbstractPLBlockElement ()
   {}
 
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLAlignedElement <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLBlockElement <?> aSource)
   {
     super.setBasicDataFrom (aSource);
     setHorzAlign (aSource.m_eHorzAlign);

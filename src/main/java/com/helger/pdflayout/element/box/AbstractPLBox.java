@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLAlignedElement;
+import com.helger.pdflayout.base.AbstractPLBlockElement;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.element.PLRenderHelper;
@@ -40,7 +40,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  *        Implementation type
  */
 public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
-                                    extends AbstractPLAlignedElement <IMPLTYPE>
+                                    extends AbstractPLBlockElement <IMPLTYPE>
 {
   private IPLRenderableObject <?> m_aElement;
   private SizeSpec m_aElementPreparedSize;

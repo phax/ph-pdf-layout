@@ -18,6 +18,7 @@ package com.helger.pdflayout.base;
 
 import java.awt.Color;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -27,6 +28,7 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
+import com.helger.pdflayout.spec.SizeSpec;
 
 /**
  * Abstract renderable PL element having a padding only
@@ -38,6 +40,8 @@ import com.helger.pdflayout.spec.PaddingSpec;
 public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>>
                                         extends AbstractPLRenderableObject <IMPLTYPE> implements IPLElement <IMPLTYPE>
 {
+  private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
+  private SizeSpec m_aMaxSize = DEFAULT_MAX_SIZE;
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private PaddingSpec m_aPadding = DEFAULT_PADDING;
@@ -55,6 +59,32 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     setBorder (aSource.m_aBorder);
     setPadding (aSource.m_aPadding);
     setFillColor (aSource.m_aFillColor);
+    return thisAsT ();
+  }
+
+  @Nonnull
+  public SizeSpec getMinSize ()
+  {
+    return m_aMinSize;
+  }
+
+  @Nonnull
+  public IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight)
+  {
+    m_aMinSize = new SizeSpec (fMinWidth, fMinHeight);
+    return thisAsT ();
+  }
+
+  @Nonnull
+  public SizeSpec getMaxSize ()
+  {
+    return m_aMaxSize;
+  }
+
+  @Nonnull
+  public IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight)
+  {
+    m_aMaxSize = new SizeSpec (fMaxWidth, fMaxHeight);
     return thisAsT ();
   }
 
@@ -118,12 +148,31 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Override
+  @Nonnull
+  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aSize)
+  {
+    ValueEnforcer.notNull (aSize, "Size");
+
+    // Consider min size here
+    float fRealWidth = Math.max (m_aMinSize.getWidth (), aSize.getWidth ());
+    float fRealHeight = Math.max (m_aMinSize.getHeight (), aSize.getHeight ());
+
+    // Consider max size here
+    fRealWidth = Math.min (m_aMaxSize.getWidth (), fRealWidth);
+    fRealHeight = Math.min (m_aMaxSize.getHeight (), fRealHeight);
+
+    return new SizeSpec (fRealWidth, fRealHeight);
+  }
+
+  @Override
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("margin", m_aMargin)
-                            .append ("border", m_aBorder)
-                            .append ("padding", m_aPadding)
+                            .append ("MinSize", m_aMinSize)
+                            .append ("MaxSize", m_aMaxSize)
+                            .append ("Margin", m_aMargin)
+                            .append ("Border", m_aBorder)
+                            .append ("Padding", m_aPadding)
                             .appendIfNotNull ("fillColor", m_aFillColor)
                             .toString ();
   }
