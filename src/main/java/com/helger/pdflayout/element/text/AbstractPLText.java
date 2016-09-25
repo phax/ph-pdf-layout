@@ -17,7 +17,6 @@
 package com.helger.pdflayout.element.text;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.CheckForSigned;
@@ -30,7 +29,6 @@ import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
@@ -62,7 +60,6 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
 public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
                                      implements IPLHasHorizontalAlignment <IMPLTYPE>, IPLSplittableObject <IMPLTYPE>
 {
-  public static final boolean DEFAULT_TOP_DOWN = true;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
   public static final boolean DEFAULT_SPLITTABLE = true;
   public static final boolean DEFAULT_REPLACE_PLACEHOLDERS = false;
@@ -71,7 +68,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private String m_sDisplayText;
   private final FontSpec m_aFontSpec;
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
-  private boolean m_bTopDown = DEFAULT_TOP_DOWN;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
   private boolean m_bSplittable = DEFAULT_SPLITTABLE;
   private boolean m_bReplacePlaceholder = DEFAULT_REPLACE_PLACEHOLDERS;
@@ -108,7 +104,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   {
     super.setBasicDataFrom (aSource);
     setHorzAlign (aSource.m_eHorzAlign);
-    setTopDown (aSource.m_bTopDown);
     setMaxRows (aSource.m_nMaxRows);
     setSplittable (aSource.m_bSplittable);
     setReplacePlaceholder (aSource.m_bReplacePlaceholder);
@@ -150,31 +145,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
   {
     m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
-    return thisAsT ();
-  }
-
-  /**
-   * @return <code>true</code> if the text is rendered from top to bottom, or
-   *         <code>false</code> if the text is rendered from bottom to top. The
-   *         default value is {@link #DEFAULT_TOP_DOWN}.
-   */
-  public boolean isTopDown ()
-  {
-    return m_bTopDown;
-  }
-
-  /**
-   * Set the rendering direction: top-down or bottom-up.
-   *
-   * @param bTopDown
-   *        <code>true</code> to render top-down, <code>false</code> to render
-   *        bottom-up.
-   * @return this
-   */
-  @Nonnull
-  public IMPLTYPE setTopDown (final boolean bTopDown)
-  {
-    m_bTopDown = bTopDown;
     return thisAsT ();
   }
 
@@ -252,12 +222,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
         for (int i = 0; i < m_nMaxRows; ++i)
           m_aPreparedLines.add (aLines.get (i));
       }
-    }
-
-    if (!m_bTopDown)
-    {
-      // Reverse order only once
-      Collections.reverse (m_aPreparedLines);
     }
   }
 
@@ -418,16 +382,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       // differ from line to line
       if (nIndex < nMax)
       {
-        if (m_bTopDown)
-        {
-          // Outdent and one line down, except for last line
-          aContentStream.moveTextPositionByAmount (-fIndentX, -fLineHeight);
-        }
-        else
-        {
-          // Outdent and one line up, except for last line
-          aContentStream.moveTextPositionByAmount (-fIndentX, fLineHeight);
-        }
+        // Outdent and one line down, except for last line
+        aContentStream.moveTextPositionByAmount (-fIndentX, -fLineHeight);
       }
     }
     aContentStream.endText ();
@@ -475,8 +431,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final float fLineHeight = m_fLineHeight;
 
     // Get the lines in the correct order from top to bottom
-    final ICommonsList <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines
-                                                                : CollectionHelper.getReverseList (m_aPreparedLines);
+    final ICommonsList <TextAndWidthSpec> aLines = m_aPreparedLines;
 
     int nLines = (int) (fAvailableHeight / fLineHeight);
     if (nLines <= 0)
@@ -547,7 +502,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("DisplayText", m_sDisplayText)
                             .append ("FontSpec", m_aFontSpec)
                             .append ("HorzAlign", m_eHorzAlign)
-                            .append ("TopDown", m_bTopDown)
                             .append ("MaxRows", m_nMaxRows)
                             .append ("Splittable", m_bSplittable)
                             .append ("ReplacePlaceholder", m_bReplacePlaceholder)

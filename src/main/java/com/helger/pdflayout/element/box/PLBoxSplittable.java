@@ -28,14 +28,14 @@ import com.helger.pdflayout.base.PLSplitResult;
  *
  * @author Philip Helger
  */
-public class PLSplittableBox extends AbstractPLBox <PLSplittableBox> implements IPLSplittableObject <PLSplittableBox>
+public class PLBoxSplittable extends AbstractPLBox <PLBoxSplittable> implements IPLSplittableObject <PLBoxSplittable>
 {
-  public PLSplittableBox ()
+  public PLBoxSplittable ()
   {
     super (null);
   }
 
-  public PLSplittableBox (@Nullable final IPLRenderableObject <?> aElement)
+  public PLBoxSplittable (@Nullable final IPLRenderableObject <?> aElement)
   {
     super (aElement);
   }
@@ -49,7 +49,13 @@ public class PLSplittableBox extends AbstractPLBox <PLSplittableBox> implements 
   @Nullable
   public PLSplitResult splitElements (final float fElementWidth, final float fAvailableHeight)
   {
-    // TODO
+    if (fAvailableHeight <= 0)
+      return null;
+
+    // Create resulting VBoxes - the first one is not splittable again!
+    final PLBox aBox1 = new PLBox ().setBasicDataFrom (this);
+    final PLBoxSplittable aBox2 = new PLBoxSplittable ().setBasicDataFrom (this);
+
     return null;
   }
 }
