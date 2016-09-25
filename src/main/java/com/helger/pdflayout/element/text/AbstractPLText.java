@@ -307,7 +307,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   {
     // Load font into document
     m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
-    return _prepareText (aCtx.getAvailableWidth () - getFullXSum ());
+    return _prepareText (aCtx.getAvailableWidth () - getOutlineXSum ());
   }
 
   protected final void setDisplayTextAfterPrepare (@Nonnull final String sNewText,
@@ -366,8 +366,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Fill and border
     PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
 
-    final float fRenderLeft = aCtx.getStartLeft () + getFullLeft ();
-    final float fRenderTop = aCtx.getStartTop () - getFullTop ();
+    final float fRenderLeft = aCtx.getStartLeft () + getOutlineLeft ();
+    final float fRenderTop = aCtx.getStartTop () - getOutlineTop ();
 
     if (PLDebug.isDebugRender ())
       PLDebug.debugRender (this,

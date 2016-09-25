@@ -271,7 +271,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       fUsedWidthFull = Math.max (fUsedWidthFull, fRowElementWidthFull);
 
       // Update used height
-      final float fRowElementHeightFull = aRowElementPreparedSize.getHeight () + aRowElement.getFullYSum ();
+      final float fRowElementHeightFull = aRowElementPreparedSize.getHeight () + aRowElement.getOutlineYSum ();
       fUsedHeightFull += fRowElementHeightFull;
 
       // Without padding and margin
@@ -307,8 +307,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Override
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    final float fCurX = aCtx.getStartLeft () + getFullLeft ();
-    float fCurY = aCtx.getStartTop () - getFullTop ();
+    final float fCurX = aCtx.getStartLeft () + getOutlineLeft ();
+    float fCurY = aCtx.getStartTop () - getOutlineTop ();
 
     int nIndex = 0;
     for (final PLVBoxRow aRow : m_aRows)
@@ -326,7 +326,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       aRowElement.render (aRowElementCtx);
 
       // Update Y-pos
-      fCurY -= fRowElementHeight + aRowElement.getFullYSum ();
+      fCurY -= fRowElementHeight;
       ++nIndex;
     }
   }

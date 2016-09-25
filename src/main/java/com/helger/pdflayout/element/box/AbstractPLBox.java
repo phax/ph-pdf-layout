@@ -102,8 +102,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     if (m_aElement == null)
       return SizeSpec.SIZE0;
 
-    final float fElementWidth = aCtx.getAvailableWidth () - getFullXSum ();
-    final float fElementHeight = aCtx.getAvailableHeight () - getFullYSum ();
+    final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
+    final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
     final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (),
                                                                    fElementWidth,
@@ -112,7 +112,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
     // Add the outer stuff of the contained element as this elements prepared
     // size
-    final SizeSpec ret = m_aElementPreparedSize.plus (m_aElement.getFullXSum (), m_aElement.getFullYSum ());
+    final SizeSpec ret = m_aElementPreparedSize.plus (m_aElement.getOutlineXSum (), m_aElement.getOutlineYSum ());
 
     if (m_aElement instanceof IPLHasMargin <?>)
     {
@@ -137,8 +137,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     if (m_aElement != null)
     {
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
-                                                                   aCtx.getStartLeft () + getFullLeft (),
-                                                                   aCtx.getStartTop () - getFullTop (),
+                                                                   aCtx.getStartLeft () + getOutlineLeft (),
+                                                                   aCtx.getStartTop () - getOutlineTop (),
                                                                    getPreparedWidth (),
                                                                    getPreparedHeight ());
       m_aElement.render (aElementCtx);

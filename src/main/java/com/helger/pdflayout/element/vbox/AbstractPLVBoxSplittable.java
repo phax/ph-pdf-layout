@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.typeconvert.TypeConverter;
@@ -84,14 +85,14 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     float fUsedVBox2RowHeight = 0;
 
     // Copy all content rows
-    boolean bOnTable1 = true;
+    boolean bOnVBox1 = true;
 
     for (int nRow = 0; nRow < nTotalRows; ++nRow)
     {
       final IPLRenderableObject <?> aRowElement = getRowElementAtIndex (nRow);
       final float fRowHeight = m_aPreparedRowSize[nRow].getHeight ();
 
-      if (bOnTable1)
+      if (bOnVBox1)
       {
         if (fUsedVBox1RowHeight + fRowHeight <= fAvailableHeight)
         {
@@ -105,13 +106,13 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
         else
         {
           // Row does not fit - check if it can be splitted
-          bOnTable1 = false;
+          bOnVBox1 = false;
           // try to split the row
           boolean bSplittedRow = false;
           if (aRowElement.isSplittable ())
           {
             final float fSplitWidth = m_aPreparedElementSize[nRow].getWidth ();
-            final float fSplitHeight = fAvailableHeight - fUsedVBox1RowHeight - aRowElement.getFullYSum ();
+            final float fSplitHeight = fAvailableHeight - fUsedVBox1RowHeight - aRowElement.getOutlineYSum ();
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this,
                                   "Trying to split " +
@@ -146,21 +147,21 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
                                           " (" +
                                           aSplitResult.getFirstElement ().getWidth () +
                                           "+" +
-                                          aVBox1RowElement.getFullXSum () +
+                                          aVBox1RowElement.getOutlineXSum () +
                                           " & " +
                                           aSplitResult.getFirstElement ().getHeight () +
                                           "+" +
-                                          aVBox1RowElement.getFullYSum () +
+                                          aVBox1RowElement.getOutlineYSum () +
                                           ") and " +
                                           aVBox2RowElement.getDebugID () +
                                           " (" +
                                           aSplitResult.getSecondElement ().getWidth () +
                                           "+" +
-                                          aVBox2RowElement.getFullXSum () +
+                                          aVBox2RowElement.getOutlineXSum () +
                                           " & " +
                                           aSplitResult.getSecondElement ().getHeight () +
                                           "+" +
-                                          aVBox2RowElement.getFullYSum () +
+                                          aVBox2RowElement.getOutlineYSum () +
                                           ")");
               bSplittedRow = true;
             }
@@ -190,7 +191,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
       else
       {
         // We're already on VBox 2 - add all elements, since VBox2 may be split
-        // again!
+        // again later!
         aVBox2.addRow (aRowElement);
         fUsedVBox2RowHeight += fRowHeight;
         aVBox2RowSize.add (m_aPreparedRowSize[nRow]);
@@ -216,12 +217,12 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
 
     // Excluding padding/margin
     aVBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight));
-    aVBox1.m_aPreparedRowSize = aVBox1RowSize.toArray (new SizeSpec [0]);
-    aVBox1.m_aPreparedElementSize = aVBox1ElementSize.toArray (new SizeSpec [0]);
+    aVBox1.m_aPreparedRowSize = ArrayHelper.newArray (aVBox1RowSize, SizeSpec.class);
+    aVBox1.m_aPreparedElementSize = ArrayHelper.newArray (aVBox1ElementSize, SizeSpec.class);
 
     aVBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight));
-    aVBox2.m_aPreparedRowSize = aVBox2RowSize.toArray (new SizeSpec [0]);
-    aVBox2.m_aPreparedElementSize = aVBox2ElementSize.toArray (new SizeSpec [0]);
+    aVBox2.m_aPreparedRowSize = ArrayHelper.newArray (aVBox2RowSize, SizeSpec.class);
+    aVBox2.m_aPreparedElementSize = ArrayHelper.newArray (aVBox2ElementSize, SizeSpec.class);
 
     return new PLSplitResult (new PLElementWithSize (aVBox1, new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
                               new PLElementWithSize (aVBox2, new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight)));

@@ -230,7 +230,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         fRestWidth -= fColumnWidth;
 
         // Update used height
-        final float fItemHeightFull = aElementPreparedSize.getHeight () + aElement.getFullYSum ();
+        final float fItemHeightFull = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
         fUsedHeightFull = Math.max (fUsedHeightFull, fItemHeightFull);
 
         // Remember width and height for element (without padding and margin)
@@ -260,7 +260,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         fUsedWidthFull += fColumnWidth;
 
         // Update used height
-        final float fItemHeightFull = fItemHeight + aElement.getFullYSum ();
+        final float fItemHeightFull = fItemHeight + aElement.getOutlineYSum ();
         fUsedHeightFull = Math.max (fUsedHeightFull, fItemHeightFull);
 
         // Remember width and height for element (without padding and margin)

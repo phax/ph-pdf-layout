@@ -302,7 +302,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   @Nonnegative
   public float getAvailableWidth ()
   {
-    return m_aPageSize.getWidth () - getFullXSum ();
+    return m_aPageSize.getWidth () - getOutlineXSum ();
   }
 
   /**
@@ -312,7 +312,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   @Nonnegative
   public float getAvailableHeight ()
   {
-    return m_aPageSize.getHeight () - getFullYSum ();
+    return m_aPageSize.getHeight () - getOutlineYSum ();
   }
 
   /**
@@ -411,7 +411,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    */
   public float getYTop ()
   {
-    return m_aPageSize.getHeight () - getFullTop ();
+    return m_aPageSize.getHeight () - getOutlineTop ();
   }
 
   public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
@@ -442,7 +442,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       final SizeSpec aElementSize = m_aPageHeader.prepare (aRPC);
       ret.setHeaderHeight (aElementSize.getHeight ());
 
-      final float fEffectiveHeaderHeight = aElementSize.getHeight () + m_aPageHeader.getFullYSum ();
+      final float fEffectiveHeaderHeight = aElementSize.getHeight () + m_aPageHeader.getOutlineYSum ();
       if (fEffectiveHeaderHeight > getMarginTop ())
       {
         // If the height of the header exceeds the available top-margin, modify
@@ -466,7 +466,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       final SizeSpec aElementSize = m_aPageFooter.prepare (aRPC);
       ret.setFooterHeight (aElementSize.getHeight ());
 
-      final float fEffectiveFooterHeight = aElementSize.getHeight () + m_aPageFooter.getFullYSum ();
+      final float fEffectiveFooterHeight = aElementSize.getHeight () + m_aPageFooter.getOutlineYSum ();
       if (fEffectiveFooterHeight > getMarginBottom ())
       {
         // If the height of the footer exceeds the available bottom-margin,
@@ -496,11 +496,11 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                               "Start preparing elements on width=" +
                                     fAvailWidth +
                                     "+" +
-                                    getFullXSum () +
+                                    getOutlineXSum () +
                                     " and height=" +
                                     fAvailHeight +
                                     "+" +
-                                    getFullYSum ());
+                                    getOutlineYSum ());
 
       // Prepare content elements
       // Must be done after header and footer, because the margins may got
@@ -518,7 +518,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
 
     // Split into pieces that fit onto a page
     final float fYTop = getYTop ();
-    final float fYLeast = getFullBottom ();
+    final float fYLeast = getOutlineBottom ();
 
     {
       if (PLDebug.isDebugSplit ())
@@ -564,9 +564,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                         fAvailableHeight);
 
             // split elements
+            final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
             final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElements (fElementPreparedWidth,
-                                                                                          fAvailableHeight -
-                                                                                                                 aElement.getFullYSum ());
+                                                                                          fSplitHeight);
             if (aSplitResult != null)
             {
               // Re-add them to the list and try again (they may be splitted
@@ -584,21 +584,21 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                           " (" +
                                           aSplitResult.getFirstElement ().getWidth () +
                                           "+" +
-                                          aSplitResult.getFirstElement ().getElement ().getFullXSum () +
+                                          aSplitResult.getFirstElement ().getElement ().getOutlineXSum () +
                                           " & " +
                                           aSplitResult.getFirstElement ().getHeight () +
                                           "+" +
-                                          aSplitResult.getFirstElement ().getElement ().getFullYSum () +
+                                          aSplitResult.getFirstElement ().getElement ().getOutlineYSum () +
                                           ") and " +
                                           aSplitResult.getSecondElement ().getElement ().getDebugID () +
                                           " (" +
                                           aSplitResult.getSecondElement ().getWidth () +
                                           "+" +
-                                          aSplitResult.getSecondElement ().getElement ().getFullXSum () +
+                                          aSplitResult.getSecondElement ().getElement ().getOutlineXSum () +
                                           " & " +
                                           aSplitResult.getSecondElement ().getHeight () +
                                           "+" +
-                                          aSplitResult.getSecondElement ().getElement ().getFullYSum () +
+                                          aSplitResult.getSecondElement ().getElement ().getOutlineYSum () +
                                           ")");
               }
               continue;
@@ -609,7 +609,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                   "The single element " +
                                         aElement.getDebugID () +
                                         " does not fit onto a single page (" +
-                                        fAvailableHeight +
+                                        fSplitHeight +
                                         ") even though it is splittable!");
             }
           }
@@ -711,7 +711,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                               @Nonnegative final int nTotalPageCount) throws IOException
   {
     // Start at the left top
-    final float fXLeft = getFullLeft ();
+    final float fXLeft = getOutlineLeft ();
     final float fYTop = getYTop ();
 
     final boolean bCompressPDF = !bDebug;
@@ -762,7 +762,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       try
       {
         // Page rect before content - debug: red
-
         {
           final float fLeft = getMarginLeft ();
           final float fTop = m_aPageSize.getHeight () - getMarginTop ();

@@ -45,7 +45,7 @@ public final class PLElementWithSize
    */
   public PLElementWithSize (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final SizeSpec aSize)
   {
-    this (aElement, aSize, aSize.plus (aElement.getFullXSum (), aElement.getFullYSum ()));
+    this (aElement, aSize, aSize.plus (aElement.getOutlineXSum (), aElement.getOutlineYSum ()));
   }
 
   /**

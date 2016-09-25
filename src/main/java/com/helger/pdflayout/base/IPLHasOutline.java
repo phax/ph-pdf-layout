@@ -18,32 +18,32 @@ package com.helger.pdflayout.base;
 
 public interface IPLHasOutline
 {
-  default float getFullTop ()
+  default float getOutlineTop ()
   {
     return 0;
   }
 
-  default float getFullRight ()
+  default float getOutlineRight ()
   {
     return 0;
   }
 
-  default float getFullBottom ()
+  default float getOutlineBottom ()
   {
     return 0;
   }
 
-  default float getFullLeft ()
+  default float getOutlineLeft ()
   {
     return 0;
   }
 
-  default float getFullXSum ()
+  default float getOutlineXSum ()
   {
     return 0;
   }
 
-  default float getFullYSum ()
+  default float getOutlineYSum ()
   {
     return 0;
   }

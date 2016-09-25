@@ -131,7 +131,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       if (fColumnHeight > fAvailableHeight && bIsSplittable)
       {
         final float fSplitWidth = fElementWidth;
-        final float fSplitHeight = fAvailableHeight - aColumnElement.getFullYSum ();
+        final float fSplitHeight = fAvailableHeight - aColumnElement.getOutlineYSum ();
         if (PLDebug.isDebugSplit ())
           PLDebug.debugSplit (this,
                               "Trying to split " +
@@ -169,21 +169,21 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
                                       " (" +
                                       aSplitResult.getFirstElement ().getWidth () +
                                       "+" +
-                                      aHBox1Element.getFullXSum () +
+                                      aHBox1Element.getOutlineXSum () +
                                       " & " +
                                       aSplitResult.getFirstElement ().getHeight () +
                                       "+" +
-                                      aHBox1Element.getFullYSum () +
+                                      aHBox1Element.getOutlineYSum () +
                                       ") and " +
                                       aHBox2Element.getDebugID () +
                                       " (" +
                                       aSplitResult.getSecondElement ().getWidth () +
                                       "+" +
-                                      aHBox2Element.getFullXSum () +
+                                      aHBox2Element.getOutlineXSum () +
                                       " & " +
                                       aSplitResult.getSecondElement ().getHeight () +
                                       "+" +
-                                      aHBox2Element.getFullYSum () +
+                                      aHBox2Element.getOutlineYSum () +
                                       ") for available height " +
                                       fAvailableHeight);
         }

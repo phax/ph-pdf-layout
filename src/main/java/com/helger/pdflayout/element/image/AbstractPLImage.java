@@ -115,8 +115,8 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLElement <IMPLT
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     aContentStream.drawXObject (m_aJpeg,
-                                aCtx.getStartLeft () + getFullLeft (),
-                                aCtx.getStartTop () - getFullTop () - m_fImageHeight,
+                                aCtx.getStartLeft () + getOutlineLeft (),
+                                aCtx.getStartTop () - getOutlineTop () - m_fImageHeight,
                                 m_fImageWidth,
                                 m_fImageHeight);
   }

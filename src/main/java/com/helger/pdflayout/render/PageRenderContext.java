@@ -97,6 +97,10 @@ public final class PageRenderContext
   {
     ValueEnforcer.notNull (eElementType, "ElementType");
     ValueEnforcer.notNull (aCS, "ContentStream");
+    ValueEnforcer.isGE0 (fStartLeft, "StartLeft");
+    ValueEnforcer.isGE0 (fStartTop, "StartTop");
+    ValueEnforcer.isGE0 (fWidth, "Width");
+    ValueEnforcer.isGE0 (fHeight, "Height");
     m_eElementType = eElementType;
     m_aCS = aCS;
     m_bDebugMode = bDebugMode;

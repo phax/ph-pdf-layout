@@ -159,7 +159,7 @@ public final class PLDebug
   {
     final float fRight = fLeft + fWidth;
     final float fBottom = fTop - fHeight;
-    return getXY (fLeft, fBottom) + "-" + getXY (fRight, fTop) + " (=" + getWH (fWidth, fHeight) + ")";
+    return "LB" + getXY (fLeft, fBottom) + " - RT" + getXY (fRight, fTop) + " (=WH " + getWH (fWidth, fHeight) + ")";
   }
 
   @Nonnull
@@ -172,7 +172,7 @@ public final class PLDebug
            "/" +
            aElement.getPaddingXSum () +
            "=" +
-           aElement.getFullXSum () +
+           aElement.getOutlineXSum () +
            "]";
   }
 
@@ -186,7 +186,7 @@ public final class PLDebug
            "/" +
            aElement.getPaddingYSum () +
            "=" +
-           aElement.getFullYSum () +
+           aElement.getOutlineYSum () +
            "]";
   }
 }

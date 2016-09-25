@@ -29,32 +29,32 @@ public interface IPLHasMarginBorderPadding <IMPLTYPE extends IPLHasMarginBorderP
                                            IPLHasBorder <IMPLTYPE>,
                                            IPLHasOutline
 {
-  default float getFullTop ()
+  default float getOutlineTop ()
   {
     return getMarginTop () + getBorderTopWidth () + getPaddingTop ();
   }
 
-  default float getFullRight ()
+  default float getOutlineRight ()
   {
     return getMarginRight () + getBorderRightWidth () + getPaddingRight ();
   }
 
-  default float getFullBottom ()
+  default float getOutlineBottom ()
   {
     return getMarginBottom () + getBorderBottomWidth () + getPaddingBottom ();
   }
 
-  default float getFullLeft ()
+  default float getOutlineLeft ()
   {
     return getMarginLeft () + getBorderLeftWidth () + getPaddingLeft ();
   }
 
-  default float getFullXSum ()
+  default float getOutlineXSum ()
   {
     return getMarginXSum () + getBorderXSumWidth () + getPaddingXSum ();
   }
 
-  default float getFullYSum ()
+  default float getOutlineYSum ()
   {
     return getMarginYSum () + getBorderYSumWidth () + getPaddingYSum ();
   }

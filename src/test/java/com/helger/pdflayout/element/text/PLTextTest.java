@@ -234,7 +234,7 @@ public final class PLTextTest
 
     final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
     for (int i = 0; i < 3; ++i)
-      aVBox.addRow (new PLText (s, r10).setPadding (5).setBorder (Color.GRAY));
+      aVBox.addRow (new PLText (s, r10).setPadding (5).setBorder (Color.RED));
     aPS1.addElement (aVBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
