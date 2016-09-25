@@ -57,9 +57,8 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     return TypeConverter.convertIfNecessary (aList, float [].class);
   }
 
-  @SuppressWarnings ("unused")
   @Nullable
-  public PLSplitResult splitElements (final float fElementWidth, final float fAvailableHeight)
+  public PLSplitResult splitElements (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
       return null;
@@ -77,18 +76,12 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     final PLVBoxSplittable aVBox2 = new PLVBoxSplittable ().setBasicDataFrom (this);
 
     final int nTotalRows = getRowCount ();
-    final ICommonsList <Float> aVBox1RowWidth = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <Float> aVBox1RowHeight = new CommonsArrayList<> (nTotalRows);
-    float fUsedVBox1Width = 0;
-    float fUsedVBox1WidthFull = 0;
-    float fUsedVBox1Height = 0;
-    float fUsedVBox1HeightFull = 0;
-    final ICommonsList <Float> aVBox2RowWidth = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <Float> aVBox2RowHeight = new CommonsArrayList<> (nTotalRows);
-    float fUsedVBox2Width = 0;
-    float fUsedVBox2WidthFull = 0;
-    float fUsedVBox2Height = 0;
-    float fUsedVBox2HeightFull = 0;
+    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList<> (nTotalRows);
+    float fUsedVBox1RowHeight = 0;
+    final ICommonsList <SizeSpec> aVBox2RowSize = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox2ElementSize = new CommonsArrayList<> (nTotalRows);
+    float fUsedVBox2RowHeight = 0;
 
     // Copy all content rows
     boolean bOnTable1 = true;
@@ -96,23 +89,18 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     for (int nRow = 0; nRow < nTotalRows; ++nRow)
     {
       final IPLRenderableObject <?> aRowElement = getRowElementAtIndex (nRow);
-      final float fRowWidth = m_aPreparedRowElementWidth[nRow];
-      final float fRowWidthFull = fRowWidth + aRowElement.getFullXSum ();
-      final float fRowHeight = m_aPreparedRowElementHeight[nRow];
-      final float fRowHeightFull = fRowHeight + aRowElement.getFullYSum ();
+      final float fRowHeight = m_aPreparedRowSize[nRow].getHeight ();
 
       if (bOnTable1)
       {
-        if (fUsedVBox1HeightFull + fRowHeightFull <= fAvailableHeight)
+        if (fUsedVBox1RowHeight + fRowHeight <= fAvailableHeight)
         {
           // Row fits in first VBox without a change
           aVBox1.addRow (aRowElement);
-          fUsedVBox1Width = Math.max (fUsedVBox1Width, fRowWidth);
-          fUsedVBox1WidthFull = Math.max (fUsedVBox1WidthFull, fRowWidthFull);
-          fUsedVBox1Height += fRowHeight;
-          fUsedVBox1HeightFull += fRowHeightFull;
-          aVBox1RowWidth.add (Float.valueOf (fRowWidth));
-          aVBox1RowHeight.add (Float.valueOf (fRowHeight));
+          fUsedVBox1RowHeight += fRowHeight;
+          // Use data as is
+          aVBox1RowSize.add (m_aPreparedRowSize[nRow]);
+          aVBox1ElementSize.add (m_aPreparedElementSize[nRow]);
         }
         else
         {
@@ -122,46 +110,30 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
           boolean bSplittedRow = false;
           if (aRowElement.isSplittable ())
           {
-            // don't override fVBox1Width
-            final float fWidth = Math.max (fUsedVBox1Width, fRowWidth);
-            final float fWidthFull = Math.max (fUsedVBox1WidthFull, fRowWidthFull);
-
-            final float fAvailableSplitWidth = fWidth;
-            final float fAvailableSplitHeight = fAvailableHeight - fUsedVBox1HeightFull - aRowElement.getFullYSum ();
+            final float fSplitWidth = m_aPreparedElementSize[nRow].getWidth ();
+            final float fSplitHeight = fAvailableHeight - fUsedVBox1RowHeight - aRowElement.getFullYSum ();
             if (PLDebug.isDebugSplit ())
               PLDebug.debugSplit (this,
                                   "Trying to split " +
                                         aRowElement.getDebugID () +
                                         " into pieces for split size " +
-                                        PLDebug.getWH (fAvailableSplitWidth, fAvailableSplitHeight));
+                                        PLDebug.getWH (fSplitWidth, fSplitHeight));
 
             // Try to split the element contained in the row
-            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElements (fAvailableSplitWidth,
-                                                                                             fAvailableSplitHeight);
-
+            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElements (fSplitWidth, fSplitHeight);
             if (aSplitResult != null)
             {
               final IPLRenderableObject <?> aVBox1RowElement = aSplitResult.getFirstElement ().getElement ();
               aVBox1.addRow (aVBox1RowElement);
-              fUsedVBox1Width = fWidth;
-              fUsedVBox1WidthFull = fWidthFull;
-              final float fVBox1RowHeight = aSplitResult.getFirstElement ().getHeight ();
-              final float fVBox1RowHeightFull = fVBox1RowHeight + aVBox1RowElement.getFullYSum ();
-              fUsedVBox1Height += fVBox1RowHeight;
-              fUsedVBox1HeightFull += fVBox1RowHeightFull;
-              aVBox1RowWidth.add (Float.valueOf (fWidth));
-              aVBox1RowHeight.add (Float.valueOf (fVBox1RowHeight));
+              fUsedVBox1RowHeight += aSplitResult.getFirstElement ().getHeightFull ();
+              aVBox1RowSize.add (aSplitResult.getFirstElement ().getSizeFull ());
+              aVBox1ElementSize.add (aSplitResult.getFirstElement ().getSize ());
 
               final IPLRenderableObject <?> aVBox2RowElement = aSplitResult.getSecondElement ().getElement ();
               aVBox2.addRow (aVBox2RowElement);
-              fUsedVBox2Width = fWidth;
-              fUsedVBox2WidthFull = fWidthFull;
-              final float fVBox2RowHeight = aSplitResult.getSecondElement ().getHeight ();
-              final float fVBox2RowHeightFull = fVBox2RowHeight + aVBox2RowElement.getFullYSum ();
-              fUsedVBox2Height += fVBox2RowHeight;
-              fUsedVBox2HeightFull += fVBox2RowHeightFull;
-              aVBox2RowWidth.add (Float.valueOf (fWidth));
-              aVBox2RowHeight.add (Float.valueOf (fVBox2RowHeight));
+              fUsedVBox2RowHeight += aSplitResult.getSecondElement ().getHeightFull ();
+              aVBox2RowSize.add (aSplitResult.getSecondElement ().getSizeFull ());
+              aVBox2ElementSize.add (aSplitResult.getSecondElement ().getSize ());
 
               if (PLDebug.isDebugSplit ())
                 PLDebug.debugSplit (this,
@@ -209,12 +181,9 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
             // just add the full row to the second VBox since the row does not
             // fit on first page
             aVBox2.addRow (aRowElement);
-            fUsedVBox2Width = Math.max (fUsedVBox2Width, fRowWidth);
-            fUsedVBox2WidthFull = Math.max (fUsedVBox2WidthFull, fRowWidthFull);
-            fUsedVBox2Height += fRowHeight;
-            fUsedVBox2HeightFull += fRowHeightFull;
-            aVBox2RowWidth.add (Float.valueOf (fRowWidth));
-            aVBox2RowHeight.add (Float.valueOf (fRowHeight));
+            fUsedVBox2RowHeight += fRowHeight;
+            aVBox2RowSize.add (m_aPreparedRowSize[nRow]);
+            aVBox2ElementSize.add (m_aPreparedElementSize[nRow]);
           }
         }
       }
@@ -223,12 +192,9 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
         // We're already on VBox 2 - add all elements, since VBox2 may be split
         // again!
         aVBox2.addRow (aRowElement);
-        fUsedVBox2Width = Math.max (fUsedVBox2Width, fRowWidth);
-        fUsedVBox2WidthFull = Math.max (fUsedVBox2WidthFull, fRowWidthFull);
-        fUsedVBox2Height += fRowHeight;
-        fUsedVBox2HeightFull += fRowHeightFull;
-        aVBox2RowWidth.add (Float.valueOf (fRowWidth));
-        aVBox2RowHeight.add (Float.valueOf (fRowHeight));
+        fUsedVBox2RowHeight += fRowHeight;
+        aVBox2RowSize.add (m_aPreparedRowSize[nRow]);
+        aVBox2ElementSize.add (m_aPreparedElementSize[nRow]);
       }
     }
 
@@ -249,15 +215,15 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     }
 
     // Excluding padding/margin
-    aVBox1.internalMarkAsPrepared (new SizeSpec (fElementWidth, fUsedVBox1HeightFull));
-    aVBox1.m_aPreparedRowElementWidth = _getAsArray (aVBox1RowWidth);
-    aVBox1.m_aPreparedRowElementHeight = _getAsArray (aVBox1RowHeight);
+    aVBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight));
+    aVBox1.m_aPreparedRowSize = aVBox1RowSize.toArray (new SizeSpec [0]);
+    aVBox1.m_aPreparedElementSize = aVBox1ElementSize.toArray (new SizeSpec [0]);
 
-    aVBox2.internalMarkAsPrepared (new SizeSpec (fElementWidth, fUsedVBox2HeightFull));
-    aVBox2.m_aPreparedRowElementWidth = _getAsArray (aVBox2RowWidth);
-    aVBox2.m_aPreparedRowElementHeight = _getAsArray (aVBox2RowHeight);
+    aVBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight));
+    aVBox2.m_aPreparedRowSize = aVBox2RowSize.toArray (new SizeSpec [0]);
+    aVBox2.m_aPreparedElementSize = aVBox2ElementSize.toArray (new SizeSpec [0]);
 
-    return new PLSplitResult (new PLElementWithSize (aVBox1, new SizeSpec (fElementWidth, fUsedVBox1HeightFull)),
-                              new PLElementWithSize (aVBox2, new SizeSpec (fElementWidth, fUsedVBox2HeightFull)));
+    return new PLSplitResult (new PLElementWithSize (aVBox1, new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
+                              new PLElementWithSize (aVBox2, new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight)));
   }
 }

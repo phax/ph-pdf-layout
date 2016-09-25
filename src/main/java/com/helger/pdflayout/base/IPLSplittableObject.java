@@ -42,10 +42,10 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    * objects!
    *
    * @param fElementWidth
-   *        The element width without padding or margin of the element.
+   *        The element width without outline of the element.
    * @param fAvailableHeight
-   *        The available height without y-padding and y-margin of this element.
-   *        Must be &ge; 0.
+   *        The available height without outline of this element. Must be &ge;
+   *        0.
    * @return <code>null</code> if splitting makes no sense.
    */
   @Nullable

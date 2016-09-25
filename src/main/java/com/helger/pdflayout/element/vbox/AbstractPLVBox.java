@@ -54,10 +54,10 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
   protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
 
-  /** prepare width (without padding and margin) */
-  protected float [] m_aPreparedRowElementWidth;
-  /** prepare height (without padding and margin) */
-  protected float [] m_aPreparedRowElementHeight;
+  /** prepared row size (with outline of contained element) */
+  protected SizeSpec [] m_aPreparedRowSize;
+  /** prepared element size (without outline) */
+  protected SizeSpec [] m_aPreparedElementSize;
 
   public AbstractPLVBox ()
   {}
@@ -248,13 +248,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @OverridingMethodsMustInvokeSuper
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
-    m_aPreparedRowElementWidth = new float [m_aRows.size ()];
-    m_aPreparedRowElementHeight = new float [m_aRows.size ()];
+    m_aPreparedRowSize = new SizeSpec [m_aRows.size ()];
+    m_aPreparedElementSize = new SizeSpec [m_aRows.size ()];
 
-    float fUsedWidthFull = 0;
-    float fUsedHeightFull = 0;
     final float fAvailableWidth = aCtx.getAvailableWidth ();
     final float fAvailableHeight = aCtx.getAvailableHeight ();
+    float fUsedWidthFull = 0;
+    float fUsedHeightFull = 0;
 
     int nIndex = 0;
     for (final PLVBoxRow aRow : m_aRows)
@@ -262,22 +262,21 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       final IPLRenderableObject <?> aRowElement = aRow.getElement ();
       // Full width of this element
       final float fRowElementWidthFull = fAvailableWidth;
-      // Effective content width of this element
-      final float fRowElementWidth = fRowElementWidthFull - aRowElement.getFullXSum ();
       // Prepare child element
-      final float fRowElementHeight = aRowElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                                   fRowElementWidth,
-                                                                                   fAvailableHeight -
-                                                                                                     aRowElement.getFullYSum ()))
-                                                 .getHeight ();
-
-      final float fRowElementHeightFull = fRowElementHeight + aRowElement.getFullYSum ();
-      // Update used width and height
+      final SizeSpec aRowElementPreparedSize = aRowElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                            fRowElementWidthFull,
+                                                                                            fAvailableHeight));
+      // Update used width
+      // Effective content width of this element
       fUsedWidthFull = Math.max (fUsedWidthFull, fRowElementWidthFull);
+
+      // Update used height
+      final float fRowElementHeightFull = aRowElementPreparedSize.getHeight () + aRowElement.getFullYSum ();
       fUsedHeightFull += fRowElementHeightFull;
+
       // Without padding and margin
-      m_aPreparedRowElementWidth[nIndex] = fRowElementWidth;
-      m_aPreparedRowElementHeight[nIndex] = fRowElementHeight;
+      m_aPreparedRowSize[nIndex] = new SizeSpec (fAvailableWidth, fRowElementHeightFull);
+      m_aPreparedElementSize[nIndex] = aRowElementPreparedSize;
       ++nIndex;
     }
 
@@ -315,8 +314,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     for (final PLVBoxRow aRow : m_aRows)
     {
       final IPLRenderableObject <?> aRowElement = aRow.getElement ();
-      final float fRowElementWidth = m_aPreparedRowElementWidth[nIndex];
-      final float fRowElementHeight = m_aPreparedRowElementHeight[nIndex];
+      final float fRowElementWidth = m_aPreparedRowSize[nIndex].getWidth ();
+      final float fRowElementHeight = m_aPreparedRowSize[nIndex].getHeight ();
 
       // Perform contained element after border
       final PageRenderContext aRowElementCtx = new PageRenderContext (aCtx,
@@ -336,9 +335,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("rows", m_aRows)
-                            .appendIfNotNull ("preparedRowElementWidth", m_aPreparedRowElementWidth)
-                            .appendIfNotNull ("preparedRowElementHeight", m_aPreparedRowElementHeight)
+                            .append ("Rows", m_aRows)
+                            .appendIfNotNull ("PreparedRowSize", m_aPreparedRowSize)
+                            .appendIfNotNull ("PreparedElementSize", m_aPreparedElementSize)
                             .toString ();
   }
 }

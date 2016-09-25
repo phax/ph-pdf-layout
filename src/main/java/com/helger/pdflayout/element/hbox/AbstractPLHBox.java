@@ -58,9 +58,9 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
   private int m_nStarWidthItems = 0;
 
-  /** prepare cell size (without padding and margin) */
+  /** prepared column size (with outline of contained element) */
   protected SizeSpec [] m_aPreparedColumnSize;
-  /** prepare content size (without padding and margin) */
+  /** prepared element size (without outline) */
   protected SizeSpec [] m_aPreparedElementSize;
 
   public AbstractPLHBox ()

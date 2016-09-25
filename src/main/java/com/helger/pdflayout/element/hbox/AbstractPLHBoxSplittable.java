@@ -124,26 +124,23 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (nCol);
       final boolean bIsSplittable = aColumnElement.isSplittable ();
       final float fColumnWidth = m_aPreparedColumnSize[nCol].getWidth ();
-      final float fElementWidth = m_aPreparedElementSize[nCol].getWidth ();
       final float fColumnHeight = m_aPreparedColumnSize[nCol].getHeight ();
-      final float fColumnHeightFull = fColumnHeight + aColumnElement.getFullYSum ();
+      final float fElementWidth = m_aPreparedElementSize[nCol].getWidth ();
 
       boolean bDidSplitColumn = false;
-      if (fColumnHeightFull > fAvailableHeight && bIsSplittable)
+      if (fColumnHeight > fAvailableHeight && bIsSplittable)
       {
+        final float fSplitWidth = fElementWidth;
+        final float fSplitHeight = fAvailableHeight - aColumnElement.getFullYSum ();
         if (PLDebug.isDebugSplit ())
           PLDebug.debugSplit (this,
                               "Trying to split " +
                                     aColumnElement.getDebugID () +
                                     " into pieces for remaining size " +
-                                    PLDebug.getWH (fColumnWidth, fAvailableHeight));
+                                    PLDebug.getWH (fSplitWidth, fSplitHeight));
 
         // Use width and height without padding and margin!
-        final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ()
-                                                         .splitElements (fElementWidth,
-                                                                         fAvailableHeight -
-                                                                                        aColumnElement.getFullYSum ());
-
+        final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ().splitElements (fSplitWidth, fSplitHeight);
         if (aSplitResult != null)
         {
           final IPLRenderableObject <?> aHBox1Element = aSplitResult.getFirstElement ().getElement ();
@@ -205,7 +202,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
       if (!bDidSplitColumn)
       {
-        if (fColumnHeightFull > fAvailableHeight)
+        if (fColumnHeight > fAvailableHeight)
         {
           // We should have split but did not
           if (bIsSplittable)
@@ -217,7 +214,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
                                         " contains splittable element " +
                                         aColumnElement.getDebugID () +
                                         " which creates an overflow by " +
-                                        (fColumnHeightFull - fAvailableHeight) +
+                                        (fColumnHeight - fAvailableHeight) +
                                         " for available height " +
                                         fAvailableHeight +
                                         "!");
@@ -231,7 +228,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
                                         " contains non splittable element " +
                                         aColumnElement.getDebugID () +
                                         " which creates an overflow by " +
-                                        (fColumnHeightFull - fAvailableHeight) +
+                                        (fColumnHeight - fAvailableHeight) +
                                         " for max height " +
                                         fAvailableHeight +
                                         "!");
@@ -245,12 +242,10 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
         // No splitting and cell fits totally in available height
         aHBox1.getColumnAtIndex (nCol).setElement (aColumnElement);
 
-        // Use the full height, because the column itself has no padding or
-        // margin!
-        fHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, Math.min (fColumnHeightFull, fAvailableHeight));
+        fHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, Math.min (fColumnHeight, fAvailableHeight));
         fHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, 0);
-        fHBox1ElementSizes[nCol] = new SizeSpec (fColumnWidth, Math.min (fColumnHeight, fAvailableHeight));
-        fHBox2ElementSizes[nCol] = new SizeSpec (fColumnWidth, 0);
+        fHBox1ElementSizes[nCol] = m_aPreparedElementSize[nCol];
+        fHBox2ElementSizes[nCol] = new SizeSpec (fElementWidth, 0);
       }
 
       // calculate max column height
