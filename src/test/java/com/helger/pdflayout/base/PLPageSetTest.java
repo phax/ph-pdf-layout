@@ -29,7 +29,6 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.text.PLText;
-import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
 import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
@@ -183,22 +182,23 @@ public final class PLPageSetTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
     aPS1.setPageHeader (new PLText (sHeader, r10).setBorder (Color.RED));
-    aPS1.setPageFooter (new PLTextWithPlaceholders (PagePreRenderContext.PLACEHOLDER_PAGESET_INDEX +
-                                                    " / " +
-                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
-                                                    " / " +
-                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
-                                                    " / " +
-                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
-                                                    " / " +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
-                                                    " / " +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
-                                                    " / " +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
-                                                    " / ${custom-var}",
-                                                    r10).setFillColor (Color.PINK)
-                                                        .setHorzAlign (EHorzAlignment.CENTER));
+    aPS1.setPageFooter (new PLText (PagePreRenderContext.PLACEHOLDER_PAGESET_INDEX +
+                                    " / " +
+                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
+                                    " / " +
+                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                    " / " +
+                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
+                                    " / " +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
+                                    " / " +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                    " / " +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
+                                    " / ${custom-var}",
+                                    r10).setReplacePlaceholder (true)
+                                        .setFillColor (Color.PINK)
+                                        .setHorzAlign (EHorzAlignment.CENTER));
 
     for (int i = 0; i < 80; ++i)
       aPS1.addElement (new PLText ("Line " + i, r10));

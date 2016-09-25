@@ -306,7 +306,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   @Override
-  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     final float fCurX = aCtx.getStartLeft () + getFullLeft ();
     float fCurY = aCtx.getStartTop () - getFullTop ();
@@ -324,7 +324,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                                                       fCurY,
                                                                       fRowElementWidth,
                                                                       fRowElementHeight);
-      aRowElement.perform (aRowElementCtx);
+      aRowElement.render (aRowElementCtx);
 
       // Update Y-pos
       fCurY -= fRowElementHeight + aRowElement.getFullYSum ();

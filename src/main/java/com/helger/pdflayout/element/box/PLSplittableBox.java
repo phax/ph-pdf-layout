@@ -19,22 +19,37 @@ package com.helger.pdflayout.element.box;
 import javax.annotation.Nullable;
 
 import com.helger.pdflayout.base.IPLRenderableObject;
+import com.helger.pdflayout.base.IPLSplittableObject;
+import com.helger.pdflayout.base.PLSplitResult;
 
 /**
- * A box is a simple element that encapsulates another element and has a
- * padding, border and margin etc. itself
+ * A splittable box is a simple element that encapsulates another element and
+ * has a padding, border and margin etc. itself
  *
  * @author Philip Helger
  */
-public class PLBox extends AbstractPLBox <PLBox>
+public class PLSplittableBox extends AbstractPLBox <PLSplittableBox> implements IPLSplittableObject <PLSplittableBox>
 {
-  public PLBox ()
+  public PLSplittableBox ()
   {
     super (null);
   }
 
-  public PLBox (@Nullable final IPLRenderableObject <?> aElement)
+  public PLSplittableBox (@Nullable final IPLRenderableObject <?> aElement)
   {
     super (aElement);
+  }
+
+  public boolean isSplittable ()
+  {
+    // Empty boxes or boxes with a non-splittable element cannot be split
+    return hasElement () && getElement ().isSplittable ();
+  }
+
+  @Nullable
+  public PLSplitResult splitElements (final float fElementWidth, final float fAvailableHeight)
+  {
+    // TODO
+    return null;
   }
 }

@@ -508,8 +508,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       for (final IPLRenderableObject <?> aElement : m_aElements)
       {
         final PreparationContext aRPC = new PreparationContext (aGlobalCtx, fAvailWidth, fAvailHeight);
-        final SizeSpec aElementSize = aElement.prepare (aRPC);
-        ret.addElement (new PLElementWithSize (aElement, aElementSize));
+        final SizeSpec aElementPreparedSize = aElement.prepare (aRPC);
+        ret.addElement (new PLElementWithSize (aElement, aElementPreparedSize));
       }
 
       if (PLDebug.isDebugPrepare ())
@@ -545,7 +545,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           bIsPagebreakDesired = false;
         }
 
-        final float fElementWidth = aElementWithSize.getWidth ();
+        final float fElementPreparedWidth = aElementWithSize.getWidth ();
         final float fElementHeightFull = aElementWithSize.getHeightFull ();
         final float fAvailableHeight = fCurY - fYLeast;
         if (fCurY - fElementHeightFull < fYLeast || bIsPagebreakDesired)
@@ -559,14 +559,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                   "Trying to split " +
                                         aElement.getDebugID () +
                                         " into pieces for available width " +
-                                        fElementWidth +
+                                        fElementPreparedWidth +
                                         " and height " +
                                         fAvailableHeight);
 
             // split elements
-            final PLSplitResult aSplitResult = aElement.getAsSplittable ()
-                                                       .splitElements (fElementWidth,
-                                                                       fAvailableHeight - aElement.getFullYSum ());
+            final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElements (fElementPreparedWidth,
+                                                                                          fAvailableHeight -
+                                                                                                                 aElement.getFullYSum ());
             if (aSplitResult != null)
             {
               // Re-add them to the list and try again (they may be splitted
@@ -801,7 +801,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                                                  fHeight);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
-          m_aPageHeader.perform (aRCtx);
+          m_aPageHeader.render (aRCtx);
         }
 
         float fCurY = fYTop;
@@ -823,7 +823,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                                                  fHeight);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
-          aElement.perform (aRCtx);
+          aElement.render (aRCtx);
 
           // In
           fCurY -= aElementWithHeight.getHeightFull ();
@@ -846,7 +846,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                                                  fHeight);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
-          m_aPageFooter.perform (aRCtx);
+          m_aPageFooter.render (aRCtx);
         }
       }
       finally

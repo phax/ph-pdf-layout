@@ -70,7 +70,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
   }
 
   @Override
-  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 
   @Override

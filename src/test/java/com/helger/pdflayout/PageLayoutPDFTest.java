@@ -30,7 +30,6 @@ import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.text.PLText;
-import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
 import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.spec.BorderStyleSpec;
@@ -58,12 +57,13 @@ public final class PageLayoutPDFTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (50, 30).setPadding (15);
     aPS1.setPageHeader (new PLText ("Das ist die Kopfzeile", r10).setBorderBottom (new BorderStyleSpec (Color.BLACK))
                                                                  .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setPageFooter (new PLTextWithPlaceholders ("Das ist die Fusszeile, Seite " +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
-                                                    " von " +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
-                                                    r10).setBorderTop (new BorderStyleSpec (Color.BLACK))
-                                                        .setHorzAlign (EHorzAlignment.CENTER));
+    aPS1.setPageFooter (new PLText ("Das ist die Fusszeile, Seite " +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                    " von " +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
+                                    r10).setReplacePlaceholder (true)
+                                        .setBorderTop (new BorderStyleSpec (Color.BLACK))
+                                        .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.addElement (new PLText ("Zeile 1", r10));
     {
       final PLHBox aHBox = new PLHBox ();
@@ -149,17 +149,18 @@ public final class PageLayoutPDFTest
     });
     aPS3.setPageHeader (new PLText ("Das ist die Kopfzeile3", r10).setBorderBottom (new BorderStyleSpec (Color.BLACK))
                                                                   .setHorzAlign (EHorzAlignment.CENTER));
-    aPS3.setPageFooter (new PLTextWithPlaceholders ("Das ist die Fusszeile3, Seite " +
-                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
-                                                    " von " +
-                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
-                                                    " bzw. " +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
-                                                    " von " +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
-                                                    "; my value: ${pages-1}",
-                                                    r10).setBorderTop (new BorderStyleSpec (Color.BLACK))
-                                                        .setHorzAlign (EHorzAlignment.CENTER));
+    aPS3.setPageFooter (new PLText ("Das ist die Fusszeile3, Seite " +
+                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                    " von " +
+                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
+                                    " bzw. " +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                    " von " +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
+                                    "; my value: ${pages-1}",
+                                    r10).setReplacePlaceholder (true)
+                                        .setBorderTop (new BorderStyleSpec (Color.BLACK))
+                                        .setHorzAlign (EHorzAlignment.CENTER));
     aPS3.addElement (new PLText ("Zeile 1\n\nZeile 3", r10));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
@@ -197,14 +198,15 @@ public final class PageLayoutPDFTest
     aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
                                                     .setPadding (4, 0)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setPageFooter (new PLTextWithPlaceholders ("Page " +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
-                                                    " of " +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
-                                                    r10).setBorder (new BorderStyleSpec (Color.BLACK))
-                                                        .setMarginTop (10)
-                                                        .setPadding (4, 10)
-                                                        .setHorzAlign (EHorzAlignment.RIGHT));
+    aPS1.setPageFooter (new PLText ("Page " +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                    " of " +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
+                                    r10).setReplacePlaceholder (true)
+                                        .setBorder (new BorderStyleSpec (Color.BLACK))
+                                        .setMarginTop (10)
+                                        .setPadding (4, 10)
+                                        .setHorzAlign (EHorzAlignment.RIGHT));
     {
       final PLHBox h = new PLHBox ();
 

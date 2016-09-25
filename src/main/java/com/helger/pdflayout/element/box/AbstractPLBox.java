@@ -129,7 +129,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   }
 
   @Override
-  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     // Fill and border
     PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
@@ -141,7 +141,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
                                                                    aCtx.getStartTop () - getFullTop (),
                                                                    getPreparedWidth (),
                                                                    getPreparedHeight ());
-      m_aElement.perform (aElementCtx);
+      m_aElement.render (aElementCtx);
     }
   }
 

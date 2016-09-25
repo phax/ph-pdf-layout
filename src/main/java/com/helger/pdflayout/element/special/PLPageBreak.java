@@ -69,7 +69,7 @@ public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
   }
 
   @Override
-  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 
   @Override

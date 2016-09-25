@@ -228,10 +228,10 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *         In case of a PDFBox error
    */
   @OverrideOnDemand
-  protected abstract void onPerform (@Nonnull PageRenderContext aCtx) throws IOException;
+  protected abstract void onRender (@Nonnull PageRenderContext aCtx) throws IOException;
 
   @Nonnegative
-  public final void perform (@Nonnull final PageRenderContext aCtx) throws IOException
+  public final void render (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     internalCheckAlreadyPrepared ();
 
@@ -244,7 +244,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                                                   aCtx.getHeight ()));
 
     // Main perform after border
-    onPerform (aCtx);
+    onRender (aCtx);
   }
 
   @Override

@@ -70,7 +70,7 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    *         margin. May not be <code>null</code>.
    * @throws IOException
    *         if already prepared
-   * @see #perform(PageRenderContext)
+   * @see #render(PageRenderContext)
    */
   @Nonnull
   SizeSpec prepare (@Nonnull final PreparationContext aCtx) throws IOException;
@@ -98,5 +98,5 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    * @see #prepare(PreparationContext)
    */
   @Nonnegative
-  void perform (@Nonnull final PageRenderContext aCtx) throws IOException;
+  void render (@Nonnull final PageRenderContext aCtx) throws IOException;
 }

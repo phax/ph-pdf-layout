@@ -24,7 +24,6 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
-import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
@@ -80,11 +79,5 @@ public class TextAndWidthSpec
   public String toString ()
   {
     return new ToStringGenerator (null).append ("text", m_sText).append ("width", m_fWidth).toString ();
-  }
-
-  @Nonnull
-  public static String getAsText (@Nonnull final Iterable <? extends TextAndWidthSpec> aTexts)
-  {
-    return StringHelper.getImploded ('\n', aTexts, x -> x.getText ());
   }
 }

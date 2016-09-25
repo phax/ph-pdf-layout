@@ -29,7 +29,7 @@ import com.helger.commons.string.ToStringGenerator;
  * @author Philip Helger
  */
 @Immutable
-public final class PLSplitResult
+public class PLSplitResult
 {
   private final PLElementWithSize m_aFirstElement;
   private final PLElementWithSize m_aSecondElement;

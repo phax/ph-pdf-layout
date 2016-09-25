@@ -30,6 +30,7 @@ import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
@@ -37,9 +38,12 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
+import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLElementWithSize;
+import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
+import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.EHorzAlignment;
@@ -56,10 +60,12 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  *        Implementation type
  */
 public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
-                                     implements IPLHasHorizontalAlignment <IMPLTYPE>
+                                     implements IPLHasHorizontalAlignment <IMPLTYPE>, IPLSplittableObject <IMPLTYPE>
 {
   public static final boolean DEFAULT_TOP_DOWN = true;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
+  public static final boolean DEFAULT_SPLITTABLE = true;
+  public static final boolean DEFAULT_REPLACE_PLACEHOLDERS = false;
 
   private String m_sText;
   private String m_sDisplayText;
@@ -67,6 +73,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private boolean m_bTopDown = DEFAULT_TOP_DOWN;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
+  private boolean m_bSplittable = DEFAULT_SPLITTABLE;
+  private boolean m_bReplacePlaceholder = DEFAULT_REPLACE_PLACEHOLDERS;
 
   // prepare result
   private LoadedFont m_aLoadedFont;
@@ -102,6 +110,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     setHorzAlign (aSource.m_eHorzAlign);
     setTopDown (aSource.m_bTopDown);
     setMaxRows (aSource.m_nMaxRows);
+    setSplittable (aSource.m_bSplittable);
+    setReplacePlaceholder (aSource.m_bReplacePlaceholder);
     return thisAsT ();
   }
 
@@ -190,6 +200,30 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public IMPLTYPE setMaxRows (final int nMaxRows)
   {
     m_nMaxRows = nMaxRows;
+    return thisAsT ();
+  }
+
+  public boolean isSplittable ()
+  {
+    return m_bSplittable;
+  }
+
+  @Nonnull
+  public IMPLTYPE setSplittable (final boolean bSplittable)
+  {
+    m_bSplittable = bSplittable;
+    return thisAsT ();
+  }
+
+  public boolean isReplacePlaceholder ()
+  {
+    return m_bReplacePlaceholder;
+  }
+
+  @Nonnull
+  public IMPLTYPE setReplacePlaceholder (final boolean bReplacePlaceholder)
+  {
+    m_bReplacePlaceholder = bReplacePlaceholder;
     return thisAsT ();
   }
 
@@ -307,7 +341,21 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Override
-  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
+  public void beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
+  {
+    if (m_bReplacePlaceholder)
+    {
+      final String sOrigText = getText ();
+      final String sDisplayText = StringHelper.replaceMultiple (sOrigText, aCtx.getAllPlaceholders ());
+      if (!sOrigText.equals (sDisplayText))
+      {
+        setDisplayTextAfterPrepare (sDisplayText, getPrepareAvailableSize ().getWidth ());
+      }
+    }
+  }
+
+  @Override
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     if (hasNoText ())
     {
@@ -393,9 +441,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Nonnull
-  protected final PLElementWithSize getCopy (final float fElementWidth,
-                                             @Nonnull @Nonempty final List <TextAndWidthSpec> aLines,
-                                             final boolean bSplittableCopy)
+  private PLElementWithSize _splitGetCopy (final float fElementWidth,
+                                           @Nonnull @Nonempty final List <TextAndWidthSpec> aLines,
+                                           final boolean bSplittableCopy)
   {
     ValueEnforcer.notEmpty (aLines, "Lines");
 
@@ -405,14 +453,90 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));
 
-    final String sTextContent = TextAndWidthSpec.getAsText (aLineCopy);
-    final AbstractPLText <?> aNewText = bSplittableCopy ? new PLTextSplittable (sTextContent, getFontSpec ())
-                                                        : new PLText (sTextContent, getFontSpec ());
-    aNewText.setBasicDataFrom (this).internalMarkAsPrepared (aSize);
+    final String sTextContent = StringHelper.getImploded ('\n', aLineCopy, x -> x.getText ());
+    final PLText aNewText = new PLText (sTextContent, getFontSpec ());
+    aNewText.setBasicDataFrom (this);
+    // Set this explicitly after setBasicDataFrom!
+    aNewText.setSplittable (bSplittableCopy);
+
+    aNewText.internalMarkAsPrepared (aSize);
     aNewText.internalSetPreparedLines (aLineCopy);
     aNewText.internalSetPreparedFontData (m_aLoadedFont, m_fLineHeight);
 
     return new PLElementWithSize (aNewText, aSize);
+  }
+
+  @Nullable
+  public PLSplitResult splitElements (final float fElementWidth, final float fAvailableHeight)
+  {
+    if (fAvailableHeight <= 0)
+      return null;
+
+    final float fLineHeight = m_fLineHeight;
+
+    // Get the lines in the correct order from top to bottom
+    final ICommonsList <TextAndWidthSpec> aLines = isTopDown () ? m_aPreparedLines
+                                                                : CollectionHelper.getReverseList (m_aPreparedLines);
+
+    int nLines = (int) (fAvailableHeight / fLineHeight);
+    if (nLines <= 0)
+    {
+      // Splitting makes no sense because the resulting text 1 would be empty
+      if (PLDebug.isDebugSplit ())
+        PLDebug.debugSplit (this,
+                            "Failed to split because the result would be " +
+                                  nLines +
+                                  " lines for available height " +
+                                  fAvailableHeight +
+                                  " and line height " +
+                                  fLineHeight);
+      return null;
+    }
+
+    if (nLines >= aLines.size ())
+    {
+      // Splitting makes no sense because the resulting text 2 would be empty
+      if (PLDebug.isDebugSplit ())
+        PLDebug.debugSplit (this,
+                            "Failed to split because the result of " +
+                                  nLines +
+                                  " lines fits into the available height " +
+                                  fAvailableHeight +
+                                  " and line height " +
+                                  fLineHeight +
+                                  " (=" +
+                                  (fAvailableHeight * fLineHeight) +
+                                  ")");
+      return null;
+    }
+
+    // Calc estimated height (required because an offset is added)
+    final float fExpectedHeight = getDisplayHeightOfLines (nLines);
+    if (fExpectedHeight > fAvailableHeight)
+    {
+      // Show one line less
+      --nLines;
+      if (nLines <= 0)
+      {
+        // Splitting makes no sense
+        if (PLDebug.isDebugSplit ())
+          PLDebug.debugSplit (this,
+                              "Failed to split because the result would be " +
+                                    nLines +
+                                    " lines for available height " +
+                                    fAvailableHeight +
+                                    " and expected height " +
+                                    fExpectedHeight);
+        return null;
+      }
+    }
+
+    // First elements does not need to be splittable anymore
+    final PLElementWithSize aText1 = _splitGetCopy (fElementWidth, aLines.subList (0, nLines), false);
+    // Second element may need additional splitting
+    final PLElementWithSize aText2 = _splitGetCopy (fElementWidth, aLines.subList (nLines, aLines.size ()), true);
+
+    return new PLSplitResult (aText1, aText2);
   }
 
   @Override
@@ -425,6 +549,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("TopDown", m_bTopDown)
                             .append ("MaxRows", m_nMaxRows)
+                            .append ("Splittable", m_bSplittable)
+                            .append ("ReplacePlaceholder", m_bReplacePlaceholder)
                             .toString ();
   }
 }

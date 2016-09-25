@@ -58,10 +58,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
   private int m_nStarWidthItems = 0;
 
-  /** prepare width (without padding and margin) */
-  protected float [] m_aPreparedColumnWidth;
-  /** prepare height (without padding and margin) */
-  protected float [] m_aPreparedColumnHeight;
+  /** prepare cell size (without padding and margin) */
+  protected SizeSpec [] m_aPreparedColumnSize;
+  /** prepare content size (without padding and margin) */
+  protected SizeSpec [] m_aPreparedElementSize;
 
   public AbstractPLHBox ()
   {}
@@ -201,8 +201,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   @OverridingMethodsMustInvokeSuper
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
-    m_aPreparedColumnWidth = new float [m_aColumns.size ()];
-    m_aPreparedColumnHeight = new float [m_aColumns.size ()];
+    m_aPreparedColumnSize = new SizeSpec [m_aColumns.size ()];
+    m_aPreparedElementSize = new SizeSpec [m_aColumns.size ()];
 
     final float fAvailableWidth = aCtx.getAvailableWidth ();
     final float fAvailableHeight = aCtx.getAvailableHeight ();
@@ -218,23 +218,24 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       {
         final IPLRenderableObject <?> aElement = aColumn.getElement ();
         // Full width of this element
-        final float fItemWidth = aColumn.getWidth ().getEffectiveValue (fAvailableWidth);
+        final float fColumnWidth = aColumn.getWidth ().getEffectiveValue (fAvailableWidth);
+
         // Prepare child element
-        final float fItemHeight = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                            fItemWidth,
-                                                                            fAvailableHeight))
-                                          .getHeight ();
+        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                        fColumnWidth,
+                                                                                        fAvailableHeight));
+
         // Update used width
-        fUsedWidthFull += fItemWidth;
-        fRestWidth -= fItemWidth;
+        fUsedWidthFull += fColumnWidth;
+        fRestWidth -= fColumnWidth;
 
         // Update used height
-        final float fItemHeightFull = fItemHeight + aElement.getFullYSum ();
+        final float fItemHeightFull = aElementPreparedSize.getHeight () + aElement.getFullYSum ();
         fUsedHeightFull = Math.max (fUsedHeightFull, fItemHeightFull);
 
         // Remember width and height for element (without padding and margin)
-        m_aPreparedColumnWidth[nIndex] = fItemWidth;
-        m_aPreparedColumnHeight[nIndex] = fItemHeight;
+        m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fItemHeightFull);
+        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
       }
       ++nIndex;
     }
@@ -247,24 +248,24 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       {
         final IPLRenderableObject <?> aElement = aColumn.getElement ();
         // Full width of this element
-        final float fItemWidth = fRestWidth / m_nStarWidthItems;
+        final float fColumnWidth = fRestWidth / m_nStarWidthItems;
 
         // Prepare child element
-        final float fItemHeight = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                            fItemWidth,
-                                                                            fAvailableHeight))
-                                          .getHeight ();
+        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                        fColumnWidth,
+                                                                                        fAvailableHeight));
+        final float fItemHeight = aElementPreparedSize.getHeight ();
 
         // Update used width
-        fUsedWidthFull += fItemWidth;
+        fUsedWidthFull += fColumnWidth;
 
         // Update used height
         final float fItemHeightFull = fItemHeight + aElement.getFullYSum ();
         fUsedHeightFull = Math.max (fUsedHeightFull, fItemHeightFull);
 
         // Remember width and height for element (without padding and margin)
-        m_aPreparedColumnWidth[nIndex] = fItemWidth;
-        m_aPreparedColumnHeight[nIndex] = fItemHeight;
+        m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fItemHeightFull);
+        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
       }
       ++nIndex;
     }
@@ -278,10 +279,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         if (aElement instanceof IPLHasVerticalAlignment <?> && aElement instanceof IPLHasMargin <?>)
         {
           final float fMarginTop = ((IPLHasVerticalAlignment <?>) aElement).getIndentY (fUsedHeightFull,
-                                                                                        m_aPreparedColumnHeight[nIndex] +
-                                                                                                         aElement.getFullYSum ());
-          if (fMarginTop != 0f)
-            ((IPLHasMargin <?>) aElement).addMarginTop (fMarginTop);
+                                                                                        m_aPreparedColumnSize[nIndex].getHeight ());
+          ((IPLHasMargin <?>) aElement).addMarginTop (fMarginTop);
         }
         ++nIndex;
       }
@@ -311,7 +310,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Override
-  protected void onPerform (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     float fCurX = aCtx.getStartLeft ();
     final float fStartY = aCtx.getStartTop ();
@@ -320,14 +319,14 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     for (final PLHBoxColumn aColumn : m_aColumns)
     {
       final IPLRenderableObject <?> aElement = aColumn.getElement ();
-      final float fItemWidth = m_aPreparedColumnWidth[nIndex];
-      final float fItemHeight = m_aPreparedColumnHeight[nIndex];
+      final float fColumnWidth = m_aPreparedColumnSize[nIndex].getWidth ();
+      final float fColumnHeight = m_aPreparedColumnSize[nIndex].getHeight ();
 
-      final PageRenderContext aItemCtx = new PageRenderContext (aCtx, fCurX, fStartY, fItemWidth, fItemHeight);
-      aElement.perform (aItemCtx);
+      final PageRenderContext aItemCtx = new PageRenderContext (aCtx, fCurX, fStartY, fColumnWidth, fColumnHeight);
+      aElement.render (aItemCtx);
 
       // Update X-pos
-      fCurX += fItemWidth + aElement.getFullXSum ();
+      fCurX += fColumnWidth + aElement.getFullXSum ();
       ++nIndex;
     }
   }
@@ -336,10 +335,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("columns", m_aColumns)
-                            .append ("startWidthItems", m_nStarWidthItems)
-                            .appendIfNotNull ("preparedWidth", m_aPreparedColumnWidth)
-                            .appendIfNotNull ("preparedHeight", m_aPreparedColumnHeight)
+                            .append ("Columns", m_aColumns)
+                            .append ("StarWidthItems", m_nStarWidthItems)
+                            .appendIfNotNull ("PreparedColumnSize", m_aPreparedColumnSize)
+                            .appendIfNotNull ("PreparedElementSize", m_aPreparedElementSize)
                             .toString ();
   }
 }

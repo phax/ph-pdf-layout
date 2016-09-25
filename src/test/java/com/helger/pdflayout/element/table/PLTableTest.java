@@ -40,7 +40,6 @@ import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.text.PLText;
-import com.helger.pdflayout.element.text.PLTextWithPlaceholders;
 import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
@@ -74,13 +73,14 @@ public final class PLTableTest
     aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
                                                     .setPadding (4, 0)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setPageFooter (new PLTextWithPlaceholders ("Page " +
-                                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
-                                                    "/" +
-                                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
-                                                    r10).setBorder (new BorderStyleSpec (Color.RED))
-                                                        .setPadding (4, 0)
-                                                        .setHorzAlign (EHorzAlignment.CENTER));
+    aPS1.setPageFooter (new PLText ("Page " +
+                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                    "/" +
+                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
+                                    r10).setReplacePlaceholder (true)
+                                        .setBorder (new BorderStyleSpec (Color.RED))
+                                        .setPadding (4, 0)
+                                        .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.addElement (new PLText ("Erste Dummy Zeile", r10));
 
     // Start table
