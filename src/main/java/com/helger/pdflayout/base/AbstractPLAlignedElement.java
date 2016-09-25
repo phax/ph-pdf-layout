@@ -21,6 +21,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
 
 /**
@@ -32,9 +33,11 @@ import com.helger.pdflayout.spec.EVertAlignment;
  *        The implementation type of this class.
  */
 public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlignedElement <IMPLTYPE>>
-                                               extends AbstractPLHorzAlignedElement <IMPLTYPE>
-                                               implements IPLHasVerticalAlignment <IMPLTYPE>
+                                               extends AbstractPLElement <IMPLTYPE> implements
+                                               IPLHasHorizontalAlignment <IMPLTYPE>,
+                                               IPLHasVerticalAlignment <IMPLTYPE>
 {
+  private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
 
   public AbstractPLAlignedElement ()
@@ -45,7 +48,21 @@ public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlign
   public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLAlignedElement <?> aSource)
   {
     super.setBasicDataFrom (aSource);
+    setHorzAlign (aSource.m_eHorzAlign);
     setVertAlign (aSource.m_eVertAlign);
+    return thisAsT ();
+  }
+
+  @Nonnull
+  public EHorzAlignment getHorzAlign ()
+  {
+    return m_eHorzAlign;
+  }
+
+  @Nonnull
+  public IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
+  {
+    m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
     return thisAsT ();
   }
 
@@ -65,6 +82,9 @@ public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlign
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("VertAlign", m_eVertAlign).toString ();
+    return ToStringGenerator.getDerived (super.toString ())
+                            .append ("HorzAlign", m_eHorzAlign)
+                            .append ("VertAlign", m_eVertAlign)
+                            .toString ();
   }
 }
