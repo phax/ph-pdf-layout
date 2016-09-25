@@ -60,6 +60,10 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     return m_aElement;
   }
 
+  /**
+   * @return <code>true</code> if an element is contained, <code>false</code> if
+   *         not.
+   */
   public boolean hasElement ()
   {
     return m_aElement != null;
@@ -68,6 +72,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   @Nonnull
   public final IMPLTYPE setElement (@Nullable final IPLRenderableObject <?> aElement)
   {
+    internalCheckNotPrepared ();
     m_aElement = aElement;
     return thisAsT ();
   }
@@ -80,6 +85,11 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
       m_aElement.visit (aVisitor);
   }
 
+  /**
+   * @return The prepared size of the contained element. May be
+   *         <code>null</code> if this box was not yet prepared or if no element
+   *         is contained.
+   */
   @Nullable
   protected final SizeSpec getElementPreparedSize ()
   {

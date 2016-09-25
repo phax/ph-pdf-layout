@@ -132,27 +132,24 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     return aColumn == null ? null : aColumn.getElement ();
   }
 
-  @Nonnull
-  private PLHBoxColumn _addAndReturnColumn (@CheckForSigned final int nIndex,
-                                            @Nonnull final IPLRenderableObject <?> aElement,
-                                            @Nonnull final WidthSpec aWidth)
+  private void _addAndReturnColumn (@CheckForSigned final int nIndex, @Nonnull final PLHBoxColumn aColumn)
   {
     internalCheckNotPrepared ();
-    final PLHBoxColumn aItem = new PLHBoxColumn (aElement, aWidth);
     if (nIndex < 0 || nIndex >= m_aColumns.size ())
-      m_aColumns.add (aItem);
+      m_aColumns.add (aColumn);
     else
-      m_aColumns.add (nIndex, aItem);
-    if (aWidth.isStar ())
+      m_aColumns.add (nIndex, aColumn);
+    if (aColumn.getWidth ().isStar ())
       m_nStarWidthItems++;
-    return aItem;
   }
 
   @Nonnull
   public PLHBoxColumn addAndReturnColumn (@Nonnull final IPLRenderableObject <?> aElement,
                                           @Nonnull final WidthSpec aWidth)
   {
-    return _addAndReturnColumn (-1, aElement, aWidth);
+    final PLHBoxColumn aColumn = new PLHBoxColumn (aElement, aWidth);
+    _addAndReturnColumn (-1, aColumn);
+    return aColumn;
   }
 
   @Nonnull
@@ -167,8 +164,9 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                           @Nonnull final IPLRenderableObject <?> aElement,
                                           @Nonnull final WidthSpec aWidth)
   {
-    ValueEnforcer.isGE0 (nIndex, "Index");
-    return _addAndReturnColumn (nIndex, aElement, aWidth);
+    final PLHBoxColumn aColumn = new PLHBoxColumn (aElement, aWidth);
+    _addAndReturnColumn (nIndex, aColumn);
+    return aColumn;
   }
 
   @Nonnull
@@ -185,8 +183,9 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
     internalCheckNotPrepared ();
+
     final PLHBoxColumn aColumn = m_aColumns.remove (nIndex);
-    if (aColumn.getWidth ().isStar ())
+    if (aColumn != null && aColumn.getWidth ().isStar ())
       m_nStarWidthItems--;
     return thisAsT ();
   }

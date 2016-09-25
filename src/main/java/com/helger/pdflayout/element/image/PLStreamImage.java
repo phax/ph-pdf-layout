@@ -18,6 +18,7 @@ package com.helger.pdflayout.element.image;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -28,57 +29,56 @@ import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.io.IHasInputStream;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.render.PagePreRenderContext;
 
 /**
- * Represent a static image based on {@link BufferedImage}.
+ * Represent a static image based on {@link BufferedImage} read from an
+ * {@link InputStream}.
  *
  * @author Philip Helger
  */
-public class PLImage extends AbstractPLImage <PLImage>
+public class PLStreamImage extends AbstractPLImage <PLStreamImage>
 {
-  private final BufferedImage m_aImage;
+  private final IHasInputStream m_aIIS;
 
-  public PLImage (@Nonnull final BufferedImage aImage)
-  {
-    this (aImage, aImage.getWidth (), aImage.getHeight ());
-  }
-
-  public PLImage (@Nonnull final BufferedImage aImage,
-                  @Nonnegative final float fImageWidth,
-                  @Nonnegative final float fImageHeight)
+  public PLStreamImage (@Nonnull final IHasInputStream aImage,
+                        @Nonnegative final float fImageWidth,
+                        @Nonnegative final float fImageHeight)
   {
     super (fImageWidth, fImageHeight);
     ValueEnforcer.notNull (aImage, "Image");
 
-    m_aImage = aImage;
+    m_aIIS = aImage;
   }
 
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public PLImage setBasicDataFrom (@Nonnull final PLImage aSource)
+  public PLStreamImage setBasicDataFrom (@Nonnull final PLStreamImage aSource)
   {
     super.setBasicDataFrom (aSource);
     return this;
   }
 
   @Nullable
-  public BufferedImage getImage ()
+  public IHasInputStream getIIS ()
   {
-    return m_aImage;
+    return m_aIIS;
   }
 
   @Override
   @Nonnull
   protected PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException
   {
-    return JPEGFactory.createFromImage (aCtx.getDocument (), m_aImage);
+    // The input stream is closed automatically
+    final InputStream aIS = m_aIIS.getInputStream ();
+    return JPEGFactory.createFromStream (aCtx.getDocument (), aIS);
   }
 
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("Image", m_aImage).toString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("IIS", m_aIIS).toString ();
   }
 }

@@ -31,7 +31,8 @@ import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Abstract renderable PL element having a padding only
+ * Abstract renderable PL element having a minimum size, a maximum size, margin,
+ * border, padding and a fill color.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>

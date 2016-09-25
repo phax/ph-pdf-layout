@@ -29,6 +29,7 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLPageSet;
+import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
@@ -58,9 +59,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.star ());
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.star ());
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.star ());
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
@@ -77,9 +78,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.perc (20));
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.perc (40));
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.perc (40));
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.perc (20));
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.perc (40));
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.perc (40));
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
@@ -96,9 +97,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.abs (80));
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.abs (120));
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.abs (80));
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.abs (80));
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.abs (120));
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.abs (80));
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
