@@ -28,12 +28,12 @@ import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
- * This class defines a dependent width of an elements:
+ * This class defines a dependent height of an elements:
  * <ul>
- * <li>absolute - element has a fixed width</li>
- * <li>percentage - element width is a certain percentage of the surrounding
+ * <li>absolute - element has a fixed height</li>
+ * <li>percentage - element height is a certain percentage of the surrounding
  * element</li>
- * <li>star - element width is a relative part of the unused width of the
+ * <li>star - element height is a relative part of the unused height of the
  * surrounding element</li>
  * </ul>
  *
@@ -41,20 +41,20 @@ import com.helger.commons.string.ToStringGenerator;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public class WidthSpec
+public class HeightSpec
 {
   private final EValueUOMType m_eType;
   private final float m_fValue;
 
-  public WidthSpec (@Nonnull final EValueUOMType eType, final float fValue)
+  public HeightSpec (@Nonnull final EValueUOMType eType, final float fValue)
   {
-    ValueEnforcer.notNull (eType, "WidthType");
+    ValueEnforcer.notNull (eType, "HeightType");
     m_eType = eType;
     m_fValue = fValue;
   }
 
   /**
-   * @return The width type. Never <code>null</code>.
+   * @return The height type. Never <code>null</code>.
    */
   @Nonnull
   public EValueUOMType getType ()
@@ -63,7 +63,7 @@ public class WidthSpec
   }
 
   /**
-   * @return The ID of the width type. Never <code>null</code>.
+   * @return The ID of the height type. Never <code>null</code>.
    */
   @Nonnull
   @Nonempty
@@ -81,9 +81,9 @@ public class WidthSpec
   }
 
   /**
-   * @return The width value - is either an absolute value or a percentage value
-   *         - depending on {@link #getType()}. For star width elements this is
-   *         0.
+   * @return The height value - is either an absolute value or a percentage
+   *         value - depending on {@link #getType()}. For star height elements
+   *         this is 0.
    */
   @Nonnegative
   public float getValue ()
@@ -92,22 +92,22 @@ public class WidthSpec
   }
 
   /**
-   * Get the effective width based on the passed available width. This may not
-   * be called for star width elements.
+   * Get the effective height based on the passed available height. This may not
+   * be called for star height elements.
    *
-   * @param fAvailableWidth
-   *        The available width.
-   * @return The effective width to use.
+   * @param fAvailableHeight
+   *        The available height.
+   * @return The effective height to use.
    */
   @Nonnegative
-  public float getEffectiveValue (final float fAvailableWidth)
+  public float getEffectiveValue (final float fAvailableHeight)
   {
     switch (m_eType)
     {
       case ABSOLUTE:
-        return Math.min (m_fValue, fAvailableWidth);
+        return Math.min (m_fValue, fAvailableHeight);
       case PERCENTAGE:
-        return fAvailableWidth * m_fValue / 100;
+        return fAvailableHeight * m_fValue / 100;
       default:
         throw new IllegalStateException ("Unsupported: " + m_eType + " - must be calculated outside!");
     }
@@ -120,7 +120,7 @@ public class WidthSpec
       return true;
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
-    final WidthSpec rhs = (WidthSpec) o;
+    final HeightSpec rhs = (HeightSpec) o;
     return m_eType.equals (rhs.m_eType) && EqualsHelper.equals (m_fValue, rhs.m_fValue);
   }
 
@@ -137,41 +137,41 @@ public class WidthSpec
   }
 
   /**
-   * Create a width element with an absolute value.
+   * Create a height element with an absolute value.
    *
    * @param fValue
-   *        The width to use. Must be &gt; 0.
+   *        The height to use. Must be &gt; 0.
    * @return Never <code>null</code>.
    */
   @Nonnull
-  public static WidthSpec abs (@Nonnegative final float fValue)
+  public static HeightSpec abs (@Nonnegative final float fValue)
   {
     ValueEnforcer.isGT0 (fValue, "Value");
-    return new WidthSpec (EValueUOMType.ABSOLUTE, fValue);
+    return new HeightSpec (EValueUOMType.ABSOLUTE, fValue);
   }
 
   /**
-   * Create a width element with an percentage value.
+   * Create a height element with an percentage value.
    *
    * @param fPerc
-   *        The width percentage to use. Must be &gt; 0.
+   *        The height percentage to use. Must be &gt; 0.
    * @return Never <code>null</code>.
    */
   @Nonnull
-  public static WidthSpec perc (@Nonnegative final float fPerc)
+  public static HeightSpec perc (@Nonnegative final float fPerc)
   {
     ValueEnforcer.isGT0 (fPerc, "Perc");
-    return new WidthSpec (EValueUOMType.PERCENTAGE, fPerc);
+    return new HeightSpec (EValueUOMType.PERCENTAGE, fPerc);
   }
 
   /**
-   * Create a new star width element.
+   * Create a new star height element.
    *
    * @return Never <code>null</code>.
    */
   @Nonnull
-  public static WidthSpec star ()
+  public static HeightSpec star ()
   {
-    return new WidthSpec (EValueUOMType.STAR, 0);
+    return new HeightSpec (EValueUOMType.STAR, 0);
   }
 }

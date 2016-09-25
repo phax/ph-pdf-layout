@@ -20,18 +20,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.pdflayout.spec.EValueUOMType;
-import com.helger.pdflayout.spec.WidthSpec;
+import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 
 /**
- * Micro type converter for class {@link WidthSpec}.
+ * Micro type converter for class {@link HeightSpec}.
  *
- * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter
+public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter
 {
   private static final String ATTR_TYPE = "type";
   private static final String ATTR_VALUE = "value";
@@ -41,7 +40,7 @@ public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final WidthSpec aValue = (WidthSpec) aObject;
+    final HeightSpec aValue = (HeightSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());
@@ -50,14 +49,14 @@ public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter
   }
 
   @Nonnull
-  public WidthSpec convertToNative (@Nonnull final IMicroElement aElement)
+  public HeightSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
     final String sTypeID = aElement.getAttributeValue (ATTR_TYPE);
-    final EValueUOMType eWidthType = EValueUOMType.getFromIDOrNull (sTypeID);
-    if (eWidthType == null)
-      throw new IllegalStateException ("Failed to resolve width type with ID '" + sTypeID + "!");
+    final EValueUOMType eHeightType = EValueUOMType.getFromIDOrNull (sTypeID);
+    if (eHeightType == null)
+      throw new IllegalStateException ("Failed to resolve height type with ID '" + sTypeID + "!");
 
     final float fValue = aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN);
-    return new WidthSpec (eWidthType, fValue);
+    return new HeightSpec (eHeightType, fValue);
   }
 }

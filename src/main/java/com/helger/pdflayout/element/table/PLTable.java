@@ -43,9 +43,9 @@ import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.vbox.AbstractPLVBox;
 import com.helger.pdflayout.element.vbox.PLVBoxRow;
+import com.helger.pdflayout.spec.EValueUOMType;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
-import com.helger.pdflayout.spec.WidthSpec.EWidthType;
 
 /**
  * A special table with a repeating header
@@ -66,7 +66,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
     ValueEnforcer.notEmptyNoNullValue (aWidths, "Widths");
 
     // Check that all width are of the same type
-    EWidthType eWidthType = null;
+    EValueUOMType eWidthType = null;
     for (final WidthSpec aWidth : aWidths)
       if (eWidthType == null)
         eWidthType = aWidth.getType ();
@@ -204,9 +204,9 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
       else
       {
         final List <WidthSpec> aWidths = m_aWidths.subList (nWidthIndex, nWidthIndex + nCols);
-        final EWidthType eWidthType = aWidths.get (0).getType ();
+        final EValueUOMType eWidthType = aWidths.get (0).getType ();
         WidthSpec aRealWidth;
-        if (eWidthType == EWidthType.STAR)
+        if (eWidthType == EValueUOMType.STAR)
         {
           // aggregate
           aRealWidth = WidthSpec.perc (nCols * 100f / m_aWidths.size ());
