@@ -39,7 +39,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   SizeSpec DEFAULT_MAX_SIZE = SizeSpec.SIZE_MAX;
 
   /**
-   * @return The minimum size to be used. Excluding padding and margin. Never
+   * @return The minimum size to be used. Excluding outline. Never
    *         <code>null</code>.
    */
   @Nonnull
@@ -56,7 +56,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the minimum size to be used. Excluding padding and margin.
+   * Set the minimum size to be used. Excluding outline.
    *
    * @param fMinWidth
    *        Minimum width. Must be &ge; 0.
@@ -68,7 +68,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight);
 
   /**
-   * Set the minimum width to be used. Excluding padding and margin.
+   * Set the minimum width to be used. Excluding outline.
    *
    * @param fMinWidth
    *        Minimum width. Must be &ge; 0.
@@ -81,7 +81,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the minimum height to be used. Excluding padding and margin.
+   * Set the minimum height to be used. Excluding outline.
    *
    * @param fMinHeight
    *        Minimum height. Must be &ge; 0.
@@ -94,7 +94,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * @return The maximum size to be used. Excluding padding and margin. Never
+   * @return The maximum size to be used. Excluding outline. Never
    *         <code>null</code>.
    */
   @Nonnull
@@ -111,7 +111,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the maximum size to be used. Excluding padding and margin.
+   * Set the maximum size to be used. Excluding outline.
    *
    * @param fMaxWidth
    *        Maximum width. Must be &ge; 0.
@@ -123,7 +123,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight);
 
   /**
-   * Set the maximum width to be used. Excluding padding and margin.
+   * Set the maximum width to be used. Excluding outline.
    *
    * @param fMaxWidth
    *        Maximum width. Must be &ge; 0.
@@ -136,7 +136,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the maximum height to be used. Excluding padding and margin.
+   * Set the maximum height to be used. Excluding outline.
    *
    * @param fMaxHeight
    *        Maximum height. Must be &ge; 0.
@@ -149,14 +149,16 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the exact size to be used. Excluding padding and margin. This is a
-   * shortcut for setting minimum and maximum size to the same values.
+   * Set the exact size to be used. Excluding outline. This is a shortcut for
+   * setting minimum and maximum size to the same values.
    *
    * @param fWidth
    *        Width to use. Must be &ge; 0.
    * @param fHeight
    *        Height to use. Must be &ge; 0.
    * @return this
+   * @see #setMinSize(float, float)
+   * @see #setMaxSize(float, float)
    */
   @Nonnull
   default IMPLTYPE setExactSize (@Nonnegative final float fWidth, @Nonnegative final float fHeight)
@@ -166,12 +168,14 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the exact width to be used. Excluding padding and margin. This is a
-   * shortcut for setting minimum and maximum width to the same values.
+   * Set the exact width to be used. Excluding outline. This is a shortcut for
+   * setting minimum and maximum width to the same values.
    *
    * @param fWidth
    *        Width to use. Must be &ge; 0.
    * @return this
+   * @see #setMinWidth(float)
+   * @see #setMaxWidth(float)
    */
   @Nonnull
   default IMPLTYPE setExactWidth (@Nonnegative final float fWidth)
@@ -181,12 +185,14 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the exact height to be used. Excluding padding and margin. This is a
-   * shortcut for setting minimum and maximum height to the same values.
+   * Set the exact height to be used. Excluding outline. This is a shortcut for
+   * setting minimum and maximum height to the same values.
    *
    * @param fHeight
    *        Height to use. Must be &ge; 0.
    * @return this
+   * @see #setMinHeight(float)
+   * @see #setMaxHeight(float)
    */
   @Nonnull
   default IMPLTYPE setExactHeight (@Nonnegative final float fHeight)

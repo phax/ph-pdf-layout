@@ -33,6 +33,7 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.base.AbstractPLBlockElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLHasMargin;
 import com.helger.pdflayout.base.IPLHasVerticalAlignment;
@@ -281,6 +282,27 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           final float fMarginTop = ((IPLHasVerticalAlignment <?>) aElement).getIndentY (fUsedHeightFull,
                                                                                         m_aPreparedColumnSize[nIndex].getHeight ());
           ((IPLHasMargin <?>) aElement).addMarginTop (fMarginTop);
+        }
+        ++nIndex;
+      }
+    }
+
+    // Set min width for block elements
+    {
+      nIndex = 0;
+      for (final PLHBoxColumn aColumn : m_aColumns)
+      {
+        final IPLRenderableObject <?> aElement = aColumn.getElement ();
+        if (aElement instanceof AbstractPLBlockElement <?>)
+        {
+          final AbstractPLBlockElement <?> aRealElement = (AbstractPLBlockElement <?>) aElement;
+          // Remember height before reset!
+          final float fPreparedHeight = aRealElement.getPreparedHeight ();
+          aRealElement.internalMarkAsNotPrepared ();
+          // Set column width as prepared width
+          aRealElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnSize[nIndex].getWidth () -
+                                                             aElement.getOutlineXSum (),
+                                                             fPreparedHeight));
         }
         ++nIndex;
       }

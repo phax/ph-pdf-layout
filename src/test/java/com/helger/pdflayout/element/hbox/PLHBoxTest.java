@@ -51,7 +51,26 @@ public final class PLHBoxTest
   }
 
   @Test
-  public void testStarWidth () throws PDFCreationException
+  public void testStarWidthInline () throws PDFCreationException
+  {
+    final String s = "This is a test String";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final PLHBox aHBox = new PLHBox ();
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.star ());
+    aPS1.addElement (aHBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-star-inline.pdf"));
+  }
+
+  @Test
+  public void testStarWidthBlock () throws PDFCreationException
   {
     final String s = "This is a test String";
 
@@ -66,11 +85,30 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-star.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-star-block.pdf"));
   }
 
   @Test
-  public void testPercWidth () throws PDFCreationException
+  public void testPercWidthInline () throws PDFCreationException
+  {
+    final String s = "This is a test String";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final PLHBox aHBox = new PLHBox ();
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.perc (20));
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.perc (40));
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.perc (40));
+    aPS1.addElement (aHBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-perc-inline.pdf"));
+  }
+
+  @Test
+  public void testPercWidthBlock () throws PDFCreationException
   {
     final String s = "This is a test String";
 
@@ -85,11 +123,30 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-perc.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-perc-block.pdf"));
   }
 
   @Test
-  public void testAbsoluteWidth () throws PDFCreationException
+  public void testAbsoluteWidthInline () throws PDFCreationException
+  {
+    final String s = "This is a test String";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final PLHBox aHBox = new PLHBox ();
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.abs (80));
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.abs (120));
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.abs (80));
+    aPS1.addElement (aHBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-abs-inline.pdf"));
+  }
+
+  @Test
+  public void testAbsoluteWidthBlock () throws PDFCreationException
   {
     final String s = "This is a test String";
 
@@ -104,6 +161,6 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-abs.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-abs-block.pdf"));
   }
 }

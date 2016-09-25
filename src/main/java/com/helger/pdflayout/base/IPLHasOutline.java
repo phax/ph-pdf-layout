@@ -16,6 +16,12 @@
  */
 package com.helger.pdflayout.base;
 
+/**
+ * Base interface for objects having an outline. If an outline is present, it is
+ * the combination or margin, border and padding.
+ * 
+ * @author Philip Helger
+ */
 public interface IPLHasOutline
 {
   default float getOutlineTop ()
