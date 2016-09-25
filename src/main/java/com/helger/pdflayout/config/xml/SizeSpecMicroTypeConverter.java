@@ -14,49 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.config;
+package com.helger.pdflayout.config.xml;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.pdflayout.spec.EValueUOMType;
-import com.helger.pdflayout.spec.HeightSpec;
+import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 
 /**
- * Micro type converter for class {@link HeightSpec}.
+ * Micro type converter for class {@link SizeSpec}.
  *
  * @author Philip Helger
  */
-public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter
+public final class SizeSpecMicroTypeConverter implements IMicroTypeConverter
 {
-  private static final String ATTR_TYPE = "type";
-  private static final String ATTR_VALUE = "value";
+  private static final String ATTR_WIDTH = "width";
+  private static final String ATTR_HEIGHT = "height";
 
   @Nonnull
   public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final HeightSpec aValue = (HeightSpec) aObject;
+    final SizeSpec aValue = (SizeSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());
-    aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
+    aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());
+    aElement.setAttribute (ATTR_HEIGHT, aValue.getHeight ());
     return aElement;
   }
 
   @Nonnull
-  public HeightSpec convertToNative (@Nonnull final IMicroElement aElement)
+  public SizeSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
-    final String sTypeID = aElement.getAttributeValue (ATTR_TYPE);
-    final EValueUOMType eHeightType = EValueUOMType.getFromIDOrNull (sTypeID);
-    if (eHeightType == null)
-      throw new IllegalStateException ("Failed to resolve height type with ID '" + sTypeID + "!");
+    final float fWidth = aElement.getAttributeValueAsFloat (ATTR_WIDTH, Float.NaN);
+    final float fHeight = aElement.getAttributeValueAsFloat (ATTR_HEIGHT, Float.NaN);
 
-    final float fValue = aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN);
-    return new HeightSpec (eHeightType, fValue);
+    return new SizeSpec (fWidth, fHeight);
   }
 }

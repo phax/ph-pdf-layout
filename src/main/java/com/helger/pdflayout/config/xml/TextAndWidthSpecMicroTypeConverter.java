@@ -14,52 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.config;
+package com.helger.pdflayout.config.xml;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.pdflayout.spec.PaddingSpec;
+import com.helger.pdflayout.spec.TextAndWidthSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
+import com.helger.xml.microdom.util.MicroHelper;
 
 /**
- * Micro type converter for class {@link PaddingSpec}.
+ * Micro type converter for class {@link TextAndWidthSpec}.
  *
- * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class PaddingSpecMicroTypeConverter implements IMicroTypeConverter
+public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConverter
 {
-  private static final String ATTR_TOP = "top";
-  private static final String ATTR_RIGHT = "right";
-  private static final String ATTR_BOTTOM = "bottom";
-  private static final String ATTR_LEFT = "left";
+  private static final String ELEMENT_TEXT = "text";
+  private static final String ATTR_WIDTH = "width";
 
   @Nonnull
   public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final PaddingSpec aValue = (PaddingSpec) aObject;
+    final TextAndWidthSpec aValue = (TextAndWidthSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_TOP, aValue.getTop ());
-    aElement.setAttribute (ATTR_RIGHT, aValue.getRight ());
-    aElement.setAttribute (ATTR_BOTTOM, aValue.getBottom ());
-    aElement.setAttribute (ATTR_LEFT, aValue.getLeft ());
-
+    aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());
+    aElement.appendElement (sNamespaceURI, ELEMENT_TEXT).appendText (aValue.getText ());
     return aElement;
   }
 
   @Nonnull
-  public PaddingSpec convertToNative (@Nonnull final IMicroElement aElement)
+  public TextAndWidthSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
-    final float fTop = aElement.getAttributeValueAsFloat (ATTR_TOP, Float.NaN);
-    final float fRight = aElement.getAttributeValueAsFloat (ATTR_RIGHT, Float.NaN);
-    final float fBottom = aElement.getAttributeValueAsFloat (ATTR_BOTTOM, Float.NaN);
-    final float fLeft = aElement.getAttributeValueAsFloat (ATTR_LEFT, Float.NaN);
-    return new PaddingSpec (fTop, fRight, fBottom, fLeft);
+    final String sText = MicroHelper.getChildTextContent (aElement, ELEMENT_TEXT);
+    final float fWidth = aElement.getAttributeValueAsFloat (ATTR_WIDTH, Float.NaN);
+
+    return new TextAndWidthSpec (sText, fWidth);
   }
 }

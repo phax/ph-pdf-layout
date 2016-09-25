@@ -14,51 +14,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.config;
+package com.helger.pdflayout.config.xml;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.pdflayout.spec.MarginSpec;
+import com.helger.pdflayout.spec.EValueUOMType;
+import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 
 /**
- * Micro type converter for class {@link MarginSpec}.
+ * Micro type converter for class {@link HeightSpec}.
  *
- * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class MarginSpecMicroTypeConverter implements IMicroTypeConverter
+public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter
 {
-  private static final String ATTR_TOP = "top";
-  private static final String ATTR_RIGHT = "right";
-  private static final String ATTR_BOTTOM = "bottom";
-  private static final String ATTR_LEFT = "left";
+  private static final String ATTR_TYPE = "type";
+  private static final String ATTR_VALUE = "value";
 
   @Nonnull
   public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final MarginSpec aValue = (MarginSpec) aObject;
+    final HeightSpec aValue = (HeightSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_TOP, aValue.getTop ());
-    aElement.setAttribute (ATTR_RIGHT, aValue.getRight ());
-    aElement.setAttribute (ATTR_BOTTOM, aValue.getBottom ());
-    aElement.setAttribute (ATTR_LEFT, aValue.getLeft ());
+    aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());
+    aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
     return aElement;
   }
 
   @Nonnull
-  public MarginSpec convertToNative (@Nonnull final IMicroElement aElement)
+  public HeightSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
-    final float fTop = aElement.getAttributeValueAsFloat (ATTR_TOP, Float.NaN);
-    final float fRight = aElement.getAttributeValueAsFloat (ATTR_RIGHT, Float.NaN);
-    final float fBottom = aElement.getAttributeValueAsFloat (ATTR_BOTTOM, Float.NaN);
-    final float fLeft = aElement.getAttributeValueAsFloat (ATTR_LEFT, Float.NaN);
-    return new MarginSpec (fTop, fRight, fBottom, fLeft);
+    final String sTypeID = aElement.getAttributeValue (ATTR_TYPE);
+    final EValueUOMType eHeightType = EValueUOMType.getFromIDOrNull (sTypeID);
+    if (eHeightType == null)
+      throw new IllegalStateException ("Failed to resolve height type with ID '" + sTypeID + "!");
+
+    final float fValue = aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN);
+    return new HeightSpec (eHeightType, fValue);
   }
 }

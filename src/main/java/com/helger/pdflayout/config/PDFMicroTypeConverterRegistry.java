@@ -20,6 +20,17 @@ import java.awt.Color;
 
 import javax.annotation.Nonnull;
 
+import com.helger.pdflayout.config.xml.BorderSpecMicroTypeConverter;
+import com.helger.pdflayout.config.xml.BorderStyleSpecMicroTypeConverter;
+import com.helger.pdflayout.config.xml.ColorMicroTypeConverter;
+import com.helger.pdflayout.config.xml.FontSpecMicroTypeConverter;
+import com.helger.pdflayout.config.xml.HeightSpecMicroTypeConverter;
+import com.helger.pdflayout.config.xml.LineDashPatternSpecMicroTypeConverter;
+import com.helger.pdflayout.config.xml.MarginSpecMicroTypeConverter;
+import com.helger.pdflayout.config.xml.PaddingSpecMicroTypeConverter;
+import com.helger.pdflayout.config.xml.SizeSpecMicroTypeConverter;
+import com.helger.pdflayout.config.xml.TextAndWidthSpecMicroTypeConverter;
+import com.helger.pdflayout.config.xml.WidthSpecMicroTypeConverter;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.FontSpec;

@@ -14,45 +14,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.config;
+package com.helger.pdflayout.config.xml;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.pdflayout.spec.SizeSpec;
+import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 
 /**
- * Micro type converter for class {@link SizeSpec}.
+ * Micro type converter for class {@link MarginSpec}.
  *
+ * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class SizeSpecMicroTypeConverter implements IMicroTypeConverter
+public final class MarginSpecMicroTypeConverter implements IMicroTypeConverter
 {
-  private static final String ATTR_WIDTH = "width";
-  private static final String ATTR_HEIGHT = "height";
+  private static final String ATTR_TOP = "top";
+  private static final String ATTR_RIGHT = "right";
+  private static final String ATTR_BOTTOM = "bottom";
+  private static final String ATTR_LEFT = "left";
 
   @Nonnull
   public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final SizeSpec aValue = (SizeSpec) aObject;
+    final MarginSpec aValue = (MarginSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());
-    aElement.setAttribute (ATTR_HEIGHT, aValue.getHeight ());
+    aElement.setAttribute (ATTR_TOP, aValue.getTop ());
+    aElement.setAttribute (ATTR_RIGHT, aValue.getRight ());
+    aElement.setAttribute (ATTR_BOTTOM, aValue.getBottom ());
+    aElement.setAttribute (ATTR_LEFT, aValue.getLeft ());
     return aElement;
   }
 
   @Nonnull
-  public SizeSpec convertToNative (@Nonnull final IMicroElement aElement)
+  public MarginSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
-    final float fWidth = aElement.getAttributeValueAsFloat (ATTR_WIDTH, Float.NaN);
-    final float fHeight = aElement.getAttributeValueAsFloat (ATTR_HEIGHT, Float.NaN);
-
-    return new SizeSpec (fWidth, fHeight);
+    final float fTop = aElement.getAttributeValueAsFloat (ATTR_TOP, Float.NaN);
+    final float fRight = aElement.getAttributeValueAsFloat (ATTR_RIGHT, Float.NaN);
+    final float fBottom = aElement.getAttributeValueAsFloat (ATTR_BOTTOM, Float.NaN);
+    final float fLeft = aElement.getAttributeValueAsFloat (ATTR_LEFT, Float.NaN);
+    return new MarginSpec (fTop, fRight, fBottom, fLeft);
   }
 }

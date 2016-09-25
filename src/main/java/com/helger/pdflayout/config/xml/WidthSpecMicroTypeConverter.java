@@ -14,54 +14,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.config;
-
-import java.awt.Color;
+package com.helger.pdflayout.config.xml;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.string.StringParser;
+import com.helger.pdflayout.spec.EValueUOMType;
+import com.helger.pdflayout.spec.WidthSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 
 /**
- * Micro type converter for class {@link Color}.
+ * Micro type converter for class {@link WidthSpec}.
  *
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class ColorMicroTypeConverter implements IMicroTypeConverter
+public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter
 {
-  private static final String ATTR_RED = "red";
-  private static final String ATTR_GREEN = "green";
-  private static final String ATTR_BLUE = "blue";
-  private static final String ATTR_ALPHA = "alpha";
+  private static final String ATTR_TYPE = "type";
+  private static final String ATTR_VALUE = "value";
 
   @Nonnull
   public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final Color aValue = (Color) aObject;
+    final WidthSpec aValue = (WidthSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_RED, aValue.getRed ());
-    aElement.setAttribute (ATTR_GREEN, aValue.getGreen ());
-    aElement.setAttribute (ATTR_BLUE, aValue.getBlue ());
-    aElement.setAttribute (ATTR_ALPHA, aValue.getAlpha ());
-
+    aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());
+    aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
     return aElement;
   }
 
   @Nonnull
-  public Color convertToNative (@Nonnull final IMicroElement aElement)
+  public WidthSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
-    final int nRed = StringParser.parseInt (aElement.getAttributeValue (ATTR_RED), 0);
-    final int nGreen = StringParser.parseInt (aElement.getAttributeValue (ATTR_GREEN), 0);
-    final int nBlue = StringParser.parseInt (aElement.getAttributeValue (ATTR_BLUE), 0);
-    final int nAlpha = StringParser.parseInt (aElement.getAttributeValue (ATTR_ALPHA), 0xff);
-    return new Color (nRed, nGreen, nBlue, nAlpha);
+    final String sTypeID = aElement.getAttributeValue (ATTR_TYPE);
+    final EValueUOMType eWidthType = EValueUOMType.getFromIDOrNull (sTypeID);
+    if (eWidthType == null)
+      throw new IllegalStateException ("Failed to resolve width type with ID '" + sTypeID + "!");
+
+    final float fValue = aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN);
+    return new WidthSpec (eWidthType, fValue);
   }
 }

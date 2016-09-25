@@ -14,66 +14,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout.config;
+package com.helger.pdflayout.config.xml;
 
 import java.awt.Color;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.pdflayout.spec.FontSpec;
-import com.helger.pdflayout.spec.IPreloadFontResolver;
-import com.helger.pdflayout.spec.PreloadFont;
+import com.helger.pdflayout.spec.BorderStyleSpec;
+import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.convert.MicroTypeConverter;
 
 /**
- * Micro type converter for class {@link FontSpec}.
+ * Micro type converter for class {@link BorderStyleSpec}.
  *
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class FontSpecMicroTypeConverter implements IMicroTypeConverter
+public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConverter
 {
-  private static final String ATTR_PRELOAD_FONT_ID = "preloadfontid";
-  private static final String ATTR_FONT_SIZE = "fontsize";
   private static final String ELEMENT_COLOR = "color";
-
-  private final IPreloadFontResolver m_aPreloadFontResolver;
-
-  public FontSpecMicroTypeConverter (@Nonnull final IPreloadFontResolver aPreloadFontResolver)
-  {
-    m_aPreloadFontResolver = ValueEnforcer.notNull (aPreloadFontResolver, "PreloadFontResolver");
-  }
+  private static final String ELEMENT_LINE_DASH_PATTERN = "linedashpattern";
+  private static final String ATTR_LINE_WIDTH = "linewidth";
 
   @Nonnull
   public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final FontSpec aValue = (FontSpec) aObject;
+    final BorderStyleSpec aValue = (BorderStyleSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-    aElement.setAttribute (ATTR_PRELOAD_FONT_ID, aValue.getPreloadFontID ());
-    aElement.setAttribute (ATTR_FONT_SIZE, aValue.getFontSize ());
-    aElement.appendChild (MicroTypeConverter.convertToMicroElement (aValue.getColor (), sNamespaceURI, ELEMENT_COLOR));
+    final Color aColor = aValue.getColor ();
+    final LineDashPatternSpec aLDPSpec = aValue.getLineDashPattern ();
+    aElement.appendChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
+    aElement.appendChild (MicroTypeConverter.convertToMicroElement (aLDPSpec,
+                                                                    sNamespaceURI,
+                                                                    ELEMENT_LINE_DASH_PATTERN));
+    aElement.setAttribute (ATTR_LINE_WIDTH, aValue.getLineWidth ());
+
     return aElement;
   }
 
   @Nonnull
-  public FontSpec convertToNative (@Nonnull final IMicroElement aElement)
+  public BorderStyleSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
-    final String sPreloadFontID = aElement.getAttributeValue (ATTR_PRELOAD_FONT_ID);
-    final PreloadFont aPreloadFont = m_aPreloadFontResolver.getPreloadFontOfID (sPreloadFontID);
-    if (aPreloadFont == null)
-      throw new IllegalStateException ("Failed to resolve preloadfont with ID '" + sPreloadFontID + "!");
-
-    final float fFontSize = aElement.getAttributeValueAsFloat (ATTR_FONT_SIZE, Float.NaN);
     final Color aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
                                                              Color.class);
-    return new FontSpec (aPreloadFont, fFontSize, aColor);
+    final LineDashPatternSpec aLDPSpec = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_LINE_DASH_PATTERN),
+                                                                             LineDashPatternSpec.class);
+    final float fLineWidth = aElement.getAttributeValueAsFloat (ATTR_LINE_WIDTH, Float.NaN);
+    return new BorderStyleSpec (aColor, aLDPSpec, fLineWidth);
   }
 }
