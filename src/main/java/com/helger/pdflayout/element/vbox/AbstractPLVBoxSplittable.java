@@ -16,11 +16,16 @@
  */
 package com.helger.pdflayout.element.vbox;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
@@ -38,8 +43,45 @@ import com.helger.pdflayout.spec.SizeSpec;
 public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxSplittable <IMPLTYPE>> extends
                                                AbstractPLVBox <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
 {
+  private int m_nHeaderRowCount = 0;
+
   public AbstractPLVBoxSplittable ()
   {}
+
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLVBoxSplittable <?> aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    setHeaderRowCount (aSource.m_nHeaderRowCount);
+    return thisAsT ();
+  }
+
+  /**
+   * @return The number of header rows. By default 0. Always &ge; 0.
+   */
+  @Nonnegative
+  public int getHeaderRowCount ()
+  {
+    return m_nHeaderRowCount;
+  }
+
+  /**
+   * Set the number of header rows in this table. Header rows get repeated on
+   * every page upon rendering.
+   *
+   * @param nHeaderRowCount
+   *        The number of header rows, to be repeated by page. Must be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  public IMPLTYPE setHeaderRowCount (@Nonnegative final int nHeaderRowCount)
+  {
+    ValueEnforcer.isGE0 (nHeaderRowCount, "HeaderRowCount");
+
+    m_nHeaderRowCount = nHeaderRowCount;
+    return thisAsT ();
+  }
 
   public boolean containsAnySplittableElement ()
   {
@@ -68,14 +110,28 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList<> (nTotalRows);
     final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList<> (nTotalRows);
     float fUsedVBox1RowHeight = 0;
-    final ICommonsList <SizeSpec> aVBox2RowSize = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <SizeSpec> aVBox2ElementSize = new CommonsArrayList<> (nTotalRows);
-    float fUsedVBox2RowHeight = 0;
+
+    // Copy all header rows
+    for (int nRow = 0; nRow < m_nHeaderRowCount; ++nRow)
+    {
+      final IPLRenderableObject <?> aHeaderRowElement = getRowElementAtIndex (nRow);
+      aVBox1.addRow (aHeaderRowElement);
+      aVBox2.addRow (aHeaderRowElement);
+
+      fUsedVBox1RowHeight += m_aPreparedRowSize[nRow].getHeight ();
+      aVBox1RowSize.add (m_aPreparedRowSize[nRow]);
+      aVBox1ElementSize.add (m_aPreparedElementSize[nRow]);
+    }
+
+    // The height and width after header are identical
+    final ICommonsList <SizeSpec> aVBox2RowSize = new CommonsArrayList<> (aVBox1RowSize);
+    final ICommonsList <SizeSpec> aVBox2ElementSize = new CommonsArrayList<> (aVBox1ElementSize);
+    float fUsedVBox2RowHeight = fUsedVBox1RowHeight;
 
     // Copy all content rows
     boolean bOnVBox1 = true;
 
-    for (int nRow = 0; nRow < nTotalRows; ++nRow)
+    for (int nRow = m_nHeaderRowCount; nRow < nTotalRows; ++nRow)
     {
       final IPLRenderableObject <?> aRowElement = getRowElementAtIndex (nRow);
       final float fRowHeight = m_aPreparedRowSize[nRow].getHeight ();
@@ -109,7 +165,8 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
                                         PLDebug.getWH (fSplitWidth, fSplitHeight));
 
             // Try to split the element contained in the row
-            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementHorz (fSplitWidth, fSplitHeight);
+            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementHorz (fSplitWidth,
+                                                                                                fSplitHeight);
             if (aSplitResult != null)
             {
               final IPLRenderableObject <?> aVBox1RowElement = aSplitResult.getFirstElement ().getElement ();
@@ -187,7 +244,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
       }
     }
 
-    if (aVBox1.getRowCount () == 0)
+    if (aVBox1.getRowCount () == m_nHeaderRowCount)
     {
       // Splitting makes no sense!
       if (PLDebug.isDebugSplit ())
@@ -195,7 +252,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
       return null;
     }
 
-    if (aVBox2.getRowCount () == 0)
+    if (aVBox2.getRowCount () == m_nHeaderRowCount)
     {
       // Splitting makes no sense!
       if (PLDebug.isDebugSplit ())
@@ -215,4 +272,11 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     return new PLSplitResult (new PLElementWithSize (aVBox1, new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
                               new PLElementWithSize (aVBox2, new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight)));
   }
+
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ()).append ("HeaderRowCount", m_nHeaderRowCount).toString ();
+  }
+
 }

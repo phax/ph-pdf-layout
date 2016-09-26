@@ -27,25 +27,18 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.commons.typeconvert.TypeConverter;
-import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.IPLRenderableObject;
-import com.helger.pdflayout.base.IPLSplittableObject;
-import com.helger.pdflayout.base.PLElementWithSize;
-import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.element.hbox.AbstractPLHBox;
 import com.helger.pdflayout.element.hbox.PLHBoxColumn;
 import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.special.PLSpacerX;
-import com.helger.pdflayout.element.vbox.AbstractPLVBox;
+import com.helger.pdflayout.element.vbox.AbstractPLVBoxSplittable;
 import com.helger.pdflayout.element.vbox.PLVBoxRow;
 import com.helger.pdflayout.spec.EValueUOMType;
-import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
 /**
@@ -53,10 +46,9 @@ import com.helger.pdflayout.spec.WidthSpec;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableObject <PLTable>
+public class PLTable extends AbstractPLVBoxSplittable <PLTable>
 {
   private final ICommonsList <WidthSpec> m_aWidths;
-  private int m_nHeaderRowCount = 0;
 
   /**
    * @param aWidths
@@ -85,7 +77,6 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
   public PLTable setBasicDataFrom (@Nonnull final PLTable aSource)
   {
     super.setBasicDataFrom (aSource);
-    setHeaderRowCount (aSource.m_nHeaderRowCount);
     return this;
   }
 
@@ -229,32 +220,6 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
   }
 
   /**
-   * @return The number of header rows. By default 0. Always &ge; 0.
-   */
-  @Nonnegative
-  public int getHeaderRowCount ()
-  {
-    return m_nHeaderRowCount;
-  }
-
-  /**
-   * Set the number of header rows in this table. Header rows get repeated on
-   * every page upon rendering.
-   *
-   * @param nHeaderRowCount
-   *        The number of header rows, to be repeated by page. Must be &ge; 0.
-   * @return this
-   */
-  @Nonnull
-  public PLTable setHeaderRowCount (@Nonnegative final int nHeaderRowCount)
-  {
-    ValueEnforcer.isGE0 (nHeaderRowCount, "HeaderRowCount");
-
-    m_nHeaderRowCount = nHeaderRowCount;
-    return this;
-  }
-
-  /**
    * Get the cell at the specified row and column index
    *
    * @param nRowIndex
@@ -277,202 +242,10 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
     return null;
   }
 
-  @Nonnull
-  @ReturnsMutableCopy
-  private static float [] _getAsArray (@Nonnull final List <Float> aList)
-  {
-    return TypeConverter.convertIfNecessary (aList, float [].class);
-  }
-
-  @Override
-  @Nullable
-  public PLSplitResult splitElementHorz (final float fAvailableWidth, final float fAvailableHeight)
-  {
-    if (fAvailableHeight <= 0)
-      return null;
-
-    final PLTable aTable1 = new PLTable (m_aWidths).setBasicDataFrom (this);
-    final PLTable aTable2 = new PLTable (m_aWidths).setBasicDataFrom (this);
-
-    final int nTotalRows = getRowCount ();
-
-    final ICommonsList <SizeSpec> aTable1RowSize = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <SizeSpec> aTable1ElementSize = new CommonsArrayList<> (nTotalRows);
-    float fUsedTable1RowHeight = 0;
-
-    // Copy all header rows
-    for (int nRow = 0; nRow < m_nHeaderRowCount; ++nRow)
-    {
-      final IPLRenderableObject <?> aHeaderRowElement = getRowElementAtIndex (nRow);
-      aTable1.addRow (aHeaderRowElement);
-      aTable2.addRow (aHeaderRowElement);
-
-      fUsedTable1RowHeight += m_aPreparedRowSize[nRow].getHeight ();
-      aTable1RowSize.add (m_aPreparedRowSize[nRow]);
-      aTable1ElementSize.add (m_aPreparedElementSize[nRow]);
-    }
-
-    // The height and width after header are identical
-    final ICommonsList <SizeSpec> aTable2RowSize = new CommonsArrayList<> (aTable1RowSize);
-    final ICommonsList <SizeSpec> aTable2ElementSize = new CommonsArrayList<> (aTable1ElementSize);
-    float fUsedTable2RowHeight = fUsedTable1RowHeight;
-
-    // Copy all content rows
-    boolean bOnTable1 = true;
-
-    for (int nRow = m_nHeaderRowCount; nRow < nTotalRows; ++nRow)
-    {
-      final IPLRenderableObject <?> aRowElement = getRowElementAtIndex (nRow);
-      final float fRowHeight = m_aPreparedRowSize[nRow].getHeight ();
-
-      if (bOnTable1)
-      {
-        if (fUsedTable1RowHeight + fRowHeight <= fAvailableHeight)
-        {
-          // Row fits in first table without a change
-          aTable1.addRow (aRowElement);
-          fUsedTable1RowHeight += fRowHeight;
-          // Use data as is
-          aTable1RowSize.add (m_aPreparedRowSize[nRow]);
-          aTable1ElementSize.add (m_aPreparedElementSize[nRow]);
-        }
-        else
-        {
-          // Row does not fit - check if it can be splitted
-          bOnTable1 = false;
-          // try to split the row
-          boolean bSplittedRow = false;
-          if (aRowElement.isHorzSplittable ())
-          {
-            final float fSplitWidth = m_aPreparedElementSize[nRow].getWidth ();
-            final float fSplitHeight = fAvailableHeight - fUsedTable1RowHeight - aRowElement.getOutlineYSum ();
-            if (PLDebug.isDebugSplit ())
-              PLDebug.debugSplit (this,
-                                  "Trying to split " +
-                                        aRowElement.getDebugID () +
-                                        " into pieces for split width " +
-                                        fSplitWidth +
-                                        " and height " +
-                                        fSplitHeight);
-
-            // Try to split the element contained in the row (without padding
-            // and margin of the element)
-            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementHorz (fSplitWidth, fSplitHeight);
-
-            if (aSplitResult != null)
-            {
-              final IPLRenderableObject <?> aTable1RowElement = aSplitResult.getFirstElement ().getElement ();
-              aTable1.addRow (aTable1RowElement);
-              fUsedTable1RowHeight += aSplitResult.getFirstElement ().getHeightFull ();
-              aTable1RowSize.add (aSplitResult.getFirstElement ().getSizeFull ());
-              aTable1ElementSize.add (aSplitResult.getFirstElement ().getSize ());
-
-              final IPLRenderableObject <?> aTable2RowElement = aSplitResult.getSecondElement ().getElement ();
-              aTable2.addRow (aTable2RowElement);
-              fUsedTable2RowHeight += aSplitResult.getSecondElement ().getHeightFull ();
-              aTable2RowSize.add (aSplitResult.getSecondElement ().getSizeFull ());
-              aTable2ElementSize.add (aSplitResult.getSecondElement ().getSize ());
-
-              if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this,
-                                    "Split row element " +
-                                          aRowElement.getDebugID () +
-                                          " (Row " +
-                                          nRow +
-                                          ") into pieces: " +
-                                          aTable1RowElement.getDebugID () +
-                                          " (" +
-                                          aSplitResult.getFirstElement ().getWidth () +
-                                          "+" +
-                                          aTable1RowElement.getOutlineXSum () +
-                                          " & " +
-                                          aSplitResult.getFirstElement ().getHeight () +
-                                          "+" +
-                                          aTable1RowElement.getOutlineYSum () +
-                                          ") and " +
-                                          aTable2RowElement.getDebugID () +
-                                          " (" +
-                                          aSplitResult.getSecondElement ().getWidth () +
-                                          "+" +
-                                          aTable2RowElement.getOutlineXSum () +
-                                          " & " +
-                                          aSplitResult.getSecondElement ().getHeight () +
-                                          "+" +
-                                          aTable2RowElement.getOutlineYSum () +
-                                          ")");
-              bSplittedRow = true;
-            }
-            else
-            {
-              if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this,
-                                    "Failed to split row element " +
-                                          aRowElement.getDebugID () +
-                                          " (Row " +
-                                          nRow +
-                                          ") into pieces");
-            }
-          }
-
-          if (!bSplittedRow)
-          {
-            // just add the full row to the second Table since the row does not
-            // fit on first page
-            aTable2.addRow (aRowElement);
-            fUsedTable2RowHeight += fRowHeight;
-            aTable2RowSize.add (m_aPreparedRowSize[nRow]);
-            aTable2ElementSize.add (m_aPreparedElementSize[nRow]);
-          }
-        }
-      }
-      else
-      {
-        // We're already on Table 2 - add all elements, since Table2 may be
-        // split again later!
-        aTable2.addRow (aRowElement);
-        fUsedTable2RowHeight += fRowHeight;
-        aTable2RowSize.add (m_aPreparedRowSize[nRow]);
-        aTable2ElementSize.add (m_aPreparedElementSize[nRow]);
-      }
-    }
-
-    if (aTable1.getRowCount () == m_nHeaderRowCount)
-    {
-      // Splitting makes no sense!
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Splitting makes no sense, because only the header row would be in table 1");
-      return null;
-    }
-
-    if (aTable2.getRowCount () == m_nHeaderRowCount)
-    {
-      // Splitting makes no sense!
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this,
-                            "Splitting makes no sense, because only the header row would be in table 2 and this means the whole table 1 would match");
-      return null;
-    }
-
-    // Excluding padding/margin
-    aTable1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fUsedTable1RowHeight));
-    aTable1.m_aPreparedRowSize = ArrayHelper.newArray (aTable1RowSize, SizeSpec.class);
-    aTable1.m_aPreparedElementSize = ArrayHelper.newArray (aTable1ElementSize, SizeSpec.class);
-
-    aTable2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fUsedTable2RowHeight));
-    aTable2.m_aPreparedRowSize = ArrayHelper.newArray (aTable2RowSize, SizeSpec.class);
-    aTable2.m_aPreparedElementSize = ArrayHelper.newArray (aTable2ElementSize, SizeSpec.class);
-
-    return new PLSplitResult (new PLElementWithSize (aTable1, new SizeSpec (fAvailableWidth, fUsedTable1RowHeight)),
-                              new PLElementWithSize (aTable2, new SizeSpec (fAvailableWidth, fUsedTable2RowHeight)));
-  }
-
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ())
-                            .append ("Width", m_aWidths)
-                            .append ("HeaderRowCount", m_nHeaderRowCount)
-                            .toString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("Width", m_aWidths).toString ();
   }
 
   /**
