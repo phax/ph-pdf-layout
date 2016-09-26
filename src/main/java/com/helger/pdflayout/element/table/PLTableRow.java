@@ -14,7 +14,7 @@ import com.helger.pdflayout.spec.SizeSpec;
 
 public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implements IPLSplittableObject <PLTableRow>
 {
-  private final PLHBox m_aRow = new PLHBox ();
+  private final PLHBox m_aRow = new PLHBox ().setVertSplittable (true);
 
   @Override
   protected SizeSpec onPrepare (final PreparationContext aCtx) throws IOException
