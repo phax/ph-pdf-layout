@@ -34,8 +34,10 @@ public enum EValueUOMType implements IHasID <String>
   ABSOLUTE ("abs"),
   /** Percentage value provided */
   PERCENTAGE ("perc"),
-  /** * value provided */
-  STAR ("star");
+  /** '*' value provided */
+  STAR ("star"),
+  /** Automatic scaling */
+  AUTO ("auto");
 
   private final String m_sID;
 
@@ -49,6 +51,16 @@ public enum EValueUOMType implements IHasID <String>
   public String getID ()
   {
     return m_sID;
+  }
+
+  /**
+   * @return <code>true</code> if this unit of measure depends on the width of
+   *         the surrounding element, <code>false</code> if this unit of measure
+   *         defines the width based on the content of this element.
+   */
+  public boolean isOuterElementDependent ()
+  {
+    return this == ABSOLUTE || this == PERCENTAGE || this == STAR;
   }
 
   @Nullable

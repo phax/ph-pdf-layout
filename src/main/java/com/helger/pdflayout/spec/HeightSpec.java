@@ -73,11 +73,27 @@ public class HeightSpec
   }
 
   /**
+   * @return <code>true</code> if type is 'absolute' or 'percentage'
+   */
+  public boolean isAbsolute ()
+  {
+    return m_eType == EValueUOMType.ABSOLUTE || m_eType == EValueUOMType.PERCENTAGE;
+  }
+
+  /**
    * @return <code>true</code> if type is 'star'.
    */
   public boolean isStar ()
   {
     return m_eType == EValueUOMType.STAR;
+  }
+
+  /**
+   * @return <code>true</code> if type is 'auto'.
+   */
+  public boolean isAuto ()
+  {
+    return m_eType == EValueUOMType.AUTO;
   }
 
   /**
@@ -173,5 +189,16 @@ public class HeightSpec
   public static HeightSpec star ()
   {
     return new HeightSpec (EValueUOMType.STAR, 0);
+  }
+
+  /**
+   * Create a new auto height element.
+   *
+   * @return Never <code>null</code>.
+   */
+  @Nonnull
+  public static HeightSpec auto ()
+  {
+    return new HeightSpec (EValueUOMType.AUTO, 0);
   }
 }

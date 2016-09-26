@@ -73,11 +73,27 @@ public class WidthSpec
   }
 
   /**
+   * @return <code>true</code> if type is 'absolute' or 'percentage'
+   */
+  public boolean isAbsolute ()
+  {
+    return m_eType == EValueUOMType.ABSOLUTE || m_eType == EValueUOMType.PERCENTAGE;
+  }
+
+  /**
    * @return <code>true</code> if type is 'star'.
    */
   public boolean isStar ()
   {
     return m_eType == EValueUOMType.STAR;
+  }
+
+  /**
+   * @return <code>true</code> if type is 'auto'.
+   */
+  public boolean isAuto ()
+  {
+    return m_eType == EValueUOMType.AUTO;
   }
 
   /**
@@ -173,5 +189,16 @@ public class WidthSpec
   public static WidthSpec star ()
   {
     return new WidthSpec (EValueUOMType.STAR, 0);
+  }
+
+  /**
+   * Create a new auto width element.
+   *
+   * @return Never <code>null</code>.
+   */
+  @Nonnull
+  public static WidthSpec auto ()
+  {
+    return new WidthSpec (EValueUOMType.AUTO, 0);
   }
 }

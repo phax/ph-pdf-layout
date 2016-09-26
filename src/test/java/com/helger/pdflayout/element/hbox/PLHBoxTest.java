@@ -163,4 +163,61 @@ public final class PLHBoxTest
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-abs-block.pdf"));
   }
+
+  @Test
+  public void testAutoWidthInline () throws PDFCreationException
+  {
+    final String s = "This is a test String";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final PLHBox aHBox = new PLHBox ();
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.auto ());
+    aPS1.addElement (aHBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-auto-inline.pdf"));
+  }
+
+  @Test
+  public void testAutoWidthBlock () throws PDFCreationException
+  {
+    final String s = "This is a test String";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final PLHBox aHBox = new PLHBox ();
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED).setMinWidth (200), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED).setMinWidth (200), WidthSpec.auto ());
+    aPS1.addElement (aHBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-auto-block.pdf"));
+  }
+
+  @Test
+  public void testAutoWidthBlockBehaveLikeStar () throws PDFCreationException
+  {
+    final String s = "This is a test String. That is followed by a String which is also followed by some text just so that the text gets long enough to create 'star' like behaviour!";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final PLHBox aHBox = new PLHBox ();
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED).setMinWidth (200), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED).setMinWidth (200), WidthSpec.auto ());
+    aPS1.addElement (aHBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-auto-block-like-star.pdf"));
+  }
 }

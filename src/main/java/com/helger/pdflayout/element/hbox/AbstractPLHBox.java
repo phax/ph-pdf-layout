@@ -57,7 +57,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
   protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
-  private int m_nStarWidthItems = 0;
 
   /** prepared column size (with outline of contained element) */
   protected SizeSpec [] m_aPreparedColumnSize;
@@ -140,8 +139,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       m_aColumns.add (aColumn);
     else
       m_aColumns.add (nIndex, aColumn);
-    if (aColumn.getWidth ().isStar ())
-      m_nStarWidthItems++;
   }
 
   @Nonnull
@@ -185,9 +182,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     ValueEnforcer.isGE0 (nIndex, "Index");
     internalCheckNotPrepared ();
 
-    final PLHBoxColumn aColumn = m_aColumns.remove (nIndex);
-    if (aColumn != null && aColumn.getWidth ().isStar ())
-      m_nStarWidthItems--;
+    m_aColumns.removeAtIndex (nIndex);
     return thisAsT ();
   }
 
@@ -210,12 +205,25 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     float fUsedWidthFull = 0;
     float fUsedHeightFull = 0;
 
+    int nStarColumns = 0;
+    int nAutoColumns = 0;
+    for (final PLHBoxColumn aColumn : m_aColumns)
+      switch (aColumn.getWidth ().getType ())
+      {
+        case STAR:
+          ++nStarColumns;
+          break;
+        case AUTO:
+          ++nAutoColumns;
+          break;
+      }
+
     int nIndex = 0;
     float fRestWidth = fAvailableWidth;
     // 1. prepare all non-star width items
     for (final PLHBoxColumn aColumn : m_aColumns)
     {
-      if (!aColumn.getWidth ().isStar ())
+      if (aColumn.getWidth ().isAbsolute ())
       {
         final IPLRenderableObject <?> aElement = aColumn.getElement ();
         // Full width of this element
@@ -241,7 +249,39 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       ++nIndex;
     }
 
-    // 2. prepare all star widths items
+    // 2. prepare all auto widths items
+    nIndex = 0;
+    for (final PLHBoxColumn aColumn : m_aColumns)
+    {
+      if (aColumn.getWidth ().isAuto ())
+      {
+        final IPLRenderableObject <?> aElement = aColumn.getElement ();
+        // Full width of this element
+        final float fAvailableColumnWidth = fRestWidth / (nAutoColumns + nStarColumns);
+
+        // Prepare child element
+        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                        fAvailableColumnWidth,
+                                                                                        fAvailableHeight));
+        // Use the used size of the element as the column width
+        final float fColumnWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+        final float fItemHeight = aElementPreparedSize.getHeight ();
+
+        // Update used width
+        fUsedWidthFull += fColumnWidth;
+
+        // Update used height
+        final float fItemHeightFull = fItemHeight + aElement.getOutlineYSum ();
+        fUsedHeightFull = Math.max (fUsedHeightFull, fItemHeightFull);
+
+        // Remember width and height for element (without padding and margin)
+        m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fItemHeightFull);
+        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+      }
+      ++nIndex;
+    }
+
+    // 3. prepare all star widths items
     nIndex = 0;
     for (final PLHBoxColumn aColumn : m_aColumns)
     {
@@ -249,7 +289,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       {
         final IPLRenderableObject <?> aElement = aColumn.getElement ();
         // Full width of this element
-        final float fColumnWidth = fRestWidth / m_nStarWidthItems;
+        final float fColumnWidth = fRestWidth / nStarColumns;
 
         // Prepare child element
         final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
@@ -358,7 +398,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("Columns", m_aColumns)
-                            .append ("StarWidthItems", m_nStarWidthItems)
                             .appendIfNotNull ("PreparedColumnSize", m_aPreparedColumnSize)
                             .appendIfNotNull ("PreparedElementSize", m_aPreparedElementSize)
                             .toString ();
