@@ -453,10 +453,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
     }
 
-    final AbstractPLHBox <?> aHBox1 = new PLHBox ();
-    aHBox1.setBasicDataFrom (this);
-    final AbstractPLHBox <?> aHBox2 = new PLHBox ();
-    aHBox2.setBasicDataFrom (this);
+    final AbstractPLHBox <?> aHBox1 = new PLHBox ().setBasicDataFrom (this);
+    final AbstractPLHBox <?> aHBox2 = new PLHBox ().setBasicDataFrom (this);
 
     // Fill all columns with empty content
     for (int i = 0; i < nCols; ++i)

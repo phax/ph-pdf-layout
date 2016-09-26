@@ -16,15 +16,13 @@
  */
 package com.helger.pdflayout.element.table;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.pdflayout.base.IPLRenderableObject;
+import com.helger.pdflayout.element.box.AbstractPLBox;
 
 /**
  * This class represents a single table cell within a table row.
@@ -32,13 +30,11 @@ import com.helger.pdflayout.base.IPLRenderableObject;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class PLTableCell
+public class PLTableCell extends AbstractPLBox <PLTableCell>
 {
   public static final int DEFAULT_COL_SPAN = 1;
 
-  private final IPLRenderableObject <?> m_aElement;
   private final int m_nColSpan;
-  private Color m_aFillColor;
 
   public PLTableCell (@Nonnull final IPLRenderableObject <?> aElement)
   {
@@ -47,44 +43,14 @@ public class PLTableCell
 
   public PLTableCell (@Nonnull final IPLRenderableObject <?> aElement, @Nonnegative final int nColSpan)
   {
-    ValueEnforcer.notNull (aElement, "Element");
+    super (aElement);
     ValueEnforcer.isGT0 (nColSpan, "ColSpan");
-    m_aElement = aElement;
     m_nColSpan = nColSpan;
-  }
-
-  @Nonnull
-  public IPLRenderableObject <?> getElement ()
-  {
-    return m_aElement;
   }
 
   @Nonnegative
   public int getColSpan ()
   {
     return m_nColSpan;
-  }
-
-  /**
-   * Set the cell fill color.
-   *
-   * @param aFillColor
-   *        The fill color to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public PLTableCell setFillColor (@Nullable final Color aFillColor)
-  {
-    m_aFillColor = aFillColor;
-    return this;
-  }
-
-  /**
-   * @return The current fill color. May be <code>null</code>.
-   */
-  @Nullable
-  public Color getFillColor ()
-  {
-    return m_aFillColor;
   }
 }
