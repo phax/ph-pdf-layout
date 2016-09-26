@@ -233,7 +233,8 @@ public final class PLHBoxTest
       aHBox.addColumn (new PLText (s + s, r10).setMargin (10)
                                               .setPadding (5)
                                               .setBorder (Color.GRAY)
-                                              .setFillColor (Color.PINK),
+                                              .setFillColor (Color.PINK)
+                                              .setVertSplittable (true),
                        WidthSpec.star ());
     aPS1.addElement (aHBox);
 
@@ -255,7 +256,8 @@ public final class PLHBoxTest
       aHBox.addColumn (new PLText (i == 1 ? "" : s + s, r10).setMargin (10)
                                                             .setPadding (5)
                                                             .setBorder (Color.GRAY)
-                                                            .setFillColor (Color.PINK),
+                                                            .setFillColor (Color.PINK)
+                                                            .setVertSplittable (true),
                        WidthSpec.star ());
     aPS1.addElement (aHBox);
     aPS1.addElement (new PLText ("Line after", r10).setBorder (Color.RED));
