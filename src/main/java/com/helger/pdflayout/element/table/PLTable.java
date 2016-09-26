@@ -36,7 +36,7 @@ import com.helger.pdflayout.element.hbox.AbstractPLHBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.hbox.PLHBoxColumn;
 import com.helger.pdflayout.element.special.PLSpacerX;
-import com.helger.pdflayout.element.vbox.AbstractPLVBoxSplittable;
+import com.helger.pdflayout.element.vbox.AbstractPLVBox;
 import com.helger.pdflayout.element.vbox.PLVBoxRow;
 import com.helger.pdflayout.spec.EValueUOMType;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -46,7 +46,7 @@ import com.helger.pdflayout.spec.WidthSpec;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLVBoxSplittable <PLTable>
+public class PLTable extends AbstractPLVBox <PLTable>
 {
   private final ICommonsList <WidthSpec> m_aWidths;
 
@@ -57,6 +57,7 @@ public class PLTable extends AbstractPLVBoxSplittable <PLTable>
   public PLTable (@Nonnull @Nonempty final Iterable <? extends WidthSpec> aWidths)
   {
     ValueEnforcer.notEmptyNoNullValue (aWidths, "Widths");
+    setVertSplittable (true);
 
     // Check that all width are of the same type
     EValueUOMType eWidthType = null;
