@@ -120,6 +120,7 @@ public final class PLTableTest
                                                                     .setMargin (aMargin)
                                                                     .setHorzAlign (EHorzAlignment.RIGHT));
     }
+    aTable.setFullGrid (new BorderStyleSpec (Color.PINK, 1));
     aPS1.addElement (aTable);
 
     // Start a new page

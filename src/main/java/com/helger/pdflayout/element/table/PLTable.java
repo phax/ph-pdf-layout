@@ -40,6 +40,7 @@ import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.element.vbox.PLVBoxRow;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
+import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EValueUOMType;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -276,23 +277,28 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
     return this;
   }
 
-  /**
-   * Get the cell at the specified row and column index
-   *
-   * @param nRowIndex
-   *        row index
-   * @param nColumnIndex
-   *        column index
-   * @return <code>null</code> if row and/or column index are out of bounds.
-   * @since 3.0.4
-   */
-  @Nullable
-  public PLTableCell getCellElement (@Nonnegative final int nRowIndex, @Nonnegative final int nColumnIndex)
+  public void setFullGrid (final BorderStyleSpec aBSS)
   {
-    final PLVBoxRow aRow = m_aVBox.getRowAtIndex (nRowIndex);
-    if (aRow != null)
-      return ((PLTableRow) aRow.getElement ()).getCellAtIndex (nColumnIndex);
-    return null;
+    int nRowIndex = 0;
+    for (final PLVBoxRow aRow : m_aVBox.getRows ())
+    {
+      final PLTableRow aTableRow = (PLTableRow) aRow.getElement ();
+      if (nRowIndex == 0)
+        aTableRow.forEachCell ( (c, i) -> {
+          if (i == 0)
+            c.setBorder (aBSS, aBSS, aBSS, aBSS);
+          else
+            c.setBorder (aBSS, aBSS, aBSS, null);
+        });
+      else
+        aTableRow.forEachCell ( (c, i) -> {
+          if (i == 0)
+            c.setBorder (null, aBSS, aBSS, aBSS);
+          else
+            c.setBorder (null, aBSS, aBSS, null);
+        });
+      ++nRowIndex;
+    }
   }
 
   @Override

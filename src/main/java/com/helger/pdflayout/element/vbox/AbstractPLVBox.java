@@ -17,6 +17,8 @@
 package com.helger.pdflayout.element.vbox;
 
 import java.io.IOException;
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
@@ -97,6 +99,25 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public ICommonsList <PLVBoxRow> getAllRows ()
   {
     return m_aRows.getClone ();
+  }
+
+  /**
+   * @return All rows. Never <code>null</code>.
+   */
+  @Nonnull
+  public Iterable <PLVBoxRow> getRows ()
+  {
+    return m_aRows;
+  }
+
+  public void forEachRow (@Nonnull final Consumer <? super PLVBoxRow> aConsumer)
+  {
+    m_aRows.forEach (aConsumer);
+  }
+
+  public void forEachRow (@Nonnull final ObjIntConsumer <? super PLVBoxRow> aConsumer)
+  {
+    m_aRows.forEach (aConsumer);
   }
 
   /**

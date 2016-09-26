@@ -17,6 +17,8 @@
 package com.helger.pdflayout.element.hbox;
 
 import java.io.IOException;
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
@@ -110,6 +112,26 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public ICommonsList <PLHBoxColumn> getAllColumns ()
   {
     return m_aColumns.getClone ();
+  }
+
+  /**
+   * @return All columns. Never <code>null</code>.
+   */
+  @Nonnull
+  @ReturnsMutableCopy
+  public Iterable <PLHBoxColumn> getColumns ()
+  {
+    return m_aColumns;
+  }
+
+  public void forEachColumn (@Nonnull final Consumer <? super PLHBoxColumn> aConsumer)
+  {
+    m_aColumns.forEach (aConsumer);
+  }
+
+  public void forEachColumn (@Nonnull final ObjIntConsumer <? super PLHBoxColumn> aConsumer)
+  {
+    m_aColumns.forEach (aConsumer);
   }
 
   @Nullable

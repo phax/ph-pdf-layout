@@ -1,6 +1,8 @@
 package com.helger.pdflayout.element.table;
 
 import java.io.IOException;
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -9,6 +11,7 @@ import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.element.hbox.PLHBox;
+import com.helger.pdflayout.element.hbox.PLHBoxColumn;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -29,7 +32,18 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   @Nullable
   public PLTableCell getCellAtIndex (final int nIndex)
   {
-    return (PLTableCell) m_aRow.getColumnAtIndex (nIndex).getElement ();
+    final PLHBoxColumn aColumn = m_aRow.getColumnAtIndex (nIndex);
+    return aColumn == null ? null : (PLTableCell) aColumn.getElement ();
+  }
+
+  public void forEachCell (@Nonnull final Consumer <? super PLTableCell> aConsumer)
+  {
+    m_aRow.forEachColumn (x -> aConsumer.accept ((PLTableCell) x.getElement ()));
+  }
+
+  public void forEachCell (@Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
+  {
+    m_aRow.forEachColumn ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
   }
 
   @Override
