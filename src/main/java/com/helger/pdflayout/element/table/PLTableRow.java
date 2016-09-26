@@ -2,6 +2,7 @@ package com.helger.pdflayout.element.table;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
@@ -11,10 +12,25 @@ import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
+import com.helger.pdflayout.spec.WidthSpec;
 
 public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implements IPLSplittableObject <PLTableRow>
 {
   private final PLHBox m_aRow = new PLHBox ().setVertSplittable (true);
+
+  public PLTableRow ()
+  {}
+
+  public void addCell (@Nonnull final PLTableCell aCell, @Nonnull final WidthSpec aWidth)
+  {
+    m_aRow.addColumn (aCell, aWidth);
+  }
+
+  @Nullable
+  public PLTableCell getCellAtIndex (final int nIndex)
+  {
+    return (PLTableCell) m_aRow.getColumnAtIndex (nIndex).getElement ();
+  }
 
   @Override
   protected SizeSpec onPrepare (final PreparationContext aCtx) throws IOException

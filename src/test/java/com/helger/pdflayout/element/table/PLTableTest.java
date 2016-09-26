@@ -36,7 +36,6 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.PLPageSet;
-import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.text.PLText;
@@ -174,7 +173,7 @@ public final class PLTableTest
                                                         (nIdx + 1),
                                                         r14b.getCloneWithDifferentColor (Color.GRAY)).setPadding (aPadding)));
 
-    final ICommonsList <Function <PLHBox, PLHBox>> aRowFcts;
+    final ICommonsList <Function <PLTableRow, PLTableRow>> aRowFcts;
     aRowFcts = new CommonsArrayList<> (x -> x);
 
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
@@ -197,7 +196,7 @@ public final class PLTableTest
                                                  .setFillColor (aBGElement));
 
     int nRowFunc = 0;
-    for (final Function <PLHBox, PLHBox> aRowFct : aRowFcts)
+    for (final Function <PLTableRow, PLTableRow> aRowFct : aRowFcts)
     {
       final int nCurRowFunc = nRowFunc;
       int nCellFunc = 0;
@@ -209,17 +208,17 @@ public final class PLTableTest
         {
           final int nCurElementFunc = nElementFunc;
           for (int i = 0; i < nRepeats; ++i)
-            aRowFct.apply (aTable.addTableRowExt (createList (nCols,
-                                                              nIdx -> aCellFct.apply (new PLTableCell (aElementFct.apply (new PLText ("Cell " +
-                                                                                                                                      (nIdx +
-                                                                                                                                       1) +
-                                                                                                                                      " @ " +
-                                                                                                                                      nCurRowFunc +
-                                                                                                                                      "/" +
-                                                                                                                                      nCurCellFunc +
-                                                                                                                                      "/" +
-                                                                                                                                      nCurElementFunc,
-                                                                                                                                      r10)))))));
+            aRowFct.apply (aTable.addAndReturnTableRowExt (createList (nCols,
+                                                                       nIdx -> aCellFct.apply (new PLTableCell (aElementFct.apply (new PLText ("Cell " +
+                                                                                                                                               (nIdx +
+                                                                                                                                                1) +
+                                                                                                                                               " @ " +
+                                                                                                                                               nCurRowFunc +
+                                                                                                                                               "/" +
+                                                                                                                                               nCurCellFunc +
+                                                                                                                                               "/" +
+                                                                                                                                               nCurElementFunc,
+                                                                                                                                               r10)))))));
           aTable.addTableRowExt (new PLTableCell (new PLSpacerY (5), nCols));
           ++nElementFunc;
         }

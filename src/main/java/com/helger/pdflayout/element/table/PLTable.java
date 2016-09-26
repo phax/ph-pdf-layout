@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.table;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
@@ -31,14 +31,17 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLRenderableObject;
-import com.helger.pdflayout.element.hbox.AbstractPLHBox;
-import com.helger.pdflayout.element.hbox.PLHBox;
-import com.helger.pdflayout.element.hbox.PLHBoxColumn;
+import com.helger.pdflayout.base.IPLSplittableObject;
+import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.element.special.PLSpacerX;
-import com.helger.pdflayout.element.vbox.AbstractPLVBox;
+import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.element.vbox.PLVBoxRow;
+import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.EValueUOMType;
+import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
 /**
@@ -46,9 +49,11 @@ import com.helger.pdflayout.spec.WidthSpec;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLVBox <PLTable>
+public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPLSplittableObject <PLTable>
 {
+  private final PLVBox m_aVBox = new PLVBox ().setVertSplittable (true);
   private final ICommonsList <WidthSpec> m_aWidths;
+  private final EValueUOMType m_eWidthType;
 
   /**
    * @param aWidths
@@ -57,7 +62,6 @@ public class PLTable extends AbstractPLVBox <PLTable>
   public PLTable (@Nonnull @Nonempty final Iterable <? extends WidthSpec> aWidths)
   {
     ValueEnforcer.notEmptyNoNullValue (aWidths, "Widths");
-    setVertSplittable (true);
 
     // Check that all width are of the same type
     EValueUOMType eWidthType = null;
@@ -70,15 +74,10 @@ public class PLTable extends AbstractPLVBox <PLTable>
                                               eWidthType +
                                               " and " +
                                               aWidth.getType ());
+    if (eWidthType == EValueUOMType.AUTO)
+      throw new IllegalArgumentException ("Width type auto is not allowed for tables!");
     m_aWidths = new CommonsArrayList<> (aWidths);
-  }
-
-  @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public PLTable setBasicDataFrom (@Nonnull final PLTable aSource)
-  {
-    super.setBasicDataFrom (aSource);
-    return this;
+    m_eWidthType = eWidthType;
   }
 
   /**
@@ -102,6 +101,16 @@ public class PLTable extends AbstractPLVBox <PLTable>
     return m_aWidths.size ();
   }
 
+  public void setHeaderRowCount (final int nHeaderRowCount)
+  {
+    m_aVBox.setHeaderRowCount (nHeaderRowCount);
+  }
+
+  public int getHeaderRowCount ()
+  {
+    return m_aVBox.getHeaderRowCount ();
+  }
+
   /**
    * Add a new table row. All contained elements are added with the specified
    * width in the constructor. <code>null</code> elements are represented as
@@ -112,7 +121,54 @@ public class PLTable extends AbstractPLVBox <PLTable>
    * @return The added row and never <code>null</code>.
    */
   @Nonnull
-  public PLHBox addTableRow (@Nullable final AbstractPLElement <?>... aElements)
+  public PLTableRow addAndReturnTableRow (@Nullable final AbstractPLElement <?>... aElements)
+  {
+    return addAndReturnTableRow (new CommonsArrayList<> (aElements));
+  }
+
+  /**
+   * Add a new table row. All contained elements are added with the specified
+   * width in the constructor. <code>null</code> elements are represented as
+   * empty cells.
+   *
+   * @param aElements
+   *        The elements to add. May not be <code>null</code>.
+   * @return the added row and never <code>null</code>.
+   */
+  @Nonnull
+  public PLTableRow addAndReturnTableRow (@Nonnull final Collection <? extends IPLRenderableObject <?>> aElements)
+  {
+    ValueEnforcer.notNull (aElements, "Elements");
+    if (aElements.size () > m_aWidths.size ())
+      throw new IllegalArgumentException ("More elements in row (" +
+                                          aElements.size () +
+                                          ") than defined in the table (" +
+                                          m_aWidths.size () +
+                                          ")!");
+
+    final PLTableRow aRow = new PLTableRow ();
+    int nWidthIndex = 0;
+    for (final IPLRenderableObject <?> aElement : aElements)
+    {
+      final WidthSpec aWidth = m_aWidths.get (nWidthIndex);
+      aRow.addCell (new PLTableCell (aElement != null ? aElement : new PLSpacerX ()), aWidth);
+      ++nWidthIndex;
+    }
+    m_aVBox.addRow (aRow);
+    return aRow;
+  }
+
+  /**
+   * Add a new table row. All contained elements are added with the specified
+   * width in the constructor. <code>null</code> elements are represented as
+   * empty cells.
+   *
+   * @param aElements
+   *        The elements to add. May be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  public PLTable addTableRow (@Nullable final AbstractPLElement <?>... aElements)
   {
     return addTableRow (new CommonsArrayList<> (aElements));
   }
@@ -127,37 +183,16 @@ public class PLTable extends AbstractPLVBox <PLTable>
    * @return this
    */
   @Nonnull
-  public PLHBox addTableRow (@Nonnull final Collection <? extends IPLRenderableObject <?>> aElements)
+  public PLTable addTableRow (@Nonnull final Collection <? extends IPLRenderableObject <?>> aElements)
   {
-    ValueEnforcer.notNull (aElements, "Elements");
-    if (aElements.size () > m_aWidths.size ())
-      throw new IllegalArgumentException ("More elements in row (" +
-                                          aElements.size () +
-                                          ") than defined in the table (" +
-                                          m_aWidths.size () +
-                                          ")!");
-
-    final PLHBox aRowHBox = new PLHBox ().setVertSplittable (true);
-    int nWidthIndex = 0;
-    for (IPLRenderableObject <?> aElement : aElements)
-    {
-      if (aElement == null)
-      {
-        // null elements end as a spacer
-        aElement = new PLSpacerX ();
-      }
-      final WidthSpec aWidth = m_aWidths.get (nWidthIndex);
-      aRowHBox.addColumn (aElement, aWidth);
-      ++nWidthIndex;
-    }
-    super.addRow (aRowHBox);
-    return aRowHBox;
+    addAndReturnTableRow (aElements);
+    return this;
   }
 
   @Nonnull
-  public PLHBox addTableRowExt (@Nonnull final PLTableCell... aCells)
+  public PLTableRow addAndReturnTableRowExt (@Nonnull final PLTableCell... aCells)
   {
-    return addTableRowExt (new CommonsArrayList<> (aCells));
+    return addAndReturnTableRowExt (new CommonsArrayList<> (aCells));
   }
 
   /**
@@ -167,10 +202,10 @@ public class PLTable extends AbstractPLVBox <PLTable>
    *
    * @param aCells
    *        The cells to add. May not be <code>null</code>.
-   * @return this
+   * @return the added table row and never <code>null</code>.
    */
   @Nonnull
-  public PLHBox addTableRowExt (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  public PLTableRow addAndReturnTableRowExt (@Nonnull final Iterable <? extends PLTableCell> aCells)
   {
     ValueEnforcer.notNull (aCells, "Cells");
 
@@ -185,21 +220,20 @@ public class PLTable extends AbstractPLVBox <PLTable>
                                           m_aWidths.size () +
                                           ")!");
 
-    final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
+    final PLTableRow aRow = new PLTableRow ();
     int nWidthIndex = 0;
     for (final PLTableCell aCell : aCells)
     {
       final int nCols = aCell.getColSpan ();
       if (nCols == 1)
       {
-        aHBox.addAndReturnColumn (aCell.getElement (), m_aWidths.get (nWidthIndex));
+        aRow.addCell (aCell, m_aWidths.get (nWidthIndex));
       }
       else
       {
         final List <WidthSpec> aWidths = m_aWidths.subList (nWidthIndex, nWidthIndex + nCols);
-        final EValueUOMType eWidthType = aWidths.get (0).getType ();
         WidthSpec aRealWidth;
-        if (eWidthType == EValueUOMType.STAR)
+        if (m_eWidthType == EValueUOMType.STAR)
         {
           // aggregate
           aRealWidth = WidthSpec.perc (nCols * 100f / m_aWidths.size ());
@@ -210,14 +244,36 @@ public class PLTable extends AbstractPLVBox <PLTable>
           float fWidth = 0;
           for (final WidthSpec aWidth : aWidths)
             fWidth += aWidth.getValue ();
-          aRealWidth = new WidthSpec (eWidthType, fWidth);
+          aRealWidth = new WidthSpec (m_eWidthType, fWidth);
         }
-        aHBox.addAndReturnColumn (aCell.getElement (), aRealWidth);
+        aRow.addCell (aCell, aRealWidth);
       }
       nWidthIndex += nCols;
     }
-    super.addRow (aHBox);
-    return aHBox;
+    m_aVBox.addRow (aRow);
+    return aRow;
+  }
+
+  @Nonnull
+  public PLTable addTableRowExt (@Nonnull final PLTableCell... aCells)
+  {
+    return addTableRowExt (new CommonsArrayList<> (aCells));
+  }
+
+  /**
+   * Add a new table row. All contained elements are added with the specified
+   * width in the constructor. <code>null</code> elements are represented as
+   * empty cells.
+   *
+   * @param aCells
+   *        The cells to add. May not be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  public PLTable addTableRowExt (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  {
+    addAndReturnTableRowExt (aCells);
+    return this;
   }
 
   /**
@@ -231,16 +287,35 @@ public class PLTable extends AbstractPLVBox <PLTable>
    * @since 3.0.4
    */
   @Nullable
-  public IPLRenderableObject <?> getCellElement (@Nonnegative final int nRowIndex, @Nonnegative final int nColumnIndex)
+  public PLTableCell getCellElement (@Nonnegative final int nRowIndex, @Nonnegative final int nColumnIndex)
   {
-    final PLVBoxRow aRow = getRowAtIndex (nRowIndex);
+    final PLVBoxRow aRow = m_aVBox.getRowAtIndex (nRowIndex);
     if (aRow != null)
-    {
-      final PLHBoxColumn aColumn = ((AbstractPLHBox <?>) aRow.getElement ()).getColumnAtIndex (nColumnIndex);
-      if (aColumn != null)
-        return aColumn.getElement ();
-    }
+      return ((PLTableRow) aRow.getElement ()).getCellAtIndex (nColumnIndex);
     return null;
+  }
+
+  @Override
+  protected SizeSpec onPrepare (final PreparationContext aCtx) throws IOException
+  {
+    return m_aVBox.prepare (aCtx);
+  }
+
+  public boolean isVertSplittable ()
+  {
+    return m_aVBox.isVertSplittable ();
+  }
+
+  @Nullable
+  public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
+  {
+    return m_aVBox.splitElementVert (fAvailableWidth, fAvailableHeight);
+  }
+
+  @Override
+  protected void onRender (final PageRenderContext aCtx) throws IOException
+  {
+    m_aVBox.render (aCtx);
   }
 
   @Override
