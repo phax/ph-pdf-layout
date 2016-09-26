@@ -45,7 +45,19 @@ import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
 /**
- * Horizontal box - groups several columns.
+ * Horizontal box - groups several columns. Each column was a width with one of
+ * the supported types:
+ * <ul>
+ * <li><b>absolute</b> - the width is explicitly specified in user units</li>
+ * <li><b>percentage</b> - the width is specified in percentage of the
+ * surrounding element</li>
+ * <li><b>star</b> - the width of all columns with this type is evenly spaced on
+ * the available width. So if at least one 'star' width column is available, the
+ * hbox uses the complete available width.</li>
+ * <li><b>auto</b> - the width of the column is determined by the width of the
+ * content. The maximum width assigned to this column type is the same as for
+ * 'star' width columns.</li>
+ * </ul>
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
