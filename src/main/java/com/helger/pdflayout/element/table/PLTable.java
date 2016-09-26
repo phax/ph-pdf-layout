@@ -33,8 +33,8 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.element.hbox.AbstractPLHBox;
+import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.hbox.PLHBoxColumn;
-import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.vbox.AbstractPLVBoxSplittable;
 import com.helger.pdflayout.element.vbox.PLVBoxRow;
@@ -111,7 +111,7 @@ public class PLTable extends AbstractPLVBoxSplittable <PLTable>
    * @return The added row and never <code>null</code>.
    */
   @Nonnull
-  public PLHBoxSplittable addTableRow (@Nullable final AbstractPLElement <?>... aElements)
+  public PLHBox addTableRow (@Nullable final AbstractPLElement <?>... aElements)
   {
     return addTableRow (new CommonsArrayList<> (aElements));
   }
@@ -126,7 +126,7 @@ public class PLTable extends AbstractPLVBoxSplittable <PLTable>
    * @return this
    */
   @Nonnull
-  public PLHBoxSplittable addTableRow (@Nonnull final Collection <? extends IPLRenderableObject <?>> aElements)
+  public PLHBox addTableRow (@Nonnull final Collection <? extends IPLRenderableObject <?>> aElements)
   {
     ValueEnforcer.notNull (aElements, "Elements");
     if (aElements.size () > m_aWidths.size ())
@@ -136,7 +136,7 @@ public class PLTable extends AbstractPLVBoxSplittable <PLTable>
                                           m_aWidths.size () +
                                           ")!");
 
-    final PLHBoxSplittable aRowHBox = new PLHBoxSplittable ();
+    final PLHBox aRowHBox = new PLHBox ().setHorzSplittable (true);
     int nWidthIndex = 0;
     for (IPLRenderableObject <?> aElement : aElements)
     {
@@ -154,7 +154,7 @@ public class PLTable extends AbstractPLVBoxSplittable <PLTable>
   }
 
   @Nonnull
-  public PLHBoxSplittable addTableRowExt (@Nonnull final PLTableCell... aCells)
+  public PLHBox addTableRowExt (@Nonnull final PLTableCell... aCells)
   {
     return addTableRowExt (new CommonsArrayList<> (aCells));
   }
@@ -169,7 +169,7 @@ public class PLTable extends AbstractPLVBoxSplittable <PLTable>
    * @return this
    */
   @Nonnull
-  public PLHBoxSplittable addTableRowExt (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  public PLHBox addTableRowExt (@Nonnull final Iterable <? extends PLTableCell> aCells)
   {
     ValueEnforcer.notNull (aCells, "Cells");
 
@@ -184,7 +184,7 @@ public class PLTable extends AbstractPLVBoxSplittable <PLTable>
                                           m_aWidths.size () +
                                           ")!");
 
-    final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
+    final PLHBox aHBox = new PLHBox ().setHorzSplittable (true);
     int nWidthIndex = 0;
     for (final PLTableCell aCell : aCells)
     {

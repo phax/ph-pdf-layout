@@ -29,7 +29,7 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLPageSet;
-import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
+import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
@@ -79,7 +79,7 @@ public final class PLVBoxSplittableTest
     final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
     for (int i = 0; i < 40; ++i)
     {
-      final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
+      final PLHBox aHBox = new PLHBox ().setHorzSplittable (true);
       for (int j = 0; j < 10; ++j)
         aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20)),
                          WidthSpec.star ());
@@ -103,10 +103,10 @@ public final class PLVBoxSplittableTest
     final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
     for (int i = 0; i < 40; ++i)
     {
-      final PLHBoxSplittable aHBox = new PLHBoxSplittable ();
+      final PLHBox aHBox = new PLHBox ().setHorzSplittable (true);
       for (int j = 0; j < 10; ++j)
         aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20))
-                                                                .setSplittable (false),
+                                                                .setHorzSplittable (false),
                          WidthSpec.star ());
       aVBox.addRow (aHBox);
     }

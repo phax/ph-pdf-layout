@@ -33,12 +33,17 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLBlockElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLHasMargin;
 import com.helger.pdflayout.base.IPLHasVerticalAlignment;
 import com.helger.pdflayout.base.IPLRenderableObject;
+import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
+import com.helger.pdflayout.base.PLElementWithSize;
+import com.helger.pdflayout.base.PLSplitResult;
+import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -63,17 +68,20 @@ import com.helger.pdflayout.spec.WidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>>
-                                     extends AbstractPLRenderableObject <IMPLTYPE>
+public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
+                                     AbstractPLRenderableObject <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
 {
+  public static final boolean DEFAULT_SPLITTABLE = true;
+
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
+  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
+  private boolean m_bHorzSplittable = DEFAULT_SPLITTABLE;
 
   /** prepared column size (with outline of contained element) */
-  protected SizeSpec [] m_aPreparedColumnSize;
+  private SizeSpec [] m_aPreparedColumnSize;
   /** prepared element size (without outline) */
-  protected SizeSpec [] m_aPreparedElementSize;
+  private SizeSpec [] m_aPreparedElementSize;
 
   public AbstractPLHBox ()
   {}
@@ -83,6 +91,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLHBox <?> aSource)
   {
     super.setBasicDataFrom (aSource);
+    setHorzSplittable (aSource.m_bHorzSplittable);
     return thisAsT ();
   }
 
@@ -196,6 +205,23 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
     m_aColumns.removeAtIndex (nIndex);
     return thisAsT ();
+  }
+
+  public boolean isHorzSplittable ()
+  {
+    return m_bHorzSplittable;
+  }
+
+  @Nonnull
+  public IMPLTYPE setHorzSplittable (final boolean bSplittable)
+  {
+    m_bHorzSplittable = bSplittable;
+    return thisAsT ();
+  }
+
+  public boolean containsAnySplittableElement ()
+  {
+    return m_aColumns.containsAny (x -> x.getElement ().isHorzSplittable ());
   }
 
   @Override
@@ -383,6 +409,237 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     return new SizeSpec (fUsedWidthFull, fUsedHeightFull);
   }
 
+  @Nullable
+  public PLSplitResult splitElementHorz (final float fAvailableWidth, final float fAvailableHeight)
+  {
+    if (fAvailableHeight <= 0)
+      return null;
+
+    if (!containsAnySplittableElement ())
+    {
+      // Splitting makes no sense
+      if (PLDebug.isDebugSplit ())
+        PLDebug.debugSplit (this, "cannot split because no splittable elements are contained");
+      return null;
+    }
+
+    final int nCols = m_aColumns.size ();
+
+    // Check if height is exceeded
+    {
+      boolean bAnySplittingPossible = false;
+      for (int i = 0; i < nCols; ++i)
+      {
+        // Is the current element higher and splittable?
+        final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (i);
+        if (aColumnElement.isHorzSplittable ())
+        {
+          final float fColumnHeightFull = m_aPreparedColumnSize[i].getHeight ();
+          if (fColumnHeightFull > fAvailableHeight)
+          {
+            bAnySplittingPossible = true;
+            break;
+          }
+        }
+      }
+
+      if (!bAnySplittingPossible)
+      {
+        // Splitting makes no sense
+        if (PLDebug.isDebugSplit ())
+          PLDebug.debugSplit (this,
+                              "no need to split because all splittable elements easily fit into the available height (" +
+                                    fAvailableHeight +
+                                    ")");
+        return null;
+      }
+    }
+
+    final AbstractPLHBox <?> aHBox1 = new PLHBox ();
+    aHBox1.setBasicDataFrom (this);
+    final AbstractPLHBox <?> aHBox2 = new PLHBox ();
+    aHBox2.setBasicDataFrom (this);
+
+    // Fill all columns with empty content
+    for (int i = 0; i < nCols; ++i)
+    {
+      final PLHBoxColumn aColumn = getColumnAtIndex (i);
+      final WidthSpec aColumnWidth = aColumn.getWidth ();
+
+      // Create empty element with the same width as the original element
+      final PLSpacerX aEmptyElement = new PLSpacerX ();
+      aEmptyElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnSize[i].getWidth (), 0));
+
+      aHBox1.addColumn (aEmptyElement, aColumnWidth);
+      aHBox2.addColumn (aEmptyElement, aColumnWidth);
+    }
+
+    float fHBox1MaxHeight = 0;
+    float fHBox2MaxHeight = 0;
+    final SizeSpec [] fHBox1ColumnSizes = new SizeSpec [m_aPreparedColumnSize.length];
+    final SizeSpec [] fHBox2ColumnSizes = new SizeSpec [m_aPreparedColumnSize.length];
+    final SizeSpec [] fHBox1ElementSizes = new SizeSpec [m_aPreparedElementSize.length];
+    final SizeSpec [] fHBox2ElementSizes = new SizeSpec [m_aPreparedElementSize.length];
+
+    // Start splitting columns
+    boolean bDidSplitAnyColumn = false;
+    for (int nCol = 0; nCol < nCols; nCol++)
+    {
+      final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (nCol);
+      final boolean bIsSplittable = aColumnElement.isHorzSplittable ();
+      final float fColumnWidth = m_aPreparedColumnSize[nCol].getWidth ();
+      final float fColumnHeight = m_aPreparedColumnSize[nCol].getHeight ();
+      final float fElementWidth = m_aPreparedElementSize[nCol].getWidth ();
+
+      boolean bDidSplitColumn = false;
+      if (fColumnHeight > fAvailableHeight && bIsSplittable)
+      {
+        final float fSplitWidth = fElementWidth;
+        final float fSplitHeight = fAvailableHeight - aColumnElement.getOutlineYSum ();
+        if (PLDebug.isDebugSplit ())
+          PLDebug.debugSplit (this,
+                              "Trying to split " +
+                                    aColumnElement.getDebugID () +
+                                    " into pieces for remaining size " +
+                                    PLDebug.getWH (fSplitWidth, fSplitHeight));
+
+        // Use width and height without padding and margin!
+        final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ().splitElementHorz (fSplitWidth,
+                                                                                               fSplitHeight);
+        if (aSplitResult != null)
+        {
+          final IPLRenderableObject <?> aHBox1Element = aSplitResult.getFirstElement ().getElement ();
+          aHBox1.getColumnAtIndex (nCol).setElement (aHBox1Element);
+
+          final IPLRenderableObject <?> aHBox2Element = aSplitResult.getSecondElement ().getElement ();
+          aHBox2.getColumnAtIndex (nCol).setElement (aHBox2Element);
+
+          // Use the full height, because the column itself has no padding or
+          // margin!
+          fHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getFirstElement ().getHeightFull ());
+          fHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getSecondElement ().getHeightFull ());
+          fHBox1ElementSizes[nCol] = new SizeSpec (fElementWidth, aSplitResult.getFirstElement ().getHeight ());
+          fHBox2ElementSizes[nCol] = new SizeSpec (fElementWidth, aSplitResult.getSecondElement ().getHeight ());
+          bDidSplitColumn = true;
+          bDidSplitAnyColumn = true;
+
+          if (PLDebug.isDebugSplit ())
+            PLDebug.debugSplit (this,
+                                "Split column element " +
+                                      aColumnElement.getDebugID () +
+                                      " (Column " +
+                                      nCol +
+                                      ") into pieces: " +
+                                      aHBox1Element.getDebugID () +
+                                      " (" +
+                                      aSplitResult.getFirstElement ().getWidth () +
+                                      "+" +
+                                      aHBox1Element.getOutlineXSum () +
+                                      " & " +
+                                      aSplitResult.getFirstElement ().getHeight () +
+                                      "+" +
+                                      aHBox1Element.getOutlineYSum () +
+                                      ") and " +
+                                      aHBox2Element.getDebugID () +
+                                      " (" +
+                                      aSplitResult.getSecondElement ().getWidth () +
+                                      "+" +
+                                      aHBox2Element.getOutlineXSum () +
+                                      " & " +
+                                      aSplitResult.getSecondElement ().getHeight () +
+                                      "+" +
+                                      aHBox2Element.getOutlineYSum () +
+                                      ") for available height " +
+                                      fAvailableHeight);
+        }
+        else
+        {
+          if (PLDebug.isDebugSplit ())
+            PLDebug.debugSplit (this,
+                                "Failed to split column element " +
+                                      aColumnElement.getDebugID () +
+                                      " (Column " +
+                                      nCol +
+                                      ") into pieces for available height " +
+                                      fAvailableHeight);
+        }
+      }
+
+      if (!bDidSplitColumn)
+      {
+        if (fColumnHeight > fAvailableHeight)
+        {
+          // We should have split but did not
+          if (bIsSplittable)
+          {
+            if (PLDebug.isDebugSplit ())
+              PLDebug.debugSplit (this,
+                                  "Column " +
+                                        nCol +
+                                        " contains splittable element " +
+                                        aColumnElement.getDebugID () +
+                                        " which creates an overflow by " +
+                                        (fColumnHeight - fAvailableHeight) +
+                                        " for available height " +
+                                        fAvailableHeight +
+                                        "!");
+          }
+          else
+          {
+            if (PLDebug.isDebugSplit ())
+              PLDebug.debugSplit (this,
+                                  "Column " +
+                                        nCol +
+                                        " contains non splittable element " +
+                                        aColumnElement.getDebugID () +
+                                        " which creates an overflow by " +
+                                        (fColumnHeight - fAvailableHeight) +
+                                        " for max height " +
+                                        fAvailableHeight +
+                                        "!");
+          }
+
+          // One column of the row is too large and cannot be split -> the whole
+          // row cannot be split!
+          return null;
+        }
+
+        // No splitting and cell fits totally in available height
+        aHBox1.getColumnAtIndex (nCol).setElement (aColumnElement);
+
+        fHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, Math.min (fColumnHeight, fAvailableHeight));
+        fHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, 0);
+        fHBox1ElementSizes[nCol] = m_aPreparedElementSize[nCol];
+        fHBox2ElementSizes[nCol] = new SizeSpec (fElementWidth, 0);
+      }
+
+      // calculate max column height
+      fHBox1MaxHeight = Math.max (fHBox1MaxHeight, fHBox1ColumnSizes[nCol].getHeight ());
+      fHBox2MaxHeight = Math.max (fHBox2MaxHeight, fHBox2ColumnSizes[nCol].getHeight ());
+    }
+
+    if (!bDidSplitAnyColumn)
+    {
+      // Nothing was splitted
+      if (PLDebug.isDebugSplit ())
+        PLDebug.debugSplit (this, "Weird: No column was split and the height is OK!");
+      return null;
+    }
+
+    // mark new hboxes as prepared
+    aHBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fHBox1MaxHeight));
+    aHBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fHBox2MaxHeight));
+    // set prepared column sizes
+    aHBox1.m_aPreparedColumnSize = fHBox1ColumnSizes;
+    aHBox2.m_aPreparedColumnSize = fHBox2ColumnSizes;
+    // set prepared element sizes
+    aHBox1.m_aPreparedElementSize = fHBox1ElementSizes;
+    aHBox2.m_aPreparedElementSize = fHBox2ElementSizes;
+
+    return new PLSplitResult (new PLElementWithSize (aHBox1, new SizeSpec (fAvailableWidth, fHBox1MaxHeight)),
+                              new PLElementWithSize (aHBox2, new SizeSpec (fAvailableWidth, fHBox2MaxHeight)));
+  }
+
   @Override
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
@@ -410,6 +667,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("Columns", m_aColumns)
+                            .append ("HorzSplittable", m_bHorzSplittable)
                             .appendIfNotNull ("PreparedColumnSize", m_aPreparedColumnSize)
                             .appendIfNotNull ("PreparedElementSize", m_aPreparedElementSize)
                             .toString ();

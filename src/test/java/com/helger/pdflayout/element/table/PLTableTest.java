@@ -36,7 +36,7 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.PLPageSet;
-import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
+import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.text.PLText;
@@ -174,7 +174,7 @@ public final class PLTableTest
                                                         (nIdx + 1),
                                                         r14b.getCloneWithDifferentColor (Color.GRAY)).setPadding (aPadding)));
 
-    final ICommonsList <Function <PLHBoxSplittable, PLHBoxSplittable>> aRowFcts;
+    final ICommonsList <Function <PLHBox, PLHBox>> aRowFcts;
     aRowFcts = new CommonsArrayList<> (x -> x);
 
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
@@ -197,7 +197,7 @@ public final class PLTableTest
                                                  .setFillColor (aBGElement));
 
     int nRowFunc = 0;
-    for (final Function <PLHBoxSplittable, PLHBoxSplittable> aRowFct : aRowFcts)
+    for (final Function <PLHBox, PLHBox> aRowFct : aRowFcts)
     {
       final int nCurRowFunc = nRowFunc;
       int nCellFunc = 0;

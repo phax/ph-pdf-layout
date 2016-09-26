@@ -69,7 +69,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private final FontSpec m_aFontSpec;
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
-  private boolean m_bSplittable = DEFAULT_SPLITTABLE;
+  private boolean m_bHorzSplittable = DEFAULT_SPLITTABLE;
   private boolean m_bReplacePlaceholder = DEFAULT_REPLACE_PLACEHOLDERS;
 
   // prepare result
@@ -105,7 +105,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     super.setBasicDataFrom (aSource);
     setHorzAlign (aSource.m_eHorzAlign);
     setMaxRows (aSource.m_nMaxRows);
-    setSplittable (aSource.m_bSplittable);
+    setHorzSplittable (aSource.m_bHorzSplittable);
     setReplacePlaceholder (aSource.m_bReplacePlaceholder);
     return thisAsT ();
   }
@@ -175,13 +175,13 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
   public boolean isHorzSplittable ()
   {
-    return m_bSplittable;
+    return m_bHorzSplittable;
   }
 
   @Nonnull
-  public IMPLTYPE setSplittable (final boolean bSplittable)
+  public IMPLTYPE setHorzSplittable (final boolean bHorzSplittable)
   {
-    m_bSplittable = bSplittable;
+    m_bHorzSplittable = bHorzSplittable;
     return thisAsT ();
   }
 
@@ -413,7 +413,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final PLText aNewText = new PLText (sTextContent, getFontSpec ());
     aNewText.setBasicDataFrom (this);
     // Set this explicitly after setBasicDataFrom!
-    aNewText.setSplittable (bSplittableCopy);
+    aNewText.setHorzSplittable (bSplittableCopy);
 
     aNewText.internalMarkAsPrepared (aSize);
     aNewText.internalSetPreparedLines (aLineCopy);
@@ -503,7 +503,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("FontSpec", m_aFontSpec)
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("MaxRows", m_nMaxRows)
-                            .append ("Splittable", m_bSplittable)
+                            .append ("HorzSplittable", m_bHorzSplittable)
                             .append ("ReplacePlaceholder", m_bReplacePlaceholder)
                             .toString ();
   }
