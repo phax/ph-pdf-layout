@@ -551,7 +551,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         if (fCurY - fElementHeightFull < fYLeast || bIsPagebreakDesired)
         {
           // Element does not fit on page - try to split
-          final boolean bIsSplittable = aElement.isSplittable ();
+          final boolean bIsSplittable = aElement.isHorzSplittable ();
           if (bIsSplittable)
           {
             if (PLDebug.isDebugSplit ())
@@ -565,7 +565,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
 
             // split elements
             final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
-            final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElements (fElementPreparedWidth,
+            final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementHorz (fElementPreparedWidth,
                                                                                           fSplitHeight);
             if (aSplitResult != null)
             {

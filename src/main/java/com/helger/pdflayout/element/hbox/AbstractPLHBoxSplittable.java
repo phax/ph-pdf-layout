@@ -42,11 +42,11 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
 
   public boolean containsAnySplittableElement ()
   {
-    return m_aColumns.containsAny (x -> x.getElement ().isSplittable ());
+    return m_aColumns.containsAny (x -> x.getElement ().isHorzSplittable ());
   }
 
   @Nullable
-  public PLSplitResult splitElements (final float fAvailableWidth, final float fAvailableHeight)
+  public PLSplitResult splitElementHorz (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
       return null;
@@ -68,7 +68,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
       {
         // Is the current element higher and splittable?
         final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (i);
-        if (aColumnElement.isSplittable ())
+        if (aColumnElement.isHorzSplittable ())
         {
           final float fColumnHeightFull = m_aPreparedColumnSize[i].getHeight ();
           if (fColumnHeightFull > fAvailableHeight)
@@ -122,7 +122,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
     for (int nCol = 0; nCol < nCols; nCol++)
     {
       final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (nCol);
-      final boolean bIsSplittable = aColumnElement.isSplittable ();
+      final boolean bIsSplittable = aColumnElement.isHorzSplittable ();
       final float fColumnWidth = m_aPreparedColumnSize[nCol].getWidth ();
       final float fColumnHeight = m_aPreparedColumnSize[nCol].getHeight ();
       final float fElementWidth = m_aPreparedElementSize[nCol].getWidth ();
@@ -140,7 +140,7 @@ public abstract class AbstractPLHBoxSplittable <IMPLTYPE extends AbstractPLHBoxS
                                     PLDebug.getWH (fSplitWidth, fSplitHeight));
 
         // Use width and height without padding and margin!
-        final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ().splitElements (fSplitWidth, fSplitHeight);
+        final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ().splitElementHorz (fSplitWidth, fSplitHeight);
         if (aSplitResult != null)
         {
           final IPLRenderableObject <?> aHBox1Element = aSplitResult.getFirstElement ().getElement ();

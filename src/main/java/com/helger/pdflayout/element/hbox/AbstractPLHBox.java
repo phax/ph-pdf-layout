@@ -319,7 +319,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                         aCtx.getAvailableWidth () +
                         ")!");
       if (fUsedHeightFull - aCtx.getAvailableHeight () > 0.01)
-        if (!isSplittable ())
+        if (!isHorzSplittable ())
           s_aLogger.warn (getDebugID () +
                           " uses more height (" +
                           fUsedHeightFull +

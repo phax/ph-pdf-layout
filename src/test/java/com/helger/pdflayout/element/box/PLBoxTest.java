@@ -207,4 +207,27 @@ public final class PLBoxTest
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-alignment-nested.pdf"));
   }
+
+  @Test
+  public void testPageBreak () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 20);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (10);
+
+    for (final EHorzAlignment eH : EHorzAlignment.values ())
+      for (final EVertAlignment eV : EVertAlignment.values ())
+        aPS1.addElement (new PLBox (new PLText ("Text " +
+                                                eH.getID () +
+                                                " / " +
+                                                eV.getID (),
+                                                r10).setFillColor (Color.PINK)).setFillColor (Color.YELLOW)
+                                                                               .setExactSize (250, 120)
+                                                                               .setHorzAlign (eH)
+                                                                               .setVertAlign (eV)
+                                                                               .setBorder (Color.BLACK));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-pagebreak.pdf"));
+  }
 }

@@ -44,7 +44,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
                                     extends AbstractPLBlockElement <IMPLTYPE>
 {
   private IPLRenderableObject <?> m_aElement;
-  private SizeSpec m_aElementPreparedSize;
+  protected SizeSpec m_aElementPreparedSize;
 
   public AbstractPLBox (@Nullable final IPLRenderableObject <?> aElement)
   {

@@ -292,7 +292,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                         ") than available (" +
                         aCtx.getAvailableWidth () +
                         ")!");
-      if (fUsedHeightFull - aCtx.getAvailableHeight () > 0.01 && !isSplittable ())
+      if (fUsedHeightFull - aCtx.getAvailableHeight () > 0.01 && !isHorzSplittable ())
         s_aLogger.warn (getDebugID () +
                         " uses more height (" +
                         fUsedHeightFull +

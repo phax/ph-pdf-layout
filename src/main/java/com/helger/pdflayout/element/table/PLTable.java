@@ -286,7 +286,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
 
   @Override
   @Nullable
-  public PLSplitResult splitElements (final float fAvailableWidth, final float fAvailableHeight)
+  public PLSplitResult splitElementHorz (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
       return null;
@@ -342,7 +342,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
           bOnTable1 = false;
           // try to split the row
           boolean bSplittedRow = false;
-          if (aRowElement.isSplittable ())
+          if (aRowElement.isHorzSplittable ())
           {
             final float fSplitWidth = m_aPreparedElementSize[nRow].getWidth ();
             final float fSplitHeight = fAvailableHeight - fUsedTable1RowHeight - aRowElement.getOutlineYSum ();
@@ -357,7 +357,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
 
             // Try to split the element contained in the row (without padding
             // and margin of the element)
-            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElements (fSplitWidth, fSplitHeight);
+            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementHorz (fSplitWidth, fSplitHeight);
 
             if (aSplitResult != null)
             {

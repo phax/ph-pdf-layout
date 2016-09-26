@@ -173,7 +173,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return thisAsT ();
   }
 
-  public boolean isSplittable ()
+  public boolean isHorzSplittable ()
   {
     return m_bSplittable;
   }
@@ -423,7 +423,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Nullable
-  public PLSplitResult splitElements (final float fElementWidth, final float fAvailableHeight)
+  public PLSplitResult splitElementHorz (final float fElementWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
       return null;

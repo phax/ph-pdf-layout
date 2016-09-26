@@ -16,16 +16,11 @@
  */
 package com.helger.pdflayout.element.vbox;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
-import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
@@ -48,18 +43,11 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
 
   public boolean containsAnySplittableElement ()
   {
-    return m_aRows.containsAny (r -> r.getElement ().isSplittable ());
-  }
-
-  @Nonnull
-  @ReturnsMutableCopy
-  private static float [] _getAsArray (@Nonnull final List <Float> aList)
-  {
-    return TypeConverter.convertIfNecessary (aList, float [].class);
+    return m_aRows.containsAny (x -> x.getElement ().isHorzSplittable ());
   }
 
   @Nullable
-  public PLSplitResult splitElements (final float fAvailableWidth, final float fAvailableHeight)
+  public PLSplitResult splitElementHorz (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
       return null;
@@ -109,7 +97,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
           bOnVBox1 = false;
           // try to split the row
           boolean bSplittedRow = false;
-          if (aRowElement.isSplittable ())
+          if (aRowElement.isHorzSplittable ())
           {
             final float fSplitWidth = m_aPreparedElementSize[nRow].getWidth ();
             final float fSplitHeight = fAvailableHeight - fUsedVBox1RowHeight - aRowElement.getOutlineYSum ();
@@ -121,7 +109,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
                                         PLDebug.getWH (fSplitWidth, fSplitHeight));
 
             // Try to split the element contained in the row
-            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElements (fSplitWidth, fSplitHeight);
+            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementHorz (fSplitWidth, fSplitHeight);
             if (aSplitResult != null)
             {
               final IPLRenderableObject <?> aVBox1RowElement = aSplitResult.getFirstElement ().getElement ();
