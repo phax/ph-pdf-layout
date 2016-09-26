@@ -34,6 +34,7 @@ import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
+import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.vbox.PLVBox;
@@ -299,6 +300,13 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
         });
       ++nRowIndex;
     }
+  }
+
+  @Override
+  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  {
+    super.visit (aVisitor);
+    m_aVBox.visit (aVisitor);
   }
 
   @Override

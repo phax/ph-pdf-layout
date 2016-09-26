@@ -385,7 +385,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
     }
 
-    // Set min width for block elements
+    // Set min size for block elements
     {
       nIndex = 0;
       for (final PLHBoxColumn aColumn : m_aColumns)
@@ -394,13 +394,11 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         if (aElement instanceof AbstractPLBlockElement <?>)
         {
           final AbstractPLBlockElement <?> aRealElement = (AbstractPLBlockElement <?>) aElement;
-          // Remember height before reset!
-          final float fPreparedHeight = aRealElement.getPreparedHeight ();
           aRealElement.internalMarkAsNotPrepared ();
           // Set column width as prepared width
           aRealElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnSize[nIndex].getWidth () -
                                                              aElement.getOutlineXSum (),
-                                                             fPreparedHeight));
+                                                             fUsedHeightFull));
         }
         ++nIndex;
       }

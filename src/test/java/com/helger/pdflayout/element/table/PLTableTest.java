@@ -33,13 +33,12 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.PLPageSet;
-import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.text.PLText;
-import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
@@ -55,6 +54,11 @@ import com.helger.pdflayout.spec.PreloadFont;
  */
 public final class PLTableTest
 {
+  static
+  {
+    PLDebug.setDebugAll (true);
+  }
+
   @Rule
   public final TestRule m_aRule = new DebugModeTestRule ();
 
@@ -66,21 +70,8 @@ public final class PLTableTest
     final MarginSpec aMargin = new MarginSpec (5);
     final PaddingSpec aPadding = new PaddingSpec (2);
 
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30)
-                                                         .setPadding (0, 20, 0, 10)
-                                                         .setFillColor (new Color (0xddffff));
-    aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
-                                                    .setPadding (4, 0)
-                                                    .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setPageFooter (new PLText ("Page " +
-                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
-                                    "/" +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
-                                    r10).setReplacePlaceholder (true)
-                                        .setBorder (new BorderStyleSpec (Color.RED))
-                                        .setPadding (4, 0)
-                                        .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.addElement (new PLText ("Erste Dummy Zeile", r10));
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    aPS1.addElement (new PLText ("First dummy line", r10));
 
     // Start table
     final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
@@ -88,49 +79,51 @@ public final class PLTableTest
     aTable.setHeaderRowCount (1);
 
     // Add row
-    aTable.addTableRow (new PLText ("ID", r14b).setPadding (aPadding),
-                        new PLText ("Name", r14b).setPadding (aPadding),
-                        new PLText ("Sum1", r14b).setPadding (aPadding).setHorzAlign (EHorzAlignment.CENTER),
-                        new PLText ("Sum2", r14b).setPadding (aPadding).setHorzAlign (EHorzAlignment.RIGHT));
+    final PLTableRow aHeaderRow = aTable.addAndReturnTableRow (new PLText ("ID", r14b).setPadding (aPadding)
+                                                                                      .setFillColor (Color.YELLOW),
+                                                               new PLText ("Name", r14b).setPadding (aPadding)
+                                                                                        .setFillColor (Color.YELLOW),
+                                                               new PLText ("Sum1",
+                                                                           r14b).setPadding (aPadding)
+                                                                                .setFillColor (Color.YELLOW)
+                                                                                .setHorzAlign (EHorzAlignment.CENTER),
+                                                               new PLText ("Sum2",
+                                                                           r14b).setPadding (aPadding)
+                                                                                .setFillColor (Color.YELLOW)
+                                                                                .setHorzAlign (EHorzAlignment.RIGHT));
+    aHeaderRow.setFillColor (Color.GRAY);
 
     // Test colspan
     aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 2a", r10), 2),
-                           new PLTableCell (new PLText ("Colspan 2b", r10), 2));
+                           new PLTableCell (new PLText ("Colspan 2b", r10).setFillColor (Color.YELLOW), 2));
     aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 3a", r10), 3),
-                           new PLTableCell (new PLText ("Colspan 1b", r10), 1));
+                           new PLTableCell (new PLText ("Colspan 1b", r10).setFillColor (Color.YELLOW), 1));
     aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 1a", r10), 1),
-                           new PLTableCell (new PLText ("Colspan 3b", r10), 3));
-    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 4", r10), 4));
+                           new PLTableCell (new PLText ("Colspan 3b", r10).setFillColor (Color.YELLOW), 3));
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 4", r10).setFillColor (Color.YELLOW), 4));
 
     // Add content lines
-    for (int i = 0; i < 184; ++i)
-    {
-      // Width is determined by the width passed to the table creating method
-      aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin),
-                          new PLText ("Name " +
-                                      i +
-                                      (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
-                                      r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED
-                                                                                 : Color.BLACK)).setPadding (aPadding)
-                                                                                                .setMargin (aMargin),
-                          new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
-                                                                    .setMargin (aMargin)
-                                                                    .setHorzAlign (EHorzAlignment.CENTER),
-                          new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
-                                                                    .setMargin (aMargin)
-                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
-    }
+    if (false)
+      for (int i = 0; i < 184; ++i)
+      {
+        // Width is determined by the width passed to the table creating method
+        aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin),
+                            new PLText ("Name " +
+                                        i +
+                                        (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
+                                        r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED
+                                                                                   : Color.BLACK)).setPadding (aPadding)
+                                                                                                  .setMargin (aMargin),
+                            new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
+                                                                      .setMargin (aMargin)
+                                                                      .setHorzAlign (EHorzAlignment.CENTER),
+                            new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
+                                                                      .setMargin (aMargin)
+                                                                      .setHorzAlign (EHorzAlignment.RIGHT));
+      }
     aTable.setFullGrid (new BorderStyleSpec (Color.PINK, 1));
     aPS1.addElement (aTable);
-
-    // Start a new page
-    aPS1.addElement (new PLPageBreak (false));
-    aPS1.addElement (new PLText ("First line on bottom of new page", r10));
-    // Next page
-    aPS1.addElement (new PLPageBreak (false));
-    // empty page by using forced page break
-    aPS1.addElement (new PLPageBreak (true));
-    aPS1.addElement (new PLText ("First line on top of last page after one empty page", r10));
+    aPS1.addElement (new PLText ("Last line", r10));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);

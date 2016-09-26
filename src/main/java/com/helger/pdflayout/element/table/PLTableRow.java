@@ -1,5 +1,6 @@
 package com.helger.pdflayout.element.table;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
@@ -9,6 +10,7 @@ import javax.annotation.Nullable;
 
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
+import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.hbox.PLHBoxColumn;
@@ -44,6 +46,18 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   public void forEachCell (@Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
     m_aRow.forEachColumn ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
+  }
+
+  public void setFillColor (@Nonnull final Color aFillColor)
+  {
+    forEachCell (x -> x.setFillColor (aFillColor));
+  }
+
+  @Override
+  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  {
+    super.visit (aVisitor);
+    m_aRow.visit (aVisitor);
   }
 
   @Override
