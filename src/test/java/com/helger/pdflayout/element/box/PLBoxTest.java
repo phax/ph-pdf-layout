@@ -220,7 +220,8 @@ public final class PLBoxTest
                                                 eH.getID () +
                                                 " / " +
                                                 eV.getID (),
-                                                r10).setFillColor (Color.PINK)).setFillColor (Color.YELLOW)
+                                                r10).setFillColor (Color.PINK)).setVertSplittable (false)
+                                                                               .setFillColor (Color.YELLOW)
                                                                                .setExactSize (250, 120)
                                                                                .setHorzAlign (eH)
                                                                                .setVertAlign (eV)
@@ -229,5 +230,25 @@ public final class PLBoxTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-pagebreak.pdf"));
+  }
+
+  @Test
+  public void testPageBreakSplittable () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (10);
+
+    for (int i = 0; i < 100; ++i)
+      aPS1.addElement (new PLBox (new PLText ("Text " +
+                                              i +
+                                              "\nline 2 of 3\nshort\nAnd finally the last line",
+                                              r10).setFillColor (Color.PINK)).setVertSplittable (true)
+                                                                             .setFillColor (Color.YELLOW)
+                                                                             .setPadding (5)
+                                                                             .setBorder (Color.BLACK));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-splittable-pagebreak.pdf"));
   }
 }

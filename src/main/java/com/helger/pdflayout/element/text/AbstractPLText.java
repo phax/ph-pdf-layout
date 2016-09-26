@@ -61,7 +61,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                                      implements IPLHasHorizontalAlignment <IMPLTYPE>, IPLSplittableObject <IMPLTYPE>
 {
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
-  public static final boolean DEFAULT_SPLITTABLE = true;
   public static final boolean DEFAULT_REPLACE_PLACEHOLDERS = false;
 
   private String m_sText;
@@ -69,7 +68,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private final FontSpec m_aFontSpec;
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
-  private boolean m_bHorzSplittable = DEFAULT_SPLITTABLE;
+  private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   private boolean m_bReplacePlaceholder = DEFAULT_REPLACE_PLACEHOLDERS;
 
   // prepare result
@@ -105,7 +104,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     super.setBasicDataFrom (aSource);
     setHorzAlign (aSource.m_eHorzAlign);
     setMaxRows (aSource.m_nMaxRows);
-    setHorzSplittable (aSource.m_bHorzSplittable);
+    setVertSplittable (aSource.m_bVertSplittable);
     setReplacePlaceholder (aSource.m_bReplacePlaceholder);
     return thisAsT ();
   }
@@ -173,15 +172,15 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return thisAsT ();
   }
 
-  public boolean isHorzSplittable ()
+  public boolean isVertSplittable ()
   {
-    return m_bHorzSplittable;
+    return m_bVertSplittable;
   }
 
   @Nonnull
-  public IMPLTYPE setHorzSplittable (final boolean bHorzSplittable)
+  public IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
-    m_bHorzSplittable = bHorzSplittable;
+    m_bVertSplittable = bVertSplittable;
     return thisAsT ();
   }
 
@@ -413,7 +412,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final PLText aNewText = new PLText (sTextContent, getFontSpec ());
     aNewText.setBasicDataFrom (this);
     // Set this explicitly after setBasicDataFrom!
-    aNewText.setHorzSplittable (bSplittableCopy);
+    aNewText.setVertSplittable (bSplittableCopy);
 
     aNewText.internalMarkAsPrepared (aSize);
     aNewText.internalSetPreparedLines (aLineCopy);
@@ -423,7 +422,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Nullable
-  public PLSplitResult splitElementHorz (final float fElementWidth, final float fAvailableHeight)
+  public PLSplitResult splitElementVert (final float fElementWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
       return null;
@@ -503,7 +502,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("FontSpec", m_aFontSpec)
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("MaxRows", m_nMaxRows)
-                            .append ("HorzSplittable", m_bHorzSplittable)
+                            .append ("VertSplittable", m_bVertSplittable)
                             .append ("ReplacePlaceholder", m_bReplacePlaceholder)
                             .toString ();
   }

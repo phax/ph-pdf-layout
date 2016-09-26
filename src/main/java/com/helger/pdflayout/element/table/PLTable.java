@@ -136,7 +136,7 @@ public class PLTable extends AbstractPLVBoxSplittable <PLTable>
                                           m_aWidths.size () +
                                           ")!");
 
-    final PLHBox aRowHBox = new PLHBox ().setHorzSplittable (true);
+    final PLHBox aRowHBox = new PLHBox ().setVertSplittable (true);
     int nWidthIndex = 0;
     for (IPLRenderableObject <?> aElement : aElements)
     {
@@ -184,7 +184,7 @@ public class PLTable extends AbstractPLVBoxSplittable <PLTable>
                                           m_aWidths.size () +
                                           ")!");
 
-    final PLHBox aHBox = new PLHBox ().setHorzSplittable (true);
+    final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
     int nWidthIndex = 0;
     for (final PLTableCell aCell : aCells)
     {

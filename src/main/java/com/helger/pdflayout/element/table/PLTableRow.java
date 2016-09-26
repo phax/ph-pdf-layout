@@ -14,7 +14,7 @@ import com.helger.pdflayout.spec.SizeSpec;
 
 public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implements IPLSplittableObject <PLTableRow>
 {
-  private final PLHBox m_aRow = new PLHBox ().setHorzSplittable (true);
+  private final PLHBox m_aRow = new PLHBox ();
 
   @Override
   protected SizeSpec onPrepare (final PreparationContext aCtx) throws IOException
@@ -22,15 +22,15 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     return m_aRow.prepare (aCtx);
   }
 
-  public boolean isHorzSplittable ()
+  public boolean isVertSplittable ()
   {
-    return m_aRow.isHorzSplittable ();
+    return m_aRow.isVertSplittable ();
   }
 
   @Nullable
-  public PLSplitResult splitElementHorz (final float fAvailableWidth, final float fAvailableHeight)
+  public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
-    return m_aRow.splitElementHorz (fAvailableWidth, fAvailableHeight);
+    return m_aRow.splitElementVert (fAvailableWidth, fAvailableHeight);
   }
 
   @Override

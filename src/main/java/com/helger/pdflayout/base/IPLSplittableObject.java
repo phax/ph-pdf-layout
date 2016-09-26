@@ -28,18 +28,20 @@ import javax.annotation.Nullable;
  */
 public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPLTYPE>> extends IPLObject <IMPLTYPE>
 {
+  boolean DEFAULT_VERT_SPLITTABLE = true;
+
   /**
-   * @return Always <code>true</code> for horizontally splittable elements
+   * @return Always <code>true</code> for vertical splittable elements
    */
-  default boolean isHorzSplittable ()
+  default boolean isVertSplittable ()
   {
     return true;
   }
 
   /**
-   * Split this element horizontally into sub-elements according to the
-   * available height. Splitting is always done after preparation and must
-   * return prepared objects!
+   * Split this element vertically into sub-elements according to the available
+   * height. Splitting is always done after preparation and must return prepared
+   * objects!
    *
    * @param fAvailableWidth
    *        The available width without outline of the element.
@@ -49,5 +51,5 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    * @return <code>null</code> if splitting makes no sense.
    */
   @Nullable
-  PLSplitResult splitElementHorz (@Nonnegative float fAvailableWidth, @Nonnegative float fAvailableHeight);
+  PLSplitResult splitElementVert (@Nonnegative float fAvailableWidth, @Nonnegative float fAvailableHeight);
 }

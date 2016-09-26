@@ -79,7 +79,7 @@ public final class PLVBoxSplittableTest
     final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
     for (int i = 0; i < 40; ++i)
     {
-      final PLHBox aHBox = new PLHBox ().setHorzSplittable (true);
+      final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
       for (int j = 0; j < 10; ++j)
         aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20)),
                          WidthSpec.star ());
@@ -103,10 +103,10 @@ public final class PLVBoxSplittableTest
     final PLVBoxSplittable aVBox = new PLVBoxSplittable ();
     for (int i = 0; i < 40; ++i)
     {
-      final PLHBox aHBox = new PLHBox ().setHorzSplittable (true);
+      final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
       for (int j = 0; j < 10; ++j)
         aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20))
-                                                                .setHorzSplittable (false),
+                                                                .setVertSplittable (false),
                          WidthSpec.star ());
       aVBox.addRow (aHBox);
     }

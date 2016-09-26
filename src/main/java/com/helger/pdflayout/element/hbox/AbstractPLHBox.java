@@ -71,12 +71,10 @@ import com.helger.pdflayout.spec.WidthSpec;
 public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
                                      AbstractPLRenderableObject <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
 {
-  public static final boolean DEFAULT_SPLITTABLE = true;
-
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
   private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
-  private boolean m_bHorzSplittable = DEFAULT_SPLITTABLE;
+  private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
   /** prepared column size (with outline of contained element) */
   private SizeSpec [] m_aPreparedColumnSize;
@@ -91,7 +89,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLHBox <?> aSource)
   {
     super.setBasicDataFrom (aSource);
-    setHorzSplittable (aSource.m_bHorzSplittable);
+    setVertSplittable (aSource.m_bVertSplittable);
     return thisAsT ();
   }
 
@@ -207,21 +205,21 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     return thisAsT ();
   }
 
-  public boolean isHorzSplittable ()
+  public boolean isVertSplittable ()
   {
-    return m_bHorzSplittable;
+    return m_bVertSplittable;
   }
 
   @Nonnull
-  public IMPLTYPE setHorzSplittable (final boolean bSplittable)
+  public IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
-    m_bHorzSplittable = bSplittable;
+    m_bVertSplittable = bVertSplittable;
     return thisAsT ();
   }
 
   public boolean containsAnySplittableElement ()
   {
-    return m_aColumns.containsAny (x -> x.getElement ().isHorzSplittable ());
+    return m_aColumns.containsAny (x -> x.getElement ().isVertSplittable ());
   }
 
   @Override
@@ -397,7 +395,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                         aCtx.getAvailableWidth () +
                         ")!");
       if (fUsedHeightFull - aCtx.getAvailableHeight () > 0.01)
-        if (!isHorzSplittable ())
+        if (!isVertSplittable ())
           s_aLogger.warn (getDebugID () +
                           " uses more height (" +
                           fUsedHeightFull +
@@ -410,7 +408,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Nullable
-  public PLSplitResult splitElementHorz (final float fAvailableWidth, final float fAvailableHeight)
+  public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
       return null;
@@ -432,7 +430,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       {
         // Is the current element higher and splittable?
         final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (i);
-        if (aColumnElement.isHorzSplittable ())
+        if (aColumnElement.isVertSplittable ())
         {
           final float fColumnHeightFull = m_aPreparedColumnSize[i].getHeight ();
           if (fColumnHeightFull > fAvailableHeight)
@@ -486,7 +484,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     for (int nCol = 0; nCol < nCols; nCol++)
     {
       final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (nCol);
-      final boolean bIsSplittable = aColumnElement.isHorzSplittable ();
+      final boolean bIsSplittable = aColumnElement.isVertSplittable ();
       final float fColumnWidth = m_aPreparedColumnSize[nCol].getWidth ();
       final float fColumnHeight = m_aPreparedColumnSize[nCol].getHeight ();
       final float fElementWidth = m_aPreparedElementSize[nCol].getWidth ();
@@ -504,7 +502,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                     PLDebug.getWH (fSplitWidth, fSplitHeight));
 
         // Use width and height without padding and margin!
-        final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ().splitElementHorz (fSplitWidth,
+        final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ().splitElementVert (fSplitWidth,
                                                                                                fSplitHeight);
         if (aSplitResult != null)
         {
@@ -667,7 +665,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("Columns", m_aColumns)
-                            .append ("HorzSplittable", m_bHorzSplittable)
+                            .append ("VertSplittable", m_bVertSplittable)
                             .appendIfNotNull ("PreparedColumnSize", m_aPreparedColumnSize)
                             .appendIfNotNull ("PreparedElementSize", m_aPreparedElementSize)
                             .toString ();

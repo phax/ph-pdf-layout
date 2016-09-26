@@ -228,7 +228,7 @@ public final class PLHBoxTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
-    final PLHBox aHBox = new PLHBox ().setHorzSplittable (true);
+    final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
     for (int i = 0; i < 3; ++i)
       aHBox.addColumn (new PLText (s + s, r10).setMargin (10)
                                               .setPadding (5)
@@ -250,7 +250,7 @@ public final class PLHBoxTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
     aPS1.addElement (new PLText ("Line before", r10).setBorder (Color.RED));
-    final PLHBox aHBox = new PLHBox ().setHorzSplittable (true);
+    final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
     for (int i = 0; i < 3; ++i)
       aHBox.addColumn (new PLText (i == 1 ? "" : s + s, r10).setMargin (10)
                                                             .setPadding (5)

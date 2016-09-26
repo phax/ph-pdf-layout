@@ -53,7 +53,7 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
    * @return <code>true</code> if this element is splittable, <code>false</code>
    *         otherwise.
    */
-  default boolean isHorzSplittable ()
+  default boolean isVertSplittable ()
   {
     return this instanceof IPLSplittableObject <?>;
   }

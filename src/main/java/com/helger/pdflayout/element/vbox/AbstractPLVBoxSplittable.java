@@ -85,11 +85,11 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
 
   public boolean containsAnySplittableElement ()
   {
-    return m_aRows.containsAny (x -> x.getElement ().isHorzSplittable ());
+    return m_aRows.containsAny (x -> x.getElement ().isVertSplittable ());
   }
 
   @Nullable
-  public PLSplitResult splitElementHorz (final float fAvailableWidth, final float fAvailableHeight)
+  public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
       return null;
@@ -153,7 +153,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
           bOnVBox1 = false;
           // try to split the row
           boolean bSplittedRow = false;
-          if (aRowElement.isHorzSplittable ())
+          if (aRowElement.isVertSplittable ())
           {
             final float fSplitWidth = m_aPreparedElementSize[nRow].getWidth ();
             final float fSplitHeight = fAvailableHeight - fUsedVBox1RowHeight - aRowElement.getOutlineYSum ();
@@ -165,7 +165,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
                                         PLDebug.getWH (fSplitWidth, fSplitHeight));
 
             // Try to split the element contained in the row
-            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementHorz (fSplitWidth,
+            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementVert (fSplitWidth,
                                                                                                 fSplitHeight);
             if (aSplitResult != null)
             {
