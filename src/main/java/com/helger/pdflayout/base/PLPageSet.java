@@ -427,7 +427,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   }
 
   @Nonnull
-  public PageSetPrepareResult prepareAllPages (@Nonnull final PreparationContextGlobal aGlobalCtx) throws IOException
+  public PageSetPrepareResult prepareAllPages (@Nonnull final PreparationContextGlobal aGlobalCtx)
   {
     // The result element
     final PageSetPrepareResult ret = new PageSetPrepareResult ();
@@ -566,7 +566,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
             // split elements
             final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
             final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fElementPreparedWidth,
-                                                                                          fSplitHeight);
+                                                                                             fSplitHeight);
             if (aSplitResult != null)
             {
               // Re-add them to the list and try again (they may be splitted

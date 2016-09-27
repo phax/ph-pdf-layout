@@ -73,6 +73,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight)
   {
     m_aMinSize = new SizeSpec (fMinWidth, fMinHeight);
+    onPreparedSizeChange ();
     return thisAsT ();
   }
 
@@ -86,6 +87,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight)
   {
     m_aMaxSize = new SizeSpec (fMaxWidth, fMaxHeight);
+    onPreparedSizeChange ();
     return thisAsT ();
   }
 
@@ -144,27 +146,21 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     return m_aFillColor;
   }
 
+  @Override
   @Nonnull
-  protected SizeSpec getWithMinMaxApplied (@Nonnull final SizeSpec aSize)
+  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
   {
-    ValueEnforcer.notNull (aSize, "Size");
+    ValueEnforcer.notNull (aPreparedSize, "Size");
 
     // Consider min size here
-    float fRealWidth = Math.max (m_aMinSize.getWidth (), aSize.getWidth ());
-    float fRealHeight = Math.max (m_aMinSize.getHeight (), aSize.getHeight ());
+    float fRealWidth = Math.max (m_aMinSize.getWidth (), aPreparedSize.getWidth ());
+    float fRealHeight = Math.max (m_aMinSize.getHeight (), aPreparedSize.getHeight ());
 
     // Consider max size here
     fRealWidth = Math.min (m_aMaxSize.getWidth (), fRealWidth);
     fRealHeight = Math.min (m_aMaxSize.getHeight (), fRealHeight);
 
     return new SizeSpec (fRealWidth, fRealHeight);
-  }
-
-  @Override
-  @Nonnull
-  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
-  {
-    return getWithMinMaxApplied (aPreparedSize);
   }
 
   @Override

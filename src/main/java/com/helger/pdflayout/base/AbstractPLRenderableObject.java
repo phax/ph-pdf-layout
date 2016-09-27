@@ -124,7 +124,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *         on PDFBox error
    */
   @Nonnull
-  protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException;
+  protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx);
 
   @Nonnull
   protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
@@ -156,15 +156,28 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                   " and " +
                   PLDebug.getYMBP ((IPLHasMarginBorderPadding <?>) this);
       }
-      PLDebug.debugPrepare (this,
-                            "Prepared object: " +
-                                  PLDebug.getWH (aPreparedSize.getWidth (), aPreparedSize.getHeight ()) +
-                                  sSuffix);
+      PLDebug.debugPrepare (this, "Prepared object: " + PLDebug.getWH (aPreparedSize) + sSuffix);
+    }
+  }
+
+  protected final void onPreparedSizeChange ()
+  {
+    if (m_bPrepared)
+    {
+      // Recalculate, e.g. for min-max size change
+      final SizeSpec aOldPreparedSize = m_aPreparedSize;
+      _setPreparedSize (aOldPreparedSize);
+      if (PLDebug.isDebugPrepare ())
+        PLDebug.debugPrepare (this,
+                              "PreparedSizeChange from " +
+                                    PLDebug.getWH (aOldPreparedSize) +
+                                    " to " +
+                                    PLDebug.getWH (m_aPreparedSize));
     }
   }
 
   @Nonnull
-  public final SizeSpec prepare (@Nonnull final PreparationContext aCtx) throws IOException
+  public final SizeSpec prepare (@Nonnull final PreparationContext aCtx)
   {
     // Prepare only once!
     internalCheckNotPrepared ();
@@ -195,8 +208,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return m_aPreparedSize;
   }
 
-  // TODO should be protected only
-  public final void internalMarkAsNotPrepared ()
+  protected final void internalMarkAsNotPrepared ()
   {
     internalCheckAlreadyPrepared ();
     m_aPreparedSize = null;
@@ -208,9 +220,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *        The new prepared size without padding or margin.
    * @return this
    */
-  // TODO should be protected only
   @Nonnull
-  public final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
+  protected final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
   {
     // Prepare only once!
     internalCheckNotPrepared ();

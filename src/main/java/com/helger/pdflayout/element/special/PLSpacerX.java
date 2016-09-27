@@ -36,7 +36,7 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
   {}
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
+  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     // No height required
     return new SizeSpec (aCtx.getAvailableWidth (), 0);

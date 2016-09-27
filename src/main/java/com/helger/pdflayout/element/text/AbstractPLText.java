@@ -266,11 +266,18 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
+  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     // Load font into document
-    m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
-    return _prepareText (aCtx.getAvailableWidth () - getOutlineXSum ());
+    try
+    {
+      m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
+      return _prepareText (aCtx.getAvailableWidth () - getOutlineXSum ());
+    }
+    catch (final IOException ex)
+    {
+      throw new IllegalStateException ("Failed to prepare text element: " + toString (), ex);
+    }
   }
 
   protected final void setDisplayTextAfterPrepare (@Nonnull final String sNewText,

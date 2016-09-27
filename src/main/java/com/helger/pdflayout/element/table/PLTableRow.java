@@ -63,7 +63,7 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   }
 
   @Override
-  protected SizeSpec onPrepare (final PreparationContext aCtx) throws IOException
+  protected SizeSpec onPrepare (final PreparationContext aCtx)
   {
     return m_aRow.prepare (aCtx);
   }

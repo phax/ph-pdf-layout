@@ -320,7 +320,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
   @Override
   @OverridingMethodsMustInvokeSuper
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
+  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     m_aPreparedRowSize = new SizeSpec [m_aRows.size ()];
     m_aPreparedElementSize = new SizeSpec [m_aRows.size ()];

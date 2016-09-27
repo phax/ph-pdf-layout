@@ -339,7 +339,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   }
 
   @Override
-  protected SizeSpec onPrepare (final PreparationContext aCtx) throws IOException
+  protected SizeSpec onPrepare (final PreparationContext aCtx)
   {
     m_aGridType.applyGridToTable (this, m_aGridBSS);
     return m_aVBox.prepare (aCtx);

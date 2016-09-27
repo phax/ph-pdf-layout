@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.pdflayout.base.IPLHasMarginBorderPadding;
 import com.helger.pdflayout.base.IPLObject;
+import com.helger.pdflayout.spec.SizeSpec;
 
 @NotThreadSafe
 public final class PLDebug
@@ -146,6 +147,12 @@ public final class PLDebug
   public static String getXY (final float fX, final float fY)
   {
     return "[" + fX + "/" + fY + "]";
+  }
+
+  @Nonnull
+  public static String getWH (@Nonnull final SizeSpec aSize)
+  {
+    return getWH (aSize.getWidth (), aSize.getHeight ());
   }
 
   @Nonnull

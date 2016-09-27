@@ -81,7 +81,7 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLElement <IMPLT
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
+  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     return new SizeSpec (m_fImageWidth, m_fImageHeight);
   }

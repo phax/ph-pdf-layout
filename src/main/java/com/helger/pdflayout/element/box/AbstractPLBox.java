@@ -140,7 +140,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
+  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     if (m_aElement == null)
       return SizeSpec.SIZE0;

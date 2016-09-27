@@ -68,12 +68,10 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    *        The preparation context
    * @return The net size of the rendered object without margin, border and
    *         margin. May not be <code>null</code>.
-   * @throws IOException
-   *         if already prepared
    * @see #render(PageRenderContext)
    */
   @Nonnull
-  SizeSpec prepare (@Nonnull final PreparationContext aCtx) throws IOException;
+  SizeSpec prepare (@Nonnull final PreparationContext aCtx);
 
   /**
    * Called after the page was created but before the content stream is created.

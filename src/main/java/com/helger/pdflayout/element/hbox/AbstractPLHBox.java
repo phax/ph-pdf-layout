@@ -253,7 +253,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   @Override
   @OverridingMethodsMustInvokeSuper
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
+  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     m_aPreparedColumnSize = new SizeSpec [m_aColumns.size ()];
     m_aPreparedElementSize = new SizeSpec [m_aColumns.size ()];
@@ -396,11 +396,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         if (aElement instanceof AbstractPLBlockElement <?>)
         {
           final AbstractPLBlockElement <?> aRealElement = (AbstractPLBlockElement <?>) aElement;
-          aRealElement.internalMarkAsNotPrepared ();
-          // Set column width and height as prepared width
-          aRealElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnSize[nIndex].getWidth () -
-                                                             aElement.getOutlineXSum (),
-                                                             fMaxContentHeight));
+          // Set minimum column width and height as prepared width
+          aRealElement.setMinSize (m_aPreparedColumnSize[nIndex].getWidth () -
+                                   aElement.getOutlineXSum (),
+                                   fMaxContentHeight);
         }
         ++nIndex;
       }
@@ -486,7 +485,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
       // Create empty element with the same width as the original element
       final PLSpacerX aEmptyElement = new PLSpacerX ();
-      aEmptyElement.internalMarkAsPrepared (new SizeSpec (m_aPreparedColumnSize[i].getWidth (), 0));
+      aEmptyElement.prepare (new PreparationContext (null, m_aPreparedColumnSize[i].getWidth (), 0));
 
       aHBox1.addColumn (aEmptyElement, aColumnWidth);
       aHBox2.addColumn (aEmptyElement, aColumnWidth);
