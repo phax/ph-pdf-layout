@@ -127,9 +127,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException;
 
   @Nonnull
-  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aSize)
+  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
   {
-    return aSize;
+    return aPreparedSize;
   }
 
   /**

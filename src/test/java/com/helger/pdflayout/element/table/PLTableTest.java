@@ -103,24 +103,23 @@ public final class PLTableTest
     aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 4", r10).setFillColor (Color.YELLOW), 4));
 
     // Add content lines
-    if (false)
-      for (int i = 0; i < 184; ++i)
-      {
-        // Width is determined by the width passed to the table creating method
-        aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin),
-                            new PLText ("Name " +
-                                        i +
-                                        (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
-                                        r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED
-                                                                                   : Color.BLACK)).setPadding (aPadding)
-                                                                                                  .setMargin (aMargin),
-                            new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
-                                                                      .setMargin (aMargin)
-                                                                      .setHorzAlign (EHorzAlignment.CENTER),
-                            new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
-                                                                      .setMargin (aMargin)
-                                                                      .setHorzAlign (EHorzAlignment.RIGHT));
-      }
+    for (int i = 0; i < 184; ++i)
+    {
+      // Width is determined by the width passed to the table creating method
+      aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin),
+                          new PLText ("Name " +
+                                      i +
+                                      (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
+                                      r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED
+                                                                                 : Color.BLACK)).setPadding (aPadding)
+                                                                                                .setMargin (aMargin),
+                          new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
+                                                                    .setMargin (aMargin)
+                                                                    .setHorzAlign (EHorzAlignment.CENTER),
+                          new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
+                                                                    .setMargin (aMargin)
+                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
+    }
     aTable.setFullGrid (new BorderStyleSpec (Color.PINK, 1));
     aPS1.addElement (aTable);
     aPS1.addElement (new PLText ("Last line", r10));

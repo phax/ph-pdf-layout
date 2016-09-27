@@ -162,9 +162,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
 
   @Override
   @Nonnull
-  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aSize)
+  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
   {
-    return getWithMinMaxApplied (aSize);
+    return getWithMinMaxApplied (aPreparedSize);
   }
 
   @Override

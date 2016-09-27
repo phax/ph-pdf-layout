@@ -25,7 +25,6 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLBlockElement;
-import com.helger.pdflayout.base.IPLHasMargin;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
@@ -53,6 +52,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
   // Status vars
   private SizeSpec m_aElementPreparedSize;
+  private SizeSpec m_aRenderOffset;
 
   public AbstractPLBox (@Nullable final IPLRenderableObject <?> aElement)
   {
@@ -129,6 +129,17 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   }
 
   @Override
+  @Nonnull
+  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
+  {
+    final SizeSpec aEffectiveSize = super.adoptPreparedSize (aPreparedSize);
+    // Calculate how big this box would be with min/max size
+    m_aRenderOffset = new SizeSpec (getIndentX (aEffectiveSize.getWidth (), aPreparedSize.getWidth ()),
+                                    getIndentY (aEffectiveSize.getHeight (), aPreparedSize.getHeight ()));
+    return aEffectiveSize;
+  }
+
+  @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx) throws IOException
   {
     if (m_aElement == null)
@@ -144,20 +155,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
     // Add the outer stuff of the contained element as this elements prepared
     // size
-    final SizeSpec ret = m_aElementPreparedSize.plus (m_aElement.getOutlineXSum (), m_aElement.getOutlineYSum ());
-
-    if (m_aElement instanceof IPLHasMargin <?>)
-    {
-      // Add margin to the child element for alignment
-      final IPLHasMargin <?> aEl = (IPLHasMargin <?>) m_aElement;
-
-      // Calculate how big this box would be with min/max size
-      final SizeSpec aRealSize = adoptPreparedSize (ret);
-      aEl.addMarginLeft (getIndentX (aRealSize.getWidth (), ret.getWidth ()));
-      aEl.addMarginTop (getIndentY (aRealSize.getHeight (), ret.getHeight ()));
-    }
-
-    return ret;
+    return m_aElementPreparedSize.plus (m_aElement.getOutlineXSum (), m_aElement.getOutlineYSum ());
   }
 
   @Nullable
@@ -166,11 +164,20 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     if (fAvailableHeight <= 0)
       return null;
 
+    final float fBoxHeight = getPreparedHeight ();
+    if (fBoxHeight <= fAvailableHeight)
+    {
+      // Splitting makes no sense!
+      if (PLDebug.isDebugSplit ())
+        PLDebug.debugSplit (this, "Splitting makes no sense, because Box 2 would be empty");
+      return null;
+    }
+
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
     final AbstractPLBox <?> aBox1 = new PLBox ().setBasicDataFrom (this);
-    final AbstractPLBox <?> aBox2 = new PLBox ().setBasicDataFrom (this);
+    final AbstractPLBox <?> aBox2 = new PLBox ().setBasicDataFrom (this).setVertSplittable (true);
 
     float fBox1UsedHeight = 0;
     float fBox2UsedHeight = 0;
@@ -178,80 +185,19 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     SizeSpec aBox1ElementPreparedSize = null;
     SizeSpec aBox2ElementPreparedSize = null;
 
-    final float fBoxHeight = getPreparedHeight ();
-    if (fBoxHeight <= fAvailableHeight)
-    {
-      // Row fits in first Box without a change
-      aBox1.setElement (aElement);
-      fBox1UsedHeight += fBoxHeight;
-      aBox1ElementPreparedSize = m_aElementPreparedSize;
-    }
-    else
-    {
-      // Try split
-      final float fSplitWidth = getElementPreparedSize ().getWidth ();
-      final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this,
-                            "Trying to split " +
-                                  aElement.getDebugID () +
-                                  " into pieces for split size " +
-                                  PLDebug.getWH (fSplitWidth, fSplitHeight));
+    // Try split
+    final float fSplitWidth = getElementPreparedSize ().getWidth ();
+    final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
+    if (PLDebug.isDebugSplit ())
+      PLDebug.debugSplit (this,
+                          "Trying to split " +
+                                aElement.getDebugID () +
+                                " into pieces for split size " +
+                                PLDebug.getWH (fSplitWidth, fSplitHeight));
 
-      // Try to split the element contained in the row
-      final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
-      if (aSplitResult != null)
-      {
-        final IPLRenderableObject <?> aBox1Element = aSplitResult.getFirstElement ().getElement ();
-        aBox1.setElement (aBox1Element);
-        fBox1UsedHeight += aSplitResult.getFirstElement ().getHeightFull ();
-        aBox1ElementPreparedSize = aSplitResult.getFirstElement ().getSize ();
-
-        final IPLRenderableObject <?> aBox2Element = aSplitResult.getSecondElement ().getElement ();
-        aBox2.setElement (aBox2Element);
-        fBox2UsedHeight += aSplitResult.getSecondElement ().getHeightFull ();
-        aBox2ElementPreparedSize = aSplitResult.getSecondElement ().getSize ();
-
-        if (PLDebug.isDebugSplit ())
-          PLDebug.debugSplit (this,
-                              "Split box element " +
-                                    aElement.getDebugID () +
-                                    " into pieces: " +
-                                    aBox1Element.getDebugID () +
-                                    " (" +
-                                    aSplitResult.getFirstElement ().getWidth () +
-                                    "+" +
-                                    aBox1Element.getOutlineXSum () +
-                                    " & " +
-                                    aSplitResult.getFirstElement ().getHeight () +
-                                    "+" +
-                                    aBox1Element.getOutlineYSum () +
-                                    ") and " +
-                                    aBox2Element.getDebugID () +
-                                    " (" +
-                                    aSplitResult.getSecondElement ().getWidth () +
-                                    "+" +
-                                    aBox2Element.getOutlineXSum () +
-                                    " & " +
-                                    aSplitResult.getSecondElement ().getHeight () +
-                                    "+" +
-                                    aBox2Element.getOutlineYSum () +
-                                    ")");
-      }
-      else
-      {
-        if (PLDebug.isDebugSplit ())
-          PLDebug.debugSplit (this, "Failed to split row element " + aElement.getDebugID () + " into pieces");
-
-        // just add the full row to the second VBox since the row does not
-        // fit on first page
-        aBox2.setElement (aElement);
-        fBox2UsedHeight += fBoxHeight;
-        aBox2ElementPreparedSize = m_aElementPreparedSize;
-      }
-    }
-
-    if (!aBox1.hasElement ())
+    // Try to split the element contained in the row
+    final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
+    if (aSplitResult == null)
     {
       // Splitting makes no sense!
       if (PLDebug.isDebugSplit ())
@@ -259,13 +205,42 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
       return null;
     }
 
-    if (!aBox2.hasElement ())
-    {
-      // Splitting makes no sense!
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Splitting makes no sense, because Box 2 would be empty");
-      return null;
-    }
+    // Splitting succeeded
+    final IPLRenderableObject <?> aBox1Element = aSplitResult.getFirstElement ().getElement ();
+    aBox1.setElement (aBox1Element);
+    fBox1UsedHeight += aSplitResult.getFirstElement ().getHeightFull ();
+    aBox1ElementPreparedSize = aSplitResult.getFirstElement ().getSize ();
+
+    final IPLRenderableObject <?> aBox2Element = aSplitResult.getSecondElement ().getElement ();
+    aBox2.setElement (aBox2Element);
+    fBox2UsedHeight += aSplitResult.getSecondElement ().getHeightFull ();
+    aBox2ElementPreparedSize = aSplitResult.getSecondElement ().getSize ();
+
+    if (PLDebug.isDebugSplit ())
+      PLDebug.debugSplit (this,
+                          "Split box element " +
+                                aElement.getDebugID () +
+                                " into pieces: " +
+                                aBox1Element.getDebugID () +
+                                " (" +
+                                aSplitResult.getFirstElement ().getWidth () +
+                                "+" +
+                                aBox1Element.getOutlineXSum () +
+                                " & " +
+                                aSplitResult.getFirstElement ().getHeight () +
+                                "+" +
+                                aBox1Element.getOutlineYSum () +
+                                ") and " +
+                                aBox2Element.getDebugID () +
+                                " (" +
+                                aSplitResult.getSecondElement ().getWidth () +
+                                "+" +
+                                aBox2Element.getOutlineXSum () +
+                                " & " +
+                                aSplitResult.getSecondElement ().getHeight () +
+                                "+" +
+                                aBox2Element.getOutlineYSum () +
+                                ")");
 
     // Excluding padding/margin
     aBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox1UsedHeight));
@@ -287,8 +262,12 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     if (m_aElement != null)
     {
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
-                                                                   aCtx.getStartLeft () + getOutlineLeft (),
-                                                                   aCtx.getStartTop () - getOutlineTop (),
+                                                                   aCtx.getStartLeft () +
+                                                                         getOutlineLeft () +
+                                                                         m_aRenderOffset.getWidth (),
+                                                                   aCtx.getStartTop () -
+                                                                                                      getOutlineTop () -
+                                                                                                      m_aRenderOffset.getHeight (),
                                                                    getPreparedWidth (),
                                                                    getPreparedHeight ());
       m_aElement.render (aElementCtx);

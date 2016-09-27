@@ -154,9 +154,12 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.abs (80));
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.abs (120));
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.abs (80));
+    aHBox.addColumn (new PLBox (new PLText (s, r10).setFillColor (Color.YELLOW)).setBorder (Color.RED),
+                     WidthSpec.abs (80));
+    aHBox.addColumn (new PLBox (new PLText (s, r10).setFillColor (Color.YELLOW)).setBorder (Color.RED),
+                     WidthSpec.abs (120));
+    aHBox.addColumn (new PLBox (new PLText (s, r10).setFillColor (Color.YELLOW)).setBorder (Color.RED),
+                     WidthSpec.abs (80));
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
