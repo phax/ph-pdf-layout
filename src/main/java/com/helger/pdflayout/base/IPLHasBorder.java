@@ -31,7 +31,7 @@ import com.helger.pdflayout.spec.BorderStyleSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends IPLObject <IMPLTYPE>
+public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
 {
   BorderSpec DEFAULT_BORDER = BorderSpec.BORDER0;
 
@@ -224,5 +224,35 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
   default float getBorderYSumWidth ()
   {
     return getBorder ().getYSumWidth ();
+  }
+
+  default float getOutlineTop ()
+  {
+    return getBorderTopWidth ();
+  }
+
+  default float getOutlineRight ()
+  {
+    return getBorderRightWidth ();
+  }
+
+  default float getOutlineBottom ()
+  {
+    return getBorderBottomWidth ();
+  }
+
+  default float getOutlineLeft ()
+  {
+    return getBorderLeftWidth ();
+  }
+
+  default float getOutlineXSum ()
+  {
+    return getBorderXSumWidth ();
+  }
+
+  default float getOutlineYSum ()
+  {
+    return getBorderYSumWidth ();
   }
 }

@@ -27,7 +27,7 @@ import com.helger.pdflayout.spec.PaddingSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> extends IPLObject <IMPLTYPE>
+public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
 {
   PaddingSpec DEFAULT_PADDING = PaddingSpec.PADDING0;
 
@@ -255,5 +255,35 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   default float getPaddingYSum ()
   {
     return getPadding ().getYSum ();
+  }
+
+  default float getOutlineTop ()
+  {
+    return getPaddingTop ();
+  }
+
+  default float getOutlineRight ()
+  {
+    return getPaddingRight ();
+  }
+
+  default float getOutlineBottom ()
+  {
+    return getPaddingBottom ();
+  }
+
+  default float getOutlineLeft ()
+  {
+    return getPaddingLeft ();
+  }
+
+  default float getOutlineXSum ()
+  {
+    return getPaddingXSum ();
+  }
+
+  default float getOutlineYSum ()
+  {
+    return getPaddingYSum ();
   }
 }

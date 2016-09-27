@@ -33,6 +33,7 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLHasMargin;
 import com.helger.pdflayout.base.IPLSplittableObject;
@@ -102,36 +103,6 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     m_aVBox.setBasicDataFrom (aSource.m_aVBox);
     setMargin (aSource.m_aMargin);
     return this;
-  }
-
-  public float getOutlineTop ()
-  {
-    return getMarginTop ();
-  }
-
-  public float getOutlineRight ()
-  {
-    return getMarginRight ();
-  }
-
-  public float getOutlineBottom ()
-  {
-    return getMarginBottom ();
-  }
-
-  public float getOutlineLeft ()
-  {
-    return getMarginLeft ();
-  }
-
-  public float getOutlineXSum ()
-  {
-    return getMarginXSum ();
-  }
-
-  public float getOutlineYSum ()
-  {
-    return getMarginYSum ();
   }
 
   @Nonnull
@@ -359,7 +330,17 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nullable
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
-    final PLSplitResult ret = m_aVBox.splitElementVert (fAvailableWidth, fAvailableHeight - getMarginYSum ());
+    final float fSplitHeight = fAvailableHeight;
+    if (PLDebug.isDebugSplit ())
+      PLDebug.debugSplit (this,
+                          "Trying to split " +
+                                m_aVBox.getDebugID () +
+                                " into pieces for available width " +
+                                fAvailableWidth +
+                                " and height " +
+                                fSplitHeight);
+
+    final PLSplitResult ret = m_aVBox.splitElementVert (fAvailableWidth, fSplitHeight);
     if (ret == null)
       return ret;
 

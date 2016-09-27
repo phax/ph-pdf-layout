@@ -56,7 +56,7 @@ public final class PLTableTest
 {
   static
   {
-    PLDebug.setDebugAll (false);
+    PLDebug.setDebugAll (true);
   }
 
   @Rule

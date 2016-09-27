@@ -27,7 +27,7 @@ import com.helger.pdflayout.spec.MarginSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends IPLObject <IMPLTYPE>
+public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
 {
   MarginSpec DEFAULT_MARGIN = MarginSpec.MARGIN0;
 
@@ -255,5 +255,35 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   default float getMarginYSum ()
   {
     return getMargin ().getYSum ();
+  }
+
+  default float getOutlineTop ()
+  {
+    return getMarginTop ();
+  }
+
+  default float getOutlineRight ()
+  {
+    return getMarginRight ();
+  }
+
+  default float getOutlineBottom ()
+  {
+    return getMarginBottom ();
+  }
+
+  default float getOutlineLeft ()
+  {
+    return getMarginLeft ();
+  }
+
+  default float getOutlineXSum ()
+  {
+    return getMarginXSum ();
+  }
+
+  default float getOutlineYSum ()
+  {
+    return getMarginYSum ();
   }
 }
