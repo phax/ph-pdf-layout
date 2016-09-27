@@ -18,7 +18,6 @@ package com.helger.pdflayout.element.table;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
@@ -34,13 +33,10 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
-import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLSplitResult;
-import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
@@ -123,99 +119,23 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
     return m_aWidths.size ();
   }
 
-  public void setHeaderRowCount (final int nHeaderRowCount)
+  @Nonnull
+  public PLTable setHeaderRowCount (@Nonnegative final int nHeaderRowCount)
   {
     m_aVBox.setHeaderRowCount (nHeaderRowCount);
+    return this;
   }
 
+  @Nonnegative
   public int getHeaderRowCount ()
   {
     return m_aVBox.getHeaderRowCount ();
   }
 
-  /**
-   * Add a new table row. All contained elements are added with the specified
-   * width in the constructor. <code>null</code> elements are represented as
-   * empty cells.
-   *
-   * @param aElements
-   *        The elements to add. May be <code>null</code>.
-   * @return The added row and never <code>null</code>.
-   */
   @Nonnull
-  public PLTableRow addAndReturnTableRow (@Nullable final AbstractPLElement <?>... aElements)
+  public PLTableRow addAndReturnRow (@Nonnull final PLTableCell... aCells)
   {
-    return addAndReturnTableRow (new CommonsArrayList<> (aElements));
-  }
-
-  /**
-   * Add a new table row. All contained elements are added with the specified
-   * width in the constructor. <code>null</code> elements are represented as
-   * empty cells.
-   *
-   * @param aElements
-   *        The elements to add. May not be <code>null</code>.
-   * @return the added row and never <code>null</code>.
-   */
-  @Nonnull
-  public PLTableRow addAndReturnTableRow (@Nonnull final Collection <? extends IPLRenderableObject <?>> aElements)
-  {
-    ValueEnforcer.notNull (aElements, "Elements");
-    if (aElements.size () > m_aWidths.size ())
-      throw new IllegalArgumentException ("More elements in row (" +
-                                          aElements.size () +
-                                          ") than defined in the table (" +
-                                          m_aWidths.size () +
-                                          ")!");
-
-    final PLTableRow aRow = new PLTableRow ();
-    int nColumnIndex = 0;
-    for (final IPLRenderableObject <?> aElement : aElements)
-    {
-      final WidthSpec aWidth = m_aWidths.get (nColumnIndex);
-      final IPLRenderableObject <?> aRealElement = aElement != null ? aElement : new PLSpacerX ();
-      aRow.addCell (new PLTableCell (aRealElement, PLTableCell.DEFAULT_COL_SPAN), aWidth);
-      ++nColumnIndex;
-    }
-    m_aVBox.addRow (aRow);
-    return aRow;
-  }
-
-  /**
-   * Add a new table row. All contained elements are added with the specified
-   * width in the constructor. <code>null</code> elements are represented as
-   * empty cells.
-   *
-   * @param aElements
-   *        The elements to add. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public PLTable addTableRow (@Nullable final AbstractPLElement <?>... aElements)
-  {
-    return addTableRow (new CommonsArrayList<> (aElements));
-  }
-
-  /**
-   * Add a new table row. All contained elements are added with the specified
-   * width in the constructor. <code>null</code> elements are represented as
-   * empty cells.
-   *
-   * @param aElements
-   *        The elements to add. May not be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  public PLTable addTableRow (@Nonnull final Collection <? extends IPLRenderableObject <?>> aElements)
-  {
-    addAndReturnTableRow (aElements);
-    return this;
-  }
-
-  @Nonnull
-  public PLTableRow addAndReturnTableRowExt (@Nonnull final PLTableCell... aCells)
-  {
-    return addAndReturnTableRowExt (new CommonsArrayList<> (aCells));
+    return addAndReturnRow (new CommonsArrayList<> (aCells));
   }
 
   /**
@@ -228,7 +148,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
    * @return the added table row and never <code>null</code>.
    */
   @Nonnull
-  public PLTableRow addAndReturnTableRowExt (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
   {
     ValueEnforcer.notNull (aCells, "Cells");
 
@@ -273,14 +193,29 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
       }
       nWidthIndex += nCols;
     }
-    m_aVBox.addRow (aRow);
+    addRow (aRow);
     return aRow;
   }
 
   @Nonnull
-  public PLTable addTableRowExt (@Nonnull final PLTableCell... aCells)
+  public PLTable addRow (@Nonnull final PLTableRow aRow)
   {
-    return addTableRowExt (new CommonsArrayList<> (aCells));
+    ValueEnforcer.notNull (aRow, "Row");
+    m_aVBox.addRow (aRow);
+    return this;
+  }
+
+  @Nonnull
+  @Deprecated
+  public PLTable addRow ()
+  {
+    return this;
+  }
+
+  @Nonnull
+  public PLTable addRow (@Nonnull final PLTableCell... aCells)
+  {
+    return addRow (new CommonsArrayList<> (aCells));
   }
 
   /**
@@ -293,9 +228,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
    * @return this
    */
   @Nonnull
-  public PLTable addTableRowExt (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  public PLTable addRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
   {
-    addAndReturnTableRowExt (aCells);
+    addAndReturnRow (aCells);
     return this;
   }
 
@@ -313,6 +248,11 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   public int getRowCount ()
   {
     return m_aVBox.getRowCount ();
+  }
+
+  public void forEachCell (@Nonnull final Consumer <? super PLTableCell> aConsumer)
+  {
+    forEachRow (aRow -> aRow.forEachCell (aConsumer));
   }
 
   @Nonnull

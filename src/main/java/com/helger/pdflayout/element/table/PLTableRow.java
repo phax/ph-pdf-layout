@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -33,6 +34,7 @@ import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.hbox.PLHBoxColumn;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
+import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
@@ -64,6 +66,24 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     return aColumn == null ? null : (PLTableCell) aColumn.getElement ();
   }
 
+  @Nonnegative
+  public int getCellCount ()
+  {
+    return m_aRow.getColumnCount ();
+  }
+
+  @Nullable
+  public PLTableCell getFirstCell ()
+  {
+    return getCellAtIndex (0);
+  }
+
+  @Nullable
+  public PLTableCell getLastCell ()
+  {
+    return getCellAtIndex (getCellCount () - 1);
+  }
+
   public void forEachCell (@Nonnull final Consumer <? super PLTableCell> aConsumer)
   {
     m_aRow.forEachColumn (x -> aConsumer.accept ((PLTableCell) x.getElement ()));
@@ -78,6 +98,48 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   public PLTableRow setFillColor (@Nonnull final Color aFillColor)
   {
     forEachCell (x -> x.setFillColor (aFillColor));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setBorderTop (@Nonnull final BorderStyleSpec aBorder)
+  {
+    forEachCell (x -> x.setBorderTop (aBorder));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setBorderBottom (@Nonnull final BorderStyleSpec aBorder)
+  {
+    forEachCell (x -> x.setBorderBottom (aBorder));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setMarginTop (final float fMargin)
+  {
+    forEachCell (x -> x.setMarginTop (fMargin));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setMarginBottom (final float fMargin)
+  {
+    forEachCell (x -> x.setMarginBottom (fMargin));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setPaddingTop (final float fPadding)
+  {
+    forEachCell (x -> x.setPaddingTop (fPadding));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setPaddingBottom (final float fPadding)
+  {
+    forEachCell (x -> x.setPaddingBottom (fPadding));
     return this;
   }
 

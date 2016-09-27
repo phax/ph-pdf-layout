@@ -72,6 +72,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public AbstractPLVBox ()
   {}
 
+  public AbstractPLVBox (@Nullable final IPLRenderableObject <?>... aElements)
+  {
+    if (aElements != null)
+      for (final IPLRenderableObject <?> aElement : aElements)
+        addRow (aElement);
+  }
+
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLVBox <?> aSource)
