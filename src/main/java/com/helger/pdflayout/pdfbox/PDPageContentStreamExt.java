@@ -1530,6 +1530,11 @@ public final class PDPageContentStreamExt implements Closeable
 
   /**
    * Writes a real real to the content stream.
+   *
+   * @param real
+   *        the value to be written
+   * @throws IOException
+   *         In case of IO error
    */
   protected void writeOperand (final float real) throws IOException
   {
@@ -1551,6 +1556,11 @@ public final class PDPageContentStreamExt implements Closeable
 
   /**
    * Writes a real number to the content stream.
+   *
+   * @param integer
+   *        the value to be written
+   * @throws IOException
+   *         In case of IO error
    */
   protected void writeOperand (final int integer) throws IOException
   {
@@ -1560,6 +1570,11 @@ public final class PDPageContentStreamExt implements Closeable
 
   /**
    * Writes a COSName to the content stream.
+   *
+   * @param name
+   *        the value to be written
+   * @throws IOException
+   *         In case of IO error
    */
   protected void writeOperand (final COSName name) throws IOException
   {
@@ -1569,6 +1584,11 @@ public final class PDPageContentStreamExt implements Closeable
 
   /**
    * Writes a string to the content stream as ASCII.
+   *
+   * @param text
+   *        the value to be written
+   * @throws IOException
+   *         In case of IO error
    */
   protected void writeOperator (final String text) throws IOException
   {
@@ -1578,6 +1598,11 @@ public final class PDPageContentStreamExt implements Closeable
 
   /**
    * Writes a string to the content stream as ASCII.
+   *
+   * @param text
+   *        the value to be written
+   * @throws IOException
+   *         In case of IO error
    */
   protected void write (final String text) throws IOException
   {
@@ -1586,6 +1611,9 @@ public final class PDPageContentStreamExt implements Closeable
 
   /**
    * Writes a string to the content stream as ASCII.
+   *
+   * @throws IOException
+   *         In case of IO error
    */
   protected void writeLine () throws IOException
   {
@@ -1594,6 +1622,11 @@ public final class PDPageContentStreamExt implements Closeable
 
   /**
    * Writes binary data to the content stream.
+   *
+   * @param data
+   *        the value to be written
+   * @throws IOException
+   *         In case of IO error
    */
   protected void writeBytes (final byte [] data) throws IOException
   {
@@ -1602,6 +1635,11 @@ public final class PDPageContentStreamExt implements Closeable
 
   /**
    * Writes an AffineTransform to the content stream as an array.
+   *
+   * @param transform
+   *        the transform to use
+   * @throws IOException
+   *         In case of IO error
    */
   private void writeAffineTransform (final AffineTransform transform) throws IOException
   {

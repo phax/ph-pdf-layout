@@ -120,8 +120,6 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *        Preparation context. Never <code>null</code>.
    * @return The size of the rendered element without padding, border and
    *         margin. May not be <code>null</code>.
-   * @throws IOException
-   *         on PDFBox error
    */
   @Nonnull
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx);
