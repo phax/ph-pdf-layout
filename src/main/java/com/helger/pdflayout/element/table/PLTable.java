@@ -53,7 +53,7 @@ import com.helger.pdflayout.spec.WidthSpec;
  */
 public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPLSplittableObject <PLTable>
 {
-  public static final IPLTableGridType DEFAULT_GRID_TYPE = EPLTableGridType.NONE;
+  public static final IPLTableGridType DEFAULT_GRID_TYPE = null;
   public static final BorderStyleSpec DEFAULT_GRID_BORDER_STYLE = new BorderStyleSpec (Color.BLACK,
                                                                                        LineDashPatternSpec.SOLID,
                                                                                        1f);
@@ -256,13 +256,13 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   }
 
   @Nonnull
-  public PLTable setGridType (@Nonnull final IPLTableGridType aGridType)
+  public PLTable setGridType (@Nullable final IPLTableGridType aGridType)
   {
-    m_aGridType = ValueEnforcer.notNull (aGridType, "GridType");
+    m_aGridType = aGridType;
     return this;
   }
 
-  @Nonnull
+  @Nullable
   public IPLTableGridType getGridType ()
   {
     return m_aGridType;
@@ -291,7 +291,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   @Override
   protected SizeSpec onPrepare (final PreparationContext aCtx)
   {
-    m_aGridType.applyGridToTable (this, m_aGridBSS);
+    if (m_aGridType != null)
+      m_aGridType.applyGridToTable (this, m_aGridBSS);
     return m_aVBox.prepare (aCtx);
   }
 
