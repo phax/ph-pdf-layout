@@ -112,7 +112,8 @@ public final class PLVBoxTest
     {
       final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
       for (int j = 0; j < 10; ++j)
-        aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20)),
+        aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20))
+                                                                .setVertSplittable (true),
                          WidthSpec.star ());
       aVBox.addRow (aHBox);
     }
