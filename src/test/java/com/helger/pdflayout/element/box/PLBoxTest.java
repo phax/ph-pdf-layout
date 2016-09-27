@@ -220,8 +220,7 @@ public final class PLBoxTest
                                                 eH.getID () +
                                                 " / " +
                                                 eV.getID (),
-                                                r10).setFillColor (Color.PINK)).setVertSplittable (false)
-                                                                               .setFillColor (Color.YELLOW)
+                                                r10).setFillColor (Color.PINK)).setFillColor (Color.YELLOW)
                                                                                .setExactSize (250, 120)
                                                                                .setHorzAlign (eH)
                                                                                .setVertAlign (eV)
@@ -241,11 +240,13 @@ public final class PLBoxTest
     for (int i = 0; i < 100; ++i)
       aPS1.addElement (new PLBox (new PLText ("Text " +
                                               i +
-                                              "\nline 2 of 3\nshort\nAnd finally the last line",
-                                              r10).setFillColor (Color.PINK)).setVertSplittable (true)
-                                                                             .setFillColor (Color.YELLOW)
-                                                                             .setPadding (5)
-                                                                             .setBorder (Color.BLACK));
+                                              "\nline 2 of 4\nshort\nAnd finally the last line",
+                                              r10).setFillColor (Color.PINK)
+                                                  .setHorzAlign (EHorzAlignment.RIGHT)
+                                                  .setVertSplittable (true)).setVertSplittable (true)
+                                                                            .setFillColor (Color.YELLOW)
+                                                                            .setPadding (5)
+                                                                            .setBorder (Color.BLACK));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);

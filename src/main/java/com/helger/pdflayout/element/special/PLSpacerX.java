@@ -19,7 +19,9 @@ package com.helger.pdflayout.element.special;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
@@ -32,25 +34,59 @@ import com.helger.pdflayout.spec.SizeSpec;
  */
 public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
 {
+  private float m_fWidth;
+
   public PLSpacerX ()
   {}
+
+  public PLSpacerX (final float fWidth)
+  {
+    setWidth (fWidth);
+  }
+
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public PLSpacerX setBasicDataFrom (@Nonnull final PLSpacerX aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    setWidth (aSource.m_fWidth);
+    return this;
+  }
+
+  @Nonnull
+  public final PLSpacerX setWidth (final float fWidth)
+  {
+    m_fWidth = fWidth;
+    return this;
+  }
+
+  public float getWidth ()
+  {
+    return m_fWidth;
+  }
 
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
-    // No height required
-    return new SizeSpec (aCtx.getAvailableWidth (), 0);
+    // Use the fixed width
+    return new SizeSpec (m_fWidth > 0 ? m_fWidth : aCtx.getAvailableWidth (), 0);
   }
 
   @Override
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ()).append ("Width", m_fWidth).toString ();
+  }
+
   @Nonnull
-  public static PLSpacerX createPrepared (final float fWidth)
+  public static PLSpacerX createPrepared (final float fWidth, final float fHeight)
   {
     final PLSpacerX ret = new PLSpacerX ();
-    ret.internalMarkAsPrepared (new SizeSpec (fWidth, 0));
+    ret.prepare (new PreparationContext (null, fWidth, fHeight));
     return ret;
   }
 }

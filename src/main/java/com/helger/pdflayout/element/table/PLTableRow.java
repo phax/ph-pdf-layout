@@ -23,6 +23,7 @@ import java.util.function.ObjIntConsumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
@@ -45,6 +46,15 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   public void addCell (@Nonnull final PLTableCell aCell, @Nonnull final WidthSpec aWidth)
   {
     m_aRow.addColumn (aCell, aWidth);
+  }
+
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public PLTableRow setBasicDataFrom (@Nonnull final PLTableRow aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    m_aRow.setBasicDataFrom (aSource.m_aRow);
+    return this;
   }
 
   @Nullable

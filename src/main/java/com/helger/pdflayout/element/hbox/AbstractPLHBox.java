@@ -474,8 +474,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
     }
 
-    final AbstractPLHBox <?> aHBox1 = new PLHBox ().setBasicDataFrom (this);
-    final AbstractPLHBox <?> aHBox2 = new PLHBox ().setBasicDataFrom (this);
+    final AbstractPLHBox <?> aHBox1 = new PLHBox ().setBasicDataFrom (this).setVertSplittable (false);
+    final AbstractPLHBox <?> aHBox2 = new PLHBox ().setBasicDataFrom (this).setVertSplittable (true);
 
     // Fill all columns with empty content
     for (int i = 0; i < nCols; ++i)
@@ -484,8 +484,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       final WidthSpec aColumnWidth = aColumn.getWidth ();
 
       // Create empty element with the same width as the original element
-      final PLSpacerX aEmptyElement = new PLSpacerX ();
-      aEmptyElement.prepare (new PreparationContext (null, m_aPreparedColumnSize[i].getWidth (), 0));
+      final PLSpacerX aEmptyElement = PLSpacerX.createPrepared (m_aPreparedColumnSize[i].getWidth (), 0);
 
       aHBox1.addColumn (aEmptyElement, aColumnWidth);
       aHBox2.addColumn (aEmptyElement, aColumnWidth);

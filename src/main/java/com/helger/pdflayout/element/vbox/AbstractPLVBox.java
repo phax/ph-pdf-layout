@@ -393,7 +393,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLVBox <?> aVBox1 = new PLVBox ().setBasicDataFrom (this);
+    final AbstractPLVBox <?> aVBox1 = new PLVBox ().setBasicDataFrom (this).setVertSplittable (false);
     final AbstractPLVBox <?> aVBox2 = new PLVBox ().setBasicDataFrom (this).setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();

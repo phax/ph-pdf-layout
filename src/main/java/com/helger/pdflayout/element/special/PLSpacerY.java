@@ -36,6 +36,11 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
 {
   private float m_fHeight;
 
+  public PLSpacerY ()
+  {
+    this (0f);
+  }
+
   public PLSpacerY (final float fHeight)
   {
     setHeight (fHeight);
@@ -47,11 +52,11 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
   {
     super.setBasicDataFrom (aSource);
     setHeight (aSource.m_fHeight);
-    return thisAsT ();
+    return this;
   }
 
   @Nonnull
-  public PLSpacerY setHeight (final float fHeight)
+  public final PLSpacerY setHeight (final float fHeight)
   {
     m_fHeight = fHeight;
     return this;
@@ -66,7 +71,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     // Use the fixed height
-    return new SizeSpec (aCtx.getAvailableWidth (), m_fHeight);
+    return new SizeSpec (0, m_fHeight > 0 ? m_fHeight : aCtx.getAvailableHeight ());
   }
 
   @Override
@@ -76,14 +81,14 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("height", m_fHeight).toString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("Height", m_fHeight).toString ();
   }
 
   @Nonnull
   public static PLSpacerY createPrepared (final float fWidth, final float fHeight)
   {
     final PLSpacerY ret = new PLSpacerY (fHeight);
-    ret.internalMarkAsPrepared (new SizeSpec (fWidth, fHeight));
+    ret.prepare (new PreparationContext (null, fWidth, fHeight));
     return ret;
   }
 }

@@ -17,7 +17,7 @@
 package com.helger.pdflayout.render;
 
 import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.ValueEnforcer;
@@ -40,23 +40,23 @@ public final class PreparationContext
    * Constructor
    *
    * @param aGlobalCtx
-   *        The global preparation context worked upon. May not be
+   *        The global preparation context worked upon. May be
    *        <code>null</code>.
    * @param fAvailableWidth
    *        The available width of the surrounding element. Should be &gt; 0.
    * @param fAvailableHeight
    *        The available height of the surrounding element. Should be &gt; 0.
    */
-  public PreparationContext (@Nonnull final PreparationContextGlobal aGlobalCtx,
+  public PreparationContext (@Nullable final PreparationContextGlobal aGlobalCtx,
                              @Nonnegative final float fAvailableWidth,
                              @Nonnegative final float fAvailableHeight)
   {
-    m_aGlobalCtx = ValueEnforcer.notNull (aGlobalCtx, "GlobalCtx");
+    m_aGlobalCtx = aGlobalCtx;
     m_fAvailableWidth = ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
     m_fAvailableHeight = ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
   }
 
-  @Nonnull
+  @Nullable
   public PreparationContextGlobal getGlobalContext ()
   {
     return m_aGlobalCtx;

@@ -26,6 +26,7 @@ import java.util.function.ObjIntConsumer;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
@@ -90,6 +91,15 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
       throw new IllegalArgumentException ("Width type auto is not allowed for tables!");
     m_aWidths = new CommonsArrayList<> (aWidths);
     m_eWidthType = eWidthType;
+  }
+
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public PLTable setBasicDataFrom (@Nonnull final PLTable aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    m_aVBox.setBasicDataFrom (aSource.m_aVBox);
+    return this;
   }
 
   /**
