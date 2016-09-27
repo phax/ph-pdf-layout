@@ -77,6 +77,7 @@ public final class PLTableTest
     final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
                                 : PLTable.createWithPercentage (10, 40, 25, 25);
     aTable.setHeaderRowCount (1);
+    aTable.setMargin (40);
 
     // Add row
     final PLTableRow aHeaderRow = aTable.addAndReturnRow (new PLTableCell (new PLText ("ID", r14b).setPadding (aPadding)
@@ -107,25 +108,21 @@ public final class PLTableTest
     for (int i = 0; i < 184; ++i)
     {
       // Width is determined by the width passed to the table creating method
-      final PLTableRow aRow = aTable.addAndReturnRow (new PLTableCell (new PLText (Integer.toString (i), r10)
-                                                                                                             .setPadding (aPadding)
-                                                                                                             .setMargin (aMargin)),
-                                                      new PLTableCell (new PLText ("Name " +
-                                                                                   i +
-                                                                                   (i == 2 ? " this is extra text for row 2 that makes this line longer"
-                                                                                           : ""),
-                                                                                   r10.getCloneWithDifferentColor (i %
-                                                                                                                   3 == 0 ? Color.RED
-                                                                                                                          : Color.BLACK)).setPadding (aPadding)
-                                                                                                                                         .setMargin (aMargin)),
-                                                      new PLTableCell (new PLText (Integer.toString (i * i),
-                                                                                   r10).setPadding (aPadding)
-                                                                                       .setMargin (aMargin)),
-                                                      new PLTableCell (new PLText (Integer.toString (i + i),
-                                                                                   r10).setPadding (aPadding)
-                                                                                       .setMargin (aMargin)));
-      aRow.getCellAtIndex (2).setHorzAlign (EHorzAlignment.CENTER);
-      aRow.getCellAtIndex (3).setHorzAlign (EHorzAlignment.RIGHT);
+      aTable.addRow (new PLTableCell (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin)),
+                     new PLTableCell (new PLText ("Name " +
+                                                  i +
+                                                  (i == 2 ? " this is extra text for row 2 that makes this line longer"
+                                                          : ""),
+                                                  r10.getCloneWithDifferentColor (i %
+                                                                                  3 == 0 ? Color.RED
+                                                                                         : Color.BLACK)).setPadding (aPadding)
+                                                                                                        .setMargin (aMargin)),
+                     new PLTableCell (new PLText (Integer.toString (i * i),
+                                                  r10).setPadding (aPadding)
+                                                      .setMargin (aMargin)).setHorzAlign (EHorzAlignment.CENTER),
+                     new PLTableCell (new PLText (Integer.toString (i + i),
+                                                  r10).setPadding (aPadding)
+                                                      .setMargin (aMargin)).setHorzAlign (EHorzAlignment.RIGHT));
     }
     aTable.setGridType (EPLTableGridType.FULL).setGridBorderStyle (new BorderStyleSpec (Color.PINK, 1));
     aPS1.addElement (aTable);
@@ -133,7 +130,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-basic.pdf"));
   }
 
   @Nonnull

@@ -34,8 +34,10 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
+import com.helger.pdflayout.base.IPLHasMargin;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
+import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.render.PageRenderContext;
@@ -43,6 +45,7 @@ import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EValueUOMType;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
+import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
@@ -51,18 +54,20 @@ import com.helger.pdflayout.spec.WidthSpec;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPLSplittableObject <PLTable>
+public class PLTable extends AbstractPLRenderableObject <PLTable>
+                     implements IPLSplittableObject <PLTable>, IPLHasMargin <PLTable>
 {
   public static final IPLTableGridType DEFAULT_GRID_TYPE = null;
   public static final BorderStyleSpec DEFAULT_GRID_BORDER_STYLE = new BorderStyleSpec (Color.BLACK,
                                                                                        LineDashPatternSpec.SOLID,
                                                                                        1f);
 
-  private final PLVBox m_aVBox = new PLVBox ().setVertSplittable (true);
+  private PLVBox m_aVBox = new PLVBox ().setVertSplittable (true);
   private final ICommonsList <WidthSpec> m_aWidths;
   private final EValueUOMType m_eWidthType;
   private IPLTableGridType m_aGridType = DEFAULT_GRID_TYPE;
   private BorderStyleSpec m_aGridBSS = DEFAULT_GRID_BORDER_STYLE;
+  private MarginSpec m_aMargin = DEFAULT_MARGIN;
 
   /**
    * @param aWidths
@@ -95,7 +100,52 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   {
     super.setBasicDataFrom (aSource);
     m_aVBox.setBasicDataFrom (aSource.m_aVBox);
+    setMargin (aSource.m_aMargin);
     return this;
+  }
+
+  public float getOutlineTop ()
+  {
+    return getMarginTop ();
+  }
+
+  public float getOutlineRight ()
+  {
+    return getMarginRight ();
+  }
+
+  public float getOutlineBottom ()
+  {
+    return getMarginBottom ();
+  }
+
+  public float getOutlineLeft ()
+  {
+    return getMarginLeft ();
+  }
+
+  public float getOutlineXSum ()
+  {
+    return getMarginXSum ();
+  }
+
+  public float getOutlineYSum ()
+  {
+    return getMarginYSum ();
+  }
+
+  @Nonnull
+  public final PLTable setMargin (@Nonnull final MarginSpec aMargin)
+  {
+    ValueEnforcer.notNull (aMargin, "Mergin");
+    m_aMargin = aMargin;
+    return this;
+  }
+
+  @Nonnull
+  public final MarginSpec getMargin ()
+  {
+    return m_aMargin;
   }
 
   /**
@@ -289,11 +339,16 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   }
 
   @Override
-  protected SizeSpec onPrepare (final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     if (m_aGridType != null)
       m_aGridType.applyGridToTable (this, m_aGridBSS);
-    return m_aVBox.prepare (aCtx);
+
+    final PreparationContext aChildCtx = new PreparationContext (aCtx.getGlobalContext (),
+                                                                 aCtx.getAvailableWidth () - getMarginXSum (),
+                                                                 aCtx.getAvailableHeight () - getMarginYSum ());
+    final SizeSpec aVBoxPreparedSize = m_aVBox.prepare (aChildCtx);
+    return aVBoxPreparedSize.plus (m_aVBox.getOutlineXSum (), m_aVBox.getOutlineYSum ());
   }
 
   public boolean isVertSplittable ()
@@ -304,19 +359,42 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   @Nullable
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
-    return m_aVBox.splitElementVert (fAvailableWidth, fAvailableHeight);
+    final PLSplitResult ret = m_aVBox.splitElementVert (fAvailableWidth, fAvailableHeight - getMarginYSum ());
+    if (ret == null)
+      return ret;
+
+    final PLTable aTable1 = new PLTable (m_aWidths);
+    aTable1.setBasicDataFrom (this);
+    aTable1.internalMarkAsPrepared (ret.getFirstElement ().getSize ());
+    aTable1.m_aVBox = (PLVBox) ret.getFirstElement ().getElement ();
+
+    final PLTable aTable2 = new PLTable (m_aWidths);
+    aTable2.setBasicDataFrom (this);
+    aTable2.internalMarkAsPrepared (ret.getSecondElement ().getSize ());
+    aTable2.m_aVBox = (PLVBox) ret.getSecondElement ().getElement ();
+
+    return new PLSplitResult (new PLElementWithSize (aTable1, ret.getFirstElement ().getSize ()),
+                              new PLElementWithSize (aTable2, ret.getSecondElement ().getSize ()));
   }
 
   @Override
-  protected void onRender (final PageRenderContext aCtx) throws IOException
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    m_aVBox.render (aCtx);
+    final PageRenderContext aChildCtx = new PageRenderContext (aCtx,
+                                                               aCtx.getStartLeft () + getMarginLeft (),
+                                                               aCtx.getStartTop () - getMarginTop (),
+                                                               aCtx.getWidth () - getMarginXSum (),
+                                                               aCtx.getHeight () - getMarginYSum ());
+    m_aVBox.render (aChildCtx);
   }
 
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("Width", m_aWidths).toString ();
+    return ToStringGenerator.getDerived (super.toString ())
+                            .append ("Width", m_aWidths)
+                            .append ("Margin", m_aMargin)
+                            .toString ();
   }
 
   /**
