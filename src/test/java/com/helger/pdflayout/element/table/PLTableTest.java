@@ -83,15 +83,13 @@ public final class PLTableTest
                                                                                       .setFillColor (Color.YELLOW),
                                                                new PLText ("Name", r14b).setPadding (aPadding)
                                                                                         .setFillColor (Color.YELLOW),
-                                                               new PLText ("Sum1",
-                                                                           r14b).setPadding (aPadding)
-                                                                                .setFillColor (Color.YELLOW)
-                                                                                .setHorzAlign (EHorzAlignment.CENTER),
-                                                               new PLText ("Sum2",
-                                                                           r14b).setPadding (aPadding)
-                                                                                .setFillColor (Color.YELLOW)
-                                                                                .setHorzAlign (EHorzAlignment.RIGHT));
+                                                               new PLText ("Sum1", r14b).setPadding (aPadding)
+                                                                                        .setFillColor (Color.YELLOW),
+                                                               new PLText ("Sum2", r14b).setPadding (aPadding)
+                                                                                        .setFillColor (Color.YELLOW));
     aHeaderRow.setFillColor (Color.GRAY);
+    aHeaderRow.getCellAtIndex (2).setHorzAlign (EHorzAlignment.CENTER);
+    aHeaderRow.getCellAtIndex (3).setHorzAlign (EHorzAlignment.RIGHT);
 
     // Test colspan
     aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 2a", r10), 2),
@@ -106,19 +104,22 @@ public final class PLTableTest
     for (int i = 0; i < 184; ++i)
     {
       // Width is determined by the width passed to the table creating method
-      aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin),
-                          new PLText ("Name " +
-                                      i +
-                                      (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
-                                      r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED
-                                                                                 : Color.BLACK)).setPadding (aPadding)
-                                                                                                .setMargin (aMargin),
-                          new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
-                                                                    .setMargin (aMargin)
-                                                                    .setHorzAlign (EHorzAlignment.CENTER),
-                          new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
-                                                                    .setMargin (aMargin)
-                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
+      final PLTableRow aRow = aTable.addAndReturnTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding)
+                                                                                                 .setMargin (aMargin),
+                                                           new PLText ("Name " +
+                                                                       i +
+                                                                       (i == 2 ? " this is extra text for row 2 that makes this line longer"
+                                                                               : ""),
+                                                                       r10.getCloneWithDifferentColor (i %
+                                                                                                       3 == 0 ? Color.RED
+                                                                                                              : Color.BLACK)).setPadding (aPadding)
+                                                                                                                             .setMargin (aMargin),
+                                                           new PLText (Integer.toString (i * i),
+                                                                       r10).setPadding (aPadding).setMargin (aMargin),
+                                                           new PLText (Integer.toString (i + i),
+                                                                       r10).setPadding (aPadding).setMargin (aMargin));
+      aRow.getCellAtIndex (2).setHorzAlign (EHorzAlignment.CENTER);
+      aRow.getCellAtIndex (3).setHorzAlign (EHorzAlignment.RIGHT);
     }
     aTable.setGridType (EPLTableGridType.FULL).setGridBorderStyle (new BorderStyleSpec (Color.PINK, 1));
     aPS1.addElement (aTable);
@@ -283,5 +284,54 @@ public final class PLTableTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-grid-types.pdf"));
+  }
+
+  @Nonnull
+  private static PLTable _createNestedTable (@Nonnull final FontSpec r10)
+  {
+    final PLTable aTable = PLTable.createWithEvenlySizedColumns (4);
+    // Test colspan
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 2a", r10), 2),
+                           new PLTableCell (new PLText ("Colspan 2b", r10).setFillColor (Color.YELLOW), 2));
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 3a", r10), 3),
+                           new PLTableCell (new PLText ("Colspan 1b", r10).setFillColor (Color.YELLOW), 1));
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 1a", r10), 1),
+                           new PLTableCell (new PLText ("Colspan 3b", r10).setFillColor (Color.YELLOW), 3));
+    aTable.addTableRowExt (new PLTableCell (new PLText ("Colspan 4", r10).setFillColor (Color.YELLOW), 4));
+    aTable.setGridType (EPLTableGridType.FULL).setGridBorderStyle (new BorderStyleSpec (Color.PINK));
+    return aTable;
+  }
+
+  @Test
+  public void testNestedTable () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    aPS1.addElement (new PLText ("First dummy line", r10));
+
+    // Start table
+    final PLTable aTable = PLTable.createWithPercentage (10, 20, 30, 40);
+    aTable.addTableRow (new PLText ("10%", r10),
+                        new PLText ("20%", r10),
+                        new PLText ("30%", r10),
+                        new PLText ("40%", r10));
+    // Test colspan
+    aTable.addTableRowExt (new PLTableCell (_createNestedTable (r10), 2),
+                           new PLTableCell (_createNestedTable (r10), 2));
+    aTable.addTableRowExt (new PLTableCell (_createNestedTable (r10), 3),
+                           new PLTableCell (_createNestedTable (r10), 1));
+    aTable.addTableRowExt (new PLTableCell (_createNestedTable (r10), 1),
+                           new PLTableCell (_createNestedTable (r10), 3));
+    aTable.addTableRowExt (new PLTableCell (_createNestedTable (r10), 4));
+    aTable.setGridType (EPLTableGridType.FULL);
+    aPS1.addElement (aTable);
+
+    // Add content lines
+    aPS1.addElement (new PLText ("Last line", r10));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-nested.pdf"));
   }
 }
