@@ -108,6 +108,55 @@ public enum EPLTableGridType implements IPLTableGridType
     }
   },
   /**
+   * Create all grid lines. The first row has the border also on top, the other
+   * rows don't. The first column also has a border on the left, the others
+   * don't.
+   */
+  OUTER ("outer")
+  {
+    @Override
+    public void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+    {
+      ValueEnforcer.notNull (aTable, "Table");
+      ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
+      final int nLastCellIndex = aTable.getColumnCount () - 1;
+      final int nLastRowIndex = aTable.getRowCount () - 1;
+      aTable.forEachRow ( (aRow, nRowIndex) -> {
+        if (nRowIndex == 0)
+          aRow.forEachCell ( (aCell, nCellIndex) -> {
+            if (nCellIndex == 0)
+              aCell.setBorder (aBSS, null, null, aBSS);
+            else
+              if (nCellIndex == nLastCellIndex)
+                aCell.setBorder (aBSS, aBSS, null, null);
+              else
+                aCell.setBorder (aBSS, null, null, null);
+          });
+        else
+          if (nRowIndex == nLastRowIndex)
+            aRow.forEachCell ( (aCell, nCellIndex) -> {
+              if (nCellIndex == 0)
+                aCell.setBorder (null, null, aBSS, aBSS);
+              else
+                if (nCellIndex == nLastCellIndex)
+                  aCell.setBorder (null, aBSS, aBSS, null);
+                else
+                  aCell.setBorder (null, null, aBSS, null);
+            });
+          else
+            aRow.forEachCell ( (aCell, nCellIndex) -> {
+              if (nCellIndex == 0)
+                aCell.setBorder (null, null, null, aBSS);
+              else
+                if (nCellIndex == nLastCellIndex)
+                  aCell.setBorder (null, aBSS, null, null);
+                else
+                  aCell.setBorder (null, null, null, null);
+            });
+      });
+    }
+  },
+  /**
    * Create all horizontal lines. The first row has a border on top and bottom,
    * all other rows only at the bottom
    */
