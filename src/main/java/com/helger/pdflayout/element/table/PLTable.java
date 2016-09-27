@@ -16,9 +16,12 @@
  */
 package com.helger.pdflayout.element.table;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -38,11 +41,11 @@ import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.vbox.PLVBox;
-import com.helger.pdflayout.element.vbox.PLVBoxRow;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EValueUOMType;
+import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
@@ -53,9 +56,16 @@ import com.helger.pdflayout.spec.WidthSpec;
  */
 public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPLSplittableObject <PLTable>
 {
+  public static final IPLTableGridType DEFAULT_GRID_TYPE = EPLTableGridType.NONE;
+  public static final BorderStyleSpec DEFAULT_GRID_BORDER_STYLE = new BorderStyleSpec (Color.BLACK,
+                                                                                       LineDashPatternSpec.SOLID,
+                                                                                       1f);
+
   private final PLVBox m_aVBox = new PLVBox ().setVertSplittable (true);
   private final ICommonsList <WidthSpec> m_aWidths;
   private final EValueUOMType m_eWidthType;
+  private IPLTableGridType m_aGridType = DEFAULT_GRID_TYPE;
+  private BorderStyleSpec m_aGridBSS = DEFAULT_GRID_BORDER_STYLE;
 
   /**
    * @param aWidths
@@ -149,12 +159,13 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
                                           ")!");
 
     final PLTableRow aRow = new PLTableRow ();
-    int nWidthIndex = 0;
+    int nColumnIndex = 0;
     for (final IPLRenderableObject <?> aElement : aElements)
     {
-      final WidthSpec aWidth = m_aWidths.get (nWidthIndex);
-      aRow.addCell (new PLTableCell (aElement != null ? aElement : new PLSpacerX ()), aWidth);
-      ++nWidthIndex;
+      final WidthSpec aWidth = m_aWidths.get (nColumnIndex);
+      final IPLRenderableObject <?> aRealElement = aElement != null ? aElement : new PLSpacerX ();
+      aRow.addCell (new PLTableCell (aRealElement, PLTableCell.DEFAULT_COL_SPAN), aWidth);
+      ++nColumnIndex;
     }
     m_aVBox.addRow (aRow);
     return aRow;
@@ -278,28 +289,46 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
     return this;
   }
 
-  public void setFullGrid (final BorderStyleSpec aBSS)
+  public void forEachRow (@Nonnull final Consumer <? super PLTableRow> aConsumer)
   {
-    int nRowIndex = 0;
-    for (final PLVBoxRow aRow : m_aVBox.getRows ())
-    {
-      final PLTableRow aTableRow = (PLTableRow) aRow.getElement ();
-      if (nRowIndex == 0)
-        aTableRow.forEachCell ( (c, i) -> {
-          if (i == 0)
-            c.setBorder (aBSS, aBSS, aBSS, aBSS);
-          else
-            c.setBorder (aBSS, aBSS, aBSS, null);
-        });
-      else
-        aTableRow.forEachCell ( (c, i) -> {
-          if (i == 0)
-            c.setBorder (null, aBSS, aBSS, aBSS);
-          else
-            c.setBorder (null, aBSS, aBSS, null);
-        });
-      ++nRowIndex;
-    }
+    m_aVBox.forEachRow (x -> aConsumer.accept ((PLTableRow) x.getElement ()));
+  }
+
+  public void forEachRow (@Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
+  {
+    m_aVBox.forEachRow ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
+  }
+
+  @Nonnegative
+  public int getRowCount ()
+  {
+    return m_aVBox.getRowCount ();
+  }
+
+  @Nonnull
+  public PLTable setGridType (@Nonnull final IPLTableGridType aGridType)
+  {
+    m_aGridType = ValueEnforcer.notNull (aGridType, "GridType");
+    return this;
+  }
+
+  @Nonnull
+  public IPLTableGridType getGridType ()
+  {
+    return m_aGridType;
+  }
+
+  @Nonnull
+  public PLTable setGridBorderStyle (@Nonnull final BorderStyleSpec aBSS)
+  {
+    m_aGridBSS = ValueEnforcer.notNull (aBSS, "GridBorderStyle");
+    return this;
+  }
+
+  @Nonnull
+  public BorderStyleSpec getGridBorderStyle ()
+  {
+    return m_aGridBSS;
   }
 
   @Override
@@ -312,6 +341,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   @Override
   protected SizeSpec onPrepare (final PreparationContext aCtx) throws IOException
   {
+    m_aGridType.applyGridToTable (this, m_aGridBSS);
     return m_aVBox.prepare (aCtx);
   }
 

@@ -48,9 +48,11 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     m_aRow.forEachColumn ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
   }
 
-  public void setFillColor (@Nonnull final Color aFillColor)
+  @Nonnull
+  public PLTableRow setFillColor (@Nonnull final Color aFillColor)
   {
     forEachCell (x -> x.setFillColor (aFillColor));
+    return this;
   }
 
   @Override

@@ -56,7 +56,7 @@ public final class PLTableTest
 {
   static
   {
-    PLDebug.setDebugAll (true);
+    PLDebug.setDebugAll (false);
   }
 
   @Rule
@@ -120,7 +120,7 @@ public final class PLTableTest
                                                                     .setMargin (aMargin)
                                                                     .setHorzAlign (EHorzAlignment.RIGHT));
     }
-    aTable.setFullGrid (new BorderStyleSpec (Color.PINK, 1));
+    aTable.setGridType (EPLTableGridType.FULL).setGridBorderStyle (new BorderStyleSpec (Color.PINK, 1));
     aPS1.addElement (aTable);
     aPS1.addElement (new PLText ("Last line", r10));
 
@@ -140,7 +140,7 @@ public final class PLTableTest
   }
 
   @Test
-  public void testGrid () throws PDFCreationException
+  public void testTableWithStyleVariations () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final FontSpec r14b = new FontSpec (PreloadFont.REGULAR_BOLD, 14);
@@ -148,6 +148,7 @@ public final class PLTableTest
     final PaddingSpec aPadding = new PaddingSpec (2);
     final Color aBGElement = Color.WHITE;
     final Color aBGCell = Color.BLUE;
+    final Color aBGRow = Color.RED;
     final Color aBGTable = Color.MAGENTA;
     final BorderSpec aBorder = new BorderSpec (new BorderStyleSpec (1));
 
@@ -158,16 +159,16 @@ public final class PLTableTest
     final int nRepeats = 3;
 
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (nCols);
-
     // Add header row
     aTable.setHeaderRowCount (1);
+
     aTable.addTableRow (createList (nCols,
                                     nIdx -> new PLText ("Col " +
                                                         (nIdx + 1),
                                                         r14b.getCloneWithDifferentColor (Color.GRAY)).setPadding (aPadding)));
 
     final ICommonsList <Function <PLTableRow, PLTableRow>> aRowFcts;
-    aRowFcts = new CommonsArrayList<> (x -> x);
+    aRowFcts = new CommonsArrayList<> (x -> x, x -> x.setFillColor (aBGRow));
 
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
     aCellFcts = new CommonsArrayList<> (x -> x,
@@ -223,6 +224,61 @@ public final class PLTableTest
     aPS1.addElement (aTable);
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-grid.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-variations.pdf"));
+  }
+
+  @Test
+  public void testGridTypes () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final FontSpec r14b = new FontSpec (PreloadFont.REGULAR_BOLD, 14);
+    final PaddingSpec aPadding = new PaddingSpec (2);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    for (final EPLTableGridType eGridType : EPLTableGridType.values ())
+    {
+      aPS1.addElement (new PLText ("Following is a table with grid type " + eGridType, r10));
+
+      // Start table
+      final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
+                                  : PLTable.createWithPercentage (10, 40, 25, 25);
+      aTable.setHeaderRowCount (1);
+
+      // Add row
+      final PLTableRow aHeaderRow = aTable.addAndReturnTableRow (new PLText ("ID", r14b).setPadding (aPadding)
+                                                                                        .setFillColor (Color.YELLOW),
+                                                                 new PLText ("Name", r14b).setPadding (aPadding)
+                                                                                          .setFillColor (Color.YELLOW),
+                                                                 new PLText ("Sum1",
+                                                                             r14b).setPadding (aPadding)
+                                                                                  .setFillColor (Color.YELLOW)
+                                                                                  .setHorzAlign (EHorzAlignment.CENTER),
+                                                                 new PLText ("Sum2",
+                                                                             r14b).setPadding (aPadding)
+                                                                                  .setFillColor (Color.YELLOW)
+                                                                                  .setHorzAlign (EHorzAlignment.RIGHT));
+      aHeaderRow.setFillColor (Color.GRAY);
+
+      // Add content lines
+      for (int i = 0; i < 10; ++i)
+      {
+        // Width is determined by the width passed to the table creating method
+        aTable.addTableRow (new PLText (Integer.toString (i), r10),
+                            new PLText ("Name " +
+                                        i +
+                                        (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
+                                        r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED : Color.BLACK)),
+                            new PLText (Integer.toString (i * i), r10).setHorzAlign (EHorzAlignment.CENTER),
+                            new PLText (Integer.toString (i + i), r10).setHorzAlign (EHorzAlignment.RIGHT));
+      }
+      aTable.setGridType (eGridType).setGridBorderStyle (new BorderStyleSpec (Color.PINK, 3));
+      aPS1.addElement (aTable);
+      aPS1.addElement (new PLText ("Text after table", r10));
+    }
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-grid-types.pdf"));
   }
 }
