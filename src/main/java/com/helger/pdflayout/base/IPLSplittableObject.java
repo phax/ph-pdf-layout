@@ -31,7 +31,9 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
   boolean DEFAULT_VERT_SPLITTABLE = false;
 
   /**
-   * @return <code>true</code> if this element is vertically splittable
+   * @return <code>true</code> if this element is vertically splittable,
+   *         <code>false</code> otherwise. The default is
+   *         {@link #DEFAULT_VERT_SPLITTABLE}.
    */
   boolean isVertSplittable ();
 

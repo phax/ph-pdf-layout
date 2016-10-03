@@ -118,16 +118,28 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return m_sText;
   }
 
+  /**
+   * @return <code>true</code> if the contained text has at least one character,
+   *         <code>false</code> if it is empty.
+   */
   public boolean hasText ()
   {
     return m_sText.length () > 0;
   }
 
+  /**
+   * @return <code>true</code> if the text provided in the constructor contains
+   *         no character, <code>false</code> otherwise.
+   */
   public boolean hasNoText ()
   {
     return m_sText.length () == 0;
   }
 
+  /**
+   * @return The font specification to be used as provided in the constructor.
+   *         Never <code>null</code>.
+   */
   @Nonnull
   public FontSpec getFontSpec ()
   {
@@ -177,6 +189,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return m_bVertSplittable;
   }
 
+  /**
+   * Change whether this text is splittable or not.
+   *
+   * @param bVertSplittable
+   *        <code>true</code> if this text should be splittable,
+   *        <code>false</code> otherwise.
+   * @return this
+   */
   @Nonnull
   public IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
@@ -184,11 +204,24 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return thisAsT ();
   }
 
+  /**
+   * @return <code>true</code> if placeholders should be replaced,
+   *         <code>false</code> otherwise. The default value is
+   *         {@link #DEFAULT_REPLACE_PLACEHOLDERS}.
+   */
   public boolean isReplacePlaceholder ()
   {
     return m_bReplacePlaceholder;
   }
 
+  /**
+   * Change whether placeholders should be replaced or not.
+   *
+   * @param bReplacePlaceholder
+   *        <code>true</code> if placeholders should be replaced,
+   *        <code>false</code> otherwise.
+   * @return this
+   */
   @Nonnull
   public IMPLTYPE setReplacePlaceholder (final boolean bReplacePlaceholder)
   {
