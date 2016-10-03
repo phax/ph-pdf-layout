@@ -226,19 +226,16 @@ public class PageLayoutPDF implements IPLVisitable
   {
     ValueEnforcer.notNull (aOS, "OutputStream");
 
-    // Small consistency check to avoid creating empty, invalid PDFs
-    int nTotalElements = 0;
-    for (final PLPageSet aPageSet : m_aPageSets)
-      nTotalElements += aPageSet.getElementCount ();
-    if (nTotalElements == 0)
-      throw new PDFCreationException ("All page sets are empty!");
-
     // create a new document
-    PDDocument aDoc = null;
-
-    try
+    // Use a buffered OS - approx 30% faster!
+    try (final PDDocument aDoc = new PDDocument (); final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
     {
-      aDoc = new PDDocument ();
+      // Small consistency check to avoid creating empty, invalid PDFs
+      int nTotalElements = 0;
+      for (final PLPageSet aPageSet : m_aPageSets)
+        nTotalElements += aPageSet.getElementCount ();
+      if (nTotalElements == 0)
+        throw new PDFCreationException ("All page sets are empty!");
 
       // Set document properties
       {
@@ -291,7 +288,7 @@ public class PageLayoutPDF implements IPLVisitable
         aCustomizer.customizeDocument (aDoc);
 
       // save document to output stream
-      aDoc.save (aOS);
+      aDoc.save (aBufferedOS);
 
       if (s_aLogger.isDebugEnabled ())
         s_aLogger.debug ("PDF successfully created");
@@ -303,14 +300,6 @@ public class PageLayoutPDF implements IPLVisitable
     catch (final Throwable t)
     {
       throw new PDFCreationException ("Internal error", t);
-    }
-    finally
-    {
-      // close PDF document
-      StreamHelper.close (aDoc);
-
-      // Necessary in case of an exception
-      StreamHelper.close (aOS);
     }
   }
 }
