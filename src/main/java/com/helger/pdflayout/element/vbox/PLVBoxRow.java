@@ -22,6 +22,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.IPLRenderableObject;
+import com.helger.pdflayout.spec.HeightSpec;
 
 /**
  * This class represents a single row within a VBox. This is a pseudo element
@@ -33,10 +34,12 @@ import com.helger.pdflayout.base.IPLRenderableObject;
 public final class PLVBoxRow
 {
   private IPLRenderableObject <?> m_aElement;
+  private final HeightSpec m_aHeight;
 
-  public PLVBoxRow (@Nonnull final IPLRenderableObject <?> aElement)
+  public PLVBoxRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
   {
     setElement (aElement);
+    m_aHeight = ValueEnforcer.notNull (aHeight, "Height");
   }
 
   @Nonnull
@@ -52,9 +55,15 @@ public final class PLVBoxRow
     return this;
   }
 
+  @Nonnull
+  public HeightSpec getHeight ()
+  {
+    return m_aHeight;
+  }
+
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("element", m_aElement).toString ();
+    return new ToStringGenerator (this).append ("Element", m_aElement).append ("Height", m_aHeight).toString ();
   }
 }

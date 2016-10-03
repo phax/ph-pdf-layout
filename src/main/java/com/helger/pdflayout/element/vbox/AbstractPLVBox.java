@@ -45,6 +45,7 @@ import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
+import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -71,13 +72,6 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
   public AbstractPLVBox ()
   {}
-
-  public AbstractPLVBox (@Nullable final IPLRenderableObject <?>... aElements)
-  {
-    if (aElements != null)
-      for (final IPLRenderableObject <?> aElement : aElements)
-        addRow (aElement);
-  }
 
   @Nonnull
   @OverridingMethodsMustInvokeSuper
@@ -195,9 +189,11 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   @Nonnull
-  private PLVBoxRow _addAndReturnRow (@CheckForSigned final int nIndex, @Nonnull final IPLRenderableObject <?> aElement)
+  private PLVBoxRow _addAndReturnRow (@CheckForSigned final int nIndex,
+                                      @Nonnull final IPLRenderableObject <?> aElement,
+                                      @Nonnull final HeightSpec aHeight)
   {
-    final PLVBoxRow aItem = new PLVBoxRow (aElement);
+    final PLVBoxRow aItem = new PLVBoxRow (aElement, aHeight);
     if (nIndex < 0 || nIndex >= m_aRows.size ())
       m_aRows.add (aItem);
     else
@@ -206,7 +202,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   /**
-   * Add a row to this VBox.
+   * Add a row to this VBox using auto height.
    *
    * @param aElement
    *        The row to be added. May not be <code>null</code>.
@@ -215,12 +211,27 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nonnull
   public PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement)
   {
-    internalCheckNotPrepared ();
-    return _addAndReturnRow (-1, aElement);
+    return addAndReturnRow (aElement, HeightSpec.auto ());
   }
 
   /**
    * Add a row to this VBox.
+   *
+   * @param aElement
+   *        The row to be added. May not be <code>null</code>.
+   * @param aHeight
+   *        The height specification to use. May not be <code>null</code>.
+   * @return the created row
+   */
+  @Nonnull
+  public PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
+  {
+    internalCheckNotPrepared ();
+    return _addAndReturnRow (-1, aElement, aHeight);
+  }
+
+  /**
+   * Add a row to this VBox using auto height.
    *
    * @param aElement
    *        The row to be added. May not be <code>null</code>.
@@ -229,7 +240,22 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nonnull
   public IMPLTYPE addRow (@Nonnull final IPLRenderableObject <?> aElement)
   {
-    addAndReturnRow (aElement);
+    return addRow (aElement, HeightSpec.auto ());
+  }
+
+  /**
+   * Add a row to this VBox.
+   *
+   * @param aElement
+   *        The row to be added. May not be <code>null</code>.
+   * @param aHeight
+   *        The height specification to use. May not be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  public IMPLTYPE addRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
+  {
+    addAndReturnRow (aElement, aHeight);
     return thisAsT ();
   }
 
@@ -240,14 +266,18 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The index where the row should be added. Must be &ge; 0.
    * @param aElement
    *        The row to be added. May not be <code>null</code>.
+   * @param aHeight
+   *        The height specification to use. May not be <code>null</code>.
    * @return the created row
    */
   @Nonnull
-  public PLVBoxRow addAndReturnRow (@Nonnegative final int nIndex, @Nonnull final IPLRenderableObject <?> aElement)
+  public PLVBoxRow addAndReturnRow (@Nonnegative final int nIndex,
+                                    @Nonnull final IPLRenderableObject <?> aElement,
+                                    @Nonnull final HeightSpec aHeight)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
     internalCheckNotPrepared ();
-    return _addAndReturnRow (nIndex, aElement);
+    return _addAndReturnRow (nIndex, aElement, aHeight);
   }
 
   /**
@@ -257,12 +287,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The index where the row should be added. Must be &ge; 0.
    * @param aElement
    *        The row to be added. May not be <code>null</code>.
+   * @param aHeight
+   *        The height specification to use. May not be <code>null</code>.
    * @return this
    */
   @Nonnull
-  public IMPLTYPE addRow (@Nonnegative final int nIndex, @Nonnull final IPLRenderableObject <?> aElement)
+  public IMPLTYPE addRow (@Nonnegative final int nIndex,
+                          @Nonnull final IPLRenderableObject <?> aElement,
+                          @Nonnull final HeightSpec aHeight)
   {
-    addAndReturnRow (nIndex, aElement);
+    addAndReturnRow (nIndex, aElement, aHeight);
     return thisAsT ();
   }
 

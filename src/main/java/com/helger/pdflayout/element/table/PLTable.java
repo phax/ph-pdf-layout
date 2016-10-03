@@ -45,6 +45,7 @@ import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EValueUOMType;
+import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -163,7 +164,22 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTableRow addAndReturnRow (@Nonnull final PLTableCell... aCells)
   {
-    return addAndReturnRow (new CommonsArrayList<> (aCells));
+    return addAndReturnRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
+  }
+
+  /**
+   * Add a new table row with auto height. All contained elements are added with
+   * the specified width in the constructor. <code>null</code> elements are
+   * represented as empty cells.
+   *
+   * @param aCells
+   *        The cells to add. May not be <code>null</code>.
+   * @return the added table row and never <code>null</code>.
+   */
+  @Nonnull
+  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  {
+    return addAndReturnRow (aCells, HeightSpec.auto ());
   }
 
   /**
@@ -173,10 +189,13 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
    *
    * @param aCells
    *        The cells to add. May not be <code>null</code>.
+   * @param aHeight
+   *        Row height to be used. May not be <code>null</code>.
    * @return the added table row and never <code>null</code>.
    */
   @Nonnull
-  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells,
+                                     @Nonnull final HeightSpec aHeight)
   {
     ValueEnforcer.notNull (aCells, "Cells");
 
@@ -221,15 +240,15 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
       }
       nWidthIndex += nCols;
     }
-    addRow (aRow);
+    addRow (aRow, aHeight);
     return aRow;
   }
 
   @Nonnull
-  public PLTable addRow (@Nonnull final PLTableRow aRow)
+  public PLTable addRow (@Nonnull final PLTableRow aRow, @Nonnull final HeightSpec aHeight)
   {
     ValueEnforcer.notNull (aRow, "Row");
-    m_aRows.addRow (aRow);
+    m_aRows.addRow (aRow, aHeight);
     return this;
   }
 
@@ -243,7 +262,22 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTable addRow (@Nonnull final PLTableCell... aCells)
   {
-    return addRow (new CommonsArrayList<> (aCells));
+    return addRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
+  }
+
+  /**
+   * Add a new table row with auto height. All contained elements are added with
+   * the specified width in the constructor. <code>null</code> elements are
+   * represented as empty cells.
+   *
+   * @param aCells
+   *        The cells to add. May not be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  public PLTable addRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  {
+    return addRow (aCells, HeightSpec.auto ());
   }
 
   /**
@@ -253,12 +287,14 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
    *
    * @param aCells
    *        The cells to add. May not be <code>null</code>.
+   * @param aHeight
+   *        Row height to be used.
    * @return this
    */
   @Nonnull
-  public PLTable addRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  public PLTable addRow (@Nonnull final Iterable <? extends PLTableCell> aCells, @Nonnull final HeightSpec aHeight)
   {
-    addAndReturnRow (aCells);
+    addAndReturnRow (aCells, aHeight);
     return this;
   }
 

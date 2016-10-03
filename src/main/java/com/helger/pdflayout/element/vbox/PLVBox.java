@@ -19,6 +19,7 @@ package com.helger.pdflayout.element.vbox;
 import javax.annotation.Nullable;
 
 import com.helger.pdflayout.base.IPLRenderableObject;
+import com.helger.pdflayout.spec.HeightSpec;
 
 /**
  * Vertical box - groups several rows.
@@ -32,6 +33,8 @@ public class PLVBox extends AbstractPLVBox <PLVBox>
 
   public PLVBox (@Nullable final IPLRenderableObject <?>... aElements)
   {
-    super (aElements);
+    if (aElements != null)
+      for (final IPLRenderableObject <?> aElement : aElements)
+        addRow (aElement, HeightSpec.auto ());
   }
 }
