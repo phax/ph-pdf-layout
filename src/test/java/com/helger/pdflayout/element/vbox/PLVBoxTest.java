@@ -29,11 +29,15 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLPageSet;
+import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.EHorzAlignment;
+import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
+import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.pdflayout.spec.PreloadFont;
+import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
 /**
@@ -79,6 +83,62 @@ public final class PLVBoxTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-basic.pdf"));
+  }
+
+  @Test
+  public void testStarAutoStarFullWidth () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (new SizeSpec (400, 600));
+
+    final PLVBox aVBox = new PLVBox ();
+    aVBox.addRow (new PLText ("This is a test String determining the width of the content", r10).setBorder (Color.RED));
+
+    // Check horizontal alignment
+    aVBox.addRow (new PLBox (new PLText ("Left/top", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.LEFT)
+                                                                                .setVertAlign (EVertAlignment.TOP)
+                                                                                .setFillColor (Color.YELLOW),
+                  HeightSpec.star ());
+    aVBox.addRow (new PLBox (new PLText ("Center/middle", r10).setBorder (Color.RED))
+                                                                                     .setHorzAlign (EHorzAlignment.CENTER)
+                                                                                     .setVertAlign (EVertAlignment.MIDDLE)
+                                                                                     .setFillColor (Color.PINK),
+                  HeightSpec.star ());
+    aVBox.addRow (new PLBox (new PLText ("Right/bottom", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                    .setVertAlign (EVertAlignment.BOTTOM)
+                                                                                    .setFillColor (Color.MAGENTA),
+                  HeightSpec.star ());
+    aPS1.addElement (aVBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-height-star.pdf"));
+  }
+
+  @Test
+  public void testStarAutoStarFullWidthNotFullWidth () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final PLVBox aVBox = new PLVBox ().setFullWidth (false);
+    aVBox.addRow (new PLText ("This is a test String determining the width of the content", r10).setBorder (Color.RED));
+
+    // Check horizontal alignment
+    aVBox.addRow (new PLBox (new PLText ("Left", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.LEFT)
+                                                                            .setFillColor (Color.YELLOW),
+                  HeightSpec.star ());
+    aVBox.addRow (new PLBox (new PLText ("Center", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.CENTER)
+                                                                              .setFillColor (Color.PINK),
+                  HeightSpec.auto ());
+    aVBox.addRow (new PLBox (new PLText ("Right", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                             .setFillColor (Color.MAGENTA),
+                  HeightSpec.star ());
+    aPS1.addElement (aVBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-height-star-small.pdf"));
   }
 
   @Test

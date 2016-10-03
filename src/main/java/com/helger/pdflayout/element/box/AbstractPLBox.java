@@ -52,7 +52,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
   // Status vars
   private SizeSpec m_aElementPreparedSize;
-  private SizeSpec m_aRenderOffset;
+  private SizeSpec m_aRenderOffset = SizeSpec.SIZE0;
 
   public AbstractPLBox (@Nullable final IPLRenderableObject <?> aElement)
   {
@@ -134,8 +134,9 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   {
     final SizeSpec aEffectiveSize = super.adoptPreparedSize (aPreparedSize);
     // Calculate how big this box would be with min/max size
-    m_aRenderOffset = new SizeSpec (getIndentX (aEffectiveSize.getWidth (), aPreparedSize.getWidth ()),
-                                    getIndentY (aEffectiveSize.getHeight (), aPreparedSize.getHeight ()));
+    if (false)
+      m_aRenderOffset = new SizeSpec (getIndentX (aEffectiveSize.getWidth (), aPreparedSize.getWidth ()),
+                                      getIndentY (aEffectiveSize.getHeight (), aPreparedSize.getHeight ()));
     return aEffectiveSize;
   }
 
@@ -265,13 +266,11 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
     if (m_aElement != null)
     {
+      final float fStartLeft = aCtx.getStartLeft () + getOutlineLeft () + m_aRenderOffset.getWidth ();
+      final float fStartTop = aCtx.getStartTop () - getOutlineTop () - m_aRenderOffset.getHeight ();
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
-                                                                   aCtx.getStartLeft () +
-                                                                         getOutlineLeft () +
-                                                                         m_aRenderOffset.getWidth (),
-                                                                   aCtx.getStartTop () -
-                                                                                                      getOutlineTop () -
-                                                                                                      m_aRenderOffset.getHeight (),
+                                                                   fStartLeft,
+                                                                   fStartTop,
                                                                    getPreparedWidth (),
                                                                    getPreparedHeight ());
       m_aElement.render (aElementCtx);

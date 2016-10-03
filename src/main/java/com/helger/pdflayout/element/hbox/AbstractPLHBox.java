@@ -342,6 +342,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     }
 
     // 3. prepare all star widths items
+    fRestWidth = fAvailableWidth - fUsedWidthFull;
     nIndex = 0;
     for (final PLHBoxColumn aColumn : m_aColumns)
     {
@@ -358,6 +359,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
         // Update used width
         fUsedWidthFull += fColumnWidth;
+        // Don't change rest-width!
 
         // Update used height
         fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
@@ -408,20 +410,20 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     // Small consistency check (with rounding included)
     if (GlobalDebug.isDebugMode ())
     {
-      if (fUsedWidthFull - aCtx.getAvailableWidth () > 0.01)
+      if (fUsedWidthFull - fAvailableWidth > 0.01)
         s_aLogger.warn (getDebugID () +
                         " uses more width (" +
                         fUsedWidthFull +
                         ") than available (" +
-                        aCtx.getAvailableWidth () +
+                        fAvailableWidth +
                         ")!");
-      if (fMaxColumnHeight - aCtx.getAvailableHeight () > 0.01)
+      if (fMaxColumnHeight - fAvailableHeight > 0.01)
         if (!isVertSplittable ())
           s_aLogger.warn (getDebugID () +
                           " uses more height (" +
                           fMaxColumnHeight +
                           ") than available (" +
-                          aCtx.getAvailableHeight () +
+                          fAvailableHeight +
                           ")!");
     }
 

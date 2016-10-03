@@ -37,7 +37,11 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.base.AbstractPLBlockElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
+import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
+import com.helger.pdflayout.base.IPLHasMargin;
+import com.helger.pdflayout.base.IPLHasVerticalAlignment;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
@@ -58,11 +62,13 @@ import com.helger.pdflayout.spec.SizeSpec;
 public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends
                                      AbstractPLRenderableObject <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
 {
+  public static final boolean DEFAULT_FULL_WIDTH = true;
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
   private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   private int m_nHeaderRowCount = 0;
+  private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
 
   // Status vars
   /** prepared row size (with outline of contained element) */
@@ -250,7 +256,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The row to be added. May not be <code>null</code>.
    * @param aHeight
    *        The height specification to use. May not be <code>null</code>.
-   * @return this
+   * @return this for chaining
    */
   @Nonnull
   public IMPLTYPE addRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
@@ -268,7 +274,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The row to be added. May not be <code>null</code>.
    * @param aHeight
    *        The height specification to use. May not be <code>null</code>.
-   * @return the created row
+   * @return the created row. Never <code>null</code>.
    */
   @Nonnull
   public PLVBoxRow addAndReturnRow (@Nonnegative final int nIndex,
@@ -289,7 +295,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The row to be added. May not be <code>null</code>.
    * @param aHeight
    *        The height specification to use. May not be <code>null</code>.
-   * @return this
+   * @return this for chaining
    */
   @Nonnull
   public IMPLTYPE addRow (@Nonnegative final int nIndex,
@@ -300,6 +306,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     return thisAsT ();
   }
 
+  /**
+   * Remove the row with the specified index.
+   *
+   * @param nIndex
+   *        The index to be removed.
+   * @return this for chaining
+   */
   @Nonnull
   public IMPLTYPE removeRow (@Nonnegative final int nIndex)
   {
@@ -352,6 +365,18 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     return m_aRows.containsAny (x -> x.getElement ().isVertSplittable ());
   }
 
+  public boolean isFullWidth ()
+  {
+    return m_bFullWidth;
+  }
+
+  @Nonnull
+  public IMPLTYPE setFullWidth (final boolean bFullWidth)
+  {
+    m_bFullWidth = bFullWidth;
+    return thisAsT ();
+  }
+
   @Override
   public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
@@ -368,55 +393,190 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
     final float fAvailableWidth = aCtx.getAvailableWidth ();
     final float fAvailableHeight = aCtx.getAvailableHeight ();
-    float fUsedWidthFull = 0;
+    float fMaxContentWidth = 0;
+    float fMaxRowWidth = 0;
     float fUsedHeightFull = 0;
 
+    int nStarRows = 0;
+    int nAutoRows = 0;
+    for (final PLVBoxRow aRow : m_aRows)
+      switch (aRow.getHeight ().getType ())
+      {
+        case STAR:
+          ++nStarRows;
+          break;
+        case AUTO:
+          ++nAutoRows;
+          break;
+      }
+
     int nIndex = 0;
+    float fRestHeight = fAvailableHeight;
+    // 1. prepare all non-star height items
     for (final PLVBoxRow aRow : m_aRows)
     {
-      final IPLRenderableObject <?> aRowElement = aRow.getElement ();
-      // Full width of this element
-      final float fRowElementWidthFull = fAvailableWidth;
-      // Prepare child element
-      final SizeSpec aRowElementPreparedSize = aRowElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                                            fRowElementWidthFull,
-                                                                                            fAvailableHeight));
-      // Update used width
-      // Effective content width of this element
-      fUsedWidthFull = Math.max (fUsedWidthFull, fRowElementWidthFull);
+      if (aRow.getHeight ().isAbsolute ())
+      {
+        final IPLRenderableObject <?> aElement = aRow.getElement ();
 
-      // Update used height
-      final float fRowElementHeightFull = aRowElementPreparedSize.getHeight () + aRowElement.getOutlineYSum ();
-      fUsedHeightFull += fRowElementHeightFull;
+        // Height of this row
+        final float fRowHeight = aRow.getHeight ().getEffectiveValue (fAvailableHeight);
 
-      // Without padding and margin
-      m_aPreparedRowSize[nIndex] = new SizeSpec (fAvailableWidth, fRowElementHeightFull);
-      m_aPreparedElementSize[nIndex] = aRowElementPreparedSize;
+        // Prepare child element
+        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                        fAvailableWidth,
+                                                                                        fRowHeight));
+
+        // Update used width
+        // Effective content width of this element
+        fMaxContentWidth = Math.max (fMaxContentWidth, aElementPreparedSize.getWidth ());
+        final float fRowWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+        fMaxRowWidth = Math.max (fMaxRowWidth, fRowWidth);
+
+        // Update used height
+        fUsedHeightFull += fRowHeight;
+        fRestHeight -= fRowHeight;
+
+        // Without padding and margin
+        m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fAvailableWidth : fRowWidth, fRowHeight);
+        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+      }
       ++nIndex;
     }
 
-    // Add at the end, because previously only the max was used
+    // 2. prepare all auto widths items
+    nIndex = 0;
+    for (final PLVBoxRow aRow : m_aRows)
+    {
+      if (aRow.getHeight ().isAuto ())
+      {
+        final IPLRenderableObject <?> aElement = aRow.getElement ();
+
+        // Height of this row
+        final float fAvailableRowHeight = fRestHeight / (nAutoRows + nStarRows);
+
+        // Prepare child element
+        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                        fAvailableWidth,
+                                                                                        fAvailableRowHeight));
+
+        // Use the used size of the element as the column width
+        final float fRowHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+
+        // Update used width
+        // Effective content width of this element
+        fMaxContentWidth = Math.max (fMaxContentWidth, aElementPreparedSize.getWidth ());
+        final float fRowWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+        fMaxRowWidth = Math.max (fMaxRowWidth, fRowWidth);
+
+        // Update used height
+        fUsedHeightFull += fRowHeight;
+
+        // Without padding and margin
+        m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fAvailableWidth : fRowWidth, fRowHeight);
+        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+      }
+      ++nIndex;
+    }
+
+    // 3. prepare all star widths items
+    fRestHeight = fAvailableHeight - fUsedHeightFull;
+    nIndex = 0;
+    for (final PLVBoxRow aRow : m_aRows)
+    {
+      if (aRow.getHeight ().isStar ())
+      {
+        final IPLRenderableObject <?> aElement = aRow.getElement ();
+
+        // Height of this row
+        final float fRowHeight = fRestHeight / nStarRows;
+
+        // Prepare child element
+        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                        fAvailableWidth,
+                                                                                        fRowHeight));
+
+        // Update used width
+        // Effective content width of this element
+        fMaxContentWidth = Math.max (fMaxContentWidth, aElementPreparedSize.getWidth ());
+        final float fRowWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+        fMaxRowWidth = Math.max (fMaxRowWidth, fRowWidth);
+
+        // Update used height
+        fUsedHeightFull += fRowHeight;
+        // Don't change rest-height!
+
+        // Without padding and margin
+        m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fAvailableWidth : fRowWidth, fRowHeight);
+        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+      }
+      ++nIndex;
+    }
+
+    // Apply alignment
+    {
+      nIndex = 0;
+      for (final PLVBoxRow aRow : m_aRows)
+      {
+        final IPLRenderableObject <?> aElement = aRow.getElement ();
+        if (aElement instanceof IPLHasMargin <?>)
+        {
+          if (aElement instanceof IPLHasVerticalAlignment <?>)
+          {
+            final float fMarginTop = ((IPLHasVerticalAlignment <?>) aElement).getIndentY (m_aPreparedRowSize[nIndex].getHeight (),
+                                                                                          m_aPreparedElementSize[nIndex].getHeight ());
+            ((IPLHasMargin <?>) aElement).addMarginTop (fMarginTop);
+          }
+          if (aElement instanceof IPLHasHorizontalAlignment <?>)
+          {
+            final float fMarginLeft = ((IPLHasHorizontalAlignment <?>) aElement).getIndentX (m_bFullWidth ? fAvailableWidth
+                                                                                                          : fMaxContentWidth,
+                                                                                             m_bFullWidth ? m_aPreparedElementSize[nIndex].getWidth ()
+                                                                                                          : m_aPreparedRowSize[nIndex].getWidth ());
+            ((IPLHasMargin <?>) aElement).addMarginLeft (fMarginLeft);
+          }
+        }
+        ++nIndex;
+      }
+    }
+
+    // Set min size for block elements
+    {
+      nIndex = 0;
+      for (final PLVBoxRow aRow : m_aRows)
+      {
+        final IPLRenderableObject <?> aElement = aRow.getElement ();
+        if (aElement instanceof AbstractPLBlockElement <?>)
+        {
+          final AbstractPLBlockElement <?> aRealElement = (AbstractPLBlockElement <?>) aElement;
+          // Set minimum column width and height as prepared width
+          aRealElement.setMinSize (m_bFullWidth ? fAvailableWidth : fMaxContentWidth,
+                                   m_aPreparedRowSize[nIndex].getHeight () - aElement.getOutlineYSum ());
+        }
+        ++nIndex;
+      }
+    }
 
     // Small consistency check (with rounding included)
     if (GlobalDebug.isDebugMode ())
     {
-      if (fUsedWidthFull - aCtx.getAvailableWidth () > 0.01)
+      if (fMaxRowWidth - fAvailableWidth > 0.01)
         s_aLogger.warn (getDebugID () +
                         " uses more width (" +
-                        fUsedWidthFull +
+                        fMaxRowWidth +
                         ") than available (" +
-                        aCtx.getAvailableWidth () +
+                        fAvailableWidth +
                         ")!");
-      if (fUsedHeightFull - aCtx.getAvailableHeight () > 0.01 && !isVertSplittable ())
+      if (fUsedHeightFull - fAvailableHeight > 0.01 && !isVertSplittable ())
         s_aLogger.warn (getDebugID () +
                         " uses more height (" +
                         fUsedHeightFull +
                         ") than available (" +
-                        aCtx.getAvailableHeight () +
+                        fAvailableHeight +
                         ")!");
     }
 
-    return new SizeSpec (fUsedWidthFull, fUsedHeightFull);
+    return new SizeSpec (fMaxRowWidth, fUsedHeightFull);
   }
 
   @Nullable
@@ -617,20 +777,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     int nIndex = 0;
     for (final PLVBoxRow aRow : m_aRows)
     {
-      final IPLRenderableObject <?> aRowElement = aRow.getElement ();
-      final float fRowElementWidth = m_aPreparedRowSize[nIndex].getWidth ();
-      final float fRowElementHeight = m_aPreparedRowSize[nIndex].getHeight ();
+      final IPLRenderableObject <?> aElement = aRow.getElement ();
+      final float fRowWidth = m_aPreparedRowSize[nIndex].getWidth ();
+      final float fRowHeight = m_aPreparedRowSize[nIndex].getHeight ();
 
       // Perform contained element after border
-      final PageRenderContext aRowElementCtx = new PageRenderContext (aCtx,
-                                                                      fCurX,
-                                                                      fCurY,
-                                                                      fRowElementWidth,
-                                                                      fRowElementHeight);
-      aRowElement.render (aRowElementCtx);
+      final PageRenderContext aRowElementCtx = new PageRenderContext (aCtx, fCurX, fCurY, fRowWidth, fRowHeight);
+      aElement.render (aRowElementCtx);
 
       // Update Y-pos
-      fCurY -= fRowElementHeight;
+      fCurY -= fRowHeight;
       ++nIndex;
     }
   }
