@@ -50,6 +50,13 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     m_aRow.addColumn (aCell, aWidth);
   }
 
+  @Override
+  @OverridingMethodsMustInvokeSuper
+  protected void onAfterSetID ()
+  {
+    m_aRow.setID (getID () + "-hbox");
+  }
+
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public PLTableRow setBasicDataFrom (@Nonnull final PLTableRow aSource)

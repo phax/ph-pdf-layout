@@ -176,8 +176,12 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLBox <?> aBox1 = new PLBox ().setBasicDataFrom (this).setVertSplittable (false);
-    final AbstractPLBox <?> aBox2 = new PLBox ().setBasicDataFrom (this).setVertSplittable (true);
+    final AbstractPLBox <?> aBox1 = new PLBox ().setBasicDataFrom (this)
+                                                .setID (getID () + "-1")
+                                                .setVertSplittable (false);
+    final AbstractPLBox <?> aBox2 = new PLBox ().setBasicDataFrom (this)
+                                                .setID (getID () + "-2")
+                                                .setVertSplittable (true);
 
     float fBox1UsedHeight = 0;
     float fBox2UsedHeight = 0;

@@ -63,7 +63,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                                                                                        LineDashPatternSpec.SOLID,
                                                                                        1f);
 
-  private PLVBox m_aVBox = new PLVBox ().setVertSplittable (true);
+  private PLVBox m_aRows = new PLVBox ().setVertSplittable (true);
   private final ICommonsList <WidthSpec> m_aWidths;
   private final EValueUOMType m_eWidthType;
   private IPLTableGridType m_aGridType = DEFAULT_GRID_TYPE;
@@ -95,12 +95,19 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     m_eWidthType = eWidthType;
   }
 
+  @Override
+  @OverridingMethodsMustInvokeSuper
+  protected void onAfterSetID ()
+  {
+    m_aRows.setID (getID () + "-vbox");
+  }
+
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public PLTable setBasicDataFrom (@Nonnull final PLTable aSource)
   {
     super.setBasicDataFrom (aSource);
-    m_aVBox.setBasicDataFrom (aSource.m_aVBox);
+    m_aRows.setBasicDataFrom (aSource.m_aRows);
     setMargin (aSource.m_aMargin);
     return this;
   }
@@ -143,14 +150,14 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTable setHeaderRowCount (@Nonnegative final int nHeaderRowCount)
   {
-    m_aVBox.setHeaderRowCount (nHeaderRowCount);
+    m_aRows.setHeaderRowCount (nHeaderRowCount);
     return this;
   }
 
   @Nonnegative
   public int getHeaderRowCount ()
   {
-    return m_aVBox.getHeaderRowCount ();
+    return m_aRows.getHeaderRowCount ();
   }
 
   @Nonnull
@@ -222,7 +229,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   public PLTable addRow (@Nonnull final PLTableRow aRow)
   {
     ValueEnforcer.notNull (aRow, "Row");
-    m_aVBox.addRow (aRow);
+    m_aRows.addRow (aRow);
     return this;
   }
 
@@ -257,18 +264,18 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
 
   public void forEachRow (@Nonnull final Consumer <? super PLTableRow> aConsumer)
   {
-    m_aVBox.forEachRow (x -> aConsumer.accept ((PLTableRow) x.getElement ()));
+    m_aRows.forEachRow (x -> aConsumer.accept ((PLTableRow) x.getElement ()));
   }
 
   public void forEachRow (@Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
-    m_aVBox.forEachRow ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
+    m_aRows.forEachRow ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
   }
 
   @Nonnegative
   public int getRowCount ()
   {
-    return m_aVBox.getRowCount ();
+    return m_aRows.getRowCount ();
   }
 
   public void forEachCell (@Nonnull final Consumer <? super PLTableCell> aConsumer)
@@ -306,7 +313,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
     super.visit (aVisitor);
-    m_aVBox.visit (aVisitor);
+    m_aRows.visit (aVisitor);
   }
 
   @Override
@@ -318,13 +325,13 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     final PreparationContext aChildCtx = new PreparationContext (aCtx.getGlobalContext (),
                                                                  aCtx.getAvailableWidth () - getMarginXSum (),
                                                                  aCtx.getAvailableHeight () - getMarginYSum ());
-    final SizeSpec aVBoxPreparedSize = m_aVBox.prepare (aChildCtx);
-    return aVBoxPreparedSize.plus (m_aVBox.getOutlineXSum (), m_aVBox.getOutlineYSum ());
+    final SizeSpec aVBoxPreparedSize = m_aRows.prepare (aChildCtx);
+    return aVBoxPreparedSize.plus (m_aRows.getOutlineXSum (), m_aRows.getOutlineYSum ());
   }
 
   public boolean isVertSplittable ()
   {
-    return m_aVBox.isVertSplittable ();
+    return m_aRows.isVertSplittable ();
   }
 
   @Nullable
@@ -334,25 +341,25 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     if (PLDebug.isDebugSplit ())
       PLDebug.debugSplit (this,
                           "Trying to split " +
-                                m_aVBox.getDebugID () +
+                                m_aRows.getDebugID () +
                                 " into pieces for available width " +
                                 fAvailableWidth +
                                 " and height " +
                                 fSplitHeight);
 
-    final PLSplitResult ret = m_aVBox.splitElementVert (fAvailableWidth, fSplitHeight);
+    final PLSplitResult ret = m_aRows.splitElementVert (fAvailableWidth, fSplitHeight);
     if (ret == null)
       return ret;
 
-    final PLTable aTable1 = new PLTable (m_aWidths);
+    final PLTable aTable1 = new PLTable (m_aWidths).setID (getID () + "-1");
     aTable1.setBasicDataFrom (this);
     aTable1.internalMarkAsPrepared (ret.getFirstElement ().getSize ());
-    aTable1.m_aVBox = (PLVBox) ret.getFirstElement ().getElement ();
+    aTable1.m_aRows = (PLVBox) ret.getFirstElement ().getElement ();
 
-    final PLTable aTable2 = new PLTable (m_aWidths);
+    final PLTable aTable2 = new PLTable (m_aWidths).setID (getID () + "-2");
     aTable2.setBasicDataFrom (this);
     aTable2.internalMarkAsPrepared (ret.getSecondElement ().getSize ());
-    aTable2.m_aVBox = (PLVBox) ret.getSecondElement ().getElement ();
+    aTable2.m_aRows = (PLVBox) ret.getSecondElement ().getElement ();
 
     return new PLSplitResult (new PLElementWithSize (aTable1, ret.getFirstElement ().getSize ()),
                               new PLElementWithSize (aTable2, ret.getSecondElement ().getSize ()));
@@ -366,14 +373,18 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                                                                aCtx.getStartTop () - getMarginTop (),
                                                                aCtx.getWidth () - getMarginXSum (),
                                                                aCtx.getHeight () - getMarginYSum ());
-    m_aVBox.render (aChildCtx);
+    m_aRows.render (aChildCtx);
   }
 
   @Override
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
+                            .append ("Rows", m_aRows)
                             .append ("Width", m_aWidths)
+                            .append ("WidthType", m_eWidthType)
+                            .append ("GridType", m_aGridType)
+                            .append ("GridBSS", m_aGridBSS)
                             .append ("Margin", m_aMargin)
                             .toString ();
   }

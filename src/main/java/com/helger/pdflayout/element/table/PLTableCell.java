@@ -47,6 +47,7 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
     super (aElement);
     ValueEnforcer.isGT0 (nColSpan, "ColSpan");
     m_nColSpan = nColSpan;
+    setVertSplittable (true);
   }
 
   @Nonnull

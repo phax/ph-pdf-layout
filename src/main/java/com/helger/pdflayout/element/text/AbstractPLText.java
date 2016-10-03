@@ -405,7 +405,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   @Nonnull
   private PLElementWithSize _splitGetCopy (final float fElementWidth,
                                            @Nonnull @Nonempty final List <TextAndWidthSpec> aLines,
-                                           final boolean bSplittableCopy)
+                                           final boolean bSplittableCopy,
+                                           @Nonnull final String sIDSuffix)
   {
     ValueEnforcer.notEmpty (aLines, "Lines");
 
@@ -417,7 +418,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
     final String sTextContent = StringHelper.getImploded ('\n', aLineCopy, x -> x.getText ());
     final PLText aNewText = new PLText (sTextContent, getFontSpec ());
-    aNewText.setBasicDataFrom (this);
+    aNewText.setBasicDataFrom (this).setID (getID () + sIDSuffix);
     // Set this explicitly after setBasicDataFrom!
     aNewText.setVertSplittable (bSplittableCopy);
 
@@ -493,9 +494,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // First elements does not need to be splittable anymore
-    final PLElementWithSize aText1 = _splitGetCopy (fElementWidth, aLines.subList (0, nLines), false);
+    final PLElementWithSize aText1 = _splitGetCopy (fElementWidth, aLines.subList (0, nLines), false, "-1");
     // Second element may need additional splitting
-    final PLElementWithSize aText2 = _splitGetCopy (fElementWidth, aLines.subList (nLines, aLines.size ()), true);
+    final PLElementWithSize aText2 = _splitGetCopy (fElementWidth, aLines.subList (nLines, aLines.size ()), true, "-2");
 
     return new PLSplitResult (aText1, aText2);
   }

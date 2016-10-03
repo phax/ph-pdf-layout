@@ -474,8 +474,12 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
     }
 
-    final AbstractPLHBox <?> aHBox1 = new PLHBox ().setBasicDataFrom (this).setVertSplittable (false);
-    final AbstractPLHBox <?> aHBox2 = new PLHBox ().setBasicDataFrom (this).setVertSplittable (true);
+    final AbstractPLHBox <?> aHBox1 = new PLHBox ().setBasicDataFrom (this)
+                                                   .setID (getID () + "-1")
+                                                   .setVertSplittable (false);
+    final AbstractPLHBox <?> aHBox2 = new PLHBox ().setBasicDataFrom (this)
+                                                   .setID (getID () + "-2")
+                                                   .setVertSplittable (true);
 
     // Fill all columns with empty content
     for (int i = 0; i < nCols; ++i)
