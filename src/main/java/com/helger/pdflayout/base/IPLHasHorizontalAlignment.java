@@ -69,9 +69,10 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
    * the provided element width as the basis for alignment.
    *
    * @param fAvailableWidth
-   *        The available width of the surrounding element.
+   *        The available width of the surrounding element. This is usually
+   *        larger than fElementWidth.
    * @param fElementWidth
-   *        The width of the element to align
+   *        The width of the element to align.
    * @return The indentation offset
    */
   default float getIndentX (final float fAvailableWidth, final float fElementWidth)

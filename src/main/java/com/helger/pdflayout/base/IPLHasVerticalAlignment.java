@@ -69,9 +69,10 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
    * provided element height as the basis for alignment.
    *
    * @param fAvailableHeight
-   *        The available height of the surrounding element.
+   *        The available height of the surrounding element. This is usually
+   *        larger than fElementHeight.
    * @param fElementHeight
-   *        The height of the element to align
+   *        The height of the element to align.
    * @return The indentation offset
    */
   default float getIndentY (final float fAvailableHeight, final float fElementHeight)
