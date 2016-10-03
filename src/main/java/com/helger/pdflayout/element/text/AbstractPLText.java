@@ -34,7 +34,7 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
-import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.AbstractPLInlineElement;
 import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLElementWithSize;
@@ -57,7 +57,8 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
+public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>>
+                                     extends AbstractPLInlineElement <IMPLTYPE>
                                      implements IPLHasHorizontalAlignment <IMPLTYPE>, IPLSplittableObject <IMPLTYPE>
 {
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;

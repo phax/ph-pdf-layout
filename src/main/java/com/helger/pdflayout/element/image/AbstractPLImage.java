@@ -27,7 +27,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLElement;
+import com.helger.pdflayout.base.AbstractPLInlineElement;
 import com.helger.pdflayout.element.PLRenderHelper;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PagePreRenderContext;
@@ -42,8 +42,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLElement <IMPLTYPE>>
-                                      extends AbstractPLElement <IMPLTYPE>
+public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYPE>>
+                                      extends AbstractPLInlineElement <IMPLTYPE>
 {
   private final float m_fImageWidth;
   private final float m_fImageHeight;

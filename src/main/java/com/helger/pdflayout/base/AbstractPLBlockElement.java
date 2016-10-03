@@ -25,8 +25,7 @@ import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
 
 /**
- * Base class for objects having a horizontal and a vertical alignment.<br>
- * The alignment is always applied to the contained objects but not this object!
+ * Abstract implementation of {@link IPLBlockElement}.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
