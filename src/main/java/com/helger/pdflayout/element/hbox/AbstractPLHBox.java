@@ -490,9 +490,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       final WidthSpec aColumnWidth = aColumn.getWidth ();
 
       // Create empty element with the same width as the original element
-      final PLSpacerX aEmptyElement = PLSpacerX.createPrepared (m_aPreparedColumnSize[i].getWidth (), 0);
-
+      PLSpacerX aEmptyElement = PLSpacerX.createPrepared (m_aPreparedColumnSize[i].getWidth (), 0);
       aHBox1.addColumn (aEmptyElement, aColumnWidth);
+
+      aEmptyElement = PLSpacerX.createPrepared (m_aPreparedColumnSize[i].getWidth (), 0);
       aHBox2.addColumn (aEmptyElement, aColumnWidth);
     }
 

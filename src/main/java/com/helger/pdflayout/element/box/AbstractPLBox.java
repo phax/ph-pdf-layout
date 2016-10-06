@@ -134,9 +134,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   {
     final SizeSpec aEffectiveSize = super.adoptPreparedSize (aPreparedSize);
     // Calculate how big this box would be with min/max size
-    if (false)
-      m_aRenderOffset = new SizeSpec (getIndentX (aEffectiveSize.getWidth (), aPreparedSize.getWidth ()),
-                                      getIndentY (aEffectiveSize.getHeight (), aPreparedSize.getHeight ()));
+    m_aRenderOffset = new SizeSpec (getIndentX (aEffectiveSize.getWidth (), aPreparedSize.getWidth ()),
+                                    getIndentY (aEffectiveSize.getHeight (), aPreparedSize.getHeight ()));
     return aEffectiveSize;
   }
 

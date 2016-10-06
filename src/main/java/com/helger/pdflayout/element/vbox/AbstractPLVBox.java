@@ -453,7 +453,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         final IPLRenderableObject <?> aElement = aRow.getElement ();
 
         // Height of this row
-        final float fAvailableRowHeight = fRestHeight / (nAutoRows + nStarRows);
+        final float fAvailableRowHeight = fRestHeight;
 
         // Prepare child element
         final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
