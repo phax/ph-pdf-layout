@@ -226,12 +226,8 @@ public class PageLayoutPDF
       throw new PDFCreationException ("All page sets are empty!");
 
     // create a new document
-    PDDocument aDoc = null;
-
-    try
+    try (final PDDocument aDoc = new PDDocument (); final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
     {
-      aDoc = new PDDocument ();
-
       // Set document properties
       {
         final PDDocumentInformation aProperties = new PDDocumentInformation ();
@@ -283,7 +279,7 @@ public class PageLayoutPDF
         aCustomizer.customizeDocument (aDoc);
 
       // save document to output stream
-      aDoc.save (aOS);
+      aDoc.save (aBufferedOS);
 
       if (s_aLogger.isDebugEnabled ())
         s_aLogger.debug ("PDF successfully created");
@@ -295,14 +291,6 @@ public class PageLayoutPDF
     catch (final Throwable t)
     {
       throw new PDFCreationException ("Internal error", t);
-    }
-    finally
-    {
-      // close PDF document
-      StreamHelper.close (aDoc);
-
-      // Necessary in case of an exception
-      StreamHelper.close (aOS);
     }
   }
 }
