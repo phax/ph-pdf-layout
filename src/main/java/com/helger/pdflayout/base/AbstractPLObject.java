@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.StringHelper;
@@ -57,6 +58,13 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     return m_sElementID;
   }
 
+  /**
+   * Override this method when interested in an ID change.
+   */
+  @OverrideOnDemand
+  protected void onIDChange ()
+  {}
+
   @Nonnull
   public final IMPLTYPE setID (@Nonnull @Nonempty final String sID)
   {
@@ -68,6 +76,7 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
       m_sDebugID = null;
     }
     m_sElementID = sID;
+    onIDChange ();
     return thisAsT ();
   }
 

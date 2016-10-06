@@ -111,6 +111,16 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return m_aPreparedSize;
   }
 
+  public final float getPreparedWidth ()
+  {
+    return m_aPreparedSize.getWidth ();
+  }
+
+  public final float getPreparedHeight ()
+  {
+    return m_aPreparedSize.getHeight ();
+  }
+
   /**
    * The abstract method that must be implemented by all subclasses. It is
    * ensured that this method is called only once per instance!

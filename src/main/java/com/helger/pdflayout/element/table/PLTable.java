@@ -131,7 +131,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
    *
    * @param aElements
    *        The elements to add. May not be <code>null</code>.
-   * @return this
+   * @return The added row and never <code>null</code>.
    */
   @Nonnull
   public PLHBoxSplittable addTableRow (@Nonnull final Collection <? extends AbstractPLElement <?>> aElements)
@@ -174,7 +174,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
    *
    * @param aCells
    *        The cells to add. May not be <code>null</code>.
-   * @return this
+   * @return The added row and never <code>null</code>.
    */
   @Nonnull
   public PLHBoxSplittable addTableRowExt (@Nonnull final Iterable <? extends PLTableCell> aCells)

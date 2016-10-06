@@ -17,14 +17,21 @@
 package com.helger.pdflayout.base;
 
 import java.awt.Color;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.PLDebug;
+import com.helger.pdflayout.element.PLRenderHelper;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
+import com.helger.pdflayout.render.RenderingContext;
 import com.helger.pdflayout.spec.BorderSpec;
+import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 
@@ -115,6 +122,31 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public Color getFillColor ()
   {
     return m_aFillColor;
+  }
+
+  @Override
+  @OverrideOnDemand
+  @OverridingMethodsMustInvokeSuper
+  protected void onPerformFillAndBorder (@Nonnull final RenderingContext aCtx) throws IOException
+  {
+    final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
+    final float fLeft = aCtx.getStartLeft ();
+    final float fTop = aCtx.getStartTop ();
+    final float fWidth = getPreparedWidth () + getPaddingXSum ();
+    final float fHeight = getPreparedHeight () + getPaddingYSum ();
+
+    // Fill before border
+    if (getFillColor () != null)
+    {
+      aContentStream.setNonStrokingColor (getFillColor ());
+      aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
+    }
+
+    BorderSpec aRealBorder = getBorder ();
+    if (PLRenderHelper.shouldApplyDebugBorder (aRealBorder, aCtx.isDebugMode ()))
+      aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_ELEMENT));
+    if (aRealBorder.hasAnyBorder ())
+      PLRenderHelper.renderBorder (this, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
   }
 
   @Override
