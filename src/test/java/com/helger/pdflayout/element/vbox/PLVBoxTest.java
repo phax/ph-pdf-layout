@@ -52,7 +52,7 @@ public final class PLVBoxTest
 
   static
   {
-    PLDebug.setDebugAll (false);
+    PLDebug.setDebugAll (true);
   }
 
   @Test
@@ -67,8 +67,10 @@ public final class PLVBoxTest
     aVBox.addRow (new PLText (s, r10).setBorder (Color.RED));
 
     // Check horizontal alignment
-    aVBox.addRow (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (Color.RED));
-    aVBox.addRow (new PLText ("Left\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (Color.RED));
+    aVBox.addRow (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (Color.RED).setID ("left1"));
+    aVBox.addRow (new PLText ("Left\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
+                                                           .setBorder (Color.RED)
+                                                           .setID ("left2"));
     aVBox.addRow (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (Color.RED));
     aVBox.addRow (new PLText ("Center\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
                                                                .setBorder (Color.RED));
@@ -80,7 +82,7 @@ public final class PLVBoxTest
                                                              .setFillColor (Color.PINK));
     aPS1.addElement (aVBox);
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-basic.pdf"));
   }
