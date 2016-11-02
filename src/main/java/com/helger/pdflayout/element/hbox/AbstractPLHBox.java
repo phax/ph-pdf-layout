@@ -18,6 +18,8 @@ package com.helger.pdflayout.element.hbox;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
@@ -61,7 +63,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
+  protected final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
   private int m_nStarWidthItems = 0;
   private BorderSpec m_aColumnBorder = BorderSpec.BORDER0;
   private Color m_aColumnFillColor = null;
@@ -201,6 +203,16 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     if (aColumn.getWidth ().isStar ())
       m_nStarWidthItems--;
     return thisAsT ();
+  }
+
+  public void forEachColumn (@Nonnull final Consumer <? super PLHBoxColumn> aConsumer)
+  {
+    m_aColumns.forEach (aConsumer);
+  }
+
+  public void forEachColumn (@Nonnull final ObjIntConsumer <? super PLHBoxColumn> aConsumer)
+  {
+    m_aColumns.forEach (aConsumer);
   }
 
   /**

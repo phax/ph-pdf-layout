@@ -16,6 +16,13 @@
  */
 package com.helger.pdflayout.element.hbox;
 
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
+
+import javax.annotation.Nonnull;
+
+import com.helger.pdflayout.base.AbstractPLElement;
+
 /**
  * Horizontal box - groups several columns.
  *
@@ -25,4 +32,14 @@ public class PLHBoxSplittable extends AbstractPLHBoxSplittable <PLHBoxSplittable
 {
   public PLHBoxSplittable ()
   {}
+
+  public void forEachCell (@Nonnull final Consumer <? super AbstractPLElement <?>> aConsumer)
+  {
+    forEachColumn (aCol -> aConsumer.accept ((AbstractPLElement <?>) aCol.getElement ()));
+  }
+
+  public void forEachCell (@Nonnull final ObjIntConsumer <? super AbstractPLElement <?>> aConsumer)
+  {
+    forEachColumn ( (aCol, idx) -> aConsumer.accept ((AbstractPLElement <?>) aCol.getElement (), idx));
+  }
 }

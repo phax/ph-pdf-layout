@@ -59,7 +59,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-  protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
+  protected final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
   private BorderSpec m_aRowBorder = BorderSpec.BORDER0;
   private Color m_aRowFillColor = null;
   /** prepare width (without padding and margin) */

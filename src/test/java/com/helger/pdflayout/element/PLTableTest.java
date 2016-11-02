@@ -38,6 +38,7 @@ import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.element.hbox.PLHBoxSplittable;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
+import com.helger.pdflayout.element.table.EPLTableGridType;
 import com.helger.pdflayout.element.table.PLTable;
 import com.helger.pdflayout.element.table.PLTableCell;
 import com.helger.pdflayout.element.text.PLText;
@@ -158,7 +159,7 @@ public final class PLTableTest
   @ReturnsMutableCopy
   public static <T> ICommonsList <T> createList (final int nCount, final IntFunction <T> aSupplier)
   {
-    final ICommonsList <T> ret = new CommonsArrayList<> (nCount);
+    final ICommonsList <T> ret = new CommonsArrayList <> (nCount);
     for (int i = 0; i < nCount; ++i)
       ret.add (aSupplier.apply (i));
     return ret;
@@ -195,35 +196,35 @@ public final class PLTableTest
           .setBorder (new BorderStyleSpec (Color.GRAY, 3));
 
     final ICommonsList <Function <PLHBoxSplittable, PLHBoxSplittable>> aRowFcts;
-    aRowFcts = new CommonsArrayList<> (x -> x,
-                                       x -> x.setColumnBorder (aBorder),
-                                       x -> x.setFillColor (aBGRow),
-                                       x -> x.setPadding (aPadding).setFillColor (aBGRow),
-                                       x -> x.setMargin (aMargin).setFillColor (aBGRow),
-                                       x -> x.setPadding (aPadding).setMargin (aMargin).setFillColor (aBGRow),
-                                       x -> x.setPadding (aPadding)
-                                             .setMargin (aMargin)
-                                             .setFillColor (aBGRow)
-                                             .setColumnBorder (aBorder));
+    aRowFcts = new CommonsArrayList <> (x -> x,
+                                        x -> x.setColumnBorder (aBorder),
+                                        x -> x.setFillColor (aBGRow),
+                                        x -> x.setPadding (aPadding).setFillColor (aBGRow),
+                                        x -> x.setMargin (aMargin).setFillColor (aBGRow),
+                                        x -> x.setPadding (aPadding).setMargin (aMargin).setFillColor (aBGRow),
+                                        x -> x.setPadding (aPadding)
+                                              .setMargin (aMargin)
+                                              .setFillColor (aBGRow)
+                                              .setColumnBorder (aBorder));
 
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
-    aCellFcts = new CommonsArrayList<> (x -> x,
-                                        x -> x.setFillColor (aBGCell),
-                                        x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2")
-                                                                                                         ? x.setFillColor (aBGCell)
-                                                                                                         : x);
+    aCellFcts = new CommonsArrayList <> (x -> x,
+                                         x -> x.setFillColor (aBGCell),
+                                         x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2")
+                                                                                                          ? x.setFillColor (aBGCell)
+                                                                                                          : x);
 
     final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts;
-    aElementFcts = new CommonsArrayList<> (x -> x,
-                                           x -> x.setFillColor (aBGElement),
-                                           x -> x.setBorder (aBorder),
-                                           x -> x.setBorder (aBorder).setFillColor (aBGElement),
-                                           x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
-                                           x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
-                                           x -> x.setBorder (aBorder)
-                                                 .setPadding (aPadding)
-                                                 .setMargin (aMargin)
-                                                 .setFillColor (aBGElement));
+    aElementFcts = new CommonsArrayList <> (x -> x,
+                                            x -> x.setFillColor (aBGElement),
+                                            x -> x.setBorder (aBorder),
+                                            x -> x.setBorder (aBorder).setFillColor (aBGElement),
+                                            x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
+                                            x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
+                                            x -> x.setBorder (aBorder)
+                                                  .setPadding (aPadding)
+                                                  .setMargin (aMargin)
+                                                  .setFillColor (aBGElement));
 
     int nRowFunc = 0;
     for (final Function <PLHBoxSplittable, PLHBoxSplittable> aRowFct : aRowFcts)
@@ -261,5 +262,43 @@ public final class PLTableTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table-grid.pdf"));
+  }
+
+  @Test
+  public void testGridType () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final MarginSpec aMargin = new MarginSpec (0);
+    final PaddingSpec aPadding = new PaddingSpec (2);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+
+    for (final EPLTableGridType e : EPLTableGridType.values ())
+    {
+      final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30).setPadding (0, 20, 0, 10);
+
+      // Start table
+      final PLTable aTable = PLTable.createWithPercentage (10, 40, 25, 25);
+      for (int i = 0; i < 10; ++i)
+      {
+        aTable.addTableRow (new PLText (Integer.toString (i), r10).setPadding (aPadding)
+                                                                  .setMargin (aMargin)
+                                                                  .setVertAlign (EVertAlignment.BOTTOM),
+                            new PLText ("Name " +
+                                        i +
+                                        (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
+                                        r10).setPadding (aPadding).setMargin (aMargin),
+                            new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
+                                                                      .setMargin (aMargin)
+                                                                      .setHorzAlign (EHorzAlignment.CENTER)
+                                                                      .setVertAlign (EVertAlignment.MIDDLE),
+                            new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
+                                                                      .setMargin (aMargin)
+                                                                      .setHorzAlign (EHorzAlignment.RIGHT));
+      }
+      e.applyGridToTable (aTable, new BorderStyleSpec (Color.RED));
+      aPS1.addElement (aTable);
+      aPageLayout.addPageSet (aPS1);
+    }
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table-gridtypes.pdf"));
   }
 }
