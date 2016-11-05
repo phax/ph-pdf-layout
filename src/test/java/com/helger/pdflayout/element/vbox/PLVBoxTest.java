@@ -71,15 +71,19 @@ public final class PLVBoxTest
     aVBox.addRow (new PLText ("Left\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
                                                            .setBorder (Color.RED)
                                                            .setID ("left2"));
-    aVBox.addRow (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (Color.RED));
+    aVBox.addRow (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER)
+                                            .setBorder (Color.RED)
+                                            .setID ("center1"));
     aVBox.addRow (new PLText ("Center\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                                               .setBorder (Color.RED));
-    aVBox.addRow (new PLText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT).setBorder (Color.RED));
+                                                               .setBorder (Color.RED)
+                                                               .setID ("center2"));
+    aVBox.addRow (new PLText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT).setBorder (Color.RED).setID ("right1"));
     aVBox.addRow (new PLText ("Right\nRight but longer", r10).setHorzAlign (EHorzAlignment.RIGHT)
                                                              .setBorder (Color.RED)
                                                              .setMarginTop (2)
                                                              .setPadding (5)
-                                                             .setFillColor (Color.PINK));
+                                                             .setFillColor (Color.PINK)
+                                                             .setID ("right2"));
     aPS1.addElement (aVBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);

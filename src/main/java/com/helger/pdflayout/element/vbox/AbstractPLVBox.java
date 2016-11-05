@@ -65,7 +65,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public static final boolean DEFAULT_FULL_WIDTH = true;
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
+  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   private int m_nHeaderRowCount = 0;
   private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
@@ -524,14 +524,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           if (aElement instanceof IPLHasVerticalAlignment <?>)
           {
             final float fMarginTop = ((IPLHasVerticalAlignment <?>) aElement).getIndentY (m_aPreparedRowSize[nIndex].getHeight (),
-                                                                                          m_aPreparedElementSize[nIndex].getHeight ());
+                                                                                          m_aPreparedElementSize[nIndex].getHeight () +
+                                                                                                                                   aElement.getOutlineYSum ());
             ((IPLHasMargin <?>) aElement).addMarginTop (fMarginTop);
           }
           if (aElement instanceof IPLHasHorizontalAlignment <?>)
           {
             final float fMarginLeft = ((IPLHasHorizontalAlignment <?>) aElement).getIndentX (m_bFullWidth ? fAvailableWidth
                                                                                                           : fMaxContentWidth,
-                                                                                             m_bFullWidth ? m_aPreparedElementSize[nIndex].getWidth ()
+                                                                                             m_bFullWidth ? m_aPreparedElementSize[nIndex].getWidth () +
+                                                                                                            aElement.getOutlineXSum ()
                                                                                                           : m_aPreparedRowSize[nIndex].getWidth ());
             ((IPLHasMargin <?>) aElement).addMarginLeft (fMarginLeft);
           }
@@ -602,8 +604,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                                    .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
-    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox1RowHeight = 0;
 
     // Copy all header rows
@@ -619,8 +621,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     // The height and width after header are identical
-    final ICommonsList <SizeSpec> aVBox2RowSize = new CommonsArrayList<> (aVBox1RowSize);
-    final ICommonsList <SizeSpec> aVBox2ElementSize = new CommonsArrayList<> (aVBox1ElementSize);
+    final ICommonsList <SizeSpec> aVBox2RowSize = new CommonsArrayList <> (aVBox1RowSize);
+    final ICommonsList <SizeSpec> aVBox2ElementSize = new CommonsArrayList <> (aVBox1ElementSize);
     float fUsedVBox2RowHeight = fUsedVBox1RowHeight;
 
     // Copy all content rows
