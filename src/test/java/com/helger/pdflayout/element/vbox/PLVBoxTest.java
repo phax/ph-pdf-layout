@@ -52,7 +52,7 @@ public final class PLVBoxTest
 
   static
   {
-    PLDebug.setDebugAll (true);
+    PLDebug.setDebugAll (false);
   }
 
   @Test

@@ -26,6 +26,7 @@ import org.junit.rules.TestRule;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBox;
@@ -48,6 +49,11 @@ public final class PLBorderFuncTest
 {
   @Rule
   public final TestRule m_aRule = new DebugModeTestRule ();
+
+  static
+  {
+    PLDebug.setDebugAll (false);
+  }
 
   @Test
   public void testDifferentBordersText () throws PDFCreationException
