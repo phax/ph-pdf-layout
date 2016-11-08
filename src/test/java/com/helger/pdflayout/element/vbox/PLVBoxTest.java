@@ -31,6 +31,7 @@ import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
+import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
@@ -145,6 +146,108 @@ public final class PLVBoxTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-height-star-small.pdf"));
+  }
+
+  @Test
+  public void testAutoHeightAdvanced () throws PDFCreationException
+  {
+    final String s1 = "This is a test";
+    final String s2 = "This is also a test string \nbut much much much much longer as the other one. \nCan you believe this???? \nNo this is not believable\nThis\nshall\ncreate\nmore\nlines\n!";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    for (int g = 0; g < 2; g++)
+      for (int h = 0; h < 2; h++)
+        for (int i = 0; i < 2; ++i)
+          for (int j = 0; j < 2; ++j)
+            for (int k = 0; k < 2; ++k)
+            {
+              final PLVBox aVBox = new PLVBox ().setVertSplittable (h == 0).setFullWidth (g == 0);
+
+              aVBox.addRow (new PLText ("This should be a " +
+                                        (h == 0 ? "vertically splittable " : "") +
+                                        (g == 0 ? "full-width " : "") +
+                                        "example.",
+                                        r10).setBorder (Color.RED));
+              aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW),
+                            HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.GREEN), HeightSpec.auto ());
+              aPS1.addElement (aVBox);
+            }
+    aPS1.addElement (new PLPageBreak (true));
+
+    for (int g = 0; g < 2; g++)
+      for (int h = 0; h < 2; h++)
+        for (int i = 0; i < 2; ++i)
+          for (int j = 0; j < 2; ++j)
+            for (int k = 0; k < 2; ++k)
+            {
+              final PLVBox aVBox = new PLVBox ().setVertSplittable (h == 0).setFullWidth (g == 0);
+              aVBox.addRow (new PLText ("This should be a " +
+                                        (h == 0 ? "vertically splittable " : "") +
+                                        (g == 0 ? "full-width " : "") +
+                                        "example.",
+                                        r10).setBorder (Color.RED));
+              aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW),
+                            HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.GREEN), HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE),
+                            HeightSpec.star ());
+              aPS1.addElement (aVBox);
+            }
+    aPS1.addElement (new PLPageBreak (true));
+
+    for (int g = 0; g < 2; g++)
+      for (int h = 0; h < 2; h++)
+        for (int i = 0; i < 2; ++i)
+          for (int j = 0; j < 2; ++j)
+            for (int k = 0; k < 2; ++k)
+            {
+              final PLVBox aVBox = new PLVBox ().setVertSplittable (h == 0).setFullWidth (g == 0);
+              aVBox.addRow (new PLText ("This should be a " +
+                                        (h == 0 ? "vertically splittable " : "") +
+                                        (g == 0 ? "full-width " : "") +
+                                        "example.",
+                                        r10).setBorder (Color.RED));
+              aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE),
+                            HeightSpec.star ());
+              aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW),
+                            HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.GREEN), HeightSpec.auto ());
+              aPS1.addElement (aVBox);
+            }
+    aPS1.addElement (new PLPageBreak (true));
+
+    for (int g = 0; g < 2; g++)
+      for (int h = 0; h < 2; h++)
+        for (int i = 0; i < 2; ++i)
+          for (int j = 0; j < 2; ++j)
+            for (int k = 0; k < 2; ++k)
+            {
+              final PLVBox aVBox = new PLVBox ().setVertSplittable (h == 0).setFullWidth (g == 0);
+              aVBox.addRow (new PLText ("This should be a " +
+                                        (h == 0 ? "vertically splittable " : "") +
+                                        (g == 0 ? "full-width " : "") +
+                                        "example.",
+                                        r10).setBorder (Color.RED));
+              aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE),
+                            HeightSpec.star ());
+              aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW),
+                            HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.GREEN), HeightSpec.auto ());
+              aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE),
+                            HeightSpec.star ());
+              aPS1.addElement (aVBox);
+            }
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-auto-advanced.pdf"));
   }
 
   @Test
