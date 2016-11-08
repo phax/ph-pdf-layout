@@ -86,6 +86,12 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     return new SizeSpec (m_fImageWidth, m_fImageHeight);
   }
 
+  @Override
+  protected void onMarkAsNotPrepared ()
+  {
+    // Nada
+  }
+
   @Nonnull
   protected abstract PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException;
 

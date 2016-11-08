@@ -163,6 +163,12 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     return m_aRow.prepare (aCtx);
   }
 
+  @Override
+  protected void onMarkAsNotPrepared ()
+  {
+    m_aRow.internalMarkAsNotPrepared ();
+  }
+
   public boolean isVertSplittable ()
   {
     return m_aRow.isVertSplittable ();

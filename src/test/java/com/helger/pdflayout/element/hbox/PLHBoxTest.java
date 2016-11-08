@@ -30,6 +30,7 @@ import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.box.PLBox;
+import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
@@ -224,6 +225,72 @@ public final class PLHBoxTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-auto-block-like-star.pdf"));
+  }
+
+  @Test
+  public void testAutoWidthAdvanced () throws PDFCreationException
+  {
+    final String s1 = "This is a test";
+    final String s2 = "This is also a test string but much much much much longer as the other one. Can you believe this???? No this is not believable";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    for (int i = 0; i < 2; ++i)
+      for (int j = 0; j < 2; ++j)
+        for (int k = 0; k < 2; ++k)
+        {
+          final PLHBox aHBox = new PLHBox ();
+          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aPS1.addElement (aHBox);
+        }
+    aPS1.addElement (new PLPageBreak (true));
+
+    for (int i = 0; i < 2; ++i)
+      for (int j = 0; j < 2; ++j)
+        for (int k = 0; k < 2; ++k)
+        {
+          final PLHBox aHBox = new PLHBox ();
+          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), WidthSpec.star ());
+          aPS1.addElement (aHBox);
+        }
+    aPS1.addElement (new PLPageBreak (true));
+
+    for (int i = 0; i < 2; ++i)
+      for (int j = 0; j < 2; ++j)
+        for (int k = 0; k < 2; ++k)
+        {
+          final PLHBox aHBox = new PLHBox ();
+          aHBox.addColumn (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), WidthSpec.star ());
+          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aPS1.addElement (aHBox);
+        }
+    aPS1.addElement (new PLPageBreak (true));
+
+    for (int i = 0; i < 2; ++i)
+      for (int j = 0; j < 2; ++j)
+        for (int k = 0; k < 2; ++k)
+        {
+          final PLHBox aHBox = new PLHBox ();
+          aHBox.addColumn (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), WidthSpec.star ());
+          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText ("Ich bin auch ein Stern", r10)).setBorder (Color.GREEN),
+                           WidthSpec.star ());
+          aPS1.addElement (aHBox);
+        }
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-star-advanced.pdf"));
   }
 
   @Test

@@ -69,6 +69,12 @@ public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
   }
 
   @Override
+  protected void onMarkAsNotPrepared ()
+  {
+    // Nada
+  }
+
+  @Override
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 

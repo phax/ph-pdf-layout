@@ -309,31 +309,41 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     }
 
     // 2. prepare all auto widths items
-    nIndex = 0;
-    if (false)
     {
-      float fRestWidthAuto = 0;
+      // First pass: identify all auto columns that directly fit in their
+      // available column width
+
+      float fRemainingWidthAuto = 0;
+      float fUsedWidthAutoTooWide = 0;
+
+      // Full width of this element
+      final float fAvailableAutoColumnWidth = fRestWidth / (nAutoColumns + nStarColumns);
+      final float fAvailableAutoColumnWidthAll = fAvailableAutoColumnWidth * nAutoColumns;
+
+      final SizeSpec [] aTooWideAutoCols = new SizeSpec [m_aColumns.size ()];
+
+      nIndex = 0;
       for (final PLHBoxColumn aColumn : m_aColumns)
       {
         if (aColumn.getWidth ().isAuto ())
         {
           final IPLRenderableObject <?> aElement = aColumn.getElement ();
-          // Full width of this element
-          final float fAvailableColumnWidth = fRestWidth / (nAutoColumns + nStarColumns);
-          final float fAvailableWidthAuto = fAvailableColumnWidth * nAutoColumns;
 
           // Prepare child element
           final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                                          fAvailableWidthAuto,
+                                                                                          fAvailableAutoColumnWidthAll,
                                                                                           fAvailableHeight));
-          if (aElementPreparedSize.getWidth () <= fAvailableColumnWidth)
+
+          // Use the used size of the element as the column width
+          final float fColumnWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+
+          if (fColumnWidth <= fAvailableAutoColumnWidth)
           {
-            fRestWidthAuto += fAvailableColumnWidth - aElementPreparedSize.getWidth ();
-            // Use the used size of the element as the column width
-            final float fColumnWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
-            fRestWidthAuto += fColumnWidth;
             // Update used width
             fUsedWidthFull += fColumnWidth;
+
+            // What's left for other auto columns?
+            fRemainingWidthAuto += fAvailableAutoColumnWidth - fColumnWidth;
 
             // Update used height
             fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
@@ -345,72 +355,99 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
             m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
             m_aPreparedElementSize[nIndex] = aElementPreparedSize;
           }
+          else
+          {
+            // Remember prepared sized
+            aTooWideAutoCols[nIndex] = aElementPreparedSize;
+
+            // The whole column width remains
+            fRemainingWidthAuto += fAvailableAutoColumnWidth;
+
+            // What would be used ideally
+            fUsedWidthAutoTooWide += fColumnWidth;
+          }
         }
+        ++nIndex;
       }
-    }
 
-    nIndex = 0;
-    for (final PLHBoxColumn aColumn : m_aColumns)
-    {
-      if (aColumn.getWidth ().isAuto ())
+      // Second pass: split all too wide auto columns on fRemainingWidthAuto
+      nIndex = 0;
+      for (final PLHBoxColumn aColumn : m_aColumns)
       {
-        final IPLRenderableObject <?> aElement = aColumn.getElement ();
-        // Full width of this element
-        final float fAvailableColumnWidth = fRestWidth / (nAutoColumns + nStarColumns);
+        // Only consider too-wide auto columns
+        if (aColumn.getWidth ().isAuto () && aTooWideAutoCols[nIndex] != null)
+        {
+          final IPLRenderableObject <?> aElement = aColumn.getElement ();
 
-        // Prepare child element
-        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                                        fAvailableColumnWidth,
-                                                                                        fAvailableHeight));
+          // Previously prepared size including outline
+          final float fTooWideColumnWidth = aTooWideAutoCols[nIndex].getWidth () + aElement.getOutlineXSum ();
 
-        // Use the used size of the element as the column width
-        final float fColumnWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
-        // Update used width
-        fUsedWidthFull += fColumnWidth;
+          // Percentage of used width compared to total used width of all too
+          // wide columns (0-1)
+          final float fAvailableColumnWidthPerc = fTooWideColumnWidth / fUsedWidthAutoTooWide;
 
-        // Update used height
-        fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
-        final float fColumnHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
-        fMaxColumnHeight = Math.max (fMaxColumnHeight, fColumnHeight);
+          // Use x% of remaining width
+          final float fNewAvailableColumnWidth = fRemainingWidthAuto * fAvailableColumnWidthPerc;
 
-        // Remember width and height for element (without padding and margin)
-        m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
-        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+          // Prepare child element
+          ((AbstractPLRenderableObject <?>) aElement).internalMarkAsNotPrepared ();
+          final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                          fNewAvailableColumnWidth,
+                                                                                          fAvailableHeight));
 
+          // Use the used size of the element as the column width
+          final float fColumnWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+          // Update used width
+          fUsedWidthFull += fColumnWidth;
+
+          // Update used height
+          fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
+          final float fColumnHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+          fMaxColumnHeight = Math.max (fMaxColumnHeight, fColumnHeight);
+
+          // Remember width and height for element (without padding and margin)
+          m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
+          m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+        }
+        ++nIndex;
       }
-      ++nIndex;
+
+      // remaining unused parts of auto columns is automatically available to
+      // star width columns (based on fUsedWidthFull)
     }
 
     // 3. prepare all star widths items
-    fRestWidth = fAvailableWidth - fUsedWidthFull;
-    nIndex = 0;
-    for (final PLHBoxColumn aColumn : m_aColumns)
     {
-      if (aColumn.getWidth ().isStar ())
+      fRestWidth = fAvailableWidth - fUsedWidthFull;
+      nIndex = 0;
+      for (final PLHBoxColumn aColumn : m_aColumns)
       {
-        final IPLRenderableObject <?> aElement = aColumn.getElement ();
-        // Full width of this element
-        final float fColumnWidth = fRestWidth / nStarColumns;
+        if (aColumn.getWidth ().isStar ())
+        {
+          final IPLRenderableObject <?> aElement = aColumn.getElement ();
+          // Full width of this element
+          final float fColumnWidth = fRestWidth / nStarColumns;
 
-        // Prepare child element
-        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                                        fColumnWidth,
-                                                                                        fAvailableHeight));
+          // Prepare child element
+          final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                          fColumnWidth,
+                                                                                          fAvailableHeight));
 
-        // Update used width
-        fUsedWidthFull += fColumnWidth;
-        // Don't change rest-width!
+          // Update used width
+          fUsedWidthFull += fColumnWidth;
+          // Don't change rest-width!
 
-        // Update used height
-        fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
-        final float fColumnHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
-        fMaxColumnHeight = Math.max (fMaxColumnHeight, fColumnHeight);
+          // Update used height
+          fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
+          final float fColumnHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+          fMaxColumnHeight = Math.max (fMaxColumnHeight, fColumnHeight);
 
-        // Remember width and height for element (without padding and margin)
-        m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
-        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+          // Remember width and height for element (without padding and margin)
+          m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
+          m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+        }
+        ++nIndex;
       }
-      ++nIndex;
     }
 
     // Set min size for block elements
@@ -452,6 +489,15 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     }
 
     return new SizeSpec (fUsedWidthFull, fMaxColumnHeight);
+  }
+
+  @Override
+  protected void onMarkAsNotPrepared ()
+  {
+    m_aPreparedColumnSize = null;
+    m_aPreparedElementSize = null;
+    for (final PLHBoxColumn aColumn : m_aColumns)
+      ((AbstractPLRenderableObject <?>) aColumn.getElement ()).internalMarkAsNotPrepared ();
   }
 
   @Nullable

@@ -550,6 +550,15 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     return new SizeSpec (fMaxRowWidth, fUsedHeightFull);
   }
 
+  @Override
+  protected void onMarkAsNotPrepared ()
+  {
+    m_aPreparedRowSize = null;
+    m_aPreparedElementSize = null;
+    for (final PLVBoxRow aRow : m_aRows)
+      ((AbstractPLRenderableObject <?>) aRow.getElement ()).internalMarkAsNotPrepared ();
+  }
+
   @Nullable
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {

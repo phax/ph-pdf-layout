@@ -25,6 +25,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLBlockElement;
+import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
@@ -156,6 +157,13 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     // Add the outer stuff of the contained element as this elements prepared
     // size
     return m_aElementPreparedSize.plus (m_aElement.getOutlineXSum (), m_aElement.getOutlineYSum ());
+  }
+
+  @Override
+  protected void onMarkAsNotPrepared ()
+  {
+    m_aElementPreparedSize = null;
+    ((AbstractPLRenderableObject <?>) m_aElement).internalMarkAsNotPrepared ();
   }
 
   @Nullable

@@ -75,6 +75,12 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
   }
 
   @Override
+  protected void onMarkAsNotPrepared ()
+  {
+    // Nada
+  }
+
+  @Override
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 

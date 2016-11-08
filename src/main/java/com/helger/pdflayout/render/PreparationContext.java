@@ -43,9 +43,11 @@ public final class PreparationContext
    *        The global preparation context worked upon. May be
    *        <code>null</code>.
    * @param fAvailableWidth
-   *        The available width of the surrounding element. Should be &gt; 0.
+   *        The available width of the surrounding element. Includes margin,
+   *        border and padding of the contained element. Should be &gt; 0.
    * @param fAvailableHeight
-   *        The available height of the surrounding element. Should be &gt; 0.
+   *        The available height of the surrounding element. Includes margin,
+   *        border and padding of the contained element. Should be &gt; 0.
    */
   public PreparationContext (@Nullable final PreparationContextGlobal aGlobalCtx,
                              @Nonnegative final float fAvailableWidth,

@@ -206,14 +206,22 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return m_aPreparedSize;
   }
 
-  protected final void internalMarkAsNotPrepared ()
+  protected abstract void onMarkAsNotPrepared ();
+
+  /**
+   * INTERNAL method. Do not call from outside!
+   */
+  public final void internalMarkAsNotPrepared ()
   {
     internalCheckAlreadyPrepared ();
     m_aPreparedSize = null;
     m_bPrepared = false;
+    onMarkAsNotPrepared ();
   }
 
   /**
+   * INTERNAL method. Do not call from outside!
+   *
    * @param aPreparedSize
    *        The new prepared size without padding or margin.
    * @return this
