@@ -31,6 +31,8 @@ import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.text.PLText;
+import com.helger.pdflayout.spec.EHorzAlignment;
+import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.WidthSpec;
@@ -231,6 +233,7 @@ public final class PLHBoxTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    aPS1.addElement (new PLText ("Line before", r10).setBorder (Color.RED));
     final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
     for (int i = 0; i < 3; ++i)
       aHBox.addColumn (new PLText (s + s, r10).setMargin (10)
@@ -240,6 +243,7 @@ public final class PLHBoxTest
                                               .setVertSplittable (true),
                        WidthSpec.star ());
     aPS1.addElement (aHBox);
+    aPS1.addElement (new PLText ("Line after", r10).setBorder (Color.RED));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
@@ -268,5 +272,34 @@ public final class PLHBoxTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-splittable-partially-filled.pdf"));
+  }
+
+  @Test
+  public void testHBoxWithAlignmentOnElement () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    final PLHBox aHBox = new PLHBox ();
+    aHBox.addColumn (new PLText ("Test string\nto have more\nlines.", r10).setBorder (Color.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText ("Bottom/left", r10).setBorder (Color.RED))
+                                                                                      .setHorzAlign (EHorzAlignment.LEFT)
+                                                                                      .setVertAlign (EVertAlignment.BOTTOM)
+                                                                                      .setFillColor (Color.YELLOW),
+                     WidthSpec.star ());
+    aHBox.addColumn (new PLBox (new PLText ("Middle/center", r10).setBorder (Color.RED))
+                                                                                        .setHorzAlign (EHorzAlignment.CENTER)
+                                                                                        .setVertAlign (EVertAlignment.MIDDLE)
+                                                                                        .setFillColor (Color.BLUE),
+                     WidthSpec.star ());
+    aHBox.addColumn (new PLBox (new PLText ("Top/right", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                    .setVertAlign (EVertAlignment.TOP)
+                                                                                    .setFillColor (Color.PINK),
+                     WidthSpec.star ());
+    aPS1.addElement (aHBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-alignment.pdf"));
   }
 }

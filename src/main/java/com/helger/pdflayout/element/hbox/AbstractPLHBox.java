@@ -38,8 +38,6 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.AbstractPLBlockElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
-import com.helger.pdflayout.base.IPLHasMargin;
-import com.helger.pdflayout.base.IPLHasVerticalAlignment;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
@@ -75,7 +73,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
+  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
   /** prepared column size (with outline of contained element) */
@@ -266,6 +264,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
     int nStarColumns = 0;
     int nAutoColumns = 0;
+    // FIXME unnecessary for-loop (do it one loop underneath?)
     for (final PLHBoxColumn aColumn : m_aColumns)
       switch (aColumn.getWidth ().getType ())
       {
@@ -311,6 +310,46 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
     // 2. prepare all auto widths items
     nIndex = 0;
+    if (false)
+    {
+      float fRestWidthAuto = 0;
+      for (final PLHBoxColumn aColumn : m_aColumns)
+      {
+        if (aColumn.getWidth ().isAuto ())
+        {
+          final IPLRenderableObject <?> aElement = aColumn.getElement ();
+          // Full width of this element
+          final float fAvailableColumnWidth = fRestWidth / (nAutoColumns + nStarColumns);
+          final float fAvailableWidthAuto = fAvailableColumnWidth * nAutoColumns;
+
+          // Prepare child element
+          final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                          fAvailableWidthAuto,
+                                                                                          fAvailableHeight));
+          if (aElementPreparedSize.getWidth () <= fAvailableColumnWidth)
+          {
+            fRestWidthAuto += fAvailableColumnWidth - aElementPreparedSize.getWidth ();
+            // Use the used size of the element as the column width
+            final float fColumnWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+            fRestWidthAuto += fColumnWidth;
+            // Update used width
+            fUsedWidthFull += fColumnWidth;
+
+            // Update used height
+            fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
+            final float fColumnHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+            fMaxColumnHeight = Math.max (fMaxColumnHeight, fColumnHeight);
+
+            // Remember width and height for element (without padding and
+            // margin)
+            m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
+            m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+          }
+        }
+      }
+    }
+
+    nIndex = 0;
     for (final PLHBoxColumn aColumn : m_aColumns)
     {
       if (aColumn.getWidth ().isAuto ())
@@ -323,9 +362,9 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                         fAvailableColumnWidth,
                                                                                         fAvailableHeight));
+
         // Use the used size of the element as the column width
         final float fColumnWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
-
         // Update used width
         fUsedWidthFull += fColumnWidth;
 
@@ -337,6 +376,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         // Remember width and height for element (without padding and margin)
         m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
         m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+
       }
       ++nIndex;
     }
@@ -371,22 +411,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         m_aPreparedElementSize[nIndex] = aElementPreparedSize;
       }
       ++nIndex;
-    }
-
-    // Apply vertical alignment
-    {
-      nIndex = 0;
-      for (final PLHBoxColumn aColumn : m_aColumns)
-      {
-        final IPLRenderableObject <?> aElement = aColumn.getElement ();
-        if (aElement instanceof IPLHasVerticalAlignment <?> && aElement instanceof IPLHasMargin <?>)
-        {
-          final float fMarginTop = ((IPLHasVerticalAlignment <?>) aElement).getIndentY (fMaxContentHeight,
-                                                                                        m_aPreparedColumnSize[nIndex].getHeight ());
-          ((IPLHasMargin <?>) aElement).addMarginTop (fMarginTop);
-        }
-        ++nIndex;
-      }
     }
 
     // Set min size for block elements
