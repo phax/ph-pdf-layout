@@ -251,7 +251,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       else
       {
         // Maximum number of lines exceeded - copy only the relevant lines
-        m_aPreparedLines = new CommonsArrayList <> (m_nMaxRows);
+        m_aPreparedLines = new CommonsArrayList<> (m_nMaxRows);
         for (int i = 0; i < m_nMaxRows; ++i)
           m_aPreparedLines.add (aLines.get (i));
       }
@@ -302,11 +302,13 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
+    final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
+
     // Load font into document
     try
     {
       m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
-      return _prepareText (aCtx.getAvailableWidth () - getOutlineXSum ());
+      return _prepareText (fElementWidth);
     }
     catch (final IOException ex)
     {
@@ -349,7 +351,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   {
     if (m_aPreparedLinesUnmodified == null)
       throw new IllegalStateException ("Preparation is not yet done");
-    return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
+    return new CommonsArrayList<> (m_aPreparedLinesUnmodified);
   }
 
   @Override
@@ -453,7 +455,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     ValueEnforcer.notEmpty (aLines, "Lines");
 
     // Create a copy to be independent!
-    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList <> (aLines);
+    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList<> (aLines);
 
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));

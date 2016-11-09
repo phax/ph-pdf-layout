@@ -37,7 +37,7 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
-import com.helger.pdflayout4.base.AbstractPLBlockElement;
+import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
 import com.helger.pdflayout4.base.IPLSplittableObject;
@@ -611,9 +611,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       for (final PLVBoxRow aRow : m_aRows)
       {
         final IPLRenderableObject <?> aElement = aRow.getElement ();
-        if (aElement instanceof AbstractPLBlockElement <?>)
+        if (aElement instanceof AbstractPLElement <?>)
         {
-          final AbstractPLBlockElement <?> aRealElement = (AbstractPLBlockElement <?>) aElement;
+          final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
           // Set minimum column width and height as prepared width
           aRealElement.setMinSize (m_bFullWidth ? fElementWidth - aRealElement.getOutlineXSum () : fMaxRowWidthNet,
                                    m_aPreparedRowSize[nIndex].getHeight () - aElement.getOutlineYSum ());

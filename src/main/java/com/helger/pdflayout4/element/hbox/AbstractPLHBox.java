@@ -36,7 +36,7 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
-import com.helger.pdflayout4.base.AbstractPLBlockElement;
+import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
 import com.helger.pdflayout4.base.IPLSplittableObject;
@@ -73,7 +73,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
+  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
   /** prepared column size (with outline of contained element) */
@@ -256,11 +256,11 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     m_aPreparedColumnSize = new SizeSpec [m_aColumns.size ()];
     m_aPreparedElementSize = new SizeSpec [m_aColumns.size ()];
 
-    final float fAvailableWidth = aCtx.getAvailableWidth ();
-    final float fAvailableHeight = aCtx.getAvailableHeight ();
+    final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
+    final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
     float fUsedWidthFull = 0;
-    float fMaxColumnHeight = 0;
-    float fMaxContentHeight = 0;
+    float fMaxColumnHeightFull = 0;
+    float fMaxContentHeightNet = 0;
 
     int nStarColumns = 0;
     int nAutoColumns = 0;
@@ -277,35 +277,37 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
 
     int nIndex = 0;
-    float fRestWidth = fAvailableWidth;
-    // 1. prepare all non-star width items
-    for (final PLHBoxColumn aColumn : m_aColumns)
+    float fRestWidth = fElementWidth;
+    // 1. prepare all absolute width items
     {
-      if (aColumn.getWidth ().isAbsolute ())
+      for (final PLHBoxColumn aColumn : m_aColumns)
       {
-        final IPLRenderableObject <?> aElement = aColumn.getElement ();
-        // Full width of this element
-        final float fColumnWidth = aColumn.getWidth ().getEffectiveValue (fAvailableWidth);
+        if (aColumn.getWidth ().isAbsolute ())
+        {
+          final IPLRenderableObject <?> aElement = aColumn.getElement ();
+          // Full width of this element
+          final float fColumnWidth = aColumn.getWidth ().getEffectiveValue (fElementWidth);
 
-        // Prepare child element
-        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                                        fColumnWidth,
-                                                                                        fAvailableHeight));
+          // Prepare child element
+          final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                          fColumnWidth,
+                                                                                          fElementHeight));
 
-        // Update used width
-        fUsedWidthFull += fColumnWidth;
-        fRestWidth -= fColumnWidth;
+          // Update used width
+          fUsedWidthFull += fColumnWidth;
+          fRestWidth -= fColumnWidth;
 
-        // Update used height
-        fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
-        final float fColumnHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
-        fMaxColumnHeight = Math.max (fMaxColumnHeight, fColumnHeight);
+          // Update used height
+          fMaxContentHeightNet = Math.max (fMaxContentHeightNet, aElementPreparedSize.getHeight ());
+          final float fColumnHeightFull = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+          fMaxColumnHeightFull = Math.max (fMaxColumnHeightFull, fColumnHeightFull);
 
-        // Remember width and height for element (without padding and margin)
-        m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
-        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+          // Remember width and height for element (without padding and margin)
+          m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeightFull);
+          m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+        }
+        ++nIndex;
       }
-      ++nIndex;
     }
 
     // 2. prepare all auto widths items
@@ -313,7 +315,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       // First pass: identify all auto columns that directly fit in their
       // available column width
 
-      float fRemainingWidthAuto = 0;
+      float fRemainingWidthAutoFull = 0;
       float fUsedWidthAutoTooWide = 0;
 
       // Full width of this element
@@ -332,27 +334,27 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           // Prepare child element
           final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                           fAvailableAutoColumnWidthAll,
-                                                                                          fAvailableHeight));
+                                                                                          fElementHeight));
 
           // Use the used size of the element as the column width
-          final float fColumnWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+          final float fColumnWidthFull = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
 
-          if (fColumnWidth <= fAvailableAutoColumnWidth)
+          if (fColumnWidthFull <= fAvailableAutoColumnWidth)
           {
             // Update used width
-            fUsedWidthFull += fColumnWidth;
+            fUsedWidthFull += fColumnWidthFull;
 
             // What's left for other auto columns?
-            fRemainingWidthAuto += fAvailableAutoColumnWidth - fColumnWidth;
+            fRemainingWidthAutoFull += fAvailableAutoColumnWidth - fColumnWidthFull;
 
             // Update used height
-            fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
-            final float fColumnHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
-            fMaxColumnHeight = Math.max (fMaxColumnHeight, fColumnHeight);
+            fMaxContentHeightNet = Math.max (fMaxContentHeightNet, aElementPreparedSize.getHeight ());
+            final float fColumnHeightFull = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+            fMaxColumnHeightFull = Math.max (fMaxColumnHeightFull, fColumnHeightFull);
 
             // Remember width and height for element (without padding and
             // margin)
-            m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
+            m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidthFull, fColumnHeightFull);
             m_aPreparedElementSize[nIndex] = aElementPreparedSize;
           }
           else
@@ -361,10 +363,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
             aTooWideAutoCols[nIndex] = aElementPreparedSize;
 
             // The whole column width remains
-            fRemainingWidthAuto += fAvailableAutoColumnWidth;
+            fRemainingWidthAutoFull += fAvailableAutoColumnWidth;
 
             // What would be used ideally
-            fUsedWidthAutoTooWide += fColumnWidth;
+            fUsedWidthAutoTooWide += fColumnWidthFull;
           }
         }
         ++nIndex;
@@ -387,26 +389,26 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           final float fAvailableColumnWidthPerc = fTooWideColumnWidth / fUsedWidthAutoTooWide;
 
           // Use x% of remaining width
-          final float fNewAvailableColumnWidth = fRemainingWidthAuto * fAvailableColumnWidthPerc;
+          final float fNewAvailableColumnWidth = fRemainingWidthAutoFull * fAvailableColumnWidthPerc;
 
           // Prepare child element
           ((AbstractPLRenderableObject <?>) aElement).internalMarkAsNotPrepared ();
           final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                           fNewAvailableColumnWidth,
-                                                                                          fAvailableHeight));
+                                                                                          fElementHeight));
 
           // Use the used size of the element as the column width
-          final float fColumnWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+          final float fColumnWidthWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
           // Update used width
-          fUsedWidthFull += fColumnWidth;
+          fUsedWidthFull += fColumnWidthWidth;
 
           // Update used height
-          fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
-          final float fColumnHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
-          fMaxColumnHeight = Math.max (fMaxColumnHeight, fColumnHeight);
+          fMaxContentHeightNet = Math.max (fMaxContentHeightNet, aElementPreparedSize.getHeight ());
+          final float fColumnHeightFull = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+          fMaxColumnHeightFull = Math.max (fMaxColumnHeightFull, fColumnHeightFull);
 
           // Remember width and height for element (without padding and margin)
-          m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
+          m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidthWidth, fColumnHeightFull);
           m_aPreparedElementSize[nIndex] = aElementPreparedSize;
         }
         ++nIndex;
@@ -418,7 +420,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
     // 3. prepare all star widths items
     {
-      fRestWidth = fAvailableWidth - fUsedWidthFull;
+      fRestWidth = fElementWidth - fUsedWidthFull;
       nIndex = 0;
       for (final PLHBoxColumn aColumn : m_aColumns)
       {
@@ -431,19 +433,19 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           // Prepare child element
           final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                           fColumnWidth,
-                                                                                          fAvailableHeight));
+                                                                                          fElementHeight));
 
           // Update used width
           fUsedWidthFull += fColumnWidth;
           // Don't change rest-width!
 
           // Update used height
-          fMaxContentHeight = Math.max (fMaxContentHeight, aElementPreparedSize.getHeight ());
-          final float fColumnHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
-          fMaxColumnHeight = Math.max (fMaxColumnHeight, fColumnHeight);
+          fMaxContentHeightNet = Math.max (fMaxContentHeightNet, aElementPreparedSize.getHeight ());
+          final float fColumnHeightFull = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+          fMaxColumnHeightFull = Math.max (fMaxColumnHeightFull, fColumnHeightFull);
 
           // Remember width and height for element (without padding and margin)
-          m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeight);
+          m_aPreparedColumnSize[nIndex] = new SizeSpec (fColumnWidth, fColumnHeightFull);
           m_aPreparedElementSize[nIndex] = aElementPreparedSize;
         }
         ++nIndex;
@@ -456,13 +458,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       for (final PLHBoxColumn aColumn : m_aColumns)
       {
         final IPLRenderableObject <?> aElement = aColumn.getElement ();
-        if (aElement instanceof AbstractPLBlockElement <?>)
+        if (aElement instanceof AbstractPLElement <?>)
         {
-          final AbstractPLBlockElement <?> aRealElement = (AbstractPLBlockElement <?>) aElement;
+          final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
           // Set minimum column width and height as prepared width
           aRealElement.setMinSize (m_aPreparedColumnSize[nIndex].getWidth () -
                                    aElement.getOutlineXSum (),
-                                   fMaxContentHeight);
+                                   fMaxContentHeightNet);
         }
         ++nIndex;
       }
@@ -471,24 +473,24 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     // Small consistency check (with rounding included)
     if (GlobalDebug.isDebugMode ())
     {
-      if (fUsedWidthFull - fAvailableWidth > 0.01)
+      if (fUsedWidthFull - fElementWidth > 0.01)
         s_aLogger.warn (getDebugID () +
                         " uses more width (" +
                         fUsedWidthFull +
                         ") than available (" +
-                        fAvailableWidth +
+                        fElementWidth +
                         ")!");
-      if (fMaxColumnHeight - fAvailableHeight > 0.01)
+      if (fMaxColumnHeightFull - fElementHeight > 0.01)
         if (!isVertSplittable ())
           s_aLogger.warn (getDebugID () +
                           " uses more height (" +
-                          fMaxColumnHeight +
+                          fMaxColumnHeightFull +
                           ") than available (" +
-                          fAvailableHeight +
+                          fElementHeight +
                           ")!");
     }
 
-    return new SizeSpec (fUsedWidthFull, fMaxColumnHeight);
+    return new SizeSpec (fUsedWidthFull, fMaxColumnHeightFull);
   }
 
   @Override

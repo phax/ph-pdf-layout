@@ -68,8 +68,10 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
+    final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
+
     // Use the fixed width
-    return new SizeSpec (m_fWidth > 0 ? m_fWidth : aCtx.getAvailableWidth (), 0);
+    return new SizeSpec (m_fWidth > 0 ? m_fWidth : fElementWidth, 0);
   }
 
   @Override

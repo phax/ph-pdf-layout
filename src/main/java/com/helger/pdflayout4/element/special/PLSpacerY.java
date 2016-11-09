@@ -70,8 +70,10 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
+    final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
+
     // Use the fixed height
-    return new SizeSpec (0, m_fHeight > 0 ? m_fHeight : aCtx.getAvailableHeight ());
+    return new SizeSpec (0, m_fHeight > 0 ? m_fHeight : fElementHeight);
   }
 
   @Override
