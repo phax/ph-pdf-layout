@@ -179,13 +179,13 @@
           <instructions>
             <Export-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*</Export-Package>
+              com.helger.pdflayout4.*</Export-Package>
             <Private-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*</Private-Package>
+              com.helger.pdflayout4.*</Private-Package>
             <Import-Package>!javax.annotation.*,*</Import-Package>
             <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"</Require-Capability>
-            <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.helger.pdflayout.config.ThirdPartyModuleProvider_ph_pdf_layout</Provide-Capability>
+            <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.helger.pdflayout4.config.ThirdPartyModuleProvider_ph_pdf_layout</Provide-Capability>
           </instructions>
         </configuration>
       </plugin>
