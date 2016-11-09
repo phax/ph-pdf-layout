@@ -25,6 +25,7 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
+import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
@@ -53,7 +54,7 @@ public final class PLVBoxTest
 
   static
   {
-    PLDebug.setDebugAll (false);
+    PLDebug.setDebugAll (true);
   }
 
   @Test
@@ -237,8 +238,8 @@ public final class PLVBoxTest
   public void testAutoHeightAdvancedSplittable () throws PDFCreationException
   {
     final String s1 = "This is a test";
-    final String s2 = "This is also a test string \nbut much much much much longer as the other one. \nCan you believe this???? \nNo this is not believable\nThis\nshall\ncreate\nmore\nlines\n!";
-    final String s3 = s2 + "\n" + s2 + "\n" + s2 + "\n" + s2 + "\n" + s2 + "\n" + s2;
+    final String s2 = "This is also a test string \nbut much much much much longer as the other one. \nCan you believe this???? \nNo this is not believable\nThis\nshall\ncreate\nmore\nlines\n\n!";
+    final String s3 = StringHelper.getRepeated (s2, 6);
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
@@ -248,16 +249,44 @@ public final class PLVBoxTest
         for (int j = 0; j < 2; ++j)
           for (int k = 0; k < 2; ++k)
           {
-            final PLVBox aVBox = new PLVBox ().setFullWidth (h == 0).setVertSplittable (true);
-            aVBox.addRow (new PLText ("This should be a " +
-                                      (h == 0 ? "full-width " : "") +
-                                      "example.",
+            final String sIDPrefix = h + "-" + i + "-" + j + "-" + k + "-";
+            final PLVBox aVBox = new PLVBox ().setID (sIDPrefix + "vbox")
+                                              .setFullWidth (h == 0)
+                                              .setVertSplittable (true);
+            aVBox.addRow (new PLText ("This is a " +
+                                      (h == 0 ? "full-width" : "regular width") +
+                                      " example (" +
+                                      sIDPrefix +
+                                      ").",
                                       r10).setBorder (Color.RED));
-            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), HeightSpec.star ());
-            aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s3, r10)).setBorder (Color.RED), HeightSpec.auto ());
-            aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s3, r10)).setBorder (Color.YELLOW), HeightSpec.auto ());
-            aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s3, r10)).setBorder (Color.GREEN), HeightSpec.auto ());
-            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), HeightSpec.star ());
+            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix + "t1"))
+                                                                                                    .setID (sIDPrefix +
+                                                                                                            "star1")
+                                                                                                    .setBorder (Color.BLUE),
+                          HeightSpec.star ());
+            aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s3, r10).setID (sIDPrefix + "t2")
+                                                                       .setVertSplittable (true)).setID (sIDPrefix +
+                                                                                                         "auto1")
+                                                                                                 .setBorder (Color.RED)
+                                                                                                 .setVertSplittable (true),
+                          HeightSpec.auto ());
+            aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s3, r10).setID (sIDPrefix + "t3")
+                                                                       .setVertSplittable (true)).setID (sIDPrefix +
+                                                                                                         "auto2")
+                                                                                                 .setBorder (Color.YELLOW)
+                                                                                                 .setVertSplittable (true),
+                          HeightSpec.auto ());
+            aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s3, r10).setID (sIDPrefix + "t4")
+                                                                       .setVertSplittable (true)).setID (sIDPrefix +
+                                                                                                         "auto3")
+                                                                                                 .setBorder (Color.GREEN)
+                                                                                                 .setVertSplittable (true),
+                          HeightSpec.auto ());
+            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix + "t5"))
+                                                                                                    .setID (sIDPrefix +
+                                                                                                            "star2")
+                                                                                                    .setBorder (Color.BLUE),
+                          HeightSpec.star ());
             aPS1.addElement (aVBox);
           }
 

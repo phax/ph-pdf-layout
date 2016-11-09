@@ -62,7 +62,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public static final boolean DEFAULT_FULL_WIDTH = true;
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
+  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   private int m_nHeaderRowCount = 0;
   private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
@@ -442,115 +442,20 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     // 2. prepare all auto widths items
-
-    // First pass: identify all auto columns that directly fit in their
-    // available column width
-
-    float fRemainingHeightAuto = 0;
-    float fUsedHeightAutoTooHigh = 0;
-
-    // Full width of this element
-    final float fAvailableAutoRowHeight = fRestHeight / (nAutoRows + nStarRows);
-    final float fAvailableAutoRowHeightAll = fAvailableAutoRowHeight * nAutoRows;
-
-    final SizeSpec [] aTooHighAutoRows = new SizeSpec [m_aRows.size ()];
-
-    nIndex = 0;
-    for (final PLVBoxRow aRow : m_aRows)
+    float fUsedAutoHeightForStar = 0;
     {
-      if (aRow.getHeight ().isAuto ())
-      {
-        final IPLRenderableObject <?> aElement = aRow.getElement ();
+      // First pass: identify all auto columns that directly fit in their
+      // available column width
 
-        // Prepare child element
-        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                                        fAvailableWidth,
-                                                                                        fAvailableAutoRowHeightAll));
+      float fRemainingHeightAuto = 0;
+      float fUsedHeightAutoTooHigh = 0;
 
-        // Use the used size of the element as the row height
-        final float fRowHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+      // Full width of this element
+      final float fAvailableAutoRowHeight = fRestHeight / (nAutoRows + nStarRows);
+      final float fAvailableAutoRowHeightAll = fAvailableAutoRowHeight * nAutoRows;
 
-        if (fRowHeight <= fAvailableAutoRowHeight)
-        {
-          // Update used height
-          fUsedHeightFull += fRowHeight;
+      final SizeSpec [] aTooHighAutoRows = new SizeSpec [m_aRows.size ()];
 
-          // What's left for other auto rows?
-          fRemainingHeightAuto += fAvailableAutoRowHeight - fRowHeight;
-
-          // Update used width
-          fMaxContentWidth = Math.max (fMaxContentWidth, aElementPreparedSize.getWidth ());
-          final float fRowWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
-          fMaxRowWidth = Math.max (fMaxRowWidth, fRowWidth);
-
-          // Without padding and margin
-          m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fAvailableWidth : fRowWidth, fRowHeight);
-          m_aPreparedElementSize[nIndex] = aElementPreparedSize;
-        }
-        else
-        {
-          // Remember prepared sized
-          aTooHighAutoRows[nIndex] = aElementPreparedSize;
-
-          // The whole row height remains
-          fRemainingHeightAuto += fAvailableAutoRowHeight;
-
-          // What would be used ideally
-          fUsedHeightAutoTooHigh += fRowHeight;
-        }
-      }
-      ++nIndex;
-    }
-
-    // Second pass: split all too high auto rows on fRemainingHeightAuto
-    nIndex = 0;
-    for (final PLVBoxRow aRow : m_aRows)
-    {
-      // Only consider too-high auto rows
-      if (aRow.getHeight ().isAuto () && aTooHighAutoRows[nIndex] != null)
-      {
-        final IPLRenderableObject <?> aElement = aRow.getElement ();
-
-        // Previously prepared size including outline
-        final float fTooHighRowHeight = aTooHighAutoRows[nIndex].getHeight () + aElement.getOutlineYSum ();
-
-        // Percentage of used height compared to total used height of all too
-        // high rows (0-1)
-        final float fAvailableRowHeightPerc = fTooHighRowHeight / fUsedHeightAutoTooHigh;
-
-        // Use x% of remaining height
-        final float fNewAvailableRowHeight = fRemainingHeightAuto * fAvailableRowHeightPerc;
-
-        // Prepare child element
-        ((AbstractPLRenderableObject <?>) aElement).internalMarkAsNotPrepared ();
-        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                                        fAvailableWidth,
-                                                                                        fNewAvailableRowHeight));
-
-        // Use the used size of the element as the row height
-        final float fRowHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
-
-        // Update used height
-        fMaxContentWidth = Math.max (fMaxContentWidth, aElementPreparedSize.getWidth ());
-        final float fRowWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
-        fMaxRowWidth = Math.max (fMaxRowWidth, fRowWidth);
-
-        // Update used height
-        fUsedHeightFull += fRowHeight;
-
-        // Without padding and margin
-        m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fAvailableWidth : fRowWidth, fRowHeight);
-        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
-
-      }
-      ++nIndex;
-    }
-
-    // remaining unused parts of auto columns is automatically available to
-    // star width columns (based on fUsedWidthFull)
-
-    if (false)
-    {
       nIndex = 0;
       for (final PLVBoxRow aRow : m_aRows)
       {
@@ -558,16 +463,129 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         {
           final IPLRenderableObject <?> aElement = aRow.getElement ();
 
+          // Prepare child element
+          final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                          fAvailableWidth,
+                                                                                          fAvailableAutoRowHeightAll));
+
+          // Use the used size of the element as the row height
+          final float fRowHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+
+          if (fRowHeight <= fAvailableAutoRowHeight)
+          {
+            // Update used height
+            fUsedHeightFull += fRowHeight;
+            fUsedAutoHeightForStar += fRowHeight;
+
+            // What's left for other auto rows?
+            fRemainingHeightAuto += fAvailableAutoRowHeight - fRowHeight;
+
+            // Update used width
+            fMaxContentWidth = Math.max (fMaxContentWidth, aElementPreparedSize.getWidth ());
+            final float fRowWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+            fMaxRowWidth = Math.max (fMaxRowWidth, fRowWidth);
+
+            // Without padding and margin
+            m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fAvailableWidth : fRowWidth, fRowHeight);
+            m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+          }
+          else
+          {
+            // Remember prepared sized
+            aTooHighAutoRows[nIndex] = aElementPreparedSize;
+
+            // The whole row height remains
+            fRemainingHeightAuto += fAvailableAutoRowHeight;
+
+            // What would be used ideally
+            fUsedHeightAutoTooHigh += fRowHeight;
+          }
+        }
+        ++nIndex;
+      }
+
+      // Second pass: split all too high auto rows on fRemainingHeightAuto
+      nIndex = 0;
+      for (final PLVBoxRow aRow : m_aRows)
+      {
+        // Only consider too-high auto rows
+        if (aRow.getHeight ().isAuto () && aTooHighAutoRows[nIndex] != null)
+        {
+          final IPLRenderableObject <?> aElement = aRow.getElement ();
+
+          // Previously prepared size including outline
+          final float fTooHighRowHeight = aTooHighAutoRows[nIndex].getHeight () + aElement.getOutlineYSum ();
+
+          // Percentage of used height compared to total used height of all too
+          // high rows (0-1)
+          final float fAvailableRowHeightPerc = fTooHighRowHeight / fUsedHeightAutoTooHigh;
+
+          // Use x% of remaining height
+          final float fNewAvailableRowHeight = fRemainingHeightAuto * fAvailableRowHeightPerc;
+
+          // Prepare child element
+          ((AbstractPLRenderableObject <?>) aElement).internalMarkAsNotPrepared ();
+          final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
+                                                                                          fAvailableWidth,
+                                                                                          fNewAvailableRowHeight));
+
+          // Use the used size of the element as the row height
+          final float fRowHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+
+          // Update used height
+          fMaxContentWidth = Math.max (fMaxContentWidth, aElementPreparedSize.getWidth ());
+          final float fRowWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
+          fMaxRowWidth = Math.max (fMaxRowWidth, fRowWidth);
+
+          // Update used height
+          fUsedHeightFull += fRowHeight;
+
+          // Note: it may be possible, that the prepared size is higher, in
+          // which case the element may be split afterwards!
+          if (fRowHeight > fNewAvailableRowHeight)
+          {
+            fUsedAutoHeightForStar += fNewAvailableRowHeight;
+            if (!aElement.isVertSplittable ())
+              s_aLogger.info ("VBox row element " +
+                              aElement.getDebugID () +
+                              " uses more height (" +
+                              fRowHeight +
+                              ") than is available (" +
+                              fNewAvailableRowHeight +
+                              " and is NOT vertical splittable!");
+          }
+          else
+            fUsedAutoHeightForStar += fRowHeight;
+
+          // Without padding and margin
+          m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fAvailableWidth : fRowWidth, fRowHeight);
+          m_aPreparedElementSize[nIndex] = aElementPreparedSize;
+
+        }
+        ++nIndex;
+      }
+
+      // remaining unused parts of auto rows is automatically available to
+      // star height rows (based on fUsedHeightFull)
+    }
+
+    // 3. prepare all star widths items
+    {
+      fRestHeight = fAvailableHeight - fUsedAutoHeightForStar;
+      nIndex = 0;
+      for (final PLVBoxRow aRow : m_aRows)
+      {
+        if (aRow.getHeight ().isStar ())
+        {
+          final IPLRenderableObject <?> aElement = aRow.getElement ();
+
           // Height of this row
-          final float fAvailableRowHeight = fRestHeight;
+          final float fRowHeight = fRestHeight / nStarRows;
 
           // Prepare child element
           final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                           fAvailableWidth,
-                                                                                          fAvailableRowHeight));
-
-          // Use the used size of the element as the column width
-          final float fRowHeight = aElementPreparedSize.getHeight () + aElement.getOutlineYSum ();
+                                                                                          fRowHeight));
 
           // Update used width
           // Effective content width of this element
@@ -577,6 +595,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
           // Update used height
           fUsedHeightFull += fRowHeight;
+          // Don't change rest-height!
 
           // Without padding and margin
           m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fAvailableWidth : fRowWidth, fRowHeight);
@@ -584,40 +603,6 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         }
         ++nIndex;
       }
-    }
-
-    // 3. prepare all star widths items
-    fRestHeight = fAvailableHeight - fUsedHeightFull;
-    nIndex = 0;
-    for (final PLVBoxRow aRow : m_aRows)
-    {
-      if (aRow.getHeight ().isStar ())
-      {
-        final IPLRenderableObject <?> aElement = aRow.getElement ();
-
-        // Height of this row
-        final float fRowHeight = fRestHeight / nStarRows;
-
-        // Prepare child element
-        final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
-                                                                                        fAvailableWidth,
-                                                                                        fRowHeight));
-
-        // Update used width
-        // Effective content width of this element
-        fMaxContentWidth = Math.max (fMaxContentWidth, aElementPreparedSize.getWidth ());
-        final float fRowWidth = aElementPreparedSize.getWidth () + aElement.getOutlineXSum ();
-        fMaxRowWidth = Math.max (fMaxRowWidth, fRowWidth);
-
-        // Update used height
-        fUsedHeightFull += fRowHeight;
-        // Don't change rest-height!
-
-        // Without padding and margin
-        m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fAvailableWidth : fRowWidth, fRowHeight);
-        m_aPreparedElementSize[nIndex] = aElementPreparedSize;
-      }
-      ++nIndex;
     }
 
     // Set min size for block elements
@@ -690,8 +675,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                                    .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
-    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList <> (nTotalRows);
-    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList<> (nTotalRows);
     float fUsedVBox1RowHeight = 0;
 
     // Copy all header rows
@@ -707,8 +692,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     // The height and width after header are identical
-    final ICommonsList <SizeSpec> aVBox2RowSize = new CommonsArrayList <> (aVBox1RowSize);
-    final ICommonsList <SizeSpec> aVBox2ElementSize = new CommonsArrayList <> (aVBox1ElementSize);
+    final ICommonsList <SizeSpec> aVBox2RowSize = new CommonsArrayList<> (aVBox1RowSize);
+    final ICommonsList <SizeSpec> aVBox2ElementSize = new CommonsArrayList<> (aVBox1ElementSize);
     float fUsedVBox2RowHeight = fUsedVBox1RowHeight;
 
     // Copy all content rows

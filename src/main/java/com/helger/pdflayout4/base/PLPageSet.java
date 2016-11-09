@@ -554,64 +554,74 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           final boolean bIsSplittable = aElement.isVertSplittable ();
           if (bIsSplittable)
           {
-            if (PLDebug.isDebugSplit ())
-              PLDebug.debugSplit (this,
-                                  "Trying to split " +
-                                        aElement.getDebugID () +
-                                        " into pieces for available width " +
-                                        fElementPreparedWidth +
-                                        " and height " +
-                                        fAvailableHeight);
-
             // split elements
             final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
-            final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fElementPreparedWidth,
-                                                                                             fSplitHeight);
-            if (aSplitResult != null)
+            if (fSplitHeight > 0)
             {
-              // Re-add them to the list and try again (they may be splitted
-              // recursively)
-              aElementsWithSize.add (0, aSplitResult.getFirstElement ());
-              aElementsWithSize.add (1, aSplitResult.getSecondElement ());
+              if (PLDebug.isDebugSplit ())
+                PLDebug.debugSplit (this,
+                                    "Trying to split " +
+                                          aElement.getDebugID () +
+                                          " into pieces for available width " +
+                                          fElementPreparedWidth +
+                                          " and height " +
+                                          fSplitHeight);
 
+              final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fElementPreparedWidth,
+                                                                                               fSplitHeight);
+              if (aSplitResult != null)
+                assert fSplitHeight > 0;
+              if (fSplitHeight <= 0)
+                assert aSplitResult == null;
+
+              if (aSplitResult != null)
+              {
+                // Re-add them to the list and try again (they may be splitted
+                // recursively)
+                aElementsWithSize.add (0, aSplitResult.getFirstElement ());
+                aElementsWithSize.add (1, aSplitResult.getSecondElement ());
+
+                if (PLDebug.isDebugSplit ())
+                {
+                  PLDebug.debugSplit (this,
+                                      "Split " +
+                                            aElement.getDebugID () +
+                                            " into pieces: " +
+                                            aSplitResult.getFirstElement ().getElement ().getDebugID () +
+                                            " (" +
+                                            aSplitResult.getFirstElement ().getWidth () +
+                                            "+" +
+                                            aSplitResult.getFirstElement ().getElement ().getOutlineXSum () +
+                                            " & " +
+                                            aSplitResult.getFirstElement ().getHeight () +
+                                            "+" +
+                                            aSplitResult.getFirstElement ().getElement ().getOutlineYSum () +
+                                            ") and " +
+                                            aSplitResult.getSecondElement ().getElement ().getDebugID () +
+                                            " (" +
+                                            aSplitResult.getSecondElement ().getWidth () +
+                                            "+" +
+                                            aSplitResult.getSecondElement ().getElement ().getOutlineXSum () +
+                                            " & " +
+                                            aSplitResult.getSecondElement ().getHeight () +
+                                            "+" +
+                                            aSplitResult.getSecondElement ().getElement ().getOutlineYSum () +
+                                            ")");
+                }
+
+                // Try to fit resulting split pieces onto page
+                continue;
+              }
               if (PLDebug.isDebugSplit ())
               {
                 PLDebug.debugSplit (this,
-                                    "Split " +
+                                    "The single element " +
                                           aElement.getDebugID () +
-                                          " into pieces: " +
-                                          aSplitResult.getFirstElement ().getElement ().getDebugID () +
-                                          " (" +
-                                          aSplitResult.getFirstElement ().getWidth () +
-                                          "+" +
-                                          aSplitResult.getFirstElement ().getElement ().getOutlineXSum () +
-                                          " & " +
-                                          aSplitResult.getFirstElement ().getHeight () +
-                                          "+" +
-                                          aSplitResult.getFirstElement ().getElement ().getOutlineYSum () +
-                                          ") and " +
-                                          aSplitResult.getSecondElement ().getElement ().getDebugID () +
-                                          " (" +
-                                          aSplitResult.getSecondElement ().getWidth () +
-                                          "+" +
-                                          aSplitResult.getSecondElement ().getElement ().getOutlineXSum () +
-                                          " & " +
-                                          aSplitResult.getSecondElement ().getHeight () +
-                                          "+" +
-                                          aSplitResult.getSecondElement ().getElement ().getOutlineYSum () +
-                                          ")");
+                                          " does not fit onto a single page (" +
+                                          fSplitHeight +
+                                          ") even though it is splittable!");
               }
-              continue;
-            }
-            if (PLDebug.isDebugSplit ())
-            {
-              PLDebug.debugSplit (this,
-                                  "The single element " +
-                                        aElement.getDebugID () +
-                                        " does not fit onto a single page (" +
-                                        fSplitHeight +
-                                        ") even though it is splittable!");
-            }
+            } // splitHeight > 0
           }
 
           // Next page
@@ -637,7 +647,11 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
               final ICommonsList <String> aLastPageContent = new CommonsArrayList<> (aCurPageElements,
                                                                                      x -> x.getElement ()
                                                                                            .getDebugID ());
-              PLDebug.debugPrepare (this, "Finished page with: " + StringHelper.getImploded (aLastPageContent));
+              PLDebug.debugPrepare (this,
+                                    "Finished page " +
+                                          ret.getPageNumber () +
+                                          " with: " +
+                                          StringHelper.getImploded (aLastPageContent));
             }
 
             ret.addPerPageElements (aCurPageElements);
@@ -662,19 +676,17 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       // Add elements to last page
       if (!aCurPageElements.isEmpty ())
       {
-        if (PLDebug.isDebugSplit ())
-          PLDebug.debugSplit (this,
-                              "Finally adding " +
-                                    aCurPageElements.size () +
-                                    " elements to page " +
-                                    ret.getPageNumber ());
         ret.addPerPageElements (aCurPageElements);
 
         if (PLDebug.isDebugSplit ())
         {
           final ICommonsList <String> aLastPageContent = new CommonsArrayList<> (aCurPageElements,
                                                                                  x -> x.getElement ().getDebugID ());
-          PLDebug.debugSplit (this, "Finished last page with: " + StringHelper.getImploded (", ", aLastPageContent));
+          PLDebug.debugSplit (this,
+                              "Finished last page " +
+                                    ret.getPageNumber () +
+                                    " with: " +
+                                    StringHelper.getImploded (", ", aLastPageContent));
         }
       }
 
