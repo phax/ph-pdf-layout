@@ -124,7 +124,16 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   @Nonnull
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx);
 
+  /**
+   * Overwrite this method to adopt prepared sizes (e.g. for min or max size)
+   * 
+   * @param aPreparedSize
+   *        The originally prepared size.
+   * @return The modified prepared size or the parameter if no changes are
+   *         necessary. May not be <code>null</code>.
+   */
   @Nonnull
+  @OverrideOnDemand
   protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
   {
     return aPreparedSize;
