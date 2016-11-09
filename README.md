@@ -6,6 +6,18 @@ Please check the test files to see how to create PDFs with the different element
 Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x.
 
 #News
+  * v4.0.0 - work in progress
+    * The Maven artifact name was changed to 'ph-pdf-layout4' so that it can be used side-by-side with version 3.
+    * The global package name was changed from `com.helger.pdflayout` to `com.helger.pdflayout4`
+    * This is major rewrite to be closer to the CSS box model
+    * VBox and HBox have no more layout information assigned to them
+    * Added a new element "Box" that allows for easy alignment etc.
+    * Separation between renderable objects, block element (box) and inline elements (text and image)
+    * New class design for tables, so that each table cell is automatically represented by a box, each table row is a separate object
+    * Added a simple grid system for tables to build the default grids easily
+    * Added new "auto" width/height for columns/rows
+  * v3.5.1 - 2016-10-07
+    * Fixed a rendering flaw with borders
   * v3.5.0 - 2016-09-21
     * Changed internal class hierarchy to prepare for future changes
     * Changed package assignments for better grouping

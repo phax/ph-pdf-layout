@@ -24,7 +24,7 @@
     <artifactId>parent-pom</artifactId>
     <version>1.9.2</version>
   </parent>
-  <artifactId>ph-pdf-layout</artifactId>
+  <artifactId>ph-pdf-layout4</artifactId>
   <version>4.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
