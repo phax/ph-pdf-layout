@@ -244,11 +244,15 @@ public final class PLVBoxTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
+    int nCount = 0;
     for (int h = 0; h < 2; h++)
       for (int i = 0; i < 2; ++i)
         for (int j = 0; j < 2; ++j)
           for (int k = 0; k < 2; ++k)
           {
+            if (nCount++ > 0)
+              aPS1.addElement (new PLPageBreak (false));
+
             final String sIDPrefix = h + "-" + i + "-" + j + "-" + k + "-";
             final PLVBox aVBox = new PLVBox ().setID (sIDPrefix + "vbox")
                                               .setFullWidth (h == 0)

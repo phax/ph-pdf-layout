@@ -191,6 +191,14 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
                                                 .setID (getID () + "-2")
                                                 .setVertSplittable (true);
 
+    // Set min width/max width from source
+    // Don't use the height, because on vertically split elements, the height is
+    // dynamic
+    aBox1.setMinWidth (getMinWidth ());
+    aBox1.setMaxWidth (getMaxWidth ());
+    aBox2.setMinWidth (getMinWidth ());
+    aBox2.setMaxWidth (getMaxWidth ());
+
     float fBox1UsedHeight = 0;
     float fBox2UsedHeight = 0;
 

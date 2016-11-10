@@ -466,6 +466,12 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Set this explicitly after setBasicDataFrom!
     aNewText.setVertSplittable (bSplittableCopy);
 
+    // Set min width/max width from source
+    // Don't use the height, because on vertically split elements, the height is
+    // dynamic
+    aNewText.setMinWidth (getMinWidth ());
+    aNewText.setMaxWidth (getMaxWidth ());
+
     aNewText.internalMarkAsPrepared (aSize);
     aNewText.internalSetPreparedLines (aLineCopy);
     aNewText.internalSetPreparedFontData (m_aLoadedFont, m_fLineHeight);

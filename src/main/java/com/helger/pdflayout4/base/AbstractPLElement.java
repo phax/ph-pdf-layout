@@ -18,7 +18,6 @@ package com.helger.pdflayout4.base;
 
 import java.awt.Color;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -70,9 +69,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Nonnull
-  public IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight)
+  public IMPLTYPE setMinSize (@Nonnull final SizeSpec aMinSize)
   {
-    m_aMinSize = new SizeSpec (fMinWidth, fMinHeight);
+    m_aMinSize = ValueEnforcer.notNull (aMinSize, "MinSize");
     onPreparedSizeChange ();
     return thisAsT ();
   }
@@ -84,9 +83,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Nonnull
-  public IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight)
+  public IMPLTYPE setMaxSize (@Nonnull final SizeSpec aMaxSize)
   {
-    m_aMaxSize = new SizeSpec (fMaxWidth, fMaxHeight);
+    m_aMaxSize = ValueEnforcer.notNull (aMaxSize, "MaxSize");
     onPreparedSizeChange ();
     return thisAsT ();
   }

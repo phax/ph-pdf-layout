@@ -126,7 +126,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
 
   /**
    * Overwrite this method to adopt prepared sizes (e.g. for min or max size)
-   * 
+   *
    * @param aPreparedSize
    *        The originally prepared size.
    * @return The modified prepared size or the parameter if no changes are
@@ -215,10 +215,15 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return m_aPreparedSize;
   }
 
+  /**
+   * PL objects need to overwrite this method to reset their preparation state.
+   * They also need to propagate this to their children!
+   */
   protected abstract void onMarkAsNotPrepared ();
 
   /**
-   * INTERNAL method. Do not call from outside!
+   * INTERNAL method. Do not call from outside! This resets the preparation
+   * state.
    */
   public final void internalMarkAsNotPrepared ()
   {

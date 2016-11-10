@@ -45,11 +45,17 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   @Nonnull
   SizeSpec getMinSize ();
 
+  /**
+   * @return The minimum width of the element.
+   */
   default float getMinWidth ()
   {
     return getMinSize ().getWidth ();
   }
 
+  /**
+   * @return The minimum height of the element.
+   */
   default float getMinHeight ()
   {
     return getMinSize ().getHeight ();
@@ -65,7 +71,20 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    * @return this
    */
   @Nonnull
-  IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight);
+  default IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight)
+  {
+    return setMinSize (new SizeSpec (fMinWidth, fMinHeight));
+  }
+
+  /**
+   * Set the minimum size to be used. Excluding outline.
+   *
+   * @param aMinSize
+   *        Minimum size. May not be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  IMPLTYPE setMinSize (@Nonnull SizeSpec aMinSize);
 
   /**
    * Set the minimum width to be used. Excluding outline.
@@ -100,11 +119,17 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   @Nonnull
   SizeSpec getMaxSize ();
 
+  /**
+   * @return The max width of the element.
+   */
   default float getMaxWidth ()
   {
     return getMaxSize ().getWidth ();
   }
 
+  /**
+   * @return The maximum height of the element.
+   */
   default float getMaxHeight ()
   {
     return getMaxSize ().getHeight ();
@@ -120,7 +145,20 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    * @return this
    */
   @Nonnull
-  IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight);
+  default IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight)
+  {
+    return setMaxSize (new SizeSpec (fMaxWidth, fMaxHeight));
+  }
+
+  /**
+   * Set the maximum size to be used. Excluding outline.
+   *
+   * @param aMaxSize
+   *        Maximum size. May not be <code>null</code>. Must both be &ge; 0.
+   * @return this
+   */
+  @Nonnull
+  IMPLTYPE setMaxSize (@Nonnull SizeSpec aMaxSize);
 
   /**
    * Set the maximum width to be used. Excluding outline.
