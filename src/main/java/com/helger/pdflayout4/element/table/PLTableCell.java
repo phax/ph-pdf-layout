@@ -18,6 +18,7 @@ package com.helger.pdflayout4.element.table;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -37,12 +38,12 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
 
   private final int m_nColSpan;
 
-  public PLTableCell (@Nonnull final IPLRenderableObject <?> aElement)
+  public PLTableCell (@Nullable final IPLRenderableObject <?> aElement)
   {
     this (aElement, DEFAULT_COL_SPAN);
   }
 
-  public PLTableCell (@Nonnull final IPLRenderableObject <?> aElement, @Nonnegative final int nColSpan)
+  public PLTableCell (@Nullable final IPLRenderableObject <?> aElement, @Nonnegative final int nColSpan)
   {
     super (aElement);
     ValueEnforcer.isGT0 (nColSpan, "ColSpan");

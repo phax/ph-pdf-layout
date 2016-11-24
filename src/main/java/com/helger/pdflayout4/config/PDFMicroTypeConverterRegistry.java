@@ -62,7 +62,14 @@ public final class PDFMicroTypeConverterRegistry
     // Details
     aRegistry.registerMicroElementTypeConverter (BorderSpec.class, new BorderSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (BorderStyleSpec.class, new BorderStyleSpecMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (Color.class, new ColorMicroTypeConverter ());
+    try
+    {
+      aRegistry.registerMicroElementTypeConverter (Color.class, new ColorMicroTypeConverter ());
+    }
+    catch (final IllegalArgumentException ex)
+    {
+      // Already registered
+    }
     aRegistry.registerMicroElementTypeConverter (FontSpec.class, new FontSpecMicroTypeConverter (aPreloadFontResolver));
     aRegistry.registerMicroElementTypeConverter (HeightSpec.class, new HeightSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (LineDashPatternSpec.class,
