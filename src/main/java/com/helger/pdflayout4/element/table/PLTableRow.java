@@ -26,7 +26,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
-import com.helger.commons.ValueEnforcer;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
@@ -102,24 +101,20 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     m_aRow.forEachColumn ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
   }
 
-  public void forEachCell (@Nonnegative final int nStartIncl,
-                           @Nonnegative final int nEndIncl,
+  public void forEachCell (final int nStartIncl,
+                           final int nEndIncl,
                            @Nonnull final Consumer <? super PLTableCell> aConsumer)
   {
-    ValueEnforcer.isGE0 (nStartIncl, "Start");
-    ValueEnforcer.isGE0 (nEndIncl, "End");
     m_aRow.forEachColumn ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
         aConsumer.accept ((PLTableCell) x.getElement ());
     });
   }
 
-  public void forEachCell (@Nonnegative final int nStartIncl,
-                           @Nonnegative final int nEndIncl,
+  public void forEachCell (final int nStartIncl,
+                           final int nEndIncl,
                            @Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
-    ValueEnforcer.isGE0 (nStartIncl, "Start");
-    ValueEnforcer.isGE0 (nEndIncl, "End");
     m_aRow.forEachColumn ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
         aConsumer.accept ((PLTableCell) x.getElement (), idx);

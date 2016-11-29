@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout4.element.table;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.id.IHasID;
@@ -39,12 +38,7 @@ public interface IPLTableGridType extends IHasID <String>
    */
   default void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
   {
-    applyGridToTable (aTable,
-                      0,
-                      Math.max (aTable.getRowCount () - 1, 0),
-                      0,
-                      Math.max (aTable.getColumnCount () - 1, 0),
-                      aBSS);
+    applyGridToTable (aTable, 0, aTable.getRowCount () - 1, 0, aTable.getColumnCount () - 1, aBSS);
   }
 
   /**
@@ -53,20 +47,20 @@ public interface IPLTableGridType extends IHasID <String>
    * @param aTable
    *        Table to modify. May not be <code>null</code>.
    * @param nStartRowIncl
-   *        Start row index (inclusive). Must be &ge; 0.
+   *        Start row index (inclusive).
    * @param nEndRowIncl
-   *        End row index (inclusive). Must be &ge; 0.
+   *        End row index (inclusive).
    * @param nStartColumnIncl
-   *        Start column index (inclusive). Must be &ge; 0.
+   *        Start column index (inclusive).
    * @param nEndColumnIncl
-   *        End column index (inclusive). Must be &ge; 0.
+   *        End column index (inclusive).
    * @param aBSS
    *        Border style specification to be used. May not be <code>null</code>.
    */
   void applyGridToTable (@Nonnull PLTable aTable,
-                         @Nonnegative int nStartRowIncl,
-                         @Nonnegative int nEndRowIncl,
-                         @Nonnegative int nStartColumnIncl,
-                         @Nonnegative int nEndColumnIncl,
+                         int nStartRowIncl,
+                         int nEndRowIncl,
+                         int nStartColumnIncl,
+                         int nEndColumnIncl,
                          @Nonnull BorderStyleSpec aBSS);
 }
