@@ -64,12 +64,14 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   public static final BorderStyleSpec DEFAULT_GRID_BORDER_STYLE = new BorderStyleSpec (Color.BLACK,
                                                                                        LineDashPatternSpec.SOLID,
                                                                                        1f);
+  public static final IPLCellRange DEFAULT_GRID_CELL_RANGE = null;
 
   private PLVBox m_aRows = new PLVBox ().setVertSplittable (true);
   private final ICommonsList <WidthSpec> m_aWidths;
   private final EValueUOMType m_eWidthType;
   private IPLTableGridType m_aGridType = DEFAULT_GRID_TYPE;
   private BorderStyleSpec m_aGridBSS = DEFAULT_GRID_BORDER_STYLE;
+  private IPLCellRange m_aGridCellRange = DEFAULT_GRID_CELL_RANGE;
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
 
   /**
@@ -309,6 +311,30 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     m_aRows.forEachRow ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
   }
 
+  public void forEachRow (@Nonnegative final int nStartRowIncl,
+                          @Nonnegative final int nEndRowIncl,
+                          @Nonnull final Consumer <? super PLTableRow> aConsumer)
+  {
+    ValueEnforcer.isGE0 (nStartRowIncl, "Start");
+    ValueEnforcer.isGE0 (nEndRowIncl, "End");
+    m_aRows.forEachRow ( (x, idx) -> {
+      if (idx >= nStartRowIncl && idx <= nEndRowIncl)
+        aConsumer.accept ((PLTableRow) x.getElement ());
+    });
+  }
+
+  public void forEachRow (@Nonnegative final int nStartRowIncl,
+                          @Nonnegative final int nEndRowIncl,
+                          @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
+  {
+    ValueEnforcer.isGE0 (nStartRowIncl, "Start");
+    ValueEnforcer.isGE0 (nEndRowIncl, "End");
+    m_aRows.forEachRow ( (x, idx) -> {
+      if (idx >= nStartRowIncl && idx <= nEndRowIncl)
+        aConsumer.accept ((PLTableRow) x.getElement (), idx);
+    });
+  }
+
   @Nonnegative
   public int getRowCount ()
   {
@@ -360,6 +386,19 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     return m_aGridBSS;
   }
 
+  @Nonnull
+  public PLTable setGridCellRange (@Nullable final IPLCellRange aGridCellRange)
+  {
+    m_aGridCellRange = aGridCellRange;
+    return this;
+  }
+
+  @Nullable
+  public IPLCellRange getGridCellRange ()
+  {
+    return m_aGridCellRange;
+  }
+
   @Override
   public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
@@ -368,10 +407,19 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   }
 
   @Override
+  @OverridingMethodsMustInvokeSuper
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     if (m_aGridType != null)
-      m_aGridType.applyGridToTable (this, m_aGridBSS);
+      if (m_aGridCellRange == null)
+        m_aGridType.applyGridToTable (this, m_aGridBSS);
+      else
+        m_aGridType.applyGridToTable (this,
+                                      m_aGridCellRange.getFirstRow (),
+                                      m_aGridCellRange.getLastRow (),
+                                      m_aGridCellRange.getFirstColumn (),
+                                      m_aGridCellRange.getLastColumn (),
+                                      m_aGridBSS);
 
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();

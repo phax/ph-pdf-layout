@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout4.element.table;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -35,12 +36,17 @@ public enum EPLTableGridType implements IPLTableGridType
   NONE ("none")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
-      aTable.forEachRow ( (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex) -> {
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, aRow -> {
+        aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, aCell -> {
           aCell.setBorder (null, null, null, null);
         });
       });
@@ -54,21 +60,26 @@ public enum EPLTableGridType implements IPLTableGridType
   FULL ("full")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
-      aTable.forEachRow ( (aRow, nRowIndex) -> {
-        if (nRowIndex == 0)
-          aRow.forEachCell ( (aCell, nCellIndex) -> {
-            if (nCellIndex == 0)
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
+        if (nRowIndex == nStartRowIncl)
+          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
+            if (nCellIndex == nStartColumnIncl)
               aCell.setBorder (aBSS, aBSS, aBSS, aBSS);
             else
               aCell.setBorder (aBSS, aBSS, aBSS, null);
           });
         else
-          aRow.forEachCell ( (aCell, nCellIndex) -> {
-            if (nCellIndex == 0)
+          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
+            if (nCellIndex == nStartColumnIncl)
               aCell.setBorder (null, aBSS, aBSS, aBSS);
             else
               aCell.setBorder (null, aBSS, aBSS, null);
@@ -83,23 +94,26 @@ public enum EPLTableGridType implements IPLTableGridType
   FULL_NO_BORDER ("full_no_border")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
-      final int nLastRowIndex = aTable.getRowCount () - 1;
-      final int nLastCellIndex = aTable.getColumnCount () - 1;
-      aTable.forEachRow ( (aRow, nRowIndex) -> {
-        if (nRowIndex == nLastRowIndex)
-          aRow.forEachCell ( (aCell, nCellIndex) -> {
-            if (nCellIndex == nLastCellIndex)
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
+        if (nRowIndex == nEndRowIncl)
+          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
+            if (nCellIndex == nEndColumnIncl)
               aCell.setBorder (null, null, null, null);
             else
               aCell.setBorder (null, aBSS, null, null);
           });
         else
-          aRow.forEachCell ( (aCell, nCellIndex) -> {
-            if (nCellIndex == nLastCellIndex)
+          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
+            if (nCellIndex == nEndColumnIncl)
               aCell.setBorder (null, null, aBSS, null);
             else
               aCell.setBorder (null, aBSS, aBSS, null);
@@ -115,40 +129,43 @@ public enum EPLTableGridType implements IPLTableGridType
   OUTER ("outer")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
-      final int nLastCellIndex = aTable.getColumnCount () - 1;
-      final int nLastRowIndex = aTable.getRowCount () - 1;
-      aTable.forEachRow ( (aRow, nRowIndex) -> {
-        if (nRowIndex == 0)
-          aRow.forEachCell ( (aCell, nCellIndex) -> {
-            if (nCellIndex == 0)
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
+        if (nRowIndex == nStartRowIncl)
+          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
+            if (nCellIndex == nStartColumnIncl)
               aCell.setBorder (aBSS, null, null, aBSS);
             else
-              if (nCellIndex == nLastCellIndex)
+              if (nCellIndex == nEndColumnIncl)
                 aCell.setBorder (aBSS, aBSS, null, null);
               else
                 aCell.setBorder (aBSS, null, null, null);
           });
         else
-          if (nRowIndex == nLastRowIndex)
-            aRow.forEachCell ( (aCell, nCellIndex) -> {
-              if (nCellIndex == 0)
+          if (nRowIndex == nEndRowIncl)
+            aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
+              if (nCellIndex == nStartColumnIncl)
                 aCell.setBorder (null, null, aBSS, aBSS);
               else
-                if (nCellIndex == nLastCellIndex)
+                if (nCellIndex == nEndColumnIncl)
                   aCell.setBorder (null, aBSS, aBSS, null);
                 else
                   aCell.setBorder (null, null, aBSS, null);
             });
           else
-            aRow.forEachCell ( (aCell, nCellIndex) -> {
-              if (nCellIndex == 0)
+            aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
+              if (nCellIndex == nStartColumnIncl)
                 aCell.setBorder (null, null, null, aBSS);
               else
-                if (nCellIndex == nLastCellIndex)
+                if (nCellIndex == nEndColumnIncl)
                   aCell.setBorder (null, aBSS, null, null);
                 else
                   aCell.setBorder (null, null, null, null);
@@ -163,17 +180,22 @@ public enum EPLTableGridType implements IPLTableGridType
   HORZ_ALL ("horz_all")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
-      aTable.forEachRow ( (aRow, nRowIndex) -> {
-        if (nRowIndex == 0)
-          aRow.forEachCell ( (aCell, nCellIndex) -> {
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
+        if (nRowIndex == nStartRowIncl)
+          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
             aCell.setBorder (aBSS, null, aBSS, null);
           });
         else
-          aRow.forEachCell ( (aCell, nCellIndex) -> {
+          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
             aCell.setBorder (null, null, aBSS, null);
           });
       });
@@ -187,18 +209,22 @@ public enum EPLTableGridType implements IPLTableGridType
   HORZ_NO_BORDER ("horz_no_border")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
-      final int nLastRowIndex = aTable.getRowCount () - 1;
-      aTable.forEachRow ( (aRow, nRowIndex) -> {
-        if (nRowIndex == nLastRowIndex)
-          aRow.forEachCell ( (aCell, nCellIndex) -> {
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
+        if (nRowIndex == nEndRowIncl)
+          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
             aCell.setBorder (null, null, null, null);
           });
         else
-          aRow.forEachCell ( (aCell, nCellIndex) -> {
+          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
             aCell.setBorder (null, null, aBSS, null);
           });
       });
@@ -211,13 +237,18 @@ public enum EPLTableGridType implements IPLTableGridType
   VERT_ALL ("vert_all")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
-      aTable.forEachRow ( (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex) -> {
-          if (nCellIndex == 0)
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
+        aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
+          if (nCellIndex == nStartColumnIncl)
             aCell.setBorder (null, aBSS, null, aBSS);
           else
             aCell.setBorder (null, aBSS, null, null);
@@ -233,14 +264,18 @@ public enum EPLTableGridType implements IPLTableGridType
   VERT_NO_BORDER ("vert_no_border")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
-      final int nLastCellIndex = aTable.getColumnCount () - 1;
-      aTable.forEachRow ( (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex) -> {
-          if (nCellIndex == nLastCellIndex)
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
+        aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
+          if (nCellIndex == nEndColumnIncl)
             aCell.setBorder (null, null, null, null);
           else
             aCell.setBorder (null, aBSS, null, null);
