@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout4.element.table;
 
-import com.helger.commons.ValueEnforcer;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
@@ -44,8 +43,6 @@ public class PLCellRange implements IPLCellRange
    */
   public PLCellRange (final int nFirstRow, final int nLastRow, final int nFirstCol, final int nLastCol)
   {
-    ValueEnforcer.isTrue (nFirstRow <= nLastRow, "First row must be <= than last row");
-    ValueEnforcer.isTrue (nFirstCol <= nLastCol, "First column must be <= than last column");
     setFirstRow (nFirstRow);
     setLastRow (nLastRow);
     setFirstColumn (nFirstCol);

@@ -311,24 +311,20 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     m_aRows.forEachRow ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
   }
 
-  public void forEachRow (@Nonnegative final int nStartRowIncl,
-                          @Nonnegative final int nEndRowIncl,
+  public void forEachRow (final int nStartRowIncl,
+                          final int nEndRowIncl,
                           @Nonnull final Consumer <? super PLTableRow> aConsumer)
   {
-    ValueEnforcer.isGE0 (nStartRowIncl, "Start");
-    ValueEnforcer.isGE0 (nEndRowIncl, "End");
     m_aRows.forEachRow ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
         aConsumer.accept ((PLTableRow) x.getElement ());
     });
   }
 
-  public void forEachRow (@Nonnegative final int nStartRowIncl,
-                          @Nonnegative final int nEndRowIncl,
+  public void forEachRow (final int nStartRowIncl,
+                          final int nEndRowIncl,
                           @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
-    ValueEnforcer.isGE0 (nStartRowIncl, "Start");
-    ValueEnforcer.isGE0 (nEndRowIncl, "End");
     m_aRows.forEachRow ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
         aConsumer.accept ((PLTableRow) x.getElement (), idx);
