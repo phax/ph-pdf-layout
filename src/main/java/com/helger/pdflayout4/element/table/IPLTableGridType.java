@@ -18,6 +18,7 @@ package com.helger.pdflayout4.element.table;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.id.IHasID;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 
@@ -38,7 +39,34 @@ public interface IPLTableGridType extends IHasID <String>
    */
   default void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
   {
+    ValueEnforcer.notNull (aTable, "Table");
     applyGridToTable (aTable, 0, aTable.getRowCount () - 1, 0, aTable.getColumnCount () - 1, aBSS);
+  }
+
+  /**
+   * Apply this grid to the passed cell range of the provided table.
+   *
+   * @param aTable
+   *        Table to modify. May not be <code>null</code>.
+   * @param aCellRange
+   *        The cell range to which it should be applied. May not be
+   *        <code>null</code>.
+   * @param aBSS
+   *        Border style specification to be used. May not be <code>null</code>.
+   */
+  default void applyGridToTable (@Nonnull final PLTable aTable,
+                                 @Nonnull final IPLCellRange aCellRange,
+                                 @Nonnull final BorderStyleSpec aBSS)
+  {
+    ValueEnforcer.notNull (aTable, "Table");
+    ValueEnforcer.notNull (aCellRange, "CellRange");
+
+    applyGridToTable (aTable,
+                      aCellRange.getFirstRow (),
+                      aCellRange.getLastRow (),
+                      aCellRange.getFirstColumn (),
+                      aCellRange.getLastColumn (),
+                      aBSS);
   }
 
   /**

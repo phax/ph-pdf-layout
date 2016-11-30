@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout4.element.table;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
@@ -44,10 +43,8 @@ import com.helger.pdflayout4.element.vbox.PLVBox;
 import com.helger.pdflayout4.element.vbox.PLVBoxRow;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
-import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EValueUOMType;
 import com.helger.pdflayout4.spec.HeightSpec;
-import com.helger.pdflayout4.spec.LineDashPatternSpec;
 import com.helger.pdflayout4.spec.MarginSpec;
 import com.helger.pdflayout4.spec.SizeSpec;
 import com.helger.pdflayout4.spec.WidthSpec;
@@ -60,18 +57,9 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public class PLTable extends AbstractPLRenderableObject <PLTable>
                      implements IPLSplittableObject <PLTable>, IPLHasMargin <PLTable>
 {
-  public static final IPLTableGridType DEFAULT_GRID_TYPE = null;
-  public static final BorderStyleSpec DEFAULT_GRID_BORDER_STYLE = new BorderStyleSpec (Color.BLACK,
-                                                                                       LineDashPatternSpec.SOLID,
-                                                                                       1f);
-  public static final IPLCellRange DEFAULT_GRID_CELL_RANGE = null;
-
   private PLVBox m_aRows = new PLVBox ().setVertSplittable (true);
   private final ICommonsList <WidthSpec> m_aWidths;
   private final EValueUOMType m_eWidthType;
-  private IPLTableGridType m_aGridType = DEFAULT_GRID_TYPE;
-  private BorderStyleSpec m_aGridBSS = DEFAULT_GRID_BORDER_STYLE;
-  private IPLCellRange m_aGridCellRange = DEFAULT_GRID_CELL_RANGE;
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
 
   /**
@@ -95,7 +83,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                                               aWidth.getType ());
     if (eWidthType == EValueUOMType.AUTO)
       throw new IllegalArgumentException ("Width type auto is not allowed for tables!");
-    m_aWidths = new CommonsArrayList <> (aWidths);
+    m_aWidths = new CommonsArrayList<> (aWidths);
     m_eWidthType = eWidthType;
   }
 
@@ -167,7 +155,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTableRow addAndReturnRow (@Nonnull final PLTableCell... aCells)
   {
-    return addAndReturnRow (new CommonsArrayList <> (aCells), HeightSpec.auto ());
+    return addAndReturnRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
   }
 
   /**
@@ -265,7 +253,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTable addRow (@Nonnull final PLTableCell... aCells)
   {
-    return addRow (new CommonsArrayList <> (aCells), HeightSpec.auto ());
+    return addRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
   }
 
   /**
@@ -356,45 +344,6 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     return aRow == null ? null : aRow.getCellAtIndex (nColIndex);
   }
 
-  @Nonnull
-  public PLTable setGridType (@Nullable final IPLTableGridType aGridType)
-  {
-    m_aGridType = aGridType;
-    return this;
-  }
-
-  @Nullable
-  public IPLTableGridType getGridType ()
-  {
-    return m_aGridType;
-  }
-
-  @Nonnull
-  public PLTable setGridBorderStyle (@Nonnull final BorderStyleSpec aBSS)
-  {
-    m_aGridBSS = ValueEnforcer.notNull (aBSS, "GridBorderStyle");
-    return this;
-  }
-
-  @Nonnull
-  public BorderStyleSpec getGridBorderStyle ()
-  {
-    return m_aGridBSS;
-  }
-
-  @Nonnull
-  public PLTable setGridCellRange (@Nullable final IPLCellRange aGridCellRange)
-  {
-    m_aGridCellRange = aGridCellRange;
-    return this;
-  }
-
-  @Nullable
-  public IPLCellRange getGridCellRange ()
-  {
-    return m_aGridCellRange;
-  }
-
   @Override
   public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
@@ -406,17 +355,6 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @OverridingMethodsMustInvokeSuper
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
-    if (m_aGridType != null)
-      if (m_aGridCellRange == null)
-        m_aGridType.applyGridToTable (this, m_aGridBSS);
-      else
-        m_aGridType.applyGridToTable (this,
-                                      m_aGridCellRange.getFirstRow (),
-                                      m_aGridCellRange.getLastRow (),
-                                      m_aGridCellRange.getFirstColumn (),
-                                      m_aGridCellRange.getLastColumn (),
-                                      m_aGridBSS);
-
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
@@ -487,8 +425,6 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                             .append ("Rows", m_aRows)
                             .append ("Width", m_aWidths)
                             .append ("WidthType", m_eWidthType)
-                            .append ("GridType", m_aGridType)
-                            .append ("GridBSS", m_aGridBSS)
                             .append ("Margin", m_aMargin)
                             .toString ();
   }
@@ -507,7 +443,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   {
     ValueEnforcer.notEmpty (aPercentages, "Percentages");
 
-    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList <> (aPercentages.length);
+    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList<> (aPercentages.length);
     for (final float fPercentage : aPercentages)
       aWidths.add (WidthSpec.perc (fPercentage));
     return new PLTable (aWidths);
@@ -526,7 +462,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   {
     ValueEnforcer.isGT0 (nColumnCount, "ColumnCount");
 
-    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList <> (nColumnCount);
+    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList<> (nColumnCount);
     for (int i = 0; i < nColumnCount; ++i)
       aWidths.add (WidthSpec.star ());
     return new PLTable (aWidths);

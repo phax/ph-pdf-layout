@@ -18,11 +18,17 @@ package com.helger.pdflayout4.element.table;
 
 import java.io.Serializable;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.math.MathHelper;
 
+/**
+ * Read-only version of the cell range.
+ * 
+ * @author Philip Helger
+ */
 public interface IPLCellRange extends Serializable
 {
   /**
@@ -54,7 +60,7 @@ public interface IPLCellRange extends Serializable
    *        The column, 0-based.
    * @return <code>true</code> if the coordinates lie within the bounds,
    *         <code>false</code> otherwise.
-   * @see #intersects(PLCellRange) for checking if two ranges overlap
+   * @see #intersects(IPLCellRange) for checking if two ranges overlap
    */
   default boolean isInRange (final int nRowIndex, final int nColumnIndex)
   {
@@ -66,7 +72,7 @@ public interface IPLCellRange extends Serializable
    *
    * @param nRowIndex
    *        the row to check
-   * @return <code>true</code> if the range contains the row [rowInd]
+   * @return <code>true</code> if the range contains the row at the passed index
    */
   default boolean containsRow (final int nRowIndex)
   {
@@ -78,7 +84,8 @@ public interface IPLCellRange extends Serializable
    *
    * @param nColumnIndex
    *        the column to check
-   * @return <code>true</code> if the range contains the column [colInd]
+   * @return <code>true</code> if the range contains the column at the passed
+   *         index
    */
   default boolean containsColumn (final int nColumnIndex)
   {
@@ -86,8 +93,8 @@ public interface IPLCellRange extends Serializable
   }
 
   /**
-   * Determines whether or not this {@link PLCellRange} and the specified
-   * {@link PLCellRange} intersect.
+   * Determines whether or not this {@link IPLCellRange} and the specified
+   * {@link IPLCellRange} intersect.
    *
    * @param aOther
    *        a candidate cell range address to check for intersection with this
@@ -96,7 +103,7 @@ public interface IPLCellRange extends Serializable
    *         cell in common
    * @see #isInRange(int, int) for checking if a single cell intersects
    */
-  default boolean intersects (@Nonnull final PLCellRange aOther)
+  default boolean intersects (@Nonnull final IPLCellRange aOther)
   {
     ValueEnforcer.notNull (aOther, "Other");
     return getFirstRow () <= aOther.getLastRow () &&
@@ -105,14 +112,22 @@ public interface IPLCellRange extends Serializable
            aOther.getFirstColumn () <= getLastColumn ();
   }
 
+  /**
+   * @return The number of effected rows. Always &ge; 0.
+   */
+  @Nonnegative
   default int getRowCount ()
   {
-    return getLastRow () - getFirstRow () + 1;
+    return Math.max (getLastRow () - getFirstRow () + 1, 0);
   }
 
-  default int getColumntCount ()
+  /**
+   * @return The number of effected columns. Always &ge; 0.
+   */
+  @Nonnegative
+  default int getColumnCount ()
   {
-    return getLastColumn () - getFirstColumn () + 1;
+    return Math.max (getLastColumn () - getFirstColumn () + 1, 0);
   }
 
   /**
@@ -120,7 +135,7 @@ public interface IPLCellRange extends Serializable
    */
   default long getNumberOfCells ()
   {
-    return MathHelper.abs ((long) getRowCount () * getColumntCount ());
+    return MathHelper.abs ((long) getRowCount () * getColumnCount ());
   }
 
   default int getMinRow ()

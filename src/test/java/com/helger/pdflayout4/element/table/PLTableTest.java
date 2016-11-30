@@ -43,6 +43,7 @@ import com.helger.pdflayout4.spec.BorderSpec;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EHorzAlignment;
 import com.helger.pdflayout4.spec.FontSpec;
+import com.helger.pdflayout4.spec.LineDashPatternSpec;
 import com.helger.pdflayout4.spec.MarginSpec;
 import com.helger.pdflayout4.spec.PaddingSpec;
 import com.helger.pdflayout4.spec.PreloadFont;
@@ -124,7 +125,7 @@ public final class PLTableTest
                                                   r10).setPadding (aPadding)
                                                       .setMargin (aMargin)).setHorzAlign (EHorzAlignment.RIGHT));
     }
-    aTable.setGridType (EPLTableGridType.FULL).setGridBorderStyle (new BorderStyleSpec (Color.PINK, 1));
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.PINK, 1));
     aPS1.addElement (aTable);
     aPS1.addElement (new PLText ("Last line", r10));
 
@@ -137,7 +138,7 @@ public final class PLTableTest
   @ReturnsMutableCopy
   public static <T> ICommonsList <T> createList (final int nCount, final IntFunction <T> aSupplier)
   {
-    final ICommonsList <T> ret = new CommonsArrayList <> (nCount);
+    final ICommonsList <T> ret = new CommonsArrayList<> (nCount);
     for (int i = 0; i < nCount; ++i)
       ret.add (aSupplier.apply (i));
     return ret;
@@ -172,26 +173,26 @@ public final class PLTableTest
                                                                     r14b.getCloneWithDifferentColor (Color.GRAY)).setPadding (aPadding))));
 
     final ICommonsList <Function <PLTableRow, PLTableRow>> aRowFcts;
-    aRowFcts = new CommonsArrayList <> (x -> x, x -> x.setFillColor (aBGRow));
+    aRowFcts = new CommonsArrayList<> (x -> x, x -> x.setFillColor (aBGRow));
 
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
-    aCellFcts = new CommonsArrayList <> (x -> x,
-                                         x -> x.setFillColor (aBGCell),
-                                         x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2")
-                                                                                                          ? x.setFillColor (aBGCell)
-                                                                                                          : x);
+    aCellFcts = new CommonsArrayList<> (x -> x,
+                                        x -> x.setFillColor (aBGCell),
+                                        x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2")
+                                                                                                         ? x.setFillColor (aBGCell)
+                                                                                                         : x);
 
     final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts;
-    aElementFcts = new CommonsArrayList <> (x -> x,
-                                            x -> x.setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder),
-                                            x -> x.setBorder (aBorder).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder)
-                                                  .setPadding (aPadding)
-                                                  .setMargin (aMargin)
-                                                  .setFillColor (aBGElement));
+    aElementFcts = new CommonsArrayList<> (x -> x,
+                                           x -> x.setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder),
+                                           x -> x.setBorder (aBorder).setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder)
+                                                 .setPadding (aPadding)
+                                                 .setMargin (aMargin)
+                                                 .setFillColor (aBGElement));
 
     int nRowFunc = 0;
     for (final Function <PLTableRow, PLTableRow> aRowFct : aRowFcts)
@@ -283,7 +284,7 @@ public final class PLTableTest
         aRow.getCellAtIndex (2).setHorzAlign (EHorzAlignment.CENTER);
         aRow.getCellAtIndex (3).setHorzAlign (EHorzAlignment.RIGHT);
       }
-      aTable.setGridType (eGridType).setGridBorderStyle (new BorderStyleSpec (Color.PINK, 3));
+      eGridType.applyGridToTable (aTable, new BorderStyleSpec (Color.PINK, 3));
       aPS1.addElement (aTable);
       aPS1.addElement (new PLText ("Text after table", r10));
     }
@@ -356,10 +357,9 @@ public final class PLTableTest
         aRow.getCellAtIndex (2).setHorzAlign (EHorzAlignment.CENTER);
         aRow.getCellAtIndex (3).setHorzAlign (EHorzAlignment.RIGHT);
       }
-      aTable.setGridType (eGridType)
-            .setGridBorderStyle (new BorderStyleSpec (Color.PINK, 3))
-            .setGridCellRange (new PLCellRange (1, aTable.getRowCount () - 2, 1, aTable.getColumnCount () -
-                                                                                 2));
+      eGridType.applyGridToTable (aTable,
+                                  new PLCellRange (1, aTable.getRowCount () - 2, 1, aTable.getColumnCount () - 2),
+                                  new BorderStyleSpec (Color.PINK, 3));
       aPS1.addElement (aTable);
       aPS1.addElement (new PLText ("Text after table", r10));
     }
@@ -381,7 +381,7 @@ public final class PLTableTest
     aTable.addRow (new PLTableCell (new PLText ("Colspan 1a", r10), 1),
                    new PLTableCell (new PLText ("Colspan 3b", r10).setFillColor (Color.YELLOW), 3));
     aTable.addRow (new PLTableCell (new PLText ("Colspan 4", r10).setFillColor (Color.YELLOW), 4));
-    aTable.setGridType (EPLTableGridType.FULL).setGridBorderStyle (new BorderStyleSpec (Color.PINK));
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.PINK));
     return aTable;
   }
 
@@ -404,7 +404,7 @@ public final class PLTableTest
     aTable.addRow (new PLTableCell (_createNestedTable (r10), 3), new PLTableCell (_createNestedTable (r10), 1));
     aTable.addRow (new PLTableCell (_createNestedTable (r10), 1), new PLTableCell (_createNestedTable (r10), 3));
     aTable.addRow (new PLTableCell (_createNestedTable (r10), 4));
-    aTable.setGridType (EPLTableGridType.FULL);
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.BLACK, LineDashPatternSpec.SOLID, 1f));
     aPS1.addElement (aTable);
 
     // Add content lines
