@@ -16,7 +16,11 @@
  */
 package com.helger.pdflayout4.element.table;
 
+import javax.annotation.Nonnull;
+
+import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.hashcode.HashCodeGenerator;
+import com.helger.commons.lang.ICloneable;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
@@ -24,7 +28,7 @@ import com.helger.commons.string.ToStringGenerator;
  *
  * @author Philip Helger
  */
-public class PLCellRange implements IPLCellRange
+public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
 {
   private int m_nFirstRow;
   private int m_nLastRow;
@@ -32,6 +36,8 @@ public class PLCellRange implements IPLCellRange
   private int m_nLastCol;
 
   /**
+   * Default constructor
+   *
    * @param nFirstRow
    *        First row index, inclusive.
    * @param nLastRow
@@ -47,6 +53,18 @@ public class PLCellRange implements IPLCellRange
     setLastRow (nLastRow);
     setFirstColumn (nFirstCol);
     setLastColumn (nLastCol);
+  }
+
+  /**
+   * Copy constructor
+   *
+   * @param aOther
+   *        The cell range to copy the values from. May not be
+   *        <code>null</code>.
+   */
+  public PLCellRange (@Nonnull final IPLCellRange aOther)
+  {
+    this (aOther.getFirstRow (), aOther.getLastRow (), aOther.getFirstColumn (), aOther.getLastColumn ());
   }
 
   /**
@@ -84,37 +102,55 @@ public class PLCellRange implements IPLCellRange
   /**
    * @param nFirstRow
    *        row number for the upper left hand corner
+   * @return this for chaining
    */
-  public final void setFirstRow (final int nFirstRow)
+  @Nonnull
+  public final PLCellRange setFirstRow (final int nFirstRow)
   {
     m_nFirstRow = nFirstRow;
+    return this;
   }
 
   /**
    * @param nLastRow
    *        row number for the lower right hand corner
+   * @return this for chaining
    */
-  public final void setLastRow (final int nLastRow)
+  @Nonnull
+  public final PLCellRange setLastRow (final int nLastRow)
   {
     m_nLastRow = nLastRow;
+    return this;
   }
 
   /**
    * @param nFirstCol
    *        column number for the upper left hand corner
+   * @return this for chaining
    */
-  public final void setFirstColumn (final int nFirstCol)
+  @Nonnull
+  public final PLCellRange setFirstColumn (final int nFirstCol)
   {
     m_nFirstCol = nFirstCol;
+    return this;
   }
 
   /**
    * @param nLastCol
    *        column number for the lower right hand corner
+   * @return this for chaining
    */
-  public final void setLastColumn (final int nLastCol)
+  public final PLCellRange setLastColumn (final int nLastCol)
   {
     m_nLastCol = nLastCol;
+    return this;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public PLCellRange getClone ()
+  {
+    return new PLCellRange (this);
   }
 
   @Override
