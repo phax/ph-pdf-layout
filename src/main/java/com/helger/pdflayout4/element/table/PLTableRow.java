@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.mutable.MutableInt;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
@@ -101,13 +102,23 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     m_aRow.forEachColumn ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
   }
 
+  public void forEachCell (@Nonnull final IPLTableCellConsumer aConsumer)
+  {
+    final MutableInt aEffectiveIndex = new MutableInt (0);
+    m_aRow.forEachColumn ( (x, idx) -> {
+      final PLTableCell aCell = (PLTableCell) x.getElement ();
+      aConsumer.accept (aCell, idx, aEffectiveIndex.intValue ());
+      aEffectiveIndex.inc (aCell.getColSpan ());
+    });
+  }
+
   public void forEachCell (final int nStartIncl,
                            final int nEndIncl,
                            @Nonnull final Consumer <? super PLTableCell> aConsumer)
   {
-    m_aRow.forEachColumn ( (x, idx) -> {
+    forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
-        aConsumer.accept ((PLTableCell) x.getElement ());
+        aConsumer.accept (x);
     });
   }
 
@@ -115,9 +126,17 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
                            final int nEndIncl,
                            @Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
-    m_aRow.forEachColumn ( (x, idx) -> {
+    forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
-        aConsumer.accept ((PLTableCell) x.getElement (), idx);
+        aConsumer.accept (x, idx);
+    });
+  }
+
+  public void forEachCell (@Nonnull final IPLTableCellConsumer aConsumer, @Nonnull final IPLTableCellFilter aFilter)
+  {
+    forEachCell ( (x, idx, eidx) -> {
+      if (aFilter.test (x, idx, eidx))
+        aConsumer.accept (x, idx, idx);
     });
   }
 
