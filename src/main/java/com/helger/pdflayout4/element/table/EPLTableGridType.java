@@ -227,11 +227,12 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-          if (nCellIndex == nStartColumnIncl)
-            aCell.setBorder (null, aBSS, null, aBSS);
-          else
-            aCell.setBorder (null, aBSS, null, null);
+        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+          if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
+          {
+            final boolean bFirstCol = nEffectiveCellStartIndex == nStartColumnIncl;
+            aCell.setBorder (null, aBSS, null, bFirstCol ? aBSS : null);
+          }
         });
       });
     }
@@ -254,11 +255,12 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-          if (nCellIndex == nEndColumnIncl)
-            aCell.setBorder (null, null, null, null);
-          else
-            aCell.setBorder (null, aBSS, null, null);
+        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+          if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
+          {
+            final boolean bLastCol = nEffectiveCellEndIndex - 1 == nEndColumnIncl;
+            aCell.setBorder (null, bLastCol ? null : aBSS, null, null);
+          }
         });
       });
     }
