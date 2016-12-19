@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 /**
  * PLTable helper class containing additional methods to deal with PLTable
  * special cases
- * 
+ *
  * @author Saskia Reimerth
  */
 public class PLTableHelper
@@ -17,9 +17,9 @@ public class PLTableHelper
   /**
    * If two joined rows both have borders at their connecting side, the doubles
    * width has to be removed
-   * 
+   *
    * @param ret
-   *        the PLTable, which doubled borders are to be removed
+   *        the PLTable, whose doubled borders are to be removed
    */
   public static void avoidDoubleBorders (@Nonnull PLTable ret)
   {
