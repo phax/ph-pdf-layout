@@ -26,6 +26,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.base.AbstractPLInlineElement;
 import com.helger.pdflayout4.element.PLRenderHelper;
@@ -96,7 +97,8 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   protected abstract PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException;
 
   @Override
-  public void beforeRender (@Nonnull final PagePreRenderContext aCtx)
+  @Nonnull
+  public EChange beforeRender (@Nonnull final PagePreRenderContext aCtx)
   {
     // It is very important that the PDJpeg is created BEFORE the page content
     // stream is created.
@@ -111,6 +113,7 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     {
       throw new IllegalArgumentException ("Failed to create JPEG", ex);
     }
+    return EChange.UNCHANGED;
   }
 
   @Override

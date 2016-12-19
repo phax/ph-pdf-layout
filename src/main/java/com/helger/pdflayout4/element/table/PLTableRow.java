@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.mutable.MutableInt;
+import com.helger.commons.state.EChange;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
@@ -42,6 +43,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implements IPLSplittableObject <PLTableRow>
 {
   private final PLHBox m_aRow = new PLHBox ().setVertSplittable (true);
+  private boolean m_bSeparableFromNextRow = true;
 
   public PLTableRow ()
   {}
@@ -107,8 +109,9 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     final MutableInt aEffectiveIndex = new MutableInt (0);
     m_aRow.forEachColumn ( (x, idx) -> {
       final PLTableCell aCell = (PLTableCell) x.getElement ();
-      aConsumer.accept (aCell, idx, aEffectiveIndex.intValue ());
-      aEffectiveIndex.inc (aCell.getColSpan ());
+      final int nColSpan = aCell.getColSpan ();
+      aConsumer.accept (aCell, idx, aEffectiveIndex.intValue (), aEffectiveIndex.intValue () + nColSpan);
+      aEffectiveIndex.inc (nColSpan);
     });
   }
 
@@ -132,30 +135,30 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     });
   }
 
-  public void forEachCell (@Nonnull final IPLTableCellConsumer aConsumer, @Nonnull final IPLTableCellFilter aFilter)
+  public void forEachCell (@Nonnull final IPLTableCellFilter aFilter, @Nonnull final IPLTableCellConsumer aConsumer)
   {
-    forEachCell ( (x, idx, eidx) -> {
-      if (aFilter.test (x, idx, eidx))
-        aConsumer.accept (x, idx, idx);
+    forEachCell ( (x, idx, esidx, eeidx) -> {
+      if (aFilter.test (x, idx, esidx, eeidx))
+        aConsumer.accept (x, idx, esidx, eeidx);
     });
   }
 
   @Nonnull
-  public PLTableRow setFillColor (@Nonnull final Color aFillColor)
+  public PLTableRow setFillColor (@Nullable final Color aFillColor)
   {
     forEachCell (x -> x.setFillColor (aFillColor));
     return this;
   }
 
   @Nonnull
-  public PLTableRow setBorderTop (@Nonnull final BorderStyleSpec aBorder)
+  public PLTableRow setBorderTop (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderTop (aBorder));
     return this;
   }
 
   @Nonnull
-  public PLTableRow setBorderBottom (@Nonnull final BorderStyleSpec aBorder)
+  public PLTableRow setBorderBottom (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderBottom (aBorder));
     return this;
@@ -189,11 +192,25 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     return this;
   }
 
-  @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  public boolean isSeparableFromNextRow ()
   {
-    super.visit (aVisitor);
-    m_aRow.visit (aVisitor);
+    return m_bSeparableFromNextRow;
+  }
+
+  @Nonnull
+  public PLTableRow setSeparableFromNextRow (final boolean bSeparableFromNextRow)
+  {
+    m_bSeparableFromNextRow = bSeparableFromNextRow;
+    return this;
+  }
+
+  @Override
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  {
+    EChange ret = super.visit (aVisitor);
+    ret = ret.or (m_aRow.visit (aVisitor));
+    return ret;
   }
 
   @Override

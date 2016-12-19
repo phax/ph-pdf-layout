@@ -18,8 +18,13 @@ public interface IPLTableCellConsumer
    *        the current table cell. Never <code>null</code>.
    * @param nCellIndex
    *        The cell index. Always &ge; 0.
-   * @param nEffectiveCellIndex
-   *        The effective cell index including colspan. Always &ge; 0.
+   * @param nEffectiveCellStartIndex
+   *        The effective cell start index including colspan. Always &ge; 0.
+   * @param nEffectiveCellEndIndex
+   *        The effective cell end index including colspan. Always &ge; 0.
    */
-  void accept (@Nonnull PLTableCell aCell, @Nonnegative int nCellIndex, @Nonnegative int nEffectiveCellIndex);
+  void accept (@Nonnull PLTableCell aCell,
+               @Nonnegative int nCellIndex,
+               @Nonnegative int nEffectiveCellStartIndex,
+               @Nonnegative int nEffectiveCellEndIndex);
 }

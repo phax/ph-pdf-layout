@@ -25,6 +25,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.OverrideOnDemand;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.render.PageRenderContext;
@@ -44,15 +45,17 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   private boolean m_bPrepared = false;
   private SizeSpec m_aPrepareAvailableSize;
   private SizeSpec m_aPreparedSize;
+  private SizeSpec m_aRenderSize;
 
   public AbstractPLRenderableObject ()
   {}
 
   @OverrideOnDemand
   @OverridingMethodsMustInvokeSuper
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
-    aVisitor.onElement (this);
+    return aVisitor.onElement (this);
   }
 
   /**
@@ -91,6 +94,17 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
+   * @return The size used to perform the preparation. Is <code>null</code> if
+   *         this object was not yet prepared. This is required, if a text needs
+   *         to be prepared more than once (e.g. text with placeholders).
+   */
+  @Nullable
+  protected final SizeSpec getPrepareAvailableSize ()
+  {
+    return m_aPrepareAvailableSize;
+  }
+
+  /**
    * @return The prepared size or <code>null</code> if this object was not yet
    *         prepared.
    * @see #isPrepared()
@@ -101,15 +115,10 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return m_aPreparedSize;
   }
 
-  /**
-   * @return The size used to perform the preparation. Is <code>null</code> if
-   *         this object was not yet prepared. This is required, if a text needs
-   *         to be prepared more than once (e.g. text with placeholders).
-   */
   @Nullable
-  protected final SizeSpec getPrepareAvailableSize ()
+  public final SizeSpec getRenderSize ()
   {
-    return m_aPrepareAvailableSize;
+    return m_aRenderSize;
   }
 
   /**
@@ -125,16 +134,17 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx);
 
   /**
-   * Overwrite this method to adopt prepared sizes (e.g. for min or max size)
+   * Overwrite this method to adopt prepared sizes (e.g. for min or max size) to
+   * get the render size.
    *
    * @param aPreparedSize
    *        The originally prepared size.
-   * @return The modified prepared size or the parameter if no changes are
-   *         necessary. May not be <code>null</code>.
+   * @return The modified prepared size or the unchanged prepared size if no
+   *         changes are necessary. May not be <code>null</code>.
    */
   @Nonnull
   @OverrideOnDemand
-  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
+  protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
   {
     return aPreparedSize;
   }
@@ -151,7 +161,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     ValueEnforcer.notNull (aPreparedSize, "PreparedSize");
 
     m_bPrepared = true;
-    m_aPreparedSize = adoptPreparedSize (aPreparedSize);
+    m_aPreparedSize = aPreparedSize;
+    m_aRenderSize = getRenderSize (aPreparedSize);
 
     if (PLDebug.isDebugPrepare ())
     {
@@ -163,23 +174,28 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                   " and " +
                   PLDebug.getYMBP ((IPLHasMarginBorderPadding <?>) this);
       }
-      PLDebug.debugPrepare (this, "Prepared object: " + PLDebug.getWH (aPreparedSize) + sSuffix);
+      PLDebug.debugPrepare (this,
+                            "Prepared object: " +
+                                  PLDebug.getWH (aPreparedSize) +
+                                  sSuffix +
+                                  "; Render size: " +
+                                  PLDebug.getWH (m_aRenderSize));
     }
   }
 
-  protected final void onPreparedSizeChange ()
+  protected final void onRenderSizeChange ()
   {
     if (m_bPrepared)
     {
       // Recalculate, e.g. for min-max size change
-      final SizeSpec aOldPreparedSize = m_aPreparedSize;
-      _setPreparedSize (aOldPreparedSize);
+      final SizeSpec aOldRenderSize = m_aRenderSize;
+      m_aRenderSize = getRenderSize (m_aPreparedSize);
       if (PLDebug.isDebugPrepare ())
         PLDebug.debugPrepare (this,
-                              "PreparedSizeChange from " +
-                                    PLDebug.getWH (aOldPreparedSize) +
+                              "RenderSize changed from " +
+                                    PLDebug.getWH (aOldRenderSize) +
                                     " to " +
-                                    PLDebug.getWH (m_aPreparedSize));
+                                    PLDebug.getWH (m_aRenderSize));
     }
   }
 
@@ -211,8 +227,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     // Remember original
     m_aPrepareAvailableSize = new SizeSpec (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ());
 
-    // Return the prepared size
-    return m_aPreparedSize;
+    // Return the render size
+    return m_aRenderSize;
   }
 
   /**
@@ -225,11 +241,21 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * INTERNAL method. Do not call from outside! This resets the preparation
    * state.
    */
-  public final void internalMarkAsNotPrepared ()
+  protected final void internalMarkAsNotPreparedDontPropagate ()
   {
     internalCheckAlreadyPrepared ();
-    m_aPreparedSize = null;
     m_bPrepared = false;
+    m_aPreparedSize = null;
+    m_aRenderSize = null;
+  }
+
+  /**
+   * INTERNAL method. Do not call from outside! This resets the preparation
+   * state.
+   */
+  public final void internalMarkAsNotPrepared ()
+  {
+    internalMarkAsNotPreparedDontPropagate ();
     onMarkAsNotPrepared ();
   }
 
@@ -285,6 +311,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                             .append ("Prepared", m_bPrepared)
                             .appendIfNotNull ("PrepareAvailableSize", m_aPrepareAvailableSize)
                             .appendIfNotNull ("PreparedSize", m_aPreparedSize)
+                            .appendIfNotNull ("RenderSize", m_aRenderSize)
                             .toString ();
   }
 }

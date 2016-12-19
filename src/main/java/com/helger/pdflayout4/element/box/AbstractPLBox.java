@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.base.AbstractPLBlockElement;
@@ -111,11 +112,26 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
-    super.visit (aVisitor);
+    EChange ret = super.visit (aVisitor);
     if (m_aElement != null)
-      m_aElement.visit (aVisitor);
+    {
+      if (m_aElement.visit (aVisitor).isChanged ())
+      {
+        ret = EChange.CHANGED;
+
+        // Something changed in the contained element
+        // E.g. in onBeforeRender for text elements with placeholder texts
+        // replaced
+        final SizeSpec aElementPreparedSize = m_aElement.getPreparedSize ();
+        internalMarkAsNotPreparedDontPropagate ();
+        m_aElementPreparedSize = aElementPreparedSize;
+        internalMarkAsPrepared (aElementPreparedSize.plus (m_aElement.getOutlineXSum (), m_aElement.getOutlineYSum ()));
+      }
+    }
+    return ret;
   }
 
   /**
@@ -131,13 +147,15 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
   @Override
   @Nonnull
-  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
+  protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
   {
-    final SizeSpec aEffectiveSize = super.adoptPreparedSize (aPreparedSize);
-    // Calculate how big this box would be with min/max size
-    m_aRenderOffset = new SizeSpec (getIndentX (aEffectiveSize.getWidth (), aPreparedSize.getWidth ()),
-                                    getIndentY (aEffectiveSize.getHeight (), aPreparedSize.getHeight ()));
-    return aEffectiveSize;
+    final SizeSpec aRenderSize = super.getRenderSize (aPreparedSize);
+
+    // Handle horizontal and vertical alignment here
+    m_aRenderOffset = new SizeSpec (getIndentX (aRenderSize.getWidth (), aPreparedSize.getWidth ()),
+                                    getIndentY (aRenderSize.getHeight (), aPreparedSize.getHeight ()));
+
+    return aRenderSize;
   }
 
   @Override
@@ -286,8 +304,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
                                                                    fStartLeft,
                                                                    fStartTop,
-                                                                   getPreparedWidth (),
-                                                                   getPreparedHeight ());
+                                                                   getRenderWidth (),
+                                                                   getRenderHeight ());
       m_aElement.render (aElementCtx);
     }
   }

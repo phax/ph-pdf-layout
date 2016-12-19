@@ -23,18 +23,22 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
+import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
-import com.helger.pdflayout4.base.PLPageSet;
+import com.helger.pdflayout4.element.box.PLBox;
+import com.helger.pdflayout4.element.table.PLTable;
+import com.helger.pdflayout4.element.table.PLTableCell;
 import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.render.PagePreRenderContext;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EHorzAlignment;
 import com.helger.pdflayout4.spec.FontSpec;
 import com.helger.pdflayout4.spec.PreloadFont;
+import com.helger.pdflayout4.spec.WidthSpec;
 
 /**
  * Test class for {@link PLPageSet}
@@ -48,7 +52,7 @@ public final class PLPageSetTest
 
   static
   {
-    if (false)
+    if (true)
       PLDebug.setDebugAll (true);
   }
 
@@ -76,15 +80,36 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.setPageHeader (new PLText (sHeader +
-                                    sHeader +
-                                    "last line of header",
-                                    r10).setFillColor (Color.PINK).setHorzAlign (EHorzAlignment.RIGHT));
+    aPS1.setPageHeader (new PLBox (new PLText (sHeader +
+                                               sHeader +
+                                               "last line of header",
+                                               r10).setFillColor (Color.PINK)).setHorzAlign (EHorzAlignment.RIGHT));
     aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-header-aligned.pdf"));
+  }
+
+  @Test
+  public void testHeaderTableAligned () throws PDFCreationException
+  {
+    final String sHeader = "This is a page header that is repeated on every page.\nIt can have multiple lines etc.\n";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+
+    final PLTable aTable = new PLTable (new CommonsArrayList <> (WidthSpec.star ()));
+    aTable.addRow (new PLTableCell (new PLText (sHeader +
+                                                sHeader +
+                                                "last line of header",
+                                                r10).setFillColor (Color.PINK)).setHorzAlign (EHorzAlignment.RIGHT));
+    aPS1.setPageHeader (aTable);
+    aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-header-table-aligned.pdf"));
   }
 
   @Test
@@ -177,32 +202,32 @@ public final class PLPageSetTest
   @Test
   public void testWithPlaceholder () throws PDFCreationException
   {
-    final String sHeader = "This is a page header that is repeated on every page.";
-
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.setPageHeader (new PLText (sHeader, r10).setBorder (Color.RED));
-    aPS1.setPageFooter (new PLText (PagePreRenderContext.PLACEHOLDER_PAGESET_INDEX +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
-                                    " / ${custom-var}",
-                                    r10).setReplacePlaceholder (true)
-                                        .setFillColor (Color.PINK)
-                                        .setHorzAlign (EHorzAlignment.CENTER));
+    aPS1.setPageHeader (new PLBox (new PLText (PagePreRenderContext.PLACEHOLDER_PAGESET_INDEX +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
+                                               " / ${custom-var}",
+                                               r10).setID ("header")
+                                                   .setReplacePlaceholder (true)
+                                                   .setFillColor (Color.PINK)).setID ("headerbox")
+                                                                              .setHorzAlign (EHorzAlignment.CENTER));
 
+    final StringBuilder aText = new StringBuilder ();
     for (int i = 0; i < 80; ++i)
-      aPS1.addElement (new PLText ("Line " + i, r10));
+      aText.append ("Line ").append (i).append ('\n');
+    aPS1.addElement (new PLText (aText.toString (), r10).setVertSplittable (true).setID ("content"));
 
     aPS1.setPreRenderContextCustomizer (aCtx -> {
       aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)");

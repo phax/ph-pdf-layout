@@ -31,6 +31,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
@@ -57,9 +58,13 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public class PLTable extends AbstractPLRenderableObject <PLTable>
                      implements IPLSplittableObject <PLTable>, IPLHasMargin <PLTable>
 {
-  private PLVBox m_aRows = new PLVBox ().setVertSplittable (true);
+  // All column widths
   private final ICommonsList <WidthSpec> m_aWidths;
+  // With type to use
   private final EValueUOMType m_eWidthType;
+  // VBox with all the PLTableRow elements
+  private PLVBox m_aRows = new PLVBox ().setVertSplittable (true).setFullWidth (true);
+  // Margin around the table
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
 
   /**
@@ -83,7 +88,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                                               aWidth.getType ());
     if (eWidthType == EValueUOMType.AUTO)
       throw new IllegalArgumentException ("Width type auto is not allowed for tables!");
-    m_aWidths = new CommonsArrayList<> (aWidths);
+    m_aWidths = new CommonsArrayList <> (aWidths);
     m_eWidthType = eWidthType;
   }
 
@@ -155,7 +160,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTableRow addAndReturnRow (@Nonnull final PLTableCell... aCells)
   {
-    return addAndReturnRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
+    return addAndReturnRow (new CommonsArrayList <> (aCells), HeightSpec.auto ());
   }
 
   /**
@@ -253,7 +258,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTable addRow (@Nonnull final PLTableCell... aCells)
   {
-    return addRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
+    return addRow (new CommonsArrayList <> (aCells), HeightSpec.auto ());
   }
 
   /**
@@ -303,9 +308,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                           final int nEndRowIncl,
                           @Nonnull final Consumer <? super PLTableRow> aConsumer)
   {
-    m_aRows.forEachRow ( (x, idx) -> {
+    forEachRow ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
-        aConsumer.accept ((PLTableRow) x.getElement ());
+        aConsumer.accept (x);
     });
   }
 
@@ -313,9 +318,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                           final int nEndRowIncl,
                           @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
-    m_aRows.forEachRow ( (x, idx) -> {
+    forEachRow ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
-        aConsumer.accept ((PLTableRow) x.getElement (), idx);
+        aConsumer.accept (x, idx);
     });
   }
 
@@ -327,7 +332,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
 
   public void forEachCell (@Nonnull final Consumer <? super PLTableCell> aConsumer)
   {
-    forEachRow (aRow -> aRow.forEachCell (aConsumer));
+    forEachRow (x -> x.forEachCell (aConsumer));
   }
 
   @Nullable
@@ -345,10 +350,11 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
-    super.visit (aVisitor);
-    m_aRows.visit (aVisitor);
+    final EChange ret = super.visit (aVisitor);
+    return ret.or (m_aRows.visit (aVisitor));
   }
 
   @Override
@@ -393,12 +399,14 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     if (ret == null)
       return ret;
 
-    final PLTable aTable1 = new PLTable (m_aWidths).setID (getID () + "-1");
+    final PLTable aTable1 = new PLTable (m_aWidths);
+    aTable1.setID (getID () + "-1");
     aTable1.setBasicDataFrom (this);
     aTable1.internalMarkAsPrepared (ret.getFirstElement ().getSize ());
     aTable1.m_aRows = (PLVBox) ret.getFirstElement ().getElement ();
 
-    final PLTable aTable2 = new PLTable (m_aWidths).setID (getID () + "-2");
+    final PLTable aTable2 = new PLTable (m_aWidths);
+    aTable2.setID (getID () + "-2");
     aTable2.setBasicDataFrom (this);
     aTable2.internalMarkAsPrepared (ret.getSecondElement ().getSize ());
     aTable2.m_aRows = (PLVBox) ret.getSecondElement ().getElement ();
@@ -443,7 +451,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   {
     ValueEnforcer.notEmpty (aPercentages, "Percentages");
 
-    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList<> (aPercentages.length);
+    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList <> (aPercentages.length);
     for (final float fPercentage : aPercentages)
       aWidths.add (WidthSpec.perc (fPercentage));
     return new PLTable (aWidths);
@@ -462,7 +470,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   {
     ValueEnforcer.isGT0 (nColumnCount, "ColumnCount");
 
-    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList<> (nColumnCount);
+    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList <> (nColumnCount);
     for (int i = 0; i < nColumnCount; ++i)
       aWidths.add (WidthSpec.star ());
     return new PLTable (aWidths);

@@ -51,6 +51,7 @@ import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.base.AbstractPLElement;
@@ -78,9 +79,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public static final boolean DEFAULT_FULL_WIDTH = true;
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
-  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
+  // All the rows of this VBox
+  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
+  // Vertical splittable?
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+  // Header rows to be repeated after a split
   private int m_nHeaderRowCount = 0;
+  // Always use the full width?
   private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
 
   // Status vars
@@ -391,10 +396,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
+    EChange ret = EChange.UNCHANGED;
     for (final PLVBoxRow aRow : m_aRows)
-      aRow.getElement ().visit (aVisitor);
+      ret = ret.or (aRow.getElement ().visit (aVisitor));
+    return ret;
   }
 
   @Override
@@ -630,9 +638,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         if (aElement instanceof AbstractPLElement <?>)
         {
           final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
-          // Set minimum column width and height as prepared width
+          // Set minimum row width and height
           aRealElement.setMinSize (m_bFullWidth ? fElementWidth - aRealElement.getOutlineXSum () : fMaxRowWidthNet,
-                                   m_aPreparedRowSize[nIndex].getHeight () - aElement.getOutlineYSum ());
+                                   m_aPreparedRowSize[nIndex].getHeight () - aRealElement.getOutlineYSum ());
         }
         ++nIndex;
       }
@@ -691,11 +699,11 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                                    .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
-    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox1RowHeight = 0;
 
-    // Copy all header rows
+    // Copy all header rows to both boxes
     for (int nRow = 0; nRow < m_nHeaderRowCount; ++nRow)
     {
       final IPLRenderableObject <?> aHeaderRowElement = getRowElementAtIndex (nRow);
@@ -707,14 +715,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       aVBox1ElementSize.add (m_aPreparedElementSize[nRow]);
     }
 
-    // The height and width after header are identical
-    final ICommonsList <SizeSpec> aVBox2RowSize = new CommonsArrayList<> (aVBox1RowSize);
-    final ICommonsList <SizeSpec> aVBox2ElementSize = new CommonsArrayList<> (aVBox1ElementSize);
+    // The height and width after header rows are identical
+    final ICommonsList <SizeSpec> aVBox2RowSize = aVBox1RowSize.getClone ();
+    final ICommonsList <SizeSpec> aVBox2ElementSize = aVBox1ElementSize.getClone ();
     float fUsedVBox2RowHeight = fUsedVBox1RowHeight;
 
     // Copy all content rows
     boolean bOnVBox1 = true;
-
     for (int nRow = m_nHeaderRowCount; nRow < nTotalRows; ++nRow)
     {
       final IPLRenderableObject <?> aRowElement = getRowElementAtIndex (nRow);

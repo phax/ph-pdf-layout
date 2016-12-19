@@ -63,7 +63,7 @@ public class PageLayoutPDF implements IPLVisitable
   private String m_sDocumentKeywords;
   private String m_sDocumentSubject;
   private boolean m_bDebug = false;
-  private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList<> ();
+  private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class
@@ -189,10 +189,13 @@ public class PageLayoutPDF implements IPLVisitable
     return m_aPageSets.removeObject (aPageSet);
   }
 
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
+    EChange ret = EChange.UNCHANGED;
     for (final PLPageSet aPageSet : m_aPageSets)
-      aPageSet.visit (aVisitor);
+      ret = ret.or (aPageSet.visit (aVisitor));
+    return ret;
   }
 
   /**
