@@ -190,7 +190,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       m_aRenderSize = getRenderSize (m_aPreparedSize);
       if (PLDebug.isDebugPrepare ())
         PLDebug.debugPrepare (this,
-                              "RenderSizeChange from " +
+                              "RenderSize changed from " +
                                     PLDebug.getWH (aOldRenderSize) +
                                     " to " +
                                     PLDebug.getWH (m_aRenderSize));
@@ -225,8 +225,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     // Remember original
     m_aPrepareAvailableSize = new SizeSpec (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ());
 
-    // Return the prepared size
-    return m_aPreparedSize;
+    // Return the render size
+    return m_aRenderSize;
   }
 
   /**
