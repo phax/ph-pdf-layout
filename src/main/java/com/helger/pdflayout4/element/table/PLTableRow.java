@@ -42,6 +42,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implements IPLSplittableObject <PLTableRow>
 {
   private final PLHBox m_aRow = new PLHBox ().setVertSplittable (true);
+  private boolean m_bSeparableFromNextRow = true;
 
   public PLTableRow ()
   {}
@@ -142,21 +143,21 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   }
 
   @Nonnull
-  public PLTableRow setFillColor (@Nonnull final Color aFillColor)
+  public PLTableRow setFillColor (@Nullable final Color aFillColor)
   {
     forEachCell (x -> x.setFillColor (aFillColor));
     return this;
   }
 
   @Nonnull
-  public PLTableRow setBorderTop (@Nonnull final BorderStyleSpec aBorder)
+  public PLTableRow setBorderTop (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderTop (aBorder));
     return this;
   }
 
   @Nonnull
-  public PLTableRow setBorderBottom (@Nonnull final BorderStyleSpec aBorder)
+  public PLTableRow setBorderBottom (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderBottom (aBorder));
     return this;
@@ -187,6 +188,18 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   public PLTableRow setPaddingBottom (final float fPadding)
   {
     forEachCell (x -> x.setPaddingBottom (fPadding));
+    return this;
+  }
+
+  public boolean isSeparableFromNextRow ()
+  {
+    return m_bSeparableFromNextRow;
+  }
+
+  @Nonnull
+  public PLTableRow setSeparableFromNextRow (final boolean bSeparableFromNextRow)
+  {
+    m_bSeparableFromNextRow = bSeparableFromNextRow;
     return this;
   }
 

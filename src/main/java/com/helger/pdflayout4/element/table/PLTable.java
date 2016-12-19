@@ -57,9 +57,13 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public class PLTable extends AbstractPLRenderableObject <PLTable>
                      implements IPLSplittableObject <PLTable>, IPLHasMargin <PLTable>
 {
+  // VBox with all the PLTableRow elements
   private PLVBox m_aRows = new PLVBox ().setVertSplittable (true);
+  // All column widths
   private final ICommonsList <WidthSpec> m_aWidths;
+  // With type to use
   private final EValueUOMType m_eWidthType;
+  // Margin around the table
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
 
   /**
@@ -393,12 +397,14 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     if (ret == null)
       return ret;
 
-    final PLTable aTable1 = new PLTable (m_aWidths).setID (getID () + "-1");
+    final PLTable aTable1 = new PLTable (m_aWidths);
+    aTable1.setID (getID () + "-1");
     aTable1.setBasicDataFrom (this);
     aTable1.internalMarkAsPrepared (ret.getFirstElement ().getSize ());
     aTable1.m_aRows = (PLVBox) ret.getFirstElement ().getElement ();
 
-    final PLTable aTable2 = new PLTable (m_aWidths).setID (getID () + "-2");
+    final PLTable aTable2 = new PLTable (m_aWidths);
+    aTable2.setID (getID () + "-2");
     aTable2.setBasicDataFrom (this);
     aTable2.internalMarkAsPrepared (ret.getSecondElement ().getSize ());
     aTable2.m_aRows = (PLVBox) ret.getSecondElement ().getElement ();
