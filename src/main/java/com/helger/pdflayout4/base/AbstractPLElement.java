@@ -72,7 +72,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public IMPLTYPE setMinSize (@Nonnull final SizeSpec aMinSize)
   {
     m_aMinSize = ValueEnforcer.notNull (aMinSize, "MinSize");
-    onPreparedSizeChange ();
+    onRenderSizeChange ();
     return thisAsT ();
   }
 
@@ -86,7 +86,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public IMPLTYPE setMaxSize (@Nonnull final SizeSpec aMaxSize)
   {
     m_aMaxSize = ValueEnforcer.notNull (aMaxSize, "MaxSize");
-    onPreparedSizeChange ();
+    onRenderSizeChange ();
     return thisAsT ();
   }
 
@@ -147,7 +147,8 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
 
   @Override
   @Nonnull
-  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
+  @OverridingMethodsMustInvokeSuper
+  protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
   {
     ValueEnforcer.notNull (aPreparedSize, "Size");
 

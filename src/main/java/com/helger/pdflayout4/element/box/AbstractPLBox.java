@@ -131,13 +131,15 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
   @Override
   @Nonnull
-  protected SizeSpec adoptPreparedSize (@Nonnull final SizeSpec aPreparedSize)
+  protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
   {
-    final SizeSpec aEffectiveSize = super.adoptPreparedSize (aPreparedSize);
-    // Calculate how big this box would be with min/max size
-    m_aRenderOffset = new SizeSpec (getIndentX (aEffectiveSize.getWidth (), aPreparedSize.getWidth ()),
-                                    getIndentY (aEffectiveSize.getHeight (), aPreparedSize.getHeight ()));
-    return aEffectiveSize;
+    final SizeSpec aRenderSize = super.getRenderSize (aPreparedSize);
+
+    // Handle horizontal and vertical alignment here
+    m_aRenderOffset = new SizeSpec (getIndentX (aRenderSize.getWidth (), aPreparedSize.getWidth ()),
+                                    getIndentY (aRenderSize.getHeight (), aPreparedSize.getHeight ()));
+
+    return aRenderSize;
   }
 
   @Override
