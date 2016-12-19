@@ -57,12 +57,12 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public class PLTable extends AbstractPLRenderableObject <PLTable>
                      implements IPLSplittableObject <PLTable>, IPLHasMargin <PLTable>
 {
-  // VBox with all the PLTableRow elements
-  private PLVBox m_aRows = new PLVBox ().setVertSplittable (true);
   // All column widths
   private final ICommonsList <WidthSpec> m_aWidths;
   // With type to use
   private final EValueUOMType m_eWidthType;
+  // VBox with all the PLTableRow elements
+  private PLVBox m_aRows = new PLVBox ().setVertSplittable (true).setFullWidth (true);
   // Margin around the table
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
 

@@ -70,9 +70,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   public static final class PageSetPrepareResult
   {
     private float m_fHeaderHeight = Float.NaN;
-    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList<> ();
+    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList <> ();
     private float m_fFooterHeight = Float.NaN;
-    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList<> ();
+    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList <> ();
 
     PageSetPrepareResult ()
     {}
@@ -178,7 +178,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private Color m_aFillColor = DEFAULT_FILL_COLOR;
   private IPLRenderableObject <?> m_aPageHeader;
-  private final ICommonsList <IPLRenderableObject <?>> m_aElements = new CommonsArrayList<> ();
+  private final ICommonsList <IPLRenderableObject <?>> m_aElements = new CommonsArrayList <> ();
   private IPLRenderableObject <?> m_aPageFooter;
   private IPreRenderContextCustomizer m_aPRCCustomizer;
   private IRenderContextCustomizer m_aRCCustomizer;
@@ -487,6 +487,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                        m_aPageSize.getHeight () +
                                        ")! Cannot render!");
 
+    // Prepare all elements
     {
       final float fAvailWidth = getAvailableWidth ();
       final float fAvailHeight = getAvailableHeight ();
@@ -503,8 +504,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                     getOutlineYSum ());
 
       // Prepare content elements
-      // Must be done after header and footer, because the margins may got
-      // adopted!
+      // Must be done after header and footer, because the pageset margins may
+      // have been adopted!
       for (final IPLRenderableObject <?> aElement : m_aElements)
       {
         final PreparationContext aRPC = new PreparationContext (aGlobalCtx, fAvailWidth, fAvailHeight);
@@ -524,14 +525,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       if (PLDebug.isDebugSplit ())
         PLDebug.debugSplit (this, "Start splitting elements");
 
-      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList<> ();
+      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList <> ();
 
       // Start at the top
       float fCurY = fYTop;
 
       // Create a copy of the list, so that we can safely modify it
       final ICommonsList <PLElementWithSize> aElementsWithSize = ret.getAllElements ();
-      while (!aElementsWithSize.isEmpty ())
+      while (aElementsWithSize.isNotEmpty ())
       {
         // Use the first element
         final PLElementWithSize aElementWithSize = aElementsWithSize.remove (0);
@@ -551,8 +552,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         if (fCurY - fElementHeightFull < fYLeast || bIsPagebreakDesired)
         {
           // Element does not fit on page - try to split
-          final boolean bIsSplittable = aElement.isVertSplittable ();
-          if (bIsSplittable)
+          final boolean bIsVertSplittable = aElement.isVertSplittable ();
+          if (bIsVertSplittable)
           {
             // split elements
             final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
@@ -619,7 +620,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                           aElement.getDebugID () +
                                           " does not fit onto a single page (" +
                                           fSplitHeight +
-                                          ") even though it is splittable!");
+                                          ") even though it is vertically splittable!");
               }
             } // splitHeight > 0
           }
@@ -633,7 +634,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
               s_aLogger.warn ("The single element " +
                               aElement.getDebugID () +
                               " does not fit onto a single page" +
-                              (bIsSplittable ? " even though it is splittable!" : " and is not splittable!"));
+                              (bIsVertSplittable ? " even though it is vertically splittable!"
+                                                 : " and is not vertically splittable!"));
             }
           }
           else
@@ -644,9 +646,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
 
             if (PLDebug.isDebugPrepare ())
             {
-              final ICommonsList <String> aLastPageContent = new CommonsArrayList<> (aCurPageElements,
-                                                                                     x -> x.getElement ()
-                                                                                           .getDebugID ());
+              final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
+                                                                                      x -> x.getElement ()
+                                                                                            .getDebugID ());
               PLDebug.debugPrepare (this,
                                     "Finished page " +
                                           ret.getPageNumber () +
@@ -654,10 +656,11 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                           StringHelper.getImploded (aLastPageContent));
             }
 
+            // Something on the current page -> start a new page
             ret.addPerPageElements (aCurPageElements);
-            aCurPageElements = new CommonsArrayList<> ();
+            aCurPageElements = new CommonsArrayList <> ();
 
-            // Start new page
+            // Start at the top again
             fCurY = fYTop;
 
             // Re-add element and continue from start, so that splitting happens
@@ -670,18 +673,20 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
 
         // Add element to current page (may also be a page break)
         aCurPageElements.add (aElementWithSize);
+
+        // Go down
         fCurY -= fElementHeightFull;
       }
 
-      // Add elements to last page
-      if (!aCurPageElements.isEmpty ())
+      if (aCurPageElements.isNotEmpty ())
       {
+        // Add elements of last page
         ret.addPerPageElements (aCurPageElements);
 
         if (PLDebug.isDebugSplit ())
         {
-          final ICommonsList <String> aLastPageContent = new CommonsArrayList<> (aCurPageElements,
-                                                                                 x -> x.getElement ().getDebugID ());
+          final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
+                                                                                  x -> x.getElement ().getDebugID ());
           PLDebug.debugSplit (this,
                               "Finished last page " +
                                     ret.getPageNumber () +
