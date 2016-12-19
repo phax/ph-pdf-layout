@@ -21,7 +21,8 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.function.IThrowingConsumer;
+import com.helger.commons.function.IThrowingFunction;
+import com.helger.commons.state.EChange;
 
 /**
  * Visitor callback
@@ -47,11 +48,15 @@ public interface IPLVisitor
    *
    * @param aElement
    *        The current element. Never <code>null</code>.
+   * @return {@link EChange#CHANGED} if the object was modified.
    * @throws IOException
    *         on PDFBox error
    */
-  default void onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
-  {}
+  @Nonnull
+  default EChange onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
+  {
+    return EChange.UNCHANGED;
+  }
 
   /**
    * Call on page set end
@@ -75,14 +80,15 @@ public interface IPLVisitor
    *         on PDFBox error
    */
   @Nonnull
-  static IPLVisitor createElementVisitor (@Nonnull final IThrowingConsumer <? super IPLRenderableObject <?>, IOException> aElementConsumer) throws IOException
+  static IPLVisitor createElementVisitor (@Nonnull final IThrowingFunction <? super IPLRenderableObject <?>, EChange, IOException> aElementConsumer) throws IOException
   {
     ValueEnforcer.notNull (aElementConsumer, "ElementConsumer");
     return new IPLVisitor ()
     {
-      public void onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
+      @Nonnull
+      public EChange onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
       {
-        aElementConsumer.accept (aElement);
+        return aElementConsumer.apply (aElement);
       }
     };
   }

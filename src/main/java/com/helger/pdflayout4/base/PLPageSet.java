@@ -38,6 +38,7 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
@@ -414,16 +415,19 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
     return m_aPageSize.getHeight () - getOutlineTop ();
   }
 
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
+    EChange ret = EChange.UNCHANGED;
     aVisitor.onPageSetStart (this);
     if (m_aPageHeader != null)
-      m_aPageHeader.visit (aVisitor);
+      ret = ret.or (m_aPageHeader.visit (aVisitor));
     if (m_aPageFooter != null)
-      m_aPageFooter.visit (aVisitor);
+      ret = ret.or (m_aPageFooter.visit (aVisitor));
     for (final IPLRenderableObject <?> aElement : m_aElements)
-      aElement.visit (aVisitor);
+      ret = ret.or (aElement.visit (aVisitor));
     aVisitor.onPageSetEnd (this);
+    return ret;
   }
 
   @Nonnull
@@ -439,6 +443,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
                                                               m_aPageSize.getWidth () - getMarginXSum (),
                                                               getMarginTop ());
+
+      if (PLDebug.isDebugPrepare ())
+        PLDebug.debugPrepare (this,
+                              "Start preparing page header on width=" +
+                                    aRPC.getAvailableWidth () +
+                                    " and height=" +
+                                    aRPC.getAvailableHeight ());
+
       final SizeSpec aElementSize = m_aPageHeader.prepare (aRPC);
       ret.setHeaderHeight (aElementSize.getHeight ());
 
@@ -463,6 +475,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
                                                               m_aPageSize.getWidth () - getMarginXSum (),
                                                               getMarginBottom ());
+
+      if (PLDebug.isDebugPrepare ())
+        PLDebug.debugPrepare (this,
+                              "Start preparing page footer on width=" +
+                                    aRPC.getAvailableWidth () +
+                                    " and height=" +
+                                    aRPC.getAvailableHeight ());
+
       final SizeSpec aElementSize = m_aPageFooter.prepare (aRPC);
       ret.setFooterHeight (aElementSize.getHeight ());
 
@@ -879,10 +899,15 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("pageSize", m_aPageSize)
-                            .appendIfNotNull ("pageHeader", m_aPageHeader)
-                            .append ("elements", m_aElements)
-                            .appendIfNotNull ("pageFooter", m_aPageFooter)
+                            .append ("PageSize", m_aPageSize)
+                            .append ("Margin", m_aMargin)
+                            .append ("Padding", m_aPadding)
+                            .append ("Border", m_aBorder)
+                            .append ("FillColor", m_aFillColor)
+                            .appendIfNotNull ("PageHeader", m_aPageHeader)
+                            .append ("Elements", m_aElements)
+                            .appendIfNotNull ("PageFooter", m_aPageFooter)
+                            .appendIfNotNull ("PRCCustomizer", m_aPRCCustomizer)
                             .appendIfNotNull ("RCCustomizer", m_aRCCustomizer)
                             .toString ();
   }

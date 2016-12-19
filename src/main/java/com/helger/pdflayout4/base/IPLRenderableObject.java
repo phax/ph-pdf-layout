@@ -22,6 +22,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.state.EChange;
 import com.helger.pdflayout4.render.PagePreRenderContext;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
@@ -97,11 +98,16 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    *
    * @param aCtx
    *        The current page render context. Never <code>null</code>.
+   * @return {@link EChange#CHANGED} if something changed. May not be
+   *         <code>null</code>.
    * @throws IOException
    *         In case of a PDFBox error
    */
-  default void beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
-  {}
+  @Nonnull
+  default EChange beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
+  {
+    return EChange.UNCHANGED;
+  }
 
   /**
    * Second step: perform. This renders the previously prepared object to the

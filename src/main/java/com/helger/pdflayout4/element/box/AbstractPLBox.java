@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.base.AbstractPLBlockElement;
@@ -111,11 +112,20 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
-    super.visit (aVisitor);
+    EChange ret = super.visit (aVisitor);
     if (m_aElement != null)
-      m_aElement.visit (aVisitor);
+    {
+      if (m_aElement.visit (aVisitor).isChanged ())
+      {
+        ret = EChange.CHANGED;
+        m_aElementPreparedSize = m_aElement.getPreparedSize ();
+        onRenderSizeChange ();
+      }
+    }
+    return ret;
   }
 
   /**

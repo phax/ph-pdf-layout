@@ -34,6 +34,7 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.base.AbstractPLElement;
@@ -73,7 +74,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
+  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
   /** prepared column size (with outline of contained element) */
@@ -243,10 +244,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
+    EChange ret = EChange.UNCHANGED;
     for (final PLHBoxColumn aColumn : m_aColumns)
-      aColumn.getElement ().visit (aVisitor);
+      ret = ret.or (aColumn.getElement ().visit (aVisitor));
+    return ret;
   }
 
   @Override
@@ -463,7 +467,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
           // Set minimum column width and height as prepared width
           aRealElement.setMinSize (m_aPreparedColumnSize[nIndex].getWidth () -
-                                   aElement.getOutlineXSum (),
+                                   aRealElement.getOutlineXSum (),
                                    fMaxContentHeightNet);
         }
         ++nIndex;

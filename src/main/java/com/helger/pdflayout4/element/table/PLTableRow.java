@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.mutable.MutableInt;
+import com.helger.commons.state.EChange;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
@@ -204,10 +205,12 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
-    super.visit (aVisitor);
-    m_aRow.visit (aVisitor);
+    EChange ret = super.visit (aVisitor);
+    ret = ret.or (m_aRow.visit (aVisitor));
+    return ret;
   }
 
   @Override

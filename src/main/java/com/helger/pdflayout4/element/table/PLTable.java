@@ -31,6 +31,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
@@ -349,10 +350,11 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
-    super.visit (aVisitor);
-    m_aRows.visit (aVisitor);
+    final EChange ret = super.visit (aVisitor);
+    return ret.or (m_aRows.visit (aVisitor));
   }
 
   @Override

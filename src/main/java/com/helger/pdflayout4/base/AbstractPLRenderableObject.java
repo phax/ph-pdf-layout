@@ -25,6 +25,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.OverrideOnDemand;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.render.PageRenderContext;
@@ -51,9 +52,10 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
 
   @OverrideOnDemand
   @OverridingMethodsMustInvokeSuper
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
-    aVisitor.onElement (this);
+    return aVisitor.onElement (this);
   }
 
   /**

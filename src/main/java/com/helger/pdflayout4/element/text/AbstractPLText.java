@@ -31,6 +31,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
@@ -355,7 +356,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Override
-  public void beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
+  @Nonnull
+  public EChange beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
   {
     if (m_bReplacePlaceholder)
     {
@@ -364,8 +366,10 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       if (!sOrigText.equals (sDisplayText))
       {
         setDisplayTextAfterPrepare (sDisplayText, getPrepareAvailableSize ().getWidth ());
+        return EChange.CHANGED;
       }
     }
+    return EChange.UNCHANGED;
   }
 
   @Override

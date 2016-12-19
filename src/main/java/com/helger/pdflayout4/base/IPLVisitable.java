@@ -20,6 +20,8 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.state.EChange;
+
 /**
  * Base interface for visitable objects.
  *
@@ -32,8 +34,10 @@ public interface IPLVisitable
    *
    * @param aVisitor
    *        The visitor to use. May not be <code>null</code>.
+   * @return {@link EChange#CHANGED} if something changed internally.
    * @throws IOException
    *         on PDFBox error
    */
-  void visit (@Nonnull IPLVisitor aVisitor) throws IOException;
+  @Nonnull
+  EChange visit (@Nonnull IPLVisitor aVisitor) throws IOException;
 }

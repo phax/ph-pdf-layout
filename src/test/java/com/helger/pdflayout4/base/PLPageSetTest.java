@@ -52,7 +52,7 @@ public final class PLPageSetTest
 
   static
   {
-    if (false)
+    if (true)
       PLDebug.setDebugAll (true);
   }
 
@@ -202,32 +202,32 @@ public final class PLPageSetTest
   @Test
   public void testWithPlaceholder () throws PDFCreationException
   {
-    final String sHeader = "This is a page header that is repeated on every page.";
-
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.setPageHeader (new PLText (sHeader, r10).setBorder (Color.RED));
-    aPS1.setPageFooter (new PLText (PagePreRenderContext.PLACEHOLDER_PAGESET_INDEX +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
-                                    " / " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
-                                    " / ${custom-var}",
-                                    r10).setReplacePlaceholder (true)
-                                        .setFillColor (Color.PINK)
-                                        .setHorzAlign (EHorzAlignment.CENTER));
+    aPS1.setPageHeader (new PLBox (new PLText (PagePreRenderContext.PLACEHOLDER_PAGESET_INDEX +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                               " / " +
+                                               PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
+                                               " / ${custom-var}",
+                                               r10).setID ("header")
+                                                   .setReplacePlaceholder (true)
+                                                   .setFillColor (Color.PINK)).setID ("headerbox")
+                                                                              .setHorzAlign (EHorzAlignment.CENTER));
 
+    final StringBuilder aText = new StringBuilder ();
     for (int i = 0; i < 80; ++i)
-      aPS1.addElement (new PLText ("Line " + i, r10));
+      aText.append ("Line ").append (i).append ('\n');
+    aPS1.addElement (new PLText (aText.toString (), r10).setVertSplittable (true));
 
     aPS1.setPreRenderContextCustomizer (aCtx -> {
       aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)");

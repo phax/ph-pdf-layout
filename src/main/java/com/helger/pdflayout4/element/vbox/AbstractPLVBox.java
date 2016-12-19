@@ -51,6 +51,7 @@ import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
+import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.base.AbstractPLElement;
@@ -395,10 +396,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   @Override
-  public void visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @Nonnull
+  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
+    EChange ret = EChange.UNCHANGED;
     for (final PLVBoxRow aRow : m_aRows)
-      aRow.getElement ().visit (aVisitor);
+      ret = ret.or (aRow.getElement ().visit (aVisitor));
+    return ret;
   }
 
   @Override
@@ -634,9 +638,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         if (aElement instanceof AbstractPLElement <?>)
         {
           final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
-          // Set minimum column width and height as prepared width
+          // Set minimum row width and height
           aRealElement.setMinSize (m_bFullWidth ? fElementWidth - aRealElement.getOutlineXSum () : fMaxRowWidthNet,
-                                   m_aPreparedRowSize[nIndex].getHeight () - aElement.getOutlineYSum ());
+                                   m_aPreparedRowSize[nIndex].getHeight () - aRealElement.getOutlineYSum ());
         }
         ++nIndex;
       }
