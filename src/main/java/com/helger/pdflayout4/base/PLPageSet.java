@@ -701,8 +701,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       if (aCurPageElements.isNotEmpty ())
       {
         // Add elements of last page
-        ret.addPerPageElements (aCurPageElements);
-
         if (PLDebug.isDebugSplit ())
         {
           final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
@@ -713,6 +711,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                     " with: " +
                                     StringHelper.getImploded (", ", aLastPageContent));
         }
+
+        ret.addPerPageElements (aCurPageElements);
       }
 
       if (PLDebug.isDebugSplit ())

@@ -227,7 +227,7 @@ public final class PLPageSetTest
     final StringBuilder aText = new StringBuilder ();
     for (int i = 0; i < 80; ++i)
       aText.append ("Line ").append (i).append ('\n');
-    aPS1.addElement (new PLText (aText.toString (), r10).setVertSplittable (true));
+    aPS1.addElement (new PLText (aText.toString (), r10).setVertSplittable (true).setID ("content"));
 
     aPS1.setPreRenderContextCustomizer (aCtx -> {
       aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)");

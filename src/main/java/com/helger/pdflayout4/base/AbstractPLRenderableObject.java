@@ -241,12 +241,21 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * INTERNAL method. Do not call from outside! This resets the preparation
    * state.
    */
-  public final void internalMarkAsNotPrepared ()
+  protected final void internalMarkAsNotPreparedDontPropagate ()
   {
     internalCheckAlreadyPrepared ();
     m_bPrepared = false;
     m_aPreparedSize = null;
     m_aRenderSize = null;
+  }
+
+  /**
+   * INTERNAL method. Do not call from outside! This resets the preparation
+   * state.
+   */
+  public final void internalMarkAsNotPrepared ()
+  {
+    internalMarkAsNotPreparedDontPropagate ();
     onMarkAsNotPrepared ();
   }
 

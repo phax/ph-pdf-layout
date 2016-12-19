@@ -121,8 +121,14 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
       if (m_aElement.visit (aVisitor).isChanged ())
       {
         ret = EChange.CHANGED;
-        m_aElementPreparedSize = m_aElement.getPreparedSize ();
-        onRenderSizeChange ();
+
+        // Something changed in the contained element
+        // E.g. in onBeforeRender for text elements with placeholder texts
+        // replaced
+        final SizeSpec aElementPreparedSize = m_aElement.getPreparedSize ();
+        internalMarkAsNotPreparedDontPropagate ();
+        m_aElementPreparedSize = aElementPreparedSize;
+        internalMarkAsPrepared (aElementPreparedSize.plus (m_aElement.getOutlineXSum (), m_aElement.getOutlineYSum ()));
       }
     }
     return ret;
