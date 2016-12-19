@@ -288,8 +288,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
                                                                    fStartLeft,
                                                                    fStartTop,
-                                                                   getPreparedWidth (),
-                                                                   getPreparedHeight ());
+                                                                   getRenderWidth (),
+                                                                   getRenderHeight ());
       m_aElement.render (aElementCtx);
     }
   }

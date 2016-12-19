@@ -194,8 +194,8 @@ public final class PLRenderHelper
     // Border starts after margin
     final float fLeft = aCtx.getStartLeft () + aElement.getMarginLeft () + fIndentX;
     final float fTop = aCtx.getStartTop () - aElement.getMarginTop () - fIndentY;
-    final float fWidth = aElement.getPreparedWidth () + aElement.getBorderXSumWidth () + aElement.getPaddingXSum ();
-    final float fHeight = aElement.getPreparedHeight () + aElement.getBorderYSumWidth () + aElement.getPaddingYSum ();
+    final float fWidth = aElement.getRenderWidth () + aElement.getBorderXSumWidth () + aElement.getPaddingXSum ();
+    final float fHeight = aElement.getRenderHeight () + aElement.getBorderYSumWidth () + aElement.getPaddingYSum ();
 
     // Fill before border
     final Color aFillColor = aElement.getFillColor ();

@@ -62,6 +62,24 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
   }
 
   /**
+   * @return The render size or <code>null</code> if this object was not yet
+   *         prepared. The render size includes the min/max size.
+   * @see #isPrepared()
+   */
+  @Nullable
+  SizeSpec getRenderSize ();
+
+  default float getRenderWidth ()
+  {
+    return getRenderSize ().getWidth ();
+  }
+
+  default float getRenderHeight ()
+  {
+    return getRenderSize ().getHeight ();
+  }
+
+  /**
    * Prepare this element once for rendering.
    *
    * @param aCtx

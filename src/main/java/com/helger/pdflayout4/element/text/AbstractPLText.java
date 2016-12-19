@@ -386,7 +386,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     if (PLDebug.isDebugRender ())
       PLDebug.debugRender (this,
                            "Display at " +
-                                 PLDebug.getXYWH (fRenderLeft, fRenderTop, getPreparedWidth (), getPreparedHeight ()) +
+                                 PLDebug.getXYWH (fRenderLeft, fRenderTop, getRenderWidth (), getRenderHeight ()) +
                                  " with " +
                                  m_aPreparedLines.size () +
                                  " lines");

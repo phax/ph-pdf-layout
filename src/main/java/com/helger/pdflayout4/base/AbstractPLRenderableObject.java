@@ -113,12 +113,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     return m_aPreparedSize;
   }
 
-  /**
-   * @return The effective size used for rendering. May differ from the prepared
-   *         size by e.g. handling min and max size.
-   */
   @Nullable
-  protected final SizeSpec getRenderSize ()
+  public final SizeSpec getRenderSize ()
   {
     return m_aRenderSize;
   }
