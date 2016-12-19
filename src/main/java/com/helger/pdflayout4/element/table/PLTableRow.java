@@ -107,8 +107,9 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     final MutableInt aEffectiveIndex = new MutableInt (0);
     m_aRow.forEachColumn ( (x, idx) -> {
       final PLTableCell aCell = (PLTableCell) x.getElement ();
-      aConsumer.accept (aCell, idx, aEffectiveIndex.intValue ());
-      aEffectiveIndex.inc (aCell.getColSpan ());
+      final int nColSpan = aCell.getColSpan ();
+      aConsumer.accept (aCell, idx, aEffectiveIndex.intValue (), aEffectiveIndex.intValue () + nColSpan);
+      aEffectiveIndex.inc (nColSpan);
     });
   }
 
@@ -132,11 +133,11 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     });
   }
 
-  public void forEachCell (@Nonnull final IPLTableCellConsumer aConsumer, @Nonnull final IPLTableCellFilter aFilter)
+  public void forEachCell (@Nonnull final IPLTableCellFilter aFilter, @Nonnull final IPLTableCellConsumer aConsumer)
   {
-    forEachCell ( (x, idx, eidx) -> {
-      if (aFilter.test (x, idx, eidx))
-        aConsumer.accept (x, idx, idx);
+    forEachCell ( (x, idx, esidx, eeidx) -> {
+      if (aFilter.test (x, idx, esidx, eeidx))
+        aConsumer.accept (x, idx, esidx, eeidx);
     });
   }
 

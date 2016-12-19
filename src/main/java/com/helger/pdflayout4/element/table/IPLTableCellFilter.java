@@ -18,10 +18,16 @@ public interface IPLTableCellFilter
    *        the current table cell. Never <code>null</code>.
    * @param nCellIndex
    *        The cell index. Always &ge; 0.
-   * @param nEffectiveCellIndex
-   *        The effective cell index including colspan. Always &ge; 0.
+   * @param nEffectiveCellStartIndex
+   *        The effective start cell index including colspan. Always &ge; 0.
+   * @param nEffectiveCellEndIndex
+   *        The effective cell end index including colspan (= effective cell
+   *        start index + colspan). Always &ge; 0.
    * @return <code>true</code> if the cell should be handled, <code>false</code>
    *         if not.
    */
-  boolean test (@Nonnull PLTableCell aCell, @Nonnegative int nCellIndex, @Nonnegative int nEffectiveCellIndex);
+  boolean test (@Nonnull PLTableCell aCell,
+                @Nonnegative int nCellIndex,
+                @Nonnegative int nEffectiveCellStartIndex,
+                @Nonnegative int nEffectiveCellEndIndex);
 }

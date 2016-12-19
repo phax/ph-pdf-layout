@@ -83,7 +83,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                                               aWidth.getType ());
     if (eWidthType == EValueUOMType.AUTO)
       throw new IllegalArgumentException ("Width type auto is not allowed for tables!");
-    m_aWidths = new CommonsArrayList<> (aWidths);
+    m_aWidths = new CommonsArrayList <> (aWidths);
     m_eWidthType = eWidthType;
   }
 
@@ -155,7 +155,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTableRow addAndReturnRow (@Nonnull final PLTableCell... aCells)
   {
-    return addAndReturnRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
+    return addAndReturnRow (new CommonsArrayList <> (aCells), HeightSpec.auto ());
   }
 
   /**
@@ -253,7 +253,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTable addRow (@Nonnull final PLTableCell... aCells)
   {
-    return addRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
+    return addRow (new CommonsArrayList <> (aCells), HeightSpec.auto ());
   }
 
   /**
@@ -303,9 +303,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                           final int nEndRowIncl,
                           @Nonnull final Consumer <? super PLTableRow> aConsumer)
   {
-    m_aRows.forEachRow ( (x, idx) -> {
+    forEachRow ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
-        aConsumer.accept ((PLTableRow) x.getElement ());
+        aConsumer.accept (x);
     });
   }
 
@@ -313,9 +313,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                           final int nEndRowIncl,
                           @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
-    m_aRows.forEachRow ( (x, idx) -> {
+    forEachRow ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
-        aConsumer.accept ((PLTableRow) x.getElement (), idx);
+        aConsumer.accept (x, idx);
     });
   }
 
@@ -327,7 +327,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
 
   public void forEachCell (@Nonnull final Consumer <? super PLTableCell> aConsumer)
   {
-    forEachRow (aRow -> aRow.forEachCell (aConsumer));
+    forEachRow (x -> x.forEachCell (aConsumer));
   }
 
   @Nullable
@@ -443,7 +443,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   {
     ValueEnforcer.notEmpty (aPercentages, "Percentages");
 
-    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList<> (aPercentages.length);
+    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList <> (aPercentages.length);
     for (final float fPercentage : aPercentages)
       aWidths.add (WidthSpec.perc (fPercentage));
     return new PLTable (aWidths);
@@ -462,7 +462,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   {
     ValueEnforcer.isGT0 (nColumnCount, "ColumnCount");
 
-    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList<> (nColumnCount);
+    final ICommonsList <WidthSpec> aWidths = new CommonsArrayList <> (nColumnCount);
     for (int i = 0; i < nColumnCount; ++i)
       aWidths.add (WidthSpec.star ());
     return new PLTable (aWidths);

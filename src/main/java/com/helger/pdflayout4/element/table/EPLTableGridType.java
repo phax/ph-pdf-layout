@@ -46,7 +46,7 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, aRow -> {
-        aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, aCell -> {
+        aRow.forEachCell ( (aCell, nIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           aCell.setBorder (null, null, null, null);
         });
       });
@@ -70,20 +70,25 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        if (nRowIndex == nStartRowIncl)
-          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-            if (nCellIndex == nStartColumnIncl)
-              aCell.setBorder (aBSS, aBSS, aBSS, aBSS);
+        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+          if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
+            if (nRowIndex == nStartRowIncl)
+            {
+              // First row
+              if (nEffectiveCellStartIndex == nStartColumnIncl)
+                aCell.setBorder (aBSS, aBSS, aBSS, aBSS);
+              else
+                aCell.setBorder (aBSS, aBSS, aBSS, null);
+            }
             else
-              aCell.setBorder (aBSS, aBSS, aBSS, null);
-          });
-        else
-          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-            if (nCellIndex == nStartColumnIncl)
-              aCell.setBorder (null, aBSS, aBSS, aBSS);
-            else
-              aCell.setBorder (null, aBSS, aBSS, null);
-          });
+            {
+              // Other rows - no top border
+              if (nEffectiveCellStartIndex == nStartColumnIncl)
+                aCell.setBorder (null, aBSS, aBSS, aBSS);
+              else
+                aCell.setBorder (null, aBSS, aBSS, null);
+            }
+        });
       });
     }
   },
@@ -104,20 +109,14 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        if (nRowIndex == nEndRowIncl)
-          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-            if (nCellIndex == nEndColumnIncl)
-              aCell.setBorder (null, null, null, null);
-            else
-              aCell.setBorder (null, aBSS, null, null);
-          });
-        else
-          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-            if (nCellIndex == nEndColumnIncl)
-              aCell.setBorder (null, null, aBSS, null);
-            else
-              aCell.setBorder (null, aBSS, aBSS, null);
-          });
+        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+          if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
+          {
+            final boolean bFirstRow = nRowIndex == nStartRowIncl;
+            final boolean bFirstCol = nEffectiveCellStartIndex == nStartColumnIncl;
+            aCell.setBorder (bFirstRow ? null : aBSS, null, null, bFirstCol ? null : aBSS);
+          }
+        });
       });
     }
   },
@@ -139,40 +138,23 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        if (nRowIndex == nStartRowIncl)
-          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-            if (nCellIndex == nStartColumnIncl)
-              aCell.setBorder (aBSS, null, null, aBSS);
-            else
-              if (nCellIndex == nEndColumnIncl)
-                aCell.setBorder (aBSS, aBSS, null, null);
-              else
-                aCell.setBorder (aBSS, null, null, null);
-          });
-        else
-          if (nRowIndex == nEndRowIncl)
-            aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-              if (nCellIndex == nStartColumnIncl)
-                aCell.setBorder (null, null, aBSS, aBSS);
-              else
-                if (nCellIndex == nEndColumnIncl)
-                  aCell.setBorder (null, aBSS, aBSS, null);
-                else
-                  aCell.setBorder (null, null, aBSS, null);
-            });
-          else
-            aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-              if (nCellIndex == nStartColumnIncl)
-                aCell.setBorder (null, null, null, aBSS);
-              else
-                if (nCellIndex == nEndColumnIncl)
-                  aCell.setBorder (null, aBSS, null, null);
-                else
-                  aCell.setBorder (null, null, null, null);
-            });
+        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+          if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
+          {
+            final boolean bFirstRow = nRowIndex == nStartRowIncl;
+            final boolean bLastRow = nRowIndex == nEndRowIncl;
+            final boolean bFirstCol = nEffectiveCellStartIndex == nStartColumnIncl;
+            final boolean bLastCol = nEffectiveCellEndIndex - 1 == nEndColumnIncl;
+            aCell.setBorder (bFirstRow ? aBSS : null,
+                             bLastCol ? aBSS : null,
+                             bLastRow ? aBSS : null,
+                             bFirstCol ? aBSS : null);
+          }
+        });
       });
     }
   },
+
   /**
    * Create all horizontal lines. The first row has a border on top and bottom,
    * all other rows only at the bottom
@@ -190,14 +172,13 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        if (nRowIndex == nStartRowIncl)
-          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-            aCell.setBorder (aBSS, null, aBSS, null);
-          });
-        else
-          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-            aCell.setBorder (null, null, aBSS, null);
-          });
+        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+          if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
+          {
+            final boolean bFirstRow = nRowIndex == nStartRowIncl;
+            aCell.setBorder (bFirstRow ? aBSS : null, null, aBSS, null);
+          }
+        });
       });
     }
   },
@@ -219,14 +200,13 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        if (nRowIndex == nEndRowIncl)
-          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-            aCell.setBorder (null, null, null, null);
-          });
-        else
-          aRow.forEachCell (nStartColumnIncl, nEndColumnIncl, (aCell, nCellIndex) -> {
-            aCell.setBorder (null, null, aBSS, null);
-          });
+        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+          if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
+          {
+            final boolean bLastRow = nRowIndex == nEndRowIncl;
+            aCell.setBorder (null, null, bLastRow ? null : aBSS, null);
+          }
+        });
       });
     }
   },
