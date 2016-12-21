@@ -35,8 +35,10 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.io.stream.StreamHelper;
+import com.helger.commons.serialize.SerializationHelper;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.system.SystemProperties;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.pdflayout4.base.IPLVisitable;
 import com.helger.pdflayout4.base.IPLVisitor;
@@ -63,7 +65,7 @@ public class PageLayoutPDF implements IPLVisitable
   private String m_sDocumentKeywords;
   private String m_sDocumentSubject;
   private boolean m_bDebug = false;
-  private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
+  private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList<> ();
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class
@@ -228,6 +230,14 @@ public class PageLayoutPDF implements IPLVisitable
                         @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
   {
     ValueEnforcer.notNull (aOS, "OutputStream");
+
+    if (false)
+    {
+      // For Serialization testing only
+      SystemProperties.setPropertyValue ("sun.io.serialization.extendedDebugInfo", true);
+      for (final PLPageSet aPageSet : m_aPageSets)
+        SerializationHelper.getSerializedByteArray (aPageSet);
+    }
 
     // create a new document
     // Use a buffered OS - approx 30% faster!

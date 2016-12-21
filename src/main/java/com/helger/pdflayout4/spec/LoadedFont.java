@@ -18,7 +18,6 @@ package com.helger.pdflayout4.spec;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.Nonnegative;
@@ -56,9 +55,9 @@ import com.helger.pdflayout4.PLDebug;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public class LoadedFont implements Serializable
+public class LoadedFont
 {
-  private static final class EncodedCodePoint implements Serializable
+  private static final class EncodedCodePoint
   {
     private final int m_nCodePoint;
     private final byte [] m_aEncoded;

@@ -26,7 +26,6 @@ import org.junit.rules.TestRule;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
-import com.helger.commons.mock.CommonsTestHelper;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
@@ -53,8 +52,7 @@ public final class PLPageSetTest
 
   static
   {
-    if (true)
-      PLDebug.setDebugAll (true);
+    PLDebug.setDebugAll (false);
   }
 
   @Test
@@ -263,9 +261,6 @@ public final class PLPageSetTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-multiple-pages.pdf"));
-
-    if (false)
-      CommonsTestHelper.testDefaultSerialization (aPS1);
   }
 
   @Test

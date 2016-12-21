@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.element.table;
 
+import java.io.Serializable;
+
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
@@ -27,7 +29,7 @@ import com.helger.pdflayout4.spec.BorderStyleSpec;
  *
  * @author Philip Helger
  */
-public interface IPLTableGridType extends IHasID <String>
+public interface IPLTableGridType extends IHasID <String>, Serializable
 {
   /**
    * Apply this grid to the whole provided table.
