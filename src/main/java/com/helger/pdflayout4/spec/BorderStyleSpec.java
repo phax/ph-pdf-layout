@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.spec;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -36,7 +37,7 @@ import com.helger.commons.string.ToStringGenerator;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public class BorderStyleSpec
+public class BorderStyleSpec implements Serializable
 {
   /** The default border color: black */
   public static final Color DEFAULT_COLOR = Color.BLACK;

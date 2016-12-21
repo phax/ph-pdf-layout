@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.spec;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -37,7 +38,7 @@ import com.helger.commons.string.ToStringGenerator;
  */
 @NotThreadSafe
 @MustImplementEqualsAndHashcode
-public class FontSpec
+public class FontSpec implements Serializable
 {
   /** The default font color: black */
   public static final Color DEFAULT_COLOR = Color.BLACK;

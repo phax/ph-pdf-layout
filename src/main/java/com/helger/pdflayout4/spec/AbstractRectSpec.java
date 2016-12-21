@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.spec;
 
+import java.io.Serializable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
@@ -32,7 +34,7 @@ import com.helger.commons.string.ToStringGenerator;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public abstract class AbstractRectSpec
+public abstract class AbstractRectSpec implements Serializable
 {
   protected final float m_fTop;
   protected final float m_fRight;

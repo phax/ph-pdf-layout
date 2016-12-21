@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.spec;
 
+import java.io.Serializable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -33,7 +35,7 @@ import com.helger.commons.string.ToStringGenerator;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public class BorderSpec
+public class BorderSpec implements Serializable
 {
   /** Represents no border at all! */
   public static final BorderSpec BORDER0 = new BorderSpec (null);
@@ -57,7 +59,7 @@ public class BorderSpec
 
   /**
    * Constructor.
-   * 
+   *
    * @param aBorderY
    *        The border to set for top and bottom. Maybe <code>null</code>.
    * @param aBorderX

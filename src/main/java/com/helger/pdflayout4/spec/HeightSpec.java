@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.spec;
 
+import java.io.Serializable;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -41,7 +43,7 @@ import com.helger.commons.string.ToStringGenerator;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public class HeightSpec
+public class HeightSpec implements Serializable
 {
   private final EValueUOMType m_eType;
   private final float m_fValue;

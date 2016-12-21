@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.element.vbox;
 
+import java.io.Serializable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -31,14 +33,14 @@ import com.helger.pdflayout4.spec.HeightSpec;
  * @author Philip Helger
  */
 @NotThreadSafe
-public final class PLVBoxRow
+public final class PLVBoxRow implements Serializable
 {
   private IPLRenderableObject <?> m_aElement;
   private final HeightSpec m_aHeight;
 
   public PLVBoxRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
   {
-    setElement (aElement);
+    internalSetElement (aElement);
     m_aHeight = ValueEnforcer.notNull (aHeight, "Height");
   }
 
@@ -49,7 +51,7 @@ public final class PLVBoxRow
   }
 
   @Nonnull
-  PLVBoxRow setElement (@Nonnull final IPLRenderableObject <?> aElement)
+  PLVBoxRow internalSetElement (@Nonnull final IPLRenderableObject <?> aElement)
   {
     m_aElement = ValueEnforcer.notNull (aElement, "Element");
     return this;

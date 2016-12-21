@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.spec;
 
+import java.io.Serializable;
+
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -37,7 +39,7 @@ import com.helger.pdflayout4.PLConvert;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public class SizeSpec
+public class SizeSpec implements Serializable
 {
   public static final SizeSpec SIZE0 = new SizeSpec (0, 0);
   public static final SizeSpec SIZE_MAX = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);

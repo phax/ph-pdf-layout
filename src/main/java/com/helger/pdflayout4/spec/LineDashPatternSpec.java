@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.spec;
 
+import java.io.Serializable;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
@@ -33,7 +35,7 @@ import com.helger.commons.string.ToStringGenerator;
  * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
-public class LineDashPatternSpec
+public class LineDashPatternSpec implements Serializable
 {
   public static final LineDashPatternSpec SOLID = new LineDashPatternSpec ();
   public static final LineDashPatternSpec DASHED_2 = new LineDashPatternSpec (2f);

@@ -17,8 +17,12 @@
 package com.helger.pdflayout4.spec;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.Immutable;
 
 import org.apache.fontbox.ttf.OTFParser;
@@ -32,9 +36,12 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.collection.ext.CommonsHashMap;
+import com.helger.commons.collection.ext.ICommonsMap;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.id.IHasID;
+import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.font.api.IFontResource;
 import com.helger.pdflayout4.PLDebug;
@@ -47,7 +54,7 @@ import com.helger.pdflayout4.PLDebug;
  * @author Philip Helger
  */
 @Immutable
-public final class PreloadFont implements IHasID <String>
+public final class PreloadFont implements IHasID <String>, Serializable
 {
   /** PDF built-in font Helvetica regular */
   public static final PreloadFont REGULAR = PreloadFont.createPredefined (PDType1Font.HELVETICA);
@@ -78,13 +85,52 @@ public final class PreloadFont implements IHasID <String>
   /** PDF built-in font Zapf Dingbats */
   public static final PreloadFont ZAPF_DINGBATS = PreloadFont.createPredefined (PDType1Font.ZAPF_DINGBATS);
 
-  private final String m_sID;
-  private final PDFont m_aFont;
-  private final IFontResource m_aFontRes;
-  private final boolean m_bEmbed;
+  private String m_sID;
+  private PDFont m_aFont;
+  private IFontResource m_aFontRes;
+  private boolean m_bEmbed;
   // Status vars
   private TrueTypeFont m_aTTF;
   private OpenTypeFont m_aOTF;
+
+  private static final ICommonsMap <String, PDType1Font> STANDARD_14 = new CommonsHashMap<> ();
+  static
+  {
+    STANDARD_14.put (PDType1Font.TIMES_ROMAN.getBaseFont (), PDType1Font.TIMES_ROMAN);
+    STANDARD_14.put (PDType1Font.TIMES_BOLD.getBaseFont (), PDType1Font.TIMES_BOLD);
+    STANDARD_14.put (PDType1Font.TIMES_ITALIC.getBaseFont (), PDType1Font.TIMES_ITALIC);
+    STANDARD_14.put (PDType1Font.TIMES_BOLD_ITALIC.getBaseFont (), PDType1Font.TIMES_BOLD_ITALIC);
+    STANDARD_14.put (PDType1Font.HELVETICA.getBaseFont (), PDType1Font.HELVETICA);
+    STANDARD_14.put (PDType1Font.HELVETICA_BOLD.getBaseFont (), PDType1Font.HELVETICA_BOLD);
+    STANDARD_14.put (PDType1Font.HELVETICA_OBLIQUE.getBaseFont (), PDType1Font.HELVETICA_OBLIQUE);
+    STANDARD_14.put (PDType1Font.HELVETICA_BOLD_OBLIQUE.getBaseFont (), PDType1Font.HELVETICA_BOLD_OBLIQUE);
+    STANDARD_14.put (PDType1Font.COURIER.getBaseFont (), PDType1Font.COURIER);
+    STANDARD_14.put (PDType1Font.COURIER_BOLD.getBaseFont (), PDType1Font.COURIER_BOLD);
+    STANDARD_14.put (PDType1Font.COURIER_OBLIQUE.getBaseFont (), PDType1Font.COURIER_OBLIQUE);
+    STANDARD_14.put (PDType1Font.COURIER_BOLD_OBLIQUE.getBaseFont (), PDType1Font.COURIER_BOLD_OBLIQUE);
+    STANDARD_14.put (PDType1Font.SYMBOL.getBaseFont (), PDType1Font.SYMBOL);
+    STANDARD_14.put (PDType1Font.ZAPF_DINGBATS.getBaseFont (), PDType1Font.ZAPF_DINGBATS);
+  }
+
+  private void readObject (@Nonnull @WillNotClose final ObjectInputStream aOIS) throws IOException,
+                                                                                ClassNotFoundException
+  {
+    m_sID = StreamHelper.readSafeUTF (aOIS);
+    final String sBaseFontName = StreamHelper.readSafeUTF (aOIS);
+    m_aFont = STANDARD_14.get (sBaseFontName);
+    m_aFontRes = (IFontResource) aOIS.readObject ();
+    m_bEmbed = aOIS.readBoolean ();
+    _parseFontRes ();
+  }
+
+  private void writeObject (@Nonnull @WillNotClose final ObjectOutputStream aOOS) throws IOException
+  {
+    StreamHelper.writeSafeUTF (aOOS, m_sID);
+    StreamHelper.writeSafeUTF (aOOS, m_aFont != null ? m_aFont.getName () : null);
+    aOOS.writeObject (m_aFontRes);
+    aOOS.writeBoolean (m_bEmbed);
+    // TTF and OTF are not written
+  }
 
   private PreloadFont (@Nonnull final PDFont aFont)
   {
@@ -95,6 +141,26 @@ public final class PreloadFont implements IHasID <String>
     m_bEmbed = false;
   }
 
+  private void _parseFontRes () throws IOException
+  {
+    if (m_aFontRes != null)
+      switch (m_aFontRes.getFontType ())
+      {
+        case TTF:
+          if (PLDebug.isDebugFont ())
+            PLDebug.debugFont (m_aFontRes.toString (), "Loading TTF font");
+          m_aTTF = new TTFParser ().parse (m_aFontRes.getInputStream ());
+          break;
+        case OTF:
+          if (PLDebug.isDebugFont ())
+            PLDebug.debugFont (m_aFontRes.toString (), "Loading OTF font");
+          m_aOTF = new OTFParser ().parse (m_aFontRes.getInputStream ());
+          break;
+        default:
+          throw new IllegalArgumentException ("Cannot parse font resources of type " + m_aFontRes.getFontType ());
+      }
+  }
+
   private PreloadFont (@Nonnull final IFontResource aFontRes, final boolean bEmbed) throws IOException
   {
     ValueEnforcer.notNull (aFontRes, "FontResource");
@@ -103,21 +169,7 @@ public final class PreloadFont implements IHasID <String>
     m_aFontRes = aFontRes;
     m_bEmbed = bEmbed;
     // Not loaded custom font
-    switch (aFontRes.getFontType ())
-    {
-      case TTF:
-        if (PLDebug.isDebugFont ())
-          PLDebug.debugFont (aFontRes.toString (), "Loading TTF font");
-        m_aTTF = new TTFParser ().parse (aFontRes.getInputStream ());
-        break;
-      case OTF:
-        if (PLDebug.isDebugFont ())
-          PLDebug.debugFont (aFontRes.toString (), "Loading OTF font");
-        m_aOTF = new OTFParser ().parse (aFontRes.getInputStream ());
-        break;
-      default:
-        throw new IllegalArgumentException ("Cannot parse font resources of type " + aFontRes.getFontType ());
-    }
+    _parseFontRes ();
   }
 
   @Nonnull
