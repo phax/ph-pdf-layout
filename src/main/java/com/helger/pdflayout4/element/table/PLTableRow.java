@@ -37,6 +37,8 @@ import com.helger.pdflayout4.element.hbox.PLHBoxColumn;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
+import com.helger.pdflayout4.spec.MarginSpec;
+import com.helger.pdflayout4.spec.PaddingSpec;
 import com.helger.pdflayout4.spec.SizeSpec;
 import com.helger.pdflayout4.spec.WidthSpec;
 
@@ -151,9 +153,23 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   }
 
   @Nonnull
+  public PLTableRow setBorder (@Nullable final BorderStyleSpec aBorder)
+  {
+    forEachCell (x -> x.setBorder (aBorder));
+    return this;
+  }
+
+  @Nonnull
   public PLTableRow setBorderTop (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderTop (aBorder));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setBorderRight (@Nullable final BorderStyleSpec aBorder)
+  {
+    forEachCell (x -> x.setBorderRight (aBorder));
     return this;
   }
 
@@ -165,9 +181,37 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   }
 
   @Nonnull
+  public PLTableRow setBorderLeft (@Nullable final BorderStyleSpec aBorder)
+  {
+    forEachCell (x -> x.setBorderLeft (aBorder));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setMargin (@Nonnull final MarginSpec aMargin)
+  {
+    forEachCell (x -> x.setMargin (aMargin));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setMargin (final float fMargin)
+  {
+    forEachCell (x -> x.setMargin (fMargin));
+    return this;
+  }
+
+  @Nonnull
   public PLTableRow setMarginTop (final float fMargin)
   {
     forEachCell (x -> x.setMarginTop (fMargin));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setMarginRight (final float fMargin)
+  {
+    forEachCell (x -> x.setMarginRight (fMargin));
     return this;
   }
 
@@ -179,6 +223,27 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   }
 
   @Nonnull
+  public PLTableRow setMarginLeft (final float fMargin)
+  {
+    forEachCell (x -> x.setMarginLeft (fMargin));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setPadding (@Nonnull final PaddingSpec aPadding)
+  {
+    forEachCell (x -> x.setPadding (aPadding));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setPadding (final float fPadding)
+  {
+    forEachCell (x -> x.setPadding (fPadding));
+    return this;
+  }
+
+  @Nonnull
   public PLTableRow setPaddingTop (final float fPadding)
   {
     forEachCell (x -> x.setPaddingTop (fPadding));
@@ -186,9 +251,23 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   }
 
   @Nonnull
+  public PLTableRow setPaddingRight (final float fPadding)
+  {
+    forEachCell (x -> x.setPaddingRight (fPadding));
+    return this;
+  }
+
+  @Nonnull
   public PLTableRow setPaddingBottom (final float fPadding)
   {
     forEachCell (x -> x.setPaddingBottom (fPadding));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setPaddingLeft (final float fPadding)
+  {
+    forEachCell (x -> x.setPaddingLeft (fPadding));
     return this;
   }
 

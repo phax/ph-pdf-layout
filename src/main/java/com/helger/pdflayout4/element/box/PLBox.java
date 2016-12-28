@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import com.helger.pdflayout4.base.IPLRenderableObject;
 
 /**
- * A box is a simple element that encapsulates another element and has a
+ * A box is a simple block element that encapsulates another element and has a
  * padding, border and margin etc. itself
  *
  * @author Philip Helger
