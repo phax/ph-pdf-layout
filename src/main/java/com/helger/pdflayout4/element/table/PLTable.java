@@ -29,6 +29,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.DevelopersNote;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
@@ -181,10 +182,21 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     return m_aRows.getHeaderRowCount ();
   }
 
+  /**
+   * @return The default height to be used for rows if none is provided. May not
+   *         be <code>null</code>.
+   */
+  @Nonnull
+  @OverrideOnDemand
+  protected HeightSpec getDefaultHeight ()
+  {
+    return HeightSpec.auto ();
+  }
+
   @Nonnull
   public PLTableRow addAndReturnRow (@Nonnull final PLTableCell... aCells)
   {
-    return addAndReturnRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
+    return addAndReturnRow (new CommonsArrayList<> (aCells), getDefaultHeight ());
   }
 
   /**
@@ -199,7 +211,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
   {
-    return addAndReturnRow (aCells, HeightSpec.auto ());
+    return addAndReturnRow (aCells, getDefaultHeight ());
   }
 
   /**
@@ -274,7 +286,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTable addRow (@Nonnull final PLTableRow aRow)
   {
-    return addRow (aRow, HeightSpec.auto ());
+    return addRow (aRow, getDefaultHeight ());
   }
 
   @Nonnull
@@ -295,7 +307,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTable addRow (@Nonnull final PLTableCell... aCells)
   {
-    return addRow (new CommonsArrayList<> (aCells), HeightSpec.auto ());
+    return addRow (new CommonsArrayList<> (aCells), getDefaultHeight ());
   }
 
   /**
@@ -310,7 +322,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   @Nonnull
   public PLTable addRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
   {
-    return addRow (aCells, HeightSpec.auto ());
+    return addRow (aCells, getDefaultHeight ());
   }
 
   /**

@@ -222,7 +222,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     }
 
     // Do prepare
-    _setPreparedSize (onPrepare (aCtx));
+    final SizeSpec aPrepResultSize = onPrepare (aCtx);
+    _setPreparedSize (aPrepResultSize);
 
     // Remember original
     m_aPrepareAvailableSize = new SizeSpec (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ());
