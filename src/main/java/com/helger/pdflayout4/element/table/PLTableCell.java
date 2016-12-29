@@ -23,8 +23,12 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.base.IPLRenderableObject;
+import com.helger.pdflayout4.base.PLElementWithSize;
+import com.helger.pdflayout4.base.PLSplitResult;
 import com.helger.pdflayout4.element.box.AbstractPLBox;
+import com.helger.pdflayout4.spec.SizeSpec;
 
 /**
  * This class represents a single table cell within a table row.
@@ -70,5 +74,113 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   public PLTableCell internalCreateNewObject (@Nonnull final PLTableCell aBase)
   {
     return new PLTableCell (null, aBase.getColSpan ());
+  }
+
+  @Override
+  @Nullable
+  public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
+  {
+    if (true)
+      return super.splitElementVert (fAvailableWidth, fAvailableHeight);
+
+    final IPLRenderableObject <?> aElement = getElement ();
+
+    // Create resulting VBoxes - the first one is not splittable again!
+    final PLTableCell aBox1 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+                                                                  .setID (getID () + "-1")
+                                                                  .setVertSplittable (false);
+    final PLTableCell aBox2 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+                                                                  .setID (getID () + "-2")
+                                                                  .setVertSplittable (true);
+
+    // Set min width/max width from source
+    // Don't use the height, because on vertically split elements, the height is
+    // dynamic
+    aBox1.setMinWidth (getMinWidth ());
+    aBox1.setMaxWidth (getMaxWidth ());
+    aBox2.setMinWidth (getMinWidth ());
+    aBox2.setMaxWidth (getMaxWidth ());
+
+    float fBox1UsedHeight = 0;
+    float fBox2UsedHeight = 0;
+
+    SizeSpec aBox1ElementPreparedSize = null;
+    SizeSpec aBox2ElementPreparedSize = null;
+
+    // Try split
+    final float fSplitWidth = getElementPreparedSize ().getWidth ();
+    final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
+    if (PLDebug.isDebugSplit ())
+      PLDebug.debugSplit (this,
+                          "Trying to split " +
+                                aElement.getDebugID () +
+                                " into pieces for split size " +
+                                PLDebug.getWH (fSplitWidth, fSplitHeight));
+
+    // Try to split the element contained in the row
+    final PLSplitResult aSplitResult = fSplitHeight <= 0 ? null : aElement.getAsSplittable ()
+                                                                          .splitElementVert (fSplitWidth, fSplitHeight);
+    if (aSplitResult == null)
+    {
+      // No splitting - so create and empty second box
+      aBox1.setElement (aElement);
+      aBox1.setBasicDataFrom (this);
+      fBox1UsedHeight += aElement.getPreparedHeight () + aElement.getOutlineYSum ();
+      aBox1ElementPreparedSize = aElement.getPreparedSize ();
+
+      aBox2.setElement (null);
+      aBox2.setBasicDataFrom (this);
+      fBox2UsedHeight += 0;
+      aBox2ElementPreparedSize = SizeSpec.SIZE0;
+    }
+    else
+    {
+      // Splitting succeeded
+      final IPLRenderableObject <?> aBox1Element = aSplitResult.getFirstElement ().getElement ();
+      aBox1.setElement (aBox1Element);
+      fBox1UsedHeight += aSplitResult.getFirstElement ().getHeightFull ();
+      aBox1ElementPreparedSize = aSplitResult.getFirstElement ().getSize ();
+
+      final IPLRenderableObject <?> aBox2Element = aSplitResult.getSecondElement ().getElement ();
+      aBox2.setElement (aBox2Element);
+      fBox2UsedHeight += aSplitResult.getSecondElement ().getHeightFull ();
+      aBox2ElementPreparedSize = aSplitResult.getSecondElement ().getSize ();
+
+      if (PLDebug.isDebugSplit ())
+        PLDebug.debugSplit (this,
+                            "Split box element " +
+                                  aElement.getDebugID () +
+                                  " into pieces: " +
+                                  aBox1Element.getDebugID () +
+                                  " (" +
+                                  aSplitResult.getFirstElement ().getWidth () +
+                                  "+" +
+                                  aBox1Element.getOutlineXSum () +
+                                  " & " +
+                                  aSplitResult.getFirstElement ().getHeight () +
+                                  "+" +
+                                  aBox1Element.getOutlineYSum () +
+                                  ") and " +
+                                  aBox2Element.getDebugID () +
+                                  " (" +
+                                  aSplitResult.getSecondElement ().getWidth () +
+                                  "+" +
+                                  aBox2Element.getOutlineXSum () +
+                                  " & " +
+                                  aSplitResult.getSecondElement ().getHeight () +
+                                  "+" +
+                                  aBox2Element.getOutlineYSum () +
+                                  ")");
+    }
+
+    // Excluding padding/margin
+    aBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox1UsedHeight));
+    aBox1.internalSetElementPreparedSize (aBox1ElementPreparedSize);
+
+    aBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox2UsedHeight));
+    aBox2.internalSetElementPreparedSize (aBox2ElementPreparedSize);
+
+    return new PLSplitResult (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
+                              new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
   }
 }

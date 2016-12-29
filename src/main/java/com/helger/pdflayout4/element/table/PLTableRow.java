@@ -32,7 +32,6 @@ import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
 import com.helger.pdflayout4.base.PLSplitResult;
-import com.helger.pdflayout4.element.hbox.PLHBox;
 import com.helger.pdflayout4.element.hbox.PLHBoxColumn;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
@@ -44,7 +43,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 
 public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implements IPLSplittableObject <PLTableRow>
 {
-  private final PLHBox m_aRow = new PLHBox ().setVertSplittable (true);
+  private final PLTableRowHBox m_aRow = new PLTableRowHBox ().setVertSplittable (true);
   private boolean m_bSeparableFromNextRow = true;
 
   public PLTableRow ()

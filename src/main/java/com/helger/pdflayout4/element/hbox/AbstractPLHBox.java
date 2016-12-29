@@ -268,7 +268,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
     int nStarColumns = 0;
     int nAutoColumns = 0;
-    // FIXME unnecessary for-loop (do it one loop underneath?)
     for (final PLHBoxColumn aColumn : m_aColumns)
       switch (aColumn.getWidth ().getType ())
       {
@@ -506,6 +505,21 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       ((AbstractPLRenderableObject <?>) aColumn.getElement ()).internalMarkAsNotPrepared ();
   }
 
+  /**
+   * Create an empty element that is to be used as a place holder for splitting
+   * 
+   * @param fWidth
+   *        Width
+   * @param fHeight
+   *        height
+   * @return Never <code>null</code>.
+   */
+  @Nonnull
+  protected IPLRenderableObject <?> splitVertCreateEmptyElement (final float fWidth, final float fHeight)
+  {
+    return PLSpacerX.createPrepared (fWidth, 0);
+  }
+
   @Nullable
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
@@ -524,7 +538,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
     // Check if height is exceeded
     {
-      boolean bAnySplittingPossible = false;
+      boolean bAnySplittingPossibleAndNecessary = false;
       for (int i = 0; i < nCols; ++i)
       {
         // Is the current element higher and splittable?
@@ -534,13 +548,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           final float fColumnHeightFull = m_aPreparedColumnSize[i].getHeight ();
           if (fColumnHeightFull > fAvailableHeight)
           {
-            bAnySplittingPossible = true;
+            bAnySplittingPossibleAndNecessary = true;
             break;
           }
         }
       }
 
-      if (!bAnySplittingPossible)
+      if (!bAnySplittingPossibleAndNecessary)
       {
         // Splitting makes no sense
         if (PLDebug.isDebugSplit ())
@@ -564,13 +578,12 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     {
       final PLHBoxColumn aColumn = getColumnAtIndex (i);
       final WidthSpec aColumnWidth = aColumn.getWidth ();
+      final float fElementWidth = m_aPreparedColumnSize[i].getWidth ();
+      final float fElementHeight = fAvailableHeight;
 
       // Create empty element with the same width as the original element
-      PLSpacerX aEmptyElement = PLSpacerX.createPrepared (m_aPreparedColumnSize[i].getWidth (), 0);
-      aHBox1.addColumn (aEmptyElement, aColumnWidth);
-
-      aEmptyElement = PLSpacerX.createPrepared (m_aPreparedColumnSize[i].getWidth (), 0);
-      aHBox2.addColumn (aEmptyElement, aColumnWidth);
+      aHBox1.addColumn (splitVertCreateEmptyElement (fElementWidth, fElementHeight), aColumnWidth);
+      aHBox2.addColumn (splitVertCreateEmptyElement (fElementWidth, fElementHeight), aColumnWidth);
     }
 
     float fHBox1MaxHeight = 0;
@@ -599,6 +612,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           PLDebug.debugSplit (this,
                               "Trying to split " +
                                     aColumnElement.getDebugID () +
+                                    " with height " +
+                                    fColumnHeight +
                                     " into pieces for remaining size " +
                                     PLDebug.getWH (fSplitWidth, fSplitHeight));
 
@@ -659,49 +674,52 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                       aColumnElement.getDebugID () +
                                       " (Column " +
                                       nCol +
-                                      ") into pieces for available height " +
+                                      ") with height " +
+                                      fColumnHeight +
+                                      " into pieces for available height " +
                                       fAvailableHeight);
         }
       }
 
       if (!bDidSplitColumn)
       {
-        if (fColumnHeight > fAvailableHeight)
-        {
-          // We should have split but did not
-          if (bIsSplittable)
+        if (false)
+          if (fColumnHeight > fAvailableHeight)
           {
-            if (PLDebug.isDebugSplit ())
-              PLDebug.debugSplit (this,
-                                  "Column " +
-                                        nCol +
-                                        " contains splittable element " +
-                                        aColumnElement.getDebugID () +
-                                        " which creates an overflow by " +
-                                        (fColumnHeight - fAvailableHeight) +
-                                        " for available height " +
-                                        fAvailableHeight +
-                                        "!");
-          }
-          else
-          {
-            if (PLDebug.isDebugSplit ())
-              PLDebug.debugSplit (this,
-                                  "Column " +
-                                        nCol +
-                                        " contains non splittable element " +
-                                        aColumnElement.getDebugID () +
-                                        " which creates an overflow by " +
-                                        (fColumnHeight - fAvailableHeight) +
-                                        " for max height " +
-                                        fAvailableHeight +
-                                        "!");
-          }
+            // We should have split but did not
+            if (bIsSplittable)
+            {
+              if (PLDebug.isDebugSplit ())
+                PLDebug.debugSplit (this,
+                                    "Column " +
+                                          nCol +
+                                          " contains splittable element " +
+                                          aColumnElement.getDebugID () +
+                                          " which creates an overflow by " +
+                                          (fColumnHeight - fAvailableHeight) +
+                                          " for available height " +
+                                          fAvailableHeight +
+                                          "!");
+            }
+            else
+            {
+              if (PLDebug.isDebugSplit ())
+                PLDebug.debugSplit (this,
+                                    "Column " +
+                                          nCol +
+                                          " contains non splittable element " +
+                                          aColumnElement.getDebugID () +
+                                          " which creates an overflow by " +
+                                          (fColumnHeight - fAvailableHeight) +
+                                          " for max height " +
+                                          fAvailableHeight +
+                                          "!");
+            }
 
-          // One column of the row is too large and cannot be split -> the whole
-          // row cannot be split!
-          return null;
-        }
+            // One column of the row is too large and cannot be split -> the
+            // whole row cannot be split!
+            return null;
+          }
 
         // No splitting and cell fits totally in available height
         aHBox1.getColumnAtIndex (nCol).setElement (aColumnElement);

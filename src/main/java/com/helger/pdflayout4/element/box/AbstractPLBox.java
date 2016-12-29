@@ -127,7 +127,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
         // replaced
         final SizeSpec aElementPreparedSize = m_aElement.getPreparedSize ();
         internalMarkAsNotPreparedDontPropagate ();
-        m_aElementPreparedSize = aElementPreparedSize;
+        internalSetElementPreparedSize (aElementPreparedSize);
         internalMarkAsPrepared (aElementPreparedSize.plus (m_aElement.getOutlineXSum (), m_aElement.getOutlineYSum ()));
       }
     }
@@ -143,6 +143,11 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   protected final SizeSpec getElementPreparedSize ()
   {
     return m_aElementPreparedSize;
+  }
+
+  protected final void internalSetElementPreparedSize (@Nullable final SizeSpec aSize)
+  {
+    m_aElementPreparedSize = aSize;
   }
 
   @Override
@@ -170,7 +175,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (),
                                                                    fElementWidth,
                                                                    fElementHeight);
-    m_aElementPreparedSize = m_aElement.prepare (aElementCtx);
+    internalSetElementPreparedSize (m_aElement.prepare (aElementCtx));
 
     // Add the outer stuff of the contained element as this elements prepared
     // size
@@ -180,7 +185,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   @Override
   protected void onMarkAsNotPrepared ()
   {
-    m_aElementPreparedSize = null;
+    internalSetElementPreparedSize (null);
     ((AbstractPLRenderableObject <?>) m_aElement).internalMarkAsNotPrepared ();
   }
 
@@ -239,7 +244,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     {
       // Splitting makes no sense!
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Splitting makes no sense, because Box 1 would be empty");
+        PLDebug.debugSplit (this, "Splitting makes no sense, because Box 2 would be empty");
       return null;
     }
 
@@ -282,10 +287,10 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
     // Excluding padding/margin
     aBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox1UsedHeight));
-    aBox1.m_aElementPreparedSize = aBox1ElementPreparedSize;
+    aBox1.internalSetElementPreparedSize (aBox1ElementPreparedSize);
 
     aBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox2UsedHeight));
-    aBox2.m_aElementPreparedSize = aBox2ElementPreparedSize;
+    aBox2.internalSetElementPreparedSize (aBox2ElementPreparedSize);
 
     return new PLSplitResult (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
                               new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
@@ -317,6 +322,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
                             .appendIfNotNull ("Element", m_aElement)
                             .append ("VertSplittable", m_bVertSplittable)
                             .appendIfNotNull ("ElementPreparedSize", m_aElementPreparedSize)
+                            .appendIfNotNull ("RenderOffset", m_aRenderOffset)
                             .toString ();
   }
 }
