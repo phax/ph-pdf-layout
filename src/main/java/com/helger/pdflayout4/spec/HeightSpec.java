@@ -111,7 +111,7 @@ public class HeightSpec implements Serializable
 
   /**
    * Get the effective height based on the passed available height. This may not
-   * be called for star height elements.
+   * be called for star or auto height elements.
    *
    * @param fAvailableHeight
    *        The available height.

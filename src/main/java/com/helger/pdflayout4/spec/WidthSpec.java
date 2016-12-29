@@ -111,7 +111,7 @@ public class WidthSpec implements Serializable
 
   /**
    * Get the effective width based on the passed available width. This may not
-   * be called for star width elements.
+   * be called for star or auto width elements.
    *
    * @param fAvailableWidth
    *        The available width.
