@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout4.element.vbox;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.pdflayout4.base.IPLRenderableObject;
@@ -36,5 +37,12 @@ public class PLVBox extends AbstractPLVBox <PLVBox>
     if (aElements != null)
       for (final IPLRenderableObject <?> aElement : aElements)
         addRow (aElement, HeightSpec.auto ());
+  }
+
+  @Override
+  @Nonnull
+  public PLVBox internalCreateNewObject (@Nonnull final PLVBox aBase)
+  {
+    return new PLVBox ();
   }
 }

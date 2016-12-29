@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.element.hbox;
 
+import javax.annotation.Nonnull;
+
 /**
  * Horizontal box - groups several columns.
  *
@@ -25,4 +27,11 @@ public class PLHBox extends AbstractPLHBox <PLHBox>
 {
   public PLHBox ()
   {}
+
+  @Override
+  @Nonnull
+  public PLHBox internalCreateNewObject (@Nonnull final PLHBox aBase)
+  {
+    return new PLHBox ();
+  }
 }

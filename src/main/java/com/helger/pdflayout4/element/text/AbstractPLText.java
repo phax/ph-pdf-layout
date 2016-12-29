@@ -80,23 +80,31 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLines;
   protected float m_fLineHeight;
 
-  public AbstractPLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
+  @Nonnull
+  public static String getPLTextText (@Nullable final String sText)
   {
     if (StringHelper.hasNoText (sText))
     {
-      m_sText = "";
+      return "";
     }
-    else
-    {
-      // Unify line endings so that all "\r" are removed and only "\n" is
-      // contained
-      String sCleaned = sText;
-      sCleaned = StringHelper.replaceAll (sCleaned, "\r\n", "\n");
-      sCleaned = StringHelper.replaceAll (sCleaned, '\r', '\n');
-      m_sText = sCleaned;
-    }
-    m_sDisplayText = sText;
+    // Unify line endings so that all "\r" are removed and only "\n" is
+    // contained
+    String sCleaned = sText;
+    sCleaned = StringHelper.replaceAll (sCleaned, "\r\n", "\n");
+    sCleaned = StringHelper.replaceAll (sCleaned, '\r', '\n');
+    return sCleaned;
+  }
+
+  public AbstractPLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
+  {
+    _setText (sText);
     m_aFontSpec = ValueEnforcer.notNull (aFontSpec, "FontSpec");
+  }
+
+  private void _setText (@Nullable final String sText)
+  {
+    m_sText = getPLTextText (sText);
+    m_sDisplayText = sText;
   }
 
   @Nonnull
@@ -355,94 +363,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return new CommonsArrayList<> (m_aPreparedLinesUnmodified);
   }
 
-  @Override
-  @Nonnull
-  public EChange beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
-  {
-    if (m_bReplacePlaceholder)
-    {
-      final String sOrigText = getText ();
-      final String sDisplayText = StringHelper.replaceMultiple (sOrigText, aCtx.getAllPlaceholders ());
-      if (!sOrigText.equals (sDisplayText))
-      {
-        setDisplayTextAfterPrepare (sDisplayText, getPrepareAvailableSize ().getWidth ());
-        return EChange.CHANGED;
-      }
-    }
-    return EChange.UNCHANGED;
-  }
-
-  @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
-  {
-    if (hasNoText ())
-    {
-      // Nothing to do - empty text
-      return;
-    }
-
-    // Fill and border
-    PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
-
-    final float fRenderLeft = aCtx.getStartLeft () + getOutlineLeft ();
-    final float fRenderTop = aCtx.getStartTop () - getOutlineTop ();
-
-    if (PLDebug.isDebugRender ())
-      PLDebug.debugRender (this,
-                           "Display at " +
-                                 PLDebug.getXYWH (fRenderLeft, fRenderTop, getRenderWidth (), getRenderHeight ()) +
-                                 " with " +
-                                 m_aPreparedLines.size () +
-                                 " lines");
-
-    final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
-
-    aContentStream.beginText ();
-
-    // Set font if changed
-    aContentStream.setFont (m_aLoadedFont, m_aFontSpec);
-
-    final float fLineHeight = m_fLineHeight;
-    final float fPreparedWidth = getPreparedWidth ();
-
-    int nIndex = 0;
-    final int nMax = m_aPreparedLines.size ();
-    for (final TextAndWidthSpec aTW : m_aPreparedLines)
-    {
-      // Replace text (if any)
-      final float fTextWidth = aTW.getWidth ();
-      final String sDrawText = aTW.getText ();
-
-      // Align text line by overall block width
-      final float fIndentX = getIndentX (fPreparedWidth, fTextWidth);
-      if (nIndex == 0)
-      {
-        // Initial move - only partial line height!
-        aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX, fRenderTop - (fLineHeight * 0.75f));
-      }
-      else
-        if (fIndentX != 0)
-        {
-          // Indent subsequent line
-          aContentStream.moveTextPositionByAmount (fIndentX, 0);
-        }
-
-      // Main draw string
-      aContentStream.drawString (sDrawText);
-      ++nIndex;
-
-      // Goto next line
-      // Handle indent per-line as when right alignment is used, the indentX may
-      // differ from line to line
-      if (nIndex < nMax)
-      {
-        // Outdent and one line down, except for last line
-        aContentStream.moveTextPositionByAmount (-fIndentX, -fLineHeight);
-      }
-    }
-    aContentStream.endText ();
-  }
-
   protected final float getDisplayHeightOfLines (@Nonnegative final int nLineCount)
   {
     // Note: when drawing the text, only 0.75*lineHeight is subtracted so now we
@@ -465,7 +385,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));
 
     final String sTextContent = StringHelper.getImplodedMapped ('\n', aLineCopy, TextAndWidthSpec::getText);
-    final PLText aNewText = new PLText (sTextContent, getFontSpec ());
+    final AbstractPLText <?> aNewText = internalCreateNewObject (thisAsT ());
+    aNewText._setText (sTextContent);
     aNewText.setBasicDataFrom (this).setID (getID () + sIDSuffix);
     // Set this explicitly after setBasicDataFrom!
     aNewText.setVertSplittable (bSplittableCopy);
@@ -553,6 +474,94 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final PLElementWithSize aText2 = _splitGetCopy (fElementWidth, aLines.subList (nLines, aLines.size ()), true, "-2");
 
     return new PLSplitResult (aText1, aText2);
+  }
+
+  @Override
+  @Nonnull
+  public EChange beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
+  {
+    if (m_bReplacePlaceholder)
+    {
+      final String sOrigText = getText ();
+      final String sDisplayText = StringHelper.replaceMultiple (sOrigText, aCtx.getAllPlaceholders ());
+      if (!sOrigText.equals (sDisplayText))
+      {
+        setDisplayTextAfterPrepare (sDisplayText, getPrepareAvailableSize ().getWidth ());
+        return EChange.CHANGED;
+      }
+    }
+    return EChange.UNCHANGED;
+  }
+
+  @Override
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    if (hasNoText ())
+    {
+      // Nothing to do - empty text
+      return;
+    }
+
+    // Fill and border
+    PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
+
+    final float fRenderLeft = aCtx.getStartLeft () + getOutlineLeft ();
+    final float fRenderTop = aCtx.getStartTop () - getOutlineTop ();
+
+    if (PLDebug.isDebugRender ())
+      PLDebug.debugRender (this,
+                           "Display at " +
+                                 PLDebug.getXYWH (fRenderLeft, fRenderTop, getRenderWidth (), getRenderHeight ()) +
+                                 " with " +
+                                 m_aPreparedLines.size () +
+                                 " lines");
+
+    final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
+
+    aContentStream.beginText ();
+
+    // Set font if changed
+    aContentStream.setFont (m_aLoadedFont, m_aFontSpec);
+
+    final float fLineHeight = m_fLineHeight;
+    final float fPreparedWidth = getPreparedWidth ();
+
+    int nIndex = 0;
+    final int nMax = m_aPreparedLines.size ();
+    for (final TextAndWidthSpec aTW : m_aPreparedLines)
+    {
+      // Replace text (if any)
+      final float fTextWidth = aTW.getWidth ();
+      final String sDrawText = aTW.getText ();
+
+      // Align text line by overall block width
+      final float fIndentX = getIndentX (fPreparedWidth, fTextWidth);
+      if (nIndex == 0)
+      {
+        // Initial move - only partial line height!
+        aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX, fRenderTop - (fLineHeight * 0.75f));
+      }
+      else
+        if (fIndentX != 0)
+        {
+          // Indent subsequent line
+          aContentStream.moveTextPositionByAmount (fIndentX, 0);
+        }
+
+      // Main draw string
+      aContentStream.drawString (sDrawText);
+      ++nIndex;
+
+      // Goto next line
+      // Handle indent per-line as when right alignment is used, the indentX may
+      // differ from line to line
+      if (nIndex < nMax)
+      {
+        // Outdent and one line down, except for last line
+        aContentStream.moveTextPositionByAmount (-fIndentX, -fLineHeight);
+      }
+    }
+    aContentStream.endText ();
   }
 
   @Override

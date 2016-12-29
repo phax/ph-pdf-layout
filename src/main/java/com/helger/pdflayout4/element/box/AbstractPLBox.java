@@ -184,9 +184,6 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     ((AbstractPLRenderableObject <?>) m_aElement).internalMarkAsNotPrepared ();
   }
 
-  @Nonnull
-  protected abstract AbstractPLBox <?> internalCreateNewObject (@Nonnull final AbstractPLBox <?> aBase);
-
   @Nullable
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
@@ -205,12 +202,12 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLBox <?> aBox1 = internalCreateNewObject (this).setBasicDataFrom (this)
-                                                                  .setID (getID () + "-1")
-                                                                  .setVertSplittable (false);
-    final AbstractPLBox <?> aBox2 = internalCreateNewObject (this).setBasicDataFrom (this)
-                                                                  .setID (getID () + "-2")
-                                                                  .setVertSplittable (true);
+    final AbstractPLBox <?> aBox1 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+                                                                        .setID (getID () + "-1")
+                                                                        .setVertSplittable (false);
+    final AbstractPLBox <?> aBox2 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+                                                                        .setID (getID () + "-2")
+                                                                        .setVertSplittable (true);
 
     // Set min width/max width from source
     // Don't use the height, because on vertically split elements, the height is

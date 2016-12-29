@@ -32,4 +32,11 @@ public class PLText extends AbstractPLText <PLText>
   {
     super (sText, aFontSpec);
   }
+
+  @Override
+  @Nonnull
+  public PLText internalCreateNewObject (@Nonnull final PLText aBase)
+  {
+    return new PLText (null, aBase.getFontSpec ());
+  }
 }

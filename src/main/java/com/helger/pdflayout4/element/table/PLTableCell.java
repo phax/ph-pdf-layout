@@ -67,8 +67,8 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
 
   @Override
   @Nonnull
-  protected PLTableCell internalCreateNewObject (@Nonnull final AbstractPLBox <?> aBase)
+  public PLTableCell internalCreateNewObject (@Nonnull final PLTableCell aBase)
   {
-    return new PLTableCell (null, ((PLTableCell) aBase).getColSpan ());
+    return new PLTableCell (null, aBase.getColSpan ());
   }
 }

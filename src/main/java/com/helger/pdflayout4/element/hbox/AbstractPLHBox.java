@@ -74,7 +74,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
+  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
   /** prepared column size (with outline of contained element) */
@@ -552,12 +552,12 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
     }
 
-    final AbstractPLHBox <?> aHBox1 = new PLHBox ().setBasicDataFrom (this)
-                                                   .setID (getID () + "-1")
-                                                   .setVertSplittable (false);
-    final AbstractPLHBox <?> aHBox2 = new PLHBox ().setBasicDataFrom (this)
-                                                   .setID (getID () + "-2")
-                                                   .setVertSplittable (true);
+    final AbstractPLHBox <?> aHBox1 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+                                                                          .setID (getID () + "-1")
+                                                                          .setVertSplittable (false);
+    final AbstractPLHBox <?> aHBox2 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+                                                                          .setID (getID () + "-2")
+                                                                          .setVertSplittable (true);
 
     // Fill all columns with empty content
     for (int i = 0; i < nCols; ++i)

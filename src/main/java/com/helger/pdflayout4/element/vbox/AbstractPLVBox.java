@@ -728,12 +728,12 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLVBox <?> aVBox1 = new PLVBox ().setBasicDataFrom (this)
-                                                   .setID (getID () + "-1")
-                                                   .setVertSplittable (false);
-    final AbstractPLVBox <?> aVBox2 = new PLVBox ().setBasicDataFrom (this)
-                                                   .setID (getID () + "-2")
-                                                   .setVertSplittable (true);
+    final AbstractPLVBox <?> aVBox1 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+                                                                          .setID (getID () + "-1")
+                                                                          .setVertSplittable (false);
+    final AbstractPLVBox <?> aVBox2 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+                                                                          .setID (getID () + "-2")
+                                                                          .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
     final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList<> (nTotalRows);

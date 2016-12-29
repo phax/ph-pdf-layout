@@ -41,7 +41,7 @@ public class PLBox extends AbstractPLBox <PLBox>
 
   @Override
   @Nonnull
-  protected PLBox internalCreateNewObject (@Nonnull final AbstractPLBox <?> aBase)
+  public PLBox internalCreateNewObject (@Nonnull final PLBox aBase)
   {
     return new PLBox ();
   }

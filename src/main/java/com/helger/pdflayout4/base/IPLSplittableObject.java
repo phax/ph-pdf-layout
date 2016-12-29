@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.base;
 
 import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -36,6 +37,9 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    *         {@link #DEFAULT_VERT_SPLITTABLE}.
    */
   boolean isVertSplittable ();
+
+  @Nonnull
+  IMPLTYPE internalCreateNewObject (@Nonnull IMPLTYPE aBase);
 
   /**
    * Split this element vertically into sub-elements according to the available

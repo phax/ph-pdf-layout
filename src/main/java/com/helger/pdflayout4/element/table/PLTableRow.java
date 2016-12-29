@@ -309,6 +309,13 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     return m_aRow.isVertSplittable ();
   }
 
+  @Override
+  @Nonnull
+  public PLTableRow internalCreateNewObject (@Nonnull final PLTableRow aBase)
+  {
+    throw new UnsupportedOperationException ();
+  }
+
   @Nullable
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
