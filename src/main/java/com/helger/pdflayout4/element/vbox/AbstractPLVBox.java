@@ -212,6 +212,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     return aRow == null ? null : aRow.getElement ();
   }
 
+  /**
+   * @return The default height to be used for rows if none is provided. May not
+   *         be <code>null</code>.
+   */
+  @Nonnull
+  public HeightSpec getDefaultHeight ()
+  {
+    return HeightSpec.auto ();
+  }
+
   @Nonnull
   private PLVBoxRow _addAndReturnRow (@CheckForSigned final int nIndex,
                                       @Nonnull final IPLRenderableObject <?> aElement,
@@ -235,7 +245,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nonnull
   public PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement)
   {
-    return addAndReturnRow (aElement, HeightSpec.auto ());
+    return addAndReturnRow (aElement, getDefaultHeight ());
   }
 
   /**
@@ -264,7 +274,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nonnull
   public IMPLTYPE addRow (@Nonnull final IPLRenderableObject <?> aElement)
   {
-    return addRow (aElement, HeightSpec.auto ());
+    return addRow (aElement, getDefaultHeight ());
   }
 
   /**
@@ -394,7 +404,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
   /**
    * Set usage of full width.
-   * 
+   *
    * @param bFullWidth
    *        <code>true</code> to enable full width, <code>false</code> to use
    *        only what is available.
@@ -445,7 +455,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
     int nIndex = 0;
     float fRestHeight = fElementHeight;
-    // 1. prepare all non-star height items
+
+    // 1. prepare all absolute height items (absolute or percentage)
     for (final PLVBoxRow aRow : m_aRows)
     {
       if (aRow.getHeight ().isAbsolute ())
@@ -477,7 +488,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       ++nIndex;
     }
 
-    // 2. prepare all auto widths items
+    // 2. prepare all auto widths items (2-pass)
     float fUsedAutoHeightFullForStar = fUsedHeightFull;
     {
       // First pass: identify all auto columns that directly fit in their
@@ -557,7 +568,11 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           final float fAvailableRowHeightPerc = fTooHighRowHeight / fUsedHeightAutoTooHigh;
 
           // Use x% of remaining height
-          final float fNewAvailableRowHeight = fRemainingHeightAuto * fAvailableRowHeightPerc;
+          // Ensure the height is not smaller than the minimum height - may be
+          // split afterwards
+          final float fNewAvailableRowHeight = Math.max (fRemainingHeightAuto *
+                                                         fAvailableRowHeightPerc,
+                                                         aTooHighAutoRows[nIndex].getHeight ());
 
           // Prepare child element
           ((AbstractPLRenderableObject <?>) aElement).internalMarkAsNotPrepared ();
@@ -605,9 +620,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       // star height rows (based on fUsedHeightFull)
     }
 
-    // 3. prepare all star widths items
+    // 3. prepare all star height items
     {
       fRestHeight = fElementHeight - fUsedAutoHeightFullForStar;
+
+      // Rest height may be <= 0 if too many "auto" rows are present that take
+      // more than the available height
+      final boolean bTooSmallRestHeight = fRestHeight <= 0;
       nIndex = 0;
       for (final PLVBoxRow aRow : m_aRows)
       {
@@ -619,9 +638,11 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           final float fRowHeight = fRestHeight / nStarRows;
 
           // Prepare child element
+          // If no height is left, use the full available height
           final SizeSpec aElementPreparedSize = aElement.prepare (new PreparationContext (aCtx.getGlobalContext (),
                                                                                           fElementWidth,
-                                                                                          fRowHeight));
+                                                                                          bTooSmallRestHeight ? fElementHeight
+                                                                                                              : fRowHeight));
 
           // Update used width
           // Effective content width of this element
@@ -630,11 +651,15 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           fMaxRowWidthFull = Math.max (fMaxRowWidthFull, fRowWidthFull);
 
           // Update used height
-          fUsedHeightFull += fRowHeight;
+          // If no height is left, use the net size of the element
+          final float fRowHeightFull = bTooSmallRestHeight ? aElementPreparedSize.getHeight () +
+                                                             aElement.getOutlineYSum ()
+                                                           : fRowHeight;
+          fUsedHeightFull += fRowHeightFull;
           // Don't change rest-height!
 
           // Without padding and margin
-          m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fElementWidth : fRowWidthFull, fRowHeight);
+          m_aPreparedRowSize[nIndex] = new SizeSpec (m_bFullWidth ? fElementWidth : fRowWidthFull, fRowHeightFull);
           m_aPreparedElementSize[nIndex] = aElementPreparedSize;
         }
         ++nIndex;

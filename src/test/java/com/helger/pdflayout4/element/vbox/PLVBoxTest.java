@@ -237,12 +237,13 @@ public final class PLVBoxTest
   @Test
   public void testAutoHeightAdvancedSplittable () throws PDFCreationException
   {
+    PLDebug.setDebugSplit (true);
     final String s1 = "This is a test";
     final String s2 = "This is also a test string \nbut much much much much longer as the other one. \nCan you believe this???? \nNo this is not believable\nThis\nshall\ncreate\nmore\nlines\n\n!";
     final String s3 = StringHelper.getRepeated (s2, 6);
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setID ("p");
 
     int nCount = 0;
     for (int h = 0; h < 2; h++)
@@ -251,7 +252,10 @@ public final class PLVBoxTest
           for (int k = 0; k < 2; ++k)
           {
             if (nCount++ > 0)
+            {
+              aPS1.addElement (new PLText ("Forced page break following", r10));
               aPS1.addElement (new PLPageBreak (false));
+            }
 
             final String sIDPrefix = h + "-" + i + "-" + j + "-" + k + "-";
             final PLVBox aVBox = new PLVBox ().setID (sIDPrefix + "vbox")
