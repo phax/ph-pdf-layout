@@ -64,4 +64,11 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   {
     return m_nColSpan;
   }
+
+  @Override
+  @Nonnull
+  protected PLTableCell internalCreateNewObject (@Nonnull final AbstractPLBox <?> aBase)
+  {
+    return new PLTableCell (null, ((PLTableCell) aBase).getColSpan ());
+  }
 }

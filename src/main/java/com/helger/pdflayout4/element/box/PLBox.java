@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout4.element.box;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.pdflayout4.base.IPLRenderableObject;
@@ -36,5 +37,12 @@ public class PLBox extends AbstractPLBox <PLBox>
   public PLBox (@Nullable final IPLRenderableObject <?> aElement)
   {
     super (aElement);
+  }
+
+  @Override
+  @Nonnull
+  protected PLBox internalCreateNewObject (@Nonnull final AbstractPLBox <?> aBase)
+  {
+    return new PLBox ();
   }
 }
