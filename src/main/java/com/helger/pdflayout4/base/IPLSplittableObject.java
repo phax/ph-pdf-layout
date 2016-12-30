@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  */
 public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPLTYPE>> extends IPLObject <IMPLTYPE>
 {
-  boolean DEFAULT_VERT_SPLITTABLE = false;
+  boolean DEFAULT_VERT_SPLITTABLE = true;
 
   /**
    * @return <code>true</code> if this element is vertically splittable,
