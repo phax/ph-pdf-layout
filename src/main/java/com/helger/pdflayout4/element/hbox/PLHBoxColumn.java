@@ -36,12 +36,12 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public final class PLHBoxColumn implements Serializable
 {
   private IPLRenderableObject <?> m_aElement;
-  private final WidthSpec m_aWidth;
+  private WidthSpec m_aWidth;
 
   public PLHBoxColumn (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final WidthSpec aWidth)
   {
-    setElement (aElement);
-    m_aWidth = ValueEnforcer.notNull (aWidth, "Width");
+    internalSetElement (aElement);
+    internalSetWidth (aWidth);
   }
 
   @Nonnull
@@ -51,7 +51,7 @@ public final class PLHBoxColumn implements Serializable
   }
 
   @Nonnull
-  PLHBoxColumn setElement (@Nonnull final IPLRenderableObject <?> aElement)
+  PLHBoxColumn internalSetElement (@Nonnull final IPLRenderableObject <?> aElement)
   {
     m_aElement = ValueEnforcer.notNull (aElement, "Element");
     return this;
@@ -61,6 +61,13 @@ public final class PLHBoxColumn implements Serializable
   public WidthSpec getWidth ()
   {
     return m_aWidth;
+  }
+
+  @Nonnull
+  PLHBoxColumn internalSetWidth (@Nonnull final WidthSpec aWidth)
+  {
+    m_aWidth = ValueEnforcer.notNull (aWidth, "Width");
+    return this;
   }
 
   @Override

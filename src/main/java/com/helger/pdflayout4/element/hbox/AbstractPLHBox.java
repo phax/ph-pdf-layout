@@ -185,20 +185,18 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public PLHBoxColumn addAndReturnColumn (@Nonnull final IPLRenderableObject <?> aElement,
                                           @Nonnull final WidthSpec aWidth)
   {
-    final PLHBoxColumn aColumn = new PLHBoxColumn (aElement, aWidth);
-    _addAndReturnColumn (-1, aColumn);
-    return aColumn;
+    return addAndReturnColumn (-1, aElement, aWidth);
   }
 
   @Nonnull
   public IMPLTYPE addColumn (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final WidthSpec aWidth)
   {
-    addAndReturnColumn (aElement, aWidth);
+    addAndReturnColumn (-1, aElement, aWidth);
     return thisAsT ();
   }
 
   @Nonnull
-  public PLHBoxColumn addAndReturnColumn (@Nonnegative final int nIndex,
+  public PLHBoxColumn addAndReturnColumn (@CheckForSigned final int nIndex,
                                           @Nonnull final IPLRenderableObject <?> aElement,
                                           @Nonnull final WidthSpec aWidth)
   {
@@ -208,7 +206,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Nonnull
-  public IMPLTYPE addColumn (@Nonnegative final int nIndex,
+  public IMPLTYPE addColumn (@CheckForSigned final int nIndex,
                              @Nonnull final IPLRenderableObject <?> aElement,
                              @Nonnull final WidthSpec aWidth)
   {
@@ -507,7 +505,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   /**
    * Create an empty element that is to be used as a place holder for splitting
-   * 
+   *
    * @param fWidth
    *        Width
    * @param fHeight
@@ -623,10 +621,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         if (aSplitResult != null)
         {
           final IPLRenderableObject <?> aHBox1Element = aSplitResult.getFirstElement ().getElement ();
-          aHBox1.getColumnAtIndex (nCol).setElement (aHBox1Element);
+          aHBox1.getColumnAtIndex (nCol).internalSetElement (aHBox1Element);
 
           final IPLRenderableObject <?> aHBox2Element = aSplitResult.getSecondElement ().getElement ();
-          aHBox2.getColumnAtIndex (nCol).setElement (aHBox2Element);
+          aHBox2.getColumnAtIndex (nCol).internalSetElement (aHBox2Element);
 
           // Use the full height, because the column itself has no padding or
           // margin!
@@ -683,46 +681,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
       if (!bDidSplitColumn)
       {
-        if (false)
-          if (fColumnHeight > fAvailableHeight)
-          {
-            // We should have split but did not
-            if (bIsSplittable)
-            {
-              if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this,
-                                    "Column " +
-                                          nCol +
-                                          " contains splittable element " +
-                                          aColumnElement.getDebugID () +
-                                          " which creates an overflow by " +
-                                          (fColumnHeight - fAvailableHeight) +
-                                          " for available height " +
-                                          fAvailableHeight +
-                                          "!");
-            }
-            else
-            {
-              if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this,
-                                    "Column " +
-                                          nCol +
-                                          " contains non splittable element " +
-                                          aColumnElement.getDebugID () +
-                                          " which creates an overflow by " +
-                                          (fColumnHeight - fAvailableHeight) +
-                                          " for max height " +
-                                          fAvailableHeight +
-                                          "!");
-            }
-
-            // One column of the row is too large and cannot be split -> the
-            // whole row cannot be split!
-            return null;
-          }
-
         // No splitting and cell fits totally in available height
-        aHBox1.getColumnAtIndex (nCol).setElement (aColumnElement);
+        aHBox1.getColumnAtIndex (nCol).internalSetElement (aColumnElement);
 
         fHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, Math.min (fColumnHeight, fAvailableHeight));
         fHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, 0);
@@ -741,6 +701,31 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       if (PLDebug.isDebugSplit ())
         PLDebug.debugSplit (this, "Weird: No column was split and the height is OK!");
       return null;
+    }
+
+    // Set min size for block elements
+    {
+      for (int nIndex = 0; nIndex < m_aColumns.size (); ++nIndex)
+      {
+        final IPLRenderableObject <?> aElement1 = aHBox1.getColumnElementAtIndex (nIndex);
+        if (aElement1 instanceof AbstractPLElement <?>)
+        {
+          // Set minimum column width and height as prepared width
+          final AbstractPLElement <?> aRealElement1 = (AbstractPLElement <?>) aElement1;
+          aRealElement1.setMinSize (m_aPreparedColumnSize[nIndex].getWidth () -
+                                    aRealElement1.getOutlineXSum (),
+                                    fHBox1MaxHeight);
+        }
+        final IPLRenderableObject <?> aElement2 = aHBox2.getColumnElementAtIndex (nIndex);
+        if (aElement2 instanceof AbstractPLElement <?>)
+        {
+          // Set minimum column width and height as prepared width
+          final AbstractPLElement <?> aRealElement2 = (AbstractPLElement <?>) aElement2;
+          aRealElement2.setMinSize (m_aPreparedColumnSize[nIndex].getWidth () -
+                                    aRealElement2.getOutlineXSum (),
+                                    fHBox2MaxHeight);
+        }
+      }
     }
 
     // mark new hboxes as prepared

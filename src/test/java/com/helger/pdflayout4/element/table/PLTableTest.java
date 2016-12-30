@@ -498,6 +498,7 @@ public final class PLTableTest
   @Test
   public void testCellSpawningPage () throws PDFCreationException
   {
+    PLDebug.setDebugAll (false);
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
@@ -505,8 +506,8 @@ public final class PLTableTest
     aPS1.addElement (new PLText ("First line", r10));
 
     // Start table
-    final String sLongText = StringHelper.getRepeated ("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                                                       100);
+    final String sLongText = StringHelper.getRepeated ("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n",
+                                                       10);
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (3).setID ("table");
     aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("celllongtext"),
                             new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),

@@ -21,11 +21,10 @@ final class PLTableRowHBox extends AbstractPLHBox <PLTableRowHBox>
   @Nonnull
   protected IPLRenderableObject <?> splitVertCreateEmptyElement (final float fWidth, final float fHeight)
   {
-    if (true)
+    if (false)
       return super.splitVertCreateEmptyElement (fWidth, fHeight);
 
     final PLTableCell ret = new PLTableCell (null);
-    ret.setMinSize (fWidth, fHeight);
     if (false)
       ret.setBorder (new BorderSpec (new BorderStyleSpec (Color.BLUE)));
     ret.prepare (new PreparationContext (null, fWidth + ret.getOutlineXSum (), fHeight + ret.getOutlineYSum ()));
