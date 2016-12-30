@@ -65,6 +65,7 @@ public class PageLayoutPDF implements IPLVisitable
   private String m_sDocumentKeywords;
   private String m_sDocumentSubject;
   private boolean m_bDebug = false;
+  private boolean m_bCompressPDF = true;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList<> ();
 
   /**
@@ -97,6 +98,27 @@ public class PageLayoutPDF implements IPLVisitable
   public PageLayoutPDF setDebug (final boolean bDebug)
   {
     m_bDebug = bDebug;
+    return this;
+  }
+
+  /**
+   * @return if PDF content should be compressed or not.
+   */
+  public boolean isCompressPDF ()
+  {
+    return m_bCompressPDF;
+  }
+
+  /**
+   * @param bCompressPDF
+   *        <code>true</code> to enable creation of compressed PDFs,
+   *        <code>false</code> to disable it.
+   * @return this for chaining
+   */
+  @Nonnull
+  public PageLayoutPDF setCompressPDF (final boolean bCompressPDF)
+  {
+    m_bCompressPDF = bCompressPDF;
     return this;
   }
 
@@ -290,7 +312,7 @@ public class PageLayoutPDF implements IPLVisitable
       for (final PLPageSet aPageSet : m_aPageSets)
       {
         final PageSetPrepareResult aPR = aPRs[nPageSetIndex];
-        aPageSet.renderAllPages (aPR, aDoc, m_bDebug, nPageSetIndex, nTotalPageIndex, nTotalPageCount);
+        aPageSet.renderAllPages (aPR, aDoc, m_bDebug, m_bCompressPDF, nPageSetIndex, nTotalPageIndex, nTotalPageCount);
         // Inc afterwards
         nTotalPageIndex += aPR.getPageCount ();
         nPageSetIndex++;

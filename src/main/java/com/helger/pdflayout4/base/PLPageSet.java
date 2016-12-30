@@ -732,6 +732,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    *        The PDDocument. May not be <code>null</code>.
    * @param bDebug
    *        <code>true</code> for debug output
+   * @param bCompressPDF
+   *        <code>true</code> for create enflated PDF content
    * @param nPageSetIndex
    *        Page set index. Always &ge; 0.
    * @param nTotalPageStartIndex
@@ -744,6 +746,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   public void renderAllPages (@Nonnull final PageSetPrepareResult aPrepareResult,
                               @Nonnull final PDDocument aDoc,
                               final boolean bDebug,
+                              final boolean bCompressPDF,
                               @Nonnegative final int nPageSetIndex,
                               @Nonnegative final int nTotalPageStartIndex,
                               @Nonnegative final int nTotalPageCount) throws IOException
@@ -752,7 +755,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
     final float fXLeft = getOutlineLeft ();
     final float fYTop = getYTop ();
 
-    final boolean bCompressPDF = !bDebug;
     int nPageIndex = 0;
     final int nPageCount = aPrepareResult.getPageCount ();
     for (final ICommonsList <PLElementWithSize> aPerPage : aPrepareResult.directGetPerPageElements ())
