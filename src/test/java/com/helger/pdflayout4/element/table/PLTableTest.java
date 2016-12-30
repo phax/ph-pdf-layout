@@ -32,12 +32,14 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
+import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.special.PLPageBreak;
+import com.helger.pdflayout4.element.special.PLSpacerX;
 import com.helger.pdflayout4.element.special.PLSpacerY;
 import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.BorderSpec;
@@ -59,7 +61,7 @@ public final class PLTableTest
 {
   static
   {
-    PLDebug.setDebugAll (false);
+    PLDebug.setDebugAll (true);
   }
 
   @Rule
@@ -491,5 +493,33 @@ public final class PLTableTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-many-rows.pdf"));
+  }
+
+  @Test
+  public void testCellSpawningPage () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.addElement (new PLText ("First line", r10));
+
+    // Start table
+    final String sLongText = StringHelper.getRepeated ("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                                                       100);
+    final PLTable aTable = PLTable.createWithEvenlySizedColumns (3).setID ("table");
+    aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("celllongtext"),
+                            new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),
+                            new PLTableCell (new PLText ("Short text", r10).setID ("shorttext"))
+                                                                                                .setID ("cellshorttext"))
+          .setID ("row");
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.BLUE));
+    aPS1.addElement (aTable);
+
+    aPS1.addElement (new PLText ("Last line", r10));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-cell-spawning-page.pdf"));
   }
 }
