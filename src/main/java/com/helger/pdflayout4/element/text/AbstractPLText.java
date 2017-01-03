@@ -374,11 +374,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
   }
 
-  protected final float getDisplayHeightOfLines (@Nonnegative final int nLineCount)
+  protected final float getDisplayHeightOfLineCount (@Nonnegative final int nLineCount)
   {
     // Note: when drawing the text, only 0.75*lineHeight is subtracted so now we
     // need to add 0.25*lineHeight so that it looks good.
-    return (nLineCount + 0.25f) * m_fLineHeight;
+    return (nLineCount + 0.15f) * m_fLineHeight;
   }
 
   @Nonnull
@@ -393,7 +393,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList <> (aLines);
 
     // Excluding padding/margin
-    final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));
+    final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLineCount (aLineCopy.size ()));
 
     final String sTextContent = StringHelper.getImplodedMapped ('\n', aLineCopy, TextAndWidthSpec::getText);
     final IMPLTYPE aNewText = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + sIDSuffix);
@@ -458,7 +458,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // Calc estimated height (required because an offset is added)
-    final float fExpectedHeight = getDisplayHeightOfLines (nLines);
+    final float fExpectedHeight = getDisplayHeightOfLineCount (nLines);
     if (fExpectedHeight > fAvailableHeight)
     {
       // Show one line less

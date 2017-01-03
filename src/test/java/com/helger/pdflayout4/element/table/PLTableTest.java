@@ -527,19 +527,18 @@ public final class PLTableTest
   public void testCellSpawningPage2 () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
 
-    final String sLongText = "Line 1\n  Line 2\nLine 3\n  Line 4\nLine 5\n  Line 6";
+    final String sLongText = "Line 1\n  Line 2\nLine 3\n  Line 4\nLine 5\n  Line 6\nLine 7\n  Line 8\nLine 9";
 
     // Start table
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (3).setID ("table");
     for (int i = 0; i < 12; ++i)
     {
-      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("celllongtext")
-                                                                                              .setPadding (2),
+      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext").setPadding (2))
+                                                                                                             .setID ("celllongtext"),
                               new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),
                               new PLTableCell (new PLText ("Short text", r10).setID ("shorttext"))
                                                                                                   .setID ("cellshorttext"))
