@@ -538,7 +538,8 @@ public final class PLTableTest
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (3).setID ("table");
     for (int i = 0; i < 12; ++i)
     {
-      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("celllongtext"),
+      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("celllongtext")
+                                                                                              .setPadding (2),
                               new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),
                               new PLTableCell (new PLText ("Short text", r10).setID ("shorttext"))
                                                                                                   .setID ("cellshorttext"))
