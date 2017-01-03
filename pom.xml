@@ -136,12 +136,32 @@
     </dependency>
     <dependency>
       <groupId>com.helger</groupId>
-      <artifactId>ph-fonts-open-sans</artifactId>
+      <artifactId>ph-fonts-alegreya-sans</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-fonts-anaheim</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-fonts-exo2</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-fonts-lato2</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-fonts-open-sans</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-fonts-roboto</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -24,16 +24,20 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.commons.CGlobal;
+import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.random.RandomHelper;
+import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
+import com.helger.font.anaheim.EFontResourceAnaheim;
+import com.helger.font.api.IHasFontResource;
 import com.helger.font.lato2.EFontResourceLato2;
 import com.helger.font.open_sans.EFontResourceOpenSans;
+import com.helger.font.roboto.EFontResourceRoboto;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
-import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EHorzAlignment;
 import com.helger.pdflayout4.spec.FontSpec;
@@ -149,6 +153,38 @@ public final class PLTextTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-lato2.pdf"));
+  }
+
+  @Test
+  public void testCustomFontMultiple () throws PDFCreationException
+  {
+    final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                     "Tataa: €";
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    for (final IHasFontResource aHasFont : new CommonsArrayList <> (EFontResourceAlegreyaSans.ALGREYA_SANS_NORMAL,
+                                                                    EFontResourceAlegreyaSans.ALGREYA_SANS_BLACK,
+                                                                    EFontResourceAnaheim.ANAHEIM_REGULAR,
+                                                                    // EFontResourceExo2.EXO2_NORMAL,
+                                                                    // EFontResourceExo2.EXO2_BLACK,
+                                                                    EFontResourceLato2.LATO2_NORMAL,
+                                                                    EFontResourceLato2.LATO2_BLACK,
+                                                                    EFontResourceOpenSans.OPEN_SANS_NORMAL,
+                                                                    EFontResourceOpenSans.OPEN_SANS_BOLD,
+                                                                    EFontResourceRoboto.ROBOTO_NORMAL,
+                                                                    EFontResourceRoboto.ROBOTO_BOLD))
+    {
+      // Load OTF font
+      final PreloadFont aFont = PreloadFont.createEmbedding (aHasFont.getFontResource ());
+
+      aPS1.addElement (new PLText (aHasFont.getFontResourceID () + ": " + s + "\n", new FontSpec (aFont, 10)));
+    }
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-multiple.pdf"));
   }
 
   @Test
