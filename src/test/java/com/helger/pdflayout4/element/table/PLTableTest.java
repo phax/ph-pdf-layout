@@ -522,4 +522,35 @@ public final class PLTableTest
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-cell-spawning-page.pdf"));
   }
+
+  @Test
+  public void testCellSpawningPage2 () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
+
+    final String sLongText = "Line 1\n  Line 2\nLine 3\n  Line 4\nLine 5\n  Line 6";
+
+    // Start table
+    final PLTable aTable = PLTable.createWithEvenlySizedColumns (3).setID ("table");
+    for (int i = 0; i < 12; ++i)
+    {
+      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("celllongtext"),
+                              new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),
+                              new PLTableCell (new PLText ("Short text", r10).setID ("shorttext"))
+                                                                                                  .setID ("cellshorttext"))
+            .setID ("row" + i);
+    }
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.RED));
+    aPS1.addElement (aTable);
+
+    aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false).setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-cell-spawning-page2.pdf"));
+  }
 }
