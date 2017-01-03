@@ -21,17 +21,17 @@ public class PLTableHelper
    * @param ret
    *        the PLTable, whose doubled borders are to be removed
    */
-  public static void avoidDoubleBorders (@Nonnull PLTable ret)
+  public static void avoidDoubleBorders (@Nonnull final PLTable ret)
   {
     boolean bPreviousRowHasBottomBorder = false;
     for (int i = 0; i < ret.getRowCount (); i++)
     {
       boolean bRowHasBottomBorder = true;
       boolean bRowHasTopBorder = true;
-      PLTableRow aRow = ret.getRowAtIndex (i);
+      final PLTableRow aRow = ret.getRowAtIndex (i);
       for (int j = 0; j < aRow.getCellCount (); j++)
       {
-        PLTableCell aCell = aRow.getCellAtIndex (j);
+        final PLTableCell aCell = aRow.getCellAtIndex (j);
 
         if (aCell.getBorderBottomWidth () == 0)
           bRowHasBottomBorder = false;
