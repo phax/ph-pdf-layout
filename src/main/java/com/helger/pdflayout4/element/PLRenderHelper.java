@@ -107,81 +107,83 @@ public final class PLRenderHelper
       aContentStream.stroke ();
     }
     else
-    {
-      // partially
-      final BorderStyleSpec aTop = aBorder.getTop ();
-      final BorderStyleSpec aRight = aBorder.getRight ();
-      final BorderStyleSpec aBottom = aBorder.getBottom ();
-      final BorderStyleSpec aLeft = aBorder.getLeft ();
-      final float fTopWidth = aTop == null ? 0 : aTop.getLineWidth ();
-      final float fRightWidth = aRight == null ? 0 : aRight.getLineWidth ();
-      final float fBottomWidth = aBottom == null ? 0 : aBottom.getLineWidth ();
-      final float fLeftWidth = aLeft == null ? 0 : aLeft.getLineWidth ();
-
-      if (aTop != null)
+      if (aBorder.hasAnyBorder ())
       {
-        if (PLDebug.isDebugRender ())
-          PLDebug.debugRender (aElement,
-                               "Border top " +
-                                         PLDebug.getXYWH (fLeft, fTop, fWidth, 0) +
-                                         " with line width " +
-                                         fTopWidth);
+        // partially
+        final BorderStyleSpec aTop = aBorder.getTop ();
+        final BorderStyleSpec aRight = aBorder.getRight ();
+        final BorderStyleSpec aBottom = aBorder.getBottom ();
+        final BorderStyleSpec aLeft = aBorder.getLeft ();
+        final float fTopWidth = aTop == null ? 0 : aTop.getLineWidth ();
+        final float fRightWidth = aRight == null ? 0 : aRight.getLineWidth ();
+        final float fBottomWidth = aBottom == null ? 0 : aBottom.getLineWidth ();
+        final float fLeftWidth = aLeft == null ? 0 : aLeft.getLineWidth ();
 
-        final float fDelta = fTopWidth / 2f;
-        aContentStream.setStrokingColor (aTop.getColor ());
-        aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
-        aContentStream.setLineWidth (fTopWidth);
-        aContentStream.drawLine (fLeft, fTop - fDelta, fRight - fRightWidth, fTop - fDelta);
+        if (aTop != null)
+        {
+          if (PLDebug.isDebugRender ())
+            PLDebug.debugRender (aElement,
+                                 "Border top " +
+                                           PLDebug.getXYWH (fLeft, fTop, fWidth, 0) +
+                                           " with line width " +
+                                           fTopWidth);
+
+          final float fDelta = fTopWidth / 2f;
+          aContentStream.setStrokingColor (aTop.getColor ());
+          aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
+          aContentStream.setLineWidth (fTopWidth);
+          aContentStream.drawLine (fLeft, fTop - fDelta, fRight - fRightWidth, fTop - fDelta, false);
+        }
+
+        if (aRight != null)
+        {
+          if (PLDebug.isDebugRender ())
+            PLDebug.debugRender (aElement,
+                                 "Border right " +
+                                           PLDebug.getXYWH (fRight, fTop, 0, fHeight) +
+                                           " with line width " +
+                                           fRightWidth);
+
+          final float fDelta = fRightWidth / 2f;
+          aContentStream.setStrokingColor (aRight.getColor ());
+          aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
+          aContentStream.setLineWidth (fRightWidth);
+          aContentStream.drawLine (fRight - fDelta, fTop, fRight - fDelta, fBottom + fBottomWidth, false);
+        }
+
+        if (aBottom != null)
+        {
+          if (PLDebug.isDebugRender ())
+            PLDebug.debugRender (aElement,
+                                 "Border bottom " +
+                                           PLDebug.getXYWH (fLeft, fBottom, fWidth, 0) +
+                                           " with line width " +
+                                           fBottomWidth);
+
+          final float fDelta = fBottomWidth / 2f;
+          aContentStream.setStrokingColor (aBottom.getColor ());
+          aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
+          aContentStream.setLineWidth (fBottomWidth);
+          aContentStream.drawLine (fLeft + fLeftWidth, fBottom + fDelta, fRight, fBottom + fDelta, false);
+        }
+
+        if (aLeft != null)
+        {
+          if (PLDebug.isDebugRender ())
+            PLDebug.debugRender (aElement,
+                                 "Border left " +
+                                           PLDebug.getXYWH (fLeft, fTop, 0, fHeight) +
+                                           " with line width " +
+                                           fLeftWidth);
+
+          final float fDelta = fLeftWidth / 2f;
+          aContentStream.setStrokingColor (aLeft.getColor ());
+          aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
+          aContentStream.setLineWidth (fLeftWidth);
+          aContentStream.drawLine (fLeft + fDelta, fTop - fTopWidth, fLeft + fDelta, fBottom, false);
+        }
+        aContentStream.stroke ();
       }
-
-      if (aRight != null)
-      {
-        if (PLDebug.isDebugRender ())
-          PLDebug.debugRender (aElement,
-                               "Border right " +
-                                         PLDebug.getXYWH (fRight, fTop, 0, fHeight) +
-                                         " with line width " +
-                                         fRightWidth);
-
-        final float fDelta = fRightWidth / 2f;
-        aContentStream.setStrokingColor (aRight.getColor ());
-        aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
-        aContentStream.setLineWidth (fRightWidth);
-        aContentStream.drawLine (fRight - fDelta, fTop, fRight - fDelta, fBottom + fBottomWidth);
-      }
-
-      if (aBottom != null)
-      {
-        if (PLDebug.isDebugRender ())
-          PLDebug.debugRender (aElement,
-                               "Border bottom " +
-                                         PLDebug.getXYWH (fLeft, fBottom, fWidth, 0) +
-                                         " with line width " +
-                                         fBottomWidth);
-
-        final float fDelta = fBottomWidth / 2f;
-        aContentStream.setStrokingColor (aBottom.getColor ());
-        aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
-        aContentStream.setLineWidth (fBottomWidth);
-        aContentStream.drawLine (fLeft + fLeftWidth, fBottom + fDelta, fRight, fBottom + fDelta);
-      }
-
-      if (aLeft != null)
-      {
-        if (PLDebug.isDebugRender ())
-          PLDebug.debugRender (aElement,
-                               "Border left " +
-                                         PLDebug.getXYWH (fLeft, fTop, 0, fHeight) +
-                                         " with line width " +
-                                         fLeftWidth);
-
-        final float fDelta = fLeftWidth / 2f;
-        aContentStream.setStrokingColor (aLeft.getColor ());
-        aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
-        aContentStream.setLineWidth (fLeftWidth);
-        aContentStream.drawLine (fLeft + fDelta, fTop - fTopWidth, fLeft + fDelta, fBottom);
-      }
-    }
   }
 
   public static void fillAndRenderBorder (@Nonnull final IPLElement <?> aElement,
