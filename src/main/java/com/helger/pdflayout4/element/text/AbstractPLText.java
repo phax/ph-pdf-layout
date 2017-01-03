@@ -107,15 +107,16 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     m_sDisplayText = sText;
   }
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLText <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
-    setHorzAlign (aSource.m_eHorzAlign);
-    setMaxRows (aSource.m_nMaxRows);
-    setVertSplittable (aSource.m_bVertSplittable);
-    setReplacePlaceholder (aSource.m_bReplacePlaceholder);
+    setHorzAlign (aSource.getHorzAlign ());
+    setMaxRows (aSource.getMaxRows ());
+    setVertSplittable (aSource.isVertSplittable ());
+    setReplacePlaceholder (aSource.isReplacePlaceholder ());
     return thisAsT ();
   }
 
@@ -260,7 +261,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       else
       {
         // Maximum number of lines exceeded - copy only the relevant lines
-        m_aPreparedLines = new CommonsArrayList<> (m_nMaxRows);
+        m_aPreparedLines = new CommonsArrayList <> (m_nMaxRows);
         for (int i = 0; i < m_nMaxRows; ++i)
           m_aPreparedLines.add (aLines.get (i));
       }
@@ -360,7 +361,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   {
     if (m_aPreparedLinesUnmodified == null)
       throw new IllegalStateException ("Preparation is not yet done");
-    return new CommonsArrayList<> (m_aPreparedLinesUnmodified);
+    return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
   }
 
   protected final float getDisplayHeightOfLines (@Nonnegative final int nLineCount)
@@ -379,15 +380,15 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     ValueEnforcer.notEmpty (aLines, "Lines");
 
     // Create a copy to be independent!
-    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList<> (aLines);
+    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList <> (aLines);
 
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));
 
     final String sTextContent = StringHelper.getImplodedMapped ('\n', aLineCopy, TextAndWidthSpec::getText);
-    final AbstractPLText <?> aNewText = internalCreateNewObject (thisAsT ());
-    aNewText._setText (sTextContent);
-    aNewText.setBasicDataFrom (this).setID (getID () + sIDSuffix);
+    final IMPLTYPE aNewText = internalCreateNewObject (thisAsT ());
+    ((AbstractPLText <?>) aNewText)._setText (sTextContent);
+    aNewText.setBasicDataFrom (thisAsT ()).setID (getID () + sIDSuffix);
     // Set this explicitly after setBasicDataFrom!
     aNewText.setVertSplittable (bSplittableCopy);
 

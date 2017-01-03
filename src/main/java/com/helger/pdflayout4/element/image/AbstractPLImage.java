@@ -50,7 +50,7 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   private final float m_fImageHeight;
 
   // Status var
-  private PDImageXObject m_aJpeg;
+  private transient PDImageXObject m_aJpeg;
 
   public AbstractPLImage (@Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
   {
@@ -61,9 +61,10 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     m_fImageHeight = fImageHeight;
   }
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLImage <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     return thisAsT ();

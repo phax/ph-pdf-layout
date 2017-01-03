@@ -50,15 +50,16 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public AbstractPLElement ()
   {}
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLElement <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
-    setMargin (aSource.m_aMargin);
-    setBorder (aSource.m_aBorder);
-    setPadding (aSource.m_aPadding);
-    setFillColor (aSource.m_aFillColor);
+    setMargin (aSource.getMargin ());
+    setBorder (aSource.getBorder ());
+    setPadding (aSource.getPadding ());
+    setFillColor (aSource.getFillColor ());
     return thisAsT ();
   }
 

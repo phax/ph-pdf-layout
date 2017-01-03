@@ -80,7 +80,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
   // All the rows of this VBox
-  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
+  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
   // Vertical splittable?
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   // Header rows to be repeated after a split
@@ -97,13 +97,14 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   public AbstractPLVBox ()
   {}
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLVBox <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
-    setVertSplittable (aSource.m_bVertSplittable);
-    setHeaderRowCount (aSource.m_nHeaderRowCount);
+    setVertSplittable (aSource.isVertSplittable ());
+    setHeaderRowCount (aSource.getHeaderRowCount ());
     return thisAsT ();
   }
 
@@ -388,7 +389,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     return thisAsT ();
   }
 
-  public boolean containsAnySplittableElement ()
+  public boolean containsAnyVertSplittableElement ()
   {
     return m_aRows.containsAny (x -> x.getElement ().isVertSplittable ());
   }
@@ -719,25 +720,25 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (fAvailableHeight <= 0)
       return null;
 
-    if (!containsAnySplittableElement ())
+    if (!containsAnyVertSplittableElement ())
     {
       // Splitting makes no sense
       if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Cannot split because no splittable elements are contained");
+        PLDebug.debugSplit (this, "Cannot split because no vertical splittable elements are contained");
       return null;
     }
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLVBox <?> aVBox1 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+    final AbstractPLVBox <?> aVBox1 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (thisAsT ())
                                                                           .setID (getID () + "-1")
                                                                           .setVertSplittable (false);
-    final AbstractPLVBox <?> aVBox2 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+    final AbstractPLVBox <?> aVBox2 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (thisAsT ())
                                                                           .setID (getID () + "-2")
                                                                           .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
-    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox1RowHeight = 0;
 
     // Copy all header rows to both boxes

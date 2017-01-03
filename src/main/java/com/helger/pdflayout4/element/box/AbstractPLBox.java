@@ -61,12 +61,13 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     setElement (aElement);
   }
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLBox <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
-    setVertSplittable (aSource.m_bVertSplittable);
+    setVertSplittable (aSource.isVertSplittable ());
     return thisAsT ();
   }
 
@@ -207,10 +208,10 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLBox <?> aBox1 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+    final AbstractPLBox <?> aBox1 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (thisAsT ())
                                                                         .setID (getID () + "-1")
                                                                         .setVertSplittable (false);
-    final AbstractPLBox <?> aBox2 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (this)
+    final AbstractPLBox <?> aBox2 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (thisAsT ())
                                                                         .setID (getID () + "-2")
                                                                         .setVertSplittable (true);
 

@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.id.IHasID;
@@ -63,4 +64,15 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
   {
     return (IPLSplittableObject <?>) this;
   }
+
+  /**
+   * For copying stuff internally. Must always call super method
+   *
+   * @param aSource
+   *        Source object to copy from. May not be <code>null</code>.
+   * @return this for chaining
+   */
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  IMPLTYPE setBasicDataFrom (@Nonnull IMPLTYPE aSource);
 }

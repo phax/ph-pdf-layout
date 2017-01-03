@@ -44,6 +44,7 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
     setWidth (fWidth);
   }
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public PLSpacerX setBasicDataFrom (@Nonnull final PLSpacerX aSource)

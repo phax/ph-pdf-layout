@@ -40,13 +40,14 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
   public AbstractPLBlockElement ()
   {}
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLBlockElement <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
-    setHorzAlign (aSource.m_eHorzAlign);
-    setVertAlign (aSource.m_eVertAlign);
+    setHorzAlign (aSource.getHorzAlign ());
+    setVertAlign (aSource.getVertAlign ());
     return thisAsT ();
   }
 

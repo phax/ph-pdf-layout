@@ -45,6 +45,10 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
   boolean isPrepared ();
 
   /**
+   * Get the prepared size of the object. This is the minimum space the content
+   * of the object needs given the available size constraints. This does NOT
+   * consider min- and max-size.
+   *
    * @return The prepared size or <code>null</code> if this object was not yet
    *         prepared.
    * @see #isPrepared()
@@ -52,11 +56,19 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
   @Nullable
   SizeSpec getPreparedSize ();
 
+  /**
+   * @return The prepared width.
+   * @see #getPreparedSize()
+   */
   default float getPreparedWidth ()
   {
     return getPreparedSize ().getWidth ();
   }
 
+  /**
+   * @return The prepared height.
+   * @see #getPreparedSize()
+   */
   default float getPreparedHeight ()
   {
     return getPreparedSize ().getHeight ();

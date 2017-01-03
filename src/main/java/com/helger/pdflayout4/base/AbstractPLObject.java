@@ -91,16 +91,9 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     return ret;
   }
 
-  /**
-   * For copying stuff internally. Must always call super method
-   *
-   * @param aSource
-   *        Source object to copy from. May not be <code>null</code>.
-   * @return this for chaining
-   */
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLObject <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     return thisAsT ();
   }

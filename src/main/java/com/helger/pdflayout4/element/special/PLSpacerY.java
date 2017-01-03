@@ -46,6 +46,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
     setHeight (fHeight);
   }
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public PLSpacerY setBasicDataFrom (@Nonnull final PLSpacerY aSource)

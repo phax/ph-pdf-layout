@@ -32,9 +32,10 @@ public abstract class AbstractPLInlineElement <IMPLTYPE extends AbstractPLInline
   public AbstractPLInlineElement ()
   {}
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final AbstractPLInlineElement <?> aSource)
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     return thisAsT ();

@@ -53,6 +53,7 @@ public class PLStreamImage extends AbstractPLImage <PLStreamImage>
     m_aIIS = aImage;
   }
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public PLStreamImage setBasicDataFrom (@Nonnull final PLStreamImage aSource)

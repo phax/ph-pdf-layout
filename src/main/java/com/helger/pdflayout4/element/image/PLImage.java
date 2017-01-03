@@ -55,6 +55,7 @@ public class PLImage extends AbstractPLImage <PLImage>
     m_aImage = aImage;
   }
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public PLImage setBasicDataFrom (@Nonnull final PLImage aSource)

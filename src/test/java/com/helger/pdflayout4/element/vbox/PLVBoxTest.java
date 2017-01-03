@@ -237,7 +237,6 @@ public final class PLVBoxTest
   @Test
   public void testAutoHeightAdvancedSplittable () throws PDFCreationException
   {
-    PLDebug.setDebugSplit (true);
     final String s1 = "This is a test";
     final String s2 = "This is also a test string \nbut much much much much longer as the other one. \nCan you believe this???? \nNo this is not believable\nThis\nshall\ncreate\nmore\nlines\n\n!";
     final String s3 = StringHelper.getRepeated (s2, 6);

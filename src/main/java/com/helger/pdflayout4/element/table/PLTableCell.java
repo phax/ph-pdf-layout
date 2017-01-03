@@ -40,7 +40,7 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
 {
   public static final int DEFAULT_COL_SPAN = 1;
 
-  private final int m_nColSpan;
+  private int m_nColSpan;
 
   public PLTableCell (@Nullable final IPLRenderableObject <?> aElement)
   {
@@ -50,16 +50,17 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   public PLTableCell (@Nullable final IPLRenderableObject <?> aElement, @Nonnegative final int nColSpan)
   {
     super (aElement);
-    ValueEnforcer.isGT0 (nColSpan, "ColSpan");
-    m_nColSpan = nColSpan;
+    _setColSpan (nColSpan);
     setVertSplittable (true);
   }
 
+  @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
   public PLTableCell setBasicDataFrom (@Nonnull final PLTableCell aSource)
   {
     super.setBasicDataFrom (aSource);
+    _setColSpan (aSource.getColSpan ());
     return this;
   }
 
@@ -67,6 +68,12 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   public int getColSpan ()
   {
     return m_nColSpan;
+  }
+
+  private void _setColSpan (@Nonnegative final int nColSpan)
+  {
+    ValueEnforcer.isGT0 (nColSpan, "ColSpan");
+    m_nColSpan = nColSpan;
   }
 
   @Override

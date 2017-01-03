@@ -50,6 +50,15 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   public AbstractPLRenderableObject ()
   {}
 
+  @Override
+  @Nonnull
+  @OverridingMethodsMustInvokeSuper
+  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  {
+    super.setBasicDataFrom (aSource);
+    return thisAsT ();
+  }
+
   @OverrideOnDemand
   @OverridingMethodsMustInvokeSuper
   @Nonnull
