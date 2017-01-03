@@ -65,9 +65,10 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
   public static final boolean DEFAULT_REPLACE_PLACEHOLDERS = false;
 
-  private String m_sText;
-  private String m_sDisplayText;
+  private String m_sOriginalText;
+  private String m_sResolvedText;
   private final FontSpec m_aFontSpec;
+
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
@@ -75,13 +76,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
   // prepare result
   private transient LoadedFont m_aLoadedFont;
+  protected float m_fLineHeight;
+
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLinesUnmodified;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLines;
-  protected float m_fLineHeight;
 
   @Nonnull
-  public static String getPLTextText (@Nullable final String sText)
+  public static String getCleanedPLText (@Nullable final String sText)
   {
     if (StringHelper.hasNoText (sText))
     {
@@ -89,6 +91,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
     // Unify line endings so that all "\r" are removed and only "\n" is
     // contained
+    // Multiple \n after each other remain
     String sCleaned = sText;
     sCleaned = StringHelper.replaceAll (sCleaned, "\r\n", "\n");
     sCleaned = StringHelper.replaceAll (sCleaned, '\r', '\n');
@@ -101,10 +104,16 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     m_aFontSpec = ValueEnforcer.notNull (aFontSpec, "FontSpec");
   }
 
+  /**
+   * Set the internal text fields
+   *
+   * @param sText
+   *        Text to use. May be <code>null</code>.
+   */
   private void _setText (@Nullable final String sText)
   {
-    m_sText = getPLTextText (sText);
-    m_sDisplayText = sText;
+    m_sOriginalText = getCleanedPLText (sText);
+    m_sResolvedText = m_sOriginalText;
   }
 
   @Override
@@ -121,30 +130,31 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return The original text provided in the constructor.
+   * @return The original text provided in the constructor, with newlines
+   *         unified. Never <code>null</code>.
    */
   @Nonnull
-  public String getText ()
+  public final String getText ()
   {
-    return m_sText;
+    return m_sOriginalText;
   }
 
   /**
    * @return <code>true</code> if the contained text has at least one character,
    *         <code>false</code> if it is empty.
    */
-  public boolean hasText ()
+  public final boolean hasText ()
   {
-    return m_sText.length () > 0;
+    return m_sOriginalText.length () > 0;
   }
 
   /**
    * @return <code>true</code> if the text provided in the constructor contains
    *         no character, <code>false</code> otherwise.
    */
-  public boolean hasNoText ()
+  public final boolean hasNoText ()
   {
-    return m_sText.length () == 0;
+    return m_sOriginalText.length () == 0;
   }
 
   /**
@@ -152,19 +162,19 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    *         Never <code>null</code>.
    */
   @Nonnull
-  public FontSpec getFontSpec ()
+  public final FontSpec getFontSpec ()
   {
     return m_aFontSpec;
   }
 
   @Nonnull
-  public EHorzAlignment getHorzAlign ()
+  public final EHorzAlignment getHorzAlign ()
   {
     return m_eHorzAlign;
   }
 
   @Nonnull
-  public IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
+  public final IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
   {
     m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
     return thisAsT ();
@@ -173,10 +183,10 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   /**
    * @return The maximum number of rows to be rendered. If this value is &le; 0
    *         than all rows are rendered. The default value is
-   *         {@link #DEFAULT_MAX_ROWS}.
+   *         {@link #DEFAULT_MAX_ROWS} meaning all rows are rendered.
    */
   @CheckForSigned
-  public int getMaxRows ()
+  public final int getMaxRows ()
   {
     return m_nMaxRows;
   }
@@ -186,16 +196,16 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    *
    * @param nMaxRows
    *        Maximum number of rows. If &le; 0 than all lines are rendered.
-   * @return this
+   * @return this for chaining
    */
   @Nonnull
-  public IMPLTYPE setMaxRows (final int nMaxRows)
+  public final IMPLTYPE setMaxRows (final int nMaxRows)
   {
     m_nMaxRows = nMaxRows;
     return thisAsT ();
   }
 
-  public boolean isVertSplittable ()
+  public final boolean isVertSplittable ()
   {
     return m_bVertSplittable;
   }
@@ -206,10 +216,10 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    * @param bVertSplittable
    *        <code>true</code> if this text should be splittable,
    *        <code>false</code> otherwise.
-   * @return this
+   * @return this for chaining
    */
   @Nonnull
-  public IMPLTYPE setVertSplittable (final boolean bVertSplittable)
+  public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
     return thisAsT ();
@@ -218,23 +228,25 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   /**
    * @return <code>true</code> if placeholders should be replaced,
    *         <code>false</code> otherwise. The default value is
-   *         {@link #DEFAULT_REPLACE_PLACEHOLDERS}.
+   *         {@link #DEFAULT_REPLACE_PLACEHOLDERS} so
+   *         {@value #DEFAULT_REPLACE_PLACEHOLDERS}.
    */
-  public boolean isReplacePlaceholder ()
+  public final boolean isReplacePlaceholder ()
   {
     return m_bReplacePlaceholder;
   }
 
   /**
-   * Change whether placeholders should be replaced or not.
+   * Change whether placeholders should be replaced or not. Enabling this slows
+   * down the execution of rendering. Enable this only if absolutely necessary.
    *
    * @param bReplacePlaceholder
    *        <code>true</code> if placeholders should be replaced,
    *        <code>false</code> otherwise.
-   * @return this
+   * @return this for chaining
    */
   @Nonnull
-  public IMPLTYPE setReplacePlaceholder (final boolean bReplacePlaceholder)
+  public final IMPLTYPE setReplacePlaceholder (final boolean bReplacePlaceholder)
   {
     m_bReplacePlaceholder = bReplacePlaceholder;
     return thisAsT ();
@@ -242,8 +254,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
   final void internalSetPreparedLines (@Nonnull final ICommonsList <TextAndWidthSpec> aLines)
   {
-    final int nLines = aLines.size ();
-    m_nPreparedLineCountUnmodified = nLines;
+    final int nLineCount = aLines.size ();
+    m_nPreparedLineCountUnmodified = nLineCount;
     m_aPreparedLinesUnmodified = aLines;
     if (m_nMaxRows <= 0)
     {
@@ -253,7 +265,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     else
     {
       // Use only a certain maximum number of rows
-      if (nLines <= m_nMaxRows)
+      if (nLineCount <= m_nMaxRows)
       {
         // We have less lines than the maximum
         m_aPreparedLines = aLines;
@@ -298,7 +310,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // Split text into rows
-    internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sDisplayText, fFontSize, fAvailableWidth));
+    internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sResolvedText, fFontSize, fAvailableWidth));
 
     // Determine max width of all prepared lines
     float fMaxWidth = Float.MIN_VALUE;
@@ -334,11 +346,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     m_aPreparedLines = null;
   }
 
-  protected final void setDisplayTextAfterPrepare (@Nonnull final String sNewText,
-                                                   final float fAvailableWidth) throws IOException
+  private void _setDisplayTextAfterPrepare (@Nonnull final String sNewResolvedText,
+                                            final float fAvailableWidth) throws IOException
   {
     internalMarkAsNotPrepared ();
-    m_sDisplayText = sNewText;
+    m_sResolvedText = sNewResolvedText;
     final SizeSpec aOnPrepareResult = _prepareText (fAvailableWidth);
     internalMarkAsPrepared (aOnPrepareResult);
   }
@@ -350,8 +362,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   @Nonnegative
   public int getPreparedLineCountUnmodified ()
   {
-    if (m_nPreparedLineCountUnmodified == CGlobal.ILLEGAL_UINT)
-      throw new IllegalStateException ("Preparation is not yet done");
+    internalCheckAlreadyPrepared ();
     return m_nPreparedLineCountUnmodified;
   }
 
@@ -359,8 +370,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   @ReturnsMutableCopy
   public ICommonsList <TextAndWidthSpec> getAllPreparedLinesUnmodified ()
   {
-    if (m_aPreparedLinesUnmodified == null)
-      throw new IllegalStateException ("Preparation is not yet done");
+    internalCheckAlreadyPrepared ();
     return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
   }
 
@@ -386,9 +396,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));
 
     final String sTextContent = StringHelper.getImplodedMapped ('\n', aLineCopy, TextAndWidthSpec::getText);
-    final IMPLTYPE aNewText = internalCreateNewObject (thisAsT ());
+    final IMPLTYPE aNewText = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + sIDSuffix);
     ((AbstractPLText <?>) aNewText)._setText (sTextContent);
-    aNewText.setBasicDataFrom (thisAsT ()).setID (getID () + sIDSuffix);
     // Set this explicitly after setBasicDataFrom!
     aNewText.setVertSplittable (bSplittableCopy);
 
@@ -483,11 +492,12 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   {
     if (m_bReplacePlaceholder)
     {
-      final String sOrigText = getText ();
+      final String sOrigText = m_sOriginalText;
       final String sDisplayText = StringHelper.replaceMultiple (sOrigText, aCtx.getAllPlaceholders ());
       if (!sOrigText.equals (sDisplayText))
       {
-        setDisplayTextAfterPrepare (sDisplayText, getPrepareAvailableSize ().getWidth ());
+        // Something changed
+        _setDisplayTextAfterPrepare (sDisplayText, getPrepareAvailableSize ().getWidth ());
         return EChange.CHANGED;
       }
     }
@@ -569,8 +579,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
-                            .append ("Text", m_sText)
-                            .append ("DisplayText", m_sDisplayText)
+                            .append ("OriginalText", m_sOriginalText)
+                            .append ("ResolvedText", m_sResolvedText)
                             .append ("FontSpec", m_aFontSpec)
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("MaxRows", m_nMaxRows)

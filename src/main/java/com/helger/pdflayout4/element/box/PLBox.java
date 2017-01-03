@@ -41,8 +41,10 @@ public class PLBox extends AbstractPLBox <PLBox>
 
   @Override
   @Nonnull
-  public PLBox internalCreateNewObject (@Nonnull final PLBox aBase)
+  public PLBox internalCreateNewVertSplitObject (@Nonnull final PLBox aBase)
   {
-    return new PLBox ();
+    final PLBox ret = new PLBox ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
   }
 }

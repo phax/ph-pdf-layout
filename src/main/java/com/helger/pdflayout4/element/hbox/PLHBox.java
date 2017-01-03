@@ -30,8 +30,10 @@ public class PLHBox extends AbstractPLHBox <PLHBox>
 
   @Override
   @Nonnull
-  public PLHBox internalCreateNewObject (@Nonnull final PLHBox aBase)
+  public PLHBox internalCreateNewVertSplitObject (@Nonnull final PLHBox aBase)
   {
-    return new PLHBox ();
+    final PLHBox ret = new PLHBox ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
   }
 }

@@ -41,8 +41,10 @@ public class PLVBox extends AbstractPLVBox <PLVBox>
 
   @Override
   @Nonnull
-  public PLVBox internalCreateNewObject (@Nonnull final PLVBox aBase)
+  public PLVBox internalCreateNewVertSplitObject (@Nonnull final PLVBox aBase)
   {
-    return new PLVBox ();
+    final PLVBox ret = new PLVBox ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
   }
 }

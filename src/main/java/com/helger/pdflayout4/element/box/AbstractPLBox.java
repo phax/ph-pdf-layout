@@ -208,11 +208,9 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLBox <?> aBox1 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (thisAsT ())
-                                                                        .setID (getID () + "-1")
+    final IMPLTYPE aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
                                                                         .setVertSplittable (false);
-    final AbstractPLBox <?> aBox2 = internalCreateNewObject (thisAsT ()).setBasicDataFrom (thisAsT ())
-                                                                        .setID (getID () + "-2")
+    final IMPLTYPE aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
                                                                         .setVertSplittable (true);
 
     // Set min width/max width from source

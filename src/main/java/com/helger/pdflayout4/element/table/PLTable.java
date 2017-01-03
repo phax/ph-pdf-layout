@@ -422,7 +422,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
 
   @Override
   @Nonnull
-  public PLTable internalCreateNewObject (@Nonnull final PLTable aBase)
+  public PLTable internalCreateNewVertSplitObject (@Nonnull final PLTable aBase)
   {
     throw new UnsupportedOperationException ();
   }

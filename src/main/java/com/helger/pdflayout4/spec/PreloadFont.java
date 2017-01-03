@@ -93,7 +93,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   private TrueTypeFont m_aTTF;
   private OpenTypeFont m_aOTF;
 
-  private static final ICommonsMap <String, PDType1Font> STANDARD_14 = new CommonsHashMap<> ();
+  private static final ICommonsMap <String, PDType1Font> STANDARD_14 = new CommonsHashMap <> ();
   static
   {
     STANDARD_14.put (PDType1Font.TIMES_ROMAN.getBaseFont (), PDType1Font.TIMES_ROMAN);

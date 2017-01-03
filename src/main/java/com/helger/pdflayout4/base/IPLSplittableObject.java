@@ -32,14 +32,21 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
   boolean DEFAULT_VERT_SPLITTABLE = true;
 
   /**
+   * Create a new object of the same type as this object.
+   * 
+   * @param aBase
+   *        The source object to copy data from.
+   * @return Never <code>null</code>.
+   */
+  @Nonnull
+  IMPLTYPE internalCreateNewVertSplitObject (@Nonnull IMPLTYPE aBase);
+
+  /**
    * @return <code>true</code> if this element is vertically splittable,
    *         <code>false</code> otherwise. The default is
    *         {@link #DEFAULT_VERT_SPLITTABLE}.
    */
   boolean isVertSplittable ();
-
-  @Nonnull
-  IMPLTYPE internalCreateNewObject (@Nonnull IMPLTYPE aBase);
 
   /**
    * Split this element vertically into sub-elements according to the available

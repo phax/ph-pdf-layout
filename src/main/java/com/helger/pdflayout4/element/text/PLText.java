@@ -35,8 +35,10 @@ public class PLText extends AbstractPLText <PLText>
 
   @Override
   @Nonnull
-  public PLText internalCreateNewObject (@Nonnull final PLText aBase)
+  public PLText internalCreateNewVertSplitObject (@Nonnull final PLText aBase)
   {
-    return new PLText (null, aBase.getFontSpec ());
+    final PLText ret = new PLText (null, aBase.getFontSpec ());
+    ret.setBasicDataFrom (aBase);
+    return ret;
   }
 }

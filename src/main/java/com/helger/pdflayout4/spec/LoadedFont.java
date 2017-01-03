@@ -112,7 +112,7 @@ public class LoadedFont
   // Status vars
   private final float m_fBBHeight;
   private final boolean m_bFontWillBeSubset;
-  private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap<> ();
+  private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <> ();
   private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
 
   public LoadedFont (@Nonnull final PDFont aFont)
@@ -374,7 +374,7 @@ public class LoadedFont
     // In the constructor we ensured that only "\n" is used
     final String [] aLines = StringHelper.getExplodedArray ('\n', sText);
 
-    final ICommonsList <TextAndWidthSpec> ret = new CommonsArrayList<> ();
+    final ICommonsList <TextAndWidthSpec> ret = new CommonsArrayList <> ();
     for (final String sLine : aLines)
       _getLineFitToWidthForward (sLine, fFontSize, fMaxWidth, ret);
 

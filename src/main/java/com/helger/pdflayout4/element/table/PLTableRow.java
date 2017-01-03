@@ -311,7 +311,7 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
 
   @Override
   @Nonnull
-  public PLTableRow internalCreateNewObject (@Nonnull final PLTableRow aBase)
+  public PLTableRow internalCreateNewVertSplitObject (@Nonnull final PLTableRow aBase)
   {
     throw new UnsupportedOperationException ();
   }

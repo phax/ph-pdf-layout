@@ -42,7 +42,7 @@ import com.helger.pdflayout4.spec.PreloadFont;
 public final class PreparationContextGlobal
 {
   private final PDDocument m_aDoc;
-  private final ICommonsMap <PreloadFont, LoadedFont> m_aFontCache = new CommonsHashMap<> ();
+  private final ICommonsMap <PreloadFont, LoadedFont> m_aFontCache = new CommonsHashMap <> ();
 
   /**
    * Constructor
