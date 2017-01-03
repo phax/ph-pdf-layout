@@ -66,7 +66,7 @@ public class PageLayoutPDF implements IPLVisitable
   private String m_sDocumentSubject;
   private boolean m_bDebug = false;
   private boolean m_bCompressPDF = true;
-  private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList<> ();
+  private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class
@@ -308,11 +308,19 @@ public class PageLayoutPDF implements IPLVisitable
 
       // Start applying all page sets - real rendering
       nPageSetIndex = 0;
+      final int nPageSetCount = m_aPageSets.size ();
       int nTotalPageIndex = 0;
       for (final PLPageSet aPageSet : m_aPageSets)
       {
         final PageSetPrepareResult aPR = aPRs[nPageSetIndex];
-        aPageSet.renderAllPages (aPR, aDoc, m_bDebug, m_bCompressPDF, nPageSetIndex, nTotalPageIndex, nTotalPageCount);
+        aPageSet.renderAllPages (aPR,
+                                 aDoc,
+                                 m_bDebug,
+                                 m_bCompressPDF,
+                                 nPageSetIndex,
+                                 nPageSetCount,
+                                 nTotalPageIndex,
+                                 nTotalPageCount);
         // Inc afterwards
         nTotalPageIndex += aPR.getPageCount ();
         nPageSetIndex++;

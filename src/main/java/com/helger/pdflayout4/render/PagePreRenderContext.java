@@ -31,6 +31,7 @@ import com.helger.commons.collection.ext.CommonsLinkedHashMap;
 import com.helger.commons.collection.ext.ICommonsOrderedMap;
 import com.helger.commons.string.StringParser;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout4.base.EPLPlaceholder;
 import com.helger.pdflayout4.base.PLPageSet;
 
 /**
@@ -41,28 +42,22 @@ import com.helger.pdflayout4.base.PLPageSet;
 @Immutable
 public class PagePreRenderContext
 {
-  public static final String PLACEHOLDER_PAGESET_INDEX = "${pageset-index}";
-  public static final String PLACEHOLDER_PAGESET_PAGE_INDEX = "${pageset-page-index}";
-  public static final String PLACEHOLDER_PAGESET_PAGE_NUMBER = "${pageset-page-number}";
-  public static final String PLACEHOLDER_PAGESET_PAGE_COUNT = "${pageset-page-count}";
-  public static final String PLACEHOLDER_TOTAL_PAGE_INDEX = "${total-page-index}";
-  public static final String PLACEHOLDER_TOTAL_PAGE_NUMBER = "${total-page-number}";
-  public static final String PLACEHOLDER_TOTAL_PAGE_COUNT = "${total-page-count}";
-
   private final PLPageSet m_aPageSet;
   private final PDDocument m_aDoc;
   private final PDPage m_aPage;
   private final int m_nPageSetIndex;
+  private final int m_nPageSetCount;
   private final int m_nPageSetPageIndex;
   private final int m_nPageSetPageCount;
   private final int m_nTotalPageIndex;
   private final int m_nTotalPageCount;
-  private final ICommonsOrderedMap <String, String> m_aPlaceholders = new CommonsLinkedHashMap<> ();
+  private final ICommonsOrderedMap <String, String> m_aPlaceholders = new CommonsLinkedHashMap <> ();
 
   public PagePreRenderContext (@Nonnull final PLPageSet aPageSet,
                                @Nonnull final PDDocument aDoc,
                                @Nonnull final PDPage aPage,
                                @Nonnegative final int nPageSetIndex,
+                               @Nonnegative final int nPageSetCount,
                                @Nonnegative final int nPageSetPageIndex,
                                @Nonnegative final int nPageSetPageCount,
                                @Nonnegative final int nTotalPageIndex,
@@ -73,6 +68,7 @@ public class PagePreRenderContext
     ValueEnforcer.notNull (aDoc, "Document");
     ValueEnforcer.notNull (aPage, "Page");
     ValueEnforcer.isGE0 (nPageSetIndex, "PageSetIndex");
+    ValueEnforcer.isGE0 (nPageSetCount, "PageSetCount");
     ValueEnforcer.isGE0 (nPageSetPageIndex, "PageSetPageIndex");
     ValueEnforcer.isGE0 (nPageSetPageCount, "PageSetPageCount");
     ValueEnforcer.isGE0 (nTotalPageIndex, "TotalPageIndex");
@@ -82,19 +78,22 @@ public class PagePreRenderContext
     m_aDoc = aDoc;
     m_aPage = aPage;
     m_nPageSetIndex = nPageSetIndex;
+    m_nPageSetCount = nPageSetCount;
     m_nPageSetPageIndex = nPageSetPageIndex;
     m_nPageSetPageCount = nPageSetPageCount;
     m_nTotalPageIndex = nTotalPageIndex;
     m_nTotalPageCount = nTotalPageCount;
 
     // Add default placeholders
-    m_aPlaceholders.put (PLACEHOLDER_PAGESET_INDEX, Integer.toString (getPageSetIndex ()));
-    m_aPlaceholders.put (PLACEHOLDER_PAGESET_PAGE_INDEX, Integer.toString (getPageSetPageIndex ()));
-    m_aPlaceholders.put (PLACEHOLDER_PAGESET_PAGE_NUMBER, Integer.toString (getPageSetPageNumber ()));
-    m_aPlaceholders.put (PLACEHOLDER_PAGESET_PAGE_COUNT, Integer.toString (getPageSetPageCount ()));
-    m_aPlaceholders.put (PLACEHOLDER_TOTAL_PAGE_INDEX, Integer.toString (getTotalPageIndex ()));
-    m_aPlaceholders.put (PLACEHOLDER_TOTAL_PAGE_NUMBER, Integer.toString (getTotalPageNumber ()));
-    m_aPlaceholders.put (PLACEHOLDER_TOTAL_PAGE_COUNT, Integer.toString (getTotalPageCount ()));
+    m_aPlaceholders.put (EPLPlaceholder.PAGESET_INDEX.getVariable (), Integer.toString (getPageSetIndex ()));
+    m_aPlaceholders.put (EPLPlaceholder.PAGESET_NUMBER.getVariable (), Integer.toString (getPageSetNumber ()));
+    m_aPlaceholders.put (EPLPlaceholder.PAGESET_COUNT.getVariable (), Integer.toString (getPageSetCount ()));
+    m_aPlaceholders.put (EPLPlaceholder.PAGESET_PAGE_INDEX.getVariable (), Integer.toString (getPageSetPageIndex ()));
+    m_aPlaceholders.put (EPLPlaceholder.PAGESET_PAGE_NUMBER.getVariable (), Integer.toString (getPageSetPageNumber ()));
+    m_aPlaceholders.put (EPLPlaceholder.PAGESET_PAGE_COUNT.getVariable (), Integer.toString (getPageSetPageCount ()));
+    m_aPlaceholders.put (EPLPlaceholder.TOTAL_PAGE_INDEX.getVariable (), Integer.toString (getTotalPageIndex ()));
+    m_aPlaceholders.put (EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable (), Integer.toString (getTotalPageNumber ()));
+    m_aPlaceholders.put (EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable (), Integer.toString (getTotalPageCount ()));
   }
 
   /**
@@ -131,6 +130,24 @@ public class PagePreRenderContext
   public int getPageSetIndex ()
   {
     return m_nPageSetIndex;
+  }
+
+  /**
+   * @return The number of the current page set. 1-based. Always &ge; 1.
+   */
+  @Nonnegative
+  public int getPageSetNumber ()
+  {
+    return m_nPageSetIndex + 1;
+  }
+
+  /**
+   * @return The total number of page sets. Always &ge; 1.
+   */
+  @Nonnegative
+  public int getPageSetCount ()
+  {
+    return m_nPageSetCount;
   }
 
   /**
@@ -226,10 +243,12 @@ public class PagePreRenderContext
                                        .append ("PDDoc", m_aDoc)
                                        .append ("PDPage", m_aPage)
                                        .append ("PageSetIndex", m_nPageSetIndex)
+                                       .append ("PageSetCount", m_nPageSetCount)
                                        .append ("PageSetPageIndex", m_nPageSetPageIndex)
                                        .append ("PageSetPageCount", m_nPageSetPageCount)
                                        .append ("TotalPageIndex", m_nTotalPageIndex)
                                        .append ("TotalPageCount", m_nTotalPageCount)
+                                       .append ("Placeholders", m_aPlaceholders)
                                        .toString ();
   }
 }

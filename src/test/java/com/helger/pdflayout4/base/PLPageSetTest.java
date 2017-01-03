@@ -33,7 +33,6 @@ import com.helger.pdflayout4.element.box.PLBox;
 import com.helger.pdflayout4.element.table.PLTable;
 import com.helger.pdflayout4.element.table.PLTableCell;
 import com.helger.pdflayout4.element.text.PLText;
-import com.helger.pdflayout4.render.PagePreRenderContext;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EHorzAlignment;
 import com.helger.pdflayout4.spec.FontSpec;
@@ -98,7 +97,7 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    final PLTable aTable = new PLTable (new CommonsArrayList<> (WidthSpec.star ()));
+    final PLTable aTable = new PLTable (new CommonsArrayList <> (WidthSpec.star ()));
     aTable.addRow (new PLTableCell (new PLText (sHeader +
                                                 sHeader +
                                                 "last line of header",
@@ -204,19 +203,23 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.setPageHeader (new PLBox (new PLText (PagePreRenderContext.PLACEHOLDER_PAGESET_INDEX +
+    aPS1.setPageHeader (new PLBox (new PLText (EPLPlaceholder.PAGESET_INDEX.getVariable () +
                                                " / " +
-                                               PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_INDEX +
+                                               EPLPlaceholder.PAGESET_NUMBER.getVariable () +
                                                " / " +
-                                               PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                               EPLPlaceholder.PAGESET_COUNT.getVariable () +
                                                " / " +
-                                               PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
+                                               EPLPlaceholder.PAGESET_PAGE_INDEX.getVariable () +
                                                " / " +
-                                               PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_INDEX +
+                                               EPLPlaceholder.PAGESET_PAGE_NUMBER.getVariable () +
                                                " / " +
-                                               PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                               EPLPlaceholder.PAGESET_PAGE_COUNT.getVariable () +
                                                " / " +
-                                               PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
+                                               EPLPlaceholder.TOTAL_PAGE_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable () +
                                                " / ${custom-var}",
                                                r10).setID ("header")
                                                    .setReplacePlaceholder (true)

@@ -25,17 +25,13 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
-import com.helger.pdflayout4.PDFCreationException;
-import com.helger.pdflayout4.PLConvert;
-import com.helger.pdflayout4.PLDebug;
-import com.helger.pdflayout4.PageLayoutPDF;
+import com.helger.pdflayout4.base.EPLPlaceholder;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.hbox.PLHBox;
 import com.helger.pdflayout4.element.special.PLSpacerX;
 import com.helger.pdflayout4.element.special.PLSpacerY;
 import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.element.vbox.PLVBox;
-import com.helger.pdflayout4.render.PagePreRenderContext;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EHorzAlignment;
 import com.helger.pdflayout4.spec.FontSpec;
@@ -67,9 +63,9 @@ public final class PageLayoutPDFTest
     aPS1.setPageHeader (new PLText ("Das ist die Kopfzeile", r10).setBorderBottom (new BorderStyleSpec (Color.BLACK))
                                                                  .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLText ("Das ist die Fusszeile, Seite " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                    EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable () +
                                     " von " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
+                                    EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable (),
                                     r10).setReplacePlaceholder (true)
                                         .setBorderTop (new BorderStyleSpec (Color.BLACK))
                                         .setHorzAlign (EHorzAlignment.CENTER));
@@ -153,19 +149,19 @@ public final class PageLayoutPDFTest
     final PLPageSet aPS3 = new PLPageSet (PDRectangle.A4.getHeight (), PDRectangle.A4.getWidth ()).setMargin (50, 30)
                                                                                                   .setPadding (15);
     aPS3.setPreRenderContextCustomizer (aCtx -> {
-      final int nTotal = aCtx.getPlaceholderAsInt (PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT, -1);
+      final int nTotal = aCtx.getPlaceholderAsInt (EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable (), -1);
       aCtx.addPlaceholder ("${pages-1}", nTotal - 1);
     });
     aPS3.setPageHeader (new PLText ("Das ist die Kopfzeile3", r10).setBorderBottom (new BorderStyleSpec (Color.BLACK))
                                                                   .setHorzAlign (EHorzAlignment.CENTER));
     aPS3.setPageFooter (new PLText ("Das ist die Fusszeile3, Seite " +
-                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_NUMBER +
+                                    EPLPlaceholder.PAGESET_PAGE_NUMBER.getVariable () +
                                     " von " +
-                                    PagePreRenderContext.PLACEHOLDER_PAGESET_PAGE_COUNT +
+                                    EPLPlaceholder.PAGESET_PAGE_COUNT.getVariable () +
                                     " bzw. " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                    EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable () +
                                     " von " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT +
+                                    EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable () +
                                     "; my value: ${pages-1}",
                                     r10).setReplacePlaceholder (true)
                                         .setBorderTop (new BorderStyleSpec (Color.BLACK))
@@ -208,9 +204,9 @@ public final class PageLayoutPDFTest
                                                     .setPadding (4, 0)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLText ("Page " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_NUMBER +
+                                    EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable () +
                                     " of " +
-                                    PagePreRenderContext.PLACEHOLDER_TOTAL_PAGE_COUNT,
+                                    EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable (),
                                     r10).setReplacePlaceholder (true)
                                         .setBorder (new BorderStyleSpec (Color.BLACK))
                                         .setMarginTop (10)
