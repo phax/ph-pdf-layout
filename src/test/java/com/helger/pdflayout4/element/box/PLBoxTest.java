@@ -29,7 +29,6 @@ import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
-import com.helger.pdflayout4.element.box.PLBox;
 import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EHorzAlignment;
@@ -165,7 +164,7 @@ public final class PLBoxTest
   public void testAlignment () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (10);
+    final PLPageSet aPS1 = new PLPageSet (new PDRectangle (300, 300)).setMargin (10);
 
     for (final EHorzAlignment eH : EHorzAlignment.values ())
       for (final EVertAlignment eV : EVertAlignment.values ())
