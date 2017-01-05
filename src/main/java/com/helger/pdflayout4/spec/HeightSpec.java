@@ -151,7 +151,9 @@ public class HeightSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("type", m_eType).append ("value", m_fValue).toString ();
+    return new ToStringGenerator (this).append ("type", m_eType)
+                                       .appendIf ("value", m_fValue, x -> isAbsolute ())
+                                       .toString ();
   }
 
   /**
