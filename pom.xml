@@ -67,14 +67,14 @@
     </developer>
   </developers>
   <properties>
-    <pdfbox.version>2.0.3</pdfbox.version>
+    <pdfbox.version>2.0.4</pdfbox.version>
   </properties>
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>8.5.4</version>
+        <version>8.6.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -121,7 +121,7 @@
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcmail-jdk15on</artifactId>
-      <version>1.55</version>
+      <version>1.56</version>
       <optional>true</optional>
     </dependency>
     <dependency>

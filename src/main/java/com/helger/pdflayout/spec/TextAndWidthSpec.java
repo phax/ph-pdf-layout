@@ -85,6 +85,6 @@ public class TextAndWidthSpec
   @Nonnull
   public static String getAsText (@Nonnull final Iterable <? extends TextAndWidthSpec> aTexts)
   {
-    return StringHelper.getImploded ('\n', aTexts, x -> x.getText ());
+    return StringHelper.getImplodedMapped ('\n', aTexts, x -> x.getText ());
   }
 }
