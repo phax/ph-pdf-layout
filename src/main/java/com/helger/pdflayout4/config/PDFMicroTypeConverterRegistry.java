@@ -16,13 +16,10 @@
  */
 package com.helger.pdflayout4.config;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 
 import com.helger.pdflayout4.config.xml.BorderSpecMicroTypeConverter;
 import com.helger.pdflayout4.config.xml.BorderStyleSpecMicroTypeConverter;
-import com.helger.pdflayout4.config.xml.ColorMicroTypeConverter;
 import com.helger.pdflayout4.config.xml.FontSpecMicroTypeConverter;
 import com.helger.pdflayout4.config.xml.HeightSpecMicroTypeConverter;
 import com.helger.pdflayout4.config.xml.LineDashPatternSpecMicroTypeConverter;
@@ -64,14 +61,6 @@ public final class PDFMicroTypeConverterRegistry
     // Details
     aRegistry.registerMicroElementTypeConverter (BorderSpec.class, new BorderSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (BorderStyleSpec.class, new BorderStyleSpecMicroTypeConverter ());
-    try
-    {
-      aRegistry.registerMicroElementTypeConverter (Color.class, new ColorMicroTypeConverter ());
-    }
-    catch (final IllegalArgumentException ex)
-    {
-      // Already registered
-    }
     aRegistry.registerMicroElementTypeConverter (FontSpec.class, new FontSpecMicroTypeConverter (aPreloadFontResolver));
     aRegistry.registerMicroElementTypeConverter (HeightSpec.class, new HeightSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (LineDashPatternSpec.class,
