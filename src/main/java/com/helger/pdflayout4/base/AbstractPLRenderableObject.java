@@ -273,7 +273,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * INTERNAL method. Do not call from outside!
    *
    * @param aPreparedSize
-   *        The new prepared size without padding or margin.
+   *        The new prepared size without margin, border and padding.
    * @return this
    */
   @Nonnull

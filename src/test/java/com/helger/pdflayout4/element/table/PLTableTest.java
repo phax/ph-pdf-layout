@@ -142,7 +142,7 @@ public final class PLTableTest
   @ReturnsMutableCopy
   public static <T> ICommonsList <T> createList (final int nCount, final IntFunction <T> aSupplier)
   {
-    final ICommonsList <T> ret = new CommonsArrayList <> (nCount);
+    final ICommonsList <T> ret = new CommonsArrayList<> (nCount);
     for (int i = 0; i < nCount; ++i)
       ret.add (aSupplier.apply (i));
     return ret;
@@ -177,26 +177,26 @@ public final class PLTableTest
                                                                     r14b.getCloneWithDifferentColor (Color.GRAY)).setPadding (aPadding))));
 
     final ICommonsList <Function <PLTableRow, PLTableRow>> aRowFcts;
-    aRowFcts = new CommonsArrayList <> (x -> x, x -> x.setFillColor (aBGRow));
+    aRowFcts = new CommonsArrayList<> (x -> x, x -> x.setFillColor (aBGRow));
 
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
-    aCellFcts = new CommonsArrayList <> (x -> x,
-                                         x -> x.setFillColor (aBGCell),
-                                         x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2")
-                                                                                                          ? x.setFillColor (aBGCell)
-                                                                                                          : x);
+    aCellFcts = new CommonsArrayList<> (x -> x,
+                                        x -> x.setFillColor (aBGCell),
+                                        x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2")
+                                                                                                         ? x.setFillColor (aBGCell)
+                                                                                                         : x);
 
     final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts;
-    aElementFcts = new CommonsArrayList <> (x -> x,
-                                            x -> x.setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder),
-                                            x -> x.setBorder (aBorder).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder)
-                                                  .setPadding (aPadding)
-                                                  .setMargin (aMargin)
-                                                  .setFillColor (aBGElement));
+    aElementFcts = new CommonsArrayList<> (x -> x,
+                                           x -> x.setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder),
+                                           x -> x.setBorder (aBorder).setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
+                                           x -> x.setBorder (aBorder)
+                                                 .setPadding (aPadding)
+                                                 .setMargin (aMargin)
+                                                 .setFillColor (aBGElement));
 
     int nRowFunc = 0;
     for (final Function <PLTableRow, PLTableRow> aRowFct : aRowFcts)
@@ -477,7 +477,7 @@ public final class PLTableTest
     final PLTable aTable = PLTable.createWithPercentage (10, 20, 30, 40);
     for (int i = 0; i < 1000; ++i)
     {
-      final ICommonsList <PLTableCell> aRow = new CommonsArrayList <> ();
+      final ICommonsList <PLTableCell> aRow = new CommonsArrayList<> ();
       for (int c = 0; c < aTable.getColumnCount (); ++c)
         aRow.add (new PLTableCell (new PLText ("Col " + c, r10)).setHorzAlign (EHorzAlignment.CENTER));
       // Setting the padding on the table cell (that's what happens internally)
@@ -552,5 +552,55 @@ public final class PLTableTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false).setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-cell-spawning-page2.pdf"));
+  }
+
+  @Test
+  public void testColSpanRightAlign () throws PDFCreationException
+  {
+    PLDebug.setDebugAll (true);
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
+
+    final String sLongText = StringHelper.getRepeated ("This is a dummy text to fill the table cell. Some other real information expected here in practice. ",
+                                                       4);
+
+    final String sMediumText = StringHelper.getRepeated ("This is a dummy text to fill the table cell. Some other real information expected here in practice. ",
+                                                         2);
+
+    // Start table
+    final PLTable aTable = PLTable.createWithPercentage (10, 60, 15, 15).setHeaderRowCount (1).setID ("table");
+    aTable.addAndReturnRow (new PLTableCell (new PLText ("Header col 1", r10)),
+                            new PLTableCell (new PLText ("Header col 2", r10)),
+                            new PLTableCell (new PLText ("Header col 3", r10)),
+                            new PLTableCell (new PLText ("Header col 4", r10)))
+          .setID ("row-header")
+          .setPadding (2)
+          .setFillColor (Color.LIGHT_GRAY);
+    for (int i = 0; i < 12; ++i)
+    {
+      aTable.addAndReturnRow (new PLTableCell (new PLText (Integer.toString (i), r10).setID ("idx")).setID ("cell-idx"),
+                              new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("cell-longtext"),
+                              new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cell-empty"),
+                              new PLTableCell (new PLText ("Short text", r10).setID ("shorttext"))
+                                                                                                  .setID ("cell-shorttext"))
+            .setID ("row-content-" + i)
+            .setPadding (2);
+      aTable.addAndReturnRow (new PLTableCell (new PLText (sMediumText, r10).setID ("spanned")
+                                                                            .setHorzAlign (EHorzAlignment.RIGHT),
+                                               aTable.getColumnCount ()).setID ("cell-spanned")
+                                                                        .setHorzAlign (EHorzAlignment.RIGHT))
+            .setID ("row-summary-" + i)
+            .setPadding (2);
+    }
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.BLUE));
+    aPS1.addElement (aTable);
+
+    aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false).setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-colspan-right-align.pdf"));
   }
 }

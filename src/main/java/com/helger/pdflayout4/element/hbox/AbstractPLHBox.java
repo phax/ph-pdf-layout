@@ -74,7 +74,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
-  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
+  private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList<> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
   /** prepared column size (with outline of contained element) */
@@ -587,8 +587,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       aHBox2.addColumn (splitVertCreateEmptyElement (aColumn.getElement (), fColumnWidth, fColumnHeight), aColumnWidth);
     }
 
-    float fHBox1MaxHeight = 0;
-    float fHBox2MaxHeight = 0;
+    float fHBox1MaxHeightNet = 0;
+    float fHBox2MaxHeightNet = 0;
     final SizeSpec [] fHBox1ColumnSizes = new SizeSpec [m_aPreparedColumnSize.length];
     final SizeSpec [] fHBox2ColumnSizes = new SizeSpec [m_aPreparedColumnSize.length];
     final SizeSpec [] fHBox1ElementSizes = new SizeSpec [m_aPreparedElementSize.length];
@@ -696,8 +696,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
 
       // calculate max column height
-      fHBox1MaxHeight = Math.max (fHBox1MaxHeight, fHBox1ColumnSizes[nCol].getHeight ());
-      fHBox2MaxHeight = Math.max (fHBox2MaxHeight, fHBox2ColumnSizes[nCol].getHeight ());
+      fHBox1MaxHeightNet = Math.max (fHBox1MaxHeightNet, fHBox1ElementSizes[nCol].getHeight ());
+      fHBox2MaxHeightNet = Math.max (fHBox2MaxHeightNet, fHBox2ElementSizes[nCol].getHeight ());
     }
 
     if (!bDidSplitAnyColumn)
@@ -720,7 +720,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           final AbstractPLElement <?> aRealElement1 = (AbstractPLElement <?>) aElement1;
           aRealElement1.setMinSize (m_aPreparedColumnSize[nIndex].getWidth () -
                                     aRealElement1.getOutlineXSum (),
-                                    fHBox1MaxHeight);
+                                    fHBox1MaxHeightNet);
         }
         final IPLRenderableObject <?> aElement2 = aHBox2.getColumnElementAtIndex (nIndex);
         if (aElement2 instanceof AbstractPLElement <?>)
@@ -729,14 +729,14 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           final AbstractPLElement <?> aRealElement2 = (AbstractPLElement <?>) aElement2;
           aRealElement2.setMinSize (m_aPreparedColumnSize[nIndex].getWidth () -
                                     aRealElement2.getOutlineXSum (),
-                                    fHBox2MaxHeight);
+                                    fHBox2MaxHeightNet);
         }
       }
     }
 
     // mark new hboxes as prepared
-    aHBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fHBox1MaxHeight));
-    aHBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fHBox2MaxHeight));
+    aHBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fHBox1MaxHeightNet));
+    aHBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fHBox2MaxHeightNet));
     // set prepared column sizes
     aHBox1.m_aPreparedColumnSize = fHBox1ColumnSizes;
     aHBox2.m_aPreparedColumnSize = fHBox2ColumnSizes;
@@ -744,8 +744,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     aHBox1.m_aPreparedElementSize = fHBox1ElementSizes;
     aHBox2.m_aPreparedElementSize = fHBox2ElementSizes;
 
-    return new PLSplitResult (new PLElementWithSize (aHBox1, new SizeSpec (fAvailableWidth, fHBox1MaxHeight)),
-                              new PLElementWithSize (aHBox2, new SizeSpec (fAvailableWidth, fHBox2MaxHeight)));
+    return new PLSplitResult (new PLElementWithSize (aHBox1, new SizeSpec (fAvailableWidth, fHBox1MaxHeightNet)),
+                              new PLElementWithSize (aHBox2, new SizeSpec (fAvailableWidth, fHBox2MaxHeightNet)));
   }
 
   @Override
