@@ -16,10 +16,13 @@
  */
 package com.helger.pdflayout4.element.table;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnull;
 
 import com.helger.pdflayout4.base.IPLRenderableObject;
 import com.helger.pdflayout4.element.hbox.AbstractPLHBox;
+import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
 
 /**
@@ -47,5 +50,11 @@ final class PLTableRowHBox extends AbstractPLHBox <PLTableRowHBox>
     final PLTableRowHBox ret = new PLTableRowHBox ();
     ret.setBasicDataFrom (aBase);
     return ret;
+  }
+
+  @Override
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    super.onRender (aCtx);
   }
 }

@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.element.table;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,6 +27,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import com.helger.commons.ValueEnforcer;
 import com.helger.pdflayout4.base.IPLRenderableObject;
 import com.helger.pdflayout4.element.box.AbstractPLBox;
+import com.helger.pdflayout4.render.PageRenderContext;
 
 /**
  * This class represents a single table cell within a table row.
@@ -79,5 +82,11 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
     final PLTableCell ret = new PLTableCell (null, aBase.getColSpan ());
     ret.setBasicDataFrom (aBase);
     return ret;
+  }
+
+  @Override
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    super.onRender (aCtx);
   }
 }

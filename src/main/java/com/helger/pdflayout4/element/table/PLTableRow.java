@@ -31,6 +31,7 @@ import com.helger.commons.state.EChange;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
+import com.helger.pdflayout4.base.PLElementWithSize;
 import com.helger.pdflayout4.base.PLSplitResult;
 import com.helger.pdflayout4.element.hbox.PLHBoxColumn;
 import com.helger.pdflayout4.render.PageRenderContext;
@@ -43,8 +44,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 
 public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implements IPLSplittableObject <PLTableRow>
 {
-  private final PLTableRowHBox m_aRow = new PLTableRowHBox ().setVertSplittable (true);
-  private boolean m_bSeparableFromNextRow = true;
+  private PLTableRowHBox m_aRow = new PLTableRowHBox ().setVertSplittable (true);
 
   public PLTableRow ()
   {}
@@ -271,18 +271,6 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
     return this;
   }
 
-  public boolean isSeparableFromNextRow ()
-  {
-    return m_bSeparableFromNextRow;
-  }
-
-  @Nonnull
-  public PLTableRow setSeparableFromNextRow (final boolean bSeparableFromNextRow)
-  {
-    m_bSeparableFromNextRow = bSeparableFromNextRow;
-    return this;
-  }
-
   @Override
   @Nonnull
   public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
@@ -319,7 +307,24 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   @Nullable
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
-    return m_aRow.splitElementVert (fAvailableWidth, fAvailableHeight);
+    final PLSplitResult ret = m_aRow.splitElementVert (fAvailableWidth, fAvailableHeight);
+    if (ret == null)
+      return null;
+
+    final PLTableRow aRow1 = new PLTableRow ().setID (getID () + "-1").setBasicDataFrom (this);
+    aRow1.m_aRow = (PLTableRowHBox) ret.getFirstElement ().getElement ();
+    aRow1.internalMarkAsPrepared (ret.getFirstElement ().getSize ());
+
+    final PLTableRow aRow2 = new PLTableRow ().setID (getID () + "-2").setBasicDataFrom (this);
+    aRow2.m_aRow = (PLTableRowHBox) ret.getSecondElement ().getElement ();
+    aRow2.internalMarkAsPrepared (ret.getSecondElement ().getSize ());
+
+    return new PLSplitResult (new PLElementWithSize (aRow1,
+                                                     ret.getFirstElement ().getSize (),
+                                                     ret.getFirstElement ().getSizeFull ()),
+                              new PLElementWithSize (aRow2,
+                                                     ret.getSecondElement ().getSize (),
+                                                     ret.getSecondElement ().getSizeFull ()));
   }
 
   @Override
