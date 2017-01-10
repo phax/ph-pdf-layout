@@ -46,7 +46,7 @@ import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebug;
+import com.helger.pdflayout4.PLDebugLog;
 
 /**
  * This class represents a wrapper around a {@link PDFont} that is uniquely
@@ -180,8 +180,8 @@ public class LoadedFont
     }
     catch (final IllegalArgumentException ex)
     {
-      if (PLDebug.isDebugFont ())
-        PLDebug.debugFont (aFont.toString (), "No code point " + nCodepoint + " in this font - " + ex.getMessage ());
+      if (PLDebugLog.isDebugFont ())
+        PLDebugLog.debugFont (aFont.toString (), "No code point " + nCodepoint + " in this font - " + ex.getMessage ());
 
       try
       {
@@ -191,8 +191,8 @@ public class LoadedFont
       }
       catch (final IllegalArgumentException ex2)
       {
-        if (PLDebug.isDebugFont ())
-          PLDebug.debugFont (aFont.toString (),
+        if (PLDebugLog.isDebugFont ())
+          PLDebugLog.debugFont (aFont.toString (),
                              "No fallback code point " + nFallbackCodepoint + " in this font - " + ex2.getMessage ());
         throw ex2;
       }

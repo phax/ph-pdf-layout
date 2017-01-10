@@ -45,7 +45,7 @@ import com.helger.commons.id.IHasID;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.font.api.IFontResource;
-import com.helger.pdflayout4.PLDebug;
+import com.helger.pdflayout4.PLDebugLog;
 
 /**
  * Represents an abstract font that is potentially not yet loaded and can be
@@ -121,13 +121,13 @@ public final class PreloadFont implements IHasID <String>, Serializable
       switch (m_aFontRes.getFontType ())
       {
         case TTF:
-          if (PLDebug.isDebugFont ())
-            PLDebug.debugFont (m_aFontRes.toString (), "Loading TTF font");
+          if (PLDebugLog.isDebugFont ())
+            PLDebugLog.debugFont (m_aFontRes.toString (), "Loading TTF font");
           m_aTTF = new TTFParser ().parse (m_aFontRes.getInputStream ());
           break;
         case OTF:
-          if (PLDebug.isDebugFont ())
-            PLDebug.debugFont (m_aFontRes.toString (), "Loading OTF font");
+          if (PLDebugLog.isDebugFont ())
+            PLDebugLog.debugFont (m_aFontRes.toString (), "Loading OTF font");
           m_aOTF = new OTFParser ().parse (m_aFontRes.getInputStream ());
           break;
         default:

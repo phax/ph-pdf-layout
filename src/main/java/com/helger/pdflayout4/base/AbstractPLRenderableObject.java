@@ -27,7 +27,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebug;
+import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
 import com.helger.pdflayout4.spec.SizeSpec;
@@ -173,22 +173,22 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     m_aPreparedSize = aPreparedSize;
     m_aRenderSize = getRenderSize (aPreparedSize);
 
-    if (PLDebug.isDebugPrepare ())
+    if (PLDebugLog.isDebugPrepare ())
     {
       String sSuffix = "";
       if (this instanceof IPLHasMarginBorderPadding <?>)
       {
         sSuffix = " with " +
-                  PLDebug.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
+                  PLDebugLog.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
                   " and " +
-                  PLDebug.getYMBP ((IPLHasMarginBorderPadding <?>) this);
+                  PLDebugLog.getYMBP ((IPLHasMarginBorderPadding <?>) this);
       }
-      PLDebug.debugPrepare (this,
+      PLDebugLog.debugPrepare (this,
                             "Prepared object: " +
-                                  PLDebug.getWH (aPreparedSize) +
+                                  PLDebugLog.getWH (aPreparedSize) +
                                   sSuffix +
                                   "; Render size: " +
-                                  PLDebug.getWH (m_aRenderSize));
+                                  PLDebugLog.getWH (m_aRenderSize));
     }
   }
 
@@ -199,12 +199,12 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       // Recalculate, e.g. for min-max size change
       final SizeSpec aOldRenderSize = m_aRenderSize;
       m_aRenderSize = getRenderSize (m_aPreparedSize);
-      if (PLDebug.isDebugPrepare ())
-        PLDebug.debugPrepare (this,
+      if (PLDebugLog.isDebugPrepare ())
+        PLDebugLog.debugPrepare (this,
                               "RenderSize changed from " +
-                                    PLDebug.getWH (aOldRenderSize) +
+                                    PLDebugLog.getWH (aOldRenderSize) +
                                     " to " +
-                                    PLDebug.getWH (m_aRenderSize));
+                                    PLDebugLog.getWH (m_aRenderSize));
     }
   }
 
@@ -214,19 +214,19 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     // Prepare only once!
     internalCheckNotPrepared ();
 
-    if (PLDebug.isDebugPrepare ())
+    if (PLDebugLog.isDebugPrepare ())
     {
       String sSuffix = "";
       if (this instanceof IPLHasMarginBorderPadding <?>)
       {
         sSuffix = " with " +
-                  PLDebug.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
+                  PLDebugLog.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
                   " and " +
-                  PLDebug.getYMBP ((IPLHasMarginBorderPadding <?>) this);
+                  PLDebugLog.getYMBP ((IPLHasMarginBorderPadding <?>) this);
       }
-      PLDebug.debugPrepare (this,
+      PLDebugLog.debugPrepare (this,
                             "Preparing object for available " +
-                                  PLDebug.getWH (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ()) +
+                                  PLDebugLog.getWH (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ()) +
                                   sSuffix);
     }
 
@@ -302,10 +302,10 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   {
     internalCheckAlreadyPrepared ();
 
-    if (PLDebug.isDebugRender ())
-      PLDebug.debugRender (this,
+    if (PLDebugLog.isDebugRender ())
+      PLDebugLog.debugRender (this,
                            "Rendering at " +
-                                 PLDebug.getXYWH (aCtx.getStartLeft (),
+                                 PLDebugLog.getXYWH (aCtx.getStartLeft (),
                                                   aCtx.getStartTop (),
                                                   aCtx.getWidth (),
                                                   aCtx.getHeight ()));

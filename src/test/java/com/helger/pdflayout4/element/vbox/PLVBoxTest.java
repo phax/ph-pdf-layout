@@ -27,7 +27,6 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout4.PDFCreationException;
-import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.box.PLBox;
@@ -51,11 +50,6 @@ public final class PLVBoxTest
 {
   @Rule
   public final TestRule m_aRule = new DebugModeTestRule ();
-
-  static
-  {
-    PLDebug.setDebugAll (false);
-  }
 
   @Test
   public void testBasic () throws PDFCreationException

@@ -42,7 +42,8 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebug;
+import com.helger.pdflayout4.PLDebugLog;
+import com.helger.pdflayout4.PLDebugRender;
 import com.helger.pdflayout4.element.special.PLPageBreak;
 import com.helger.pdflayout4.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout4.render.ERenderingElementType;
@@ -54,7 +55,6 @@ import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
 import com.helger.pdflayout4.render.PreparationContextGlobal;
 import com.helger.pdflayout4.spec.BorderSpec;
-import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.MarginSpec;
 import com.helger.pdflayout4.spec.PaddingSpec;
 import com.helger.pdflayout4.spec.SizeSpec;
@@ -445,12 +445,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                                               m_aPageSize.getWidth () - getMarginXSum (),
                                                               getMarginTop ());
 
-      if (PLDebug.isDebugPrepare ())
-        PLDebug.debugPrepare (this,
-                              "Start preparing page header on width=" +
-                                    aRPC.getAvailableWidth () +
-                                    " and height=" +
-                                    aRPC.getAvailableHeight ());
+      if (PLDebugLog.isDebugPrepare ())
+        PLDebugLog.debugPrepare (this,
+                                 "Start preparing page header on width=" +
+                                       aRPC.getAvailableWidth () +
+                                       " and height=" +
+                                       aRPC.getAvailableHeight ());
 
       final SizeSpec aElementSize = m_aPageHeader.prepare (aRPC);
       ret.setHeaderHeight (aElementSize.getHeight ());
@@ -477,12 +477,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                                               m_aPageSize.getWidth () - getMarginXSum (),
                                                               getMarginBottom ());
 
-      if (PLDebug.isDebugPrepare ())
-        PLDebug.debugPrepare (this,
-                              "Start preparing page footer on width=" +
-                                    aRPC.getAvailableWidth () +
-                                    " and height=" +
-                                    aRPC.getAvailableHeight ());
+      if (PLDebugLog.isDebugPrepare ())
+        PLDebugLog.debugPrepare (this,
+                                 "Start preparing page footer on width=" +
+                                       aRPC.getAvailableWidth () +
+                                       " and height=" +
+                                       aRPC.getAvailableHeight ());
 
       final SizeSpec aElementSize = m_aPageFooter.prepare (aRPC);
       ret.setFooterHeight (aElementSize.getHeight ());
@@ -513,16 +513,16 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       final float fAvailWidth = getAvailableWidth ();
       final float fAvailHeight = getAvailableHeight ();
 
-      if (PLDebug.isDebugPrepare ())
-        PLDebug.debugPrepare (this,
-                              "Start preparing elements on width=" +
-                                    fAvailWidth +
-                                    "+" +
-                                    getOutlineXSum () +
-                                    " and height=" +
-                                    fAvailHeight +
-                                    "+" +
-                                    getOutlineYSum ());
+      if (PLDebugLog.isDebugPrepare ())
+        PLDebugLog.debugPrepare (this,
+                                 "Start preparing elements on width=" +
+                                       fAvailWidth +
+                                       "+" +
+                                       getOutlineXSum () +
+                                       " and height=" +
+                                       fAvailHeight +
+                                       "+" +
+                                       getOutlineYSum ());
 
       // Prepare content elements
       // Must be done after header and footer, because the pageset margins may
@@ -534,8 +534,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         ret.addElement (new PLElementWithSize (aElement, aElementPreparedSize));
       }
 
-      if (PLDebug.isDebugPrepare ())
-        PLDebug.debugPrepare (this, "Finished preparing elements");
+      if (PLDebugLog.isDebugPrepare ())
+        PLDebugLog.debugPrepare (this, "Finished preparing elements");
     }
 
     // Split into pieces that fit onto a page
@@ -543,8 +543,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
     final float fYLeast = getOutlineBottom ();
 
     {
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Start splitting elements");
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "Start splitting elements");
 
       ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList <> ();
 
@@ -580,14 +580,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
             final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
             if (fSplitHeight > 0)
             {
-              if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this,
-                                    "Trying to split " +
-                                          aElement.getDebugID () +
-                                          " into pieces for available width " +
-                                          fElementPreparedWidth +
-                                          " and height " +
-                                          fSplitHeight);
+              if (PLDebugLog.isDebugSplit ())
+                PLDebugLog.debugSplit (this,
+                                       "Trying to split " +
+                                             aElement.getDebugID () +
+                                             " into pieces for available width " +
+                                             fElementPreparedWidth +
+                                             " and height " +
+                                             fSplitHeight);
 
               final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fElementPreparedWidth,
                                                                                                fSplitHeight);
@@ -603,45 +603,45 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                 aElementsWithSize.add (0, aSplitResult.getFirstElement ());
                 aElementsWithSize.add (1, aSplitResult.getSecondElement ());
 
-                if (PLDebug.isDebugSplit ())
+                if (PLDebugLog.isDebugSplit ())
                 {
-                  PLDebug.debugSplit (this,
-                                      "Split " +
-                                            aElement.getDebugID () +
-                                            " into pieces: " +
-                                            aSplitResult.getFirstElement ().getElement ().getDebugID () +
-                                            " (" +
-                                            aSplitResult.getFirstElement ().getWidth () +
-                                            "+" +
-                                            aSplitResult.getFirstElement ().getElement ().getOutlineXSum () +
-                                            " & " +
-                                            aSplitResult.getFirstElement ().getHeight () +
-                                            "+" +
-                                            aSplitResult.getFirstElement ().getElement ().getOutlineYSum () +
-                                            ") and " +
-                                            aSplitResult.getSecondElement ().getElement ().getDebugID () +
-                                            " (" +
-                                            aSplitResult.getSecondElement ().getWidth () +
-                                            "+" +
-                                            aSplitResult.getSecondElement ().getElement ().getOutlineXSum () +
-                                            " & " +
-                                            aSplitResult.getSecondElement ().getHeight () +
-                                            "+" +
-                                            aSplitResult.getSecondElement ().getElement ().getOutlineYSum () +
-                                            ")");
+                  PLDebugLog.debugSplit (this,
+                                         "Split " +
+                                               aElement.getDebugID () +
+                                               " into pieces: " +
+                                               aSplitResult.getFirstElement ().getElement ().getDebugID () +
+                                               " (" +
+                                               aSplitResult.getFirstElement ().getWidth () +
+                                               "+" +
+                                               aSplitResult.getFirstElement ().getElement ().getOutlineXSum () +
+                                               " & " +
+                                               aSplitResult.getFirstElement ().getHeight () +
+                                               "+" +
+                                               aSplitResult.getFirstElement ().getElement ().getOutlineYSum () +
+                                               ") and " +
+                                               aSplitResult.getSecondElement ().getElement ().getDebugID () +
+                                               " (" +
+                                               aSplitResult.getSecondElement ().getWidth () +
+                                               "+" +
+                                               aSplitResult.getSecondElement ().getElement ().getOutlineXSum () +
+                                               " & " +
+                                               aSplitResult.getSecondElement ().getHeight () +
+                                               "+" +
+                                               aSplitResult.getSecondElement ().getElement ().getOutlineYSum () +
+                                               ")");
                 }
 
                 // Try to fit resulting split pieces onto page
                 continue;
               }
-              if (PLDebug.isDebugSplit ())
+              if (PLDebugLog.isDebugSplit ())
               {
-                PLDebug.debugSplit (this,
-                                    "The single element " +
-                                          aElement.getDebugID () +
-                                          " does not fit onto a single page (" +
-                                          fSplitHeight +
-                                          ") even though it is vertically splittable!");
+                PLDebugLog.debugSplit (this,
+                                       "The single element " +
+                                             aElement.getDebugID () +
+                                             " does not fit onto a single page (" +
+                                             fSplitHeight +
+                                             ") even though it is vertically splittable!");
               }
             } // splitHeight > 0
           }
@@ -665,16 +665,16 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
             if (s_aLogger.isDebugEnabled ())
               s_aLogger.debug ("Adding " + aCurPageElements.size () + " elements to page " + ret.getPageNumber ());
 
-            if (PLDebug.isDebugPrepare ())
+            if (PLDebugLog.isDebugPrepare ())
             {
               final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
                                                                                       x -> x.getElement ()
                                                                                             .getDebugID ());
-              PLDebug.debugPrepare (this,
-                                    "Finished page " +
-                                          ret.getPageNumber () +
-                                          " with: " +
-                                          StringHelper.getImploded (aLastPageContent));
+              PLDebugLog.debugPrepare (this,
+                                       "Finished page " +
+                                             ret.getPageNumber () +
+                                             " with: " +
+                                             StringHelper.getImploded (aLastPageContent));
             }
 
             // Something on the current page -> start a new page
@@ -702,22 +702,22 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       if (aCurPageElements.isNotEmpty ())
       {
         // Add elements of last page
-        if (PLDebug.isDebugSplit ())
+        if (PLDebugLog.isDebugSplit ())
         {
           final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
                                                                                   x -> x.getElement ().getDebugID ());
-          PLDebug.debugSplit (this,
-                              "Finished last page " +
-                                    ret.getPageNumber () +
-                                    " with: " +
-                                    StringHelper.getImploded (", ", aLastPageContent));
+          PLDebugLog.debugSplit (this,
+                                 "Finished last page " +
+                                       ret.getPageNumber () +
+                                       " with: " +
+                                       StringHelper.getImploded (", ", aLastPageContent));
         }
 
         ret.addPerPageElements (aCurPageElements);
       }
 
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Finished splitting elements");
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "Finished splitting elements");
     }
 
     return ret;
@@ -762,16 +762,16 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
     final int nPageCount = aPrepareResult.getPageCount ();
     for (final ICommonsList <PLElementWithSize> aPerPage : aPrepareResult.directGetPerPageElements ())
     {
-      if (PLDebug.isDebugRender ())
-        PLDebug.debugRender (this,
-                             "Start rendering page index " +
-                                   nPageIndex +
-                                   " (" +
-                                   (nTotalPageStartIndex + nPageIndex) +
-                                   ") with page size " +
-                                   PLDebug.getWH (getPageWidth (), getPageHeight ()) +
-                                   " and available size " +
-                                   PLDebug.getWH (getAvailableWidth (), getAvailableHeight ()));
+      if (PLDebugLog.isDebugRender ())
+        PLDebugLog.debugRender (this,
+                                "Start rendering page index " +
+                                      nPageIndex +
+                                      " (" +
+                                      (nTotalPageStartIndex + nPageIndex) +
+                                      ") with page size " +
+                                      PLDebugLog.getWH (getPageWidth (), getPageHeight ()) +
+                                      " and available size " +
+                                      PLDebugLog.getWH (getAvailableWidth (), getAvailableHeight ()));
 
       // Layout in memory
       final PDPage aPage = new PDPage (m_aPageSize.getAsRectangle ());
@@ -807,23 +807,19 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       {
         // Page rect before content - debug: red
         {
-          final float fLeft = getMarginLeft ();
+          final float fLeft = 0 + getMarginLeft ();
           final float fTop = m_aPageSize.getHeight () - getMarginTop ();
           final float fWidth = m_aPageSize.getWidth () - getMarginXSum ();
           final float fHeight = m_aPageSize.getHeight () - getMarginYSum ();
 
-          // Fill before border
-          if (getFillColor () != null)
-          {
-            aContentStream.setNonStrokingColor (getFillColor ());
-            aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
-          }
-
-          BorderSpec aRealBorder = getBorder ();
-          if (PLRenderHelper.shouldApplyDebugBorder (aRealBorder, bDebug))
-            aRealBorder = new BorderSpec (new BorderStyleSpec (PLDebug.BORDER_COLOR_PAGESET));
-          if (aRealBorder.hasAnyBorder ())
-            PLRenderHelper.renderBorder (this, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
+          PLRenderHelper.fillAndRenderBorder (this,
+                                              fLeft,
+                                              fTop,
+                                              fWidth,
+                                              fHeight,
+                                              aContentStream,
+                                              bDebug,
+                                              PLDebugRender.BORDER_COLOR_PAGESET);
         }
 
         // Start with the page rectangle
@@ -898,8 +894,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       }
       ++nPageIndex;
     }
-    if (PLDebug.isDebugRender ())
-      PLDebug.debugRender (this, "Finished rendering");
+    if (PLDebugLog.isDebugRender ())
+      PLDebugLog.debugRender (this, "Finished rendering");
   }
 
   @Override

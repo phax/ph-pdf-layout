@@ -53,7 +53,7 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebug;
+import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
@@ -723,8 +723,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (!containsAnyVertSplittableElement ())
     {
       // Splitting makes no sense
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Cannot split because no vertical splittable elements are contained");
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "Cannot split because no vertical splittable elements are contained");
       return null;
     }
 
@@ -784,12 +784,12 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           {
             final float fSplitWidth = m_aPreparedElementSize[nRow].getWidth ();
             final float fSplitHeight = fAvailableHeight - fUsedVBox1RowHeight - aRowElement.getOutlineYSum ();
-            if (PLDebug.isDebugSplit ())
-              PLDebug.debugSplit (this,
+            if (PLDebugLog.isDebugSplit ())
+              PLDebugLog.debugSplit (this,
                                   "Trying to split " +
                                         aRowElement.getDebugID () +
                                         " into pieces for split size " +
-                                        PLDebug.getWH (fSplitWidth, fSplitHeight));
+                                        PLDebugLog.getWH (fSplitWidth, fSplitHeight));
 
             // Try to split the element contained in the row
             final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementVert (fSplitWidth,
@@ -808,8 +808,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
               aVBox2RowSize.add (aSplitResult.getSecondElement ().getSizeFull ());
               aVBox2ElementSize.add (aSplitResult.getSecondElement ().getSize ());
 
-              if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this,
+              if (PLDebugLog.isDebugSplit ())
+                PLDebugLog.debugSplit (this,
                                     "Split row element " +
                                           aRowElement.getDebugID () +
                                           " (Row " +
@@ -839,8 +839,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
             }
             else
             {
-              if (PLDebug.isDebugSplit ())
-                PLDebug.debugSplit (this,
+              if (PLDebugLog.isDebugSplit ())
+                PLDebugLog.debugSplit (this,
                                     "Failed to split row element " +
                                           aRowElement.getDebugID () +
                                           " (Row " +
@@ -874,16 +874,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (aVBox1.getRowCount () == m_nHeaderRowCount)
     {
       // Splitting makes no sense!
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Splitting makes no sense, because VBox 1 would be empty");
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "Splitting makes no sense, because VBox 1 would be empty");
       return null;
     }
 
     if (aVBox2.getRowCount () == m_nHeaderRowCount)
     {
       // Splitting makes no sense!
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Splitting makes no sense, because VBox 2 would be empty");
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "Splitting makes no sense, because VBox 2 would be empty");
       return null;
     }
 

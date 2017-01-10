@@ -30,12 +30,9 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout4.PDFCreationException;
-import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.hbox.PLHBox;
-import com.helger.pdflayout4.element.image.PLImage;
-import com.helger.pdflayout4.element.image.PLStreamImage;
 import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EHorzAlignment;
@@ -52,11 +49,6 @@ public final class PLImageTest
 {
   @Rule
   public final TestRule m_aRule = new DebugModeTestRule ();
-
-  static
-  {
-    PLDebug.setDebugAll (false);
-  }
 
   @Test
   public void testWithWordBreak () throws PDFCreationException, IOException

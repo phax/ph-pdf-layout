@@ -34,7 +34,7 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebug;
+import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLHasMargin;
 import com.helger.pdflayout4.base.IPLSplittableObject;
@@ -431,8 +431,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     final float fSplitHeight = fAvailableHeight;
-    if (PLDebug.isDebugSplit ())
-      PLDebug.debugSplit (this,
+    if (PLDebugLog.isDebugSplit ())
+      PLDebugLog.debugSplit (this,
                           "Trying to split " +
                                 m_aRows.getDebugID () +
                                 " into pieces for available width " +

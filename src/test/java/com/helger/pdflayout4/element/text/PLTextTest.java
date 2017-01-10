@@ -36,7 +36,6 @@ import com.helger.font.lato2.EFontResourceLato2;
 import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.font.roboto.EFontResourceRoboto;
 import com.helger.pdflayout4.PDFCreationException;
-import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
@@ -53,11 +52,6 @@ public final class PLTextTest
 {
   @Rule
   public final TestRule m_aRule = new DebugModeTestRule ();
-
-  static
-  {
-    PLDebug.setDebugAll (false);
-  }
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -110,7 +104,7 @@ public final class PLTextTest
                                      .setPadding (5)
                                      .setFillColor (Color.YELLOW));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false).setCompressPDF (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true).setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-basic.pdf"));
   }

@@ -34,7 +34,7 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebug;
+import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.base.AbstractPLInlineElement;
 import com.helger.pdflayout4.base.IPLHasHorizontalAlignment;
 import com.helger.pdflayout4.base.IPLSplittableObject;
@@ -430,8 +430,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     if (nLineCount <= 0)
     {
       // Splitting makes no sense because the resulting text 1 would be empty
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this,
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this,
                             "Failed to split because the result would be " +
                                   nLineCount +
                                   " lines for available height " +
@@ -444,8 +444,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     if (nLineCount >= aLines.size ())
     {
       // Splitting makes no sense because the resulting text 2 would be empty
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this,
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this,
                             "Failed to split because the result of " +
                                   nLineCount +
                                   " lines fits into the available height " +
@@ -467,8 +467,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       if (nLineCount <= 0)
       {
         // Splitting makes no sense
-        if (PLDebug.isDebugSplit ())
-          PLDebug.debugSplit (this,
+        if (PLDebugLog.isDebugSplit ())
+          PLDebugLog.debugSplit (this,
                               "Failed to split because the result would be " +
                                     nLineCount +
                                     " lines for available height " +
@@ -518,15 +518,15 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // Fill and border
-    PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
+    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
 
     final float fRenderLeft = aCtx.getStartLeft () + getOutlineLeft ();
     final float fRenderTop = aCtx.getStartTop () - getOutlineTop ();
 
-    if (PLDebug.isDebugRender ())
-      PLDebug.debugRender (this,
+    if (PLDebugLog.isDebugRender ())
+      PLDebugLog.debugRender (this,
                            "Display at " +
-                                 PLDebug.getXYWH (fRenderLeft, fRenderTop, getRenderWidth (), getRenderHeight ()) +
+                                 PLDebugLog.getXYWH (fRenderLeft, fRenderTop, getRenderWidth (), getRenderHeight ()) +
                                  " with " +
                                  m_aPreparedLines.size () +
                                  " lines");

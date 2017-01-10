@@ -36,7 +36,7 @@ import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebug;
+import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
@@ -533,8 +533,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     if (!containsAnyVertSplittableElement ())
     {
       // Splitting makes no sense
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "cannot split because no vertical splittable elements are contained");
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "cannot split because no vertical splittable elements are contained");
       return null;
     }
 
@@ -561,8 +561,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       if (!bAnySplittingPossibleAndNecessary)
       {
         // Splitting makes no sense
-        if (PLDebug.isDebugSplit ())
-          PLDebug.debugSplit (this,
+        if (PLDebugLog.isDebugSplit ())
+          PLDebugLog.debugSplit (this,
                               "no need to split because all splittable elements easily fit into the available height (" +
                                     fAvailableHeight +
                                     ")");
@@ -619,14 +619,14 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       {
         final float fSplitWidth = fElementWidthNet;
         final float fSplitHeight = fAvailableHeight - aColumnElement.getOutlineYSum ();
-        if (PLDebug.isDebugSplit ())
-          PLDebug.debugSplit (this,
+        if (PLDebugLog.isDebugSplit ())
+          PLDebugLog.debugSplit (this,
                               "Trying to split " +
                                     aColumnElement.getDebugID () +
                                     " with height " +
                                     fColumnHeight +
                                     " into pieces for remaining size " +
-                                    PLDebug.getWH (fSplitWidth, fSplitHeight));
+                                    PLDebugLog.getWH (fSplitWidth, fSplitHeight));
 
         // Use width and height without padding and margin!
         final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ().splitElementVert (fSplitWidth,
@@ -648,8 +648,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           bDidSplitColumn = true;
           bDidSplitAnyColumn = true;
 
-          if (PLDebug.isDebugSplit ())
-            PLDebug.debugSplit (this,
+          if (PLDebugLog.isDebugSplit ())
+            PLDebugLog.debugSplit (this,
                                 "Split column element " +
                                       aColumnElement.getDebugID () +
                                       " (Column " +
@@ -679,8 +679,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         }
         else
         {
-          if (PLDebug.isDebugSplit ())
-            PLDebug.debugSplit (this,
+          if (PLDebugLog.isDebugSplit ())
+            PLDebugLog.debugSplit (this,
                                 "Failed to split column element " +
                                       aColumnElement.getDebugID () +
                                       " (Column " +
@@ -715,8 +715,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     if (!bDidSplitAnyColumn)
     {
       // Nothing was splitted
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Weird: No column was split and the height is OK!");
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "Weird: No column was split and the height is OK!");
       return null;
     }
 

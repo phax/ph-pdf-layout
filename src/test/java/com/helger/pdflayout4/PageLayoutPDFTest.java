@@ -49,11 +49,6 @@ public final class PageLayoutPDFTest
   @Rule
   public TestRule m_aRule = new DebugModeTestRule ();
 
-  static
-  {
-    PLDebug.setDebugAll (false);
-  }
-
   @Test
   public void testBasic () throws PDFCreationException
   {

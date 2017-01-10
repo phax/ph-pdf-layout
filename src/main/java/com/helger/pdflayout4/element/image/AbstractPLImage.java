@@ -121,7 +121,7 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     // Fill and border
-    PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
+    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     aContentStream.drawXObject (m_aJpeg,

@@ -27,7 +27,6 @@ import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout4.PDFCreationException;
-import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.element.box.PLBox;
 import com.helger.pdflayout4.element.table.PLTable;
@@ -48,11 +47,6 @@ public final class PLPageSetTest
 {
   @Rule
   public final TestRule m_aRule = new DebugModeTestRule ();
-
-  static
-  {
-    PLDebug.setDebugAll (false);
-  }
 
   @Test
   public void testHeader () throws PDFCreationException

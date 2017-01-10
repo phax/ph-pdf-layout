@@ -24,7 +24,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebug;
+import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.base.AbstractPLBlockElement;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
@@ -200,8 +200,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     if (fBoxHeight <= fAvailableHeight)
     {
       // Splitting makes no sense!
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Splitting makes no sense, because Box 2 would be empty");
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "Splitting makes no sense, because Box 2 would be empty");
       return null;
     }
 
@@ -230,20 +230,20 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     // Try split
     final float fSplitWidth = getElementPreparedSize ().getWidth ();
     final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
-    if (PLDebug.isDebugSplit ())
-      PLDebug.debugSplit (this,
+    if (PLDebugLog.isDebugSplit ())
+      PLDebugLog.debugSplit (this,
                           "Trying to split " +
                                 aElement.getDebugID () +
                                 " into pieces for split size " +
-                                PLDebug.getWH (fSplitWidth, fSplitHeight));
+                                PLDebugLog.getWH (fSplitWidth, fSplitHeight));
 
     // Try to split the element contained in the row
     final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
     if (aSplitResult == null)
     {
       // Splitting makes no sense!
-      if (PLDebug.isDebugSplit ())
-        PLDebug.debugSplit (this, "Splitting makes no sense, because Box 2 would be empty");
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "Splitting makes no sense, because Box 2 would be empty");
       return null;
     }
 
@@ -258,8 +258,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     fBox2UsedHeight += aSplitResult.getSecondElement ().getHeightFull ();
     aBox2ElementPreparedSize = aSplitResult.getSecondElement ().getSize ();
 
-    if (PLDebug.isDebugSplit ())
-      PLDebug.debugSplit (this,
+    if (PLDebugLog.isDebugSplit ())
+      PLDebugLog.debugSplit (this,
                           "Split box element " +
                                 aElement.getDebugID () +
                                 " into pieces: " +
@@ -299,7 +299,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     // Fill and border
-    PLRenderHelper.fillAndRenderBorder (this, aCtx, 0f, 0f);
+    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
 
     if (m_aElement != null)
     {

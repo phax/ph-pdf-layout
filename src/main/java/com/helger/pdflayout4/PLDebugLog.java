@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout4;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -28,29 +26,22 @@ import com.helger.pdflayout4.base.IPLHasMarginBorderPadding;
 import com.helger.pdflayout4.base.IPLObject;
 import com.helger.pdflayout4.spec.SizeSpec;
 
+/**
+ * This class allows for some debug logging on PDF creation.
+ *
+ * @author Philip Helger
+ */
 @NotThreadSafe
-public final class PLDebug
+public final class PLDebugLog
 {
-  /** red */
-  public static final Color BORDER_COLOR_PAGESET = Color.RED;
-
-  /** green */
-  public static final Color BORDER_COLOR_ELEMENT = Color.GREEN;
-
-  /** blue */
-  public static final Color BORDER_COLOR_HBOX = Color.BLUE;
-
-  /** pink */
-  public static final Color BORDER_COLOR_VBOX = Color.PINK;
-
-  private static final Logger s_aLogger = LoggerFactory.getLogger (PLDebug.class);
+  private static final Logger s_aLogger = LoggerFactory.getLogger (PLDebugLog.class);
   private static boolean s_bDebugText = false;
   private static boolean s_bDebugFont = false;
   private static boolean s_bDebugSplit = false;
   private static boolean s_bDebugPrepare = false;
   private static boolean s_bDebugRender = false;
 
-  private PLDebug ()
+  private PLDebugLog ()
   {}
 
   public static boolean isDebugText ()

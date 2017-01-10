@@ -34,7 +34,6 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout4.PDFCreationException;
-import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.PLPageSet;
@@ -59,11 +58,6 @@ import com.helger.pdflayout4.spec.PreloadFont;
  */
 public final class PLTableTest
 {
-  static
-  {
-    PLDebug.setDebugAll (false);
-  }
-
   @Rule
   public final TestRule m_aRule = new DebugModeTestRule ();
 
