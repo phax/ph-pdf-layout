@@ -24,8 +24,6 @@ import javax.annotation.Nullable;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
-import com.helger.commons.ValueEnforcer;
-
 /**
  * Callback interface for PDF customization
  *
@@ -46,27 +44,23 @@ public interface IPDDocumentCustomizer
 
   /**
    * Invoke this customizer and afterwards the provided customizer.
-   * 
+   *
    * @param aNextCustomizer
-   *        The customizer to be invoked after this customizer. May not be
+   *        The customizer to be invoked after this customizer. May be
    *        <code>null</code>.
    * @return A new, non-<code>null</code> customizer.
    */
   @Nonnull
   @CheckReturnValue
-  default IPDDocumentCustomizer and (@Nonnull final IPDDocumentCustomizer aNextCustomizer)
+  default IPDDocumentCustomizer and (@Nullable final IPDDocumentCustomizer aNextCustomizer)
   {
-    ValueEnforcer.notNull (aNextCustomizer, "NextCustomizer");
-    return aDoc -> {
-      this.customizeDocument (aDoc);
-      aNextCustomizer.customizeDocument (aDoc);
-    };
+    return and (this, aNextCustomizer);
   }
 
   /**
    * Create a customizer that invokes both customizers if they are
    * non-<code>null</code>.
-   * 
+   *
    * @param aCustomizer1
    *        The first customizer to be invoked. May be <code>null</code>.
    * @param aCustomizer2
@@ -82,7 +76,12 @@ public interface IPDDocumentCustomizer
     if (aCustomizer1 != null)
     {
       if (aCustomizer2 != null)
-        return aCustomizer1.and (aCustomizer2);
+      {
+        return aDoc -> {
+          aCustomizer1.customizeDocument (aDoc);
+          aCustomizer2.customizeDocument (aDoc);
+        };
+      }
       return aCustomizer1;
     }
 
