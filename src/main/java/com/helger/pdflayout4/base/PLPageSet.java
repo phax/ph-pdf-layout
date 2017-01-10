@@ -18,7 +18,6 @@ package com.helger.pdflayout4.base;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnegative;
@@ -34,9 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.collection.ext.ICommonsList;
 import com.helger.commons.state.EChange;
@@ -68,109 +65,6 @@ import com.helger.pdflayout4.spec.SizeSpec;
 public class PLPageSet extends AbstractPLObject <PLPageSet>
                        implements IPLHasMarginBorderPadding <PLPageSet>, IPLHasFillColor <PLPageSet>
 {
-  public static final class PageSetPrepareResult implements Serializable
-  {
-    private float m_fHeaderHeight = Float.NaN;
-    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList <> ();
-    private float m_fFooterHeight = Float.NaN;
-    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList <> ();
-
-    PageSetPrepareResult ()
-    {}
-
-    /**
-     * Set the page header height.
-     *
-     * @param fHeaderHeight
-     *        Height without margin, border and padding.
-     */
-    void setHeaderHeight (final float fHeaderHeight)
-    {
-      m_fHeaderHeight = fHeaderHeight;
-    }
-
-    /**
-     * @return Page header height without margin, border and padding.
-     */
-    public float getHeaderHeight ()
-    {
-      return m_fHeaderHeight;
-    }
-
-    /**
-     * @param aElement
-     *        The element to be added. May not be <code>null</code>. The element
-     *        height must be without padding or margin.
-     */
-    void addElement (@Nonnull final PLElementWithSize aElement)
-    {
-      ValueEnforcer.notNull (aElement, "Element");
-      m_aContentHeight.add (aElement);
-    }
-
-    /**
-     * @return A list of all elements. Never <code>null</code>. The height of
-     *         the contained elements is without padding or margin.
-     */
-    @Nonnull
-    @ReturnsMutableCopy
-    ICommonsList <PLElementWithSize> getAllElements ()
-    {
-      return m_aContentHeight.getClone ();
-    }
-
-    /**
-     * Set the page footer height.
-     *
-     * @param fFooterHeight
-     *        Height without padding or margin.
-     */
-    void setFooterHeight (final float fFooterHeight)
-    {
-      m_fFooterHeight = fFooterHeight;
-    }
-
-    /**
-     * @return Page footer height without padding or margin.
-     */
-    public float getFooterHeight ()
-    {
-      return m_fFooterHeight;
-    }
-
-    /**
-     * Add a list of elements for a single page. This implicitly creates a new
-     * page.
-     *
-     * @param aCurPageElements
-     *        The list to use. May neither be <code>null</code> nor empty.
-     */
-    void addPerPageElements (@Nonnull @Nonempty final ICommonsList <PLElementWithSize> aCurPageElements)
-    {
-      ValueEnforcer.notEmptyNoNullValue (aCurPageElements, "CurPageElements");
-      m_aPerPageElements.add (aCurPageElements);
-    }
-
-    @Nonnegative
-    public int getPageCount ()
-    {
-      return m_aPerPageElements.size ();
-    }
-
-    @Nonnegative
-    public int getPageNumber ()
-    {
-      return getPageCount () + 1;
-    }
-
-    @Nonnull
-    @ReturnsMutableObject ("speed")
-    ICommonsList <ICommonsList <PLElementWithSize>> directGetPerPageElements ()
-    {
-      return m_aPerPageElements;
-    }
-  }
-
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLPageSet.class);
 
   private final SizeSpec m_aPageSize;
@@ -431,10 +325,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   }
 
   @Nonnull
-  public PageSetPrepareResult prepareAllPages (@Nonnull final PreparationContextGlobal aGlobalCtx)
+  public PLPageSetPrepareResult prepareAllPages (@Nonnull final PreparationContextGlobal aGlobalCtx)
   {
     // The result element
-    final PageSetPrepareResult ret = new PageSetPrepareResult ();
+    final PLPageSetPrepareResult ret = new PLPageSetPrepareResult ();
 
     // Prepare page header
     if (m_aPageHeader != null)
@@ -742,7 +636,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    * @throws IOException
    *         In case of render errors
    */
-  public void renderAllPages (@Nonnull final PageSetPrepareResult aPrepareResult,
+  public void renderAllPages (@Nonnull final PLPageSetPrepareResult aPrepareResult,
                               @Nonnull final PDDocument aDoc,
                               final boolean bCompressPDF,
                               @Nonnegative final int nPageSetIndex,

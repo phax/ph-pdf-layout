@@ -641,7 +641,7 @@ public final class PLBorderFuncTest
     final BorderStyleSpec aGray = new BorderStyleSpec (Color.GRAY, fValue);
 
     final PLPageSet aPS1 = new PLPageSet (new PDRectangle (500, 800)).setID ("pageset")
-                                                                     .setMargin (100, fValue)
+                                                                     .setMargin (50, fValue)
                                                                      .setFillColor (Color.GREEN)
                                                                      .setBorder (new BorderSpec (aGray));
     {

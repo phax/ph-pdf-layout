@@ -43,7 +43,7 @@ import com.helger.commons.vendor.VendorInfo;
 import com.helger.pdflayout4.base.IPLVisitable;
 import com.helger.pdflayout4.base.IPLVisitor;
 import com.helger.pdflayout4.base.PLPageSet;
-import com.helger.pdflayout4.base.PLPageSet.PageSetPrepareResult;
+import com.helger.pdflayout4.base.PLPageSetPrepareResult;
 import com.helger.pdflayout4.render.PreparationContextGlobal;
 
 /**
@@ -272,12 +272,12 @@ public class PageLayoutPDF implements IPLVisitable
 
       // Prepare all page sets
       final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal (aDoc);
-      final PageSetPrepareResult [] aPRs = new PageSetPrepareResult [m_aPageSets.size ()];
+      final PLPageSetPrepareResult [] aPRs = new PLPageSetPrepareResult [m_aPageSets.size ()];
       int nPageSetIndex = 0;
       int nTotalPageCount = 0;
       for (final PLPageSet aPageSet : m_aPageSets)
       {
-        final PageSetPrepareResult aPR = aPageSet.prepareAllPages (aGlobalPrepareCtx);
+        final PLPageSetPrepareResult aPR = aPageSet.prepareAllPages (aGlobalPrepareCtx);
         aPRs[nPageSetIndex] = aPR;
         nTotalPageCount += aPR.getPageCount ();
         nPageSetIndex++;
@@ -289,7 +289,7 @@ public class PageLayoutPDF implements IPLVisitable
       int nTotalPageIndex = 0;
       for (final PLPageSet aPageSet : m_aPageSets)
       {
-        final PageSetPrepareResult aPR = aPRs[nPageSetIndex];
+        final PLPageSetPrepareResult aPR = aPRs[nPageSetIndex];
         aPageSet.renderAllPages (aPR,
                                  aDoc,
                                  m_bCompressPDF,
