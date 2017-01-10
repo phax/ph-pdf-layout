@@ -104,7 +104,7 @@ public final class PLTextTest
                                      .setPadding (5)
                                      .setFillColor (Color.YELLOW));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true).setCompressPDF (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-basic.pdf"));
   }
@@ -124,7 +124,7 @@ public final class PLTextTest
 
     aPS1.addElement (new PLText (s, r10));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-open-sans.pdf"));
   }
@@ -145,7 +145,7 @@ public final class PLTextTest
     aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
     aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-lato2.pdf"));
   }
@@ -191,7 +191,7 @@ public final class PLTextTest
                                    new FontSpec (aFont, 10)));
     }
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-multiple.pdf"));
   }
@@ -218,7 +218,7 @@ public final class PLTextTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
     aPS1.addElement (new PLText (aSB.toString (), r10).setBorder (Color.RED));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split.pdf"));
   }

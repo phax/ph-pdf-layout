@@ -149,7 +149,7 @@ public final class PLBoxTest
                                                                                 .setBorder (null, aBSS, aBSS, aBSS)
                                                                                 .setFillColor (Color.YELLOW));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-basic.pdf"));
   }
@@ -172,7 +172,7 @@ public final class PLBoxTest
                                                                                .setVertAlign (eV)
                                                                                .setBorder (Color.BLACK));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-alignment.pdf"));
   }
@@ -197,7 +197,7 @@ public final class PLBoxTest
                                                                                .setVertAlign (eV)
                                                                                .setBorder (Color.BLACK));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-alignment-nested.pdf"));
   }
@@ -220,7 +220,7 @@ public final class PLBoxTest
                                                                                .setVertAlign (eV)
                                                                                .setBorder (Color.BLACK));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-pagebreak.pdf"));
   }
@@ -242,7 +242,7 @@ public final class PLBoxTest
                                                                             .setPadding (5)
                                                                             .setBorder (Color.BLACK));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-splittable-pagebreak.pdf"));
   }

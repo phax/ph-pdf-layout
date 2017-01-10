@@ -163,7 +163,7 @@ public final class PageLayoutPDFTest
                                         .setHorzAlign (EHorzAlignment.CENTER));
     aPS3.addElement (new PLText ("Zeile 1\n\nZeile 3", r10));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.addPageSet (aPS2);
     aPageLayout.addPageSet (aPS3);
@@ -178,7 +178,7 @@ public final class PageLayoutPDFTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
     aPS1.addElement (new PLText ("Dummy line", r10));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.setDocumentAuthor ("Weird author äöü");
     aPageLayout.setDocumentTitle ("Special chars €!\"§$%&/()=\uFFE5");
     aPageLayout.addPageSet (aPS1);
@@ -254,7 +254,7 @@ public final class PageLayoutPDFTest
       aPS1.addElement (new PLText (sLID, r10).setFillColor (new Color (0xabcdef)));
     }
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test2.pdf"));
   }
@@ -284,7 +284,7 @@ public final class PageLayoutPDFTest
     aPS1.addElement (new PLSpacerY (PLConvert.mm2units (99)));
     aPS1.addElement (new PLSpacerY (PLConvert.mm2units (98.5f)));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-din-letter.pdf"));
   }

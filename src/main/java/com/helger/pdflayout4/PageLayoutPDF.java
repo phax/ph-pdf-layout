@@ -64,7 +64,6 @@ public class PageLayoutPDF implements IPLVisitable
   private String m_sDocumentTitle;
   private String m_sDocumentKeywords;
   private String m_sDocumentSubject;
-  private boolean m_bDebug = false;
   private boolean m_bCompressPDF = true;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
 
@@ -77,28 +76,6 @@ public class PageLayoutPDF implements IPLVisitable
     m_sDocumentAuthor = VendorInfo.getVendorName () + " " + VendorInfo.getVendorURLWithoutProtocol ();
     m_aDocumentCreationDate = Calendar.getInstance ();
     m_sDocumentCreator = VendorInfo.getVendorName ();
-  }
-
-  /**
-   * @return debug mode is active. This will draw additional box lines on the
-   *         PDF.
-   */
-  public boolean isDebug ()
-  {
-    return m_bDebug;
-  }
-
-  /**
-   * @param bDebug
-   *        <code>true</code> to enable PDF debug mode, <code>false</code> to
-   *        disable it.
-   * @return this for chaining
-   */
-  @Nonnull
-  public PageLayoutPDF setDebug (final boolean bDebug)
-  {
-    m_bDebug = bDebug;
-    return this;
   }
 
   /**
@@ -315,7 +292,6 @@ public class PageLayoutPDF implements IPLVisitable
         final PageSetPrepareResult aPR = aPRs[nPageSetIndex];
         aPageSet.renderAllPages (aPR,
                                  aDoc,
-                                 m_bDebug,
                                  m_bCompressPDF,
                                  nPageSetIndex,
                                  nPageSetCount,

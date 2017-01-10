@@ -34,6 +34,7 @@ import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout4.PDFCreationException;
+import com.helger.pdflayout4.PLDebugRender;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.PLPageSet;
@@ -127,7 +128,7 @@ public final class PLTableTest
     aPS1.addElement (aTable);
     aPS1.addElement (new PLText ("Last line", r10));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-basic.pdf"));
   }
@@ -225,7 +226,7 @@ public final class PLTableTest
     }
 
     aPS1.addElement (aTable);
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-variations.pdf"));
   }
@@ -287,7 +288,7 @@ public final class PLTableTest
       aPS1.addElement (new PLText ("Text after table", r10));
     }
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-grid-types.pdf"));
   }
@@ -362,7 +363,7 @@ public final class PLTableTest
       aPS1.addElement (new PLText ("Text after table", r10));
     }
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-grid-types-partial.pdf"));
   }
@@ -402,7 +403,7 @@ public final class PLTableTest
       aPS1.addElement (new PLPageBreak (false));
     }
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-grid-types-colspan.pdf"));
   }
@@ -454,7 +455,7 @@ public final class PLTableTest
     // Add content lines
     aPS1.addElement (new PLText ("Last line", r10));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-nested.pdf"));
   }
@@ -484,7 +485,7 @@ public final class PLTableTest
     // Add content lines
     aPS1.addElement (new PLText ("Last line", r10));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-many-rows.pdf"));
   }
@@ -512,7 +513,7 @@ public final class PLTableTest
 
     aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false).setCompressPDF (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-cell-spawning-page.pdf"));
   }
@@ -543,7 +544,7 @@ public final class PLTableTest
 
     aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false).setCompressPDF (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-cell-spawning-page2.pdf"));
   }
@@ -587,13 +588,15 @@ public final class PLTableTest
             .setID ("row-summary-" + i)
             .setPadding (2);
     }
-    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.BLUE));
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.PINK));
     aPS1.addElement (aTable);
 
     aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true).setCompressPDF (false);
-    aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-colspan-right-align.pdf"));
+    PLDebugRender.withDebugRender (false, () -> {
+      final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
+      aPageLayout.addPageSet (aPS1);
+      aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltable-colspan-right-align.pdf"));
+    });
   }
 }

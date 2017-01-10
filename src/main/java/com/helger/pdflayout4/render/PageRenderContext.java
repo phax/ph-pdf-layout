@@ -34,7 +34,6 @@ public final class PageRenderContext
 {
   private final ERenderingElementType m_eElementType;
   private final PDPageContentStreamWithCache m_aCS;
-  private final boolean m_bDebugMode;
   private final float m_fStartLeft;
   private final float m_fStartTop;
   private final float m_fWidth;
@@ -60,13 +59,7 @@ public final class PageRenderContext
                             final float fWidth,
                             final float fHeight)
   {
-    this (aCtx.getElementType (),
-          aCtx.getContentStream (),
-          aCtx.isDebugMode (),
-          fStartLeft,
-          fStartTop,
-          fWidth,
-          fHeight);
+    this (aCtx.getElementType (), aCtx.getContentStream (), fStartLeft, fStartTop, fWidth, fHeight);
   }
 
   /**
@@ -74,8 +67,6 @@ public final class PageRenderContext
    *        Element type. May not be <code>null</code>.
    * @param aCS
    *        Page content stream. May not be <code>null</code>.
-   * @param bDebugMode
-   *        debug mode?
    * @param fStartLeft
    *        Absolute page x-start position of the element. Does not contain
    *        margin, padding or border of the element to be rendered.
@@ -89,7 +80,6 @@ public final class PageRenderContext
    */
   public PageRenderContext (@Nonnull final ERenderingElementType eElementType,
                             @Nonnull final PDPageContentStreamWithCache aCS,
-                            final boolean bDebugMode,
                             final float fStartLeft,
                             final float fStartTop,
                             final float fWidth,
@@ -103,7 +93,6 @@ public final class PageRenderContext
     ValueEnforcer.isGE0 (fHeight, "Height");
     m_eElementType = eElementType;
     m_aCS = aCS;
-    m_bDebugMode = bDebugMode;
     m_fStartLeft = fStartLeft;
     m_fStartTop = fStartTop;
     m_fWidth = fWidth;
@@ -136,15 +125,6 @@ public final class PageRenderContext
   public PDDocument getDocument ()
   {
     return m_aCS.getDocument ();
-  }
-
-  /**
-   * @return <code>true</code> if debug output should be emitted into the PDF,
-   *         <code>false</code> otherwise.
-   */
-  public boolean isDebugMode ()
-  {
-    return m_bDebugMode;
   }
 
   /**

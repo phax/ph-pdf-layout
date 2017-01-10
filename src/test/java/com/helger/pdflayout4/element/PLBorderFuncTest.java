@@ -113,7 +113,7 @@ public final class PLBorderFuncTest
     aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
     aPS1.addElement (new PLText ("Border all", r10).setID ("all").setBorder (aAll));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-text.pdf"));
   }
@@ -370,7 +370,7 @@ public final class PLBorderFuncTest
       }
     }
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-hbox.pdf"));
   }
@@ -624,7 +624,7 @@ public final class PLBorderFuncTest
       }
     }
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-vbox.pdf"));
   }
@@ -658,7 +658,7 @@ public final class PLBorderFuncTest
     }
     aPS1.addElement (new PLText ("Only content", r10).setID ("all").setBorder (aRed));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-header-footer.pdf"));
   }

@@ -82,7 +82,7 @@ public final class PLVBoxTest
                                                              .setID ("right2"));
     aPS1.addElement (aVBox);
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-basic.pdf"));
   }
@@ -112,7 +112,7 @@ public final class PLVBoxTest
                   HeightSpec.star ());
     aPS1.addElement (aVBox);
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-height-star.pdf"));
   }
@@ -138,7 +138,7 @@ public final class PLVBoxTest
                   HeightSpec.star ());
     aPS1.addElement (aVBox);
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-height-star-small.pdf"));
   }
@@ -223,7 +223,7 @@ public final class PLVBoxTest
             aPS1.addElement (aVBox);
           }
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-auto-advanced.pdf"));
   }
@@ -291,7 +291,7 @@ public final class PLVBoxTest
             aPS1.addElement (aVBox);
           }
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-auto-advanced-splittable.pdf"));
   }
@@ -309,7 +309,7 @@ public final class PLVBoxTest
       aVBox.addRow (new PLText (s, r10).setPadding (5).setBorder (Color.RED).setVertSplittable (true));
     aPS1.addElement (aVBox);
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-splittable-text.pdf"));
   }
@@ -334,7 +334,7 @@ public final class PLVBoxTest
     }
     aPS1.addElement (aVBox);
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-splittable-content-splittable.pdf"));
   }
@@ -359,7 +359,7 @@ public final class PLVBoxTest
     }
     aPS1.addElement (aVBox);
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-splittable-content-fixed.pdf"));
   }

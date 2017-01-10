@@ -39,20 +39,6 @@ public final class PLRenderHelper
   {}
 
   /**
-   * Should a debug border be drawn? Only if no other border is present.
-   *
-   * @param aBorder
-   *        The element border. May not be <code>null</code>.
-   * @param bDebug
-   *        <code>true</code> if debug mode is enabled
-   * @return <code>true</code> if a debug border should be drawn
-   */
-  public static boolean shouldApplyDebugBorder (@Nonnull final BorderSpec aBorder, final boolean bDebug)
-  {
-    return !aBorder.hasAnyBorder () && bDebug;
-  }
-
-  /**
    * Render a single border
    *
    * @param aElement
@@ -199,14 +185,7 @@ public final class PLRenderHelper
     final float fWidth = aElement.getRenderWidth () + aElement.getBorderXSumWidth () + aElement.getPaddingXSum ();
     final float fHeight = aElement.getRenderHeight () + aElement.getBorderYSumWidth () + aElement.getPaddingYSum ();
 
-    fillAndRenderBorder (aElement,
-                         fLeft,
-                         fTop,
-                         fWidth,
-                         fHeight,
-                         aCtx.getContentStream (),
-                         aCtx.isDebugMode (),
-                         PLDebugRender.BORDER_COLOR_ELEMENT);
+    fillAndRenderBorder (aElement, fLeft, fTop, fWidth, fHeight, aCtx.getContentStream ());
   }
 
   public static <T extends IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorder (@Nonnull final T aElement,
@@ -214,20 +193,22 @@ public final class PLRenderHelper
                                                                                                           final float fTop,
                                                                                                           final float fWidth,
                                                                                                           final float fHeight,
-                                                                                                          @Nonnull final PDPageContentStreamWithCache aContentStream,
-                                                                                                          final boolean bDebug,
-                                                                                                          @Nonnull final Color aDebugColor) throws IOException
+                                                                                                          @Nonnull final PDPageContentStreamWithCache aContentStream) throws IOException
   {
-    if (bDebug)
+    final boolean bDebugRender = PLDebugRender.isDebugRender ();
+    if (bDebugRender)
     {
       // Debug margin with a filled rectangle
-      aContentStream.setNonStrokingColor (aDebugColor == PLDebugRender.BORDER_COLOR_ELEMENT ? Color.LIGHT_GRAY
-                                                                                            : Color.DARK_GRAY);
-      aContentStream.fillRect (fLeft -
-                               aElement.getMarginLeft (),
-                               fTop - fHeight - aElement.getMarginBottom (),
-                               fWidth + aElement.getMarginXSum (),
-                               fHeight + aElement.getMarginYSum ());
+      final Color aOutlineColor = PLDebugRender.getDebugOutlineColor (aElement);
+      if (aOutlineColor != null)
+      {
+        aContentStream.setNonStrokingColor (aOutlineColor);
+        aContentStream.fillRect (fLeft -
+                                 aElement.getMarginLeft (),
+                                 fTop - fHeight - aElement.getMarginBottom (),
+                                 fWidth + aElement.getMarginXSum (),
+                                 fHeight + aElement.getMarginYSum ());
+      }
     }
 
     // Fill before border
@@ -238,12 +219,18 @@ public final class PLRenderHelper
       aContentStream.fillRect (fLeft, fTop - fHeight, fWidth, fHeight);
     }
 
+    // Draw debug border first anyway, in case only partial borders are present
+    if (bDebugRender)
+    {
+      final BorderSpec aDebugBorder = new BorderSpec (PLDebugRender.getDebugBorder (aElement));
+      if (aDebugBorder.hasAnyBorder ())
+        renderBorder (aElement, aContentStream, fLeft, fTop, fWidth, fHeight, aDebugBorder);
+    }
+
     // Border draws over fill, to avoid nasty display problems if the background
-    // is visible between them
-    BorderSpec aRealBorder = aElement.getBorder ();
-    if (shouldApplyDebugBorder (aRealBorder, bDebug))
-      aRealBorder = new BorderSpec (new BorderStyleSpec (aDebugColor));
-    if (aRealBorder.hasAnyBorder ())
-      renderBorder (aElement, aContentStream, fLeft, fTop, fWidth, fHeight, aRealBorder);
+    // is visible between then
+    final BorderSpec aBorder = aElement.getBorder ();
+    if (aBorder.hasAnyBorder ())
+      renderBorder (aElement, aContentStream, fLeft, fTop, fWidth, fHeight, aBorder);
   }
 }

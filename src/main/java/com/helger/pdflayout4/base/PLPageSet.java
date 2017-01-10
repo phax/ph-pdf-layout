@@ -43,7 +43,6 @@ import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebugLog;
-import com.helger.pdflayout4.PLDebugRender;
 import com.helger.pdflayout4.element.special.PLPageBreak;
 import com.helger.pdflayout4.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout4.render.ERenderingElementType;
@@ -730,8 +729,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    *        The preparation result. May not be <code>null</code>.
    * @param aDoc
    *        The PDDocument. May not be <code>null</code>.
-   * @param bDebug
-   *        <code>true</code> for debug output
    * @param bCompressPDF
    *        <code>true</code> for create enflated PDF content
    * @param nPageSetIndex
@@ -747,7 +744,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
    */
   public void renderAllPages (@Nonnull final PageSetPrepareResult aPrepareResult,
                               @Nonnull final PDDocument aDoc,
-                              final boolean bDebug,
                               final boolean bCompressPDF,
                               @Nonnegative final int nPageSetIndex,
                               @Nonnegative final int nPageSetCount,
@@ -812,14 +808,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           final float fWidth = m_aPageSize.getWidth () - getMarginXSum ();
           final float fHeight = m_aPageSize.getHeight () - getMarginYSum ();
 
-          PLRenderHelper.fillAndRenderBorder (this,
-                                              fLeft,
-                                              fTop,
-                                              fWidth,
-                                              fHeight,
-                                              aContentStream,
-                                              bDebug,
-                                              PLDebugRender.BORDER_COLOR_PAGESET);
+          PLRenderHelper.fillAndRenderBorder (this, fLeft, fTop, fWidth, fHeight, aContentStream);
         }
 
         // Start with the page rectangle
@@ -833,7 +822,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           final float fHeight = aPrepareResult.getHeaderHeight ();
           final PageRenderContext aRCtx = new PageRenderContext (ERenderingElementType.PAGE_HEADER,
                                                                  aContentStream,
-                                                                 bDebug,
                                                                  fStartLeft,
                                                                  fStartTop,
                                                                  fWidth,
@@ -855,7 +843,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
 
           final PageRenderContext aRCtx = new PageRenderContext (ERenderingElementType.CONTENT_ELEMENT,
                                                                  aContentStream,
-                                                                 bDebug,
                                                                  fStartLeft,
                                                                  fStartTop,
                                                                  fWidth,
@@ -878,7 +865,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           final float fHeight = aPrepareResult.getFooterHeight ();
           final PageRenderContext aRCtx = new PageRenderContext (ERenderingElementType.PAGE_FOOTER,
                                                                  aContentStream,
-                                                                 bDebug,
                                                                  fStartLeft,
                                                                  fStartTop,
                                                                  fWidth,

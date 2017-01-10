@@ -77,7 +77,7 @@ public final class PLImageTest
 
     aPS1.addElement (new PLText ("Last line", r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (Color.GREEN));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plimage.pdf"));
   }
