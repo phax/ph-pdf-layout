@@ -423,56 +423,54 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     if (fAvailableHeight <= 0)
       return null;
 
-    final float fTextHeight = m_fTextHeight;
-
     // Get the lines in the correct order from top to bottom
     final ICommonsList <TextAndWidthSpec> aLines = m_aPreparedLines;
 
-    int nLines = (int) (fAvailableHeight / fTextHeight);
-    if (nLines <= 0)
+    int nLineCount = (int) (fAvailableHeight / m_fTextHeight);
+    if (nLineCount <= 0)
     {
       // Splitting makes no sense because the resulting text 1 would be empty
       if (PLDebug.isDebugSplit ())
         PLDebug.debugSplit (this,
                             "Failed to split because the result would be " +
-                                  nLines +
+                                  nLineCount +
                                   " lines for available height " +
                                   fAvailableHeight +
                                   " and line height " +
-                                  fTextHeight);
+                                  m_fTextHeight);
       return null;
     }
 
-    if (nLines >= aLines.size ())
+    if (nLineCount >= aLines.size ())
     {
       // Splitting makes no sense because the resulting text 2 would be empty
       if (PLDebug.isDebugSplit ())
         PLDebug.debugSplit (this,
                             "Failed to split because the result of " +
-                                  nLines +
+                                  nLineCount +
                                   " lines fits into the available height " +
                                   fAvailableHeight +
                                   " and line height " +
-                                  fTextHeight +
+                                  m_fTextHeight +
                                   " (=" +
-                                  (fAvailableHeight * fTextHeight) +
+                                  (fAvailableHeight * m_fTextHeight) +
                                   ")");
       return null;
     }
 
     // Calc estimated height (required because an offset is added)
-    final float fExpectedHeight = getDisplayHeightOfLineCount (nLines);
+    final float fExpectedHeight = getDisplayHeightOfLineCount (nLineCount);
     if (fExpectedHeight > fAvailableHeight)
     {
       // Show one line less
-      --nLines;
-      if (nLines <= 0)
+      --nLineCount;
+      if (nLineCount <= 0)
       {
         // Splitting makes no sense
         if (PLDebug.isDebugSplit ())
           PLDebug.debugSplit (this,
                               "Failed to split because the result would be " +
-                                    nLines +
+                                    nLineCount +
                                     " lines for available height " +
                                     fAvailableHeight +
                                     " and expected height " +
@@ -482,9 +480,12 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // First elements does not need to be splittable anymore
-    final PLElementWithSize aText1 = _splitGetCopy (fElementWidth, aLines.subList (0, nLines), false, "-1");
+    final PLElementWithSize aText1 = _splitGetCopy (fElementWidth, aLines.subList (0, nLineCount), false, "-1");
     // Second element may need additional splitting
-    final PLElementWithSize aText2 = _splitGetCopy (fElementWidth, aLines.subList (nLines, aLines.size ()), true, "-2");
+    final PLElementWithSize aText2 = _splitGetCopy (fElementWidth,
+                                                    aLines.subList (nLineCount, aLines.size ()),
+                                                    true,
+                                                    "-2");
 
     return new PLSplitResult (aText1, aText2);
   }

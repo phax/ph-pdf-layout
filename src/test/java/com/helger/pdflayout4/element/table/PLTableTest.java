@@ -557,8 +557,6 @@ public final class PLTableTest
   @Test
   public void testColSpanRightAlign () throws PDFCreationException
   {
-    if (false)
-      PLDebug.setDebugRender (true);
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
