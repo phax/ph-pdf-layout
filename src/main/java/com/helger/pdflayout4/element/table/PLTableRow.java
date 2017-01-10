@@ -21,67 +21,61 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.mutable.MutableInt;
-import com.helger.commons.state.EChange;
-import com.helger.pdflayout4.base.AbstractPLRenderableObject;
-import com.helger.pdflayout4.base.IPLSplittableObject;
-import com.helger.pdflayout4.base.IPLVisitor;
-import com.helger.pdflayout4.base.PLElementWithSize;
-import com.helger.pdflayout4.base.PLSplitResult;
+import com.helger.pdflayout4.base.IPLRenderableObject;
+import com.helger.pdflayout4.element.hbox.AbstractPLHBox;
 import com.helger.pdflayout4.element.hbox.PLHBoxColumn;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.MarginSpec;
 import com.helger.pdflayout4.spec.PaddingSpec;
-import com.helger.pdflayout4.spec.SizeSpec;
 import com.helger.pdflayout4.spec.WidthSpec;
 
-public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implements IPLSplittableObject <PLTableRow>
+public class PLTableRow extends AbstractPLHBox <PLTableRow>
 {
-  private PLTableRowHBox m_aRow = new PLTableRowHBox ().setVertSplittable (true);
-
   public PLTableRow ()
   {}
 
-  public void addCell (@Nonnull final PLTableCell aCell, @Nonnull final WidthSpec aWidth)
-  {
-    m_aRow.addColumn (aCell, aWidth);
-  }
-
-  @Override
-  @OverridingMethodsMustInvokeSuper
-  protected void onAfterSetID ()
-  {
-    m_aRow.setID (getID () + "-hbox");
-  }
-
   @Override
   @Nonnull
-  @OverridingMethodsMustInvokeSuper
-  public PLTableRow setBasicDataFrom (@Nonnull final PLTableRow aSource)
+  protected PLTableCell splitVertCreateEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
+                                                     final float fWidth,
+                                                     final float fHeight)
   {
-    super.setBasicDataFrom (aSource);
-    m_aRow.setBasicDataFrom (aSource.m_aRow);
-    return this;
+    final PLTableCell ret = new PLTableCell (null);
+    ret.setBasicDataFrom ((PLTableCell) aSrcObject);
+    ret.prepare (new PreparationContext (null, fWidth, fHeight));
+    return ret;
+  }
+
+  @Nonnull
+  public PLTableRow internalCreateNewVertSplitObject (@Nonnull final PLTableRow aBase)
+  {
+    final PLTableRow ret = new PLTableRow ();
+    ret.setBasicDataFrom (aBase);
+    return ret;
+  }
+
+  @Override
+  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    super.onRender (aCtx);
+  }
+
+  public void addCell (@Nonnull final PLTableCell aCell, @Nonnull final WidthSpec aWidth)
+  {
+    addColumn (aCell, aWidth);
   }
 
   @Nullable
   public PLTableCell getCellAtIndex (final int nIndex)
   {
-    final PLHBoxColumn aColumn = m_aRow.getColumnAtIndex (nIndex);
+    final PLHBoxColumn aColumn = getColumnAtIndex (nIndex);
     return aColumn == null ? null : (PLTableCell) aColumn.getElement ();
-  }
-
-  @Nonnegative
-  public int getCellCount ()
-  {
-    return m_aRow.getColumnCount ();
   }
 
   @Nullable
@@ -93,23 +87,23 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   @Nullable
   public PLTableCell getLastCell ()
   {
-    return getCellAtIndex (getCellCount () - 1);
+    return getCellAtIndex (getColumnCount () - 1);
   }
 
   public void forEachCell (@Nonnull final Consumer <? super PLTableCell> aConsumer)
   {
-    m_aRow.forEachColumn (x -> aConsumer.accept ((PLTableCell) x.getElement ()));
+    forEachColumn (x -> aConsumer.accept ((PLTableCell) x.getElement ()));
   }
 
   public void forEachCell (@Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
-    m_aRow.forEachColumn ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
+    forEachColumn ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
   }
 
   public void forEachCell (@Nonnull final IPLTableCellConsumer aConsumer)
   {
     final MutableInt aEffectiveIndex = new MutableInt (0);
-    m_aRow.forEachColumn ( (x, idx) -> {
+    forEachColumn ( (x, idx) -> {
       final PLTableCell aCell = (PLTableCell) x.getElement ();
       final int nColSpan = aCell.getColSpan ();
       aConsumer.accept (aCell, idx, aEffectiveIndex.intValue (), aEffectiveIndex.intValue () + nColSpan);
@@ -269,67 +263,5 @@ public class PLTableRow extends AbstractPLRenderableObject <PLTableRow> implemen
   {
     forEachCell (x -> x.setPaddingLeft (fPadding));
     return this;
-  }
-
-  @Override
-  @Nonnull
-  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
-  {
-    EChange ret = super.visit (aVisitor);
-    ret = ret.or (m_aRow.visit (aVisitor));
-    return ret;
-  }
-
-  @Override
-  protected SizeSpec onPrepare (final PreparationContext aCtx)
-  {
-    return m_aRow.prepare (aCtx);
-  }
-
-  @Override
-  protected void onMarkAsNotPrepared ()
-  {
-    m_aRow.internalMarkAsNotPrepared ();
-  }
-
-  public boolean isVertSplittable ()
-  {
-    return m_aRow.isVertSplittable ();
-  }
-
-  @Override
-  @Nonnull
-  public PLTableRow internalCreateNewVertSplitObject (@Nonnull final PLTableRow aBase)
-  {
-    throw new UnsupportedOperationException ();
-  }
-
-  @Nullable
-  public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
-  {
-    final PLSplitResult ret = m_aRow.splitElementVert (fAvailableWidth, fAvailableHeight);
-    if (ret == null)
-      return null;
-
-    final PLTableRow aRow1 = new PLTableRow ().setID (getID () + "-1").setBasicDataFrom (this);
-    aRow1.m_aRow = (PLTableRowHBox) ret.getFirstElement ().getElement ();
-    aRow1.internalMarkAsPrepared (ret.getFirstElement ().getSize ());
-
-    final PLTableRow aRow2 = new PLTableRow ().setID (getID () + "-2").setBasicDataFrom (this);
-    aRow2.m_aRow = (PLTableRowHBox) ret.getSecondElement ().getElement ();
-    aRow2.internalMarkAsPrepared (ret.getSecondElement ().getSize ());
-
-    return new PLSplitResult (new PLElementWithSize (aRow1,
-                                                     ret.getFirstElement ().getSize (),
-                                                     ret.getFirstElement ().getSizeFull ()),
-                              new PLElementWithSize (aRow2,
-                                                     ret.getSecondElement ().getSize (),
-                                                     ret.getSecondElement ().getSizeFull ()));
-  }
-
-  @Override
-  protected void onRender (final PageRenderContext aCtx) throws IOException
-  {
-    m_aRow.render (aCtx);
   }
 }

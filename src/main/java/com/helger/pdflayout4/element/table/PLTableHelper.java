@@ -45,7 +45,7 @@ public class PLTableHelper
       boolean bRowHasBottomBorder = true;
       boolean bRowHasTopBorder = true;
       final PLTableRow aRow = ret.getRowAtIndex (i);
-      for (int j = 0; j < aRow.getCellCount (); j++)
+      for (int j = 0; j < aRow.getColumnCount (); j++)
       {
         final PLTableCell aCell = aRow.getCellAtIndex (j);
 
