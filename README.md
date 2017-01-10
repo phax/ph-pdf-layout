@@ -8,7 +8,7 @@ Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and includ
 Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_112 or later should work.
 
 #News
-  * v4.0.0 Beta 4
+  * v4.0.0 Beta 4 - 2017-01-10
     * Block elements use full width now by default
     * Improved placeholder handling in text preparation
   * v4.0.0 Beta 3 - 2017-01-10
