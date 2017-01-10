@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.element.text;
 
 import java.awt.Color;
+import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -160,10 +161,19 @@ public final class PLTextTest
   {
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
                      "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
-                     "Tataa: €";
+                     "Tataa: € - and some specials: áàéèíìóòúù ÁÀÉÈÍÌÓÒÚÙ";
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
+    for (final Map.Entry <String, PreloadFont> aEntry : PreloadFont.getAllStandard14PreloadFonts ().entrySet ())
+    {
+      aPS1.addElement (new PLText ("[Standard] [" +
+                                   aEntry.getKey () +
+                                   "]: " +
+                                   s +
+                                   "\n",
+                                   new FontSpec (aEntry.getValue (), 10)));
+    }
     for (final IHasFontResource aHasFont : new CommonsArrayList <> (EFontResourceAlegreyaSans.ALGREYA_SANS_NORMAL,
                                                                     EFontResourceAlegreyaSans.ALGREYA_SANS_BLACK,
                                                                     EFontResourceAnaheim.ANAHEIM_REGULAR,
@@ -176,10 +186,15 @@ public final class PLTextTest
                                                                     EFontResourceRoboto.ROBOTO_NORMAL,
                                                                     EFontResourceRoboto.ROBOTO_BOLD))
     {
-      // Load OTF font
+      // Load TTF font
       final PreloadFont aFont = PreloadFont.createEmbedding (aHasFont.getFontResource ());
 
-      aPS1.addElement (new PLText (aHasFont.getFontResourceID () + ": " + s + "\n", new FontSpec (aFont, 10)));
+      aPS1.addElement (new PLText ("[External] [" +
+                                   aHasFont.getFontResourceID () +
+                                   "]: " +
+                                   s +
+                                   "\n",
+                                   new FontSpec (aFont, 10)));
     }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);

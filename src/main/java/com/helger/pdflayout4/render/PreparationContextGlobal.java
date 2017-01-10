@@ -72,7 +72,7 @@ public final class PreparationContextGlobal
       if (PLDebug.isDebugFont ())
         PLDebug.debugFont (aPreloadFont.toString (), "Loading into current document");
 
-      aLoadedFont = new LoadedFont (aPreloadFont.loadPDFont (m_aDoc));
+      aLoadedFont = new LoadedFont (aPreloadFont.loadPDFont (m_aDoc), aPreloadFont.getFallbackCodePoint ());
       m_aFontCache.put (aPreloadFont, aLoadedFont);
     }
     return aLoadedFont;

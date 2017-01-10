@@ -76,7 +76,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
   // prepare result
   private transient LoadedFont m_aLoadedFont;
-  protected float m_fLineHeight;
+  protected float m_fTextHeight;
+  protected float m_fDescent;
 
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLinesUnmodified;
@@ -280,11 +281,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
   }
 
-  final void internalSetPreparedFontData (@Nonnull final LoadedFont aLoadedFont, final float fLineHeight)
+  final void internalSetPreparedFontData (@Nonnull final LoadedFont aLoadedFont,
+                                          final float fTextHeight,
+                                          final float fDescent)
   {
     ValueEnforcer.notNull (aLoadedFont, "LoadedFont");
     m_aLoadedFont = aLoadedFont;
-    m_fLineHeight = fLineHeight;
+    m_fTextHeight = fTextHeight;
+    m_fDescent = fDescent;
   }
 
   /**
@@ -300,13 +304,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private SizeSpec _prepareText (final float fAvailableWidth) throws IOException
   {
     final float fFontSize = m_aFontSpec.getFontSize ();
-    m_fLineHeight = m_aLoadedFont.getLineHeight (fFontSize);
+    m_fTextHeight = m_aLoadedFont.getTextHeight (fFontSize);
+    m_fDescent = m_aLoadedFont.getDescent (fFontSize);
 
     if (hasNoText ())
     {
       // Nothing to do - empty
       // But keep the height distance!
-      return new SizeSpec (0, m_fLineHeight);
+      return new SizeSpec (0, m_fTextHeight);
     }
 
     // Split text into rows
@@ -318,7 +323,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       fMaxWidth = Math.max (fMaxWidth, aTWS.getWidth ());
 
     // Determine height by number of lines
-    return new SizeSpec (fMaxWidth, m_aPreparedLines.size () * m_fLineHeight);
+    return new SizeSpec (fMaxWidth, m_aPreparedLines.size () * m_fTextHeight);
   }
 
   @Override
@@ -376,9 +381,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
   protected final float getDisplayHeightOfLineCount (@Nonnegative final int nLineCount)
   {
-    // Note: when drawing the text, only 0.75*lineHeight is subtracted so now we
-    // need to add 0.25*lineHeight so that it looks good.
-    return (nLineCount + 0.15f) * m_fLineHeight;
+    return nLineCount * m_fTextHeight;
   }
 
   @Nonnull
@@ -409,7 +412,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
     aNewText.internalMarkAsPrepared (aSize);
     aNewText.internalSetPreparedLines (aLineCopy);
-    aNewText.internalSetPreparedFontData (m_aLoadedFont, m_fLineHeight);
+    aNewText.internalSetPreparedFontData (m_aLoadedFont, m_fTextHeight, m_fDescent);
 
     return new PLElementWithSize (aNewText, aSize);
   }
@@ -420,12 +423,12 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     if (fAvailableHeight <= 0)
       return null;
 
-    final float fLineHeight = m_fLineHeight;
+    final float fTextHeight = m_fTextHeight;
 
     // Get the lines in the correct order from top to bottom
     final ICommonsList <TextAndWidthSpec> aLines = m_aPreparedLines;
 
-    int nLines = (int) (fAvailableHeight / fLineHeight);
+    int nLines = (int) (fAvailableHeight / fTextHeight);
     if (nLines <= 0)
     {
       // Splitting makes no sense because the resulting text 1 would be empty
@@ -436,7 +439,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                                   " lines for available height " +
                                   fAvailableHeight +
                                   " and line height " +
-                                  fLineHeight);
+                                  fTextHeight);
       return null;
     }
 
@@ -450,9 +453,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                                   " lines fits into the available height " +
                                   fAvailableHeight +
                                   " and line height " +
-                                  fLineHeight +
+                                  fTextHeight +
                                   " (=" +
-                                  (fAvailableHeight * fLineHeight) +
+                                  (fAvailableHeight * fTextHeight) +
                                   ")");
       return null;
     }
@@ -534,7 +537,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Set font if changed
     aContentStream.setFont (m_aLoadedFont, m_aFontSpec);
 
-    final float fLineHeight = m_fLineHeight;
+    final float fTextHeight = m_fTextHeight;
     final float fPreparedWidth = getPreparedWidth ();
 
     int nIndex = 0;
@@ -550,7 +553,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
-        aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX, fRenderTop - (fLineHeight * 0.75f));
+        aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX, fRenderTop - fTextHeight - m_fDescent);
       }
       else
         if (fIndentX != 0)
@@ -569,7 +572,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       if (nIndex < nMax)
       {
         // Outdent and one line down, except for last line
-        aContentStream.moveTextPositionByAmount (-fIndentX, -fLineHeight);
+        aContentStream.moveTextPositionByAmount (-fIndentX, -fTextHeight);
       }
     }
     aContentStream.endText ();

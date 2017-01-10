@@ -18,6 +18,7 @@ package com.helger.pdflayout4.spec;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.Nonnegative;
@@ -57,7 +58,7 @@ import com.helger.pdflayout4.PLDebug;
 @MustImplementEqualsAndHashcode
 public class LoadedFont
 {
-  private static final class EncodedCodePoint
+  private static final class EncodedCodePoint implements Serializable
   {
     private final int m_nCodePoint;
     private final byte [] m_aEncoded;
@@ -107,22 +108,25 @@ public class LoadedFont
 
   private static final Logger s_aLogger = LoggerFactory.getLogger (LoadedFont.class);
 
+  /** The underlying PDFBox font */
   private final PDFont m_aFont;
+  /**
+   * The fallback character to be used in case an unmappable character is
+   * contained
+   */
   private final int m_nFallbackCodePoint;
   // Status vars
   private final float m_fBBHeight;
+  private final float m_fDescent;
   private final boolean m_bFontWillBeSubset;
   private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <> ();
   private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
 
-  public LoadedFont (@Nonnull final PDFont aFont)
+  public LoadedFont (@Nonnull final PDFont aFont, final int nFallbackCodePoint)
   {
     ValueEnforcer.notNull (aFont, "Font");
     m_aFont = aFont;
-
-    // The fallback character to be used in case an unmappable character is
-    // contained
-    m_nFallbackCodePoint = '?';
+    m_nFallbackCodePoint = nFallbackCodePoint;
 
     PDFontDescriptor aFD = aFont.getFontDescriptor ();
     if (aFD == null)
@@ -138,6 +142,7 @@ public class LoadedFont
       throw new IllegalArgumentException ("Failed to determine FontDescriptor from specified font " + aFont);
 
     m_fBBHeight = aFD.getFontBoundingBox ().getHeight ();
+    m_fDescent = aFD.getDescent ();
     m_bFontWillBeSubset = m_aFont.willBeSubset ();
   }
 
@@ -151,16 +156,15 @@ public class LoadedFont
   }
 
   @Nonnegative
-  public float getTextHeight (@Nonnegative final float fFontSize)
+  public float getDescent (@Nonnegative final float fFontSize)
   {
-    return m_fBBHeight * fFontSize / 1000f;
+    return m_fDescent * fFontSize / 1000f;
   }
 
   @Nonnegative
-  public float getLineHeight (@Nonnegative final float fFontSize)
+  public float getTextHeight (@Nonnegative final float fFontSize)
   {
-    // By default add 5% from text height line
-    return getTextHeight (fFontSize) * 1.05f;
+    return m_fBBHeight * fFontSize / 1000f;
   }
 
   @Nonnull
@@ -177,11 +181,21 @@ public class LoadedFont
     catch (final IllegalArgumentException ex)
     {
       if (PLDebug.isDebugFont ())
-        PLDebug.debugFont (aFont.toString (), "No code point " + nCodepoint + " in this font");
+        PLDebug.debugFont (aFont.toString (), "No code point " + nCodepoint + " in this font - " + ex.getMessage ());
 
-      // Use fallback code point
-      final byte [] aEncodedBytes = PDFontHelper.encode (aFont, nFallbackCodepoint);
-      return new EncodedCodePoint (nFallbackCodepoint, aEncodedBytes);
+      try
+      {
+        // Use fallback code point
+        final byte [] aEncodedBytes = PDFontHelper.encode (aFont, nFallbackCodepoint);
+        return new EncodedCodePoint (nFallbackCodepoint, aEncodedBytes);
+      }
+      catch (final IllegalArgumentException ex2)
+      {
+        if (PLDebug.isDebugFont ())
+          PLDebug.debugFont (aFont.toString (),
+                             "No fallback code point " + nFallbackCodepoint + " in this font - " + ex2.getMessage ());
+        throw ex2;
+      }
     }
   }
 
@@ -401,6 +415,11 @@ public class LoadedFont
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("font", m_aFont).append ("bbHeight", m_fBBHeight).toString ();
+    return new ToStringGenerator (this).append ("Font", m_aFont)
+                                       .append ("FallbackCodePoint", m_nFallbackCodePoint)
+                                       .append ("BBHeight", m_fBBHeight)
+                                       .append ("Descent", m_fDescent)
+                                       .append ("FontWillBeSubset", m_bFontWillBeSubset)
+                                       .toString ();
   }
 }

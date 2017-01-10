@@ -36,8 +36,9 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.collection.ext.CommonsHashMap;
-import com.helger.commons.collection.ext.ICommonsMap;
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.ext.CommonsLinkedHashMap;
+import com.helger.commons.collection.ext.ICommonsOrderedMap;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.id.IHasID;
@@ -56,90 +57,63 @@ import com.helger.pdflayout4.PLDebug;
 @Immutable
 public final class PreloadFont implements IHasID <String>, Serializable
 {
+  private static final int DEFAULT_FALLBACK_CODE_POINT = '?';
+
+  // Must be defined before the standard fonts are registered
+  private static final ICommonsOrderedMap <String, PDType1Font> STANDARD_14 = new CommonsLinkedHashMap <> ();
+  private static final ICommonsOrderedMap <String, PreloadFont> STANDARD_14_PF = new CommonsLinkedHashMap <> ();
+
+  @Nonnull
+  private static PreloadFont _createPredefined (@Nonnull final PDType1Font aFont)
+  {
+    ValueEnforcer.notNull (aFont, "Font");
+    // Symbol fonts needs a different fallback code point!
+    final int nFallbackCodePoint = aFont == PDType1Font.SYMBOL ? '•'
+                                                               : aFont == PDType1Font.ZAPF_DINGBATS ? '✕'
+                                                                                                    : DEFAULT_FALLBACK_CODE_POINT;
+    final PreloadFont ret = new PreloadFont (aFont, nFallbackCodePoint);
+    STANDARD_14.put (aFont.getBaseFont (), aFont);
+    STANDARD_14_PF.put (aFont.getBaseFont (), ret);
+    return ret;
+  }
+
   /** PDF built-in font Helvetica regular */
-  public static final PreloadFont REGULAR = PreloadFont.createPredefined (PDType1Font.HELVETICA);
+  public static final PreloadFont REGULAR = _createPredefined (PDType1Font.HELVETICA);
   /** PDF built-in font Helvetica bold */
-  public static final PreloadFont REGULAR_BOLD = PreloadFont.createPredefined (PDType1Font.HELVETICA_BOLD);
+  public static final PreloadFont REGULAR_BOLD = _createPredefined (PDType1Font.HELVETICA_BOLD);
   /** PDF built-in font Helvetica italic */
-  public static final PreloadFont REGULAR_ITALIC = PreloadFont.createPredefined (PDType1Font.HELVETICA_OBLIQUE);
+  public static final PreloadFont REGULAR_ITALIC = _createPredefined (PDType1Font.HELVETICA_OBLIQUE);
   /** PDF built-in font Helvetica bold and italic */
-  public static final PreloadFont REGULAR_BOLD_ITALIC = PreloadFont.createPredefined (PDType1Font.HELVETICA_BOLD_OBLIQUE);
+  public static final PreloadFont REGULAR_BOLD_ITALIC = _createPredefined (PDType1Font.HELVETICA_BOLD_OBLIQUE);
   /** PDF built-in font Courier regular */
-  public static final PreloadFont MONOSPACE = PreloadFont.createPredefined (PDType1Font.COURIER);
+  public static final PreloadFont MONOSPACE = _createPredefined (PDType1Font.COURIER);
   /** PDF built-in font Courier bold */
-  public static final PreloadFont MONOSPACE_BOLD = PreloadFont.createPredefined (PDType1Font.COURIER_BOLD);
+  public static final PreloadFont MONOSPACE_BOLD = _createPredefined (PDType1Font.COURIER_BOLD);
   /** PDF built-in font Courier italic */
-  public static final PreloadFont MONOSPACE_ITALIC = PreloadFont.createPredefined (PDType1Font.COURIER_OBLIQUE);
+  public static final PreloadFont MONOSPACE_ITALIC = _createPredefined (PDType1Font.COURIER_OBLIQUE);
   /** PDF built-in font Courier bold and italic */
-  public static final PreloadFont MONOSPACE_BOLD_ITALIC = PreloadFont.createPredefined (PDType1Font.COURIER_BOLD_OBLIQUE);
+  public static final PreloadFont MONOSPACE_BOLD_ITALIC = _createPredefined (PDType1Font.COURIER_BOLD_OBLIQUE);
   /** PDF built-in font Times Roman regular */
-  public static final PreloadFont TIMES = PreloadFont.createPredefined (PDType1Font.TIMES_ROMAN);
+  public static final PreloadFont TIMES = _createPredefined (PDType1Font.TIMES_ROMAN);
   /** PDF built-in font Times Roman bold */
-  public static final PreloadFont TIMES_BOLD = PreloadFont.createPredefined (PDType1Font.TIMES_BOLD);
+  public static final PreloadFont TIMES_BOLD = _createPredefined (PDType1Font.TIMES_BOLD);
   /** PDF built-in font Times Roman italic */
-  public static final PreloadFont TIMES_ITALIC = PreloadFont.createPredefined (PDType1Font.TIMES_ITALIC);
+  public static final PreloadFont TIMES_ITALIC = _createPredefined (PDType1Font.TIMES_ITALIC);
   /** PDF built-in font Times Roman bold italic */
-  public static final PreloadFont TIMES_BOLD_ITALIC = PreloadFont.createPredefined (PDType1Font.TIMES_BOLD_ITALIC);
+  public static final PreloadFont TIMES_BOLD_ITALIC = _createPredefined (PDType1Font.TIMES_BOLD_ITALIC);
   /** PDF built-in font Symbol */
-  public static final PreloadFont SYMBOL = PreloadFont.createPredefined (PDType1Font.SYMBOL);
+  public static final PreloadFont SYMBOL = _createPredefined (PDType1Font.SYMBOL);
   /** PDF built-in font Zapf Dingbats */
-  public static final PreloadFont ZAPF_DINGBATS = PreloadFont.createPredefined (PDType1Font.ZAPF_DINGBATS);
+  public static final PreloadFont ZAPF_DINGBATS = _createPredefined (PDType1Font.ZAPF_DINGBATS);
 
   private String m_sID;
   private PDFont m_aFont;
   private IFontResource m_aFontRes;
   private boolean m_bEmbed;
+  private int m_nFallbackCodePoint;
   // Status vars
-  private TrueTypeFont m_aTTF;
-  private OpenTypeFont m_aOTF;
-
-  private static final ICommonsMap <String, PDType1Font> STANDARD_14 = new CommonsHashMap <> ();
-  static
-  {
-    STANDARD_14.put (PDType1Font.TIMES_ROMAN.getBaseFont (), PDType1Font.TIMES_ROMAN);
-    STANDARD_14.put (PDType1Font.TIMES_BOLD.getBaseFont (), PDType1Font.TIMES_BOLD);
-    STANDARD_14.put (PDType1Font.TIMES_ITALIC.getBaseFont (), PDType1Font.TIMES_ITALIC);
-    STANDARD_14.put (PDType1Font.TIMES_BOLD_ITALIC.getBaseFont (), PDType1Font.TIMES_BOLD_ITALIC);
-    STANDARD_14.put (PDType1Font.HELVETICA.getBaseFont (), PDType1Font.HELVETICA);
-    STANDARD_14.put (PDType1Font.HELVETICA_BOLD.getBaseFont (), PDType1Font.HELVETICA_BOLD);
-    STANDARD_14.put (PDType1Font.HELVETICA_OBLIQUE.getBaseFont (), PDType1Font.HELVETICA_OBLIQUE);
-    STANDARD_14.put (PDType1Font.HELVETICA_BOLD_OBLIQUE.getBaseFont (), PDType1Font.HELVETICA_BOLD_OBLIQUE);
-    STANDARD_14.put (PDType1Font.COURIER.getBaseFont (), PDType1Font.COURIER);
-    STANDARD_14.put (PDType1Font.COURIER_BOLD.getBaseFont (), PDType1Font.COURIER_BOLD);
-    STANDARD_14.put (PDType1Font.COURIER_OBLIQUE.getBaseFont (), PDType1Font.COURIER_OBLIQUE);
-    STANDARD_14.put (PDType1Font.COURIER_BOLD_OBLIQUE.getBaseFont (), PDType1Font.COURIER_BOLD_OBLIQUE);
-    STANDARD_14.put (PDType1Font.SYMBOL.getBaseFont (), PDType1Font.SYMBOL);
-    STANDARD_14.put (PDType1Font.ZAPF_DINGBATS.getBaseFont (), PDType1Font.ZAPF_DINGBATS);
-  }
-
-  private void readObject (@Nonnull @WillNotClose final ObjectInputStream aOIS) throws IOException,
-                                                                                ClassNotFoundException
-  {
-    m_sID = StreamHelper.readSafeUTF (aOIS);
-    final String sBaseFontName = StreamHelper.readSafeUTF (aOIS);
-    m_aFont = STANDARD_14.get (sBaseFontName);
-    m_aFontRes = (IFontResource) aOIS.readObject ();
-    m_bEmbed = aOIS.readBoolean ();
-    _parseFontRes ();
-  }
-
-  private void writeObject (@Nonnull @WillNotClose final ObjectOutputStream aOOS) throws IOException
-  {
-    StreamHelper.writeSafeUTF (aOOS, m_sID);
-    StreamHelper.writeSafeUTF (aOOS, m_aFont != null ? m_aFont.getName () : null);
-    aOOS.writeObject (m_aFontRes);
-    aOOS.writeBoolean (m_bEmbed);
-    // TTF and OTF are not written
-  }
-
-  private PreloadFont (@Nonnull final PDFont aFont)
-  {
-    ValueEnforcer.notNull (aFont, "Font");
-    m_sID = aFont.getName ();
-    m_aFont = aFont;
-    m_aFontRes = null;
-    m_bEmbed = false;
-  }
+  private transient TrueTypeFont m_aTTF;
+  private transient OpenTypeFont m_aOTF;
 
   private void _parseFontRes () throws IOException
   {
@@ -161,6 +135,38 @@ public final class PreloadFont implements IHasID <String>, Serializable
       }
   }
 
+  private void readObject (@Nonnull @WillNotClose final ObjectInputStream aOIS) throws IOException,
+                                                                                ClassNotFoundException
+  {
+    m_sID = StreamHelper.readSafeUTF (aOIS);
+    final String sBaseFontName = StreamHelper.readSafeUTF (aOIS);
+    m_aFont = STANDARD_14.get (sBaseFontName);
+    m_aFontRes = (IFontResource) aOIS.readObject ();
+    m_bEmbed = aOIS.readBoolean ();
+    m_nFallbackCodePoint = aOIS.readInt ();
+    _parseFontRes ();
+  }
+
+  private void writeObject (@Nonnull @WillNotClose final ObjectOutputStream aOOS) throws IOException
+  {
+    StreamHelper.writeSafeUTF (aOOS, m_sID);
+    StreamHelper.writeSafeUTF (aOOS, m_aFont != null ? m_aFont.getName () : null);
+    aOOS.writeObject (m_aFontRes);
+    aOOS.writeBoolean (m_bEmbed);
+    aOOS.writeInt (m_nFallbackCodePoint);
+    // TTF and OTF are not written
+  }
+
+  private PreloadFont (@Nonnull final PDFont aFont, final int nFallbackCodePoint)
+  {
+    ValueEnforcer.notNull (aFont, "Font");
+    m_sID = aFont.getName ();
+    m_aFont = aFont;
+    m_aFontRes = null;
+    m_bEmbed = false;
+    m_nFallbackCodePoint = nFallbackCodePoint;
+  }
+
   private PreloadFont (@Nonnull final IFontResource aFontRes, final boolean bEmbed) throws IOException
   {
     ValueEnforcer.notNull (aFontRes, "FontResource");
@@ -168,6 +174,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
     m_aFont = null;
     m_aFontRes = aFontRes;
     m_bEmbed = bEmbed;
+    m_nFallbackCodePoint = DEFAULT_FALLBACK_CODE_POINT;
     // Not loaded custom font
     _parseFontRes ();
   }
@@ -211,6 +218,15 @@ public final class PreloadFont implements IHasID <String>, Serializable
     return ret;
   }
 
+  /**
+   * @return THe fallback code point to be used if a character is not contained
+   *         in the font. Defaults to '?'.
+   */
+  public int getFallbackCodePoint ()
+  {
+    return m_nFallbackCodePoint;
+  }
+
   @Override
   public boolean equals (final Object o)
   {
@@ -221,13 +237,18 @@ public final class PreloadFont implements IHasID <String>, Serializable
     final PreloadFont rhs = (PreloadFont) o;
     return EqualsHelper.equals (m_aFont, rhs.m_aFont) &&
            EqualsHelper.equals (m_aFontRes, rhs.m_aFontRes) &&
-           m_bEmbed == rhs.m_bEmbed;
+           m_bEmbed == rhs.m_bEmbed &&
+           m_nFallbackCodePoint == rhs.m_nFallbackCodePoint;
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aFont).append (m_aFontRes).append (m_bEmbed).getHashCode ();
+    return new HashCodeGenerator (this).append (m_aFont)
+                                       .append (m_aFontRes)
+                                       .append (m_bEmbed)
+                                       .append (m_nFallbackCodePoint)
+                                       .getHashCode ();
   }
 
   @Override
@@ -236,14 +257,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
     return new ToStringGenerator (null).appendIfNotNull ("Font", m_aFont)
                                        .appendIfNotNull ("FontResource", m_aFontRes)
                                        .append ("Embed", m_bEmbed)
+                                       .append ("FallbackCodePoint", m_nFallbackCodePoint)
                                        .toString ();
-  }
-
-  @Nonnull
-  public static PreloadFont createPredefined (@Nonnull final PDType1Font aFont)
-  {
-    ValueEnforcer.notNull (aFont, "Font");
-    return new PreloadFont (aFont);
   }
 
   @Nonnull
@@ -272,5 +287,19 @@ public final class PreloadFont implements IHasID <String>, Serializable
     {
       throw new IllegalArgumentException ("Cannot use the passed font resource " + aFontRes, ex);
     }
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public static final ICommonsOrderedMap <String, PDType1Font> getAllStandard14Fonts ()
+  {
+    return STANDARD_14.getClone ();
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public static final ICommonsOrderedMap <String, PreloadFont> getAllStandard14PreloadFonts ()
+  {
+    return STANDARD_14_PF.getClone ();
   }
 }

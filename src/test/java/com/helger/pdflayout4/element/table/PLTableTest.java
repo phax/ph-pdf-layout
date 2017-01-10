@@ -565,7 +565,7 @@ public final class PLTableTest
     aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
 
     final String sLongText = StringHelper.getRepeated ("This is a dummy text to fill the table cell. Some other real information expected here in practice. ",
-                                                       4);
+                                                       6);
 
     final String sMediumText = StringHelper.getRepeated ("This is a dummy text to fill the table cell. Some other real information expected here in practice. ",
                                                          2);
