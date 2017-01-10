@@ -23,7 +23,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.collection.ext.CommonsArrayList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout4.PDFCreationException;
@@ -54,10 +53,14 @@ public final class PLPageSetTest
     final String sHeader = "This is a page header that is repeated on every page.\nIt can have multiple lines etc.\n";
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (100, 50, 50, 50);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (100, 50, 30, 20);
 
-    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED));
+    aPS1.setPageHeader (new PLBox (new PLText (sHeader +
+                                               sHeader +
+                                               "last line of header",
+                                               r10).setBorder (Color.RED)).setBorder (Color.GREEN));
     aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
+    aPS1.addElement (new PLBox (new PLText ("Second body line", r10).setBorder (Color.BLUE)).setBorder (Color.PINK));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -91,7 +94,7 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    final PLTable aTable = new PLTable (new CommonsArrayList <> (WidthSpec.star ()));
+    final PLTable aTable = new PLTable (WidthSpec.star ());
     aTable.addRow (new PLTableCell (new PLText (sHeader +
                                                 sHeader +
                                                 "last line of header",
@@ -195,7 +198,7 @@ public final class PLPageSetTest
   public void testWithPlaceholder () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (0);
 
     aPS1.setPageHeader (new PLBox (new PLText (EPLPlaceholder.PAGESET_INDEX.getVariable () +
                                                " / " +
@@ -218,7 +221,8 @@ public final class PLPageSetTest
                                                r10).setID ("header")
                                                    .setReplacePlaceholder (true)
                                                    .setFillColor (Color.PINK)).setID ("headerbox")
-                                                                              .setHorzAlign (EHorzAlignment.CENTER));
+                                                                              .setHorzAlign (EHorzAlignment.CENTER)
+                                                                              .setBorder (Color.GREEN));
 
     final StringBuilder aText = new StringBuilder ();
     for (int i = 0; i < 80; ++i)

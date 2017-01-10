@@ -7,7 +7,7 @@ Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and includ
 
 #News
   * v4.0.0 Beta 4
-    * Block elements use full width
+    * Block elements use full width now by default
   * v4.0.0 Beta 3 - 2017-01-10
     * Fixed a height problem with vertical split HBoxes
     * Simplified class hierarchy for table rows

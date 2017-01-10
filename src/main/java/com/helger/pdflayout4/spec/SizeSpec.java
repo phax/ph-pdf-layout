@@ -25,7 +25,6 @@ import javax.annotation.concurrent.Immutable;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
-import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
@@ -57,8 +56,8 @@ public class SizeSpec implements Serializable
    */
   public SizeSpec (@Nonnegative final float fWidth, @Nonnegative final float fHeight)
   {
-    ValueEnforcer.isGE0 (fWidth, "Width");
-    ValueEnforcer.isGE0 (fHeight, "Height");
+    // ValueEnforcer.isGE0 (fWidth, "Width");
+    // ValueEnforcer.isGE0 (fHeight, "Height");
 
     m_fWidth = fWidth;
     m_fHeight = fHeight;

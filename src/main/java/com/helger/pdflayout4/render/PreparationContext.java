@@ -20,7 +20,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
@@ -53,9 +52,12 @@ public final class PreparationContext
                              @Nonnegative final float fAvailableWidth,
                              @Nonnegative final float fAvailableHeight)
   {
+    // ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
+    // ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
+
     m_aGlobalCtx = aGlobalCtx;
-    m_fAvailableWidth = ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
-    m_fAvailableHeight = ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
+    m_fAvailableWidth = fAvailableWidth;
+    m_fAvailableHeight = fAvailableHeight;
   }
 
   @Nullable
