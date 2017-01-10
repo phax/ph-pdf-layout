@@ -563,9 +563,9 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         // Splitting makes no sense
         if (PLDebugLog.isDebugSplit ())
           PLDebugLog.debugSplit (this,
-                              "no need to split because all splittable elements easily fit into the available height (" +
-                                    fAvailableHeight +
-                                    ")");
+                                 "no need to split because all splittable elements easily fit into the available height (" +
+                                       fAvailableHeight +
+                                       ")");
         return null;
       }
     }
@@ -621,12 +621,12 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         final float fSplitHeight = fAvailableHeight - aColumnElement.getOutlineYSum ();
         if (PLDebugLog.isDebugSplit ())
           PLDebugLog.debugSplit (this,
-                              "Trying to split " +
-                                    aColumnElement.getDebugID () +
-                                    " with height " +
-                                    fColumnHeight +
-                                    " into pieces for remaining size " +
-                                    PLDebugLog.getWH (fSplitWidth, fSplitHeight));
+                                 "Trying to split " +
+                                       aColumnElement.getDebugID () +
+                                       " with height " +
+                                       fColumnHeight +
+                                       " into pieces for remaining size " +
+                                       PLDebugLog.getWH (fSplitWidth, fSplitHeight));
 
         // Use width and height without padding and margin!
         final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ().splitElementVert (fSplitWidth,
@@ -650,45 +650,45 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
           if (PLDebugLog.isDebugSplit ())
             PLDebugLog.debugSplit (this,
-                                "Split column element " +
-                                      aColumnElement.getDebugID () +
-                                      " (Column " +
-                                      nCol +
-                                      ") into pieces: " +
-                                      aHBox1Element.getDebugID () +
-                                      " (" +
-                                      aSplitResult.getFirstElement ().getWidth () +
-                                      "+" +
-                                      aHBox1Element.getOutlineXSum () +
-                                      " & " +
-                                      aSplitResult.getFirstElement ().getHeight () +
-                                      "+" +
-                                      aHBox1Element.getOutlineYSum () +
-                                      ") and " +
-                                      aHBox2Element.getDebugID () +
-                                      " (" +
-                                      aSplitResult.getSecondElement ().getWidth () +
-                                      "+" +
-                                      aHBox2Element.getOutlineXSum () +
-                                      " & " +
-                                      aSplitResult.getSecondElement ().getHeight () +
-                                      "+" +
-                                      aHBox2Element.getOutlineYSum () +
-                                      ") for available height " +
-                                      fAvailableHeight);
+                                   "Split column element " +
+                                         aColumnElement.getDebugID () +
+                                         " (Column " +
+                                         nCol +
+                                         ") into pieces: " +
+                                         aHBox1Element.getDebugID () +
+                                         " (" +
+                                         aSplitResult.getFirstElement ().getWidth () +
+                                         "+" +
+                                         aHBox1Element.getOutlineXSum () +
+                                         " & " +
+                                         aSplitResult.getFirstElement ().getHeight () +
+                                         "+" +
+                                         aHBox1Element.getOutlineYSum () +
+                                         ") and " +
+                                         aHBox2Element.getDebugID () +
+                                         " (" +
+                                         aSplitResult.getSecondElement ().getWidth () +
+                                         "+" +
+                                         aHBox2Element.getOutlineXSum () +
+                                         " & " +
+                                         aSplitResult.getSecondElement ().getHeight () +
+                                         "+" +
+                                         aHBox2Element.getOutlineYSum () +
+                                         ") for available height " +
+                                         fAvailableHeight);
         }
         else
         {
           if (PLDebugLog.isDebugSplit ())
             PLDebugLog.debugSplit (this,
-                                "Failed to split column element " +
-                                      aColumnElement.getDebugID () +
-                                      " (Column " +
-                                      nCol +
-                                      ") with height " +
-                                      fColumnHeight +
-                                      " into pieces for available height " +
-                                      fAvailableHeight);
+                                   "Failed to split column element " +
+                                         aColumnElement.getDebugID () +
+                                         " (Column " +
+                                         nCol +
+                                         ") with height " +
+                                         fColumnHeight +
+                                         " into pieces for available height " +
+                                         fAvailableHeight);
         }
       }
 

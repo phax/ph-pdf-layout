@@ -432,12 +432,12 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       // Splitting makes no sense because the resulting text 1 would be empty
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this,
-                            "Failed to split because the result would be " +
-                                  nLineCount +
-                                  " lines for available height " +
-                                  fAvailableHeight +
-                                  " and line height " +
-                                  m_fTextHeight);
+                               "Failed to split because the result would be " +
+                                     nLineCount +
+                                     " lines for available height " +
+                                     fAvailableHeight +
+                                     " and line height " +
+                                     m_fTextHeight);
       return null;
     }
 
@@ -446,15 +446,15 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       // Splitting makes no sense because the resulting text 2 would be empty
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this,
-                            "Failed to split because the result of " +
-                                  nLineCount +
-                                  " lines fits into the available height " +
-                                  fAvailableHeight +
-                                  " and line height " +
-                                  m_fTextHeight +
-                                  " (=" +
-                                  (fAvailableHeight * m_fTextHeight) +
-                                  ")");
+                               "Failed to split because the result of " +
+                                     nLineCount +
+                                     " lines fits into the available height " +
+                                     fAvailableHeight +
+                                     " and line height " +
+                                     m_fTextHeight +
+                                     " (=" +
+                                     (fAvailableHeight * m_fTextHeight) +
+                                     ")");
       return null;
     }
 
@@ -469,12 +469,12 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
         // Splitting makes no sense
         if (PLDebugLog.isDebugSplit ())
           PLDebugLog.debugSplit (this,
-                              "Failed to split because the result would be " +
-                                    nLineCount +
-                                    " lines for available height " +
-                                    fAvailableHeight +
-                                    " and expected height " +
-                                    fExpectedHeight);
+                                 "Failed to split because the result would be " +
+                                       nLineCount +
+                                       " lines for available height " +
+                                       fAvailableHeight +
+                                       " and expected height " +
+                                       fExpectedHeight);
         return null;
       }
     }
@@ -525,11 +525,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
     if (PLDebugLog.isDebugRender ())
       PLDebugLog.debugRender (this,
-                           "Display at " +
-                                 PLDebugLog.getXYWH (fRenderLeft, fRenderTop, getRenderWidth (), getRenderHeight ()) +
-                                 " with " +
-                                 m_aPreparedLines.size () +
-                                 " lines");
+                              "Display at " +
+                                    PLDebugLog.getXYWH (fRenderLeft,
+                                                        fRenderTop,
+                                                        getRenderWidth (),
+                                                        getRenderHeight ()) +
+                                    " with " +
+                                    m_aPreparedLines.size () +
+                                    " lines");
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
 

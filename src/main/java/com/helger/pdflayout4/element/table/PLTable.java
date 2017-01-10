@@ -433,12 +433,12 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     final float fSplitHeight = fAvailableHeight;
     if (PLDebugLog.isDebugSplit ())
       PLDebugLog.debugSplit (this,
-                          "Trying to split " +
-                                m_aRows.getDebugID () +
-                                " into pieces for available width " +
-                                fAvailableWidth +
-                                " and height " +
-                                fSplitHeight);
+                             "Trying to split " +
+                                   m_aRows.getDebugID () +
+                                   " into pieces for available width " +
+                                   fAvailableWidth +
+                                   " and height " +
+                                   fSplitHeight);
 
     final PLSplitResult ret = m_aRows.splitElementVert (fAvailableWidth, fSplitHeight);
     if (ret == null)

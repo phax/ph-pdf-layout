@@ -232,10 +232,10 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     final float fSplitHeight = fAvailableHeight - aElement.getOutlineYSum ();
     if (PLDebugLog.isDebugSplit ())
       PLDebugLog.debugSplit (this,
-                          "Trying to split " +
-                                aElement.getDebugID () +
-                                " into pieces for split size " +
-                                PLDebugLog.getWH (fSplitWidth, fSplitHeight));
+                             "Trying to split " +
+                                   aElement.getDebugID () +
+                                   " into pieces for split size " +
+                                   PLDebugLog.getWH (fSplitWidth, fSplitHeight));
 
     // Try to split the element contained in the row
     final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
@@ -260,29 +260,29 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
     if (PLDebugLog.isDebugSplit ())
       PLDebugLog.debugSplit (this,
-                          "Split box element " +
-                                aElement.getDebugID () +
-                                " into pieces: " +
-                                aBox1Element.getDebugID () +
-                                " (" +
-                                aSplitResult.getFirstElement ().getWidth () +
-                                "+" +
-                                aBox1Element.getOutlineXSum () +
-                                " & " +
-                                aSplitResult.getFirstElement ().getHeight () +
-                                "+" +
-                                aBox1Element.getOutlineYSum () +
-                                ") and " +
-                                aBox2Element.getDebugID () +
-                                " (" +
-                                aSplitResult.getSecondElement ().getWidth () +
-                                "+" +
-                                aBox2Element.getOutlineXSum () +
-                                " & " +
-                                aSplitResult.getSecondElement ().getHeight () +
-                                "+" +
-                                aBox2Element.getOutlineYSum () +
-                                ")");
+                             "Split box element " +
+                                   aElement.getDebugID () +
+                                   " into pieces: " +
+                                   aBox1Element.getDebugID () +
+                                   " (" +
+                                   aSplitResult.getFirstElement ().getWidth () +
+                                   "+" +
+                                   aBox1Element.getOutlineXSum () +
+                                   " & " +
+                                   aSplitResult.getFirstElement ().getHeight () +
+                                   "+" +
+                                   aBox1Element.getOutlineYSum () +
+                                   ") and " +
+                                   aBox2Element.getDebugID () +
+                                   " (" +
+                                   aSplitResult.getSecondElement ().getWidth () +
+                                   "+" +
+                                   aBox2Element.getOutlineXSum () +
+                                   " & " +
+                                   aSplitResult.getSecondElement ().getHeight () +
+                                   "+" +
+                                   aBox2Element.getOutlineYSum () +
+                                   ")");
 
     // Excluding padding/margin
     aBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox1UsedHeight));

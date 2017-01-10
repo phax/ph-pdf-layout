@@ -193,7 +193,10 @@ public class LoadedFont
       {
         if (PLDebugLog.isDebugFont ())
           PLDebugLog.debugFont (aFont.toString (),
-                             "No fallback code point " + nFallbackCodepoint + " in this font - " + ex2.getMessage ());
+                                "No fallback code point " +
+                                                   nFallbackCodepoint +
+                                                   " in this font - " +
+                                                   ex2.getMessage ());
         throw ex2;
       }
     }

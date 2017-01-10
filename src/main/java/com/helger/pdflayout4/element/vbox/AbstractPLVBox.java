@@ -786,10 +786,10 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
             final float fSplitHeight = fAvailableHeight - fUsedVBox1RowHeight - aRowElement.getOutlineYSum ();
             if (PLDebugLog.isDebugSplit ())
               PLDebugLog.debugSplit (this,
-                                  "Trying to split " +
-                                        aRowElement.getDebugID () +
-                                        " into pieces for split size " +
-                                        PLDebugLog.getWH (fSplitWidth, fSplitHeight));
+                                     "Trying to split " +
+                                           aRowElement.getDebugID () +
+                                           " into pieces for split size " +
+                                           PLDebugLog.getWH (fSplitWidth, fSplitHeight));
 
             // Try to split the element contained in the row
             final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementVert (fSplitWidth,
@@ -810,42 +810,42 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
               if (PLDebugLog.isDebugSplit ())
                 PLDebugLog.debugSplit (this,
-                                    "Split row element " +
-                                          aRowElement.getDebugID () +
-                                          " (Row " +
-                                          nRow +
-                                          ") into pieces: " +
-                                          aVBox1RowElement.getDebugID () +
-                                          " (" +
-                                          aSplitResult.getFirstElement ().getWidth () +
-                                          "+" +
-                                          aVBox1RowElement.getOutlineXSum () +
-                                          " & " +
-                                          aSplitResult.getFirstElement ().getHeight () +
-                                          "+" +
-                                          aVBox1RowElement.getOutlineYSum () +
-                                          ") and " +
-                                          aVBox2RowElement.getDebugID () +
-                                          " (" +
-                                          aSplitResult.getSecondElement ().getWidth () +
-                                          "+" +
-                                          aVBox2RowElement.getOutlineXSum () +
-                                          " & " +
-                                          aSplitResult.getSecondElement ().getHeight () +
-                                          "+" +
-                                          aVBox2RowElement.getOutlineYSum () +
-                                          ")");
+                                       "Split row element " +
+                                             aRowElement.getDebugID () +
+                                             " (Row " +
+                                             nRow +
+                                             ") into pieces: " +
+                                             aVBox1RowElement.getDebugID () +
+                                             " (" +
+                                             aSplitResult.getFirstElement ().getWidth () +
+                                             "+" +
+                                             aVBox1RowElement.getOutlineXSum () +
+                                             " & " +
+                                             aSplitResult.getFirstElement ().getHeight () +
+                                             "+" +
+                                             aVBox1RowElement.getOutlineYSum () +
+                                             ") and " +
+                                             aVBox2RowElement.getDebugID () +
+                                             " (" +
+                                             aSplitResult.getSecondElement ().getWidth () +
+                                             "+" +
+                                             aVBox2RowElement.getOutlineXSum () +
+                                             " & " +
+                                             aSplitResult.getSecondElement ().getHeight () +
+                                             "+" +
+                                             aVBox2RowElement.getOutlineYSum () +
+                                             ")");
               bSplittedRow = true;
             }
             else
             {
               if (PLDebugLog.isDebugSplit ())
                 PLDebugLog.debugSplit (this,
-                                    "Failed to split row element " +
-                                          aRowElement.getDebugID () +
-                                          " (Row " +
-                                          nRow +
-                                          ") into pieces");
+                                       "Failed to split row element " +
+                                             aRowElement.getDebugID () +
+                                             " (Row " +
+                                             nRow +
+                                             ") into pieces");
             }
           }
 

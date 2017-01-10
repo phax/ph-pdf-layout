@@ -184,11 +184,11 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                   PLDebugLog.getYMBP ((IPLHasMarginBorderPadding <?>) this);
       }
       PLDebugLog.debugPrepare (this,
-                            "Prepared object: " +
-                                  PLDebugLog.getWH (aPreparedSize) +
-                                  sSuffix +
-                                  "; Render size: " +
-                                  PLDebugLog.getWH (m_aRenderSize));
+                               "Prepared object: " +
+                                     PLDebugLog.getWH (aPreparedSize) +
+                                     sSuffix +
+                                     "; Render size: " +
+                                     PLDebugLog.getWH (m_aRenderSize));
     }
   }
 
@@ -201,10 +201,10 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       m_aRenderSize = getRenderSize (m_aPreparedSize);
       if (PLDebugLog.isDebugPrepare ())
         PLDebugLog.debugPrepare (this,
-                              "RenderSize changed from " +
-                                    PLDebugLog.getWH (aOldRenderSize) +
-                                    " to " +
-                                    PLDebugLog.getWH (m_aRenderSize));
+                                 "RenderSize changed from " +
+                                       PLDebugLog.getWH (aOldRenderSize) +
+                                       " to " +
+                                       PLDebugLog.getWH (m_aRenderSize));
     }
   }
 
@@ -225,9 +225,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                   PLDebugLog.getYMBP ((IPLHasMarginBorderPadding <?>) this);
       }
       PLDebugLog.debugPrepare (this,
-                            "Preparing object for available " +
-                                  PLDebugLog.getWH (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ()) +
-                                  sSuffix);
+                               "Preparing object for available " +
+                                     PLDebugLog.getWH (aCtx.getAvailableWidth (), aCtx.getAvailableHeight ()) +
+                                     sSuffix);
     }
 
     // Do prepare
@@ -304,11 +304,11 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
 
     if (PLDebugLog.isDebugRender ())
       PLDebugLog.debugRender (this,
-                           "Rendering at " +
-                                 PLDebugLog.getXYWH (aCtx.getStartLeft (),
-                                                  aCtx.getStartTop (),
-                                                  aCtx.getWidth (),
-                                                  aCtx.getHeight ()));
+                              "Rendering at " +
+                                    PLDebugLog.getXYWH (aCtx.getStartLeft (),
+                                                        aCtx.getStartTop (),
+                                                        aCtx.getWidth (),
+                                                        aCtx.getHeight ()));
 
     // Main perform after border
     onRender (aCtx);
