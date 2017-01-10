@@ -56,6 +56,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
+    m_aPrepareAvailableSize = aSource.getPrepareAvailableSize ();
     return thisAsT ();
   }
 

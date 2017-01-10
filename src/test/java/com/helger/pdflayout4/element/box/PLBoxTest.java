@@ -251,7 +251,7 @@ public final class PLBoxTest
                                                   .setHorzAlign (EHorzAlignment.RIGHT)
                                                   .setVertSplittable (true)).setVertSplittable (true)
                                                                             .setFillColor (Color.YELLOW)
-                                                                            .setPadding (5)
+                                                                            .setPadding (8)
                                                                             .setBorder (Color.BLACK));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();

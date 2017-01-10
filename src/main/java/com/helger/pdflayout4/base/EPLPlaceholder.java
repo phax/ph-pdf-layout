@@ -21,7 +21,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ArrayHelper;
+import com.helger.commons.collection.ext.CommonsHashMap;
+import com.helger.commons.collection.ext.ICommonsMap;
 import com.helger.commons.string.StringHelper;
 
 public enum EPLPlaceholder
@@ -47,15 +50,19 @@ public enum EPLPlaceholder
 
   private final String m_sVariable;
   private final int m_nEstimatedCharCount;
-  private final String m_sPrepareText;
+  private final String m_sEstimatedPrepareText;
 
   private EPLPlaceholder (@Nonnull @Nonempty final String sVariable, @Nonnegative final int nEstimatedCharCount)
   {
     m_sVariable = sVariable;
     m_nEstimatedCharCount = nEstimatedCharCount;
-    m_sPrepareText = StringHelper.getRepeated ('X', nEstimatedCharCount);
+    m_sEstimatedPrepareText = StringHelper.getRepeated ('X', nEstimatedCharCount);
   }
 
+  /**
+   * @return The name of the variable, starting with "${" and ending with "}".
+   *         Neither <code>null</code> nor empty.
+   */
   @Nonnull
   @Nonempty
   public String getVariable ()
@@ -63,22 +70,40 @@ public enum EPLPlaceholder
     return m_sVariable;
   }
 
+  /**
+   * @return The number of estimated characters in the final document. Always
+   *         &gt; 0.
+   */
   @Nonnegative
   public int getEstimatedCharCount ()
   {
     return m_nEstimatedCharCount;
   }
 
+  /**
+   * @return The estimated replacement text, using
+   *         {@link #getEstimatedCharCount()} as the basis.
+   */
   @Nonnull
   @Nonempty
-  public String getPrepareText ()
+  public String getEstimatedPrepareText ()
   {
-    return m_sPrepareText;
+    return m_sEstimatedPrepareText;
   }
 
   @Nullable
   public static EPLPlaceholder getFromVariableOrNull (@Nullable final String sVariable)
   {
     return ArrayHelper.findFirst (values (), x -> x.getVariable ().equals (sVariable));
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public static ICommonsMap <String, String> getEstimationReplacements ()
+  {
+    final ICommonsMap <String, String> ret = new CommonsHashMap<> ();
+    for (final EPLPlaceholder e : values ())
+      ret.put (e.m_sVariable, e.m_sEstimatedPrepareText);
+    return ret;
   }
 }

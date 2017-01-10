@@ -36,6 +36,7 @@ import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.base.AbstractPLInlineElement;
+import com.helger.pdflayout4.base.EPLPlaceholder;
 import com.helger.pdflayout4.base.IPLHasHorizontalAlignment;
 import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.PLElementWithSize;
@@ -67,7 +68,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public static final boolean DEFAULT_REPLACE_PLACEHOLDERS = false;
 
   private String m_sOriginalText;
-  private String m_sResolvedText;
+  private String m_sTextWithPlaceholdersReplaced;
   private final FontSpec m_aFontSpec;
   private float m_fLineSpacing = DEFAULT_LINE_SPACING;
 
@@ -115,7 +116,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private void _setText (@Nullable final String sText)
   {
     m_sOriginalText = getCleanedPLText (sText);
-    m_sResolvedText = m_sOriginalText;
+    m_sTextWithPlaceholdersReplaced = m_sOriginalText;
   }
 
   @Override
@@ -171,8 +172,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return The line height factor. Defaults to
-   *         {@link #DEFAULT_LINE_SPACING} which means 100%.
+   * @return The line height factor. Defaults to {@link #DEFAULT_LINE_SPACING}
+   *         which means 100%.
    */
   public final float getLineSpacing ()
   {
@@ -301,7 +302,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       else
       {
         // Maximum number of lines exceeded - copy only the relevant lines
-        m_aPreparedLines = new CommonsArrayList <> (m_nMaxRows);
+        m_aPreparedLines = new CommonsArrayList<> (m_nMaxRows);
         for (int i = 0; i < m_nMaxRows; ++i)
           m_aPreparedLines.add (aLines.get (i));
       }
@@ -323,12 +324,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    *
    * @param fAvailableWidth
    *        Available with
+   * @param bAlreadyReplaced
+   *        <code>true</code> if the text was already replaced
    * @return The new preparation size
    * @throws IOException
    *         On PDFBox error
    */
   @Nonnull
-  private SizeSpec _prepareText (final float fAvailableWidth) throws IOException
+  private SizeSpec _prepareText (final float fAvailableWidth, final boolean bAlreadyReplaced) throws IOException
   {
     final float fFontSize = m_aFontSpec.getFontSize ();
     m_fTextHeight = m_aLoadedFont.getTextHeight (fFontSize);
@@ -342,7 +345,17 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // Split text into rows
-    internalSetPreparedLines (m_aLoadedFont.getFitToWidth (m_sResolvedText, fFontSize, fAvailableWidth));
+    String sTextToFit;
+    if (bAlreadyReplaced)
+    {
+      sTextToFit = m_sTextWithPlaceholdersReplaced;
+    }
+    else
+    {
+      // Use the approximations from the place holders
+      sTextToFit = StringHelper.replaceMultiple (m_sOriginalText, EPLPlaceholder.getEstimationReplacements ());
+    }
+    internalSetPreparedLines (m_aLoadedFont.getFitToWidth (sTextToFit, fFontSize, fAvailableWidth));
 
     // Determine max width of all prepared lines
     float fMaxWidth = Float.MIN_VALUE;
@@ -362,7 +375,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     try
     {
       m_aLoadedFont = aCtx.getGlobalContext ().getLoadedFont (m_aFontSpec);
-      return _prepareText (fElementWidth);
+      return _prepareText (fElementWidth, false);
     }
     catch (final IOException ex)
     {
@@ -378,12 +391,12 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     m_aPreparedLines = null;
   }
 
-  private void _setDisplayTextAfterPrepare (@Nonnull final String sNewResolvedText,
+  private void _setDisplayTextAfterPrepare (@Nonnull final String sNewTextWithPlaceholdersReplaced,
                                             final float fAvailableWidth) throws IOException
   {
     internalMarkAsNotPrepared ();
-    m_sResolvedText = sNewResolvedText;
-    final SizeSpec aOnPrepareResult = _prepareText (fAvailableWidth);
+    m_sTextWithPlaceholdersReplaced = sNewTextWithPlaceholdersReplaced;
+    final SizeSpec aOnPrepareResult = _prepareText (fAvailableWidth, true);
     internalMarkAsPrepared (aOnPrepareResult);
   }
 
@@ -403,7 +416,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public ICommonsList <TextAndWidthSpec> getAllPreparedLinesUnmodified ()
   {
     internalCheckAlreadyPrepared ();
-    return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
+    return new CommonsArrayList<> (m_aPreparedLinesUnmodified);
   }
 
   protected final float getDisplayHeightOfLineCount (@Nonnegative final int nLineCount)
@@ -426,7 +439,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     ValueEnforcer.notEmpty (aLines, "Lines");
 
     // Create a copy to be independent!
-    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList <> (aLines);
+    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList<> (aLines);
 
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLineCount (aLineCopy.size ()));
@@ -621,7 +634,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("OriginalText", m_sOriginalText)
-                            .append ("ResolvedText", m_sResolvedText)
+                            .append ("TextWithPlaceholdersReplaced", m_sTextWithPlaceholdersReplaced)
                             .append ("FontSpec", m_aFontSpec)
                             .append ("LineSpacing", m_fLineSpacing)
                             .append ("HorzAlign", m_eHorzAlign)
