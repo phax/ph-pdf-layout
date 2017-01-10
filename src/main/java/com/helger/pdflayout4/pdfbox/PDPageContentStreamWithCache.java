@@ -181,16 +181,11 @@ public class PDPageContentStreamWithCache
     m_aStream.addRect (fLeft, fBottom, fWidth, fHeight);
   }
 
-  public void drawLine (final float xStart,
-                        final float yStart,
-                        final float xEnd,
-                        final float yEnd,
-                        final boolean bStroke) throws IOException
+  public void drawLine (final float xStart, final float yStart, final float xEnd, final float yEnd) throws IOException
   {
     m_aStream.moveTo (xStart, yStart);
     m_aStream.lineTo (xEnd, yEnd);
-    if (bStroke)
-      stroke ();
+    stroke ();
   }
 
   public void fillRect (final float fX, final float fY, final float fWidth, final float fHeight) throws IOException

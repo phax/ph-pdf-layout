@@ -32,7 +32,7 @@ import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
 import com.helger.pdflayout4.base.PLElementWithSize;
 import com.helger.pdflayout4.base.PLSplitResult;
-import com.helger.pdflayout4.element.PLRenderHelper;
+import com.helger.pdflayout4.render.PLRenderHelper;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
 import com.helger.pdflayout4.spec.SizeSpec;

@@ -6,11 +6,12 @@ Please check the test files to see how to create PDFs with the different element
 Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x.
 
 #News
-  * v4.0.0 Beta 3 
+  * v4.0.0 Beta 3 - 2017-01-10
     * Fixed a height problem with vertical split HBoxes
     * Simplified class hierarchy for table rows
     * Made font fallback code point more flexible
     * Changed font rendering to use descent from font instead of heuristics
+    * Fixed different border color rendering
   * v4.0.0 Beta 2 - 2017-01-03
     * The Maven artifact name was changed to 'ph-pdf-layout4' so that it can be used side-by-side with version 3.
     * The global package name was changed from `com.helger.pdflayout` to `com.helger.pdflayout4` so that both 3.x and 4.x can run side-by-side
@@ -52,7 +53,7 @@ or
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout4</artifactId>
-  <version>4.0.0-b2</version>
+  <version>4.0.0-b3</version>
 </dependency>
 ```
 

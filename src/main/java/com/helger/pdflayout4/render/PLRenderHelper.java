@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout4.element;
+package com.helger.pdflayout4.render;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -26,7 +26,6 @@ import com.helger.pdflayout4.PLDebug;
 import com.helger.pdflayout4.base.IPLElement;
 import com.helger.pdflayout4.base.IPLObject;
 import com.helger.pdflayout4.pdfbox.PDPageContentStreamWithCache;
-import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.spec.BorderSpec;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 
@@ -132,7 +131,7 @@ public final class PLRenderHelper
           aContentStream.setStrokingColor (aTop.getColor ());
           aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
           aContentStream.setLineWidth (fTopWidth);
-          aContentStream.drawLine (fLeft, fTop - fDelta, fRight - fRightWidth, fTop - fDelta, false);
+          aContentStream.drawLine (fLeft, fTop - fDelta, fRight - fRightWidth, fTop - fDelta);
         }
 
         if (aRight != null)
@@ -148,7 +147,7 @@ public final class PLRenderHelper
           aContentStream.setStrokingColor (aRight.getColor ());
           aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
           aContentStream.setLineWidth (fRightWidth);
-          aContentStream.drawLine (fRight - fDelta, fTop, fRight - fDelta, fBottom + fBottomWidth, false);
+          aContentStream.drawLine (fRight - fDelta, fTop, fRight - fDelta, fBottom + fBottomWidth);
         }
 
         if (aBottom != null)
@@ -164,7 +163,7 @@ public final class PLRenderHelper
           aContentStream.setStrokingColor (aBottom.getColor ());
           aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
           aContentStream.setLineWidth (fBottomWidth);
-          aContentStream.drawLine (fLeft + fLeftWidth, fBottom + fDelta, fRight, fBottom + fDelta, false);
+          aContentStream.drawLine (fLeft + fLeftWidth, fBottom + fDelta, fRight, fBottom + fDelta);
         }
 
         if (aLeft != null)
@@ -180,7 +179,7 @@ public final class PLRenderHelper
           aContentStream.setStrokingColor (aLeft.getColor ());
           aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
           aContentStream.setLineWidth (fLeftWidth);
-          aContentStream.drawLine (fLeft + fDelta, fTop - fTopWidth, fLeft + fDelta, fBottom, false);
+          aContentStream.drawLine (fLeft + fDelta, fTop - fTopWidth, fLeft + fDelta, fBottom);
         }
         aContentStream.stroke ();
       }

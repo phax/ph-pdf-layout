@@ -110,7 +110,7 @@ public final class PLTextTest
                                      .setPadding (5)
                                      .setFillColor (Color.YELLOW));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false).setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-basic.pdf"));
   }
