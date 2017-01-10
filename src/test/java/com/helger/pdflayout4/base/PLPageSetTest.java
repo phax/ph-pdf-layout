@@ -54,7 +54,7 @@ public final class PLPageSetTest
     final String sHeader = "This is a page header that is repeated on every page.\nIt can have multiple lines etc.\n";
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
-    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (100, 50, 50, 50);
 
     aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED));
     aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));

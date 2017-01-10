@@ -13,6 +13,7 @@ Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and includ
     * Changed font rendering to use descent from font instead of heuristics
     * Fixed different border color rendering
     * Made debug rendering customizable
+    * Added support for line spacing in PLText
   * v4.0.0 Beta 2 - 2017-01-03
     * The Maven artifact name was changed to 'ph-pdf-layout4' so that it can be used side-by-side with version 3.
     * The global package name was changed from `com.helger.pdflayout` to `com.helger.pdflayout4` so that both 3.x and 4.x can run side-by-side

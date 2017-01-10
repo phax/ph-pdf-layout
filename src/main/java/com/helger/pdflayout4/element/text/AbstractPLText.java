@@ -62,12 +62,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                                      extends AbstractPLInlineElement <IMPLTYPE>
                                      implements IPLHasHorizontalAlignment <IMPLTYPE>, IPLSplittableObject <IMPLTYPE>
 {
+  public static final float DEFAULT_LINE_SPACING = 1f;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
   public static final boolean DEFAULT_REPLACE_PLACEHOLDERS = false;
 
   private String m_sOriginalText;
   private String m_sResolvedText;
   private final FontSpec m_aFontSpec;
+  private float m_fLineSpacing = DEFAULT_LINE_SPACING;
 
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
@@ -78,7 +80,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private transient LoadedFont m_aLoadedFont;
   protected float m_fTextHeight;
   protected float m_fDescent;
-
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLinesUnmodified;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLines;
@@ -123,6 +124,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
+    setLineSpacing (aSource.getLineSpacing ());
     setHorzAlign (aSource.getHorzAlign ());
     setMaxRows (aSource.getMaxRows ());
     setVertSplittable (aSource.isVertSplittable ());
@@ -166,6 +168,31 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public final FontSpec getFontSpec ()
   {
     return m_aFontSpec;
+  }
+
+  /**
+   * @return The line height factor. Defaults to
+   *         {@link #DEFAULT_LINE_SPACING} which means 100%.
+   */
+  public final float getLineSpacing ()
+  {
+    return m_fLineSpacing;
+  }
+
+  /**
+   * Set the line spacing to use. The line spacing is the distance between 2
+   * consecutive lines. The line spacing is not considered if there is a single
+   * line of text.
+   *
+   * @param fLineSpacing
+   *        A value of 1 means 100%, 1.05 means 105% etc. Must be &gt; 0.
+   * @return this for chaining
+   */
+  @Nonnull
+  public final IMPLTYPE setLineSpacing (@Nonnegative final float fLineSpacing)
+  {
+    m_fLineSpacing = ValueEnforcer.isGT0 (fLineSpacing, "LineSpacing");
+    return thisAsT ();
   }
 
   @Nonnull
@@ -323,7 +350,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       fMaxWidth = Math.max (fMaxWidth, aTWS.getWidth ());
 
     // Determine height by number of lines
-    return new SizeSpec (fMaxWidth, m_aPreparedLines.size () * m_fTextHeight);
+    return new SizeSpec (fMaxWidth, getDisplayHeightOfLineCount (m_aPreparedLines.size ()));
   }
 
   @Override
@@ -381,7 +408,13 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
   protected final float getDisplayHeightOfLineCount (@Nonnegative final int nLineCount)
   {
-    return nLineCount * m_fTextHeight;
+    if (nLineCount == 0)
+      return 0f;
+    if (nLineCount == 1)
+      return m_fTextHeight;
+
+    // The line height factor counts only between lines!
+    return (nLineCount - 1) * m_fTextHeight * m_fLineSpacing + 1 * m_fTextHeight;
   }
 
   @Nonnull
@@ -426,7 +459,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Get the lines in the correct order from top to bottom
     final ICommonsList <TextAndWidthSpec> aLines = m_aPreparedLines;
 
-    int nLineCount = (int) (fAvailableHeight / m_fTextHeight);
+    int nLineCount = (int) ((fAvailableHeight + (m_fLineSpacing - 1f) * m_fTextHeight) /
+                            (m_fTextHeight * m_fLineSpacing));
     if (nLineCount <= 0)
     {
       // Splitting makes no sense because the resulting text 1 would be empty
@@ -437,7 +471,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                                      " lines for available height " +
                                      fAvailableHeight +
                                      " and line height " +
-                                     m_fTextHeight);
+                                     m_fTextHeight * m_fLineSpacing);
       return null;
     }
 
@@ -451,14 +485,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                                      " lines fits into the available height " +
                                      fAvailableHeight +
                                      " and line height " +
-                                     m_fTextHeight +
+                                     m_fTextHeight * m_fLineSpacing +
                                      " (=" +
-                                     (fAvailableHeight * m_fTextHeight) +
+                                     getDisplayHeightOfLineCount (nLineCount) +
                                      ")");
       return null;
     }
 
-    // Calc estimated height (required because an offset is added)
+    // Calc estimated height
     final float fExpectedHeight = getDisplayHeightOfLineCount (nLineCount);
     if (fExpectedHeight > fAvailableHeight)
     {
@@ -576,7 +610,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       if (nIndex < nMax)
       {
         // Outdent and one line down, except for last line
-        aContentStream.moveTextPositionByAmount (-fIndentX, -fTextHeight);
+        aContentStream.moveTextPositionByAmount (-fIndentX, -fTextHeight * m_fLineSpacing);
       }
     }
     aContentStream.endText ();
@@ -589,6 +623,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("OriginalText", m_sOriginalText)
                             .append ("ResolvedText", m_sResolvedText)
                             .append ("FontSpec", m_aFontSpec)
+                            .append ("LineSpacing", m_fLineSpacing)
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("MaxRows", m_nMaxRows)
                             .append ("VertSplittable", m_bVertSplittable)
