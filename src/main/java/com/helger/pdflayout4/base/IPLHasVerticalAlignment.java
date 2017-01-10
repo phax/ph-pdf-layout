@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout4.base;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.pdflayout4.spec.EVertAlignment;
@@ -57,8 +58,9 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
    *
    * @param fAvailableHeight
    *        The available height of the surrounding element.
-   * @return The indentation offset
+   * @return The indentation offset. Always &ge; 0.
    */
+  @Nonnegative
   default float getIndentY (final float fAvailableHeight)
   {
     return getIndentY (fAvailableHeight, getPreparedHeight ());
@@ -73,8 +75,9 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
    *        larger than fElementHeight.
    * @param fElementHeight
    *        The height of the element to align.
-   * @return The indentation offset
+   * @return The indentation offset. Always &ge; 0.
    */
+  @Nonnegative
   default float getIndentY (final float fAvailableHeight, final float fElementHeight)
   {
     switch (getVertAlign ())
@@ -82,9 +85,9 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
       case TOP:
         return 0f;
       case MIDDLE:
-        return (fAvailableHeight - fElementHeight) / 2f;
+        return Math.max ((fAvailableHeight - fElementHeight) / 2f, 0f);
       case BOTTOM:
-        return fAvailableHeight - fElementHeight;
+        return Math.max (fAvailableHeight - fElementHeight, 0f);
       default:
         throw new IllegalStateException ("Unsupported vertical alignment " + getVertAlign ());
     }

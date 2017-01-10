@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.base;
 
+import javax.annotation.Nonnull;
+
 /**
  * Base interface for block elements. They additionally have a horizontal and
  * vertical alignment.
@@ -29,5 +31,22 @@ public interface IPLBlockElement <IMPLTYPE extends IPLBlockElement <IMPLTYPE>> e
                                  IPLHasHorizontalAlignment <IMPLTYPE>,
                                  IPLHasVerticalAlignment <IMPLTYPE>
 {
-  /* empty */
+  boolean DEFAULT_FULL_WIDTH = true;
+
+  /**
+   * @return Should the element occupy the full width? The default is
+   *         {@link #DEFAULT_FULL_WIDTH}.
+   */
+  boolean isFullWidth ();
+
+  /**
+   * Set usage of full width.
+   *
+   * @param bFullWidth
+   *        <code>true</code> to enable full width, <code>false</code> to use
+   *        only what is available.
+   * @return this for chaining
+   */
+  @Nonnull
+  IMPLTYPE setFullWidth (final boolean bFullWidth);
 }

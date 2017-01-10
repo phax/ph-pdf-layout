@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout4.base;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.pdflayout4.spec.EHorzAlignment;
@@ -57,8 +58,9 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
    *
    * @param fAvailableWidth
    *        The available width of the surrounding element.
-   * @return The indentation offset
+   * @return The indentation offset. Always &ge; 0.
    */
+  @Nonnegative
   default float getIndentX (final float fAvailableWidth)
   {
     return getIndentX (fAvailableWidth, getPreparedWidth ());
@@ -73,8 +75,9 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
    *        larger than fElementWidth.
    * @param fElementWidth
    *        The width of the element to align.
-   * @return The indentation offset
+   * @return The indentation offset. Always &ge; 0.
    */
+  @Nonnegative
   default float getIndentX (final float fAvailableWidth, final float fElementWidth)
   {
     switch (getHorzAlign ())
@@ -82,9 +85,9 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
       case LEFT:
         return 0f;
       case CENTER:
-        return (fAvailableWidth - fElementWidth) / 2;
+        return Math.max ((fAvailableWidth - fElementWidth) / 2, 0f);
       case RIGHT:
-        return fAvailableWidth - fElementWidth;
+        return Math.max (fAvailableWidth - fElementWidth, 0f);
       default:
         throw new IllegalStateException ("Unsupported horizontal alignment " + getHorzAlign ());
     }

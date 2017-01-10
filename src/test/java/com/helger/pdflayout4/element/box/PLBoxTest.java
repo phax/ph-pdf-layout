@@ -122,6 +122,18 @@ public final class PLBoxTest
                                                                                                               5))
                                                                              .setFillColor (Color.GRAY));
 
+    aPS1.addElement (new PLBox (new PLBox (new PLText ("Text with MBP in Box in Box",
+                                                       r10).setBorder (Color.RED)
+                                                           .setMargin (5)
+                                                           .setPadding (5)
+                                                           .setFillColor (Color.PINK)).setPadding (2)
+                                                                                      .setMargin (5)
+                                                                                      .setFillColor (Color.YELLOW)
+                                                                                      .setBorder (Color.RED)).setPadding (2)
+                                                                                                             .setMargin (5)
+                                                                                                             .setFillColor (Color.GREEN)
+                                                                                                             .setBorder (Color.BLUE));
+
     final BorderStyleSpec aBSS = new BorderStyleSpec (Color.BLACK, 1);
     aPS1.addElement (new PLBox (new PLText ("Table cell example",
                                             r10).setBorder (Color.RED)

@@ -167,11 +167,12 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
-    if (m_aElement == null)
-      return SizeSpec.SIZE0;
-
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
+
+    final boolean bFullWidth = isFullWidth ();
+    if (m_aElement == null)
+      return bFullWidth ? new SizeSpec (fElementWidth, 0f) : SizeSpec.SIZE0;
 
     final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (),
                                                                    fElementWidth,
@@ -180,7 +181,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
     // Add the outer stuff of the contained element as this elements prepared
     // size
-    return m_aElementPreparedSize.plus (m_aElement.getOutlineXSum (), m_aElement.getOutlineYSum ());
+    return new SizeSpec (bFullWidth ? fElementWidth : m_aElementPreparedSize.getWidth () + m_aElement.getOutlineXSum (),
+                         m_aElementPreparedSize.getHeight () + m_aElement.getOutlineYSum ());
   }
 
   @Override

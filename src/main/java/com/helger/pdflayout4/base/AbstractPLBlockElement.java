@@ -36,6 +36,8 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
 {
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
+  // Always use the full width?
+  private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
 
   public AbstractPLBlockElement ()
   {}
@@ -77,12 +79,25 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
     return thisAsT ();
   }
 
+  public boolean isFullWidth ()
+  {
+    return m_bFullWidth;
+  }
+
+  @Nonnull
+  public IMPLTYPE setFullWidth (final boolean bFullWidth)
+  {
+    m_bFullWidth = bFullWidth;
+    return thisAsT ();
+  }
+
   @Override
   public String toString ()
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("VertAlign", m_eVertAlign)
+                            .append ("FullWidth", m_bFullWidth)
                             .toString ();
   }
 }
