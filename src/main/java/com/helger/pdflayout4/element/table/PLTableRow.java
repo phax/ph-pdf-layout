@@ -42,7 +42,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
 
   @Override
   @Nonnull
-  protected PLTableCell splitVertCreateEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
+  protected PLTableCell internalCreateVertSplitEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
                                                      final float fWidth,
                                                      final float fHeight)
   {

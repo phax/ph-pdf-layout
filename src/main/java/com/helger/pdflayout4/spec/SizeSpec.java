@@ -116,6 +116,20 @@ public class SizeSpec implements Serializable
     return minus (aOther.m_fWidth, aOther.m_fHeight);
   }
 
+  @Nonnull
+  @CheckReturnValue
+  public SizeSpec withWidth (final float fWidth)
+  {
+    return new SizeSpec (fWidth, m_fHeight);
+  }
+
+  @Nonnull
+  @CheckReturnValue
+  public SizeSpec withHeight (final float fHeight)
+  {
+    return new SizeSpec (m_fWidth, fHeight);
+  }
+
   @Override
   public boolean equals (final Object o)
   {
@@ -136,7 +150,7 @@ public class SizeSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("width", m_fWidth).append ("height", m_fHeight).toString ();
+    return new ToStringGenerator (null).append ("Width", m_fWidth).append ("Height", m_fHeight).toString ();
   }
 
   @Nonnull
