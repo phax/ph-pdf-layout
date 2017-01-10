@@ -155,7 +155,14 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   @Nonnull
   protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
   {
-    final SizeSpec aRenderSize = super.getRenderSize (aPreparedSize);
+    SizeSpec aRenderSize = super.getRenderSize (aPreparedSize);
+
+    if (isFullWidth ())
+    {
+      // Change render size before render offset, so that internal alignment
+      // works
+      aRenderSize = aRenderSize.withWidth (getPrepareAvailableSize ().getWidth () - getOutlineXSum ());
+    }
 
     // Handle horizontal and vertical alignment here
     m_aRenderOffset = new SizeSpec (getIndentX (aRenderSize.getWidth (), aPreparedSize.getWidth ()),
@@ -170,9 +177,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
-    final boolean bFullWidth = isFullWidth ();
     if (m_aElement == null)
-      return bFullWidth ? new SizeSpec (fElementWidth, 0f) : SizeSpec.SIZE0;
+      return SizeSpec.SIZE0;
 
     final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (),
                                                                    fElementWidth,
@@ -181,7 +187,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
     // Add the outer stuff of the contained element as this elements prepared
     // size
-    return new SizeSpec (bFullWidth ? fElementWidth : m_aElementPreparedSize.getWidth () + m_aElement.getOutlineXSum (),
+    return new SizeSpec (m_aElementPreparedSize.getWidth () +
+                         m_aElement.getOutlineXSum (),
                          m_aElementPreparedSize.getHeight () + m_aElement.getOutlineYSum ());
   }
 
