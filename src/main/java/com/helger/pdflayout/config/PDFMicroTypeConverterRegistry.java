@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout.config;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 
 import com.helger.pdflayout.spec.BorderSpec;
@@ -50,7 +48,6 @@ public final class PDFMicroTypeConverterRegistry
     // Details
     aRegistry.registerMicroElementTypeConverter (BorderSpec.class, new BorderSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (BorderStyleSpec.class, new BorderStyleSpecMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (Color.class, new ColorMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (FontSpec.class, new FontSpecMicroTypeConverter (aPreloadFontResolver));
     aRegistry.registerMicroElementTypeConverter (LineDashPatternSpec.class,
                                                  new LineDashPatternSpecMicroTypeConverter ());
