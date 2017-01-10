@@ -12,6 +12,7 @@ Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_
     * Block elements use full width now by default
     * Improved placeholder handling in text preparation
   * v4.0.0 Beta 3 - 2017-01-10
+    * Binds to ph-commons 8.6.x
     * Fixed a height problem with vertical split HBoxes
     * Simplified class hierarchy for table rows
     * Made font fallback code point more flexible
@@ -29,6 +30,9 @@ Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_
     * New class design for tables, so that each table cell is automatically represented by a box, each table row is a separate object
     * Added a simple grid system for tables to build the default grids easily
     * Added new "auto" width/height for columns/rows
+    * Updated to PDFBox 2.0.4
+  * v3.5.2 - 2017-01-10
+    * Binds to ph-commons 8.6.x
     * Updated to PDFBox 2.0.4
   * v3.5.1 - 2016-10-07
     * Fixed a rendering flaw with borders
@@ -52,7 +56,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>3.5.1</version>
+  <version>3.5.2</version>
 </dependency>
 ```
 or
