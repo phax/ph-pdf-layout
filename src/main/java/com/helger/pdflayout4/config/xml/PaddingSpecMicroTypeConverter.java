@@ -22,7 +22,6 @@ import javax.annotation.Nullable;
 import com.helger.pdflayout4.spec.PaddingSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
-import com.helger.xml.microdom.convert.IMicroTypeConverter;
 
 /**
  * Micro type converter for class {@link PaddingSpec}.
@@ -30,12 +29,8 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class PaddingSpecMicroTypeConverter implements IMicroTypeConverter
+public final class PaddingSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter
 {
-  private static final String ATTR_TOP = "top";
-  private static final String ATTR_RIGHT = "right";
-  private static final String ATTR_BOTTOM = "bottom";
-  private static final String ATTR_LEFT = "left";
 
   @Nonnull
   public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
@@ -44,22 +39,13 @@ public final class PaddingSpecMicroTypeConverter implements IMicroTypeConverter
   {
     final PaddingSpec aValue = (PaddingSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
-
-    aElement.setAttribute (ATTR_TOP, aValue.getTop ());
-    aElement.setAttribute (ATTR_RIGHT, aValue.getRight ());
-    aElement.setAttribute (ATTR_BOTTOM, aValue.getBottom ());
-    aElement.setAttribute (ATTR_LEFT, aValue.getLeft ());
-
+    fillMicroElement (aValue, aElement);
     return aElement;
   }
 
   @Nonnull
   public PaddingSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
-    final float fTop = aElement.getAttributeValueAsFloat (ATTR_TOP, Float.NaN);
-    final float fRight = aElement.getAttributeValueAsFloat (ATTR_RIGHT, Float.NaN);
-    final float fBottom = aElement.getAttributeValueAsFloat (ATTR_BOTTOM, Float.NaN);
-    final float fLeft = aElement.getAttributeValueAsFloat (ATTR_LEFT, Float.NaN);
-    return new PaddingSpec (fTop, fRight, fBottom, fLeft);
+    return new PaddingSpec (convertToRectSpec (aElement));
   }
 }
