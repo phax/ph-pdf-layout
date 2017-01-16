@@ -34,7 +34,7 @@ public class PaddingSpec extends AbstractRectSpec
 {
   public static final PaddingSpec PADDING0 = new PaddingSpec (0, 0, 0, 0);
 
-  public PaddingSpec (@Nonnull final PaddingSpec aOther)
+  public PaddingSpec (@Nonnull final AbstractRectSpec aOther)
   {
     super (aOther);
   }

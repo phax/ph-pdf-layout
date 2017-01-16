@@ -34,7 +34,7 @@ public class MarginSpec extends AbstractRectSpec
 {
   public static final MarginSpec MARGIN0 = new MarginSpec (0, 0, 0, 0);
 
-  public MarginSpec (@Nonnull final MarginSpec aOther)
+  public MarginSpec (@Nonnull final AbstractRectSpec aOther)
   {
     super (aOther);
   }
