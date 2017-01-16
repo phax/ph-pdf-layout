@@ -59,7 +59,10 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter
 
     aElement.setAttribute (ATTR_PRELOAD_FONT_ID, aValue.getPreloadFontID ());
     aElement.setAttribute (ATTR_FONT_SIZE, aValue.getFontSize ());
-    aElement.appendChild (MicroTypeConverter.convertToMicroElement (aValue.getColor (), sNamespaceURI, ELEMENT_COLOR));
+
+    final Color aColor = aValue.getColor ();
+    if (aColor != FontSpec.DEFAULT_COLOR)
+      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
     return aElement;
   }
 
@@ -72,8 +75,10 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter
       throw new IllegalStateException ("Failed to resolve preloadfont with ID '" + sPreloadFontID + "!");
 
     final float fFontSize = aElement.getAttributeValueAsFloat (ATTR_FONT_SIZE, Float.NaN);
+
     final Color aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
-                                                             Color.class);
+                                                             Color.class,
+                                                             FontSpec.DEFAULT_COLOR);
     return new FontSpec (aPreloadFont, fFontSize, aColor);
   }
 }

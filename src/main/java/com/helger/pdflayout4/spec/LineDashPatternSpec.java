@@ -74,7 +74,8 @@ public class LineDashPatternSpec implements Serializable
   public LineDashPatternSpec (@Nonnull final float [] aPattern, final float fPhase)
   {
     ValueEnforcer.notNull (aPattern, "Pattern");
-    ValueEnforcer.isTrue (aPattern.length <= 2, () -> "Too many patterns (" + aPattern.length + ") provided");
+    ValueEnforcer.isTrue (aPattern.length <= 2,
+                          () -> "Too many patterns (" + aPattern.length + ") provided. At max 2 items are allowed.");
     for (final float fPatternValue : aPattern)
       ValueEnforcer.isGT0 (fPatternValue, "PatternValue");
 
