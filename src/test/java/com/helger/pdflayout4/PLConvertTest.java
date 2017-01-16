@@ -21,8 +21,6 @@ import static org.junit.Assert.assertEquals;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Test;
 
-import com.helger.pdflayout4.PLConvert;
-
 /**
  * Test class for class {@link PLConvert}.
  *
@@ -35,5 +33,10 @@ public final class PLConvertTest
   {
     assertEquals (PDRectangle.A4.getWidth (), PLConvert.mm2units (210), 0.001f);
     assertEquals (PDRectangle.A4.getWidth (), PLConvert.cm2units (21), 0.001f);
+
+    assertEquals (210f, PLConvert.units2mm (PDRectangle.A4.getWidth ()), 0.001f);
+    assertEquals (297f, PLConvert.units2mm (PDRectangle.A4.getHeight ()), 0.001f);
+    assertEquals (21.0f, PLConvert.units2cm (PDRectangle.A4.getWidth ()), 0.001f);
+    assertEquals (29.7f, PLConvert.units2cm (PDRectangle.A4.getHeight ()), 0.001f);
   }
 }
