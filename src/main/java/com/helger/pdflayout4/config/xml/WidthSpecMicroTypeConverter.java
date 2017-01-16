@@ -45,7 +45,8 @@ public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());
-    aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
+    if (aValue.isAbsolute ())
+      aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
     return aElement;
   }
 
@@ -57,7 +58,7 @@ public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter
     if (eWidthType == null)
       throw new IllegalStateException ("Failed to resolve width type with ID '" + sTypeID + "!");
 
-    final float fValue = aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN);
+    final float fValue = eWidthType.isValueRequired () ? aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN) : 0;
     return new WidthSpec (eWidthType, fValue);
   }
 }

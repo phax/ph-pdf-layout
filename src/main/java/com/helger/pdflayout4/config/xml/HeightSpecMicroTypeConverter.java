@@ -44,7 +44,8 @@ public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());
-    aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
+    if (aValue.isAbsolute ())
+      aElement.setAttribute (ATTR_VALUE, aValue.getValue ());
     return aElement;
   }
 
@@ -56,7 +57,7 @@ public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter
     if (eHeightType == null)
       throw new IllegalStateException ("Failed to resolve height type with ID '" + sTypeID + "!");
 
-    final float fValue = aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN);
+    final float fValue = eHeightType.isValueRequired () ? aElement.getAttributeValueAsFloat (ATTR_VALUE, Float.NaN) : 0;
     return new HeightSpec (eHeightType, fValue);
   }
 }

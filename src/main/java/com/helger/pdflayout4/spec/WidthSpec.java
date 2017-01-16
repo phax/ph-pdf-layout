@@ -75,11 +75,12 @@ public class WidthSpec implements Serializable
   }
 
   /**
-   * @return <code>true</code> if type is 'absolute' or 'percentage'
+   * @return <code>true</code> if type is 'absolute' or 'percentage'. Only
+   *         absolute entries need to provide a value!
    */
   public boolean isAbsolute ()
   {
-    return m_eType == EValueUOMType.ABSOLUTE || m_eType == EValueUOMType.PERCENTAGE;
+    return m_eType.isValueRequired ();
   }
 
   /**
@@ -116,6 +117,7 @@ public class WidthSpec implements Serializable
    * @param fAvailableWidth
    *        The available width.
    * @return The effective width to use.
+   * @see #isAbsolute()
    */
   @Nonnegative
   public float getEffectiveValue (final float fAvailableWidth)
