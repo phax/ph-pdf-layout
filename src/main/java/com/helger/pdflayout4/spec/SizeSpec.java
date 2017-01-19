@@ -40,7 +40,8 @@ import com.helger.pdflayout4.PLConvert;
 @MustImplementEqualsAndHashcode
 public class SizeSpec implements Serializable
 {
-  public static final SizeSpec SIZE0 = new SizeSpec (0, 0);
+  public static final float DEFAULT_FLOAT = 0f;
+  public static final SizeSpec SIZE0 = new SizeSpec (DEFAULT_FLOAT, DEFAULT_FLOAT);
   public static final SizeSpec SIZE_MAX = new SizeSpec (Float.MAX_VALUE, Float.MAX_VALUE);
 
   private final float m_fWidth;
@@ -162,5 +163,17 @@ public class SizeSpec implements Serializable
   public static SizeSpec createMM (final float fWidth, final float fHeight)
   {
     return new SizeSpec (PLConvert.mm2units (fWidth), PLConvert.mm2units (fHeight));
+  }
+
+  @Nonnull
+  public static SizeSpec width (final float fWidth)
+  {
+    return new SizeSpec (fWidth, DEFAULT_FLOAT);
+  }
+
+  @Nonnull
+  public static SizeSpec height (final float fHeight)
+  {
+    return new SizeSpec (DEFAULT_FLOAT, fHeight);
   }
 }

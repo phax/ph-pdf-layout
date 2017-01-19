@@ -32,23 +32,59 @@ import com.helger.pdflayout4.PLConvert;
 @MustImplementEqualsAndHashcode
 public class PaddingSpec extends AbstractRectSpec
 {
-  public static final PaddingSpec PADDING0 = new PaddingSpec (0, 0, 0, 0);
+  public static final float DEFAULT_FLOAT = 0f;
+  public static final PaddingSpec PADDING0 = new PaddingSpec (DEFAULT_FLOAT,
+                                                              DEFAULT_FLOAT,
+                                                              DEFAULT_FLOAT,
+                                                              DEFAULT_FLOAT);
 
+  /**
+   * Pseudo copy constructor.
+   *
+   * @param aOther
+   *        Value to copy from. May not be <code>null</code>.
+   */
   public PaddingSpec (@Nonnull final AbstractRectSpec aOther)
   {
     super (aOther);
   }
 
+  /**
+   * Constructor with the same value for all axis.
+   *
+   * @param f
+   *        value for top, right, bottom, left
+   */
   public PaddingSpec (final float f)
   {
     this (f, f);
   }
 
+  /**
+   * Constructor with the same value for X and Y axis.
+   *
+   * @param fY
+   *        top and bottom value
+   * @param fX
+   *        left and right value
+   */
   public PaddingSpec (final float fY, final float fX)
   {
     this (fY, fX, fY, fX);
   }
 
+  /**
+   * Constructor with explicit values
+   *
+   * @param fTop
+   *        top value
+   * @param fRight
+   *        right value
+   * @param fBottom
+   *        bottom value
+   * @param fLeft
+   *        left value
+   */
   public PaddingSpec (final float fTop, final float fRight, final float fBottom, final float fLeft)
   {
     super (fTop, fRight, fBottom, fLeft);
@@ -105,5 +141,29 @@ public class PaddingSpec extends AbstractRectSpec
                             PLConvert.mm2units (fRight),
                             PLConvert.mm2units (fBottom),
                             PLConvert.mm2units (fLeft));
+  }
+
+  @Nonnull
+  public static PaddingSpec top (final float fTop)
+  {
+    return new PaddingSpec (fTop, DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT);
+  }
+
+  @Nonnull
+  public static PaddingSpec right (final float fRight)
+  {
+    return new PaddingSpec (DEFAULT_FLOAT, fRight, DEFAULT_FLOAT, DEFAULT_FLOAT);
+  }
+
+  @Nonnull
+  public static PaddingSpec bottom (final float fBottom)
+  {
+    return new PaddingSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, fBottom, DEFAULT_FLOAT);
+  }
+
+  @Nonnull
+  public static PaddingSpec left (final float fLeft)
+  {
+    return new PaddingSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT, fLeft);
   }
 }

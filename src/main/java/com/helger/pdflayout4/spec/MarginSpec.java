@@ -32,23 +32,56 @@ import com.helger.pdflayout4.PLConvert;
 @MustImplementEqualsAndHashcode
 public class MarginSpec extends AbstractRectSpec
 {
-  public static final MarginSpec MARGIN0 = new MarginSpec (0, 0, 0, 0);
+  public static final float DEFAULT_FLOAT = 0f;
+  public static final MarginSpec MARGIN0 = new MarginSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT);
 
+  /**
+   * Pseudo copy constructor.
+   *
+   * @param aOther
+   *        Value to copy from. May not be <code>null</code>.
+   */
   public MarginSpec (@Nonnull final AbstractRectSpec aOther)
   {
     super (aOther);
   }
 
+  /**
+   * Constructor with the same value for all axis.
+   *
+   * @param f
+   *        value for top, right, bottom, left
+   */
   public MarginSpec (final float f)
   {
     this (f, f);
   }
 
+  /**
+   * Constructor with the same value for X and Y axis.
+   *
+   * @param fY
+   *        top and bottom value
+   * @param fX
+   *        left and right value
+   */
   public MarginSpec (final float fY, final float fX)
   {
     this (fY, fX, fY, fX);
   }
 
+  /**
+   * Constructor with explicit values
+   *
+   * @param fTop
+   *        top value
+   * @param fRight
+   *        right value
+   * @param fBottom
+   *        bottom value
+   * @param fLeft
+   *        left value
+   */
   public MarginSpec (final float fTop, final float fRight, final float fBottom, final float fLeft)
   {
     super (fTop, fRight, fBottom, fLeft);
@@ -105,5 +138,29 @@ public class MarginSpec extends AbstractRectSpec
                            PLConvert.mm2units (fRight),
                            PLConvert.mm2units (fBottom),
                            PLConvert.mm2units (fLeft));
+  }
+
+  @Nonnull
+  public static MarginSpec top (final float fTop)
+  {
+    return new MarginSpec (fTop, DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT);
+  }
+
+  @Nonnull
+  public static MarginSpec right (final float fRight)
+  {
+    return new MarginSpec (DEFAULT_FLOAT, fRight, DEFAULT_FLOAT, DEFAULT_FLOAT);
+  }
+
+  @Nonnull
+  public static MarginSpec bottom (final float fBottom)
+  {
+    return new MarginSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, fBottom, DEFAULT_FLOAT);
+  }
+
+  @Nonnull
+  public static MarginSpec left (final float fLeft)
+  {
+    return new MarginSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT, fLeft);
   }
 }

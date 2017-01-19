@@ -38,7 +38,7 @@ import com.helger.commons.string.ToStringGenerator;
 public class BorderSpec implements Serializable
 {
   /** Represents no border at all! */
-  public static final BorderSpec BORDER0 = new BorderSpec (null);
+  public static final BorderSpec BORDER0 = new BorderSpec (null, null, null, null);
 
   private final BorderStyleSpec m_aTop;
   private final BorderStyleSpec m_aRight;
@@ -275,5 +275,29 @@ public class BorderSpec implements Serializable
                                        .appendIfNotNull ("right", m_aRight)
                                        .appendIfNotNull ("bottom", m_aBottom)
                                        .toString ();
+  }
+
+  @Nonnull
+  public static BorderSpec top (@Nullable final BorderStyleSpec aTop)
+  {
+    return new BorderSpec (aTop, null, null, null);
+  }
+
+  @Nonnull
+  public static BorderSpec right (@Nullable final BorderStyleSpec aRight)
+  {
+    return new BorderSpec (null, aRight, null, null);
+  }
+
+  @Nonnull
+  public static BorderSpec bottom (@Nullable final BorderStyleSpec aBottom)
+  {
+    return new BorderSpec (null, null, aBottom, null);
+  }
+
+  @Nonnull
+  public static BorderSpec left (@Nullable final BorderStyleSpec aLeft)
+  {
+    return new BorderSpec (null, null, null, aLeft);
   }
 }
