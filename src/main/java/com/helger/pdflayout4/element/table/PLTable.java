@@ -111,7 +111,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                                               " and " +
                                               aWidth.getType ());
     if (eWidthType == EValueUOMType.AUTO)
-      throw new IllegalArgumentException ("Width type auto is not allowed for tables!");
+      throw new IllegalArgumentException ("Width type auto is not allowed for tables! Use type star instead!");
     m_aWidths = new CommonsArrayList <> (aWidths);
     m_eWidthType = eWidthType;
   }
