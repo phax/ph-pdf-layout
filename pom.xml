@@ -170,6 +170,12 @@
       <version>${pdfbox.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>pdfbox-app</artifactId>
+      <version>${pdfbox.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <resources>
