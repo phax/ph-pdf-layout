@@ -8,6 +8,8 @@ Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and includ
 Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_112 or later should work.
 
 #News
+  * v4.0.0 - 2017-02-21
+    * No change
   * v4.0.0 Beta 5 - 2017-01-19
     * Improved XML serialization slightly
     * Fixed an NPE with PLBox without a contained element
