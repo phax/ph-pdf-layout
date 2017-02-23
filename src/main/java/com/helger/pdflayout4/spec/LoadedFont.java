@@ -423,6 +423,6 @@ public class LoadedFont
                                        .append ("BBHeight", m_fBBHeight)
                                        .append ("Descent", m_fDescent)
                                        .append ("FontWillBeSubset", m_bFontWillBeSubset)
-                                       .toString ();
+                                       .getToString ();
   }
 }

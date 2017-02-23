@@ -258,7 +258,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
                                        .appendIfNotNull ("FontResource", m_aFontRes)
                                        .append ("Embed", m_bEmbed)
                                        .append ("FallbackCodePoint", m_nFallbackCodePoint)
-                                       .toString ();
+                                       .getToString ();
   }
 
   @Nonnull

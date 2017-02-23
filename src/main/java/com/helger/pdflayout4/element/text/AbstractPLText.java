@@ -302,7 +302,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       else
       {
         // Maximum number of lines exceeded - copy only the relevant lines
-        m_aPreparedLines = new CommonsArrayList<> (m_nMaxRows);
+        m_aPreparedLines = new CommonsArrayList <> (m_nMaxRows);
         for (int i = 0; i < m_nMaxRows; ++i)
           m_aPreparedLines.add (aLines.get (i));
       }
@@ -416,7 +416,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public ICommonsList <TextAndWidthSpec> getAllPreparedLinesUnmodified ()
   {
     internalCheckAlreadyPrepared ();
-    return new CommonsArrayList<> (m_aPreparedLinesUnmodified);
+    return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
   }
 
   protected final float getDisplayHeightOfLineCount (@Nonnegative final int nLineCount)
@@ -439,7 +439,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     ValueEnforcer.notEmpty (aLines, "Lines");
 
     // Create a copy to be independent!
-    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList<> (aLines);
+    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList <> (aLines);
 
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLineCount (aLineCopy.size ()));
@@ -641,6 +641,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("MaxRows", m_nMaxRows)
                             .append ("VertSplittable", m_bVertSplittable)
                             .append ("ReplacePlaceholder", m_bReplacePlaceholder)
-                            .toString ();
+                            .getToString ();
   }
 }

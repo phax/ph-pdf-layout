@@ -323,6 +323,6 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                             .appendIfNotNull ("PrepareAvailableSize", m_aPrepareAvailableSize)
                             .appendIfNotNull ("PreparedSize", m_aPreparedSize)
                             .appendIfNotNull ("RenderSize", m_aRenderSize)
-                            .toString ();
+                            .getToString ();
   }
 }

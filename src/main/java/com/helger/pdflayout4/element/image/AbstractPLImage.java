@@ -137,6 +137,6 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("ImageWidth", m_fImageWidth)
                             .append ("ImageHeight", m_fImageHeight)
-                            .toString ();
+                            .getToString ();
   }
 }

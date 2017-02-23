@@ -88,7 +88,7 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("Width", m_fWidth).toString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("Width", m_fWidth).getToString ();
   }
 
   @Nonnull

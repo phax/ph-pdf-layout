@@ -149,6 +149,6 @@ public abstract class AbstractRectSpec implements Serializable
                                        .append ("Left", m_fLeft)
                                        .append ("XSum", m_fXSum)
                                        .append ("YSum", m_fYSum)
-                                       .toString ();
+                                       .getToString ();
   }
 }

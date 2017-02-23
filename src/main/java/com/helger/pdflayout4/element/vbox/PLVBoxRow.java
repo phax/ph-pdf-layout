@@ -66,6 +66,6 @@ public final class PLVBoxRow implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Element", m_aElement).append ("Height", m_aHeight).toString ();
+    return new ToStringGenerator (this).append ("Element", m_aElement).append ("Height", m_aHeight).getToString ();
   }
 }

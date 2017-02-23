@@ -249,6 +249,6 @@ public class PagePreRenderContext
                                        .append ("TotalPageIndex", m_nTotalPageIndex)
                                        .append ("TotalPageCount", m_nTotalPageCount)
                                        .append ("Placeholders", m_aPlaceholders)
-                                       .toString ();
+                                       .getToString ();
   }
 }

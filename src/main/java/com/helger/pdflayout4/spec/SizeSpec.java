@@ -150,7 +150,7 @@ public class SizeSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (null).append ("Width", m_fWidth).append ("Height", m_fHeight).toString ();
+    return new ToStringGenerator (null).append ("Width", m_fWidth).append ("Height", m_fHeight).getToString ();
   }
 
   @Nonnull

@@ -98,6 +98,6 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("VertAlign", m_eVertAlign)
                             .append ("FullWidth", m_bFullWidth)
-                            .toString ();
+                            .getToString ();
   }
 }

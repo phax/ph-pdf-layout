@@ -80,6 +80,6 @@ public class PLStreamImage extends AbstractPLImage <PLStreamImage>
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("IIS", m_aIIS).toString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("IIS", m_aIIS).getToString ();
   }
 }

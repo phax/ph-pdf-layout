@@ -80,6 +80,6 @@ public class PLImage extends AbstractPLImage <PLImage>
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("Image", m_aImage).toString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("Image", m_aImage).getToString ();
   }
 }

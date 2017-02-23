@@ -73,6 +73,6 @@ public final class PLHBoxColumn implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Element", m_aElement).append ("Width", m_aWidth).toString ();
+    return new ToStringGenerator (this).append ("Element", m_aElement).append ("Width", m_aWidth).getToString ();
   }
 }

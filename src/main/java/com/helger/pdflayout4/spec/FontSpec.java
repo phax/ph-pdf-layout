@@ -176,6 +176,6 @@ public class FontSpec implements Serializable
     return new ToStringGenerator (this).append ("PreloadFont", m_aPreloadFont)
                                        .append ("FontSize", m_fFontSize)
                                        .append ("Color", m_aColor)
-                                       .toString ();
+                                       .getToString ();
   }
 }

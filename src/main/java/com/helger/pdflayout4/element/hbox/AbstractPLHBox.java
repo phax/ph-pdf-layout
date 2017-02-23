@@ -790,6 +790,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                             .append ("VertSplittable", m_bVertSplittable)
                             .appendIfNotNull ("PreparedColumnSize", m_aPreparedColumnSizes)
                             .appendIfNotNull ("PreparedElementSize", m_aPreparedElementSizes)
-                            .toString ();
+                            .getToString ();
   }
 }

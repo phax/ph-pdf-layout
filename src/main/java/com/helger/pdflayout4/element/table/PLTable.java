@@ -479,7 +479,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                             .append ("Width", m_aWidths)
                             .append ("WidthType", m_eWidthType)
                             .append ("Margin", m_aMargin)
-                            .toString ();
+                            .getToString ();
   }
 
   /**

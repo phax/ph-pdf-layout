@@ -332,6 +332,6 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
                             .append ("VertSplittable", m_bVertSplittable)
                             .appendIfNotNull ("ElementPreparedSize", m_aElementPreparedSize)
                             .appendIfNotNull ("RenderOffset", m_aRenderOffset)
-                            .toString ();
+                            .getToString ();
   }
 }

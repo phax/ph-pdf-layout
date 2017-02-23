@@ -155,7 +155,7 @@ public class WidthSpec implements Serializable
   {
     return new ToStringGenerator (null).append ("Type", m_eType)
                                        .appendIf ("Value", m_fValue, x -> isAbsolute ())
-                                       .toString ();
+                                       .getToString ();
   }
 
   /**

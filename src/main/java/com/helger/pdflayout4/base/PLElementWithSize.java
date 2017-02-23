@@ -137,6 +137,6 @@ public final class PLElementWithSize implements Serializable
     return new ToStringGenerator (this).append ("element", m_aElement)
                                        .append ("size", m_aSize)
                                        .append ("sizeFull", m_aSizeFull)
-                                       .toString ();
+                                       .getToString ();
   }
 }

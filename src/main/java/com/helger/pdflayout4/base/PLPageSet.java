@@ -792,6 +792,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                             .appendIfNotNull ("PageFooter", m_aPageFooter)
                             .appendIfNotNull ("PRCCustomizer", m_aPRCCustomizer)
                             .appendIfNotNull ("RCCustomizer", m_aRCCustomizer)
-                            .toString ();
+                            .getToString ();
   }
 }

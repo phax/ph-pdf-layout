@@ -160,7 +160,7 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
                                        .append ("LastRow", m_nLastRow)
                                        .append ("FirstColumn", m_nFirstCol)
                                        .append ("LastColumn", m_nLastCol)
-                                       .toString ();
+                                       .getToString ();
   }
 
   @Override

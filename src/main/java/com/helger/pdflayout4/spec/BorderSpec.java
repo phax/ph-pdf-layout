@@ -274,7 +274,7 @@ public class BorderSpec implements Serializable
                                        .appendIfNotNull ("top", m_aTop)
                                        .appendIfNotNull ("right", m_aRight)
                                        .appendIfNotNull ("bottom", m_aBottom)
-                                       .toString ();
+                                       .getToString ();
   }
 
   @Nonnull

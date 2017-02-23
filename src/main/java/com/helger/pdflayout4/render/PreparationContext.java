@@ -88,6 +88,6 @@ public final class PreparationContext
     return new ToStringGenerator (this).append ("GlobalCtx", m_aGlobalCtx)
                                        .append ("AvailableWidth", m_fAvailableWidth)
                                        .append ("AvailableHeight", m_fAvailableHeight)
-                                       .toString ();
+                                       .getToString ();
   }
 }

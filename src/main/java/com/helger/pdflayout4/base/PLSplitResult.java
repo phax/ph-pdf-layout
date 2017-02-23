@@ -59,6 +59,6 @@ public class PLSplitResult
   {
     return new ToStringGenerator (this).append ("firstElement", m_aFirstElement)
                                        .append ("secondElement", m_aSecondElement)
-                                       .toString ();
+                                       .getToString ();
   }
 }
