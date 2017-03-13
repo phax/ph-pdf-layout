@@ -23,16 +23,41 @@ import com.helger.pdflayout4.base.IPLRenderableObject;
 import com.helger.pdflayout4.spec.HeightSpec;
 
 /**
- * Vertical box - groups several rows.
+ * Vertical box - groups several rows without having layout information itself.
  *
  * @author Philip Helger
  */
 public class PLVBox extends AbstractPLVBox <PLVBox>
 {
+  /**
+   * Default constructor for an empty VBox.
+   */
   public PLVBox ()
   {}
 
+  /**
+   * Constructor with elements so that each element constitutes a new row with
+   * auto-height.
+   *
+   * @param aElements
+   *        The elements for which rows should be created.
+   */
   public PLVBox (@Nullable final IPLRenderableObject <?>... aElements)
+  {
+    if (aElements != null)
+      for (final IPLRenderableObject <?> aElement : aElements)
+        addRow (aElement, HeightSpec.auto ());
+  }
+
+  /**
+   * Constructor with elements so that each element constitutes a new row with
+   * auto-height.
+   *
+   * @param aElements
+   *        The elements for which rows should be created.
+   * @since 4.0.1
+   */
+  public PLVBox (@Nullable final Iterable <? extends IPLRenderableObject <?>> aElements)
   {
     if (aElements != null)
       for (final IPLRenderableObject <?> aElement : aElements)

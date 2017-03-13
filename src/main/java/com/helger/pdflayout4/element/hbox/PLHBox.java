@@ -19,12 +19,16 @@ package com.helger.pdflayout4.element.hbox;
 import javax.annotation.Nonnull;
 
 /**
- * Horizontal box - groups several columns.
+ * Horizontal box - groups several columns without having layout information
+ * itself.
  *
  * @author Philip Helger
  */
 public class PLHBox extends AbstractPLHBox <PLHBox>
 {
+  /**
+   * Default constructor for an empty HBox.
+   */
   public PLHBox ()
   {}
 

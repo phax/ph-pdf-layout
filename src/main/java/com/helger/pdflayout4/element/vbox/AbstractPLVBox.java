@@ -80,7 +80,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
   // All the rows of this VBox
-  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
+  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
   // Vertical splittable?
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   // Header rows to be repeated after a split
@@ -260,7 +260,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return the created row
    */
   @Nonnull
-  public PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
+  public final PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement,
+                                          @Nonnull final HeightSpec aHeight)
   {
     internalCheckNotPrepared ();
     return _addAndReturnRow (-1, aElement, aHeight);
@@ -289,7 +290,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return this for chaining
    */
   @Nonnull
-  public IMPLTYPE addRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
+  public final IMPLTYPE addRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
   {
     addAndReturnRow (aElement, aHeight);
     return thisAsT ();
@@ -736,8 +737,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                                                                    .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
-    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList <> (nTotalRows);
-    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList<> (nTotalRows);
     float fUsedVBox1RowHeight = 0;
 
     // Copy all header rows to both boxes

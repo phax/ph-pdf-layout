@@ -27,8 +27,8 @@ import com.helger.pdflayout4.base.IPLRenderableObject;
 import com.helger.pdflayout4.spec.WidthSpec;
 
 /**
- * This class represents a single column within a HBox. This is a pseudo element
- * and does not have a padding, margin or border!
+ * This class represents a single column within an {@link PLHBox}. This is a
+ * pseudo element and does not have a padding, margin or border!
  *
  * @author Philip Helger
  */
