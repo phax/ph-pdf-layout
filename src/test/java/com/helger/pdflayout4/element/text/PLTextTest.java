@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.element.text;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -106,7 +107,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-basic.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-basic.pdf")));
   }
 
   @Test
@@ -178,7 +179,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-basic-line-height.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-basic-line-height.pdf")));
   }
 
   @Test
@@ -198,7 +199,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-open-sans.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-font-open-sans.pdf")));
   }
 
   @Test
@@ -219,7 +220,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-lato2.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-font-lato2.pdf")));
   }
 
   @Test
@@ -265,7 +266,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-multiple.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-font-multiple.pdf")));
   }
 
   @Test
@@ -292,6 +293,6 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-split.pdf")));
   }
 }

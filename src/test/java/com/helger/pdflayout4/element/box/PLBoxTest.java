@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.element.box;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -163,7 +164,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-basic.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-basic.pdf")));
   }
 
   @Test
@@ -186,7 +187,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-alignment.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-alignment.pdf")));
   }
 
   @Test
@@ -211,7 +212,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-alignment-nested.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-alignment-nested.pdf")));
   }
 
   @Test
@@ -234,7 +235,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-pagebreak.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-pagebreak.pdf")));
   }
 
   @Test
@@ -256,6 +257,6 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plbox-splittable-pagebreak.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-splittable-pagebreak.pdf")));
   }
 }

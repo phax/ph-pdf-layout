@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.element.hbox;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -63,7 +64,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-star-inline.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-star-inline.pdf")));
   }
 
   @Test
@@ -82,7 +83,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-star-block.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-star-block.pdf")));
   }
 
   @Test
@@ -101,7 +102,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-perc-inline.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-perc-inline.pdf")));
   }
 
   @Test
@@ -120,7 +121,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-perc-block.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-perc-block.pdf")));
   }
 
   @Test
@@ -139,7 +140,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-abs-inline.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-abs-inline.pdf")));
   }
 
   @Test
@@ -161,7 +162,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-abs-block.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-abs-block.pdf")));
   }
 
   @Test
@@ -180,7 +181,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-auto-inline.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-auto-inline.pdf")));
   }
 
   @Test
@@ -199,7 +200,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-auto-block.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-auto-block.pdf")));
   }
 
   @Test
@@ -218,7 +219,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-auto-block-like-star.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-auto-block-like-star.pdf")));
   }
 
   @Test
@@ -284,7 +285,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-star-advanced.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-star-advanced.pdf")));
   }
 
   @Test
@@ -308,7 +309,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-splittable-text.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-splittable-text.pdf")));
   }
 
   @Test
@@ -332,7 +333,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-splittable-partially-filled.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-splittable-partially-filled.pdf")));
   }
 
   @Test
@@ -361,6 +362,6 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plhbox-alignment.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plhbox-alignment.pdf")));
   }
 }

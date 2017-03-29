@@ -17,6 +17,7 @@
 package com.helger.pdflayout4;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -167,7 +168,7 @@ public final class PageLayoutPDFTest
     aPageLayout.addPageSet (aPS1);
     aPageLayout.addPageSet (aPS2);
     aPageLayout.addPageSet (aPS3);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test1.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test1.pdf")));
   }
 
   @Test
@@ -182,7 +183,7 @@ public final class PageLayoutPDFTest
     aPageLayout.setDocumentAuthor ("Weird author äöü");
     aPageLayout.setDocumentTitle ("Special chars €!\"§$%&/()=\uFFE5");
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-properties.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-properties.pdf")));
   }
 
   @Test
@@ -256,7 +257,7 @@ public final class PageLayoutPDFTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test2.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test2.pdf")));
   }
 
   @Test
@@ -286,6 +287,6 @@ public final class PageLayoutPDFTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-din-letter.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-din-letter.pdf")));
   }
 }

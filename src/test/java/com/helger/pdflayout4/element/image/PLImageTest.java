@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.element.image;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -79,6 +80,6 @@ public final class PLImageTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plimage.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plimage.pdf")));
   }
 }

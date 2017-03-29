@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.element;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -115,7 +116,7 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-text.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-border-text.pdf")));
   }
 
   @Test
@@ -372,7 +373,7 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-hbox.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-border-hbox.pdf")));
   }
 
   @Test
@@ -626,7 +627,7 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-vbox.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-border-vbox.pdf")));
   }
 
   @Test
@@ -660,6 +661,6 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-border-header-footer.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-border-header-footer.pdf")));
   }
 }

@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.element.vbox;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -84,7 +85,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-basic.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-basic.pdf")));
   }
 
   @Test
@@ -114,7 +115,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-height-star.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-height-star.pdf")));
   }
 
   @Test
@@ -140,7 +141,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-height-star-small.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-height-star-small.pdf")));
   }
 
   @Test
@@ -225,7 +226,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-auto-advanced.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-auto-advanced.pdf")));
   }
 
   @Test
@@ -293,7 +294,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-auto-advanced-splittable.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-auto-advanced-splittable.pdf")));
   }
 
   @Test
@@ -311,7 +312,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-splittable-text.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-splittable-text.pdf")));
   }
 
   @Test
@@ -336,7 +337,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-splittable-content-splittable.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-splittable-content-splittable.pdf")));
   }
 
   @Test
@@ -361,6 +362,6 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plvbox-splittable-content-fixed.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-splittable-content-fixed.pdf")));
   }
 }

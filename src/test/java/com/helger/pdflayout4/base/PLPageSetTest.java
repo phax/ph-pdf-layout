@@ -17,6 +17,7 @@
 package com.helger.pdflayout4.base;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -64,7 +65,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-header.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-header.pdf")));
   }
 
   @Test
@@ -83,7 +84,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-header-aligned.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-header-aligned.pdf")));
   }
 
   @Test
@@ -104,7 +105,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-header-table-aligned.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-header-table-aligned.pdf")));
   }
 
   @Test
@@ -120,7 +121,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-footer.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-footer.pdf")));
   }
 
   @Test
@@ -139,7 +140,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-footer-aligned.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-footer-aligned.pdf")));
   }
 
   @Test
@@ -163,7 +164,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-both.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-both.pdf")));
   }
 
   @Test
@@ -191,7 +192,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-both-styled.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-both-styled.pdf")));
   }
 
   @Test
@@ -235,7 +236,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-placeholder.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-placeholder.pdf")));
   }
 
   @Test
@@ -261,7 +262,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-multiple-pages.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-multiple-pages.pdf")));
   }
 
   @Test
@@ -282,6 +283,6 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-plpageset-fillcolor.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-fillcolor.pdf")));
   }
 }
