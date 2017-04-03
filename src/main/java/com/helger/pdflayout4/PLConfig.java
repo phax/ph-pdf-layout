@@ -25,6 +25,11 @@ import com.helger.commons.collection.ext.ICommonsMap;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.lang.PropertiesHelper;
 
+/**
+ * Contains global configuration constants.
+ * 
+ * @author Philip Helger
+ */
 @Immutable
 public final class PLConfig
 {
@@ -40,13 +45,13 @@ public final class PLConfig
   static
   {
     String sProjectVersion = null;
-    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout-version.properties"));
+    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout4-version.properties"));
     if (p != null)
       sProjectVersion = p.get ("version");
     if (sProjectVersion == null)
     {
       sProjectVersion = "undefined";
-      s_aLogger.warn ("Failed to load version number");
+      s_aLogger.warn ("Failed to load ph-pdf-layout version number");
     }
     PROJECT_VERSION = sProjectVersion;
   }
