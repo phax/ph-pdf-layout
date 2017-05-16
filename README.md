@@ -3,7 +3,7 @@
 Java library for creating fluid page layouts with Apache PDFBox.
 
 Please check the test files to see how to create PDFs with the different elements.
-Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x.
+Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x. Note: version 3.5.2 is not actively developed - in the meantime ph-pdf-layout 4 is the way forward.
 
 Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_112 or later should work.
 
@@ -63,16 +63,16 @@ Add the following to your pom.xml to use this artifact:
 ```
 <dependency>
   <groupId>com.helger</groupId>
-  <artifactId>ph-pdf-layout</artifactId>
-  <version>3.5.2</version>
+  <artifactId>ph-pdf-layout4</artifactId>
+  <version>4.0.1</version>
 </dependency>
 ```
 or
 ```
 <dependency>
   <groupId>com.helger</groupId>
-  <artifactId>ph-pdf-layout4</artifactId>
-  <version>4.0.0</version>
+  <artifactId>ph-pdf-layout</artifactId>
+  <version>3.5.2</version>
 </dependency>
 ```
 
