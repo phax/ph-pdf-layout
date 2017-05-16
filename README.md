@@ -9,7 +9,7 @@ Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_
 
 # News and Noteworthy
   * v4.0.1 - work in progress
-    * Updated to PDFBox 2.0.5
+    * Updated to PDFBox 2.0.6
   * v4.0.0 - 2017-02-22
     * No change compared to 4.0.0 Beta 5
   * v4.0.0 Beta 5 - 2017-01-19
