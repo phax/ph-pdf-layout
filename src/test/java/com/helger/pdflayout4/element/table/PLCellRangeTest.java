@@ -27,7 +27,7 @@ import com.helger.xml.mock.XMLTestHelper;
  *
  * @author Philip Helger
  */
-public class PLCellRangeTest
+public final class PLCellRangeTest
 {
   @Test
   public void testBasic ()

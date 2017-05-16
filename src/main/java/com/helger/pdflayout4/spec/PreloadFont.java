@@ -291,14 +291,14 @@ public final class PreloadFont implements IHasID <String>, Serializable
 
   @Nonnull
   @ReturnsMutableCopy
-  public static final ICommonsOrderedMap <String, PDType1Font> getAllStandard14Fonts ()
+  public static ICommonsOrderedMap <String, PDType1Font> getAllStandard14Fonts ()
   {
     return STANDARD_14.getClone ();
   }
 
   @Nonnull
   @ReturnsMutableCopy
-  public static final ICommonsOrderedMap <String, PreloadFont> getAllStandard14PreloadFonts ()
+  public static ICommonsOrderedMap <String, PreloadFont> getAllStandard14PreloadFonts ()
   {
     return STANDARD_14_PF.getClone ();
   }
