@@ -111,10 +111,11 @@
       <optional>true</optional>
     </dependency>
     <!-- For reading PDFs with contained JPEGs -->
+    <!-- Cannot use it in production because GPL 3 licensed -->
     <dependency>
       <groupId>com.levigo.jbig2</groupId>
       <artifactId>levigo-jbig2-imageio</artifactId>
-      <version>1.6.5</version>
+      <version>2.0</version>
       <optional>true</optional>
     </dependency>
     <!-- For reading encrypted PDFs -->
