@@ -8,6 +8,8 @@ Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and includ
 Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_112 or later should work.
 
 # News and Noteworthy
+  * v4.0.2 - work in progress
+    * Updated to PDFBox 2.0.7
   * v4.0.1 - 2017-05-16
     * Updated to PDFBox 2.0.6
     * Slight API extensions
