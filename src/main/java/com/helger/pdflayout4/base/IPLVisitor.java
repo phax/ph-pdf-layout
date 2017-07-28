@@ -21,7 +21,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.function.IThrowingFunction;
+import com.helger.commons.functional.IThrowingFunction;
 import com.helger.commons.state.EChange;
 
 /**

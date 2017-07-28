@@ -29,15 +29,14 @@ import com.helger.xml.microdom.MicroElement;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class MarginSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter
+public final class MarginSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter <MarginSpec>
 {
   @Override
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final MarginSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final MarginSpec aValue = (MarginSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
     fillMicroElement (aValue, aElement);
     return aElement;

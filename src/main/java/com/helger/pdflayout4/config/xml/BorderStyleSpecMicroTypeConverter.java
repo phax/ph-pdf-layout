@@ -34,18 +34,17 @@ import com.helger.xml.microdom.convert.MicroTypeConverter;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConverter
+public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConverter <BorderStyleSpec>
 {
   private static final String ELEMENT_COLOR = "color";
   private static final String ELEMENT_LINE_DASH_PATTERN = "linedashpattern";
   private static final String ATTR_LINE_WIDTH = "linewidth";
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final BorderStyleSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final BorderStyleSpec aValue = (BorderStyleSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     final Color aColor = aValue.getColor ();

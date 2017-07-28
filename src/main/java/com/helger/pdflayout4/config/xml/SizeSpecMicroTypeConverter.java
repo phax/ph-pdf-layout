@@ -29,17 +29,16 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  *
  * @author Philip Helger
  */
-public final class SizeSpecMicroTypeConverter implements IMicroTypeConverter
+public final class SizeSpecMicroTypeConverter implements IMicroTypeConverter <SizeSpec>
 {
   private static final String ATTR_WIDTH = "width";
   private static final String ATTR_HEIGHT = "height";
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final SizeSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final SizeSpec aValue = (SizeSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());

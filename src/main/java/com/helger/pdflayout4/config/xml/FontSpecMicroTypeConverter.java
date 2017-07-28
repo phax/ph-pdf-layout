@@ -36,7 +36,7 @@ import com.helger.xml.microdom.convert.MicroTypeConverter;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class FontSpecMicroTypeConverter implements IMicroTypeConverter
+public final class FontSpecMicroTypeConverter implements IMicroTypeConverter <FontSpec>
 {
   private static final String ATTR_PRELOAD_FONT_ID = "preloadfontid";
   private static final String ATTR_FONT_SIZE = "fontsize";
@@ -50,11 +50,10 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter
   }
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final FontSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final FontSpec aValue = (FontSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_PRELOAD_FONT_ID, aValue.getPreloadFontID ());

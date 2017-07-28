@@ -29,15 +29,14 @@ import com.helger.xml.microdom.MicroElement;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class PaddingSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter
+public final class PaddingSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter <PaddingSpec>
 {
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final PaddingSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final PaddingSpec aValue = (PaddingSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
     fillMicroElement (aValue, aElement);
     return aElement;

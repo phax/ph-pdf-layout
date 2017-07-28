@@ -29,8 +29,8 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.ext.CommonsArrayList;
-import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.string.StringHelper;

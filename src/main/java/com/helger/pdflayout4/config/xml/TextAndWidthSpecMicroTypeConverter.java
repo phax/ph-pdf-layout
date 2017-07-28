@@ -30,17 +30,16 @@ import com.helger.xml.microdom.util.MicroHelper;
  *
  * @author Philip Helger
  */
-public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConverter
+public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConverter <TextAndWidthSpec>
 {
   private static final String ELEMENT_TEXT = "text";
   private static final String ATTR_WIDTH = "width";
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final TextAndWidthSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final TextAndWidthSpec aValue = (TextAndWidthSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());

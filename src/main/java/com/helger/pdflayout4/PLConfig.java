@@ -21,7 +21,7 @@ import javax.annotation.concurrent.Immutable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.collection.ext.ICommonsMap;
+import com.helger.commons.collection.impl.ICommonsMap;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.lang.PropertiesHelper;
 

@@ -62,7 +62,7 @@ import org.apache.pdfbox.util.Matrix;
 import org.apache.pdfbox.util.NumberFormatUtil;
 
 import com.helger.commons.annotation.CodingStyleguideUnaware;
-import com.helger.commons.collection.impl.NonBlockingStack;
+import com.helger.commons.collection.NonBlockingStack;
 
 /**
  * Provides the ability to write to a page content stream.<br>

@@ -24,8 +24,6 @@ import org.junit.Test;
 
 import com.helger.font.api.IFontResource;
 import com.helger.font.lato2.EFontResourceLato2;
-import com.helger.pdflayout4.spec.PreloadFont;
-import com.helger.pdflayout4.spec.PreloadFontManager;
 
 /**
  * Test class for class {@link PreloadFontManager}.

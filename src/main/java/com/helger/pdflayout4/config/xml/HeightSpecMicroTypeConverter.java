@@ -30,17 +30,16 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  *
  * @author Philip Helger
  */
-public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter
+public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter <HeightSpec>
 {
   private static final String ATTR_TYPE = "type";
   private static final String ATTR_VALUE = "value";
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final HeightSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final HeightSpec aValue = (HeightSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_TYPE, aValue.getTypeID ());

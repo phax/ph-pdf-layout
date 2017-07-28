@@ -19,7 +19,6 @@ package com.helger.pdflayout4.config.xml;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.pdflayout4.element.table.IPLCellRange;
 import com.helger.pdflayout4.element.table.PLCellRange;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
@@ -30,7 +29,7 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  *
  * @author Philip Helger
  */
-public final class PLCellRangeMicroTypeConverter implements IMicroTypeConverter
+public final class PLCellRangeMicroTypeConverter implements IMicroTypeConverter <PLCellRange>
 {
   private static final String ATTR_FIRST_ROW = "firstrow";
   private static final String ATTR_LAST_ROW = "lastrow";
@@ -38,11 +37,10 @@ public final class PLCellRangeMicroTypeConverter implements IMicroTypeConverter
   private static final String ATTR_LAST_COLUMN = "lastcol";
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final PLCellRange aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final IPLCellRange aValue = (IPLCellRange) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_FIRST_ROW, aValue.getFirstRow ());

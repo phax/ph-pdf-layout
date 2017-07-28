@@ -28,8 +28,10 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  *
  * @author Saskia Reimerth
  * @author Philip Helger
+ * @param <T>
+ *        Data type to convert
  */
-public abstract class AbstractRectSpecMicroTypeConverter implements IMicroTypeConverter
+public abstract class AbstractRectSpecMicroTypeConverter <T> implements IMicroTypeConverter <T>
 {
   private static final String ATTR_TOP = "top";
   private static final String ATTR_RIGHT = "right";
