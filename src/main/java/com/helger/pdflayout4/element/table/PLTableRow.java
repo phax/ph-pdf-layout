@@ -97,13 +97,13 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
 
   public void forEachCell (@Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
-    forEachColumn ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
+    forEachColumnByIndex ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
   }
 
   public void forEachCell (@Nonnull final IPLTableCellConsumer aConsumer)
   {
     final MutableInt aEffectiveIndex = new MutableInt (0);
-    forEachColumn ( (x, idx) -> {
+    forEachColumnByIndex ( (x, idx) -> {
       final PLTableCell aCell = (PLTableCell) x.getElement ();
       final int nColSpan = aCell.getColSpan ();
       aConsumer.accept (aCell, idx, aEffectiveIndex.intValue (), aEffectiveIndex.intValue () + nColSpan);

@@ -70,7 +70,8 @@ import com.helger.pdflayout4.spec.WidthSpec;
  *        Implementation type
  */
 public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
-                                     AbstractPLRenderableObject <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
+                                     AbstractPLRenderableObject <IMPLTYPE> implements
+                                     IPLSplittableObject <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
 
@@ -129,9 +130,9 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     m_aColumns.forEach (aConsumer);
   }
 
-  public void forEachColumn (@Nonnull final ObjIntConsumer <? super PLHBoxColumn> aConsumer)
+  public void forEachColumnByIndex (@Nonnull final ObjIntConsumer <? super PLHBoxColumn> aConsumer)
   {
-    m_aColumns.forEach (aConsumer);
+    m_aColumns.forEachByIndex (aConsumer);
   }
 
   @Nullable
@@ -464,8 +465,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         {
           final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
           // Set minimum column width and height as prepared width
-          aRealElement.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () -
-                                   aRealElement.getOutlineXSum (),
+          aRealElement.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement.getOutlineXSum (),
                                    fMaxContentHeightNet);
         }
         ++nIndex;
@@ -585,13 +585,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
       // Create empty element with the same width as the original element
       final IPLRenderableObject <?> aSrcElement = aColumn.getElement ();
-      aHBox1.addColumn (internalCreateVertSplitEmptyElement (aSrcElement, fColumnWidth, fColumnHeight).setID (
-                                                                                                              aSrcElement.getID () +
-                                                                                                              "-1"),
+      aHBox1.addColumn (internalCreateVertSplitEmptyElement (aSrcElement,
+                                                             fColumnWidth,
+                                                             fColumnHeight).setID (aSrcElement.getID () + "-1"),
                         aColumnWidth);
-      aHBox2.addColumn (internalCreateVertSplitEmptyElement (aSrcElement, fColumnWidth, fColumnHeight).setID (
-                                                                                                              aSrcElement.getID () +
-                                                                                                              "-2"),
+      aHBox2.addColumn (internalCreateVertSplitEmptyElement (aSrcElement,
+                                                             fColumnWidth,
+                                                             fColumnHeight).setID (aSrcElement.getID () + "-2"),
                         aColumnWidth);
     }
 
@@ -729,8 +729,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         {
           // Set minimum column width and height as prepared width
           final AbstractPLElement <?> aRealElement1 = (AbstractPLElement <?>) aElement1;
-          aRealElement1.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () -
-                                    aRealElement1.getOutlineXSum (),
+          aRealElement1.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement1.getOutlineXSum (),
                                     fHBox1MaxHeightNet);
         }
 
@@ -739,8 +738,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         {
           // Set minimum column width and height as prepared width
           final AbstractPLElement <?> aRealElement2 = (AbstractPLElement <?>) aElement2;
-          aRealElement2.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () -
-                                    aRealElement2.getOutlineXSum (),
+          aRealElement2.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement2.getOutlineXSum (),
                                     fHBox2MaxHeightNet);
         }
       }

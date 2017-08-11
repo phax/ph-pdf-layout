@@ -57,8 +57,9 @@ import com.helger.pdflayout4.spec.WidthSpec;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLRenderableObject <PLTable>
-                     implements IPLSplittableObject <PLTable>, IPLHasMargin <PLTable>
+public class PLTable extends AbstractPLRenderableObject <PLTable> implements
+                     IPLSplittableObject <PLTable>,
+                     IPLHasMargin <PLTable>
 {
   // All column widths
   private final ICommonsList <WidthSpec> m_aWidths;
@@ -337,16 +338,16 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
     m_aRows.forEachRow (x -> aConsumer.accept ((PLTableRow) x.getElement ()));
   }
 
-  public void forEachRow (@Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
+  public void forEachRowByIndex (@Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
-    m_aRows.forEachRow ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
+    m_aRows.forEachRowByIndex ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
   }
 
   public void forEachRow (final int nStartRowIncl,
                           final int nEndRowIncl,
                           @Nonnull final Consumer <? super PLTableRow> aConsumer)
   {
-    forEachRow ( (x, idx) -> {
+    forEachRowByIndex ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
         aConsumer.accept (x);
     });
@@ -356,7 +357,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable>
                           final int nEndRowIncl,
                           @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
-    forEachRow ( (x, idx) -> {
+    forEachRowByIndex ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
         aConsumer.accept (x, idx);
     });

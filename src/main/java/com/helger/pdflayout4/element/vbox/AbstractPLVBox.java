@@ -74,13 +74,14 @@ import com.helger.pdflayout4.spec.SizeSpec;
  *        Implementation type
  */
 public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends
-                                     AbstractPLRenderableObject <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
+                                     AbstractPLRenderableObject <IMPLTYPE> implements
+                                     IPLSplittableObject <IMPLTYPE>
 {
   public static final boolean DEFAULT_FULL_WIDTH = true;
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
   // All the rows of this VBox
-  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList<> ();
+  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
   // Vertical splittable?
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   // Header rows to be repeated after a split
@@ -142,9 +143,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     m_aRows.forEach (aConsumer);
   }
 
-  public void forEachRow (@Nonnull final ObjIntConsumer <? super PLVBoxRow> aConsumer)
+  public void forEachRowByIndex (@Nonnull final ObjIntConsumer <? super PLVBoxRow> aConsumer)
   {
-    m_aRows.forEach (aConsumer);
+    m_aRows.forEachByIndex (aConsumer);
   }
 
   /**
@@ -573,8 +574,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           // Use x% of remaining height
           // Ensure the height is not smaller than the minimum height - may be
           // split afterwards
-          final float fNewAvailableRowHeight = Math.max (fRemainingHeightAuto *
-                                                         fAvailableRowHeightPerc,
+          final float fNewAvailableRowHeight = Math.max (fRemainingHeightAuto * fAvailableRowHeightPerc,
                                                          aTooHighAutoRows[nIndex].getHeight ());
 
           // Prepare child element
@@ -737,8 +737,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                                                                    .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
-    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox1RowHeight = 0;
 
     // Copy all header rows to both boxes
