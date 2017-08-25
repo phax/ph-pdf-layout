@@ -122,7 +122,7 @@
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcmail-jdk15on</artifactId>
-      <version>1.57</version>
+      <version>1.58</version>
       <optional>true</optional>
     </dependency>
     <dependency>

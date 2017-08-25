@@ -11,6 +11,7 @@ Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_
   * v5.0.0 - work in progress
     * Updated to PDFBox 2.0.7
     * Updated to ph-commons 9.0.0
+    * Updated to BouncyCastle 1.58
   * v4.0.1 - 2017-05-16
     * Updated to PDFBox 2.0.6
     * Slight API extensions
