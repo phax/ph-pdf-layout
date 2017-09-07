@@ -212,9 +212,8 @@ public class PDPageContentStreamWithCache
     {
       final byte [] aEncoded = m_aLastUsedLoadedFont.getEncodedForPageContentStream (sDrawText);
       COSWriter.writeString (aEncoded, m_aStream.getOutput ());
-      m_aStream.write (" ");
-
-      m_aStream.writeOperator ("Tj");
+      m_aStream.write ((byte) ' ');
+      m_aStream.writeOperator ((byte) 'T', (byte) 'j');
     }
   }
 
