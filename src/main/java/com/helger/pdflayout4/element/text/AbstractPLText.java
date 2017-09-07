@@ -31,6 +31,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.collection.impl.ICommonsMap;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
@@ -59,9 +60,10 @@ import com.helger.pdflayout4.spec.TextAndWidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>>
-                                     extends AbstractPLInlineElement <IMPLTYPE>
-                                     implements IPLHasHorizontalAlignment <IMPLTYPE>, IPLSplittableObject <IMPLTYPE>
+public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends
+                                     AbstractPLInlineElement <IMPLTYPE> implements
+                                     IPLHasHorizontalAlignment <IMPLTYPE>,
+                                     IPLSplittableObject <IMPLTYPE>
 {
   public static final float DEFAULT_LINE_SPACING = 1f;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
@@ -319,6 +321,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     m_fDescent = fDescent;
   }
 
+  // Call only once here - used read-only!
+  private static final ICommonsMap <String, String> ESTIMATION_REPLACEMENTS = EPLPlaceholder.getEstimationReplacements ();
+
   /**
    * This method can only be called after loadedFont member was set!
    *
@@ -353,7 +358,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     else
     {
       // Use the approximations from the place holders
-      sTextToFit = StringHelper.replaceMultiple (m_sOriginalText, EPLPlaceholder.getEstimationReplacements ());
+      sTextToFit = StringHelper.replaceMultiple (m_sOriginalText, ESTIMATION_REPLACEMENTS);
     }
     internalSetPreparedLines (m_aLoadedFont.getFitToWidth (sTextToFit, fFontSize, fAvailableWidth));
 
