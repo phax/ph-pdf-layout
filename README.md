@@ -12,7 +12,7 @@ The basic elements provided are:
   * Basic (block) element is box. 
   * Layout elements are h-box, v-box, spacer-x, spacer-y, page break
   * The most complex element is a table, which consists of a number of "h-boxes" (rows) which itself consist of a number of "v-boxes" (columns) plus comes with repeating headlines etc.
-  * Elements can have margin, padding and border - if you know CSS you should be familiar with it.
+  * Elements can have min-size, max-size, margin, padding, border and fill-color - if you know CSS you should be familiar with it.
 
 # News and Noteworthy
 
@@ -81,14 +81,6 @@ Add the following to your pom.xml to use this artifact:
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout4</artifactId>
   <version>4.0.1</version>
-</dependency>
-```
-or
-```
-<dependency>
-  <groupId>com.helger</groupId>
-  <artifactId>ph-pdf-layout</artifactId>
-  <version>3.5.2</version>
 </dependency>
 ```
 
