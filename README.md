@@ -3,11 +3,19 @@
 Java library for creating fluid page layouts with Apache PDFBox.
 
 Please check the test files to see how to create PDFs with the different elements.
-Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x. Note: version 3.5.2 is not actively developed - in the meantime ph-pdf-layout 4 is the way forward.
 
-Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_112 or later should work.
+The basic elements provided are:
+* PageLayoutPDF - the entry class, having a list of page sets
+* PLPageSet - a set of pages that share the same size and orientation and contain a fluid set of elements
+* *PL elements* - basic or complex layout elements.
+  * Basic (inline) elements are text (Unicode of course) and image (whatever ImageIO can load).
+  * Basic (block) element is box. 
+  * Layout elements are h-box, v-box, spacer-x, spacer-y, page break
+  * The most complex element is a table, which consists of a number of "h-boxes" (rows) which itself consist of a number of "v-boxes" (columns) plus comes with repeating headlines etc.
+  * Elements can have margin, padding and border - if you know CSS you should be familiar with it.
 
 # News and Noteworthy
+
   * v5.0.0 - work in progress
     * Updated to PDFBox 2.0.7
     * Updated to ph-commons 9.0.0
@@ -57,10 +65,14 @@ Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_
     * Included optional MicroTypeConverters
   * v3.0.2 - 2016-09-06
     * API extensions for the classes in the "spec" package
-  * v3.0.1 - never released because of issues with the release batch file :(   
+  * v3.0.1 - never released because of issues with the release script :(   
   * v3.0.0 - 2016-08-21
     * Requires JDK 8
     * Still on PDFBox 2.0.0 because of problems with 2.0.1 and 2.0.2
+
+Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x.
+Note: version 3.5.2 is not actively developed - in the meantime ph-pdf-layout 4 is the way forward.
+Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_112 or later should work.
 
 # Maven usage
 Add the following to your pom.xml to use this artifact:
