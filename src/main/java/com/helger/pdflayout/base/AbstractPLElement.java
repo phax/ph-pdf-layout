@@ -42,8 +42,9 @@ import com.helger.pdflayout.spec.PaddingSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>>
-                                        extends AbstractPLRenderableObject <IMPLTYPE> implements IPLElement <IMPLTYPE>
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends
+                                        AbstractPLRenderableObject <IMPLTYPE> implements
+                                        IPLElement <IMPLTYPE>
 {
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
@@ -157,6 +158,6 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
                             .append ("border", m_aBorder)
                             .append ("padding", m_aPadding)
                             .appendIfNotNull ("fillColor", m_aFillColor)
-                            .toString ();
+                            .getToString ();
   }
 }

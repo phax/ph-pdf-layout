@@ -118,6 +118,6 @@ public class LineDashPatternSpec
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("pattern", m_aPattern).append ("phase", m_fPhase).toString ();
+    return new ToStringGenerator (this).append ("pattern", m_aPattern).append ("phase", m_fPhase).getToString ();
   }
 }

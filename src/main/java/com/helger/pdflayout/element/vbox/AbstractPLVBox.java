@@ -55,7 +55,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  *        Implementation type
  */
 public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
-                                     implements IPLHasRowBorder <IMPLTYPE>
+                                     implements
+                                     IPLHasRowBorder <IMPLTYPE>
 {
   private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
 
@@ -456,6 +457,6 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                             .appendIfNotNull ("rowFillColor", m_aRowFillColor)
                             .appendIfNotNull ("preparedRowElementWidth", m_aPreparedRowElementWidth)
                             .appendIfNotNull ("preparedRowElementHeight", m_aPreparedRowElementHeight)
-                            .toString ();
+                            .getToString ();
   }
 }

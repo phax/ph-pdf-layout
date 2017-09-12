@@ -147,6 +147,6 @@ public class RenderPageIndex
                                        .append ("pageSetPageCount", m_nPageSetPageCount)
                                        .append ("totalPageIndex", m_nTotalPageIndex)
                                        .append ("totalPageCount", m_nTotalPageCount)
-                                       .toString ();
+                                       .getToString ();
   }
 }

@@ -30,7 +30,7 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class MarginSpecMicroTypeConverter implements IMicroTypeConverter
+public final class MarginSpecMicroTypeConverter implements IMicroTypeConverter <MarginSpec>
 {
   private static final String ATTR_TOP = "top";
   private static final String ATTR_RIGHT = "right";
@@ -38,11 +38,10 @@ public final class MarginSpecMicroTypeConverter implements IMicroTypeConverter
   private static final String ATTR_LEFT = "left";
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final MarginSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final MarginSpec aValue = (MarginSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_TOP, aValue.getTop ());

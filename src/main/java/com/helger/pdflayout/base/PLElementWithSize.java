@@ -137,6 +137,6 @@ public final class PLElementWithSize
     return new ToStringGenerator (this).append ("element", m_aElement)
                                        .append ("size", m_aSize)
                                        .append ("sizeFull", m_aSizeFull)
-                                       .toString ();
+                                       .getToString ();
   }
 }

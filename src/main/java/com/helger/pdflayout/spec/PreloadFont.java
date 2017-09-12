@@ -184,7 +184,7 @@ public final class PreloadFont implements IHasID <String>
     return new ToStringGenerator (null).appendIfNotNull ("Font", m_aFont)
                                        .appendIfNotNull ("FontResource", m_aFontRes)
                                        .append ("Embed", m_bEmbed)
-                                       .toString ();
+                                       .getToString ();
   }
 
   @Nonnull

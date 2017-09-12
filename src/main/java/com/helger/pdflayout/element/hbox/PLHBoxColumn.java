@@ -94,6 +94,6 @@ public final class PLHBoxColumn
     return new ToStringGenerator (this).append ("element", m_aElement)
                                        .append ("width", m_aWidth)
                                        .append ("fillColor", m_aFillColor)
-                                       .toString ();
+                                       .getToString ();
   }
 }

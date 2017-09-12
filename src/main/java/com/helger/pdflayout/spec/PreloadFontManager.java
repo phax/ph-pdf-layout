@@ -41,7 +41,7 @@ import com.helger.font.api.IHasFontResource;
 public class PreloadFontManager implements IPreloadFontResolver
 {
   private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock ();
-  private final ICommonsMap <String, PreloadFont> m_aMap = new CommonsHashMap<> ();
+  private final ICommonsMap <String, PreloadFont> m_aMap = new CommonsHashMap <> ();
 
   /**
    * Default constructor which registers the standard 14 fonts.
@@ -161,6 +161,6 @@ public class PreloadFontManager implements IPreloadFontResolver
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Map", m_aMap).toString ();
+    return new ToStringGenerator (this).append ("Map", m_aMap).getToString ();
   }
 }

@@ -175,6 +175,6 @@ public class FontSpec
     return new ToStringGenerator (this).append ("font", m_aPreloadFont)
                                        .append ("fontSize", m_fFontSize)
                                        .append ("color", m_aColor)
-                                       .toString ();
+                                       .getToString ();
   }
 }

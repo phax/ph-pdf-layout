@@ -55,6 +55,6 @@ public final class PLVBoxRow
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("element", m_aElement).toString ();
+    return new ToStringGenerator (this).append ("element", m_aElement).getToString ();
   }
 }

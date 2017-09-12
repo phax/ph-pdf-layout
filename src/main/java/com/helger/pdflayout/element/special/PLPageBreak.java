@@ -75,7 +75,7 @@ public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("forcePageBreak", m_bForcePageBreak).toString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("forcePageBreak", m_bForcePageBreak).getToString ();
   }
 
   @Nonnull

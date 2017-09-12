@@ -182,6 +182,6 @@ public class PLImage extends AbstractPLAlignedElement <PLImage>
                             .append ("image", m_aImage)
                             .append ("width", m_fWidth)
                             .append ("height", m_fHeight)
-                            .toString ();
+                            .getToString ();
   }
 }

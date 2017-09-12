@@ -147,6 +147,6 @@ public abstract class AbstractRectSpec
                                        .append ("Left", m_fLeft)
                                        .append ("XSum", m_fXSum)
                                        .append ("YSum", m_fYSum)
-                                       .toString ();
+                                       .getToString ();
   }
 }

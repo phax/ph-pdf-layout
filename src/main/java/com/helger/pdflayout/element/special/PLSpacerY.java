@@ -76,7 +76,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ()).append ("height", m_fHeight).toString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("height", m_fHeight).getToString ();
   }
 
   @Nonnull

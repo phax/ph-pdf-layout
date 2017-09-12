@@ -188,6 +188,6 @@ public class BorderStyleSpec
     return new ToStringGenerator (this).append ("Color", m_aColor)
                                        .append ("LineDashPattern", m_aLineDashPattern)
                                        .append ("LineWidth", m_fLineWidth)
-                                       .toString ();
+                                       .getToString ();
   }
 }

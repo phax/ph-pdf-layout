@@ -40,7 +40,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  *        The implementation type of this class.
  */
 public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRenderableObject <IMPLTYPE>> extends
-                                                 AbstractPLObject <IMPLTYPE> implements IPLRenderableObject <IMPLTYPE>
+                                                 AbstractPLObject <IMPLTYPE> implements
+                                                 IPLRenderableObject <IMPLTYPE>
 {
   private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
   private SizeSpec m_aMaxSize = DEFAULT_MAX_SIZE;
@@ -274,6 +275,6 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                             .append ("maxSize", m_aMaxSize)
                             .append ("prepared", m_bPrepared)
                             .appendIfNotNull ("preparedSize", m_aPreparedSize)
-                            .toString ();
+                            .getToString ();
   }
 }

@@ -53,8 +53,8 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>>
-                                     extends AbstractPLAlignedElement <IMPLTYPE>
+public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends
+                                     AbstractPLAlignedElement <IMPLTYPE>
 {
   public static final boolean DEFAULT_TOP_DOWN = true;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
@@ -251,7 +251,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   {
     if (m_aPreparedLinesUnmodified == null)
       throw new IllegalStateException ("Preparation is not yet done");
-    return new CommonsArrayList<> (m_aPreparedLinesUnmodified);
+    return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
   }
 
   /**
@@ -327,8 +327,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
-        aContentStream.moveTextPositionByAmount (aCtx.getStartLeft () +
-                                                 fIndentX,
+        aContentStream.moveTextPositionByAmount (aCtx.getStartLeft () + fIndentX,
                                                  aCtx.getStartTop () - fTop - (fLineHeight * 0.75f));
       }
       else
@@ -375,7 +374,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     ValueEnforcer.notEmpty (aLines, "Lines");
 
     // Create a copy to be independent!
-    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList<> (aLines);
+    final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList <> (aLines);
 
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLines (aLineCopy.size ()));
@@ -398,6 +397,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("FontSpec", m_aFontSpec)
                             .append ("TopDown", m_bTopDown)
                             .append ("MaxRows", m_nMaxRows)
-                            .toString ();
+                            .getToString ();
   }
 }

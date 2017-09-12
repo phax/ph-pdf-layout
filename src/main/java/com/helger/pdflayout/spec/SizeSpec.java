@@ -133,7 +133,7 @@ public class SizeSpec
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("width", m_fWidth).append ("height", m_fHeight).toString ();
+    return new ToStringGenerator (this).append ("width", m_fWidth).append ("height", m_fHeight).getToString ();
   }
 
   @Nonnull

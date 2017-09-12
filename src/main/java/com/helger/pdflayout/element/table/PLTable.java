@@ -509,7 +509,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("width", m_aWidths)
                             .append ("headerRowCount", m_nHeaderRowCount)
-                            .toString ();
+                            .getToString ();
   }
 
   /**

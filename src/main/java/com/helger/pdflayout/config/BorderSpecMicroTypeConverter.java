@@ -32,7 +32,7 @@ import com.helger.xml.microdom.convert.MicroTypeConverter;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class BorderSpecMicroTypeConverter implements IMicroTypeConverter
+public final class BorderSpecMicroTypeConverter implements IMicroTypeConverter <BorderSpec>
 {
   private static final String ELEMENT_TOP = "top";
   private static final String ELEMENT_RIGHT = "right";
@@ -40,11 +40,10 @@ public final class BorderSpecMicroTypeConverter implements IMicroTypeConverter
   private static final String ELEMENT_LEFT = "left";
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final BorderSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final BorderSpec aValue = (BorderSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.appendChild (MicroTypeConverter.convertToMicroElement (aValue.getTop (), sNamespaceURI, ELEMENT_TOP));

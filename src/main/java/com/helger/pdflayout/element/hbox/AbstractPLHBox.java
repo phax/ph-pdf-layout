@@ -598,6 +598,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                             .appendIfNotNull ("columnFillColor", m_aColumnFillColor)
                             .appendIfNotNull ("preparedWidth", m_aPreparedColumnWidth)
                             .appendIfNotNull ("preparedHeight", m_aPreparedColumnHeight)
-                            .toString ();
+                            .getToString ();
   }
 }

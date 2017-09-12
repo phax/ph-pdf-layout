@@ -86,6 +86,6 @@ public final class PreparationContext
   {
     return new ToStringGenerator (this).append ("availableWidth", m_fAvailableWidth)
                                        .append ("availableHeight", m_fAvailableHeight)
-                                       .toString ();
+                                       .getToString ();
   }
 }

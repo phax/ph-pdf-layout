@@ -73,15 +73,16 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class PLPageSet extends AbstractPLObject <PLPageSet>
-                       implements IPLHasMarginBorderPadding <PLPageSet>, IPLHasFillColor <PLPageSet>
+public class PLPageSet extends AbstractPLObject <PLPageSet> implements
+                       IPLHasMarginBorderPadding <PLPageSet>,
+                       IPLHasFillColor <PLPageSet>
 {
   public static final class PageSetPrepareResult
   {
     private float m_fHeaderHeight = Float.NaN;
-    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList<> ();
+    private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList <> ();
     private float m_fFooterHeight = Float.NaN;
-    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList<> ();
+    private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList <> ();
 
     PageSetPrepareResult ()
     {}
@@ -187,7 +188,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private Color m_aFillColor = DEFAULT_FILL_COLOR;
   private IPLElement <?> m_aPageHeader;
-  private final ICommonsList <IPLRenderableObject <?>> m_aElements = new CommonsArrayList<> ();
+  private final ICommonsList <IPLRenderableObject <?>> m_aElements = new CommonsArrayList <> ();
   private IPLElement <?> m_aPageFooter;
   private IRenderingContextCustomizer m_aRCCustomizer;
 
@@ -480,7 +481,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       if (PLDebug.isDebugSplit ())
         PLDebug.debugSplit (this, "Start splitting elements");
 
-      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList<> ();
+      ICommonsList <PLElementWithSize> aCurPageElements = new CommonsArrayList <> ();
 
       // Start at the top
       float fCurY = fYTop;
@@ -588,14 +589,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
 
             if (PLDebug.isDebugPrepare ())
             {
-              final ICommonsList <String> aLastPageContent = new CommonsArrayList<> (aCurPageElements,
-                                                                                     x -> x.getElement ()
-                                                                                           .getDebugID ());
+              final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
+                                                                                      x -> x.getElement ()
+                                                                                            .getDebugID ());
               PLDebug.debugPrepare (this, "Finished page with: " + StringHelper.getImploded (aLastPageContent));
             }
 
             ret.addPerPageElements (aCurPageElements);
-            aCurPageElements = new CommonsArrayList<> ();
+            aCurPageElements = new CommonsArrayList <> ();
 
             // Start new page
             fCurY = fYTop;
@@ -657,8 +658,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
 
         if (PLDebug.isDebugSplit ())
         {
-          final ICommonsList <String> aLastPageContent = new CommonsArrayList<> (aCurPageElements,
-                                                                                 x -> x.getElement ().getDebugID ());
+          final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
+                                                                                  x -> x.getElement ().getDebugID ());
           PLDebug.debugSplit (this, "Finished last page with: " + StringHelper.getImploded (", ", aLastPageContent));
         }
       }
@@ -857,6 +858,6 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                             .append ("elements", m_aElements)
                             .appendIfNotNull ("pageFooter", m_aPageFooter)
                             .appendIfNotNull ("RCCustomizer", m_aRCCustomizer)
-                            .toString ();
+                            .getToString ();
   }
 }

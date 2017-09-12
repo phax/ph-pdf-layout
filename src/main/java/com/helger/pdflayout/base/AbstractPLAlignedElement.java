@@ -32,8 +32,8 @@ import com.helger.pdflayout.spec.EVertAlignment;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlignedElement <IMPLTYPE>>
-                                               extends AbstractPLElement <IMPLTYPE> implements
+public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlignedElement <IMPLTYPE>> extends
+                                               AbstractPLElement <IMPLTYPE> implements
                                                IPLHasHorizontalAlignment <IMPLTYPE>,
                                                IPLHasVerticalAlignment <IMPLTYPE>
 {
@@ -85,6 +85,6 @@ public abstract class AbstractPLAlignedElement <IMPLTYPE extends AbstractPLAlign
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("horzAlign", m_eHorzAlign)
                             .append ("vertAlign", m_eVertAlign)
-                            .toString ();
+                            .getToString ();
   }
 }

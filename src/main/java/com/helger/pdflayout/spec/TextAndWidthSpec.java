@@ -79,7 +79,7 @@ public class TextAndWidthSpec
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (null).append ("text", m_sText).append ("width", m_fWidth).toString ();
+    return new ToStringGenerator (null).append ("text", m_sText).append ("width", m_fWidth).getToString ();
   }
 
   @Nonnull

@@ -32,18 +32,17 @@ import com.helger.xml.microdom.convert.IMicroTypeConverter;
  * @author Saskia Reimerth
  * @author Philip Helger
  */
-public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeConverter
+public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeConverter <LineDashPatternSpec>
 {
   private static final String ATTR_PHASE = "phase";
   private static final String ELEMENT_PATTERN = "pattern";
   private static final String ATTR_ITEM = "item";
 
   @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final Object aObject,
+  public IMicroElement convertToMicroElement (@Nonnull final LineDashPatternSpec aValue,
                                               @Nullable final String sNamespaceURI,
                                               @Nonnull final String sTagName)
   {
-    final LineDashPatternSpec aValue = (LineDashPatternSpec) aObject;
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
     aElement.setAttribute (ATTR_PHASE, aValue.getPhase ());

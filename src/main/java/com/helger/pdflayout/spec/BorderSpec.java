@@ -57,7 +57,7 @@ public class BorderSpec
 
   /**
    * Constructor.
-   * 
+   *
    * @param aBorderY
    *        The border to set for top and bottom. Maybe <code>null</code>.
    * @param aBorderX
@@ -272,6 +272,6 @@ public class BorderSpec
                                        .appendIfNotNull ("top", m_aTop)
                                        .appendIfNotNull ("right", m_aRight)
                                        .appendIfNotNull ("bottom", m_aBottom)
-                                       .toString ();
+                                       .getToString ();
   }
 }
