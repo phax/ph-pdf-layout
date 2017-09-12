@@ -17,6 +17,7 @@
 package com.helger.pdflayout.element;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
@@ -28,8 +29,8 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.ext.CommonsArrayList;
-import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout.PDFCreationException;
@@ -124,10 +125,9 @@ public final class PLTableTest
                                              i +
                                              (i == 2 ? " this is extra text for row 2 that makes this line longer"
                                                      : ""),
-                                             r10.getCloneWithDifferentColor (i %
-                                                                             3 == 0 ? Color.RED
-                                                                                    : Color.BLACK)).setPadding (aPadding)
-                                                                                                   .setMargin (aMargin),
+                                             r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED : Color.BLACK))
+                                                                                                                   .setPadding (aPadding)
+                                                                                                                   .setMargin (aMargin),
                                  new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
                                                                            .setMargin (aMargin)
                                                                            .setHorzAlign (EHorzAlignment.CENTER)
@@ -152,7 +152,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table.pdf"));
+    aPageLayout.renderTo (FileHelper.getBufferedOutputStream (new File ("pdf/test-table.pdf")));
   }
 
   @Nonnull
@@ -189,8 +189,7 @@ public final class PLTableTest
     // Add header row
     aTable.setHeaderRowCount (1);
     aTable.addTableRow (createList (nCols,
-                                    nIdx -> new PLText ("Col " +
-                                                        (nIdx + 1),
+                                    nIdx -> new PLText ("Col " + (nIdx + 1),
                                                         r14b.getCloneWithDifferentColor (Color.GRAY)).setPadding (aPadding)))
           .setFillColor (Color.YELLOW)
           .setBorder (new BorderStyleSpec (Color.GRAY, 3));
@@ -210,9 +209,9 @@ public final class PLTableTest
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
     aCellFcts = new CommonsArrayList <> (x -> x,
                                          x -> x.setFillColor (aBGCell),
-                                         x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2")
-                                                                                                          ? x.setFillColor (aBGCell)
-                                                                                                          : x);
+                                         x -> ((PLText) x.getElement ()).getText ()
+                                                                        .startsWith ("Cell 2") ? x.setFillColor (aBGCell)
+                                                                                               : x);
 
     final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts;
     aElementFcts = new CommonsArrayList <> (x -> x,
@@ -261,7 +260,7 @@ public final class PLTableTest
     aPS1.addElement (aTable);
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table-grid.pdf"));
+    aPageLayout.renderTo (FileHelper.getBufferedOutputStream (new File ("pdf/test-table-grid.pdf")));
   }
 
   @Test
@@ -299,6 +298,6 @@ public final class PLTableTest
       aPS1.addElement (aTable);
       aPageLayout.addPageSet (aPS1);
     }
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table-gridtypes.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-table-gridtypes.pdf")));
   }
 }

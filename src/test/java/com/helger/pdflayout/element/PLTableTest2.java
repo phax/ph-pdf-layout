@@ -17,6 +17,7 @@
 package com.helger.pdflayout.element;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -102,6 +103,6 @@ public final class PLTableTest2
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-table-new.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-table-new.pdf")));
   }
 }

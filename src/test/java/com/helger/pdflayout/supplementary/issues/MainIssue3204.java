@@ -22,7 +22,7 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
-import com.helger.commons.io.file.iterate.FileSystemRecursiveIterator;
+import com.helger.commons.io.file.FileSystemRecursiveIterator;
 
 public final class MainIssue3204
 {

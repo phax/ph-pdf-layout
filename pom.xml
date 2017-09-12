@@ -67,21 +67,21 @@
     </developer>
   </developers>
   <properties>
-    <pdfbox.version>2.0.4</pdfbox.version>
+    <pdfbox.version>2.0.7</pdfbox.version>
   </properties>
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>8.6.0</version>
+        <version>9.0.0-b1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-fonts-parent-pom</artifactId>
-        <version>3.1.1</version>
+        <version>4.0.0-b1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

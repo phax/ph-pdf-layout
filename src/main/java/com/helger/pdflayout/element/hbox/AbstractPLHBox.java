@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.ext.CommonsArrayList;
-import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.PLDebug;
@@ -212,7 +212,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   public void forEachColumn (@Nonnull final ObjIntConsumer <? super PLHBoxColumn> aConsumer)
   {
-    m_aColumns.forEach (aConsumer);
+    m_aColumns.forEachByIndex (aConsumer);
   }
 
   /**

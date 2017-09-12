@@ -17,6 +17,7 @@
 package com.helger.pdflayout.element;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -81,7 +82,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext.pdf")));
   }
 
   @Test
@@ -105,7 +106,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-split.pdf")));
   }
 
   @Test
@@ -125,7 +126,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split-hbox.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-split-hbox.pdf")));
   }
 
   @Test
@@ -147,7 +148,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-split-vbox.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-split-vbox.pdf")));
   }
 
   @Test
@@ -168,7 +169,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-vertical-align.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-vertical-align.pdf")));
   }
 
   @Test
@@ -188,7 +189,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-open-sans.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-font-open-sans.pdf")));
   }
 
   @Test
@@ -208,6 +209,6 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-pltext-font-lato2.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-font-lato2.pdf")));
   }
 }

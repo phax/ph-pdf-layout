@@ -24,8 +24,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.collection.ext.CommonsHashMap;
-import com.helger.commons.collection.ext.ICommonsMap;
+import com.helger.commons.collection.impl.CommonsHashMap;
+import com.helger.commons.collection.impl.ICommonsMap;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;

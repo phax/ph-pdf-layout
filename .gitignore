@@ -17,3 +17,4 @@ target/
 /pdf/
 
 /**/.pmd
+/**/*.iml

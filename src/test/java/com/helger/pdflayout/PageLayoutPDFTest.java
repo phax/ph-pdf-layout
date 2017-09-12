@@ -17,6 +17,7 @@
 package com.helger.pdflayout;
 
 import java.awt.Color;
+import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -69,11 +70,13 @@ public final class PageLayoutPDFTest
       final PLHBox aHBox = new PLHBox ();
       // First column 30%
       aHBox.addColumn (new PLText ("Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text ",
-                                   r10).setMargin (10).setPadding (5).setHorzAlign (EHorzAlignment.LEFT).setBorder (
-                                                                                                                    new BorderStyleSpec (Color.GREEN),
-                                                                                                                    new BorderStyleSpec (Color.BLUE),
-                                                                                                                    new BorderStyleSpec (Color.CYAN),
-                                                                                                                    new BorderStyleSpec (Color.RED)),
+                                   r10).setMargin (10)
+                                       .setPadding (5)
+                                       .setHorzAlign (EHorzAlignment.LEFT)
+                                       .setBorder (new BorderStyleSpec (Color.GREEN),
+                                                   new BorderStyleSpec (Color.BLUE),
+                                                   new BorderStyleSpec (Color.CYAN),
+                                                   new BorderStyleSpec (Color.RED)),
                        WidthSpec.perc (30));
       // Remaining columns use each the same part of the space: WidthSpec.star()
       aHBox.addColumn (new PLText ("Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text ",
@@ -81,11 +84,11 @@ public final class PageLayoutPDFTest
                                                                                .setHorzAlign (EHorzAlignment.CENTER)
                                                                                .setMaxRows (3),
                        WidthSpec.star ());
-      aHBox.addColumn (new PLText ("Spalte 3 mit Text Spalte 3 mit Text Spalte 3 mit Text Ende", r10).setMarginTop (10)
-                                                                                                     .setPadding (5)
-                                                                                                     .setBorder (new BorderStyleSpec (Color.GREEN,
-                                                                                                                                      LineDashPatternSpec.DASHED_3))
-                                                                                                     .setHorzAlign (EHorzAlignment.RIGHT),
+      aHBox.addColumn (new PLText ("Spalte 3 mit Text Spalte 3 mit Text Spalte 3 mit Text Ende",
+                                   r10).setMarginTop (10)
+                                       .setPadding (5)
+                                       .setBorder (new BorderStyleSpec (Color.GREEN, LineDashPatternSpec.DASHED_3))
+                                       .setHorzAlign (EHorzAlignment.RIGHT),
                        WidthSpec.star ());
       aHBox.addColumn (new PLText ("Spalte 4 mit Text Spalte 4 mit Text Spalte 4 mit Text Ende",
                                    r10.getCloneWithDifferentFont (PreloadFont.REGULAR_ITALIC)).setBorder (new BorderStyleSpec (Color.RED))
@@ -167,7 +170,7 @@ public final class PageLayoutPDFTest
     aPageLayout.addPageSet (aPS1);
     aPageLayout.addPageSet (aPS2);
     aPageLayout.addPageSet (aPS3);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test1.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test1.pdf")));
   }
 
   @Test
@@ -182,7 +185,7 @@ public final class PageLayoutPDFTest
     aPageLayout.setDocumentAuthor ("Weird author äöü");
     aPageLayout.setDocumentTitle ("Special chars €!\"§$%&/()=\uFFE5");
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-properties.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-properties.pdf")));
   }
 
   @Test
@@ -239,29 +242,30 @@ public final class PageLayoutPDFTest
     }
     if (true)
     {
-      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.WHITE))
-                                                                                      .setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                      .setBorder (new BorderStyleSpec (Color.BLACK))
-                                                                                      .setFillColor (Color.RED)
-                                                                                      .setMargin (0)
-                                                                                      .setPadding (10));
-      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                    .setBorder (new BorderStyleSpec (Color.BLACK))
-                                                                                    .setFillColor (Color.GREEN)
-                                                                                    .setMargin (5)
-                                                                                    .setPadding (5));
-      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.WHITE))
-                                                                                      .setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                      .setBorder (new BorderStyleSpec (Color.BLACK))
-                                                                                      .setFillColor (Color.BLUE)
-                                                                                      .setMargin (10)
-                                                                                      .setPadding (0));
+      aPS1.addElement (new PLText (sLID,
+                                   r10.getCloneWithDifferentColor (Color.WHITE)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                .setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                                .setFillColor (Color.RED)
+                                                                                .setMargin (0)
+                                                                                .setPadding (10));
+      aPS1.addElement (new PLText (sLID,
+                                   r10.getCloneWithDifferentColor (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                              .setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                              .setFillColor (Color.GREEN)
+                                                                              .setMargin (5)
+                                                                              .setPadding (5));
+      aPS1.addElement (new PLText (sLID,
+                                   r10.getCloneWithDifferentColor (Color.WHITE)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                .setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                                .setFillColor (Color.BLUE)
+                                                                                .setMargin (10)
+                                                                                .setPadding (0));
       aPS1.addElement (new PLText (sLID, r10).setFillColor (new Color (0xabcdef)));
     }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test2.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test2.pdf")));
   }
 
   @Test
@@ -291,6 +295,6 @@ public final class PageLayoutPDFTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setDebug (true);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream ("pdf/test-din-letter.pdf"));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-din-letter.pdf")));
   }
 }

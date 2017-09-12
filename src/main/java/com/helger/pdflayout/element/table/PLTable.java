@@ -29,8 +29,8 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.ext.CommonsArrayList;
-import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
@@ -237,7 +237,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
 
   public void forEachRow (@Nonnull final ObjIntConsumer <? super PLHBoxSplittable> aConsumer)
   {
-    m_aRows.forEach ( (x, idx) -> aConsumer.accept ((PLHBoxSplittable) x.getElement (), idx));
+    m_aRows.forEachByIndex ( (x, idx) -> aConsumer.accept ((PLHBoxSplittable) x.getElement (), idx));
   }
 
   public void forEachCell (@Nonnull final Consumer <? super AbstractPLElement <?>> aConsumer)
@@ -303,7 +303,7 @@ public class PLTable extends AbstractPLVBox <PLTable> implements IPLSplittableOb
   @ReturnsMutableCopy
   private static float [] _getAsArray (@Nonnull final List <Float> aList)
   {
-    return TypeConverter.convertIfNecessary (aList, float [].class);
+    return TypeConverter.convert (aList, float [].class);
   }
 
   @SuppressWarnings ("unused")

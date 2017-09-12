@@ -22,8 +22,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.ext.CommonsArrayList;
-import com.helger.commons.collection.ext.ICommonsList;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.pdflayout.PLDebug;
 import com.helger.pdflayout.base.IPLRenderableObject;
@@ -40,7 +40,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  *        Implementation type
  */
 public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxSplittable <IMPLTYPE>> extends
-                                               AbstractPLVBox <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
+                                               AbstractPLVBox <IMPLTYPE> implements
+                                               IPLSplittableObject <IMPLTYPE>
 {
   public AbstractPLVBoxSplittable ()
   {}
@@ -54,7 +55,7 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
   @ReturnsMutableCopy
   private static float [] _getAsArray (@Nonnull final List <Float> aList)
   {
-    return TypeConverter.convertIfNecessary (aList, float [].class);
+    return TypeConverter.convert (aList, float [].class);
   }
 
   @SuppressWarnings ("unused")
@@ -77,14 +78,14 @@ public abstract class AbstractPLVBoxSplittable <IMPLTYPE extends AbstractPLVBoxS
     final PLVBoxSplittable aVBox2 = new PLVBoxSplittable ().setBasicDataFrom (this);
 
     final int nTotalRows = getRowCount ();
-    final ICommonsList <Float> aVBox1RowWidth = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <Float> aVBox1RowHeight = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <Float> aVBox1RowWidth = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <Float> aVBox1RowHeight = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox1Width = 0;
     float fUsedVBox1WidthFull = 0;
     float fUsedVBox1Height = 0;
     float fUsedVBox1HeightFull = 0;
-    final ICommonsList <Float> aVBox2RowWidth = new CommonsArrayList<> (nTotalRows);
-    final ICommonsList <Float> aVBox2RowHeight = new CommonsArrayList<> (nTotalRows);
+    final ICommonsList <Float> aVBox2RowWidth = new CommonsArrayList <> (nTotalRows);
+    final ICommonsList <Float> aVBox2RowHeight = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox2Width = 0;
     float fUsedVBox2WidthFull = 0;
     float fUsedVBox2Height = 0;
