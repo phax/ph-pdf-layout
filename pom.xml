@@ -25,7 +25,7 @@
     <version>1.9.2</version>
   </parent>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>3.5.3-SNAPSHOT</version>
+  <version>3.5.3-b1</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
@@ -52,7 +52,7 @@
     <connection>scm:git:git@github.com:phax/ph-pdf-layout.git</connection>
     <developerConnection>scm:git:git@github.com:phax/ph-pdf-layout.git</developerConnection>
     <url>http://github.com/phax/ph-pdf-layout</url>
-    <tag>3.5</tag>
+    <tag>ph-pdf-layout-3.5.3-b1</tag>
   </scm>
   <organization>
     <name>Philip Helger</name>
