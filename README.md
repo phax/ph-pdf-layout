@@ -51,6 +51,9 @@ The basic elements provided are:
     * Added a simple grid system for tables to build the default grids easily
     * Added new "auto" width/height for columns/rows
     * Updated to PDFBox 2.0.4
+  * v3.5.3 - work in progress
+    * Binds to ph-commons 9.0.0
+    * Updated to PDFBox 2.0.7
   * v3.5.2 - 2017-01-10
     * Binds to ph-commons 8.6.x
     * Updated to PDFBox 2.0.4
