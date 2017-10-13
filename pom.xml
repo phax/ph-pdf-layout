@@ -204,6 +204,7 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
+            <Automatic-Module-Name>com.helger.pdflayout4</Automatic-Module-Name>
             <Export-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
               com.helger.pdflayout4.*</Export-Package>
