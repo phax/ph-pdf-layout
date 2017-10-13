@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.helger</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>1.9.2</version>
+    <version>1.9.3</version>
   </parent>
   <artifactId>ph-pdf-layout</artifactId>
   <version>3.5.3-SNAPSHOT</version>
@@ -114,14 +114,14 @@
     <dependency>
       <groupId>com.levigo.jbig2</groupId>
       <artifactId>levigo-jbig2-imageio</artifactId>
-      <version>1.6.5</version>
+      <version>2.0</version>
       <optional>true</optional>
     </dependency>
     <!-- For reading encrypted PDFs -->
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcmail-jdk15on</artifactId>
-      <version>1.56</version>
+      <version>1.58</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -177,6 +177,7 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
+            <Automatic-Module-Name>com.helger.pdflayout</Automatic-Module-Name>
             <Export-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
               com.helger.pdflayout.*</Export-Package>
