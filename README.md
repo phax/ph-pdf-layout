@@ -8,7 +8,7 @@ Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and includ
 #News
   * v3.5.3 - work in progress
     * Binds to ph-commons 9.0.0
-    * Updated to PDFBox 2.0.7
+    * Updated to PDFBox 2.0.8
   * v3.5.2 - 2017-01-10
     * Binds to ph-commons 8.6.x
     * Updated to PDFBox 2.0.4
