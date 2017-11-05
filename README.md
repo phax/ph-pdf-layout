@@ -17,7 +17,7 @@ The basic elements provided are:
 # News and Noteworthy
 
   * v5.0.0 - work in progress
-    * Updated to PDFBox 2.0.7
+    * Updated to PDFBox 2.0.8
     * Updated to ph-commons 9.0.0
     * Updated to BouncyCastle 1.58
   * v4.0.1 - 2017-05-16
