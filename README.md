@@ -6,7 +6,7 @@ Please check the test files to see how to create PDFs with the different element
 Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x.
 
 #News
-  * v3.5.3 - work in progress
+  * v3.5.3 - 2017-11-07
     * Binds to ph-commons 9.0.0
     * Updated to PDFBox 2.0.8
   * v3.5.2 - 2017-01-10
@@ -34,7 +34,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>3.5.2</version>
+  <version>3.5.3</version>
 </dependency>
 ```
 
