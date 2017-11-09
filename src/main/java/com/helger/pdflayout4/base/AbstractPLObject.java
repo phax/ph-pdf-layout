@@ -101,6 +101,6 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("id", m_sElementID).getToString ();
+    return new ToStringGenerator (this).append ("ElementID", m_sElementID).getToString ();
   }
 }
