@@ -43,14 +43,17 @@ import com.helger.pdflayout4.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYPE>>
-                                      extends AbstractPLInlineElement <IMPLTYPE>
+public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYPE>> extends
+                                      AbstractPLInlineElement <IMPLTYPE>
 {
+  public static final EPLImageType DEFAULT_IMAGE_TYPE = EPLImageType.JPEG;
+
   private final float m_fImageWidth;
   private final float m_fImageHeight;
+  private EPLImageType m_eImageType = DEFAULT_IMAGE_TYPE;
 
   // Status var
-  private transient PDImageXObject m_aJpeg;
+  private transient PDImageXObject m_aXObject;
 
   public AbstractPLImage (@Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
   {
@@ -71,15 +74,44 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   }
 
   @Nonnegative
-  public float getImageWidth ()
+  public final float getImageWidth ()
   {
     return m_fImageWidth;
   }
 
   @Nonnegative
-  public float getImageHeight ()
+  public final float getImageHeight ()
   {
     return m_fImageHeight;
+  }
+
+  /**
+   * @return The image type to use. Never <code>null</code>. The default is
+   *         {@link #DEFAULT_IMAGE_TYPE}.
+   * @see #setImageType(EPLImageType)
+   * @since 5.0.1
+   */
+  @Nonnull
+  public final EPLImageType getImageType ()
+  {
+    return m_eImageType;
+  }
+
+  /**
+   * Set the image type to be used. <br>
+   * Note: not all image types may be supported by all subclasses of this class.
+   * Please check the respecitve documentation!
+   * 
+   * @param eImageType
+   *        The image type to be used. May not be <code>null</code>.
+   * @return this for chaining
+   */
+  @Nonnull
+  public final IMPLTYPE setImageType (@Nonnull final EPLImageType eImageType)
+  {
+    ValueEnforcer.notNull (eImageType, "ImageType");
+    m_eImageType = eImageType;
+    return thisAsT ();
   }
 
   @Override
@@ -94,6 +126,16 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     // Nada
   }
 
+  /**
+   * Resolve the {@link PDImageXObject} for rendering. Must consider the image
+   * type according to {@link #getImageType()}.
+   *
+   * @param aCtx
+   *        Render context
+   * @return Never <code>null</code>.
+   * @throws IOException
+   *         In case of error.
+   */
   @Nonnull
   protected abstract PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException;
 
@@ -106,8 +148,8 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     // http://stackoverflow.com/questions/8521290/cant-add-an-image-to-a-pdf-using-pdfbox
     try
     {
-      m_aJpeg = getXObject (aCtx);
-      if (m_aJpeg == null)
+      m_aXObject = getXObject (aCtx);
+      if (m_aXObject == null)
         throw new IllegalStateException ("Failed to create PDImageXObject");
     }
     catch (final IOException ex)
@@ -124,7 +166,7 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
-    aContentStream.drawXObject (m_aJpeg,
+    aContentStream.drawXObject (m_aXObject,
                                 aCtx.getStartLeft () + getOutlineLeft (),
                                 aCtx.getStartTop () - getOutlineTop () - m_fImageHeight,
                                 m_fImageWidth,
@@ -137,6 +179,7 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("ImageWidth", m_fImageWidth)
                             .append ("ImageHeight", m_fImageHeight)
+                            .append ("ImageType", m_eImageType)
                             .getToString ();
   }
 }

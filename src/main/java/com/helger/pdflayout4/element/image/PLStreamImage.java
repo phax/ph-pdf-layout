@@ -25,18 +25,22 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.IHasInputStream;
+import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.render.PagePreRenderContext;
 
 /**
  * Represent a static image based on {@link BufferedImage} read from an
- * {@link InputStream}.
+ * {@link InputStream}. This is not supported for the image type
+ * {@link EPLImageType#LOSSLESS}!
  *
+ * @see PLImage
  * @author Philip Helger
  */
 public class PLStreamImage extends AbstractPLImage <PLStreamImage>
@@ -72,9 +76,27 @@ public class PLStreamImage extends AbstractPLImage <PLStreamImage>
   @Nonnull
   protected PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException
   {
-    // The input stream is closed automatically
+    // The input stream is only sometimes closed automatically
     final InputStream aIS = m_aIIS.getInputStream ();
-    return JPEGFactory.createFromStream (aCtx.getDocument (), aIS);
+    if (aIS == null)
+      throw new IOException ("Failed to open InputStream from " + m_aIIS);
+
+    try (final InputStream aRealIS = aIS)
+    {
+      final byte [] aBytes = StreamHelper.getAllBytes (aRealIS);
+      switch (getImageType ())
+      {
+        case CCITT:
+          return CCITTFactory.createFromByteArray (aCtx.getDocument (), aBytes);
+        case JPEG:
+          return JPEGFactory.createFromByteArray (aCtx.getDocument (), aBytes);
+        case LOSSLESS:
+          // API does not support it
+          throw new IllegalStateException ("Lossless images cannot be read from Stream - use the version with BufferedImage!");
+        default:
+          throw new IllegalStateException ("Unsupported image type: " + toString ());
+      }
+    }
   }
 
   @Override

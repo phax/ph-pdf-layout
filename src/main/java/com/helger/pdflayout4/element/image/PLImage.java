@@ -24,7 +24,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
@@ -32,8 +34,10 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.render.PagePreRenderContext;
 
 /**
- * Represent a static image based on {@link BufferedImage}.
- *
+ * Represent a static image based on {@link BufferedImage}. This image type is
+ * supported for all {@link EPLImageType}s!
+ * 
+ * @see PLStreamImage
  * @author Philip Helger
  */
 public class PLImage extends AbstractPLImage <PLImage>
@@ -74,7 +78,17 @@ public class PLImage extends AbstractPLImage <PLImage>
   @Nonnull
   protected PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException
   {
-    return JPEGFactory.createFromImage (aCtx.getDocument (), m_aImage);
+    switch (getImageType ())
+    {
+      case CCITT:
+        return CCITTFactory.createFromImage (aCtx.getDocument (), m_aImage);
+      case JPEG:
+        return JPEGFactory.createFromImage (aCtx.getDocument (), m_aImage);
+      case LOSSLESS:
+        return LosslessFactory.createFromImage (aCtx.getDocument (), m_aImage);
+      default:
+        throw new IllegalStateException ("Unsupported image type: " + toString ());
+    }
   }
 
   @Override
