@@ -18,6 +18,7 @@ The basic elements provided are:
 
 * v5.0.1 - work in progress
   * Added image type support (issue #3)
+  * Updated to BouncyCastle 1.59
 * v5.0.0 - 2017-11-09
   * Updated to PDFBox 2.0.8
   * Updated to ph-commons 9.0.0
