@@ -182,6 +182,37 @@ public enum EPLTableGridType implements IPLTableGridType
       });
     }
   },
+
+  /**
+   * Create all horizontal lines. The first row has a border on all sides all
+   * other rows at outer left, outer right and every bottom
+   */
+  HORZ_OUTER_BORDER ("horz_outer_border")
+  {
+    @Override
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
+    {
+      ValueEnforcer.notNull (aTable, "Table");
+      ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
+        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+          if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
+          {
+            final boolean bFirstRow = nRowIndex == nStartRowIncl;
+            final boolean bFirstCol = nEffectiveCellStartIndex == nStartColumnIncl;
+            final boolean bLastCol = nEffectiveCellEndIndex - 1 == nEndColumnIncl;
+            aCell.setBorder (bFirstRow ? aBSS : null, bLastCol ? aBSS : null, aBSS, bFirstCol ? aBSS : null);
+          }
+        });
+      });
+    }
+  },
+
   /**
    * Create only horizontal lines but without the border lines on top and on
    * bottom. All rows have a border on bottom except for the last line which has
@@ -232,6 +263,36 @@ public enum EPLTableGridType implements IPLTableGridType
           {
             final boolean bFirstCol = nEffectiveCellStartIndex == nStartColumnIncl;
             aCell.setBorder (null, aBSS, null, bFirstCol ? aBSS : null);
+          }
+        });
+      });
+    }
+  },
+
+  /**
+   * Create all vertical lines. The first column has a border on left, right and
+   * top, all other columns at the outer top, outer bottom and every right
+   */
+  VERT_OUTER_BORDER ("vert_outer_border")
+  {
+    @Override
+    public void applyGridToTable (@Nonnull final PLTable aTable,
+                                  @Nonnegative final int nStartRowIncl,
+                                  @Nonnegative final int nEndRowIncl,
+                                  @Nonnegative final int nStartColumnIncl,
+                                  @Nonnegative final int nEndColumnIncl,
+                                  @Nonnull final BorderStyleSpec aBSS)
+    {
+      ValueEnforcer.notNull (aTable, "Table");
+      ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
+      aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
+        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+          if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
+          {
+            final boolean bFirstRow = nRowIndex == nStartRowIncl;
+            final boolean bLastRow = nRowIndex == nEndRowIncl;
+            final boolean bFirstCol = nEffectiveCellStartIndex == nStartColumnIncl;
+            aCell.setBorder (bFirstRow ? aBSS : null, aBSS, bLastRow ? aBSS : null, bFirstCol ? aBSS : null);
           }
         });
       });
