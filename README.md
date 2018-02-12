@@ -16,9 +16,10 @@ The basic elements provided are:
 
 # News and Noteworthy
 
-* v5.0.1 - work in progress
+* v5.0.1 - 2018-02-12
   * Added image type support (issue #3)
   * Updated to BouncyCastle 1.59
+  * Added new table grid types
 * v5.0.0 - 2017-11-09
   * Updated to PDFBox 2.0.8
   * Updated to ph-commons 9.0.0
@@ -87,7 +88,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout4</artifactId>
-  <version>5.0.0</version>
+  <version>5.0.1</version>
 </dependency>
 ```
 
