@@ -295,6 +295,52 @@ public final class PLPageSetTest
   }
 
   @Test
+  public void testDifferentFirstPageHeader () throws PDFCreationException
+  {
+    final String sHeader = "This is a page header that is repeated on every page.\nIt can have multiple lines etc.\n";
+    final String sFooter = "This is a page footer that is repeated on every page.\nIt can have multiple lines etc.\n";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30).setDifferentFirstPageHeader (true);
+
+    aPS1.setFirstPageHeader (new PLBox (new PLText ("First page header only", r10)).setBorder (Color.BLUE));
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header",
+                                    r10).setBorder (Color.RED).setHorzAlign (EHorzAlignment.CENTER));
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer",
+                                    r10).setFillColor (Color.PINK).setHorzAlign (EHorzAlignment.RIGHT));
+
+    for (int i = 0; i < 1000; ++i)
+      aPS1.addElement (new PLText ("Dummy line " + i, r10).setMargin (3, 0));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-firstpage-different-header.pdf")));
+  }
+
+  @Test
+  public void testDifferentFirstPageFooter () throws PDFCreationException
+  {
+    final String sHeader = "This is a page header that is repeated on every page.\nIt can have multiple lines etc.\n";
+    final String sFooter = "This is a page footer that is repeated on every page.\nIt can have multiple lines etc.\n";
+
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30).setDifferentFirstPageFooter (true);
+
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header",
+                                    r10).setBorder (Color.RED).setHorzAlign (EHorzAlignment.CENTER));
+    aPS1.setFirstPageFooter (new PLBox (new PLText ("First page footer only", r10)).setBorder (Color.BLUE));
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer",
+                                    r10).setFillColor (Color.PINK).setHorzAlign (EHorzAlignment.RIGHT));
+
+    for (int i = 0; i < 1000; ++i)
+      aPS1.addElement (new PLText ("Dummy line " + i, r10).setMargin (3, 0));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plpageset-firstpage-different-footer.pdf")));
+  }
+
+  @Test
   public void testNoFirstPageHeaderFooter () throws PDFCreationException
   {
     final String sHeader = "This is a page header that is repeated on every page.\nIt can have multiple lines etc.\n";
