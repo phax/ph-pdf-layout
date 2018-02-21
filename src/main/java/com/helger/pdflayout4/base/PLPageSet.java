@@ -62,9 +62,12 @@ import com.helger.pdflayout4.spec.SizeSpec;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class PLPageSet extends AbstractPLObject <PLPageSet>
-                       implements IPLHasMarginBorderPadding <PLPageSet>, IPLHasFillColor <PLPageSet>
+public class PLPageSet extends AbstractPLObject <PLPageSet> implements
+                       IPLHasMarginBorderPadding <PLPageSet>,
+                       IPLHasFillColor <PLPageSet>
 {
+  public static final boolean DEFAULT_DIFFERENT_FIRST_PAGE_HEADER = false;
+  public static final boolean DEFAULT_DIFFERENT_FIRST_PAGE_FOOTER = false;
   private static final Logger s_aLogger = LoggerFactory.getLogger (PLPageSet.class);
 
   private final SizeSpec m_aPageSize;
@@ -72,8 +75,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   private PaddingSpec m_aPadding = DEFAULT_PADDING;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private Color m_aFillColor = DEFAULT_FILL_COLOR;
+  private boolean m_bDifferentFirstPageHeader = DEFAULT_DIFFERENT_FIRST_PAGE_HEADER;
+  private IPLRenderableObject <?> m_aFirstPageHeader;
   private IPLRenderableObject <?> m_aPageHeader;
   private final ICommonsList <IPLRenderableObject <?>> m_aElements = new CommonsArrayList <> ();
+  private boolean m_bDifferentFirstPageFooter = DEFAULT_DIFFERENT_FIRST_PAGE_FOOTER;
+  private IPLRenderableObject <?> m_aFirstPageFooter;
   private IPLRenderableObject <?> m_aPageFooter;
   private IPreRenderContextCustomizer m_aPRCCustomizer;
   private IRenderContextCustomizer m_aRCCustomizer;
@@ -211,6 +218,69 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   }
 
   /**
+   * @return <code>true</code> if a special page header should be used on the
+   *         first page, <code>false</code> if the same header should be used.
+   * @since 5.0.2
+   */
+  public boolean isDifferentFirstPageHeader ()
+  {
+    return m_bDifferentFirstPageFooter;
+  }
+
+  /**
+   * Enable/disable usage of special header on the first page. To have an
+   * effect, {@link #setFirstPageHeader(IPLRenderableObject)} must be called
+   *
+   * @param bDifferentFirstPageHeader
+   *        <code>true</code> for special page header on the first page
+   * @return this for chaining
+   * @see #setFirstPageHeader(IPLRenderableObject)
+   * @since 5.0.2
+   */
+  @Nonnull
+  public PLPageSet setDifferentFirstPageHeader (final boolean bDifferentFirstPageHeader)
+  {
+    m_bDifferentFirstPageHeader = bDifferentFirstPageHeader;
+    return this;
+  }
+
+  /**
+   * @return The global first page header. May be <code>null</code>.
+   * @since 5.0.2
+   */
+  @Nullable
+  public IPLRenderableObject <?> getFirstPageHeader ()
+  {
+    return m_aFirstPageHeader;
+  }
+
+  /**
+   * @return <code>true</code> if a global first page header is present,
+   *         <code>false</code> if not.
+   * @since 5.0.2
+   */
+  public boolean hasFirstPageHeader ()
+  {
+    return m_aFirstPageHeader != null;
+  }
+
+  /**
+   * Set the global first page header
+   *
+   * @param aPageHeader
+   *        The global page header. May be <code>null</code>.
+   * @return this
+   * @see #setDifferentFirstPageFooter(boolean)
+   * @since 5.0.2
+   */
+  @Nonnull
+  public PLPageSet setFirstPageHeader (@Nullable final IPLRenderableObject <?> aPageHeader)
+  {
+    m_aFirstPageHeader = aPageHeader;
+    return this;
+  }
+
+  /**
    * @return The global page header. May be <code>null</code>.
    */
   @Nullable
@@ -269,6 +339,69 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   }
 
   /**
+   * @return <code>true</code> if a special page footer should be used on the
+   *         first page, <code>false</code> if the same footer should be used.
+   * @since 5.0.2
+   */
+  public boolean isDifferentFirstPageFooter ()
+  {
+    return m_bDifferentFirstPageFooter;
+  }
+
+  /**
+   * Enable/disable usage of special footer on the first page. To have an
+   * effect, {@link #setFirstPageFooter(IPLRenderableObject)} must be called.
+   *
+   * @param bDifferentFirstPageFooter
+   *        <code>true</code> for special page footer on the first page
+   * @return this for chaining
+   * @see #setFirstPageFooter(IPLRenderableObject)
+   * @since 5.0.2
+   */
+  @Nonnull
+  public PLPageSet setDifferentFirstPageFooter (final boolean bDifferentFirstPageFooter)
+  {
+    m_bDifferentFirstPageFooter = bDifferentFirstPageFooter;
+    return this;
+  }
+
+  /**
+   * @return The global first page footer. May be <code>null</code>.
+   * @since 5.0.2
+   */
+  @Nullable
+  public IPLRenderableObject <?> getFirstPageFooter ()
+  {
+    return m_aFirstPageFooter;
+  }
+
+  /**
+   * @return <code>true</code> if a global first page footer is present,
+   *         <code>false</code> if not.
+   * @since 5.0.2
+   */
+  public boolean hasFirstPageFooter ()
+  {
+    return m_aFirstPageFooter != null;
+  }
+
+  /**
+   * Set the global page footer
+   *
+   * @param aFirstPageFooter
+   *        The global first page footer. May be <code>null</code>.
+   * @return this
+   * @see #setDifferentFirstPageFooter(boolean)
+   * @since 5.0.2
+   */
+  @Nonnull
+  public PLPageSet setFirstPageFooter (@Nullable final IPLRenderableObject <?> aFirstPageFooter)
+  {
+    m_aFirstPageFooter = aFirstPageFooter;
+    return this;
+  }
+
+  /**
    * @return The global page footer. May be <code>null</code>.
    */
   @Nullable
@@ -314,8 +447,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   {
     EChange ret = EChange.UNCHANGED;
     aVisitor.onPageSetStart (this);
+    if (m_bDifferentFirstPageHeader && m_aFirstPageHeader != null)
+      ret = ret.or (m_aFirstPageHeader.visit (aVisitor));
     if (m_aPageHeader != null)
       ret = ret.or (m_aPageHeader.visit (aVisitor));
+    if (m_bDifferentFirstPageFooter && m_aFirstPageFooter != null)
+      ret = ret.or (m_aFirstPageFooter.visit (aVisitor));
     if (m_aPageFooter != null)
       ret = ret.or (m_aPageFooter.visit (aVisitor));
     for (final IPLRenderableObject <?> aElement : m_aElements)
@@ -329,6 +466,39 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
   {
     // The result element
     final PLPageSetPrepareResult ret = new PLPageSetPrepareResult ();
+
+    // Prepare first page header
+    if (m_bDifferentFirstPageHeader && m_aFirstPageHeader != null)
+    {
+      // Page header does not care about page padding
+      final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
+                                                              m_aPageSize.getWidth () - getMarginXSum (),
+                                                              getMarginTop ());
+
+      if (PLDebugLog.isDebugPrepare ())
+        PLDebugLog.debugPrepare (this,
+                                 "Start preparing first page header on width=" +
+                                       aRPC.getAvailableWidth () +
+                                       " and height=" +
+                                       aRPC.getAvailableHeight ());
+
+      final SizeSpec aElementSize = m_aFirstPageHeader.prepare (aRPC);
+      // Remember largest height
+      ret.setHeaderHeight (aElementSize.getHeight ());
+
+      final float fEffectiveHeaderHeight = aElementSize.getHeight () + m_aFirstPageHeader.getOutlineYSum ();
+      if (fEffectiveHeaderHeight > getMarginTop ())
+      {
+        // If the height of the header exceeds the available top-margin, modify
+        // the margin so that the header fits!
+        s_aLogger.info ("PageSet margin top was changed from " +
+                        getMarginTop () +
+                        " to " +
+                        fEffectiveHeaderHeight +
+                        " so that firstPageHeader fits!");
+        setMarginTop (fEffectiveHeaderHeight);
+      }
+    }
 
     // Prepare page header
     if (m_aPageHeader != null)
@@ -346,6 +516,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                        aRPC.getAvailableHeight ());
 
       final SizeSpec aElementSize = m_aPageHeader.prepare (aRPC);
+      // Remember largest height
       ret.setHeaderHeight (aElementSize.getHeight ());
 
       final float fEffectiveHeaderHeight = aElementSize.getHeight () + m_aPageHeader.getOutlineYSum ();
@@ -359,6 +530,39 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                         fEffectiveHeaderHeight +
                         " so that pageHeader fits!");
         setMarginTop (fEffectiveHeaderHeight);
+      }
+    }
+
+    // Prepare footer
+    if (m_bDifferentFirstPageFooter && m_aFirstPageFooter != null)
+    {
+      // Page footer does not care about page padding
+      final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
+                                                              m_aPageSize.getWidth () - getMarginXSum (),
+                                                              getMarginBottom ());
+
+      if (PLDebugLog.isDebugPrepare ())
+        PLDebugLog.debugPrepare (this,
+                                 "Start preparing first page footer on width=" +
+                                       aRPC.getAvailableWidth () +
+                                       " and height=" +
+                                       aRPC.getAvailableHeight ());
+
+      final SizeSpec aElementSize = m_aFirstPageFooter.prepare (aRPC);
+      // Remember largest height
+      ret.setFooterHeight (aElementSize.getHeight ());
+
+      final float fEffectiveFooterHeight = aElementSize.getHeight () + m_aFirstPageFooter.getOutlineYSum ();
+      if (fEffectiveFooterHeight > getMarginBottom ())
+      {
+        // If the height of the footer exceeds the available bottom-margin,
+        // modify the margin so that the footer fits!
+        s_aLogger.info ("PageSet margin bottom was changed from " +
+                        getMarginBottom () +
+                        " to " +
+                        fEffectiveFooterHeight +
+                        " so that firstPageFooter fits!");
+        setMarginBottom (fEffectiveFooterHeight);
       }
     }
 
@@ -378,6 +582,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                        aRPC.getAvailableHeight ());
 
       final SizeSpec aElementSize = m_aPageFooter.prepare (aRPC);
+      // Remember largest height
       ret.setFooterHeight (aElementSize.getHeight ());
 
       final float fEffectiveFooterHeight = aElementSize.getHeight () + m_aPageFooter.getOutlineYSum ();
@@ -667,6 +872,11 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
       final PDPage aPage = new PDPage (m_aPageSize.getAsRectangle ());
       aDoc.addPage (aPage);
 
+      final boolean bUseFirstPageHeader = nPageIndex == 0 && m_bDifferentFirstPageHeader;
+      final IPLRenderableObject <?> aPageHeader = bUseFirstPageHeader ? m_aFirstPageHeader : m_aPageHeader;
+      final boolean bUseFirstPageFooter = nPageIndex == 0 && m_bDifferentFirstPageFooter;
+      final IPLRenderableObject <?> aPageFooter = bUseFirstPageFooter ? m_aFirstPageFooter : m_aPageFooter;
+
       {
         final PagePreRenderContext aPreRenderCtx = new PagePreRenderContext (this,
                                                                              aDoc,
@@ -681,10 +891,13 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           m_aPRCCustomizer.customizePreRenderContext (aPreRenderCtx);
 
         final IPLVisitor aVisitor = IPLVisitor.createElementVisitor (x -> x.beforeRender (aPreRenderCtx));
-        if (m_aPageHeader != null)
-          m_aPageHeader.visit (aVisitor);
-        if (m_aPageFooter != null)
-          m_aPageFooter.visit (aVisitor);
+
+        if (aPageHeader != null)
+          aPageHeader.visit (aVisitor);
+
+        if (aPageFooter != null)
+          aPageFooter.visit (aVisitor);
+
         for (final PLElementWithSize aElementWithHeight : aPerPage)
           aElementWithHeight.getElement ().visit (aVisitor);
       }
@@ -706,7 +919,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
         }
 
         // Start with the page rectangle
-        if (m_aPageHeader != null)
+        if (aPageHeader != null)
         {
           // Page header does not care about page padding
           // header top-left
@@ -722,7 +935,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                                                  fHeight);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
-          m_aPageHeader.render (aRCtx);
+          aPageHeader.render (aRCtx);
         }
 
         float fCurY = fYTop;
@@ -749,7 +962,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
           fCurY -= aElementWithHeight.getHeightFull ();
         }
 
-        if (m_aPageFooter != null)
+        if (aPageFooter != null)
         {
           // Page footer does not care about page padding
           // footer top-left
@@ -765,7 +978,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                                                                  fHeight);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
-          m_aPageFooter.render (aRCtx);
+          aPageFooter.render (aRCtx);
         }
       }
       finally
@@ -787,8 +1000,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet>
                             .append ("Padding", m_aPadding)
                             .append ("Border", m_aBorder)
                             .append ("FillColor", m_aFillColor)
+                            .appendIfNotNull ("FirstPageHeader", m_aFirstPageHeader)
                             .appendIfNotNull ("PageHeader", m_aPageHeader)
                             .append ("Elements", m_aElements)
+                            .appendIfNotNull ("FirstPageFooter", m_aFirstPageFooter)
                             .appendIfNotNull ("PageFooter", m_aPageFooter)
                             .appendIfNotNull ("PRCCustomizer", m_aPRCCustomizer)
                             .appendIfNotNull ("RCCustomizer", m_aRCCustomizer)

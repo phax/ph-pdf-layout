@@ -30,7 +30,7 @@ import com.helger.commons.collection.impl.ICommonsList;
 
 /**
  * Page set preparae result. Used only internally.
- * 
+ *
  * @author Philip Helger
  */
 public final class PLPageSetPrepareResult implements Serializable
@@ -51,7 +51,11 @@ public final class PLPageSetPrepareResult implements Serializable
    */
   void setHeaderHeight (final float fHeaderHeight)
   {
-    m_fHeaderHeight = fHeaderHeight;
+    // Set the maximum value only
+    if (Float.isNaN (m_fHeaderHeight))
+      m_fHeaderHeight = fHeaderHeight;
+    else
+      m_fHeaderHeight = Math.max (m_fHeaderHeight, fHeaderHeight);
   }
 
   /**
@@ -85,14 +89,18 @@ public final class PLPageSetPrepareResult implements Serializable
   }
 
   /**
-   * Set the page footer height.
+   * Set the page footer height. The maximum height is used.
    *
    * @param fFooterHeight
    *        Height without padding or margin.
    */
   void setFooterHeight (final float fFooterHeight)
   {
-    m_fFooterHeight = fFooterHeight;
+    // Set the maximum value only
+    if (Float.isNaN (m_fFooterHeight))
+      m_fFooterHeight = fFooterHeight;
+    else
+      m_fFooterHeight = Math.max (m_fFooterHeight, fFooterHeight);
   }
 
   /**

@@ -16,6 +16,8 @@ The basic elements provided are:
 
 # News and Noteworthy
 
+* v5.0.2 - 2018-02-21
+  * Added possibility to use special page header and footer on the first page of a PLPageSet
 * v5.0.1 - 2018-02-12
   * Added image type support (issue #3)
   * Updated to BouncyCastle 1.59
@@ -88,7 +90,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout4</artifactId>
-  <version>5.0.1</version>
+  <version>5.0.2</version>
 </dependency>
 ```
 
