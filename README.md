@@ -16,6 +16,8 @@ The basic elements provided are:
 
 # News and Noteworthy
 
+* v5.0.3 - work in progress
+  * Added `ph-collection` dependency for issue #4
 * v5.0.2 - 2018-02-21
   * Added possibility to use special page header and footer on the first page of a PLPageSet
 * v5.0.1 - 2018-02-12
