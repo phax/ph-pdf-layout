@@ -98,6 +98,10 @@
       <artifactId>ph-fonts-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-collection</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox</artifactId>
       <version>${pdfbox.version}</version>
