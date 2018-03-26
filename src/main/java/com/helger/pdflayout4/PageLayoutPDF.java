@@ -18,7 +18,9 @@ package com.helger.pdflayout4;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,11 +36,14 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.datetime.PDTConfig;
+import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.serialize.SerializationHelper;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.system.SystemProperties;
+import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.pdflayout4.base.IPLVisitable;
 import com.helger.pdflayout4.base.IPLVisitor;
@@ -59,7 +64,7 @@ public class PageLayoutPDF implements IPLVisitable
   private static final Logger s_aLogger = LoggerFactory.getLogger (PageLayoutPDF.class);
 
   private String m_sDocumentAuthor;
-  private Calendar m_aDocumentCreationDate;
+  private LocalDateTime m_aDocumentCreationDate;
   private String m_sDocumentCreator;
   private String m_sDocumentTitle;
   private String m_sDocumentKeywords;
@@ -74,7 +79,7 @@ public class PageLayoutPDF implements IPLVisitable
   public PageLayoutPDF ()
   {
     m_sDocumentAuthor = VendorInfo.getVendorName () + " " + VendorInfo.getVendorURLWithoutProtocol ();
-    m_aDocumentCreationDate = Calendar.getInstance ();
+    m_aDocumentCreationDate = PDTFactory.getCurrentLocalDateTime ();
     m_sDocumentCreator = VendorInfo.getVendorName ();
   }
 
@@ -111,12 +116,25 @@ public class PageLayoutPDF implements IPLVisitable
   }
 
   @Nullable
+  @Deprecated
   public Calendar getDocumentCreationDate ()
+  {
+    return TypeConverter.convert (m_aDocumentCreationDate, Calendar.class);
+  }
+
+  @Deprecated
+  public void setDocumentCreationDate (@Nullable final Calendar aDocumentCreationDate)
+  {
+    m_aDocumentCreationDate = TypeConverter.convert (aDocumentCreationDate, LocalDateTime.class);
+  }
+
+  @Nullable
+  public LocalDateTime getDocumentCreationDateTime ()
   {
     return m_aDocumentCreationDate;
   }
 
-  public void setDocumentCreationDate (@Nullable final Calendar aDocumentCreationDate)
+  public void setDocumentCreationDate (@Nullable final LocalDateTime aDocumentCreationDate)
   {
     m_aDocumentCreationDate = aDocumentCreationDate;
   }
@@ -255,7 +273,7 @@ public class PageLayoutPDF implements IPLVisitable
         if (StringHelper.hasText (m_sDocumentAuthor))
           aProperties.setAuthor (m_sDocumentAuthor);
         if (m_aDocumentCreationDate != null)
-          aProperties.setCreationDate (m_aDocumentCreationDate);
+          aProperties.setCreationDate (GregorianCalendar.from (m_aDocumentCreationDate.atZone (PDTConfig.getDefaultZoneId ())));
         if (StringHelper.hasText (m_sDocumentCreator))
           aProperties.setCreator (m_sDocumentCreator);
         if (StringHelper.hasText (m_sDocumentTitle))
