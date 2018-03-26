@@ -996,8 +996,15 @@ public final class PDPageContentStreamExt implements Closeable
   {
     if (isOutsideOneInterval (c) || isOutsideOneInterval (m) || isOutsideOneInterval (y) || isOutsideOneInterval (k))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..1, but are " +
-                                          String.format ("(%.2f,%.2f,%.2f,%.2f)", c, m, y, k));
+      throw new IllegalArgumentException ("Parameters must be within 0..1, but are (" +
+                                          c +
+                                          "," +
+                                          m +
+                                          "," +
+                                          y +
+                                          "," +
+                                          k +
+                                          ")");
     }
     writeOperand ((float) c);
     writeOperand ((float) m);
