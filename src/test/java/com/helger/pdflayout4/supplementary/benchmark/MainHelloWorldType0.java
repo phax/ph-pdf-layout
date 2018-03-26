@@ -23,11 +23,15 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.font.open_sans.EFontResourceOpenSans;
 
 public final class MainHelloWorldType0
 {
+  private static final Logger s_aLogger = LoggerFactory.getLogger (MainHelloWorldType0.class);
+
   public static void main (final String [] args) throws IOException
   {
     final String s = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. ";
@@ -47,15 +51,15 @@ public final class MainHelloWorldType0
       final PDFont font = PDType0Font.load (doc,
                                             EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
                                                                                   .getInputStream ());
-      System.out.println ("Finished loading font at " + (System.currentTimeMillis () - nStart) + "ms");
+      s_aLogger.info ("Finished loading font at " + (System.currentTimeMillis () - nStart) + "ms");
 
       for (int i = 0; i < 100; ++i)
         font.getStringWidth (message);
-      System.out.println ("Finished string width (" +
-                          message.length () +
-                          " chars) after " +
-                          (System.currentTimeMillis () - nStart) +
-                          "ms");
+      s_aLogger.info ("Finished string width (" +
+                      message.length () +
+                      " chars) after " +
+                      (System.currentTimeMillis () - nStart) +
+                      "ms");
 
       try (final PDPageContentStream contents = new PDPageContentStream (doc, page))
       {
@@ -68,6 +72,6 @@ public final class MainHelloWorldType0
 
       doc.save (file);
     }
-    System.out.println (file + " created! Took " + (System.currentTimeMillis () - nStart) + "ms");
+    s_aLogger.info (file + " created! Took " + (System.currentTimeMillis () - nStart) + "ms");
   }
 }

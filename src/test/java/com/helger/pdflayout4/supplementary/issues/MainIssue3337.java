@@ -26,11 +26,15 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.font.open_sans.EFontResourceOpenSans;
 
 public final class MainIssue3337
 {
+  private static final Logger s_aLogger = LoggerFactory.getLogger (MainIssue3337.class);
+
   public static void main (final String [] args) throws IOException
   {
     final TrueTypeFont aTTF = new TTFParser ().parse (EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
@@ -38,7 +42,7 @@ public final class MainIssue3337
 
     for (int i = 0; i < 2; ++i)
     {
-      System.out.println ("Create PDF " + i);
+      s_aLogger.info ("Create PDF " + i);
       try (final PDDocument doc = new PDDocument ())
       {
         final PDPage page = new PDPage (PDRectangle.A4);

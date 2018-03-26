@@ -21,24 +21,28 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.commons.io.file.FileSystemRecursiveIterator;
 
 public final class MainIssue3204
 {
+  private static final Logger s_aLogger = LoggerFactory.getLogger (MainIssue3204.class);
+
   public static void main (final String [] args) throws IOException
   {
     int n = 0;
     for (final File f : new FileSystemRecursiveIterator ("/"))
       if (f.isFile () && f.getName ().endsWith (".pdf"))
       {
-        System.out.println (f.getAbsolutePath ());
+        s_aLogger.info (f.getAbsolutePath ());
         try (PDDocument aDoc = PDDocument.load (f))
         {
           new PDFRenderer (aDoc).renderImageWithDPI (0, 195);
           n++;
         }
       }
-    System.out.println (n + " files found");
+    s_aLogger.info (n + " files found");
   }
 }
