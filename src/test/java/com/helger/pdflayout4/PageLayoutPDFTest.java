@@ -16,14 +16,21 @@
  */
 package com.helger.pdflayout4;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.awt.Color;
 import java.io.File;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
+import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout4.base.EPLPlaceholder;
@@ -70,11 +77,13 @@ public final class PageLayoutPDFTest
       final PLHBox aHBox = new PLHBox ();
       // First column 30%
       aHBox.addColumn (new PLText ("Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text Spalte 1 mit Text ",
-                                   r10).setMargin (10).setPadding (5).setHorzAlign (EHorzAlignment.LEFT).setBorder (
-                                                                                                                    new BorderStyleSpec (Color.GREEN),
-                                                                                                                    new BorderStyleSpec (Color.BLUE),
-                                                                                                                    new BorderStyleSpec (Color.CYAN),
-                                                                                                                    new BorderStyleSpec (Color.RED)),
+                                   r10).setMargin (10)
+                                       .setPadding (5)
+                                       .setHorzAlign (EHorzAlignment.LEFT)
+                                       .setBorder (new BorderStyleSpec (Color.GREEN),
+                                                   new BorderStyleSpec (Color.BLUE),
+                                                   new BorderStyleSpec (Color.CYAN),
+                                                   new BorderStyleSpec (Color.RED)),
                        WidthSpec.perc (30));
       // Remaining columns use each the same part of the space: WidthSpec.star()
       aHBox.addColumn (new PLText ("Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text ",
@@ -82,11 +91,11 @@ public final class PageLayoutPDFTest
                                                                                .setHorzAlign (EHorzAlignment.CENTER)
                                                                                .setMaxRows (3),
                        WidthSpec.star ());
-      aHBox.addColumn (new PLText ("Spalte 3 mit Text Spalte 3 mit Text Spalte 3 mit Text Ende", r10).setMarginTop (10)
-                                                                                                     .setPadding (5)
-                                                                                                     .setBorder (new BorderStyleSpec (Color.GREEN,
-                                                                                                                                      LineDashPatternSpec.DASHED_3))
-                                                                                                     .setHorzAlign (EHorzAlignment.RIGHT),
+      aHBox.addColumn (new PLText ("Spalte 3 mit Text Spalte 3 mit Text Spalte 3 mit Text Ende",
+                                   r10).setMarginTop (10)
+                                       .setPadding (5)
+                                       .setBorder (new BorderStyleSpec (Color.GREEN, LineDashPatternSpec.DASHED_3))
+                                       .setHorzAlign (EHorzAlignment.RIGHT),
                        WidthSpec.star ());
       aHBox.addColumn (new PLText ("Spalte 4 mit Text Spalte 4 mit Text Spalte 4 mit Text Ende",
                                    r10.getCloneWithDifferentFont (PreloadFont.REGULAR_ITALIC)).setBorder (new BorderStyleSpec (Color.RED))
@@ -171,6 +180,7 @@ public final class PageLayoutPDFTest
     aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test1.pdf")));
   }
 
+  @SuppressWarnings ("deprecation")
   @Test
   public void testCreatePDFProperties () throws PDFCreationException
   {
@@ -182,6 +192,21 @@ public final class PageLayoutPDFTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.setDocumentAuthor ("Weird author äöü");
     aPageLayout.setDocumentTitle ("Special chars €!\"§$%&/()=\uFFE5");
+
+    aPageLayout.setDocumentCreationDate (null);
+    assertNull (aPageLayout.getDocumentCreationDate ());
+    assertNull (aPageLayout.getDocumentCreationDateTime ());
+    aPageLayout.setDocumentCreationDate (Calendar.getInstance (TimeZone.getDefault (), Locale.getDefault ()));
+    assertNotNull (aPageLayout.getDocumentCreationDate ());
+    assertNotNull (aPageLayout.getDocumentCreationDateTime ());
+
+    aPageLayout.setDocumentCreationDateTime (null);
+    assertNull (aPageLayout.getDocumentCreationDate ());
+    assertNull (aPageLayout.getDocumentCreationDateTime ());
+    aPageLayout.setDocumentCreationDateTime (PDTFactory.getCurrentLocalDateTime ());
+    assertNotNull (aPageLayout.getDocumentCreationDate ());
+    assertNotNull (aPageLayout.getDocumentCreationDateTime ());
+
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-properties.pdf")));
   }
@@ -235,23 +260,24 @@ public final class PageLayoutPDFTest
     }
     if (true)
     {
-      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.WHITE))
-                                                                                      .setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                      .setBorder (new BorderStyleSpec (Color.BLACK))
-                                                                                      .setFillColor (Color.RED)
-                                                                                      .setMargin (0)
-                                                                                      .setPadding (10));
-      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                    .setBorder (new BorderStyleSpec (Color.BLACK))
-                                                                                    .setFillColor (Color.GREEN)
-                                                                                    .setMargin (5)
-                                                                                    .setPadding (5));
-      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.WHITE))
-                                                                                      .setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                      .setBorder (new BorderStyleSpec (Color.BLACK))
-                                                                                      .setFillColor (Color.BLUE)
-                                                                                      .setMargin (10)
-                                                                                      .setPadding (0));
+      aPS1.addElement (new PLText (sLID,
+                                   r10.getCloneWithDifferentColor (Color.WHITE)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                .setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                                .setFillColor (Color.RED)
+                                                                                .setMargin (0)
+                                                                                .setPadding (10));
+      aPS1.addElement (new PLText (sLID,
+                                   r10.getCloneWithDifferentColor (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                              .setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                              .setFillColor (Color.GREEN)
+                                                                              .setMargin (5)
+                                                                              .setPadding (5));
+      aPS1.addElement (new PLText (sLID,
+                                   r10.getCloneWithDifferentColor (Color.WHITE)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                .setBorder (new BorderStyleSpec (Color.BLACK))
+                                                                                .setFillColor (Color.BLUE)
+                                                                                .setMargin (10)
+                                                                                .setPadding (0));
       aPS1.addElement (new PLText (sLID, r10).setFillColor (new Color (0xabcdef)));
     }
 

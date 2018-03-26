@@ -134,7 +134,7 @@ public class PageLayoutPDF implements IPLVisitable
     return m_aDocumentCreationDate;
   }
 
-  public void setDocumentCreationDate (@Nullable final LocalDateTime aDocumentCreationDate)
+  public void setDocumentCreationDateTime (@Nullable final LocalDateTime aDocumentCreationDate)
   {
     m_aDocumentCreationDate = aDocumentCreationDate;
   }

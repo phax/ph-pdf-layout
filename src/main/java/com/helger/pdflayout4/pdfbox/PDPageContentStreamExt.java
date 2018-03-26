@@ -932,13 +932,11 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IllegalArgumentException
    *         If the parameters are invalid.
    */
-  @SuppressWarnings ("boxing")
   public void setNonStrokingColor (final int r, final int g, final int b) throws IOException
   {
     if (isOutside255Interval (r) || isOutside255Interval (g) || isOutside255Interval (b))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..255, but are " +
-                                          String.format ("(%d,%d,%d)", r, g, b));
+      throw new IllegalArgumentException ("Parameters must be within 0..255, but are (" + r + "," + g + "," + b + ")");
     }
     writeOperand (r / 255f);
     writeOperand (g / 255f);
@@ -962,13 +960,19 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IllegalArgumentException
    *         If the parameters are invalid.
    */
-  @SuppressWarnings ("boxing")
   public void setNonStrokingColor (final int c, final int m, final int y, final int k) throws IOException
   {
     if (isOutside255Interval (c) || isOutside255Interval (m) || isOutside255Interval (y) || isOutside255Interval (k))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..255, but are " +
-                                          String.format ("(%d,%d,%d,%d)", c, m, y, k));
+      throw new IllegalArgumentException ("Parameters must be within 0..255, but are (" +
+                                          c +
+                                          "," +
+                                          m +
+                                          "," +
+                                          y +
+                                          "," +
+                                          k +
+                                          ")");
     }
     setNonStrokingColor (c / 255f, m / 255f, y / 255f, k / 255f);
   }
