@@ -187,6 +187,8 @@ public final class PLRenderHelper
    *        Additional y-indentation
    * @throws IOException
    *         in case writing fails
+   * @param <T>
+   *        element type to render
    */
   public static <T extends IPLElement <T>> void fillAndRenderBorder (@Nonnull final T aElement,
                                                                      @Nonnull final PageRenderContext aCtx,
@@ -220,6 +222,9 @@ public final class PLRenderHelper
    *        Content stream to act on. May not be <code>null</code>.
    * @throws IOException
    *         in case writing fails
+   * @param <T>
+   *        Type that implements {@link IPLHasFillColor} and
+   *        {@link IPLHasMarginBorderPadding}
    */
   public static <T extends IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorder (@Nonnull final T aElement,
                                                                                                           final float fLeft,
