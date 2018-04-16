@@ -16,6 +16,8 @@ The basic elements provided are:
 
 # News and Noteworthy
 
+* v5.0.5 - 2018-04-16
+  * Something went wrong when publishing to Maven Central - next try
 * v5.0.4 - 2018-04-16
   * Do not justify the last line of multiline text
 * v5.0.3 - 2018-04-16
@@ -96,7 +98,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout4</artifactId>
-  <version>5.0.4</version>
+  <version>5.0.5</version>
 </dependency>
 ```
 
