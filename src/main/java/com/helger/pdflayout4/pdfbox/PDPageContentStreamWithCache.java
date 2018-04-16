@@ -204,6 +204,11 @@ public class PDPageContentStreamWithCache
     m_aStream.endText ();
   }
 
+  public void setCharacterSpacing (final float fSpacing) throws IOException
+  {
+    m_aStream.setCharacterSpacing (fSpacing);
+  }
+
   public void drawString (final String sDrawText) throws IOException
   {
     if (false)

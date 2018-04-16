@@ -54,20 +54,6 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
 
   /**
    * Get the indentation for a certain horizontal alignment. This method uses
-   * the prepared width as the basis for alignment.
-   *
-   * @param fAvailableWidth
-   *        The available width of the surrounding element.
-   * @return The indentation offset. Always &ge; 0.
-   */
-  @Nonnegative
-  default float getIndentX (final float fAvailableWidth)
-  {
-    return getIndentX (fAvailableWidth, getPreparedWidth ());
-  }
-
-  /**
-   * Get the indentation for a certain horizontal alignment. This method uses
    * the provided element width as the basis for alignment.
    *
    * @param fAvailableWidth

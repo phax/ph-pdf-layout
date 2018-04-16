@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.Since;
 import com.helger.commons.id.IHasID;
 import com.helger.commons.lang.EnumHelper;
 
@@ -37,7 +38,14 @@ public enum EHorzAlignment implements IHasID <String>
   CENTER ("center"),
 
   /** Align right */
-  RIGHT ("right");
+  RIGHT ("right"),
+
+  /**
+   * Justify all text. This alignment has no effect for boxes, it only works on
+   * PLText!
+   */
+  @Since ("5.0.3")
+  JUSTIFY("justify");
 
   public static final EHorzAlignment DEFAULT = LEFT;
 

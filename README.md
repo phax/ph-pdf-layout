@@ -19,6 +19,7 @@ The basic elements provided are:
 * v5.0.3 - work in progress
   * Added `ph-collection` dependency for issue #4
   * Updated to PDFBox 2.0.9
+  * Added possibility to justify text
 * v5.0.2 - 2018-02-21
   * Added possibility to use special page header and footer on the first page of a PLPageSet
 * v5.0.1 - 2018-02-12

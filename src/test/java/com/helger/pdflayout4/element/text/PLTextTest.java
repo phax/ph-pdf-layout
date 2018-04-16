@@ -30,6 +30,7 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.random.RandomHelper;
+import com.helger.commons.string.StringHelper;
 import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
 import com.helger.font.anaheim.EFontResourceAnaheim;
 import com.helger.font.api.IHasFontResource;
@@ -119,8 +120,7 @@ public final class PLTextTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
     final float fLineSpacing = 1.5f;
 
-    aPS1.addElement (new PLText ("All texts are using a line spacing of " +
-                                 fLineSpacing,
+    aPS1.addElement (new PLText ("All texts are using a line spacing of " + fLineSpacing,
                                  r10).setLineSpacing (fLineSpacing));
     aPS1.addElement (new PLText (s, r10).setBorder (Color.RED).setLineSpacing (fLineSpacing));
 
@@ -234,11 +234,7 @@ public final class PLTextTest
 
     for (final Map.Entry <String, PreloadFont> aEntry : PreloadFont.getAllStandard14PreloadFonts ().entrySet ())
     {
-      aPS1.addElement (new PLText ("[Standard] [" +
-                                   aEntry.getKey () +
-                                   "]: " +
-                                   s +
-                                   "\n",
+      aPS1.addElement (new PLText ("[Standard] [" + aEntry.getKey () + "]: " + s + "\n",
                                    new FontSpec (aEntry.getValue (), 10)));
     }
     for (final IHasFontResource aHasFont : new CommonsArrayList <> (EFontResourceAlegreyaSans.ALGREYA_SANS_NORMAL,
@@ -256,17 +252,38 @@ public final class PLTextTest
       // Load TTF font
       final PreloadFont aFont = PreloadFont.createEmbedding (aHasFont.getFontResource ());
 
-      aPS1.addElement (new PLText ("[External] [" +
-                                   aHasFont.getFontResourceID () +
-                                   "]: " +
-                                   s +
-                                   "\n",
+      aPS1.addElement (new PLText ("[External] [" + aHasFont.getFontResourceID () + "]: " + s + "\n",
                                    new FontSpec (aFont, 10)));
     }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-font-multiple.pdf")));
+  }
+
+  @Test
+  public void testTextHorzAlignment () throws PDFCreationException
+  {
+    final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
+                     StringHelper.getRepeated ("Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.",
+                                               5) +
+                     "\n" +
+                     "Tataa: € - and some specials: áàéèíìóòúù ÁÀÉÈÍÌÓÒÚÙ\n" +
+                     "Very short line\n";
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    // Repeat to ensure values are reset correctly
+    for (int i = 0; i < 2; ++i)
+      for (final EHorzAlignment eHorzAlign : EHorzAlignment.values ())
+      {
+        aPS1.addElement (new PLText ("Alignment: " + eHorzAlign + "\n" + s, r10).setHorzAlign (eHorzAlign));
+      }
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-horz-alignment.pdf")));
   }
 
   @Test

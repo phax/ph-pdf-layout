@@ -618,6 +618,19 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
           aContentStream.moveTextPositionByAmount (fIndentX, 0);
         }
 
+      // Avoid division by zero
+      boolean bDoJustifyText = m_eHorzAlign == EHorzAlignment.JUSTIFY && sDrawText.length () > 1;
+
+      if (bDoJustifyText)
+      {
+        // Calculate width of space between each character (therefore -1)
+        final float fCharSpacing = (fPreparedWidth - fTextWidth) / (sDrawText.length () - 1);
+        if (fCharSpacing != 0)
+          aContentStream.setCharacterSpacing (fCharSpacing);
+        else
+          bDoJustifyText = false;
+      }
+
       // Main draw string
       aContentStream.drawString (sDrawText);
       ++nIndex;
@@ -629,6 +642,12 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       {
         // Outdent and one line down, except for last line
         aContentStream.moveTextPositionByAmount (-fIndentX, -fTextHeight * m_fLineSpacing);
+      }
+
+      if (bDoJustifyText)
+      {
+        // Important to reset back to default
+        aContentStream.setCharacterSpacing (0);
       }
     }
     aContentStream.endText ();

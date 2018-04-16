@@ -346,6 +346,22 @@ public final class PDPageContentStreamExt implements Closeable
   }
 
   /**
+   * Set the character spacing. The value shall be added to the horizontal or
+   * vertical component of the glyph's displacement, depending on the writing
+   * mode.
+   *
+   * @param spacing
+   *        character spacing
+   * @throws IOException
+   *         If the content stream could not be written.
+   */
+  public void setCharacterSpacing (final float spacing) throws IOException
+  {
+    writeOperand (spacing);
+    writeOperator ((byte) 'T', (byte) 'c');
+  }
+
+  /**
    * Shows the given text at the location specified by the current text matrix.
    *
    * @param text
@@ -784,7 +800,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setStrokingColor (final int r, final int g, final int b) throws IOException
   {
-    if (isOutside255Interval (r) || isOutside255Interval (g) || isOutside255Interval (b))
+    if (_isOutside255Interval (r) || _isOutside255Interval (g) || _isOutside255Interval (b))
     {
       throw new IllegalArgumentException ("Parameters must be within 0..255, but are (" + r + "," + g + "," + b + ")");
     }
@@ -812,7 +828,10 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setStrokingColor (final float c, final float m, final float y, final float k) throws IOException
   {
-    if (isOutsideOneInterval (c) || isOutsideOneInterval (m) || isOutsideOneInterval (y) || isOutsideOneInterval (k))
+    if (_isOutsideOneInterval (c) ||
+        _isOutsideOneInterval (m) ||
+        _isOutsideOneInterval (y) ||
+        _isOutsideOneInterval (k))
     {
       throw new IllegalArgumentException ("Parameters must be within 0..1, but are (" +
                                           c +
@@ -843,7 +862,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setStrokingColor (final double g) throws IOException
   {
-    if (isOutsideOneInterval (g))
+    if (_isOutsideOneInterval (g))
     {
       throw new IllegalArgumentException ("Parameter must be within 0..1, but is " + g);
     }
@@ -934,7 +953,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setNonStrokingColor (final int r, final int g, final int b) throws IOException
   {
-    if (isOutside255Interval (r) || isOutside255Interval (g) || isOutside255Interval (b))
+    if (_isOutside255Interval (r) || _isOutside255Interval (g) || _isOutside255Interval (b))
     {
       throw new IllegalArgumentException ("Parameters must be within 0..255, but are (" + r + "," + g + "," + b + ")");
     }
@@ -962,7 +981,10 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setNonStrokingColor (final int c, final int m, final int y, final int k) throws IOException
   {
-    if (isOutside255Interval (c) || isOutside255Interval (m) || isOutside255Interval (y) || isOutside255Interval (k))
+    if (_isOutside255Interval (c) ||
+        _isOutside255Interval (m) ||
+        _isOutside255Interval (y) ||
+        _isOutside255Interval (k))
     {
       throw new IllegalArgumentException ("Parameters must be within 0..255, but are (" +
                                           c +
@@ -991,10 +1013,12 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IOException
    *         If an IO error occurs while writing to the stream.
    */
-  @SuppressWarnings ("boxing")
   public void setNonStrokingColor (final double c, final double m, final double y, final double k) throws IOException
   {
-    if (isOutsideOneInterval (c) || isOutsideOneInterval (m) || isOutsideOneInterval (y) || isOutsideOneInterval (k))
+    if (_isOutsideOneInterval (c) ||
+        _isOutsideOneInterval (m) ||
+        _isOutsideOneInterval (y) ||
+        _isOutsideOneInterval (k))
     {
       throw new IllegalArgumentException ("Parameters must be within 0..1, but are (" +
                                           c +
@@ -1025,7 +1049,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setNonStrokingColor (final int g) throws IOException
   {
-    if (isOutside255Interval (g))
+    if (_isOutside255Interval (g))
     {
       throw new IllegalArgumentException ("Parameter must be within 0..255, but is " + g);
     }
@@ -1044,7 +1068,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setNonStrokingColor (final double g) throws IOException
   {
-    if (isOutsideOneInterval (g))
+    if (_isOutsideOneInterval (g))
     {
       throw new IllegalArgumentException ("Parameter must be within 0..1, but is " + g);
     }
@@ -1692,12 +1716,12 @@ public final class PDPageContentStreamExt implements Closeable
     m_aOS.close ();
   }
 
-  private boolean isOutside255Interval (final int val)
+  private static boolean _isOutside255Interval (final int val)
   {
     return val < 0 || val > 255;
   }
 
-  private boolean isOutsideOneInterval (final double val)
+  private static boolean _isOutsideOneInterval (final double val)
   {
     return val < 0 || val > 1;
   }
