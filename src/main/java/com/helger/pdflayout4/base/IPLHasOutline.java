@@ -16,39 +16,63 @@
  */
 package com.helger.pdflayout4.base;
 
+import java.io.Serializable;
+
 /**
  * Base interface for objects having an outline. If an outline is present, it is
  * the combination or margin, border and padding.
- * 
+ *
  * @author Philip Helger
  */
-public interface IPLHasOutline
+public interface IPLHasOutline extends Serializable
 {
+  /**
+   * @return margin top + border top + padding top.
+   */
   default float getOutlineTop ()
   {
     return 0;
   }
 
+  /**
+   * @return margin right + border right + padding right.
+   */
   default float getOutlineRight ()
   {
     return 0;
   }
 
+  /**
+   * @return margin bottom + border bottom + padding bottom.
+   */
   default float getOutlineBottom ()
   {
     return 0;
   }
 
+  /**
+   * @return margin left + border left + padding left.
+   */
   default float getOutlineLeft ()
   {
     return 0;
   }
 
+  /**
+   * @return Sum of left and right outline.
+   * @see #getOutlineLeft()
+   * @see #getOutlineRight()
+   */
   default float getOutlineXSum ()
   {
     return 0;
   }
 
+  /**
+   * @return Sum of top and bottom outline.
+   * @see #getOutlineTop()
+   * @see #getOutlineBottom()
+   */
   default float getOutlineYSum ()
   {
     return 0;

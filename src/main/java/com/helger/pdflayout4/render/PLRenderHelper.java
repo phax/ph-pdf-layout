@@ -87,8 +87,7 @@ public final class PLRenderHelper
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
       aContentStream.setLineWidth (fLineWidth);
-      aContentStream.addRect (fLeft +
-                              fHalfLineWidth,
+      aContentStream.addRect (fLeft + fHalfLineWidth,
                               fBottom + fHalfLineWidth,
                               fWidth - fLineWidth,
                               fHeight - fLineWidth);
@@ -174,6 +173,21 @@ public final class PLRenderHelper
       }
   }
 
+  /**
+   * Create the background fill (debug and real) and draw the border (debug and
+   * real) of an element.
+   *
+   * @param aElement
+   *        The element to be rendered. May not be <code>null</code>.
+   * @param aCtx
+   *        The render context incl. the content stream.
+   * @param fIndentX
+   *        Additional x-indentation
+   * @param fIndentY
+   *        Additional y-indentation
+   * @throws IOException
+   *         in case writing fails
+   */
   public static <T extends IPLElement <T>> void fillAndRenderBorder (@Nonnull final T aElement,
                                                                      @Nonnull final PageRenderContext aCtx,
                                                                      final float fIndentX,
@@ -188,6 +202,25 @@ public final class PLRenderHelper
     fillAndRenderBorder (aElement, fLeft, fTop, fWidth, fHeight, aCtx.getContentStream ());
   }
 
+  /**
+   * Create the background fill (debug and real) and draw the border (debug and
+   * real) of an element.
+   *
+   * @param aElement
+   *        The element to be rendered. May not be <code>null</code>.
+   * @param fLeft
+   *        left
+   * @param fTop
+   *        top
+   * @param fWidth
+   *        width
+   * @param fHeight
+   *        height
+   * @param aContentStream
+   *        Content stream to act on. May not be <code>null</code>.
+   * @throws IOException
+   *         in case writing fails
+   */
   public static <T extends IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorder (@Nonnull final T aElement,
                                                                                                           final float fLeft,
                                                                                                           final float fTop,
@@ -203,8 +236,7 @@ public final class PLRenderHelper
       if (aOutlineColor != null)
       {
         aContentStream.setNonStrokingColor (aOutlineColor);
-        aContentStream.fillRect (fLeft -
-                                 aElement.getMarginLeft (),
+        aContentStream.fillRect (fLeft - aElement.getMarginLeft (),
                                  fTop - fHeight - aElement.getMarginBottom (),
                                  fWidth + aElement.getMarginXSum (),
                                  fHeight + aElement.getMarginYSum ());
