@@ -595,6 +595,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
     final float fTextHeight = m_fTextHeight;
     final float fPreparedWidth = getPreparedWidth ();
+    final boolean bDoJustifyText = m_eHorzAlign == EHorzAlignment.JUSTIFY;
 
     int nIndex = 0;
     final int nMax = m_aPreparedLines.size ();
@@ -618,17 +619,18 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
           aContentStream.moveTextPositionByAmount (fIndentX, 0);
         }
 
-      // Avoid division by zero
-      boolean bDoJustifyText = m_eHorzAlign == EHorzAlignment.JUSTIFY && sDrawText.length () > 1;
-
       if (bDoJustifyText)
       {
-        // Calculate width of space between each character (therefore -1)
-        final float fCharSpacing = (fPreparedWidth - fTextWidth) / (sDrawText.length () - 1);
-        if (fCharSpacing != 0)
-          aContentStream.setCharacterSpacing (fCharSpacing);
-        else
-          bDoJustifyText = false;
+        // Avoid division by zero
+        float fCharSpacing = 0;
+        if (sDrawText.length () > 1)
+        {
+          // Calculate width of space between each character (therefore -1)
+          fCharSpacing = (fPreparedWidth - fTextWidth) / (sDrawText.length () - 1);
+        }
+
+        // Set for each line separately,
+        aContentStream.setCharacterSpacing (fCharSpacing);
       }
 
       // Main draw string
@@ -644,12 +646,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
         aContentStream.moveTextPositionByAmount (-fIndentX, -fTextHeight * m_fLineSpacing);
       }
 
-      if (bDoJustifyText)
-      {
-        // Important to reset back to default
-        aContentStream.setCharacterSpacing (0);
-      }
     }
+
+    if (bDoJustifyText)
+    {
+      // Important to reset back to default after all
+      aContentStream.setCharacterSpacing (0);
+    }
+
     aContentStream.endText ();
   }
 
