@@ -601,6 +601,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final int nMax = m_aPreparedLines.size ();
     for (final TextAndWidthSpec aTW : m_aPreparedLines)
     {
+      final boolean bBeforeLastLine = nIndex < (nMax - 1);
+
       // Replace text (if any)
       final float fTextWidth = aTW.getWidth ();
       final String sDrawText = aTW.getText ();
@@ -621,16 +623,26 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
       if (bDoJustifyText)
       {
-        // Avoid division by zero
-        float fCharSpacing = 0;
-        if (sDrawText.length () > 1)
+        if (bBeforeLastLine)
         {
-          // Calculate width of space between each character (therefore -1)
-          fCharSpacing = (fPreparedWidth - fTextWidth) / (sDrawText.length () - 1);
-        }
+          // Avoid division by zero
+          float fCharSpacing = 0;
+          if (sDrawText.length () > 1)
+          {
+            // Calculate width of space between each character (therefore -1)
+            fCharSpacing = (fPreparedWidth - fTextWidth) / (sDrawText.length () - 1);
+          }
 
-        // Set for each line separately,
-        aContentStream.setCharacterSpacing (fCharSpacing);
+          // Set for each line separately,
+          aContentStream.setCharacterSpacing (fCharSpacing);
+        }
+        else
+        {
+          // On last line, no justify
+          // Important to reset back to default after all (if any was set)
+          if (nIndex > 0)
+            aContentStream.setCharacterSpacing (0);
+        }
       }
 
       // Main draw string
@@ -640,18 +652,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       // Goto next line
       // Handle indent per-line as when right alignment is used, the indentX may
       // differ from line to line
-      if (nIndex < nMax)
+      if (bBeforeLastLine)
       {
         // Outdent and one line down, except for last line
         aContentStream.moveTextPositionByAmount (-fIndentX, -fTextHeight * m_fLineSpacing);
       }
-
-    }
-
-    if (bDoJustifyText)
-    {
-      // Important to reset back to default after all
-      aContentStream.setCharacterSpacing (0);
     }
 
     aContentStream.endText ();

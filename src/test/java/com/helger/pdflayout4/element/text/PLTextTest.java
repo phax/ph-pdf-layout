@@ -269,7 +269,7 @@ public final class PLTextTest
                                                5) +
                      "\n" +
                      "Tataa: € - and some specials: áàéèíìóòúù ÁÀÉÈÍÌÓÒÚÙ\n" +
-                     "Very short line\n";
+                     "Very short line";
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
@@ -279,6 +279,8 @@ public final class PLTextTest
       for (final EHorzAlignment eHorzAlign : EHorzAlignment.values ())
       {
         aPS1.addElement (new PLText ("Alignment: " + eHorzAlign + "\n" + s, r10).setHorzAlign (eHorzAlign));
+        aPS1.addElement (new PLText ("Second text with a single line only.", r10).setHorzAlign (eHorzAlign)
+                                                                                 .setMarginBottom (10));
       }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();

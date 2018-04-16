@@ -16,6 +16,8 @@ The basic elements provided are:
 
 # News and Noteworthy
 
+* v5.0.4 - 2018-04-16
+  * Do not justify the last line of multiline text
 * v5.0.3 - 2018-04-16
   * Added `ph-collection` dependency for issue #4
   * Updated to PDFBox 2.0.9
@@ -94,7 +96,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout4</artifactId>
-  <version>5.0.3</version>
+  <version>5.0.4</version>
 </dependency>
 ```
 
