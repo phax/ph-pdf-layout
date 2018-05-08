@@ -16,6 +16,8 @@ The basic elements provided are:
 
 # News and Noteworthy
 
+* v5.0.6 - work in progress
+  * Updated to org.apache.pdfbox:jbig2-imageio for JPEG handling 
 * v5.0.5 - 2018-04-16
   * Something went wrong when publishing to Maven Central - next try
 * v5.0.4 - 2018-04-16

@@ -115,12 +115,11 @@
       <artifactId>ph-xml</artifactId>
       <optional>true</optional>
     </dependency>
-    <!-- For reading PDFs with contained JPEGs -->
-    <!-- Cannot use it in production because GPL 3 licensed -->
+    <!-- For reading PDFs with contained JPEGs -->    
     <dependency>
-      <groupId>com.levigo.jbig2</groupId>
-      <artifactId>levigo-jbig2-imageio</artifactId>
-      <version>2.0</version>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>jbig2-imageio</artifactId>
+      <version>3.0.0</version>
       <optional>true</optional>
     </dependency>
     <!-- For reading encrypted PDFs -->
@@ -218,7 +217,7 @@
               com.helger.pdflayout4.*</Private-Package>
             <Import-Package>!javax.annotation.*,*</Import-Package>
             <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"</Require-Capability>
-            <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.helger.pdflayout4.config.ThirdPartyModuleProvider_ph_pdf_layout</Provide-Capability>
+            <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.helger.commons.thirdparty.IThirdPartyModuleProviderSPI</Provide-Capability>
           </instructions>
         </configuration>
       </plugin>
@@ -236,8 +235,7 @@
             </signaturesArtifact>
           </signaturesArtifacts>
         </configuration>
-        <!-- local executions are ignored -->
-      </plugin>
+        <!-- local executions are ignored -->      </plugin>
     </plugins>
   </build>
 </project>
