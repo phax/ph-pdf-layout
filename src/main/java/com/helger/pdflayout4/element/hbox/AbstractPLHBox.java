@@ -322,7 +322,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       float fUsedWidthAutoTooWide = 0;
 
       // Full width of this element
-      final float fAvailableAutoColumnWidth = fRestWidth / (nAutoColumns + nStarColumns);
+      final float fAvailableAutoColumnWidth = nAutoColumns + nStarColumns == 0 ? 0 : fRestWidth /
+                                                                                     (nAutoColumns + nStarColumns);
       final float fAvailableAutoColumnWidthAll = fAvailableAutoColumnWidth * nAutoColumns;
 
       final SizeSpec [] aTooWideAutoCols = new SizeSpec [m_aColumns.size ()];
@@ -389,7 +390,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
           // Percentage of used width compared to total used width of all too
           // wide columns (0-1)
-          final float fAvailableColumnWidthPerc = fTooWideColumnWidth / fUsedWidthAutoTooWide;
+          final float fAvailableColumnWidthPerc = fUsedWidthAutoTooWide == 0 ? 0 : fTooWideColumnWidth /
+                                                                                   fUsedWidthAutoTooWide;
 
           // Use x% of remaining width
           final float fNewAvailableColumnWidth = fRemainingWidthAutoFull * fAvailableColumnWidthPerc;

@@ -334,9 +334,9 @@ public class PageLayoutPDF implements IPLVisitable
     {
       throw new PDFCreationException ("IO Error", ex);
     }
-    catch (final Throwable t)
+    catch (final Exception ex)
     {
-      throw new PDFCreationException ("Internal error", t);
+      throw new PDFCreationException ("Internal error", ex);
     }
   }
 }

@@ -257,31 +257,37 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
     return getPadding ().getYSum ();
   }
 
+  @Override
   default float getOutlineTop ()
   {
     return getPaddingTop ();
   }
 
+  @Override
   default float getOutlineRight ()
   {
     return getPaddingRight ();
   }
 
+  @Override
   default float getOutlineBottom ()
   {
     return getPaddingBottom ();
   }
 
+  @Override
   default float getOutlineLeft ()
   {
     return getPaddingLeft ();
   }
 
+  @Override
   default float getOutlineXSum ()
   {
     return getPaddingXSum ();
   }
 
+  @Override
   default float getOutlineYSum ()
   {
     return getPaddingYSum ();

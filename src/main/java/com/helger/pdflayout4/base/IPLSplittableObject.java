@@ -33,7 +33,7 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
 
   /**
    * Create a new object of the same type as this object.
-   * 
+   *
    * @param aBase
    *        The source object to copy data from.
    * @return Never <code>null</code>.
@@ -46,6 +46,7 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    *         <code>false</code> otherwise. The default is
    *         {@link #DEFAULT_VERT_SPLITTABLE}.
    */
+  @Override
   boolean isVertSplittable ();
 
   /**

@@ -56,7 +56,8 @@ public final class PLDebugLog
 
   public static void debugText (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Text] " + aElement.getDebugID () + " " + sMsg);
+    if (s_aLogger.isInfoEnabled ())
+      s_aLogger.info ("[Text] " + aElement.getDebugID () + " " + sMsg);
   }
 
   public static boolean isDebugFont ()
@@ -71,7 +72,8 @@ public final class PLDebugLog
 
   public static void debugFont (@Nonnull final String sFontID, final String sMsg)
   {
-    s_aLogger.info ("[Font] " + sFontID + " " + sMsg);
+    if (s_aLogger.isInfoEnabled ())
+      s_aLogger.info ("[Font] " + sFontID + " " + sMsg);
   }
 
   public static boolean isDebugSplit ()
@@ -86,7 +88,8 @@ public final class PLDebugLog
 
   public static void debugSplit (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Splitting] " + aElement.getDebugID () + " " + sMsg);
+    if (s_aLogger.isInfoEnabled ())
+      s_aLogger.info ("[Splitting] " + aElement.getDebugID () + " " + sMsg);
   }
 
   public static boolean isDebugPrepare ()
@@ -101,7 +104,8 @@ public final class PLDebugLog
 
   public static void debugPrepare (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Preparing] " + aElement.getDebugID () + " " + sMsg);
+    if (s_aLogger.isInfoEnabled ())
+      s_aLogger.info ("[Preparing] " + aElement.getDebugID () + " " + sMsg);
   }
 
   public static boolean isDebugRender ()
@@ -116,7 +120,8 @@ public final class PLDebugLog
 
   public static void debugRender (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
-    s_aLogger.info ("[Rendering] " + aElement.getDebugID () + " " + sMsg);
+    if (s_aLogger.isInfoEnabled ())
+      s_aLogger.info ("[Rendering] " + aElement.getDebugID () + " " + sMsg);
   }
 
   /**

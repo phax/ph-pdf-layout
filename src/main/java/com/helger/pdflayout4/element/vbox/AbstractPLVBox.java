@@ -502,7 +502,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       float fUsedHeightAutoTooHigh = 0;
 
       // Full width of this element
-      final float fAvailableAutoRowHeight = fRestHeight / (nAutoRows + nStarRows);
+      final float fAvailableAutoRowHeight = nAutoRows + nStarRows == 0 ? 0 : fRestHeight / (nAutoRows + nStarRows);
       final float fAvailableAutoRowHeightAll = fAvailableAutoRowHeight * nAutoRows;
 
       final SizeSpec [] aTooHighAutoRows = new SizeSpec [m_aRows.size ()];
@@ -569,7 +569,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
           // Percentage of used height compared to total used height of all too
           // high rows (0-1)
-          final float fAvailableRowHeightPerc = fTooHighRowHeight / fUsedHeightAutoTooHigh;
+          final float fAvailableRowHeightPerc = fUsedHeightAutoTooHigh == 0 ? 0 : fTooHighRowHeight /
+                                                                                  fUsedHeightAutoTooHigh;
 
           // Use x% of remaining height
           // Ensure the height is not smaller than the minimum height - may be
@@ -600,13 +601,14 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           {
             fUsedAutoHeightFullForStar += fNewAvailableRowHeight;
             if (!aElement.isVertSplittable ())
-              s_aLogger.info ("VBox row element " +
-                              aElement.getDebugID () +
-                              " uses more height (" +
-                              fRowHeightFull +
-                              ") than is available (" +
-                              fNewAvailableRowHeight +
-                              " and is NOT vertical splittable!");
+              if (s_aLogger.isInfoEnabled ())
+                s_aLogger.info ("VBox row element " +
+                                aElement.getDebugID () +
+                                " uses more height (" +
+                                fRowHeightFull +
+                                ") than is available (" +
+                                fNewAvailableRowHeight +
+                                " and is NOT vertical splittable!");
           }
           else
             fUsedAutoHeightFullForStar += fRowHeightFull;

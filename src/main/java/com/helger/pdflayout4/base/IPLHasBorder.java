@@ -226,31 +226,37 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
     return getBorder ().getYSumWidth ();
   }
 
+  @Override
   default float getOutlineTop ()
   {
     return getBorderTopWidth ();
   }
 
+  @Override
   default float getOutlineRight ()
   {
     return getBorderRightWidth ();
   }
 
+  @Override
   default float getOutlineBottom ()
   {
     return getBorderBottomWidth ();
   }
 
+  @Override
   default float getOutlineLeft ()
   {
     return getBorderLeftWidth ();
   }
 
+  @Override
   default float getOutlineXSum ()
   {
     return getBorderXSumWidth ();
   }
 
+  @Override
   default float getOutlineYSum ()
   {
     return getBorderYSumWidth ();

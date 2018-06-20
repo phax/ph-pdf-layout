@@ -72,7 +72,8 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     ValueEnforcer.notEmpty (sID, "ID");
     if (StringHelper.hasText (m_sElementID) && m_sDebugID != null)
     {
-      s_aLogger.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
+      if (s_aLogger.isWarnEnabled ())
+        s_aLogger.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
       // Disable caching
       m_sDebugID = null;
     }

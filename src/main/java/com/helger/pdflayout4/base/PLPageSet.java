@@ -224,7 +224,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
    */
   public boolean isDifferentFirstPageHeader ()
   {
-    return m_bDifferentFirstPageFooter;
+    return m_bDifferentFirstPageHeader;
   }
 
   /**

@@ -257,31 +257,37 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
     return getMargin ().getYSum ();
   }
 
+  @Override
   default float getOutlineTop ()
   {
     return getMarginTop ();
   }
 
+  @Override
   default float getOutlineRight ()
   {
     return getMarginRight ();
   }
 
+  @Override
   default float getOutlineBottom ()
   {
     return getMarginBottom ();
   }
 
+  @Override
   default float getOutlineLeft ()
   {
     return getMarginLeft ();
   }
 
+  @Override
   default float getOutlineXSum ()
   {
     return getMarginXSum ();
   }
 
+  @Override
   default float getOutlineYSum ()
   {
     return getMarginYSum ();

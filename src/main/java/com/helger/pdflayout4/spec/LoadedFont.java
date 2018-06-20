@@ -282,19 +282,21 @@ public class LoadedFont
   {
     // Minimum is 1*string length
     // Maximum is 4*string length
-    final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream (sText.length () * 2);
-    int nCPOfs = 0;
-    while (nCPOfs < sText.length ())
+    try (final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream (sText.length () * 2))
     {
-      final int nCP = sText.codePointAt (nCPOfs);
-      nCPOfs += Character.charCount (nCP);
+      int nCPOfs = 0;
+      while (nCPOfs < sText.length ())
+      {
+        final int nCP = sText.codePointAt (nCPOfs);
+        nCPOfs += Character.charCount (nCP);
 
-      final EncodedCodePoint aECP = _getEncodedCodePoint (nCP);
-      if (m_bFontWillBeSubset)
-        m_aFont.addToSubset (aECP.getCodePoint ());
-      aECP.writeEncodedBytes (aBAOS);
+        final EncodedCodePoint aECP = _getEncodedCodePoint (nCP);
+        if (m_bFontWillBeSubset)
+          m_aFont.addToSubset (aECP.getCodePoint ());
+        aECP.writeEncodedBytes (aBAOS);
+      }
+      return aBAOS.toByteArray ();
     }
-    return aBAOS.toByteArray ();
   }
 
   private void _getLineFitToWidthForward (@Nonnull final String sLine,
