@@ -16,7 +16,7 @@ The basic elements provided are:
 
 # News and Noteworthy
 
-* v5.0.6 - work in progress
+* v5.0.6 - 2018-06-21
   * Updated to org.apache.pdfbox:jbig2-imageio for JPEG handling
   * Fixed OSGI ServiceProvider configuration
   * Updated to ph-commons 9.1.2
@@ -102,7 +102,7 @@ Add the following to your pom.xml to use this artifact:
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout4</artifactId>
-  <version>5.0.5</version>
+  <version>5.0.6</version>
 </dependency>
 ```
 
