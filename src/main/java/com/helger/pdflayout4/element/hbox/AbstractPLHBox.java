@@ -432,7 +432,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         if (aColumn.getWidth ().isStar ())
         {
           final IPLRenderableObject <?> aElement = aColumn.getElement ();
+
           // Full width of this element
+          if (nStarColumns == 0)
+            throw new IllegalStateException ("Internal inconsistency");
           final float fColumnWidthFull = fRestWidth / nStarColumns;
 
           // Prepare child element
@@ -478,20 +481,22 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidthFull - fElementWidth > 0.01)
-        s_aLogger.warn (getDebugID () +
-                        " uses more width (" +
-                        fUsedWidthFull +
-                        ") than available (" +
-                        fElementWidth +
-                        ")!");
+        if (s_aLogger.isWarnEnabled ())
+          s_aLogger.warn (getDebugID () +
+                          " uses more width (" +
+                          fUsedWidthFull +
+                          ") than available (" +
+                          fElementWidth +
+                          ")!");
       if (fMaxColumnHeightFull - fElementHeight > 0.01)
         if (!isVertSplittable ())
-          s_aLogger.warn (getDebugID () +
-                          " uses more height (" +
-                          fMaxColumnHeightFull +
-                          ") than available (" +
-                          fElementHeight +
-                          ")!");
+          if (s_aLogger.isWarnEnabled ())
+            s_aLogger.warn (getDebugID () +
+                            " uses more height (" +
+                            fMaxColumnHeightFull +
+                            ") than available (" +
+                            fElementHeight +
+                            ")!");
     }
 
     return new SizeSpec (fUsedWidthFull, fMaxColumnHeightFull);

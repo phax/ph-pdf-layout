@@ -76,15 +76,14 @@ public interface IPLVisitor
    * @param aElementConsumer
    *        The consumer to use. May not be <code>null</code>.
    * @return The new element visitor to use
-   * @throws IOException
-   *         on PDFBox error
    */
   @Nonnull
-  static IPLVisitor createElementVisitor (@Nonnull final IThrowingFunction <? super IPLRenderableObject <?>, EChange, IOException> aElementConsumer) throws IOException
+  static IPLVisitor createElementVisitor (@Nonnull final IThrowingFunction <? super IPLRenderableObject <?>, EChange, IOException> aElementConsumer)
   {
     ValueEnforcer.notNull (aElementConsumer, "ElementConsumer");
     return new IPLVisitor ()
     {
+      @Override
       @Nonnull
       public EChange onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
       {

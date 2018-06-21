@@ -491,11 +491,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       {
         // If the height of the header exceeds the available top-margin, modify
         // the margin so that the header fits!
-        s_aLogger.info ("PageSet margin top was changed from " +
-                        getMarginTop () +
-                        " to " +
-                        fEffectiveHeaderHeight +
-                        " so that firstPageHeader fits!");
+        if (s_aLogger.isInfoEnabled ())
+          s_aLogger.info ("PageSet margin top was changed from " +
+                          getMarginTop () +
+                          " to " +
+                          fEffectiveHeaderHeight +
+                          " so that firstPageHeader fits!");
         setMarginTop (fEffectiveHeaderHeight);
       }
     }
@@ -524,11 +525,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       {
         // If the height of the header exceeds the available top-margin, modify
         // the margin so that the header fits!
-        s_aLogger.info ("PageSet margin top was changed from " +
-                        getMarginTop () +
-                        " to " +
-                        fEffectiveHeaderHeight +
-                        " so that pageHeader fits!");
+        if (s_aLogger.isInfoEnabled ())
+          s_aLogger.info ("PageSet margin top was changed from " +
+                          getMarginTop () +
+                          " to " +
+                          fEffectiveHeaderHeight +
+                          " so that pageHeader fits!");
         setMarginTop (fEffectiveHeaderHeight);
       }
     }
@@ -557,11 +559,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       {
         // If the height of the footer exceeds the available bottom-margin,
         // modify the margin so that the footer fits!
-        s_aLogger.info ("PageSet margin bottom was changed from " +
-                        getMarginBottom () +
-                        " to " +
-                        fEffectiveFooterHeight +
-                        " so that firstPageFooter fits!");
+        if (s_aLogger.isInfoEnabled ())
+          s_aLogger.info ("PageSet margin bottom was changed from " +
+                          getMarginBottom () +
+                          " to " +
+                          fEffectiveFooterHeight +
+                          " so that firstPageFooter fits!");
         setMarginBottom (fEffectiveFooterHeight);
       }
     }
@@ -590,11 +593,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       {
         // If the height of the footer exceeds the available bottom-margin,
         // modify the margin so that the footer fits!
-        s_aLogger.info ("PageSet margin bottom was changed from " +
-                        getMarginBottom () +
-                        " to " +
-                        fEffectiveFooterHeight +
-                        " so that pageFooter fits!");
+        if (s_aLogger.isInfoEnabled ())
+          s_aLogger.info ("PageSet margin bottom was changed from " +
+                          getMarginBottom () +
+                          " to " +
+                          fEffectiveFooterHeight +
+                          " so that pageFooter fits!");
         setMarginBottom (fEffectiveFooterHeight);
       }
     }
@@ -750,11 +754,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
             if (!bIsPagebreakDesired)
             {
               // one element too large for a page
-              s_aLogger.warn ("The single element " +
-                              aElement.getDebugID () +
-                              " does not fit onto a single page" +
-                              (bIsVertSplittable ? " even though it is vertically splittable!"
-                                                 : " and is not vertically splittable!"));
+              if (s_aLogger.isWarnEnabled ())
+                s_aLogger.warn ("The single element " +
+                                aElement.getDebugID () +
+                                " does not fit onto a single page" +
+                                (bIsVertSplittable ? " even though it is vertically splittable!"
+                                                   : " and is not vertically splittable!"));
             }
           }
           else

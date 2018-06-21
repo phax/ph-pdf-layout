@@ -261,12 +261,10 @@ public final class PDPageContentStreamExt implements Closeable
    *        The appearance stream to add to.
    * @param outputStream
    *        The appearances output stream to write to.
-   * @throws IOException
-   *         If there is an error writing to the page contents.
    */
   public PDPageContentStreamExt (final PDDocument doc,
                                  final PDAppearanceStream appearance,
-                                 final OutputStream outputStream) throws IOException
+                                 final OutputStream outputStream)
   {
     this.m_aDoc = doc;
 
@@ -1642,8 +1640,7 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IOException
    *         In case of IO error
    */
-  @Deprecated
-  protected void write (final String text) throws IOException
+  private void write (final String text) throws IOException
   {
     write (text.getBytes (Charsets.US_ASCII));
   }

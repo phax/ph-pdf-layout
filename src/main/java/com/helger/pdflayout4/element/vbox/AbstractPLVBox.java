@@ -640,6 +640,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           final IPLRenderableObject <?> aElement = aRow.getElement ();
 
           // Height of this row
+          if (nStarRows == 0)
+            throw new IllegalStateException ("Internal inconsistency");
           final float fRowHeight = fRestHeight / nStarRows;
 
           // Prepare child element
@@ -692,19 +694,21 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fMaxRowWidthFull - fElementWidth > 0.01)
-        s_aLogger.warn (getDebugID () +
-                        " uses more width (" +
-                        fMaxRowWidthFull +
-                        ") than available (" +
-                        fElementWidth +
-                        ")!");
+        if (s_aLogger.isWarnEnabled ())
+          s_aLogger.warn (getDebugID () +
+                          " uses more width (" +
+                          fMaxRowWidthFull +
+                          ") than available (" +
+                          fElementWidth +
+                          ")!");
       if (fUsedHeightFull - fElementHeight > 0.01 && !isVertSplittable ())
-        s_aLogger.warn (getDebugID () +
-                        " uses more height (" +
-                        fUsedHeightFull +
-                        ") than available (" +
-                        fElementHeight +
-                        ")!");
+        if (s_aLogger.isWarnEnabled ())
+          s_aLogger.warn (getDebugID () +
+                          " uses more height (" +
+                          fUsedHeightFull +
+                          ") than available (" +
+                          fElementHeight +
+                          ")!");
     }
     return new SizeSpec (fMaxRowWidthFull, fUsedHeightFull);
   }

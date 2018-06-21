@@ -63,6 +63,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
   @Override
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
+    // No further ado
     super.onRender (aCtx);
   }
 
