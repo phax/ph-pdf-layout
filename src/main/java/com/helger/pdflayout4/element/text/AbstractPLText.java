@@ -236,6 +236,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return thisAsT ();
   }
 
+  @Override
   public final boolean isVertSplittable ()
   {
     return m_bVertSplittable;

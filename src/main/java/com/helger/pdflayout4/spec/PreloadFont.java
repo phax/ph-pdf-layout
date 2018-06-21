@@ -68,9 +68,15 @@ public final class PreloadFont implements IHasID <String>, Serializable
   {
     ValueEnforcer.notNull (aFont, "Font");
     // Symbol fonts needs a different fallback code point!
-    final int nFallbackCodePoint = aFont == PDType1Font.SYMBOL ? '•'
-                                                               : aFont == PDType1Font.ZAPF_DINGBATS ? '✕'
-                                                                                                    : DEFAULT_FALLBACK_CODE_POINT;
+    int nFallbackCodePoint;
+    if (aFont == PDType1Font.SYMBOL)
+      nFallbackCodePoint = '•';
+    else
+      if (aFont == PDType1Font.ZAPF_DINGBATS)
+        nFallbackCodePoint = '✕';
+      else
+        nFallbackCodePoint = DEFAULT_FALLBACK_CODE_POINT;
+
     final PreloadFont ret = new PreloadFont (aFont, nFallbackCodePoint);
     STANDARD_14.put (aFont.getBaseFont (), aFont);
     STANDARD_14_PF.put (aFont.getBaseFont (), ret);
