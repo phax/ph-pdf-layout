@@ -17,7 +17,7 @@ The basic elements provided are:
 # News and Noteworthy
 
 * v5.0.7 - work in progress
-    * Updated to PDFBox 2.0.10
+    * Updated to PDFBox 2.0.11
 * v5.0.6 - 2018-06-21
     * Updated to org.apache.pdfbox:jbig2-imageio for JPEG handling
     * Fixed OSGI ServiceProvider configuration
