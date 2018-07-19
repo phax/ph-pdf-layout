@@ -30,7 +30,7 @@ import com.helger.font.open_sans.EFontResourceOpenSans;
 
 public final class MainHelloWorldType0
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (MainHelloWorldType0.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (MainHelloWorldType0.class);
 
   public static void main (final String [] args) throws IOException
   {
@@ -51,11 +51,11 @@ public final class MainHelloWorldType0
       final PDFont font = PDType0Font.load (doc,
                                             EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
                                                                                   .getInputStream ());
-      s_aLogger.info ("Finished loading font at " + (System.currentTimeMillis () - nStart) + "ms");
+      LOGGER.info ("Finished loading font at " + (System.currentTimeMillis () - nStart) + "ms");
 
       for (int i = 0; i < 100; ++i)
         font.getStringWidth (message);
-      s_aLogger.info ("Finished string width (" +
+      LOGGER.info ("Finished string width (" +
                       message.length () +
                       " chars) after " +
                       (System.currentTimeMillis () - nStart) +
@@ -72,6 +72,6 @@ public final class MainHelloWorldType0
 
       doc.save (file);
     }
-    s_aLogger.info (file + " created! Took " + (System.currentTimeMillis () - nStart) + "ms");
+    LOGGER.info (file + " created! Took " + (System.currentTimeMillis () - nStart) + "ms");
   }
 }

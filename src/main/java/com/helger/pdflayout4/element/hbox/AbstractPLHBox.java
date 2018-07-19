@@ -73,7 +73,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                      AbstractPLRenderableObject <IMPLTYPE> implements
                                      IPLSplittableObject <IMPLTYPE>
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLHBox.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLHBox.class);
 
   private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
@@ -481,8 +481,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fUsedWidthFull - fElementWidth > 0.01)
-        if (s_aLogger.isWarnEnabled ())
-          s_aLogger.warn (getDebugID () +
+        if (LOGGER.isWarnEnabled ())
+          LOGGER.warn (getDebugID () +
                           " uses more width (" +
                           fUsedWidthFull +
                           ") than available (" +
@@ -490,8 +490,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                           ")!");
       if (fMaxColumnHeightFull - fElementHeight > 0.01)
         if (!isVertSplittable ())
-          if (s_aLogger.isWarnEnabled ())
-            s_aLogger.warn (getDebugID () +
+          if (LOGGER.isWarnEnabled ())
+            LOGGER.warn (getDebugID () +
                             " uses more height (" +
                             fMaxColumnHeightFull +
                             ") than available (" +

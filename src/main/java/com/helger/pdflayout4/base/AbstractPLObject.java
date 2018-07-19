@@ -39,7 +39,7 @@ import com.helger.commons.string.ToStringGenerator;
  */
 public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLTYPE>> implements IPLObject <IMPLTYPE>
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLObject.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLObject.class);
 
   private String m_sElementID;
   private transient String m_sDebugID;
@@ -72,8 +72,8 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     ValueEnforcer.notEmpty (sID, "ID");
     if (StringHelper.hasText (m_sElementID) && m_sDebugID != null)
     {
-      if (s_aLogger.isWarnEnabled ())
-        s_aLogger.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
+      if (LOGGER.isWarnEnabled ())
+        LOGGER.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
       // Disable caching
       m_sDebugID = null;
     }

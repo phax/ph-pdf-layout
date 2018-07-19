@@ -79,7 +79,7 @@ import com.helger.commons.collection.NonBlockingStack;
 @NotThreadSafe
 public final class PDPageContentStreamExt implements Closeable
 {
-  private static final Log s_aLogger = LogFactory.getLog (PDPageContentStreamExt.class);
+  private static final Log LOGGER = LogFactory.getLog (PDPageContentStreamExt.class);
 
   private final PDDocument m_aDoc;
   protected OutputStream m_aOS;
@@ -214,7 +214,7 @@ public final class PDPageContentStreamExt implements Closeable
     {
       if (sourcePage.hasContents ())
       {
-        s_aLogger.warn ("You are overwriting an existing content, you should use the append mode");
+        LOGGER.warn ("You are overwriting an existing content, you should use the append mode");
       }
       final PDStream contents = new PDStream (document);
       sourcePage.setContents (contents);

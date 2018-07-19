@@ -40,7 +40,7 @@ public final class PLConfig
   /** Current version - from properties file */
   public static final String PROJECT_VERSION;
 
-  private static final Logger s_aLogger = LoggerFactory.getLogger (PLConfig.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (PLConfig.class);
 
   static
   {
@@ -51,7 +51,7 @@ public final class PLConfig
     if (sProjectVersion == null)
     {
       sProjectVersion = "undefined";
-      s_aLogger.warn ("Failed to load ph-pdf-layout version number");
+      LOGGER.warn ("Failed to load ph-pdf-layout version number");
     }
     PROJECT_VERSION = sProjectVersion;
   }

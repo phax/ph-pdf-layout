@@ -78,7 +78,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                      IPLSplittableObject <IMPLTYPE>
 {
   public static final boolean DEFAULT_FULL_WIDTH = true;
-  private static final Logger s_aLogger = LoggerFactory.getLogger (AbstractPLVBox.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLVBox.class);
 
   // All the rows of this VBox
   private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
@@ -601,8 +601,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           {
             fUsedAutoHeightFullForStar += fNewAvailableRowHeight;
             if (!aElement.isVertSplittable ())
-              if (s_aLogger.isInfoEnabled ())
-                s_aLogger.info ("VBox row element " +
+              if (LOGGER.isInfoEnabled ())
+                LOGGER.info ("VBox row element " +
                                 aElement.getDebugID () +
                                 " uses more height (" +
                                 fRowHeightFull +
@@ -694,16 +694,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (GlobalDebug.isDebugMode ())
     {
       if (fMaxRowWidthFull - fElementWidth > 0.01)
-        if (s_aLogger.isWarnEnabled ())
-          s_aLogger.warn (getDebugID () +
+        if (LOGGER.isWarnEnabled ())
+          LOGGER.warn (getDebugID () +
                           " uses more width (" +
                           fMaxRowWidthFull +
                           ") than available (" +
                           fElementWidth +
                           ")!");
       if (fUsedHeightFull - fElementHeight > 0.01 && !isVertSplittable ())
-        if (s_aLogger.isWarnEnabled ())
-          s_aLogger.warn (getDebugID () +
+        if (LOGGER.isWarnEnabled ())
+          LOGGER.warn (getDebugID () +
                           " uses more height (" +
                           fUsedHeightFull +
                           ") than available (" +

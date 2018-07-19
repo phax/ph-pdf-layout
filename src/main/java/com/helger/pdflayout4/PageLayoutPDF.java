@@ -61,7 +61,7 @@ import com.helger.pdflayout4.render.PreparationContextGlobal;
 @NotThreadSafe
 public class PageLayoutPDF implements IPLVisitable
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (PageLayoutPDF.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (PageLayoutPDF.class);
 
   private String m_sDocumentAuthor;
   private LocalDateTime m_aDocumentCreationDate;
@@ -327,8 +327,8 @@ public class PageLayoutPDF implements IPLVisitable
       // save document to output stream
       aDoc.save (aBufferedOS);
 
-      if (s_aLogger.isDebugEnabled ())
-        s_aLogger.debug ("PDF successfully created");
+      if (LOGGER.isDebugEnabled ())
+        LOGGER.debug ("PDF successfully created");
     }
     catch (final IOException ex)
     {

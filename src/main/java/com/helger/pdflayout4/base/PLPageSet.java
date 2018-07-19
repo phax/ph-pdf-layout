@@ -68,7 +68,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
 {
   public static final boolean DEFAULT_DIFFERENT_FIRST_PAGE_HEADER = false;
   public static final boolean DEFAULT_DIFFERENT_FIRST_PAGE_FOOTER = false;
-  private static final Logger s_aLogger = LoggerFactory.getLogger (PLPageSet.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (PLPageSet.class);
 
   private final SizeSpec m_aPageSize;
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
@@ -491,8 +491,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       {
         // If the height of the header exceeds the available top-margin, modify
         // the margin so that the header fits!
-        if (s_aLogger.isInfoEnabled ())
-          s_aLogger.info ("PageSet margin top was changed from " +
+        if (LOGGER.isInfoEnabled ())
+          LOGGER.info ("PageSet margin top was changed from " +
                           getMarginTop () +
                           " to " +
                           fEffectiveHeaderHeight +
@@ -525,8 +525,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       {
         // If the height of the header exceeds the available top-margin, modify
         // the margin so that the header fits!
-        if (s_aLogger.isInfoEnabled ())
-          s_aLogger.info ("PageSet margin top was changed from " +
+        if (LOGGER.isInfoEnabled ())
+          LOGGER.info ("PageSet margin top was changed from " +
                           getMarginTop () +
                           " to " +
                           fEffectiveHeaderHeight +
@@ -559,8 +559,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       {
         // If the height of the footer exceeds the available bottom-margin,
         // modify the margin so that the footer fits!
-        if (s_aLogger.isInfoEnabled ())
-          s_aLogger.info ("PageSet margin bottom was changed from " +
+        if (LOGGER.isInfoEnabled ())
+          LOGGER.info ("PageSet margin bottom was changed from " +
                           getMarginBottom () +
                           " to " +
                           fEffectiveFooterHeight +
@@ -593,8 +593,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       {
         // If the height of the footer exceeds the available bottom-margin,
         // modify the margin so that the footer fits!
-        if (s_aLogger.isInfoEnabled ())
-          s_aLogger.info ("PageSet margin bottom was changed from " +
+        if (LOGGER.isInfoEnabled ())
+          LOGGER.info ("PageSet margin bottom was changed from " +
                           getMarginBottom () +
                           " to " +
                           fEffectiveFooterHeight +
@@ -754,8 +754,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
             if (!bIsPagebreakDesired)
             {
               // one element too large for a page
-              if (s_aLogger.isWarnEnabled ())
-                s_aLogger.warn ("The single element " +
+              if (LOGGER.isWarnEnabled ())
+                LOGGER.warn ("The single element " +
                                 aElement.getDebugID () +
                                 " does not fit onto a single page" +
                                 (bIsVertSplittable ? " even though it is vertically splittable!"
@@ -765,8 +765,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
           else
           {
             // We found elements fitting onto a page (at least one)
-            if (s_aLogger.isDebugEnabled ())
-              s_aLogger.debug ("Adding " + aCurPageElements.size () + " elements to page " + ret.getPageNumber ());
+            if (LOGGER.isDebugEnabled ())
+              LOGGER.debug ("Adding " + aCurPageElements.size () + " elements to page " + ret.getPageNumber ());
 
             if (PLDebugLog.isDebugPrepare ())
             {

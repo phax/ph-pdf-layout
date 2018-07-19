@@ -33,7 +33,7 @@ import com.helger.font.open_sans.EFontResourceOpenSans;
 
 public final class MainIssue3337
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (MainIssue3337.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (MainIssue3337.class);
 
   public static void main (final String [] args) throws IOException
   {
@@ -42,7 +42,7 @@ public final class MainIssue3337
 
     for (int i = 0; i < 2; ++i)
     {
-      s_aLogger.info ("Create PDF " + i);
+      LOGGER.info ("Create PDF " + i);
       try (final PDDocument doc = new PDDocument ())
       {
         final PDPage page = new PDPage (PDRectangle.A4);

@@ -106,7 +106,7 @@ public class LoadedFont
     }
   }
 
-  private static final Logger s_aLogger = LoggerFactory.getLogger (LoadedFont.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (LoadedFont.class);
 
   /** The underlying PDFBox font */
   private final PDFont m_aFont;
@@ -332,8 +332,8 @@ public class LoadedFont
       {
         if (!bWarnedOnTooSmallMaxWidth)
         {
-          if (s_aLogger.isWarnEnabled ())
-            s_aLogger.warn ("The provided max width (" +
+          if (LOGGER.isWarnEnabled ())
+            LOGGER.warn ("The provided max width (" +
                             fMaxWidth +
                             ") is too small to hold a single character! Will create an overlap! Problem string=<" +
                             sLine +

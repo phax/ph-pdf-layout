@@ -28,7 +28,7 @@ import com.helger.commons.io.file.FileSystemRecursiveIterator;
 
 public final class MainIssue3204
 {
-  private static final Logger s_aLogger = LoggerFactory.getLogger (MainIssue3204.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (MainIssue3204.class);
 
   public static void main (final String [] args) throws IOException
   {
@@ -36,13 +36,13 @@ public final class MainIssue3204
     for (final File f : new FileSystemRecursiveIterator ("/"))
       if (f.isFile () && f.getName ().endsWith (".pdf"))
       {
-        s_aLogger.info (f.getAbsolutePath ());
+        LOGGER.info (f.getAbsolutePath ());
         try (PDDocument aDoc = PDDocument.load (f))
         {
           new PDFRenderer (aDoc).renderImageWithDPI (0, 195);
           n++;
         }
       }
-    s_aLogger.info (n + " files found");
+    LOGGER.info (n + " files found");
   }
 }
