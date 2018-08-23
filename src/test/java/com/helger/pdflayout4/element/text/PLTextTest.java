@@ -34,9 +34,11 @@ import com.helger.commons.string.StringHelper;
 import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
 import com.helger.font.anaheim.EFontResourceAnaheim;
 import com.helger.font.api.IHasFontResource;
+import com.helger.font.exo2.EFontResourceExo2;
 import com.helger.font.lato2.EFontResourceLato2;
 import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.font.roboto.EFontResourceRoboto;
+import com.helger.font.source_sans_pro.EFontResourceSourceSansPro;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
@@ -240,14 +242,16 @@ public final class PLTextTest
     for (final IHasFontResource aHasFont : new CommonsArrayList <> (EFontResourceAlegreyaSans.ALGREYA_SANS_NORMAL,
                                                                     EFontResourceAlegreyaSans.ALGREYA_SANS_BLACK,
                                                                     EFontResourceAnaheim.ANAHEIM_REGULAR,
-                                                                    // EFontResourceExo2.EXO2_NORMAL,
-                                                                    // EFontResourceExo2.EXO2_BLACK,
+                                                                    EFontResourceExo2.EXO2_NORMAL,
+                                                                    EFontResourceExo2.EXO2_BLACK,
                                                                     EFontResourceLato2.LATO2_NORMAL,
                                                                     EFontResourceLato2.LATO2_BLACK,
                                                                     EFontResourceOpenSans.OPEN_SANS_NORMAL,
                                                                     EFontResourceOpenSans.OPEN_SANS_BOLD,
                                                                     EFontResourceRoboto.ROBOTO_NORMAL,
-                                                                    EFontResourceRoboto.ROBOTO_BOLD))
+                                                                    EFontResourceRoboto.ROBOTO_BOLD,
+                                                                    EFontResourceSourceSansPro.SOURCE_SANS_PRO_NORMAL,
+                                                                    EFontResourceSourceSansPro.SOURCE_SANS_PRO_BOLD))
     {
       // Load TTF font
       final PreloadFont aFont = PreloadFont.createEmbedding (aHasFont.getFontResource ());

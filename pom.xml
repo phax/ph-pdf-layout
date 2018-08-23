@@ -171,6 +171,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-fonts-source-sans-pro</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox-examples</artifactId>
       <version>${pdfbox.version}</version>
