@@ -52,7 +52,7 @@ public final class PLImageTest
   public final TestRule m_aRule = new DebugModeTestRule ();
 
   @Test
-  public void testWithWordBreak () throws PDFCreationException, IOException
+  public void testBasic () throws PDFCreationException, IOException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
@@ -81,5 +81,25 @@ public final class PLImageTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plimage.pdf")));
+  }
+
+  @Test
+  public void testTextOverImage () throws PDFCreationException, IOException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+
+    final PLHBox aBox = new PLHBox ();
+    aBox.addColumn (new PLImage (ImageIO.read (ClassPathResource.getInputStream ("images/test1.jpg")), 50, 50),
+                    WidthSpec.abs (50));
+    aBox.addColumn (new PLText ("Text over image", r10.getCloneWithDifferentColor (Color.RED)).setMarginLeft (-50)
+                                                                                              .setMarginTop (10),
+                    WidthSpec.abs (50));
+    aPS1.addElement (aBox);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-over-plimage.pdf")));
   }
 }
