@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.WillNotClose;
-import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.fontbox.ttf.OpenTypeFont;
@@ -54,7 +54,7 @@ import com.helger.pdflayout4.PLDebugLog;
  *
  * @author Philip Helger
  */
-@Immutable
+@NotThreadSafe
 public final class PreloadFont implements IHasID <String>, Serializable
 {
   private static final int DEFAULT_FALLBACK_CODE_POINT = '?';

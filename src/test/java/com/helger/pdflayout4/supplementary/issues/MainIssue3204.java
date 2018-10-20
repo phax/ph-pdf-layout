@@ -26,10 +26,13 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.io.file.FileSystemRecursiveIterator;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public final class MainIssue3204
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (MainIssue3204.class);
 
+  @SuppressFBWarnings ("DMI_HARDCODED_ABSOLUTE_FILENAME")
   public static void main (final String [] args) throws IOException
   {
     int n = 0;
