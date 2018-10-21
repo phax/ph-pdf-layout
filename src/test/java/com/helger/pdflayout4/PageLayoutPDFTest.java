@@ -55,7 +55,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public final class PageLayoutPDFTest
 {
   @Rule
-  public TestRule m_aRule = new DebugModeTestRule ();
+  public final TestRule m_aRule = new DebugModeTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException
