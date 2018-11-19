@@ -237,7 +237,7 @@
               <artifactId>ph-forbidden-apis</artifactId>
               <version>1.1.1</version>
               <type>jar</type>
-              <path>forbidden-apis-java8.txt</path>
+              <path>forbidden-apis-java9.txt</path>
             </signaturesArtifact>
           </signaturesArtifacts>
         </configuration>
