@@ -31,6 +31,7 @@
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
   <url>https://github.com/phax/ph-pdf-layout</url>
   <inceptionYear>2014</inceptionYear>
+
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -38,6 +39,7 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
   <repositories>
     <repository>
       <id>ApacheSnapshot</id>
@@ -48,16 +50,19 @@
       </snapshots>
     </repository>
   </repositories>
+
   <scm>
     <connection>scm:git:git@github.com:phax/ph-pdf-layout.git</connection>
     <developerConnection>scm:git:git@github.com:phax/ph-pdf-layout.git</developerConnection>
     <url>http://github.com/phax/ph-pdf-layout</url>
     <tag>HEAD</tag>
   </scm>
+
   <organization>
     <name>Philip Helger</name>
     <url>http://www.helger.com</url>
   </organization>
+
   <developers>
     <developer>
       <id>philip</id>
@@ -66,9 +71,11 @@
       <url>http://www.helger.com</url>
     </developer>
   </developers>
+
   <properties>
     <pdfbox.version>2.0.12</pdfbox.version>
   </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -85,8 +92,29 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox</artifactId>
+        <version>${pdfbox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox-examples</artifactId>
+        <version>${pdfbox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox-app</artifactId>
+        <version>${pdfbox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>jbig2-imageio</artifactId>
+        <version>3.0.2</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>com.helger</groupId>
@@ -103,12 +131,12 @@
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox</artifactId>
-      <version>${pdfbox.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
     </dependency>
+
     <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-xml</artifactId>
@@ -118,7 +146,6 @@
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>jbig2-imageio</artifactId>
-      <version>3.0.2</version>
       <optional>true</optional>
     </dependency>
     <!-- For reading encrypted PDFs -->
@@ -130,6 +157,7 @@
       <optional>true</optional>
     </dependency>
     -->
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -178,16 +206,15 @@
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox-examples</artifactId>
-      <version>${pdfbox.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox-app</artifactId>
-      <version>${pdfbox.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
     <resources>
       <!-- Don't specify the targetPath because this leads to a broken JAR file 

@@ -16,8 +16,9 @@ The basic elements provided are:
 
 # News and Noteworthy
 
-* v5.0.8 - work in progress
+* v5.0.8 - 2018-11-22
     * Updated to PDFBox 2.0.12
+    * Updated to ph-commons 9.2.0
 * v5.0.7 - 2018-07-10
     * Updated to PDFBox 2.0.11
 * v5.0.6 - 2018-06-21
@@ -101,12 +102,14 @@ Note: version 3.5.2 is not actively developed - in the meantime ph-pdf-layout 4 
 Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_112 or later should work.
 
 # Maven usage
+
 Add the following to your pom.xml to use this artifact:
-```
+
+```xml
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout4</artifactId>
-  <version>5.0.7</version>
+  <version>5.0.8</version>
 </dependency>
 ```
 
