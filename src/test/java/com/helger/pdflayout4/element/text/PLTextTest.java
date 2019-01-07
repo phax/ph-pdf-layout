@@ -42,10 +42,13 @@ import com.helger.font.source_sans_pro.EFontResourceSourceSansPro;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
+import com.helger.pdflayout4.element.box.PLBox;
+import com.helger.pdflayout4.element.hbox.PLHBox;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EHorzAlignment;
 import com.helger.pdflayout4.spec.FontSpec;
 import com.helger.pdflayout4.spec.PreloadFont;
+import com.helger.pdflayout4.spec.WidthSpec;
 
 /**
  * Test class for {@link PLText}
@@ -286,6 +289,35 @@ public final class PLTextTest
         aPS1.addElement (new PLText ("Second text with a single line only.", r10).setHorzAlign (eHorzAlign)
                                                                                  .setMarginBottom (10));
       }
+
+    {
+      final PLText aText = new PLText ("For issue #7 (V1)\nMultiline", r10).setBorder (new BorderStyleSpec (Color.RED))
+                                                                           .setHorzAlign (EHorzAlignment.RIGHT);
+      aPS1.addElement (aText);
+    }
+    {
+      final PLBox aBox = new PLBox (new PLText ("For issue #7 (V2)\nMultiline",
+                                                r10).setBorder (new BorderStyleSpec (Color.RED))).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                                 .setBorder (new BorderStyleSpec (Color.BLUE));
+      aPS1.addElement (aBox);
+    }
+    {
+      final PLText aText = new PLText ("For issue #7 (V3)\nMultiline", r10).setBorder (new BorderStyleSpec (Color.RED))
+                                                                           .setHorzAlign (EHorzAlignment.RIGHT);
+
+      final PLHBox aHBox = new PLHBox ();
+      aHBox.addColumn (aText, WidthSpec.perc (50));
+      aPS1.addElement (aHBox);
+    }
+    {
+      final PLBox aBox = new PLBox (new PLText ("For issue #7 (V4)\nMultiline",
+                                                r10).setBorder (new BorderStyleSpec (Color.RED))).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                                 .setBorder (new BorderStyleSpec (Color.BLUE));
+
+      final PLHBox aHBox = new PLHBox ();
+      aHBox.addColumn (aBox, WidthSpec.perc (50));
+      aPS1.addElement (aHBox);
+    }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
