@@ -17,7 +17,7 @@ The basic elements provided are:
 # News and Noteworthy
 
 * v5.0.9 - work in progress
-    * Updated to PDFBox 2.0.14
+    * Updated to PDFBox 2.0.15
 * v5.0.8 - 2018-11-22
     * Updated to PDFBox 2.0.12
     * Updated to ph-commons 9.2.0
