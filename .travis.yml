@@ -51,3 +51,8 @@ jobs:
       jdk: oraclejdk11
       script:
         - mvn test -B
+    - stage: test
+      jdk: openjdk12
+      script:
+        - mvn test -B
+        
