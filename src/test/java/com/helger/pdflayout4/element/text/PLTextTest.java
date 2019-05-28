@@ -19,6 +19,7 @@ package com.helger.pdflayout4.element.text;
 import java.awt.Color;
 import java.io.File;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -29,7 +30,6 @@ import com.helger.commons.CGlobal;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
-import com.helger.commons.random.RandomHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
 import com.helger.font.anaheim.EFontResourceAnaheim;
@@ -327,6 +327,7 @@ public final class PLTextTest
   @Test
   public void testWithTextExceedingPage () throws PDFCreationException
   {
+    final Random aRandom = new Random ();
     final StringBuilder aSB = new StringBuilder (5 * CGlobal.BYTES_PER_MEGABYTE);
     for (int i = 0; i < 4000; ++i)
     {
@@ -336,8 +337,7 @@ public final class PLTextTest
         if ((i % 100) == 0)
           aSB.append ('\n');
       if ((i % 100) == 0)
-        aSB.append ((char) ('a' + RandomHelper.getRandom ().nextInt (26)))
-           .append ((char) ('a' + RandomHelper.getRandom ().nextInt (26)));
+        aSB.append ((char) ('a' + aRandom.nextInt (26))).append ((char) ('a' + aRandom.nextInt (26)));
       aSB.append ("This is a dummy");
     }
 
