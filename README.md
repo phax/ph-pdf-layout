@@ -18,6 +18,7 @@ The basic elements provided are:
 
 * v5.0.10 - work in progress
     * Updated to PDFBox 2.0.17
+    * Updated to jbig2-imageio 3.0.3
 * v5.0.9 - 2019-04-29
     * Updated to PDFBox 2.0.15 (security update)
 * v5.0.8 - 2018-11-22

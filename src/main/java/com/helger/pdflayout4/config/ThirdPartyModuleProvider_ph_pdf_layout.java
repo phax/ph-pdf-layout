@@ -39,10 +39,15 @@ public final class ThirdPartyModuleProvider_ph_pdf_layout implements IThirdParty
                                                                        ELicense.APACHE2,
                                                                        new Version (2, 0, 17),
                                                                        "http://pdfbox.apache.org/");
+  public static final IThirdPartyModule JBIG_IMAGEIO = new ThirdPartyModule ("Apache PDFBox ImageIO",
+                                                                             "Apache",
+                                                                             ELicense.APACHE2,
+                                                                             new Version (3, 0, 3),
+                                                                             "http://pdfbox.apache.org/");
 
   @Nullable
   public IThirdPartyModule [] getAllThirdPartyModules ()
   {
-    return new IThirdPartyModule [] { PDFBOX };
+    return new IThirdPartyModule [] { PDFBOX, JBIG_IMAGEIO };
   }
 }
