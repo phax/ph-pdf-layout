@@ -37,7 +37,7 @@ public final class ThirdPartyModuleProvider_ph_pdf_layout implements IThirdParty
   public static final IThirdPartyModule PDFBOX = new ThirdPartyModule ("Apache PDFBox",
                                                                        "Apache",
                                                                        ELicense.APACHE2,
-                                                                       new Version (2, 0, 18),
+                                                                       new Version (2, 0, 19),
                                                                        "http://pdfbox.apache.org/");
   public static final IThirdPartyModule JBIG_IMAGEIO = new ThirdPartyModule ("Apache PDFBox ImageIO",
                                                                              "Apache",
