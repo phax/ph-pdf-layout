@@ -59,9 +59,9 @@ public interface IPLHasOutline extends Serializable
   }
 
   /**
-   * @return Sum of left and right outline.
-   * @see #getOutlineLeft()
-   * @see #getOutlineRight()
+   * Sum of left and right outline
+   *
+   * @return {@link #getOutlineLeft()} + {@link #getOutlineRight()}
    */
   default float getOutlineXSum ()
   {
@@ -69,9 +69,9 @@ public interface IPLHasOutline extends Serializable
   }
 
   /**
-   * @return Sum of top and bottom outline.
-   * @see #getOutlineTop()
-   * @see #getOutlineBottom()
+   * Sum of top and bottom outline
+   *
+   * @return {@link #getOutlineTop()} + {@link #getOutlineBottom()}
    */
   default float getOutlineYSum ()
   {
