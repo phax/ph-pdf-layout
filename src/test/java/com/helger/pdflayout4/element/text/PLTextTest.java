@@ -113,7 +113,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-basic.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/basic.pdf")));
   }
 
   @Test
@@ -182,9 +182,15 @@ public final class PLTextTest
                                      .setFillColor (Color.YELLOW)
                                      .setLineSpacing (fLineSpacing));
 
+    String sVeryLongText = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
+                           "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                           "Tataa: € ";
+    sVeryLongText = StringHelper.getRepeated (sVeryLongText, 100);
+    aPS1.addElement (new PLText (sVeryLongText, r10).setLineSpacing (fLineSpacing));
+
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-basic-line-height.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/line-spacing.pdf")));
   }
 
   @Test
@@ -204,7 +210,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-font-open-sans.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/font-open-sans.pdf")));
   }
 
   @Test
@@ -225,7 +231,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-font-lato2.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/font-lato2.pdf")));
   }
 
   @Test
@@ -265,7 +271,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-font-multiple.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/font-multiple.pdf")));
   }
 
   @Test
@@ -321,7 +327,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-horz-alignment.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/horz-alignment.pdf")));
   }
 
   @Test
@@ -348,6 +354,6 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-split.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/split-vertically.pdf")));
   }
 }

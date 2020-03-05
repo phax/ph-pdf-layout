@@ -369,7 +369,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       fMaxWidth = Math.max (fMaxWidth, aTWS.getWidth ());
 
     // Determine height by number of lines
-    return new SizeSpec (fMaxWidth, getDisplayHeightOfLineCount (m_aPreparedLines.size ()));
+    // No line spacing for the last line
+    return new SizeSpec (fMaxWidth, getDisplayHeightOfLineCount (m_aPreparedLines.size (), false));
   }
 
   @Override
@@ -425,12 +426,16 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
   }
 
-  protected final float getDisplayHeightOfLineCount (@Nonnegative final int nLineCount)
+  protected final float getDisplayHeightOfLineCount (@Nonnegative final int nLineCount,
+                                                     final boolean bLineSpacingAlsoOnLastLine)
   {
     if (nLineCount == 0)
       return 0f;
     if (nLineCount == 1)
       return m_fTextHeight;
+
+    if (bLineSpacingAlsoOnLastLine)
+      return nLineCount * m_fTextHeight * m_fLineSpacing;
 
     // The line height factor counts only between lines!
     return (nLineCount - 1) * m_fTextHeight * m_fLineSpacing + 1 * m_fTextHeight;
@@ -448,7 +453,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final ICommonsList <TextAndWidthSpec> aLineCopy = new CommonsArrayList <> (aLines);
 
     // Excluding padding/margin
-    final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLineCount (aLineCopy.size ()));
+    final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLineCount (aLineCopy.size (), true));
 
     final String sTextContent = StringHelper.getImplodedMapped ('\n', aLineCopy, TextAndWidthSpec::getText);
     final IMPLTYPE aNewText = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + sIDSuffix);
@@ -506,13 +511,13 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                                      " and line height " +
                                      m_fTextHeight * m_fLineSpacing +
                                      " (=" +
-                                     getDisplayHeightOfLineCount (nLineCount) +
+                                     getDisplayHeightOfLineCount (nLineCount, true) +
                                      ")");
       return null;
     }
 
     // Calc estimated height
-    final float fExpectedHeight = getDisplayHeightOfLineCount (nLineCount);
+    final float fExpectedHeight = getDisplayHeightOfLineCount (nLineCount, true);
     if (fExpectedHeight > fAvailableHeight)
     {
       // Show one line less
