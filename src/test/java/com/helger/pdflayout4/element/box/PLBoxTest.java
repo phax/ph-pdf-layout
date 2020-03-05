@@ -164,7 +164,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-basic.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plbox/basic.pdf")));
   }
 
   @Test
@@ -175,10 +175,7 @@ public final class PLBoxTest
 
     for (final EHorzAlignment eH : EHorzAlignment.values ())
       for (final EVertAlignment eV : EVertAlignment.values ())
-        aPS1.addElement (new PLBox (new PLText ("Text " +
-                                                eH.getID () +
-                                                " / " +
-                                                eV.getID (),
+        aPS1.addElement (new PLBox (new PLText ("Text " + eH.getID () + " / " + eV.getID (),
                                                 r10).setFillColor (Color.PINK)).setFillColor (Color.YELLOW)
                                                                                .setExactSize (150, 30)
                                                                                .setHorzAlign (eH)
@@ -187,7 +184,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-alignment.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plbox/alignment.pdf")));
   }
 
   @Test
@@ -212,7 +209,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-alignment-nested.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plbox/alignment-nested.pdf")));
   }
 
   @Test
@@ -223,10 +220,7 @@ public final class PLBoxTest
 
     for (final EHorzAlignment eH : EHorzAlignment.values ())
       for (final EVertAlignment eV : EVertAlignment.values ())
-        aPS1.addElement (new PLBox (new PLText ("Text " +
-                                                eH.getID () +
-                                                " / " +
-                                                eV.getID (),
+        aPS1.addElement (new PLBox (new PLText ("Text " + eH.getID () + " / " + eV.getID (),
                                                 r10).setFillColor (Color.PINK)).setFillColor (Color.YELLOW)
                                                                                .setExactSize (250, 120)
                                                                                .setHorzAlign (eH)
@@ -235,7 +229,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-pagebreak.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plbox/pagebreak.pdf")));
   }
 
   @Test
@@ -245,9 +239,7 @@ public final class PLBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (10);
 
     for (int i = 0; i < 100; ++i)
-      aPS1.addElement (new PLBox (new PLText ("Text " +
-                                              i +
-                                              "\nline 2 of 4\nshort\nAnd finally the last line",
+      aPS1.addElement (new PLBox (new PLText ("Text " + i + "\nline 2 of 4\nshort\nAnd finally the last line",
                                               r10).setFillColor (Color.PINK)
                                                   .setHorzAlign (EHorzAlignment.RIGHT)
                                                   .setVertSplittable (true)).setVertSplittable (true)
@@ -257,6 +249,6 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plbox-splittable-pagebreak.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plbox/splittable-pagebreak.pdf")));
   }
 }

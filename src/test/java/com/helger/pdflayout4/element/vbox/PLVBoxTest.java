@@ -85,7 +85,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-basic.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plvbox/basic.pdf")));
   }
 
   @Test
@@ -102,20 +102,21 @@ public final class PLVBoxTest
                                                                                 .setVertAlign (EVertAlignment.TOP)
                                                                                 .setFillColor (Color.YELLOW),
                   HeightSpec.star ());
-    aVBox.addRow (new PLBox (new PLText ("Center/middle", r10).setBorder (Color.RED))
-                                                                                     .setHorzAlign (EHorzAlignment.CENTER)
-                                                                                     .setVertAlign (EVertAlignment.MIDDLE)
-                                                                                     .setFillColor (Color.PINK),
+    aVBox.addRow (new PLBox (new PLText ("Center/middle",
+                                         r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.CENTER)
+                                                                    .setVertAlign (EVertAlignment.MIDDLE)
+                                                                    .setFillColor (Color.PINK),
                   HeightSpec.star ());
-    aVBox.addRow (new PLBox (new PLText ("Right/bottom", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                    .setVertAlign (EVertAlignment.BOTTOM)
-                                                                                    .setFillColor (Color.MAGENTA),
+    aVBox.addRow (new PLBox (new PLText ("Right/bottom",
+                                         r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                    .setVertAlign (EVertAlignment.BOTTOM)
+                                                                    .setFillColor (Color.MAGENTA),
                   HeightSpec.star ());
     aPS1.addElement (aVBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-height-star.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plvbox/height-star.pdf")));
   }
 
   @Test
@@ -141,7 +142,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-height-star-small.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plvbox/height-star-small.pdf")));
   }
 
   @Test
@@ -159,9 +160,7 @@ public final class PLVBoxTest
           for (int k = 0; k < 2; ++k)
           {
             final PLVBox aVBox = new PLVBox ().setFullWidth (h == 0);
-            aVBox.addRow (new PLText ("This should be a " +
-                                      (h == 0 ? "full-width " : "") +
-                                      "example.",
+            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.",
                                       r10).setBorder (Color.RED));
             aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
             aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW), HeightSpec.auto ());
@@ -176,9 +175,7 @@ public final class PLVBoxTest
           for (int k = 0; k < 2; ++k)
           {
             final PLVBox aVBox = new PLVBox ().setFullWidth (h == 0);
-            aVBox.addRow (new PLText ("This should be a " +
-                                      (h == 0 ? "full-width " : "") +
-                                      "example.",
+            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.",
                                       r10).setBorder (Color.RED));
             aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
             aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW), HeightSpec.auto ());
@@ -194,9 +191,7 @@ public final class PLVBoxTest
           for (int k = 0; k < 2; ++k)
           {
             final PLVBox aVBox = new PLVBox ().setFullWidth (h == 0);
-            aVBox.addRow (new PLText ("This should be a " +
-                                      (h == 0 ? "full-width " : "") +
-                                      "example.",
+            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.",
                                       r10).setBorder (Color.RED));
             aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), HeightSpec.star ());
             aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
@@ -212,9 +207,7 @@ public final class PLVBoxTest
           for (int k = 0; k < 2; ++k)
           {
             final PLVBox aVBox = new PLVBox ().setFullWidth (h == 0);
-            aVBox.addRow (new PLText ("This should be a " +
-                                      (h == 0 ? "full-width " : "") +
-                                      "example.",
+            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.",
                                       r10).setBorder (Color.RED));
             aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), HeightSpec.star ());
             aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
@@ -226,7 +219,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-auto-advanced.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plvbox/auto-advanced.pdf")));
   }
 
   @Test
@@ -261,40 +254,38 @@ public final class PLVBoxTest
                                       sIDPrefix +
                                       ").",
                                       r10).setBorder (Color.RED));
-            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix + "t1"))
-                                                                                                    .setID (sIDPrefix +
-                                                                                                            "star1")
-                                                                                                    .setBorder (Color.BLUE),
+            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix +
+                                                                                  "t1")).setID (sIDPrefix + "star1")
+                                                                                        .setBorder (Color.BLUE),
                           HeightSpec.star ());
-            aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s3, r10).setID (sIDPrefix + "t2")
-                                                                       .setVertSplittable (true)).setID (sIDPrefix +
-                                                                                                         "auto1")
-                                                                                                 .setBorder (Color.RED)
-                                                                                                 .setVertSplittable (true),
+            aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s3,
+                                                 r10).setID (sIDPrefix + "t2")
+                                                     .setVertSplittable (true)).setID (sIDPrefix + "auto1")
+                                                                               .setBorder (Color.RED)
+                                                                               .setVertSplittable (true),
                           HeightSpec.auto ());
-            aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s3, r10).setID (sIDPrefix + "t3")
-                                                                       .setVertSplittable (true)).setID (sIDPrefix +
-                                                                                                         "auto2")
-                                                                                                 .setBorder (Color.YELLOW)
-                                                                                                 .setVertSplittable (true),
+            aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s3,
+                                                 r10).setID (sIDPrefix + "t3")
+                                                     .setVertSplittable (true)).setID (sIDPrefix + "auto2")
+                                                                               .setBorder (Color.YELLOW)
+                                                                               .setVertSplittable (true),
                           HeightSpec.auto ());
-            aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s3, r10).setID (sIDPrefix + "t4")
-                                                                       .setVertSplittable (true)).setID (sIDPrefix +
-                                                                                                         "auto3")
-                                                                                                 .setBorder (Color.GREEN)
-                                                                                                 .setVertSplittable (true),
+            aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s3,
+                                                 r10).setID (sIDPrefix + "t4")
+                                                     .setVertSplittable (true)).setID (sIDPrefix + "auto3")
+                                                                               .setBorder (Color.GREEN)
+                                                                               .setVertSplittable (true),
                           HeightSpec.auto ());
-            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix + "t5"))
-                                                                                                    .setID (sIDPrefix +
-                                                                                                            "star2")
-                                                                                                    .setBorder (Color.BLUE),
+            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix +
+                                                                                  "t5")).setID (sIDPrefix + "star2")
+                                                                                        .setBorder (Color.BLUE),
                           HeightSpec.star ());
             aPS1.addElement (aVBox);
           }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-auto-advanced-splittable.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plvbox/auto-advanced-splittable.pdf")));
   }
 
   @Test
@@ -312,7 +303,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-splittable-text.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plvbox/splittable-text.pdf")));
   }
 
   @Test
@@ -337,7 +328,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-splittable-content-splittable.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plvbox/splittable-content-splittable.pdf")));
   }
 
   @Test
@@ -362,6 +353,6 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plvbox-splittable-content-fixed.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plvbox/splittable-content-fixed.pdf")));
   }
 }

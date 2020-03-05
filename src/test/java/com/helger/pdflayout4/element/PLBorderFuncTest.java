@@ -116,7 +116,7 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-border-text.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/border/text.pdf")));
   }
 
   @Test
@@ -373,7 +373,7 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-border-hbox.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/border/hbox.pdf")));
   }
 
   @Test
@@ -627,7 +627,7 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-border-vbox.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/border/vbox.pdf")));
   }
 
   @Test
@@ -661,6 +661,6 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-border-header-footer.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/border/header-footer.pdf")));
   }
 }

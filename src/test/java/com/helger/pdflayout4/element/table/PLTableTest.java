@@ -131,7 +131,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-basic.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/basic.pdf")));
   }
 
   @Nonnull
@@ -228,7 +228,7 @@ public final class PLTableTest
     aPS1.addElement (aTable);
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-variations.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/variations.pdf")));
   }
 
   @Test
@@ -290,7 +290,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-grid-types.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/grid-types.pdf")));
   }
 
   @Test
@@ -365,7 +365,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-grid-types-partial.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/grid-types-partial.pdf")));
   }
 
   @Test
@@ -405,7 +405,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-grid-types-colspan.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/grid-types-colspan.pdf")));
   }
 
   @Nonnull
@@ -457,7 +457,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-nested.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/nested.pdf")));
   }
 
   @Test
@@ -487,7 +487,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-many-rows.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/many-rows.pdf")));
   }
 
   @Test
@@ -515,7 +515,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-cell-spawning-page.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/cell-spawning-page.pdf")));
   }
 
   @Test
@@ -546,7 +546,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-cell-spawning-page2.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/cell-spawning-page2.pdf")));
   }
 
   @Test
@@ -583,7 +583,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-cell-spawning-page-inner-table.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/cell-spawning-page-inner-table.pdf")));
   }
 
   @Test
@@ -633,7 +633,7 @@ public final class PLTableTest
     PLDebugRender.withDebugRender (false, () -> {
       final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
       aPageLayout.addPageSet (aPS1);
-      aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltable-colspan-right-align.pdf")));
+      aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/colspan-right-align.pdf")));
     });
   }
 }

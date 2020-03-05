@@ -80,7 +80,7 @@ public final class PLImageTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-plimage.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plimage/basic.pdf")));
   }
 
   @Test
@@ -100,6 +100,6 @@ public final class PLImageTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-pltext-over-plimage.pdf")));
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plimage/text-over-image.pdf")));
   }
 }
