@@ -19,6 +19,7 @@ The basic elements provided are:
 * v5.0.10 - work in progress
     * Updated to PDFBox 2.0.19
     * Updated to jbig2-imageio 3.0.3
+    * Fixed line spacing on page break (see [issue #10](https://github.com/phax/ph-pdf-layout/issues/10))
 * v5.0.9 - 2019-04-29
     * Updated to PDFBox 2.0.15 (security update)
 * v5.0.8 - 2018-11-22
