@@ -44,6 +44,7 @@ import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.box.PLBox;
 import com.helger.pdflayout4.element.hbox.PLHBox;
+import com.helger.pdflayout4.element.special.PLPageBreak;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 import com.helger.pdflayout4.spec.EHorzAlignment;
 import com.helger.pdflayout4.spec.FontSpec;
@@ -181,11 +182,11 @@ public final class PLTextTest
                                      .setPadding (5)
                                      .setFillColor (Color.YELLOW)
                                      .setLineSpacing (fLineSpacing));
-
+    aPS1.addElement (new PLPageBreak (false));
     String sVeryLongText = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
                            "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
                            "Tataa: € ";
-    sVeryLongText = StringHelper.getRepeated (sVeryLongText, 100);
+    sVeryLongText = StringHelper.getRepeated (sVeryLongText, 48);
     aPS1.addElement (new PLText (sVeryLongText, r10).setLineSpacing (fLineSpacing));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
