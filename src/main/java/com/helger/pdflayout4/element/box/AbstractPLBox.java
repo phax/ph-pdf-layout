@@ -196,7 +196,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   protected void onMarkAsNotPrepared ()
   {
     internalSetElementPreparedSize (null);
-    if (m_aElement != null)
+    if (m_aElement instanceof AbstractPLRenderableObject <?>)
       ((AbstractPLRenderableObject <?>) m_aElement).internalMarkAsNotPrepared ();
   }
 
