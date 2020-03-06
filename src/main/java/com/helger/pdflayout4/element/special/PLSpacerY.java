@@ -56,16 +56,16 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY>
     return this;
   }
 
+  public final float getHeight ()
+  {
+    return m_fHeight;
+  }
+
   @Nonnull
   public final PLSpacerY setHeight (final float fHeight)
   {
     m_fHeight = fHeight;
     return this;
-  }
-
-  public float getHeight ()
-  {
-    return m_fHeight;
   }
 
   @Override

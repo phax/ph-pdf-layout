@@ -37,8 +37,9 @@ import com.helger.pdflayout4.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>>
-                                        extends AbstractPLRenderableObject <IMPLTYPE> implements IPLElement <IMPLTYPE>
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends
+                                        AbstractPLRenderableObject <IMPLTYPE> implements
+                                        IPLElement <IMPLTYPE>
 {
   private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
   private SizeSpec m_aMaxSize = DEFAULT_MAX_SIZE;
@@ -64,13 +65,13 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Nonnull
-  public SizeSpec getMinSize ()
+  public final SizeSpec getMinSize ()
   {
     return m_aMinSize;
   }
 
   @Nonnull
-  public IMPLTYPE setMinSize (@Nonnull final SizeSpec aMinSize)
+  public final IMPLTYPE setMinSize (@Nonnull final SizeSpec aMinSize)
   {
     m_aMinSize = ValueEnforcer.notNull (aMinSize, "MinSize");
     onRenderSizeChange ();
@@ -78,17 +79,23 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Nonnull
-  public SizeSpec getMaxSize ()
+  public final SizeSpec getMaxSize ()
   {
     return m_aMaxSize;
   }
 
   @Nonnull
-  public IMPLTYPE setMaxSize (@Nonnull final SizeSpec aMaxSize)
+  public final IMPLTYPE setMaxSize (@Nonnull final SizeSpec aMaxSize)
   {
     m_aMaxSize = ValueEnforcer.notNull (aMaxSize, "MaxSize");
     onRenderSizeChange ();
     return thisAsT ();
+  }
+
+  @Nonnull
+  public final MarginSpec getMargin ()
+  {
+    return m_aMargin;
   }
 
   @Nonnull
@@ -100,9 +107,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Nonnull
-  public final MarginSpec getMargin ()
+  public final BorderSpec getBorder ()
   {
-    return m_aMargin;
+    return m_aBorder;
   }
 
   @Nonnull
@@ -114,9 +121,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Nonnull
-  public final BorderSpec getBorder ()
+  public final PaddingSpec getPadding ()
   {
-    return m_aBorder;
+    return m_aPadding;
   }
 
   @Nonnull
@@ -127,23 +134,17 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     return thisAsT ();
   }
 
-  @Nonnull
-  public final PaddingSpec getPadding ()
+  @Nullable
+  public final Color getFillColor ()
   {
-    return m_aPadding;
+    return m_aFillColor;
   }
 
   @Nonnull
-  public IMPLTYPE setFillColor (@Nullable final Color aFillColor)
+  public final IMPLTYPE setFillColor (@Nullable final Color aFillColor)
   {
     m_aFillColor = aFillColor;
     return thisAsT ();
-  }
-
-  @Nullable
-  public Color getFillColor ()
-  {
-    return m_aFillColor;
   }
 
   @Override

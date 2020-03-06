@@ -46,8 +46,9 @@ import com.helger.pdflayout4.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
-                                    extends AbstractPLBlockElement <IMPLTYPE> implements IPLSplittableObject <IMPLTYPE>
+public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> extends
+                                    AbstractPLBlockElement <IMPLTYPE> implements
+                                    IPLSplittableObject <IMPLTYPE>
 {
   private IPLRenderableObject <?> m_aElement;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
@@ -75,7 +76,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
    * @return The element passed in the constructor. May be <code>null</code>.
    */
   @Nullable
-  public IPLRenderableObject <?> getElement ()
+  public final IPLRenderableObject <?> getElement ()
   {
     return m_aElement;
   }
@@ -84,7 +85,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
    * @return <code>true</code> if an element is contained, <code>false</code> if
    *         not.
    */
-  public boolean hasElement ()
+  public final boolean hasElement ()
   {
     return m_aElement != null;
   }
@@ -97,7 +98,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
     return thisAsT ();
   }
 
-  public boolean isVertSplittable ()
+  public final boolean isVertSplittable ()
   {
     if (!m_bVertSplittable)
       return false;
@@ -106,7 +107,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
   }
 
   @Nonnull
-  public IMPLTYPE setVertSplittable (final boolean bVertSplittable)
+  public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
     return thisAsT ();
@@ -187,8 +188,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>>
 
     // Add the outer stuff of the contained element as this elements prepared
     // size
-    return new SizeSpec (m_aElementPreparedSize.getWidth () +
-                         m_aElement.getOutlineXSum (),
+    return new SizeSpec (m_aElementPreparedSize.getWidth () + m_aElement.getOutlineXSum (),
                          m_aElementPreparedSize.getHeight () + m_aElement.getOutlineYSum ());
   }
 

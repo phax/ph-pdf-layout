@@ -351,7 +351,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // Split text into rows
-    String sTextToFit;
+    final String sTextToFit;
     if (bAlreadyReplaced)
     {
       sTextToFit = m_sTextWithPlaceholdersReplaced;

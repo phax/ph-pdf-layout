@@ -136,17 +136,17 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
   }
 
   @Nonnull
+  public final MarginSpec getMargin ()
+  {
+    return m_aMargin;
+  }
+
+  @Nonnull
   public final PLTable setMargin (@Nonnull final MarginSpec aMargin)
   {
     ValueEnforcer.notNull (aMargin, "Mergin");
     m_aMargin = aMargin;
     return this;
-  }
-
-  @Nonnull
-  public final MarginSpec getMargin ()
-  {
-    return m_aMargin;
   }
 
   /**

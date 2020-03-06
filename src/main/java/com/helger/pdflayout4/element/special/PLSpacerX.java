@@ -54,16 +54,16 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
     return this;
   }
 
+  public final float getWidth ()
+  {
+    return m_fWidth;
+  }
+
   @Nonnull
   public final PLSpacerX setWidth (final float fWidth)
   {
     m_fWidth = fWidth;
     return this;
-  }
-
-  public float getWidth ()
-  {
-    return m_fWidth;
   }
 
   @Override

@@ -31,8 +31,9 @@ import com.helger.pdflayout4.spec.EVertAlignment;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>>
-                                             extends AbstractPLElement <IMPLTYPE> implements IPLBlockElement <IMPLTYPE>
+public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>> extends
+                                             AbstractPLElement <IMPLTYPE> implements
+                                             IPLBlockElement <IMPLTYPE>
 {
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
@@ -54,38 +55,38 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
   }
 
   @Nonnull
-  public EHorzAlignment getHorzAlign ()
+  public final EHorzAlignment getHorzAlign ()
   {
     return m_eHorzAlign;
   }
 
   @Nonnull
-  public IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
+  public final IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
   {
     m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
     return thisAsT ();
   }
 
   @Nonnull
-  public EVertAlignment getVertAlign ()
+  public final EVertAlignment getVertAlign ()
   {
     return m_eVertAlign;
   }
 
   @Nonnull
-  public IMPLTYPE setVertAlign (@Nonnull final EVertAlignment eVertAlign)
+  public final IMPLTYPE setVertAlign (@Nonnull final EVertAlignment eVertAlign)
   {
     m_eVertAlign = ValueEnforcer.notNull (eVertAlign, "VertAlign");
     return thisAsT ();
   }
 
-  public boolean isFullWidth ()
+  public final boolean isFullWidth ()
   {
     return m_bFullWidth;
   }
 
   @Nonnull
-  public IMPLTYPE setFullWidth (final boolean bFullWidth)
+  public final IMPLTYPE setFullWidth (final boolean bFullWidth)
   {
     m_bFullWidth = bFullWidth;
     return thisAsT ();

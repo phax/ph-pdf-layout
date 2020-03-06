@@ -56,7 +56,7 @@ public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
    * @return <code>true</code> if this is a forced page break,
    *         <code>false</code> if it is a normal page break.
    */
-  public boolean isForcePageBreak ()
+  public final boolean isForcePageBreak ()
   {
     return m_bForcePageBreak;
   }
