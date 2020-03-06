@@ -40,7 +40,8 @@ import com.helger.pdflayout4.spec.SizeSpec;
  *        The implementation type of this class.
  */
 public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRenderableObject <IMPLTYPE>> extends
-                                                 AbstractPLObject <IMPLTYPE> implements IPLRenderableObject <IMPLTYPE>
+                                                 AbstractPLObject <IMPLTYPE> implements
+                                                 IPLRenderableObject <IMPLTYPE>
 {
   private boolean m_bPrepared = false;
   private SizeSpec m_aPrepareAvailableSize;
@@ -291,7 +292,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * Abstract method to be implemented by subclasses.
    *
    * @param aCtx
-   *        Rendering context
+   *        Rendering context. Never <code>null</code>.
    * @throws IOException
    *         In case of a PDFBox error
    */
