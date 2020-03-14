@@ -56,6 +56,10 @@ public final class PreparationContextGlobal
     m_aDoc = aDoc;
   }
 
+  /**
+   * @return The {@link PDDocument} as provided in the constructor. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public PDDocument getDocument ()
   {
