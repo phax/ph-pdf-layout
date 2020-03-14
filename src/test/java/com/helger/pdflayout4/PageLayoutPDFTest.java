@@ -21,9 +21,6 @@ import static org.junit.Assert.assertNull;
 
 import java.awt.Color;
 import java.io.File;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -31,7 +28,6 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.commons.datetime.PDTFactory;
-import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout4.base.EPLPlaceholder;
 import com.helger.pdflayout4.base.PLPageSet;
@@ -177,10 +173,9 @@ public final class PageLayoutPDFTest
     aPageLayout.addPageSet (aPS1);
     aPageLayout.addPageSet (aPS2);
     aPageLayout.addPageSet (aPS3);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test1.pdf")));
+    aPageLayout.renderTo (new File ("pdf/test1.pdf"));
   }
 
-  @SuppressWarnings ("deprecation")
   @Test
   public void testCreatePDFProperties () throws PDFCreationException
   {
@@ -193,22 +188,13 @@ public final class PageLayoutPDFTest
     aPageLayout.setDocumentAuthor ("Weird author äöü");
     aPageLayout.setDocumentTitle ("Special chars €!\"§$%&/()=\uFFE5");
 
-    aPageLayout.setDocumentCreationDate (null);
-    assertNull (aPageLayout.getDocumentCreationDate ());
-    assertNull (aPageLayout.getDocumentCreationDateTime ());
-    aPageLayout.setDocumentCreationDate (Calendar.getInstance (TimeZone.getDefault (), Locale.getDefault ()));
-    assertNotNull (aPageLayout.getDocumentCreationDate ());
-    assertNotNull (aPageLayout.getDocumentCreationDateTime ());
-
     aPageLayout.setDocumentCreationDateTime (null);
-    assertNull (aPageLayout.getDocumentCreationDate ());
     assertNull (aPageLayout.getDocumentCreationDateTime ());
     aPageLayout.setDocumentCreationDateTime (PDTFactory.getCurrentLocalDateTime ());
-    assertNotNull (aPageLayout.getDocumentCreationDate ());
     assertNotNull (aPageLayout.getDocumentCreationDateTime ());
 
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-properties.pdf")));
+    aPageLayout.renderTo (new File ("pdf/test-properties.pdf"));
   }
 
   @Test
@@ -283,7 +269,7 @@ public final class PageLayoutPDFTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test2.pdf")));
+    aPageLayout.renderTo (new File ("pdf/test2.pdf"));
   }
 
   @Test
@@ -313,6 +299,6 @@ public final class PageLayoutPDFTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/test-din-letter.pdf")));
+    aPageLayout.renderTo (new File ("pdf/test-din-letter.pdf"));
   }
 }

@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout4;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
@@ -37,6 +38,7 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTConfig;
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.serialize.SerializationHelper;
 import com.helger.commons.state.EChange;
@@ -59,6 +61,8 @@ import com.helger.pdflayout4.render.PreparationContextGlobal;
 @NotThreadSafe
 public class PageLayoutPDF implements IPLVisitable
 {
+  public static final boolean DEFAULT_COMPRESS_PDF = true;
+
   private static final Logger LOGGER = LoggerFactory.getLogger (PageLayoutPDF.class);
 
   private String m_sDocumentAuthor;
@@ -67,8 +71,9 @@ public class PageLayoutPDF implements IPLVisitable
   private String m_sDocumentTitle;
   private String m_sDocumentKeywords;
   private String m_sDocumentSubject;
-  private boolean m_bCompressPDF = true;
+  private boolean m_bCompressPDF = DEFAULT_COMPRESS_PDF;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
+  private IPDDocumentCustomizer m_aDocumentCustomizer;
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class
@@ -84,7 +89,7 @@ public class PageLayoutPDF implements IPLVisitable
   /**
    * @return if PDF content should be compressed or not.
    */
-  public boolean isCompressPDF ()
+  public final boolean isCompressPDF ()
   {
     return m_bCompressPDF;
   }
@@ -96,85 +101,85 @@ public class PageLayoutPDF implements IPLVisitable
    * @return this for chaining
    */
   @Nonnull
-  public PageLayoutPDF setCompressPDF (final boolean bCompressPDF)
+  public final PageLayoutPDF setCompressPDF (final boolean bCompressPDF)
   {
     m_bCompressPDF = bCompressPDF;
     return this;
   }
 
   @Nullable
-  public String getDocumentAuthor ()
+  public final String getDocumentAuthor ()
   {
     return m_sDocumentAuthor;
   }
 
   @Nonnull
-  public PageLayoutPDF setDocumentAuthor (@Nullable final String sDocumentAuthor)
+  public final PageLayoutPDF setDocumentAuthor (@Nullable final String sDocumentAuthor)
   {
     m_sDocumentAuthor = sDocumentAuthor;
     return this;
   }
 
   @Nullable
-  public LocalDateTime getDocumentCreationDateTime ()
+  public final LocalDateTime getDocumentCreationDateTime ()
   {
     return m_aDocumentCreationDate;
   }
 
   @Nonnull
-  public PageLayoutPDF setDocumentCreationDateTime (@Nullable final LocalDateTime aDocumentCreationDate)
+  public final PageLayoutPDF setDocumentCreationDateTime (@Nullable final LocalDateTime aDocumentCreationDate)
   {
     m_aDocumentCreationDate = aDocumentCreationDate;
     return this;
   }
 
   @Nullable
-  public String getDocumentCreator ()
+  public final String getDocumentCreator ()
   {
     return m_sDocumentCreator;
   }
 
   @Nonnull
-  public PageLayoutPDF setDocumentCreator (@Nullable final String sDocumentCreator)
+  public final PageLayoutPDF setDocumentCreator (@Nullable final String sDocumentCreator)
   {
     m_sDocumentCreator = sDocumentCreator;
     return this;
   }
 
   @Nullable
-  public String getDocumentTitle ()
+  public final String getDocumentTitle ()
   {
     return m_sDocumentTitle;
   }
 
   @Nonnull
-  public PageLayoutPDF setDocumentTitle (@Nullable final String sDocumentTitle)
+  public final PageLayoutPDF setDocumentTitle (@Nullable final String sDocumentTitle)
   {
     m_sDocumentTitle = sDocumentTitle;
     return this;
   }
 
   @Nullable
-  public String getDocumentKeywords ()
+  public final String getDocumentKeywords ()
   {
     return m_sDocumentKeywords;
   }
 
   @Nonnull
-  public PageLayoutPDF setDocumentKeywords (@Nullable final String sDocumentKeywords)
+  public final PageLayoutPDF setDocumentKeywords (@Nullable final String sDocumentKeywords)
   {
     m_sDocumentKeywords = sDocumentKeywords;
     return this;
   }
 
   @Nullable
-  public String getDocumentSubject ()
+  public final String getDocumentSubject ()
   {
     return m_sDocumentSubject;
   }
 
   @Nonnull
-  public PageLayoutPDF setDocumentSubject (@Nullable final String sDocumentSubject)
+  public final PageLayoutPDF setDocumentSubject (@Nullable final String sDocumentSubject)
   {
     m_sDocumentSubject = sDocumentSubject;
     return this;
@@ -208,6 +213,19 @@ public class PageLayoutPDF implements IPLVisitable
     return m_aPageSets.removeObject (aPageSet);
   }
 
+  @Nullable
+  public final IPDDocumentCustomizer getDocumentCustomizer ()
+  {
+    return m_aDocumentCustomizer;
+  }
+
+  @Nonnull
+  public final PageLayoutPDF setDocumentCustomizer (@Nullable final IPDDocumentCustomizer aDocumentCustomizer)
+  {
+    m_aDocumentCustomizer = aDocumentCustomizer;
+    return this;
+  }
+
   @Nonnull
   public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
   {
@@ -229,26 +247,6 @@ public class PageLayoutPDF implements IPLVisitable
    */
   @Nonnull
   public PageLayoutPDF renderTo (@Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
-  {
-    return renderTo ((IPDDocumentCustomizer) null, aOS);
-  }
-
-  /**
-   * Render this layout to an OutputStream.
-   *
-   * @param aCustomizer
-   *        The customizer to be invoked before the document is written to the
-   *        stream. May be <code>null</code>.
-   * @param aOS
-   *        The output stream to write to. May not be <code>null</code>. Is
-   *        closed automatically.
-   * @return this for chaining
-   * @throws PDFCreationException
-   *         In case of an error
-   */
-  @Nonnull
-  public PageLayoutPDF renderTo (@Nullable final IPDDocumentCustomizer aCustomizer,
-                                 @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
   {
     ValueEnforcer.notNull (aOS, "OutputStream");
 
@@ -325,8 +323,8 @@ public class PageLayoutPDF implements IPLVisitable
       }
 
       // Customize the whole document (optional)
-      if (aCustomizer != null)
-        aCustomizer.customizeDocument (aDoc);
+      if (m_aDocumentCustomizer != null)
+        m_aDocumentCustomizer.customizeDocument (aDoc);
 
       // save document to output stream
       aDoc.save (aBufferedOS);
@@ -344,5 +342,47 @@ public class PageLayoutPDF implements IPLVisitable
     }
 
     return this;
+  }
+
+  /**
+   * Render this layout to an OutputStream.
+   *
+   * @param aCustomizer
+   *        The customizer to be invoked before the document is written to the
+   *        stream. May be <code>null</code>.
+   * @param aOS
+   *        The output stream to write to. May not be <code>null</code>. Is
+   *        closed automatically.
+   * @return this for chaining
+   * @throws PDFCreationException
+   *         In case of an error
+   * @deprecated Since 5.1.0; Call
+   *             {@link #setDocumentCustomizer(IPDDocumentCustomizer)} and than
+   *             {@link #renderTo(OutputStream)}
+   */
+  @Nonnull
+  @Deprecated
+  public final PageLayoutPDF renderTo (@Nullable final IPDDocumentCustomizer aCustomizer,
+                                       @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
+  {
+    setDocumentCustomizer (aCustomizer);
+    return renderTo (aOS);
+  }
+
+  /**
+   * Render this layout to a {@link File}.
+   *
+   * @param aFile
+   *        The output stream to write to. May not be <code>null</code>. Is
+   *        closed automatically.
+   * @return this for chaining
+   * @throws PDFCreationException
+   *         In case of an error
+   * @since 5.1.0
+   */
+  @Nonnull
+  public PageLayoutPDF renderTo (@Nonnull final File aFile) throws PDFCreationException
+  {
+    return renderTo (FileHelper.getOutputStream (aFile));
   }
 }

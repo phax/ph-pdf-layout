@@ -24,7 +24,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PageLayoutPDF;
@@ -63,7 +62,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/header.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/header.pdf"));
   }
 
   @Test
@@ -80,7 +79,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/header-aligned.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/header-aligned.pdf"));
   }
 
   @Test
@@ -99,7 +98,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/header-table-aligned.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/header-table-aligned.pdf"));
   }
 
   @Test
@@ -115,7 +114,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/footer.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/footer.pdf"));
   }
 
   @Test
@@ -132,7 +131,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/footer-aligned.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/footer-aligned.pdf"));
   }
 
   @Test
@@ -152,7 +151,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/both.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/both.pdf"));
   }
 
   @Test
@@ -178,7 +177,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/both-styled.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/both-styled.pdf"));
   }
 
   @Test
@@ -222,7 +221,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/placeholder.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/placeholder.pdf"));
   }
 
   @Test
@@ -244,7 +243,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/multiple-pages.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/multiple-pages.pdf"));
   }
 
   @Test
@@ -265,7 +264,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/fillcolor.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/fillcolor.pdf"));
   }
 
   @Test
@@ -291,7 +290,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/firstpage-different.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-different.pdf"));
   }
 
   @Test
@@ -314,7 +313,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/firstpage-different-header.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-different-header.pdf"));
   }
 
   @Test
@@ -337,7 +336,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/firstpage-different-footer.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-different-footer.pdf"));
   }
 
   @Test
@@ -361,7 +360,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/firstpage-none.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-none.pdf"));
   }
 
   @Test
@@ -380,6 +379,6 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plpageset/firstpage-only.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-only.pdf"));
   }
 }
