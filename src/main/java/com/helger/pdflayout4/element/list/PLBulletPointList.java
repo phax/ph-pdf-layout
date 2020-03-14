@@ -52,7 +52,8 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     return m_aBulletPointCreator;
   }
 
-  public void addBulletPoint (@Nonnull final IPLRenderableObject <?> aElement)
+  @Nonnull
+  public PLBulletPointList addBulletPoint (@Nonnull final IPLRenderableObject <?> aElement)
   {
     final int nBulletPointIndex = m_aTable.getRowCount ();
 
@@ -60,6 +61,7 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     final PLTableCell aCellRight = new PLTableCell (aElement).setID ("content");
 
     m_aTable.addRow (aCellLeft, aCellRight);
+    return this;
   }
 
   @Override

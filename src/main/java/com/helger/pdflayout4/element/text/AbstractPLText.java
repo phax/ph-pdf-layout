@@ -375,7 +375,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
     else
     {
-      // Use the approximations from the place holders
+      // Use the approximations from the placeholders
       sTextToFit = StringHelper.replaceMultiple (m_sOriginalText, ESTIMATION_REPLACEMENTS);
     }
     internalSetPreparedLines (m_aLoadedFont.getFitToWidth (sTextToFit, fFontSize, fAvailableWidth));

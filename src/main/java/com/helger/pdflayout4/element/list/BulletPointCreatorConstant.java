@@ -43,6 +43,6 @@ public class BulletPointCreatorConstant implements IBulletPointCreator
   @Nonnull
   public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    return new PLText (m_sText, m_aFontSpec);
+    return new PLText (m_sText, m_aFontSpec).setVertSplittable (false);
   }
 }

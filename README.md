@@ -23,6 +23,7 @@ The basic elements provided are:
     * Allow table columns with different `WidthSpec` types, as long as colspan is `1`.
     * Added another generic parameter to `IPLSplittableObject`
     * Made `PageLayoutPDF` API more chainable
+    * New class `PLBulletPointList` can be used to create regular bullet point lists 
 * v5.0.9 - 2019-04-29
     * Updated to PDFBox 2.0.15 (security update)
 * v5.0.8 - 2018-11-22

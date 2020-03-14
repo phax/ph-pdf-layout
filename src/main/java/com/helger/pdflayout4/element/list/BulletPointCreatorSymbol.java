@@ -3,7 +3,9 @@ package com.helger.pdflayout4.element.list;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
+import com.helger.pdflayout4.PLConvert;
 import com.helger.pdflayout4.base.IPLRenderableObject;
+import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.FontSpec;
 import com.helger.pdflayout4.spec.PreloadFont;
 
@@ -16,17 +18,33 @@ import com.helger.pdflayout4.spec.PreloadFont;
  */
 public class BulletPointCreatorSymbol extends BulletPointCreatorConstant
 {
-  public BulletPointCreatorSymbol (@Nonnegative final float fFontSize)
+  public BulletPointCreatorSymbol (final char cSymbol, @Nonnegative final float fFontSize)
   {
-    // 183 or 176
-    super (true ? " \u00b7" : " \u00b0", new FontSpec (PreloadFont.SYMBOL, fFontSize));
+    super (Character.toString (cSymbol), new FontSpec (PreloadFont.SYMBOL, fFontSize));
   }
 
   @Override
   @Nonnull
   public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    final IPLRenderableObject <?> ret = super.getBulletPointElement (nBulletPointIndex);
+    final PLText ret = (PLText) super.getBulletPointElement (nBulletPointIndex);
+    ret.setPaddingLeft (5f).setPaddingRight (5f);
+    // Vertical align
+    ret.setCustomAscent (PLConvert.getWidthForFontSize (450, getFontSpec ().getFontSize ()));
     return ret;
+  }
+
+  @Nonnull
+  public static BulletPointCreatorSymbol createFilledDot (@Nonnegative final float fFontSize)
+  {
+    // 183
+    return new BulletPointCreatorSymbol ('\u00b7', fFontSize);
+  }
+
+  @Nonnull
+  public static BulletPointCreatorSymbol createEmptyDot (@Nonnegative final float fFontSize)
+  {
+    // 176
+    return new BulletPointCreatorSymbol ('\u00b0', fFontSize);
   }
 }
