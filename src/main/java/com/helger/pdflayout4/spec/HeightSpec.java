@@ -62,7 +62,7 @@ public class HeightSpec implements Serializable
    * @return The height type. Never <code>null</code>.
    */
   @Nonnull
-  public EValueUOMType getType ()
+  public final EValueUOMType getType ()
   {
     return m_eType;
   }
@@ -72,7 +72,7 @@ public class HeightSpec implements Serializable
    */
   @Nonnull
   @Nonempty
-  public String getTypeID ()
+  public final String getTypeID ()
   {
     return m_eType.getID ();
   }
@@ -81,7 +81,7 @@ public class HeightSpec implements Serializable
    * @return <code>true</code> if type is 'absolute' or 'percentage'- Only
    *         absolute entries need to provide a value!
    */
-  public boolean isAbsolute ()
+  public final boolean isAbsolute ()
   {
     return m_eType.isValueRequired ();
   }
@@ -89,7 +89,7 @@ public class HeightSpec implements Serializable
   /**
    * @return <code>true</code> if type is 'star'.
    */
-  public boolean isStar ()
+  public final boolean isStar ()
   {
     return m_eType == EValueUOMType.STAR;
   }
@@ -97,7 +97,7 @@ public class HeightSpec implements Serializable
   /**
    * @return <code>true</code> if type is 'auto'.
    */
-  public boolean isAuto ()
+  public final boolean isAuto ()
   {
     return m_eType == EValueUOMType.AUTO;
   }
@@ -108,7 +108,7 @@ public class HeightSpec implements Serializable
    *         this is 0.
    */
   @Nonnegative
-  public float getValue ()
+  public final float getValue ()
   {
     return m_fValue;
   }

@@ -63,7 +63,7 @@ public abstract class AbstractRectSpec implements Serializable
     m_fYSum = fTop + fBottom;
   }
 
-  public boolean hasAnyValue ()
+  public final boolean hasAnyValue ()
   {
     return m_fTop != 0 || m_fRight != 0 || m_fBottom != 0 || m_fLeft != 0;
   }
@@ -71,7 +71,7 @@ public abstract class AbstractRectSpec implements Serializable
   /**
    * @return Top value
    */
-  public float getTop ()
+  public final float getTop ()
   {
     return m_fTop;
   }
@@ -79,7 +79,7 @@ public abstract class AbstractRectSpec implements Serializable
   /**
    * @return Right value
    */
-  public float getRight ()
+  public final float getRight ()
   {
     return m_fRight;
   }
@@ -87,7 +87,7 @@ public abstract class AbstractRectSpec implements Serializable
   /**
    * @return Bottom value
    */
-  public float getBottom ()
+  public final float getBottom ()
   {
     return m_fBottom;
   }
@@ -95,7 +95,7 @@ public abstract class AbstractRectSpec implements Serializable
   /**
    * @return Left value
    */
-  public float getLeft ()
+  public final float getLeft ()
   {
     return m_fLeft;
   }
@@ -103,7 +103,7 @@ public abstract class AbstractRectSpec implements Serializable
   /**
    * @return Left + right value
    */
-  public float getXSum ()
+  public final float getXSum ()
   {
     return m_fXSum;
   }
@@ -111,7 +111,7 @@ public abstract class AbstractRectSpec implements Serializable
   /**
    * @return Top + bottom value
    */
-  public float getYSum ()
+  public final float getYSum ()
   {
     return m_fYSum;
   }

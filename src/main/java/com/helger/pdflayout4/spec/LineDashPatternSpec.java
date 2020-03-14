@@ -88,7 +88,7 @@ public class LineDashPatternSpec implements Serializable
    */
   @Nonnull
   @ReturnsMutableCopy
-  public float [] getPattern ()
+  public final float [] getPattern ()
   {
     return ArrayHelper.getCopy (m_aPattern);
   }
@@ -96,7 +96,7 @@ public class LineDashPatternSpec implements Serializable
   /**
    * @return The phase to use.
    */
-  public float getPhase ()
+  public final float getPhase ()
   {
     return m_fPhase;
   }

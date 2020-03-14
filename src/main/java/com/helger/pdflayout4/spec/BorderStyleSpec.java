@@ -105,7 +105,7 @@ public class BorderStyleSpec implements Serializable
    * @return The border color to use. Never <code>null</code>.
    */
   @Nonnull
-  public Color getColor ()
+  public final Color getColor ()
   {
     return m_aColor;
   }
@@ -114,13 +114,13 @@ public class BorderStyleSpec implements Serializable
    * @return The border line style to use. Never <code>null</code>.
    */
   @Nonnull
-  public LineDashPatternSpec getLineDashPattern ()
+  public final LineDashPatternSpec getLineDashPattern ()
   {
     return m_aLineDashPattern;
   }
 
   @Nonnegative
-  public float getLineWidth ()
+  public final float getLineWidth ()
   {
     return m_fLineWidth;
   }
@@ -129,7 +129,7 @@ public class BorderStyleSpec implements Serializable
    * @return <code>true</code> if all values are set to default,
    *         <code>false</code> otherwise.
    */
-  public boolean isDefault ()
+  public final boolean isDefault ()
   {
     return m_aColor.equals (DEFAULT_COLOR) &&
            m_aLineDashPattern.equals (DEFAULT_LINE_DASH_PATTERN) &&

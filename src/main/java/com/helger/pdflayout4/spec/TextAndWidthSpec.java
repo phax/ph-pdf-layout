@@ -49,13 +49,13 @@ public class TextAndWidthSpec implements Serializable
   }
 
   @Nonnull
-  public String getText ()
+  public final String getText ()
   {
     return m_sText;
   }
 
   @Nonnegative
-  public float getWidth ()
+  public final float getWidth ()
   {
     return m_fWidth;
   }

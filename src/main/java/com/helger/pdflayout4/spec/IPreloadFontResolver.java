@@ -21,6 +21,11 @@ import javax.annotation.Nullable;
 import com.helger.font.api.IFontResource;
 import com.helger.font.api.IHasFontResource;
 
+/**
+ * Find {@link PreloadFont} objects by ID.
+ * 
+ * @author Philip Helger
+ */
 @FunctionalInterface
 public interface IPreloadFontResolver
 {

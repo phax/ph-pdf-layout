@@ -68,7 +68,7 @@ public class SizeSpec implements Serializable
    * @return Width. Always &ge; 0.
    */
   @Nonnegative
-  public float getWidth ()
+  public final float getWidth ()
   {
     return m_fWidth;
   }
@@ -77,7 +77,7 @@ public class SizeSpec implements Serializable
    * @return Height. Always &ge; 0.
    */
   @Nonnegative
-  public float getHeight ()
+  public final float getHeight ()
   {
     return m_fHeight;
   }

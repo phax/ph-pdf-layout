@@ -97,7 +97,7 @@ public class BorderSpec implements Serializable
    * @return <code>true</code> if all borders are defined, <code>false</code>
    *         otherwise.
    */
-  public boolean hasAllBorders ()
+  public final boolean hasAllBorders ()
   {
     return m_aTop != null && m_aRight != null && m_aBottom != null && m_aLeft != null;
   }
@@ -106,7 +106,7 @@ public class BorderSpec implements Serializable
    * @return <code>true</code> if at least one border is defined,
    *         <code>false</code> if no border is defined at all.
    */
-  public boolean hasAnyBorder ()
+  public final boolean hasAnyBorder ()
   {
     return m_aTop != null || m_aRight != null || m_aBottom != null || m_aLeft != null;
   }
@@ -127,7 +127,7 @@ public class BorderSpec implements Serializable
    * @return The top border style. May be <code>null</code>.
    */
   @Nullable
-  public BorderStyleSpec getTop ()
+  public final BorderStyleSpec getTop ()
   {
     return m_aTop;
   }
@@ -136,7 +136,7 @@ public class BorderSpec implements Serializable
    * @return The right border style. May be <code>null</code>.
    */
   @Nullable
-  public BorderStyleSpec getRight ()
+  public final BorderStyleSpec getRight ()
   {
     return m_aRight;
   }
@@ -145,7 +145,7 @@ public class BorderSpec implements Serializable
    * @return The bottom border style. May be <code>null</code>.
    */
   @Nullable
-  public BorderStyleSpec getBottom ()
+  public final BorderStyleSpec getBottom ()
   {
     return m_aBottom;
   }
@@ -154,7 +154,7 @@ public class BorderSpec implements Serializable
    * @return The left border style. May be <code>null</code>.
    */
   @Nullable
-  public BorderStyleSpec getLeft ()
+  public final BorderStyleSpec getLeft ()
   {
     return m_aLeft;
   }
@@ -162,7 +162,7 @@ public class BorderSpec implements Serializable
   /**
    * @return The top border width.
    */
-  public float getTopWidth ()
+  public final float getTopWidth ()
   {
     final BorderStyleSpec aBSS = m_aTop;
     return aBSS == null ? 0 : aBSS.getLineWidth ();
@@ -171,7 +171,7 @@ public class BorderSpec implements Serializable
   /**
    * @return The right border width.
    */
-  public float getRightWidth ()
+  public final float getRightWidth ()
   {
     final BorderStyleSpec aBSS = m_aRight;
     return aBSS == null ? 0 : aBSS.getLineWidth ();
@@ -180,7 +180,7 @@ public class BorderSpec implements Serializable
   /**
    * @return The bottom border width.
    */
-  public float getBottomWidth ()
+  public final float getBottomWidth ()
   {
     final BorderStyleSpec aBSS = m_aBottom;
     return aBSS == null ? 0 : aBSS.getLineWidth ();
@@ -189,7 +189,7 @@ public class BorderSpec implements Serializable
   /**
    * @return The left border width.
    */
-  public float getLeftWidth ()
+  public final float getLeftWidth ()
   {
     final BorderStyleSpec aBSS = m_aLeft;
     return aBSS == null ? 0 : aBSS.getLineWidth ();
@@ -198,7 +198,7 @@ public class BorderSpec implements Serializable
   /**
    * @return The sum of left and right border width.
    */
-  public float getXSumWidth ()
+  public final float getXSumWidth ()
   {
     return getLeftWidth () + getRightWidth ();
   }
@@ -206,7 +206,7 @@ public class BorderSpec implements Serializable
   /**
    * @return The sum of left and right border width.
    */
-  public float getYSumWidth ()
+  public final float getYSumWidth ()
   {
     return getTopWidth () + getBottomWidth ();
   }

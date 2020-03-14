@@ -151,19 +151,19 @@ public class LoadedFont
    * @return The underlying font. Never <code>null</code>.
    */
   @Nonnull
-  public PDFont getFont ()
+  public final PDFont getFont ()
   {
     return m_aFont;
   }
 
   @Nonnegative
-  public float getDescent (@Nonnegative final float fFontSize)
+  public final float getDescent (@Nonnegative final float fFontSize)
   {
     return m_fDescent * fFontSize / 1000f;
   }
 
   @Nonnegative
-  public float getTextHeight (@Nonnegative final float fFontSize)
+  public final float getTextHeight (@Nonnegative final float fFontSize)
   {
     return m_fBBHeight * fFontSize / 1000f;
   }

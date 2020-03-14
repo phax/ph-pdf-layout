@@ -69,7 +69,7 @@ public class FontSpec implements Serializable
    * @return The font to use. Never <code>null</code>.
    */
   @Nonnull
-  public PreloadFont getPreloadFont ()
+  public final PreloadFont getPreloadFont ()
   {
     return m_aPreloadFont;
   }
@@ -79,7 +79,7 @@ public class FontSpec implements Serializable
    */
   @Nonnull
   @Nonempty
-  public String getPreloadFontID ()
+  public final String getPreloadFontID ()
   {
     return m_aPreloadFont.getID ();
   }
@@ -88,7 +88,7 @@ public class FontSpec implements Serializable
    * @return The font size in points. Always &gt; 0.
    */
   @Nonnegative
-  public float getFontSize ()
+  public final float getFontSize ()
   {
     return m_fFontSize;
   }
@@ -97,7 +97,7 @@ public class FontSpec implements Serializable
    * @return The text color to use.
    */
   @Nonnull
-  public Color getColor ()
+  public final Color getColor ()
   {
     return m_aColor;
   }
