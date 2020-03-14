@@ -226,13 +226,21 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     return thisAsT ();
   }
 
-  public boolean isVertSplittable ()
+  public final boolean isVertSplittable ()
   {
     return m_bVertSplittable;
   }
 
+  /**
+   * Change the vertical splitability of this object.
+   *
+   * @param bVertSplittable
+   *        <code>true</code> if this element is splittable, <code>false</code>
+   *        otherwise.
+   * @return this for chaining
+   */
   @Nonnull
-  public IMPLTYPE setVertSplittable (final boolean bVertSplittable)
+  public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
     return thisAsT ();

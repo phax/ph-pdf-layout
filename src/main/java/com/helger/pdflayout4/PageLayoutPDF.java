@@ -119,13 +119,13 @@ public class PageLayoutPDF implements IPLVisitable
   @Deprecated
   public Calendar getDocumentCreationDate ()
   {
-    return TypeConverter.convert (m_aDocumentCreationDate, Calendar.class);
+    return TypeConverter.convert (getDocumentCreationDateTime (), Calendar.class);
   }
 
   @Deprecated
   public void setDocumentCreationDate (@Nullable final Calendar aDocumentCreationDate)
   {
-    m_aDocumentCreationDate = TypeConverter.convert (aDocumentCreationDate, LocalDateTime.class);
+    setDocumentCreationDateTime (TypeConverter.convert (aDocumentCreationDate, LocalDateTime.class));
   }
 
   @Nullable

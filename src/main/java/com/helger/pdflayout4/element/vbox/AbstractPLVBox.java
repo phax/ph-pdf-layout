@@ -354,13 +354,21 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     return thisAsT ();
   }
 
-  public boolean isVertSplittable ()
+  public final boolean isVertSplittable ()
   {
     return m_bVertSplittable;
   }
 
+  /**
+   * Change the vertical splitability of this object.
+   *
+   * @param bVertSplittable
+   *        <code>true</code> if this element is splittable, <code>false</code>
+   *        otherwise.
+   * @return this for chaining
+   */
   @Nonnull
-  public IMPLTYPE setVertSplittable (final boolean bVertSplittable)
+  public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
     return thisAsT ();
@@ -370,7 +378,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return The number of header rows. By default 0. Always &ge; 0.
    */
   @Nonnegative
-  public int getHeaderRowCount ()
+  public final int getHeaderRowCount ()
   {
     return m_nHeaderRowCount;
   }
@@ -384,7 +392,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return this
    */
   @Nonnull
-  public IMPLTYPE setHeaderRowCount (@Nonnegative final int nHeaderRowCount)
+  public final IMPLTYPE setHeaderRowCount (@Nonnegative final int nHeaderRowCount)
   {
     ValueEnforcer.isGE0 (nHeaderRowCount, "HeaderRowCount");
 
@@ -401,7 +409,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return Should the VBox occupy the full width? The default is
    *         {@link #DEFAULT_FULL_WIDTH}.
    */
-  public boolean isFullWidth ()
+  public final boolean isFullWidth ()
   {
     return m_bFullWidth;
   }
@@ -415,7 +423,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return this for chaining
    */
   @Nonnull
-  public IMPLTYPE setFullWidth (final boolean bFullWidth)
+  public final IMPLTYPE setFullWidth (final boolean bFullWidth)
   {
     m_bFullWidth = bFullWidth;
     return thisAsT ();
