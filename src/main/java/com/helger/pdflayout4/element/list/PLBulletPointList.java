@@ -2,11 +2,15 @@ package com.helger.pdflayout4.element.list;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
+import com.helger.pdflayout4.base.IPLSplittableObject;
+import com.helger.pdflayout4.base.PLSplitResult;
 import com.helger.pdflayout4.element.table.PLTable;
 import com.helger.pdflayout4.element.table.PLTableCell;
 import com.helger.pdflayout4.render.PageRenderContext;
@@ -20,7 +24,8 @@ import com.helger.pdflayout4.spec.WidthSpec;
  * @author Philip Helger
  * @since 5.0.10
  */
-public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPointList>
+public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPointList> implements
+                               IPLSplittableObject <PLBulletPointList, PLTable>
 {
   private final PLTable m_aTable;
   private final IBulletPointCreator m_aBulletPointCreator;
@@ -74,5 +79,23 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   protected void onRender (final PageRenderContext aCtx) throws IOException
   {
     m_aTable.render (aCtx);
+  }
+
+  @Nonnull
+  public PLTable internalCreateNewVertSplitObject (@Nonnull final PLTable aBase)
+  {
+    return m_aTable.internalCreateNewVertSplitObject (aBase);
+  }
+
+  public boolean isVertSplittable ()
+  {
+    return m_aTable.isVertSplittable ();
+  }
+
+  @Nullable
+  public PLSplitResult splitElementVert (@Nonnegative final float fAvailableWidth,
+                                         @Nonnegative final float fAvailableHeight)
+  {
+    return m_aTable.splitElementVert (fAvailableWidth, fAvailableHeight);
   }
 }

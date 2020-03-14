@@ -50,10 +50,22 @@ public final class PLBulletPointListTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     // This is the "Bullet point" in "Symbol font" (char 183)
-    final PLBulletPointList aList = new PLBulletPointList (15f, new BulletPointCreatorSymbol (10f));
-    for (int i = 0; i < 10; ++i)
-      aList.addBulletPoint (new PLText ("Bullet point item " + i, r10));
-    aPS1.addElement (aList);
+    {
+      final PLBulletPointList aList = new PLBulletPointList (15f, new BulletPointCreatorSymbol (10f));
+      for (int i = 0; i < 10; ++i)
+        aList.addBulletPoint (new PLText ("Bullet point item " + i, r10));
+      aPS1.addElement (aList);
+    }
+
+    // Numbered items
+    {
+      final PLBulletPointList aList = new PLBulletPointList (25f,
+                                                             new BulletPointCreatorNumeric (x -> "[" + (x + 1) + ".)",
+                                                                                            r10));
+      for (int i = 0; i < 10; ++i)
+        aList.addBulletPoint (new PLText ("Bullet point item " + i, r10));
+      aPS1.addElement (aList);
+    }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -61,7 +73,6 @@ public final class PLBulletPointListTest
   }
 
   @Test
-  @Deprecated
   public void testMultilineBullets () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);

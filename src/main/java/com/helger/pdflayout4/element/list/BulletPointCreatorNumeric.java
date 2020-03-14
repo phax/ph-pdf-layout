@@ -1,6 +1,6 @@
 package com.helger.pdflayout4.element.list;
 
-import java.util.function.Function;
+import java.util.function.IntFunction;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -20,10 +20,9 @@ import com.helger.pdflayout4.spec.FontSpec;
 public class BulletPointCreatorNumeric implements IBulletPointCreator
 {
   private final FontSpec m_aFontSpec;
-  private final Function <String, String> m_aFormatter;
+  private final IntFunction <String> m_aFormatter;
 
-  public BulletPointCreatorNumeric (@Nonnull final Function <String, String> aFormatter,
-                                    @Nonnull final FontSpec aFontSpec)
+  public BulletPointCreatorNumeric (@Nonnull final IntFunction <String> aFormatter, @Nonnull final FontSpec aFontSpec)
   {
     ValueEnforcer.notNull (aFontSpec, "FontSpec");
     ValueEnforcer.notNull (aFormatter, "Formatter");
@@ -32,7 +31,7 @@ public class BulletPointCreatorNumeric implements IBulletPointCreator
   }
 
   @Nonnull
-  public final Function <String, String> getFormatter ()
+  public final IntFunction <String> getFormatter ()
   {
     return m_aFormatter;
   }
@@ -40,8 +39,8 @@ public class BulletPointCreatorNumeric implements IBulletPointCreator
   @Nonnull
   public String getBulletPointText (@Nonnegative final int nBulletPointIndex)
   {
-    // Use 1-based index
-    return m_aFormatter.apply (Integer.toString (nBulletPointIndex + 1));
+    // Use 0-based index
+    return m_aFormatter.apply (nBulletPointIndex);
   }
 
   @Nonnull
