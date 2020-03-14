@@ -4,6 +4,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.FontSpec;
 
 /**
@@ -11,18 +12,25 @@ import com.helger.pdflayout4.spec.FontSpec;
  * character (like in an unordered list).
  *
  * @author Philip Helger
+ * @since 5.0.10
  */
 public class BulletPointCreatorConstant implements IBulletPointCreator
 {
-  private final FontSpec m_aFontSpec;
   private final String m_sText;
+  private final FontSpec m_aFontSpec;
 
-  public BulletPointCreatorConstant (@Nonnull final FontSpec aFontSpec, @Nonnull final String sText)
+  public BulletPointCreatorConstant (@Nonnull final String sText, @Nonnull final FontSpec aFontSpec)
   {
     ValueEnforcer.notNull (aFontSpec, "FontSpec");
     ValueEnforcer.notNull (sText, "Text");
     m_aFontSpec = aFontSpec;
     m_sText = sText;
+  }
+
+  @Nonnull
+  public final String getText ()
+  {
+    return m_sText;
   }
 
   @Nonnull
@@ -32,8 +40,8 @@ public class BulletPointCreatorConstant implements IBulletPointCreator
   }
 
   @Nonnull
-  public String getBulletPointText (@Nonnegative final int nBulletPointIndex)
+  public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    return m_sText;
+    return new PLText (m_sText, m_aFontSpec);
   }
 }

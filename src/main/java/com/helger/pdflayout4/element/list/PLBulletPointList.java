@@ -9,12 +9,17 @@ import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
 import com.helger.pdflayout4.element.table.PLTable;
 import com.helger.pdflayout4.element.table.PLTableCell;
-import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
 import com.helger.pdflayout4.spec.SizeSpec;
 import com.helger.pdflayout4.spec.WidthSpec;
 
+/**
+ * A simple bullet point list.
+ * 
+ * @author Philip Helger
+ * @since 5.0.10
+ */
 public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPointList>
 {
   private final PLTable m_aTable;
@@ -23,7 +28,9 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   public PLBulletPointList (final float fWidthSpec, @Nonnull final IBulletPointCreator aBulletPointCreator)
   {
     ValueEnforcer.notNull (aBulletPointCreator, "BulletPointCreator");
+    // Using different width types requires to NOT use a colspan
     m_aTable = new PLTable (WidthSpec.abs (fWidthSpec), WidthSpec.star ());
+    m_aTable.setID ("bulletpoint-list");
     m_aBulletPointCreator = aBulletPointCreator;
   }
 
@@ -42,9 +49,12 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   public void addBulletPoint (@Nonnull final IPLRenderableObject <?> aElement)
   {
     final int nBulletPointIndex = m_aTable.getRowCount ();
-    final PLTableCell aCellLeft = new PLTableCell (new PLText (m_aBulletPointCreator.getBulletPointText (nBulletPointIndex),
-                                                               m_aBulletPointCreator.getFontSpec ()));
+
+    final PLTableCell aCellLeft = new PLTableCell (m_aBulletPointCreator.getBulletPointElement (nBulletPointIndex));
+    aCellLeft.setID ("bulletpoint");
     final PLTableCell aCellRight = new PLTableCell (aElement);
+    aCellRight.setID ("content");
+
     m_aTable.addRow (aCellLeft, aCellRight);
   }
 

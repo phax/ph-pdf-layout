@@ -46,9 +46,11 @@ public final class PLBulletPointListTest
   public void testBasic () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final FontSpec s10 = new FontSpec (PreloadFont.SYMBOL, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
-    final PLBulletPointList aList = new PLBulletPointList (20f, new BulletPointCreatorConstant (r10, " * "));
+    // This is the "Bullet point" in "Symbol font" (char 183)
+    final PLBulletPointList aList = new PLBulletPointList (15f, new BulletPointCreatorConstant (" \u00b7", s10));
     for (int i = 0; i < 10; ++i)
       aList.addBulletPoint (new PLText ("Bullet point item " + i, r10));
     aPS1.addElement (aList);
