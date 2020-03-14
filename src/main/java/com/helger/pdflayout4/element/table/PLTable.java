@@ -63,8 +63,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
 {
   // All column widths
   private final ICommonsList <WidthSpec> m_aWidths;
-  // With type to use
-  private final EValueUOMType m_eWidthType;
+  // With type to use - may be null
+  private final EValueUOMType m_eCommonWidthType;
   // VBox with all the PLTableRow elements
   private PLVBox m_aRows = new PLVBox ().setVertSplittable (true).setFullWidth (true);
   // Margin around the table
@@ -100,21 +100,35 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
   {
     ValueEnforcer.notEmptyNoNullValue (aWidths, "Widths");
 
-    // Check that all width are of the same type
+    // Check if all width are of the same type
     EValueUOMType eWidthType = null;
+    boolean bDifferentWidthTypes = false;
     for (final WidthSpec aWidth : aWidths)
+    {
+      final EValueUOMType eCurWidth = aWidth.getType ();
+      if (eCurWidth == EValueUOMType.AUTO)
+        throw new IllegalArgumentException ("Width type auto is not allowed for tables! Use type star instead!");
+
       if (eWidthType == null)
-        eWidthType = aWidth.getType ();
+        eWidthType = eCurWidth;
       else
-        if (aWidth.getType () != eWidthType)
-          throw new IllegalArgumentException ("All widths must be of the same type! Found " +
-                                              eWidthType +
-                                              " and " +
-                                              aWidth.getType ());
-    if (eWidthType == EValueUOMType.AUTO)
-      throw new IllegalArgumentException ("Width type auto is not allowed for tables! Use type star instead!");
+        if (eCurWidth != eWidthType)
+        {
+          if (true)
+          {
+            // This means, colspan cannot be used
+            bDifferentWidthTypes = true;
+          }
+          else
+            throw new IllegalArgumentException ("All widths must be of the same type! Found " +
+                                                eWidthType +
+                                                " and " +
+                                                eCurWidth);
+        }
+    }
+
     m_aWidths = new CommonsArrayList <> (aWidths);
-    m_eWidthType = eWidthType;
+    m_eCommonWidthType = bDifferentWidthTypes ? null : eWidthType;
   }
 
   @Override
@@ -250,9 +264,12 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
       }
       else
       {
+        if (m_eCommonWidthType == null)
+          throw new IllegalArgumentException ("Since columns with different width types are used, 'colspan' must be 1");
+
         final List <WidthSpec> aWidths = m_aWidths.subList (nWidthIndex, nWidthIndex + nColSpan);
         WidthSpec aRealWidth;
-        if (m_eWidthType == EValueUOMType.STAR)
+        if (m_eCommonWidthType == EValueUOMType.STAR)
         {
           // aggregate
           aRealWidth = WidthSpec.perc (nColSpan * 100f / m_aWidths.size ());
@@ -263,7 +280,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
           float fWidth = 0;
           for (final WidthSpec aWidth : aWidths)
             fWidth += aWidth.getValue ();
-          aRealWidth = new WidthSpec (m_eWidthType, fWidth);
+          aRealWidth = new WidthSpec (m_eCommonWidthType, fWidth);
         }
         aRow.addCell (aRealCell, aRealWidth);
       }
@@ -478,7 +495,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("Rows", m_aRows)
                             .append ("Width", m_aWidths)
-                            .append ("WidthType", m_eWidthType)
+                            .append ("WidthType", m_eCommonWidthType)
                             .append ("Margin", m_aMargin)
                             .getToString ();
   }
