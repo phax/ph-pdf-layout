@@ -52,6 +52,7 @@ import com.helger.pdflayout4.spec.LineDashPatternSpec;
 import com.helger.pdflayout4.spec.MarginSpec;
 import com.helger.pdflayout4.spec.PaddingSpec;
 import com.helger.pdflayout4.spec.PreloadFont;
+import com.helger.pdflayout4.spec.WidthSpec;
 
 /**
  * Test class for class {@link PLTable}.
@@ -635,5 +636,107 @@ public final class PLTableTest
       aPageLayout.addPageSet (aPS1);
       aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/colspan-right-align.pdf")));
     });
+  }
+
+  @Test
+  public void testDifferentColWidthTypes () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
+
+    final String sLongText = "Line 1\n  Line 2\nLine 3\n  Line 4\nLine 5";
+
+    // Start table
+    final PLTable aTable = new PLTable (WidthSpec.abs (100), WidthSpec.star (), WidthSpec.perc (25)).setID ("table");
+    aTable.addAndReturnRow (new PLTableCell (new PLText ("100f", r10)),
+                            new PLTableCell (new PLText ("star", r10)),
+                            new PLTableCell (new PLText ("25%", r10)))
+          .setFillColor (Color.GREEN)
+          .setID ("headerrow");
+    for (int i = 0; i < 12; ++i)
+    {
+      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10)),
+                              new PLTableCell (new PLText (sLongText, r10)),
+                              new PLTableCell (new PLText (sLongText, r10)))
+            .setID ("row" + i);
+    }
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.RED));
+    aPS1.addElement (aTable);
+
+    aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/different-width-types.pdf")));
+  }
+
+  @Test
+  public void testDifferentColWidthTypesNotFullWidth () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
+
+    final String sLongText = "Line 1\n  Line 2\nLine 3\n  Line 4\nLine 5";
+
+    // Start table
+    final PLTable aTable = new PLTable (WidthSpec.abs (100), WidthSpec.perc (25), WidthSpec.perc (25)).setID ("table");
+    aTable.addAndReturnRow (new PLTableCell (new PLText ("100f", r10)),
+                            new PLTableCell (new PLText ("25%", r10)),
+                            new PLTableCell (new PLText ("25%", r10)))
+          .setFillColor (Color.GREEN)
+          .setID ("headerrow");
+    for (int i = 0; i < 12; ++i)
+    {
+      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10)),
+                              new PLTableCell (new PLText (sLongText, r10)),
+                              new PLTableCell (new PLText (sLongText, r10)))
+            .setID ("row" + i);
+    }
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.RED));
+    aPS1.addElement (aTable);
+
+    aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/different-width-types-not-full-width.pdf")));
+  }
+
+  @Test
+  public void testDifferentColWidthTypesTooWide () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
+
+    final String sLongText = "Line 1\n  Line 2\nLine 3\n  Line 4\nLine 5";
+
+    // Start table
+    final PLTable aTable = new PLTable (WidthSpec.abs (100), WidthSpec.perc (50), WidthSpec.perc (50)).setID ("table");
+    aTable.addAndReturnRow (new PLTableCell (new PLText ("100f", r10)),
+                            new PLTableCell (new PLText ("50%", r10)),
+                            new PLTableCell (new PLText ("50%", r10)))
+          .setFillColor (Color.GREEN)
+          .setID ("headerrow");
+    for (int i = 0; i < 12; ++i)
+    {
+      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10)),
+                              new PLTableCell (new PLText (sLongText, r10)),
+                              new PLTableCell (new PLText (sLongText, r10)))
+            .setID ("row" + i);
+    }
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.RED));
+    aPS1.addElement (aTable);
+
+    aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltable/different-width-types-too-wide.pdf")));
   }
 }
