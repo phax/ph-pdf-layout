@@ -27,7 +27,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout4.PDFCreationException;
@@ -80,7 +79,7 @@ public final class PLImageTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plimage/basic.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plimage/basic.pdf"));
   }
 
   @Test
@@ -100,6 +99,6 @@ public final class PLImageTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plimage/text-over-image.pdf")));
+    aPageLayout.renderTo (new File ("pdf/plimage/text-over-image.pdf"));
   }
 }

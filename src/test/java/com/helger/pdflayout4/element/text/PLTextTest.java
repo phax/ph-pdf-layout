@@ -28,7 +28,6 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.CGlobal;
 import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.string.StringHelper;
 import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
@@ -114,7 +113,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/basic.pdf")));
+    aPageLayout.renderTo (new File ("pdf/pltext/basic.pdf"));
   }
 
   @Test
@@ -191,7 +190,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/line-spacing.pdf")));
+    aPageLayout.renderTo (new File ("pdf/pltext/line-spacing.pdf"));
   }
 
   @Test
@@ -211,7 +210,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/font-open-sans.pdf")));
+    aPageLayout.renderTo (new File ("pdf/pltext/font-open-sans.pdf"));
   }
 
   @Test
@@ -232,7 +231,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/font-lato2.pdf")));
+    aPageLayout.renderTo (new File ("pdf/pltext/font-lato2.pdf"));
   }
 
   @Test
@@ -272,7 +271,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/font-multiple.pdf")));
+    aPageLayout.renderTo (new File ("pdf/pltext/font-multiple.pdf"));
   }
 
   @Test
@@ -328,7 +327,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/horz-alignment.pdf")));
+    aPageLayout.renderTo (new File ("pdf/pltext/horz-alignment.pdf"));
   }
 
   @Test
@@ -355,6 +354,6 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/pltext/split-vertically.pdf")));
+    aPageLayout.renderTo (new File ("pdf/pltext/split-vertically.pdf"));
   }
 }
