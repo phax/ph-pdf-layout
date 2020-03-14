@@ -4,6 +4,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.pdflayout4.base.IPLRenderableObject;
 import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.FontSpec;
 
@@ -40,7 +41,7 @@ public class BulletPointCreatorConstant implements IBulletPointCreator
   }
 
   @Nonnull
-  public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
+  public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
     return new PLText (m_sText, m_aFontSpec);
   }

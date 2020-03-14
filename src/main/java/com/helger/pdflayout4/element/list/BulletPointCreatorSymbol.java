@@ -3,7 +3,9 @@ package com.helger.pdflayout4.element.list;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
-import com.helger.pdflayout4.element.text.PLText;
+import com.helger.pdflayout4.base.IPLRenderableObject;
+import com.helger.pdflayout4.element.box.PLBox;
+import com.helger.pdflayout4.spec.EVertAlignment;
 import com.helger.pdflayout4.spec.FontSpec;
 import com.helger.pdflayout4.spec.PreloadFont;
 
@@ -23,10 +25,9 @@ public class BulletPointCreatorSymbol extends BulletPointCreatorConstant
 
   @Override
   @Nonnull
-  public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
+  public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    final PLText ret = super.getBulletPointElement (nBulletPointIndex);
-    ret.addMarginTop (-getFontSpec ().getFontSize ());
-    return ret;
+    final IPLRenderableObject <?> ret = super.getBulletPointElement (nBulletPointIndex);
+    return new PLBox (ret).setVertAlign (EVertAlignment.MIDDLE);
   }
 }

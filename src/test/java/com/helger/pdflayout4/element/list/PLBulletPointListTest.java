@@ -25,6 +25,7 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.junit.DebugModeTestRule;
+import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
@@ -57,6 +58,27 @@ public final class PLBulletPointListTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plbulletpointlist/basic.pdf")));
+  }
+
+  @Test
+  @Deprecated
+  public void testMultilineBullets () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    final String sBaseText = StringHelper.getRepeated ("In typography, cap height is the height of a capital letter above the baseline for a particular typeface.[1] It specifically is the height of capital letters that are flat—such as H or I—as opposed to round letters such as O, or pointed letters like A, both of which may display overshoot. The height of the small letters is the x-height. ",
+                                                       5);
+
+    // This is the "Bullet point" in "Symbol font" (char 183)
+    final PLBulletPointList aList = new PLBulletPointList (15f, new BulletPointCreatorSymbol (10f));
+    for (int i = 0; i < 10; ++i)
+      aList.addBulletPoint (new PLText (sBaseText, r10));
+    aPS1.addElement (aList);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (FileHelper.getOutputStream (new File ("pdf/plbulletpointlist/basic-multiline.pdf")));
   }
 
   @Test
