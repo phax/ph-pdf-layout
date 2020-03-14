@@ -19,7 +19,6 @@ package com.helger.pdflayout4;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.annotation.Nonnull;
@@ -43,7 +42,6 @@ import com.helger.commons.serialize.SerializationHelper;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.system.SystemProperties;
-import com.helger.commons.typeconvert.TypeConverter;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.pdflayout4.base.IPLVisitable;
 import com.helger.pdflayout4.base.IPLVisitor;
@@ -110,22 +108,11 @@ public class PageLayoutPDF implements IPLVisitable
     return m_sDocumentAuthor;
   }
 
-  public void setDocumentAuthor (@Nullable final String sDocumentAuthor)
+  @Nonnull
+  public PageLayoutPDF setDocumentAuthor (@Nullable final String sDocumentAuthor)
   {
     m_sDocumentAuthor = sDocumentAuthor;
-  }
-
-  @Nullable
-  @Deprecated
-  public Calendar getDocumentCreationDate ()
-  {
-    return TypeConverter.convert (getDocumentCreationDateTime (), Calendar.class);
-  }
-
-  @Deprecated
-  public void setDocumentCreationDate (@Nullable final Calendar aDocumentCreationDate)
-  {
-    setDocumentCreationDateTime (TypeConverter.convert (aDocumentCreationDate, LocalDateTime.class));
+    return this;
   }
 
   @Nullable
@@ -134,9 +121,11 @@ public class PageLayoutPDF implements IPLVisitable
     return m_aDocumentCreationDate;
   }
 
-  public void setDocumentCreationDateTime (@Nullable final LocalDateTime aDocumentCreationDate)
+  @Nonnull
+  public PageLayoutPDF setDocumentCreationDateTime (@Nullable final LocalDateTime aDocumentCreationDate)
   {
     m_aDocumentCreationDate = aDocumentCreationDate;
+    return this;
   }
 
   @Nullable
@@ -145,9 +134,11 @@ public class PageLayoutPDF implements IPLVisitable
     return m_sDocumentCreator;
   }
 
-  public void setDocumentCreator (@Nullable final String sDocumentCreator)
+  @Nonnull
+  public PageLayoutPDF setDocumentCreator (@Nullable final String sDocumentCreator)
   {
     m_sDocumentCreator = sDocumentCreator;
+    return this;
   }
 
   @Nullable
@@ -156,9 +147,11 @@ public class PageLayoutPDF implements IPLVisitable
     return m_sDocumentTitle;
   }
 
-  public void setDocumentTitle (@Nullable final String sDocumentTitle)
+  @Nonnull
+  public PageLayoutPDF setDocumentTitle (@Nullable final String sDocumentTitle)
   {
     m_sDocumentTitle = sDocumentTitle;
+    return this;
   }
 
   @Nullable
@@ -167,9 +160,11 @@ public class PageLayoutPDF implements IPLVisitable
     return m_sDocumentKeywords;
   }
 
-  public void setDocumentKeywords (@Nullable final String sDocumentKeywords)
+  @Nonnull
+  public PageLayoutPDF setDocumentKeywords (@Nullable final String sDocumentKeywords)
   {
     m_sDocumentKeywords = sDocumentKeywords;
+    return this;
   }
 
   @Nullable
@@ -178,9 +173,11 @@ public class PageLayoutPDF implements IPLVisitable
     return m_sDocumentSubject;
   }
 
-  public void setDocumentSubject (@Nullable final String sDocumentSubject)
+  @Nonnull
+  public PageLayoutPDF setDocumentSubject (@Nullable final String sDocumentSubject)
   {
     m_sDocumentSubject = sDocumentSubject;
+    return this;
   }
 
   @Nonnull
@@ -195,11 +192,14 @@ public class PageLayoutPDF implements IPLVisitable
    *
    * @param aPageSet
    *        The page set to be added. May not be <code>null</code>.
+   * @return this for chaining
    */
-  public void addPageSet (@Nonnull final PLPageSet aPageSet)
+  @Nonnull
+  public PageLayoutPDF addPageSet (@Nonnull final PLPageSet aPageSet)
   {
     ValueEnforcer.notNull (aPageSet, "PageSet");
     m_aPageSets.add (aPageSet);
+    return this;
   }
 
   @Nonnull
@@ -223,12 +223,14 @@ public class PageLayoutPDF implements IPLVisitable
    * @param aOS
    *        The output stream to write to. May not be <code>null</code>. Is
    *        closed automatically.
+   * @return this for chaining
    * @throws PDFCreationException
    *         In case of an error
    */
-  public void renderTo (@Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
+  @Nonnull
+  public PageLayoutPDF renderTo (@Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
   {
-    renderTo ((IPDDocumentCustomizer) null, aOS);
+    return renderTo ((IPDDocumentCustomizer) null, aOS);
   }
 
   /**
@@ -240,11 +242,13 @@ public class PageLayoutPDF implements IPLVisitable
    * @param aOS
    *        The output stream to write to. May not be <code>null</code>. Is
    *        closed automatically.
+   * @return this for chaining
    * @throws PDFCreationException
    *         In case of an error
    */
-  public void renderTo (@Nullable final IPDDocumentCustomizer aCustomizer,
-                        @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
+  @Nonnull
+  public PageLayoutPDF renderTo (@Nullable final IPDDocumentCustomizer aCustomizer,
+                                 @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
   {
     ValueEnforcer.notNull (aOS, "OutputStream");
 
@@ -338,5 +342,7 @@ public class PageLayoutPDF implements IPLVisitable
     {
       throw new PDFCreationException ("Internal error", ex);
     }
+
+    return this;
   }
 }
