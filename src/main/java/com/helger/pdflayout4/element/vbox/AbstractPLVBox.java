@@ -359,14 +359,6 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     return m_bVertSplittable;
   }
 
-  /**
-   * Change the vertical splitability of this object.
-   *
-   * @param bVertSplittable
-   *        <code>true</code> if this element is splittable, <code>false</code>
-   *        otherwise.
-   * @return this for chaining
-   */
   @Nonnull
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {

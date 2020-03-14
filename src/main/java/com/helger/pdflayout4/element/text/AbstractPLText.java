@@ -242,14 +242,6 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return m_bVertSplittable;
   }
 
-  /**
-   * Change whether this text is splittable or not.
-   *
-   * @param bVertSplittable
-   *        <code>true</code> if this text should be splittable,
-   *        <code>false</code> otherwise.
-   * @return this for chaining
-   */
   @Nonnull
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {

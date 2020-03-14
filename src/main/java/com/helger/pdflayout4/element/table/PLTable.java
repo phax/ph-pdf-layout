@@ -433,9 +433,16 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     m_aRows.internalMarkAsNotPrepared ();
   }
 
-  public boolean isVertSplittable ()
+  public final boolean isVertSplittable ()
   {
     return m_aRows.isVertSplittable ();
+  }
+
+  @Nonnull
+  public final PLTable setVertSplittable (final boolean bVertSplittable)
+  {
+    m_aRows.setVertSplittable (bVertSplittable);
+    return this;
   }
 
   @Override

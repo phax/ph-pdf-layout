@@ -54,6 +54,17 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
   boolean isVertSplittable ();
 
   /**
+   * Change the vertical splitability of this object.
+   *
+   * @param bVertSplittable
+   *        <code>true</code> if this element is splittable, <code>false</code>
+   *        otherwise.
+   * @return this for chaining
+   */
+  @Nonnull
+  IMPLTYPE setVertSplittable (boolean bVertSplittable);
+
+  /**
    * Split this element vertically into sub-elements according to the available
    * height. Splitting is always done after preparation and must return prepared
    * objects!
