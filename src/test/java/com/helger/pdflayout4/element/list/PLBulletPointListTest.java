@@ -32,6 +32,7 @@ import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.FontSpec;
 import com.helger.pdflayout4.spec.PreloadFont;
+import com.helger.pdflayout4.spec.WidthSpec;
 
 /**
  * Test class for {@link PLBulletPointList}
@@ -51,7 +52,7 @@ public final class PLBulletPointListTest
 
     // This is the "Bullet point" in "Symbol font" (char 183)
     {
-      final PLBulletPointList aList = new PLBulletPointList (15f, new BulletPointCreatorSymbol (10f));
+      final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (15f), new BulletPointCreatorSymbol (10f));
       for (int i = 0; i < 10; ++i)
         aList.addBulletPoint (new PLText ("Bullet point item " + i, r10));
       aPS1.addElement (aList);
@@ -59,7 +60,7 @@ public final class PLBulletPointListTest
 
     // Numbered items
     {
-      final PLBulletPointList aList = new PLBulletPointList (25f,
+      final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (25f),
                                                              new BulletPointCreatorNumeric (x -> "[" + (x + 1) + ".)",
                                                                                             r10));
       for (int i = 0; i < 10; ++i)
@@ -81,8 +82,7 @@ public final class PLBulletPointListTest
     final String sBaseText = StringHelper.getRepeated ("In typography, cap height is the height of a capital letter above the baseline for a particular typeface.[1] It specifically is the height of capital letters that are flat—such as H or I—as opposed to round letters such as O, or pointed letters like A, both of which may display overshoot. The height of the small letters is the x-height. ",
                                                        5);
 
-    // This is the "Bullet point" in "Symbol font" (char 183)
-    final PLBulletPointList aList = new PLBulletPointList (15f, new BulletPointCreatorSymbol (10f));
+    final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (15f), new BulletPointCreatorSymbol (10f));
     for (int i = 0; i < 10; ++i)
       aList.addBulletPoint (new PLText (sBaseText, r10));
     aPS1.addElement (aList);
@@ -98,8 +98,7 @@ public final class PLBulletPointListTest
     final FontSpec r30 = new FontSpec (PreloadFont.REGULAR, 30);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
-    // This is the "Bullet point" in "Symbol font" (char 183)
-    final PLBulletPointList aList = new PLBulletPointList (15f, new BulletPointCreatorSymbol (30f));
+    final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (15f), new BulletPointCreatorSymbol (30f));
     for (int i = 0; i < 10; ++i)
       aList.addBulletPoint (new PLText ("Bullet point item " + i, r30));
     aPS1.addElement (aList);

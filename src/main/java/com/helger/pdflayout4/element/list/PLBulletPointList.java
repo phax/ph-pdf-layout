@@ -30,12 +30,13 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   private final PLTable m_aTable;
   private final IBulletPointCreator m_aBulletPointCreator;
 
-  public PLBulletPointList (final float fWidthSpec, @Nonnull final IBulletPointCreator aBulletPointCreator)
+  public PLBulletPointList (@Nonnull final WidthSpec aWidthSpec, @Nonnull final IBulletPointCreator aBulletPointCreator)
   {
+    ValueEnforcer.notNull (aWidthSpec, "WidthSpec");
     ValueEnforcer.notNull (aBulletPointCreator, "BulletPointCreator");
+
     // Using different width types requires to NOT use a colspan
-    m_aTable = new PLTable (WidthSpec.abs (fWidthSpec), WidthSpec.star ());
-    m_aTable.setID ("bulletpoint-list");
+    m_aTable = new PLTable (aWidthSpec, WidthSpec.star ()).setID ("bulletpoint-list");
     m_aBulletPointCreator = aBulletPointCreator;
   }
 
@@ -56,7 +57,7 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     final int nBulletPointIndex = m_aTable.getRowCount ();
 
     final PLTableCell aCellLeft = new PLTableCell (m_aBulletPointCreator.getBulletPointElement (nBulletPointIndex)).setID ("bulletpoint");
-    final PLTableCell aCellRight = new PLTableCell (aElement).setVertSplittable (true).setID ("content");
+    final PLTableCell aCellRight = new PLTableCell (aElement).setID ("content");
 
     m_aTable.addRow (aCellLeft, aCellRight);
   }
@@ -85,14 +86,21 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     return m_aTable.internalCreateNewVertSplitObject (aBase);
   }
 
-  public boolean isVertSplittable ()
+  public final boolean isVertSplittable ()
   {
     return m_aTable.isVertSplittable ();
   }
 
+  @Nonnull
+  public final PLBulletPointList setVertSplittable (final boolean bVertSplittable)
+  {
+    m_aTable.setVertSplittable (bVertSplittable);
+    return this;
+  }
+
   @Nullable
-  public PLSplitResult splitElementVert (@Nonnegative final float fAvailableWidth,
-                                         @Nonnegative final float fAvailableHeight)
+  public final PLSplitResult splitElementVert (@Nonnegative final float fAvailableWidth,
+                                               @Nonnegative final float fAvailableHeight)
   {
     return m_aTable.splitElementVert (fAvailableWidth, fAvailableHeight);
   }
