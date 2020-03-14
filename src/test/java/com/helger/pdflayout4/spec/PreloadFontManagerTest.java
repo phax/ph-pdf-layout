@@ -20,7 +20,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
+import java.io.IOException;
+
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.font.api.IFontResource;
 import com.helger.font.lato2.EFontResourceLato2;
@@ -32,6 +37,8 @@ import com.helger.font.lato2.EFontResourceLato2;
  */
 public final class PreloadFontManagerTest
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (PreloadFontManagerTest.class);
+
   @Test
   public void testInit ()
   {
@@ -43,5 +50,30 @@ public final class PreloadFontManagerTest
     assertNotNull (aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK));
     assertSame (aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK),
                 aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK));
+  }
+
+  public void _test (final PDType1Font f, final int nCP) throws IOException
+  {
+    LOGGER.info ("Character: " + (char) nCP);
+    LOGGER.info ("  Height = " + f.getHeight (nCP));
+    LOGGER.info ("  Width = " + f.getWidth (nCP));
+    LOGGER.info ("  Displacement-X = " + f.getDisplacement (nCP).getX ());
+    LOGGER.info ("  Font-Ascent = " + f.getFontDescriptor ().getAscent ());
+    LOGGER.info ("  Font-CapHeight = " + f.getFontDescriptor ().getCapHeight ());
+    LOGGER.info ("  Font-Descent = " + f.getFontDescriptor ().getDescent ());
+  }
+
+  @Test
+  public void testGetDifferences () throws IOException
+  {
+    final PDType1Font f = (PDType1Font) PreloadFont.SYMBOL.loadPDFont (null);
+    _test (f, "\u00b0".codePointAt (0));
+    _test (f, "\u00b7".codePointAt (0));
+
+    final PDType1Font f2 = (PDType1Font) PreloadFont.REGULAR.loadPDFont (null);
+    _test (f2, "B".codePointAt (0));
+    _test (f2, "C".codePointAt (0));
+    _test (f2, "b".codePointAt (0));
+    _test (f2, "c".codePointAt (0));
   }
 }
