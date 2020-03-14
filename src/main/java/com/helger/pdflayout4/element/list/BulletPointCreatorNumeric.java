@@ -11,11 +11,11 @@ import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.FontSpec;
 
 /**
- * An implementation of {@link IBulletPointCreator} that uses Arabic digits for
- * numbering and an optional suffix (e.g. a dot).
+ * An implementation of {@link IBulletPointCreator} that uses a custom
+ * {@link IntFunction} to create a custom formatted text.
  *
  * @author Philip Helger
- * @since 5.0.10
+ * @since 5.1.0
  */
 public class BulletPointCreatorNumeric implements IBulletPointCreator
 {

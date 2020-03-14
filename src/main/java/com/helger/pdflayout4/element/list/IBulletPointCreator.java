@@ -10,7 +10,7 @@ import com.helger.pdflayout4.base.IPLRenderableObject;
  * characters.
  *
  * @author Philip Helger
- * @since 5.0.10
+ * @since 5.1.0
  */
 public interface IBulletPointCreator
 {

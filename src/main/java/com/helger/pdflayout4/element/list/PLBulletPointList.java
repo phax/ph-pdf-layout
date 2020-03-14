@@ -22,7 +22,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
  * A simple bullet point list.
  *
  * @author Philip Helger
- * @since 5.0.10
+ * @since 5.1.0
  */
 public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPointList> implements
                                IPLSplittableObject <PLBulletPointList, PLTable>
@@ -55,10 +55,8 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   {
     final int nBulletPointIndex = m_aTable.getRowCount ();
 
-    final PLTableCell aCellLeft = new PLTableCell (m_aBulletPointCreator.getBulletPointElement (nBulletPointIndex));
-    aCellLeft.setID ("bulletpoint");
-    final PLTableCell aCellRight = new PLTableCell (aElement).setVertSplittable (true);
-    aCellRight.setID ("content");
+    final PLTableCell aCellLeft = new PLTableCell (m_aBulletPointCreator.getBulletPointElement (nBulletPointIndex)).setID ("bulletpoint");
+    final PLTableCell aCellRight = new PLTableCell (aElement).setVertSplittable (true).setID ("content");
 
     m_aTable.addRow (aCellLeft, aCellRight);
   }

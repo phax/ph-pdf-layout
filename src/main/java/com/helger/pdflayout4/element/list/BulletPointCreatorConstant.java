@@ -13,7 +13,7 @@ import com.helger.pdflayout4.spec.FontSpec;
  * character (like in an unordered list).
  *
  * @author Philip Helger
- * @since 5.0.10
+ * @since 5.1.0
  */
 public class BulletPointCreatorConstant implements IBulletPointCreator
 {
