@@ -97,12 +97,13 @@ public class LoadedFont
 
     public int getEncodedIntValue ()
     {
-      if (m_aEncodedValue == null)
+      Integer ret = m_aEncodedValue;
+      if (ret == null)
       {
         // Lazy init
-        m_aEncodedValue = Integer.valueOf (_toInt (m_aEncoded));
+        ret = m_aEncodedValue = Integer.valueOf (_toInt (m_aEncoded));
       }
-      return m_aEncodedValue.intValue ();
+      return ret.intValue ();
     }
   }
 
@@ -306,38 +307,38 @@ public class LoadedFont
   {
     String sCurLine = sLine;
     float fSumWidth = 0f;
-    int nCPOfs = 0;
-    float fSumWidthOfLastWS = 0f;
-    int nCPOfsOfLastWS = 0;
+    int nCodePointOffset = 0;
+    float fSumWidthOfLastWhitespace = 0f;
+    int nCodePointOffsetOfLastWhitespace = 0;
     boolean bWarnedOnTooSmallMaxWidth = false;
 
     // For each code point
-    while (nCPOfs < sCurLine.length ())
+    while (nCodePointOffset < sCurLine.length ())
     {
-      final int nCP = sCurLine.codePointAt (nCPOfs);
-      final float fCPWidth = _getWidthForFontSize (_getCodePointWidth (nCP), fFontSize);
+      final int nCodePoint = sCurLine.codePointAt (nCodePointOffset);
+      final float fCodePointWidth = _getWidthForFontSize (_getCodePointWidth (nCodePoint), fFontSize);
 
-      if (Character.isWhitespace (nCP))
+      if (Character.isWhitespace (nCodePoint))
       {
         // Whitespace is considered a word break and allows us to break the line
         // here, so remember it before the increment
-        nCPOfsOfLastWS = nCPOfs;
-        fSumWidthOfLastWS = fSumWidth;
+        nCodePointOffsetOfLastWhitespace = nCodePointOffset;
+        fSumWidthOfLastWhitespace = fSumWidth;
       }
 
-      final float fNewWidth = fSumWidth + fCPWidth;
+      final float fNewWidth = fSumWidth + fCodePointWidth;
 
       boolean bSplitNow = fNewWidth > fMaxWidth;
-      if (bSplitNow && nCPOfs == 0)
+      if (bSplitNow && nCodePointOffset == 0)
       {
         if (!bWarnedOnTooSmallMaxWidth)
         {
           if (LOGGER.isWarnEnabled ())
             LOGGER.warn ("The provided max width (" +
-                            fMaxWidth +
-                            ") is too small to hold a single character! Will create an overlap! Problem string=<" +
-                            sLine +
-                            ">");
+                         fMaxWidth +
+                         ") is too small to hold a single character! Will create an overlap! Problem string=<" +
+                         sLine +
+                         ">");
           bWarnedOnTooSmallMaxWidth = true;
         }
         bSplitNow = false;
@@ -346,32 +347,32 @@ public class LoadedFont
       if (bSplitNow)
       {
         // Maximum width reached
-        if (nCPOfsOfLastWS > 0)
+        if (nCodePointOffsetOfLastWhitespace > 0)
         {
           // Use everything up to but excluding the last whitespace
-          final String sPart = sCurLine.substring (0, nCPOfsOfLastWS);
+          final String sPart = sCurLine.substring (0, nCodePointOffsetOfLastWhitespace);
           // Skip whitespace char in this case
-          sCurLine = sCurLine.substring (nCPOfsOfLastWS + 1);
-          ret.add (new TextAndWidthSpec (sPart, fSumWidthOfLastWS));
+          sCurLine = sCurLine.substring (nCodePointOffsetOfLastWhitespace + 1);
+          ret.add (new TextAndWidthSpec (sPart, fSumWidthOfLastWhitespace));
         }
         else
         {
           // No whitespace - use up to but excluding last char
-          final String sPart = sCurLine.substring (0, nCPOfs);
-          sCurLine = sCurLine.substring (nCPOfs);
+          final String sPart = sCurLine.substring (0, nCodePointOffset);
+          sCurLine = sCurLine.substring (nCodePointOffset);
           ret.add (new TextAndWidthSpec (sPart, fSumWidth));
         }
 
         // Reset counter for the rest of the line
         fSumWidth = 0f;
-        nCPOfs = 0;
-        fSumWidthOfLastWS = 0f;
-        nCPOfsOfLastWS = 0;
+        nCodePointOffset = 0;
+        fSumWidthOfLastWhitespace = 0f;
+        nCodePointOffsetOfLastWhitespace = 0;
       }
       else
       {
         // Add current char
-        nCPOfs += Character.charCount (nCP);
+        nCodePointOffset += Character.charCount (nCodePoint);
         fSumWidth = fNewWidth;
       }
     }
