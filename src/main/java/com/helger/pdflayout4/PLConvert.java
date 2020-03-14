@@ -146,4 +146,10 @@ public final class PLConvert
   {
     return fUnits * CGlobal.CM_PER_INCH / nDPI;
   }
+
+  public static float getWidthForFontSize (final float fWidth, final float fFontSize)
+  {
+    // The width is in 1000 unit of text space, ie 333 or 777
+    return fWidth * fFontSize / 1000f;
+  }
 }

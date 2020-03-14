@@ -46,6 +46,7 @@ import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout4.PLConvert;
 import com.helger.pdflayout4.PLDebugLog;
 
 /**
@@ -159,13 +160,13 @@ public class LoadedFont
   @Nonnegative
   public final float getDescent (@Nonnegative final float fFontSize)
   {
-    return m_fDescent * fFontSize / 1000f;
+    return PLConvert.getWidthForFontSize (m_fDescent, fFontSize);
   }
 
   @Nonnegative
   public final float getTextHeight (@Nonnegative final float fFontSize)
   {
-    return m_fBBHeight * fFontSize / 1000f;
+    return PLConvert.getWidthForFontSize (m_fBBHeight, fFontSize);
   }
 
   @Nonnull
@@ -234,19 +235,13 @@ public class LoadedFont
     return fWidth;
   }
 
-  private static float _getWidthForFontSize (final float fWidth, final float fFontSize)
-  {
-    // The width is in 1000 unit of text space, ie 333 or 777
-    return fWidth * fFontSize / 1000f;
-  }
-
   @Nonnegative
   public float getStringWidth (@Nonnull final String sText, @Nonnegative final float fFontSize) throws IOException
   {
     if (false)
     {
       // Toooo slow
-      return m_aFont.getStringWidth (sText) * fFontSize / 1000f;
+      return PLConvert.getWidthForFontSize (m_aFont.getStringWidth (sText), fFontSize);
     }
 
     float fWidth = 0;
@@ -264,7 +259,7 @@ public class LoadedFont
     }
 
     // The width is in 1000 unit of text space, ie 333 or 777
-    return _getWidthForFontSize (fWidth, fFontSize);
+    return PLConvert.getWidthForFontSize (fWidth, fFontSize);
   }
 
   /**
@@ -316,7 +311,7 @@ public class LoadedFont
     while (nCodePointOffset < sCurLine.length ())
     {
       final int nCodePoint = sCurLine.codePointAt (nCodePointOffset);
-      final float fCodePointWidth = _getWidthForFontSize (_getCodePointWidth (nCodePoint), fFontSize);
+      final float fCodePointWidth = PLConvert.getWidthForFontSize (_getCodePointWidth (nCodePoint), fFontSize);
 
       if (Character.isWhitespace (nCodePoint))
       {

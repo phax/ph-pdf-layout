@@ -83,6 +83,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private transient LoadedFont m_aLoadedFont;
   protected float m_fTextHeight;
   protected float m_fDescent;
+  private float m_fCustomAscent = 0f;
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLinesUnmodified;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLines;
@@ -273,6 +274,18 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public final IMPLTYPE setReplacePlaceholder (final boolean bReplacePlaceholder)
   {
     m_bReplacePlaceholder = bReplacePlaceholder;
+    return thisAsT ();
+  }
+
+  public final float getCustomAscent ()
+  {
+    return m_fCustomAscent;
+  }
+
+  @Nonnull
+  public final IMPLTYPE setCustomAscent (final float fCustomAscent)
+  {
+    m_fCustomAscent = fCustomAscent;
     return thisAsT ();
   }
 
@@ -610,7 +623,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
-        aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX, fRenderTop - fTextHeight - m_fDescent);
+        aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX,
+                                                 fRenderTop - fTextHeight - m_fDescent + m_fCustomAscent);
       }
       else
         if (fIndentX != 0)
