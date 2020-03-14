@@ -100,8 +100,8 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   /**
    * Set the image type to be used. <br>
    * Note: not all image types may be supported by all subclasses of this class.
-   * Please check the respecitve documentation!
-   * 
+   * Please check the respective documentation!
+   *
    * @param eImageType
    *        The image type to be used. May not be <code>null</code>.
    * @return this for chaining
