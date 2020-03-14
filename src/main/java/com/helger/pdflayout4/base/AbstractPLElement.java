@@ -174,7 +174,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
                             .append ("Margin", m_aMargin)
                             .append ("Border", m_aBorder)
                             .append ("Padding", m_aPadding)
-                            .appendIfNotNull ("fillColor", m_aFillColor)
+                            .appendIfNotNull ("FillColor", m_aFillColor)
                             .getToString ();
   }
 }
