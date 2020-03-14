@@ -277,11 +277,23 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return thisAsT ();
   }
 
+  /**
+   * @return A custom ascent to the first line. Defaults to 0.
+   * @since 5.1.0
+   */
   public final float getCustomAscent ()
   {
     return m_fCustomAscent;
   }
 
+  /**
+   * Set a custom ascent to the first line
+   *
+   * @param fCustomAscent
+   *        The value to use. 0 means no change.
+   * @return this for chaining
+   * @since 5.1.0
+   */
   @Nonnull
   public final IMPLTYPE setCustomAscent (final float fCustomAscent)
   {
