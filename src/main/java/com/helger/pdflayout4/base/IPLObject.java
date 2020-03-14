@@ -33,8 +33,11 @@ import com.helger.commons.traits.IGenericImplTrait;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
-                           extends IHasID <String>, IGenericImplTrait <IMPLTYPE>, IPLVisitable, Serializable
+public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
+                           IHasID <String>,
+                           IGenericImplTrait <IMPLTYPE>,
+                           IPLVisitable,
+                           Serializable
 {
   default boolean hasID (@Nullable final String sID)
   {
@@ -56,13 +59,17 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>>
    */
   default boolean isVertSplittable ()
   {
-    return this instanceof IPLSplittableObject <?>;
+    return this instanceof IPLSplittableObject <?, ?>;
   }
 
+  /**
+   * @return this as an {@link IPLSplittableObject} - ensure to call it only if
+   *         {@link #isVertSplittable()} returns <code>true</code>.
+   */
   @Nonnull
-  default IPLSplittableObject <?> getAsSplittable ()
+  default IPLSplittableObject <?, ?> getAsSplittable ()
   {
-    return (IPLSplittableObject <?>) this;
+    return (IPLSplittableObject <?, ?>) this;
   }
 
   /**

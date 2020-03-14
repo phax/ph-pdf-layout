@@ -75,7 +75,7 @@ import com.helger.pdflayout4.spec.SizeSpec;
  */
 public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends
                                      AbstractPLRenderableObject <IMPLTYPE> implements
-                                     IPLSplittableObject <IMPLTYPE>
+                                     IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
   public static final boolean DEFAULT_FULL_WIDTH = true;
   private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLVBox.class);

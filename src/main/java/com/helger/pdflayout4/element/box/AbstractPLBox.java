@@ -48,7 +48,7 @@ import com.helger.pdflayout4.spec.SizeSpec;
  */
 public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> extends
                                     AbstractPLBlockElement <IMPLTYPE> implements
-                                    IPLSplittableObject <IMPLTYPE>
+                                    IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
   private IPLRenderableObject <?> m_aElement;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
@@ -108,7 +108,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
 
   /**
    * Change the vertical splitability of this object.
-   * 
+   *
    * @param bVertSplittable
    *        <code>true</code> if this element is splittable, <code>false</code>
    *        otherwise.
@@ -226,10 +226,10 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final IMPLTYPE aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
-                                                                        .setVertSplittable (false);
-    final IMPLTYPE aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
-                                                                        .setVertSplittable (true);
+    final AbstractPLBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+                                                                                 .setVertSplittable (false);
+    final AbstractPLBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+                                                                                 .setVertSplittable (true);
 
     // Set min width/max width from source
     // Don't use the height, because on vertically split elements, the height is

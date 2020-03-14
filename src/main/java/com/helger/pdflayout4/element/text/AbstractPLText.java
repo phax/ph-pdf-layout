@@ -63,7 +63,7 @@ import com.helger.pdflayout4.spec.TextAndWidthSpec;
 public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends
                                      AbstractPLInlineElement <IMPLTYPE> implements
                                      IPLHasHorizontalAlignment <IMPLTYPE>,
-                                     IPLSplittableObject <IMPLTYPE>
+                                     IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
   public static final float DEFAULT_LINE_SPACING = 1f;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
@@ -456,8 +456,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLineCount (aLineCopy.size (), true));
 
     final String sTextContent = StringHelper.getImplodedMapped ('\n', aLineCopy, TextAndWidthSpec::getText);
-    final IMPLTYPE aNewText = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + sIDSuffix);
-    ((AbstractPLText <?>) aNewText)._setText (sTextContent);
+    final AbstractPLText <?> aNewText = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + sIDSuffix);
+    aNewText._setText (sTextContent);
     // Set this explicitly after setBasicDataFrom!
     aNewText.setVertSplittable (bSplittableCopy);
 

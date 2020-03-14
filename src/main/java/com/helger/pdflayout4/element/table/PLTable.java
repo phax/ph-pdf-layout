@@ -58,7 +58,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
  * @author Philip Helger
  */
 public class PLTable extends AbstractPLRenderableObject <PLTable> implements
-                     IPLSplittableObject <PLTable>,
+                     IPLSplittableObject <PLTable, PLTable>,
                      IPLHasMargin <PLTable>
 {
   // All column widths

@@ -26,8 +26,12 @@ import javax.annotation.Nullable;
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        Implementation type
+ * @param <SPLITTYPE>
+ *        Type to be split
  */
-public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPLTYPE>> extends IPLObject <IMPLTYPE>
+public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPLTYPE, ?>, SPLITTYPE extends IPLSplittableObject <?, ?>>
+                                     extends
+                                     IPLObject <IMPLTYPE>
 {
   boolean DEFAULT_VERT_SPLITTABLE = true;
 
@@ -39,7 +43,7 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    * @return Never <code>null</code>.
    */
   @Nonnull
-  IMPLTYPE internalCreateNewVertSplitObject (@Nonnull IMPLTYPE aBase);
+  SPLITTYPE internalCreateNewVertSplitObject (@Nonnull SPLITTYPE aBase);
 
   /**
    * @return <code>true</code> if this element is vertically splittable,
