@@ -20,12 +20,10 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   private final PLTable m_aTable;
   private final IBulletPointCreator m_aBulletPointCreator;
 
-  public PLBulletPointList (@Nonnull final WidthSpec aLeftPartWidth,
-                            @Nonnull final IBulletPointCreator aBulletPointCreator)
+  public PLBulletPointList (final float fWidthSpec, @Nonnull final IBulletPointCreator aBulletPointCreator)
   {
-    ValueEnforcer.notNull (aLeftPartWidth, "LeftPartWidth");
     ValueEnforcer.notNull (aBulletPointCreator, "BulletPointCreator");
-    m_aTable = new PLTable (aLeftPartWidth, WidthSpec.star ());
+    m_aTable = new PLTable (WidthSpec.abs (fWidthSpec), WidthSpec.star ());
     m_aBulletPointCreator = aBulletPointCreator;
   }
 

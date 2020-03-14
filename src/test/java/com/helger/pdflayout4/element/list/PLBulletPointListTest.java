@@ -31,7 +31,6 @@ import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.text.PLText;
 import com.helger.pdflayout4.spec.FontSpec;
 import com.helger.pdflayout4.spec.PreloadFont;
-import com.helger.pdflayout4.spec.WidthSpec;
 
 /**
  * Test class for {@link PLBulletPointList}
@@ -49,8 +48,7 @@ public final class PLBulletPointListTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
-    final PLBulletPointList aList = new PLBulletPointList (WidthSpec.star (),
-                                                           new BulletPointCreatorConstant (r10, " * "));
+    final PLBulletPointList aList = new PLBulletPointList (20f, new BulletPointCreatorConstant (r10, " * "));
     for (int i = 0; i < 10; ++i)
       aList.addBulletPoint (new PLText ("Bullet point item " + i, r10));
     aPS1.addElement (aList);
