@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout4;
+package com.helger.pdflayout4.debug;
 
 import java.awt.Color;
 

@@ -22,12 +22,12 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.pdflayout4.PLDebugLog;
-import com.helger.pdflayout4.PLDebugRender;
 import com.helger.pdflayout4.base.IPLElement;
 import com.helger.pdflayout4.base.IPLHasFillColor;
 import com.helger.pdflayout4.base.IPLHasMarginBorderPadding;
 import com.helger.pdflayout4.base.IPLObject;
+import com.helger.pdflayout4.debug.PLDebugLog;
+import com.helger.pdflayout4.debug.PLDebugRender;
 import com.helger.pdflayout4.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout4.spec.BorderSpec;
 import com.helger.pdflayout4.spec.BorderStyleSpec;

@@ -47,7 +47,7 @@ import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout4.PLConvert;
-import com.helger.pdflayout4.PLDebugLog;
+import com.helger.pdflayout4.debug.PLDebugLog;
 
 /**
  * This class represents a wrapper around a {@link PDFont} that is uniquely

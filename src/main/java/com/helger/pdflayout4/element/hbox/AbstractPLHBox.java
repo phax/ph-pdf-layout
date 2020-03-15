@@ -26,17 +26,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
@@ -44,6 +39,7 @@ import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
 import com.helger.pdflayout4.base.PLElementWithSize;
 import com.helger.pdflayout4.base.PLSplitResult;
+import com.helger.pdflayout4.debug.PLDebugLog;
 import com.helger.pdflayout4.element.special.PLSpacerX;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
@@ -73,8 +69,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                      AbstractPLRenderableObject <IMPLTYPE> implements
                                      IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLHBox.class);
-
   private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
@@ -479,25 +473,18 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     }
 
     // Small consistency check (with rounding included)
-    if (GlobalDebug.isDebugMode ())
+    if (PLDebugLog.isDebugPrepare ())
     {
       if (fUsedWidthFull - fElementWidth > 0.01)
-        if (LOGGER.isWarnEnabled ())
-          LOGGER.warn (getDebugID () +
-                       " uses more width (" +
-                       fUsedWidthFull +
-                       ") than available (" +
-                       fElementWidth +
-                       ")!");
-      if (fMaxColumnHeightFull - fElementHeight > 0.01)
-        if (!isVertSplittable ())
-          if (LOGGER.isWarnEnabled ())
-            LOGGER.warn (getDebugID () +
-                         " uses more height (" +
-                         fMaxColumnHeightFull +
-                         ") than available (" +
-                         fElementHeight +
-                         ")!");
+        PLDebugLog.debugPrepare (this,
+                                 "uses more width (" + fUsedWidthFull + ") than available (" + fElementWidth + ")!");
+      if (fMaxColumnHeightFull - fElementHeight > 0.01 && !isVertSplittable ())
+        PLDebugLog.debugPrepare (this,
+                                 "uses more height (" +
+                                       fMaxColumnHeightFull +
+                                       ") than available (" +
+                                       fElementHeight +
+                                       ")!");
     }
 
     return new SizeSpec (fUsedWidthFull, fMaxColumnHeightFull);

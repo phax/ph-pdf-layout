@@ -27,7 +27,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebugLog;
+import com.helger.pdflayout4.debug.PLDebugLog;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
 import com.helger.pdflayout4.spec.SizeSpec;

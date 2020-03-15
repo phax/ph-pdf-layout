@@ -24,9 +24,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout4.PDFCreationException;
+import com.helger.pdflayout4.PLDebugTestRule;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.text.PLText;
@@ -42,7 +42,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public final class PLBulletPointListTest
 {
   @Rule
-  public final TestRule m_aRule = new DebugModeTestRule ();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException

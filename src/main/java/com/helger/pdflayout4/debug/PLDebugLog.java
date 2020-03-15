@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout4;
+package com.helger.pdflayout4.debug;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -22,6 +22,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.pdflayout4.base.IPLHasMarginBorderPadding;
 import com.helger.pdflayout4.base.IPLObject;
 import com.helger.pdflayout4.spec.SizeSpec;
@@ -34,15 +35,63 @@ import com.helger.pdflayout4.spec.SizeSpec;
 @NotThreadSafe
 public final class PLDebugLog
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (PLDebugLog.class);
-  private static boolean s_bDebugText = false;
-  private static boolean s_bDebugFont = false;
-  private static boolean s_bDebugSplit = false;
-  private static boolean s_bDebugPrepare = false;
-  private static boolean s_bDebugRender = false;
+  /**
+   * Debug log output abstraction.
+   *
+   * @author Philip Helger
+   * @since 5.1.0
+   */
+  public static interface IPLDebugOutput
+  {
+    boolean isEnabled ();
+
+    void log (@Nonnull String sMsg);
+  }
+
+  /**
+   * Default implementation of {@link IPLDebugOutput} using an SLF4J logger.
+   *
+   * @author Philip Helger
+   * @since 5.1.0
+   */
+  public static class PLDebugOutputLogger implements IPLDebugOutput
+  {
+    private static final Logger LOGGER = LoggerFactory.getLogger (PLDebugOutputLogger.class);
+
+    public boolean isEnabled ()
+    {
+      return LOGGER.isInfoEnabled ();
+    }
+
+    public void log (final String sMsg)
+    {
+      LOGGER.info (sMsg);
+    }
+  }
+
+  public static final boolean DEFAULT_DEBUG = false;
+
+  private static IPLDebugOutput s_aDebugOutput = new PLDebugOutputLogger ();
+  private static boolean s_bDebugText = DEFAULT_DEBUG;
+  private static boolean s_bDebugFont = DEFAULT_DEBUG;
+  private static boolean s_bDebugSplit = DEFAULT_DEBUG;
+  private static boolean s_bDebugPrepare = DEFAULT_DEBUG;
+  private static boolean s_bDebugRender = DEFAULT_DEBUG;
 
   private PLDebugLog ()
   {}
+
+  @Nonnull
+  public static IPLDebugOutput getDebugOutput ()
+  {
+    return s_aDebugOutput;
+  }
+
+  public static void setDebugOutput (@Nonnull final IPLDebugOutput aDebugOutput)
+  {
+    ValueEnforcer.notNull (aDebugOutput, "DebugOutput");
+    s_aDebugOutput = aDebugOutput;
+  }
 
   public static boolean isDebugText ()
   {
@@ -56,8 +105,8 @@ public final class PLDebugLog
 
   public static void debugText (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
-    if (LOGGER.isInfoEnabled ())
-      LOGGER.info ("[Text] " + aElement.getDebugID () + " " + sMsg);
+    if (s_aDebugOutput.isEnabled ())
+      s_aDebugOutput.log ("[Text] " + aElement.getDebugID () + " " + sMsg);
   }
 
   public static boolean isDebugFont ()
@@ -72,8 +121,8 @@ public final class PLDebugLog
 
   public static void debugFont (@Nonnull final String sFontID, final String sMsg)
   {
-    if (LOGGER.isInfoEnabled ())
-      LOGGER.info ("[Font] " + sFontID + " " + sMsg);
+    if (s_aDebugOutput.isEnabled ())
+      s_aDebugOutput.log ("[Font] " + sFontID + " " + sMsg);
   }
 
   public static boolean isDebugSplit ()
@@ -88,8 +137,8 @@ public final class PLDebugLog
 
   public static void debugSplit (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
-    if (LOGGER.isInfoEnabled ())
-      LOGGER.info ("[Splitting] " + aElement.getDebugID () + " " + sMsg);
+    if (s_aDebugOutput.isEnabled ())
+      s_aDebugOutput.log ("[Splitting] " + aElement.getDebugID () + " " + sMsg);
   }
 
   public static boolean isDebugPrepare ()
@@ -104,8 +153,8 @@ public final class PLDebugLog
 
   public static void debugPrepare (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
-    if (LOGGER.isInfoEnabled ())
-      LOGGER.info ("[Preparing] " + aElement.getDebugID () + " " + sMsg);
+    if (s_aDebugOutput.isEnabled ())
+      s_aDebugOutput.log ("[Preparing] " + aElement.getDebugID () + " " + sMsg);
   }
 
   public static boolean isDebugRender ()
@@ -120,8 +169,8 @@ public final class PLDebugLog
 
   public static void debugRender (@Nonnull final IPLObject <?> aElement, final String sMsg)
   {
-    if (LOGGER.isInfoEnabled ())
-      LOGGER.info ("[Rendering] " + aElement.getDebugID () + " " + sMsg);
+    if (s_aDebugOutput.isEnabled ())
+      s_aDebugOutput.log ("[Rendering] " + aElement.getDebugID () + " " + sMsg);
   }
 
   /**
@@ -129,14 +178,19 @@ public final class PLDebugLog
    *
    * @param bDebug
    *        <code>true</code> to enable debug output
+   * @see #setDebugFont(boolean)
+   * @see #setDebugPrepare(boolean)
+   * @see #setDebugRender(boolean)
+   * @see #setDebugRender(boolean)
+   * @see #setDebugText(boolean)
    */
   public static void setDebugAll (final boolean bDebug)
   {
-    setDebugText (bDebug);
     setDebugFont (bDebug);
-    setDebugSplit (bDebug);
     setDebugPrepare (bDebug);
     setDebugRender (bDebug);
+    setDebugSplit (bDebug);
+    setDebugText (bDebug);
   }
 
   @Nonnull

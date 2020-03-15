@@ -28,7 +28,6 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.CGlobal;
 import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.string.StringHelper;
 import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
 import com.helger.font.anaheim.EFontResourceAnaheim;
@@ -39,6 +38,7 @@ import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.font.roboto.EFontResourceRoboto;
 import com.helger.font.source_sans_pro.EFontResourceSourceSansPro;
 import com.helger.pdflayout4.PDFCreationException;
+import com.helger.pdflayout4.PLDebugTestRule;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.box.PLBox;
@@ -58,7 +58,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public final class PLTextTest
 {
   @Rule
-  public final TestRule m_aRule = new DebugModeTestRule ();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException

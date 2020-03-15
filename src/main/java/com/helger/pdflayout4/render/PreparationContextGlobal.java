@@ -26,7 +26,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.collection.impl.CommonsHashMap;
 import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.pdflayout4.PLDebugLog;
+import com.helger.pdflayout4.debug.PLDebugLog;
 import com.helger.pdflayout4.spec.FontSpec;
 import com.helger.pdflayout4.spec.LoadedFont;
 import com.helger.pdflayout4.spec.PreloadFont;

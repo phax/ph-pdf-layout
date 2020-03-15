@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.commons.datetime.PDTFactory;
-import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.pdflayout4.base.EPLPlaceholder;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.element.hbox.PLHBox;
@@ -51,7 +50,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public final class PageLayoutPDFTest
 {
   @Rule
-  public final TestRule m_aRule = new DebugModeTestRule ();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException

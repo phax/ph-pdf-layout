@@ -45,7 +45,7 @@ import com.helger.commons.id.IHasID;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.font.api.IFontResource;
-import com.helger.pdflayout4.PLDebugLog;
+import com.helger.pdflayout4.debug.PLDebugLog;
 
 /**
  * Represents an abstract font that is potentially not yet loaded and can be

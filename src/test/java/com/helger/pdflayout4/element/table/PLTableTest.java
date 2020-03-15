@@ -31,13 +31,13 @@ import org.junit.rules.TestRule;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.junit.DebugModeTestRule;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout4.PDFCreationException;
-import com.helger.pdflayout4.PLDebugRender;
+import com.helger.pdflayout4.PLDebugTestRule;
 import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.PLPageSet;
+import com.helger.pdflayout4.debug.PLDebugRender;
 import com.helger.pdflayout4.element.special.PLPageBreak;
 import com.helger.pdflayout4.element.special.PLSpacerX;
 import com.helger.pdflayout4.element.special.PLSpacerY;
@@ -61,7 +61,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 public final class PLTableTest
 {
   @Rule
-  public final TestRule m_aRule = new DebugModeTestRule ();
+  public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException

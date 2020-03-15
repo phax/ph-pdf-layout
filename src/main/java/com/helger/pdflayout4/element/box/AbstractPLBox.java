@@ -24,7 +24,6 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.base.AbstractPLBlockElement;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
@@ -32,6 +31,7 @@ import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
 import com.helger.pdflayout4.base.PLElementWithSize;
 import com.helger.pdflayout4.base.PLSplitResult;
+import com.helger.pdflayout4.debug.PLDebugLog;
 import com.helger.pdflayout4.render.PLRenderHelper;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;

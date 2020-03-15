@@ -39,7 +39,7 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebugLog;
+import com.helger.pdflayout4.debug.PLDebugLog;
 import com.helger.pdflayout4.element.special.PLPageBreak;
 import com.helger.pdflayout4.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout4.render.ERenderingElementType;
@@ -101,17 +101,17 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   @Nonnull
-  public SizeSpec getPageSize ()
+  public final SizeSpec getPageSize ()
   {
     return m_aPageSize;
   }
 
-  public float getPageWidth ()
+  public final float getPageWidth ()
   {
     return m_aPageSize.getWidth ();
   }
 
-  public float getPageHeight ()
+  public final float getPageHeight ()
   {
     return m_aPageSize.getHeight ();
   }
@@ -493,10 +493,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
         // the margin so that the header fits!
         if (LOGGER.isInfoEnabled ())
           LOGGER.info ("PageSet margin top was changed from " +
-                          getMarginTop () +
-                          " to " +
-                          fEffectiveHeaderHeight +
-                          " so that firstPageHeader fits!");
+                       getMarginTop () +
+                       " to " +
+                       fEffectiveHeaderHeight +
+                       " so that firstPageHeader fits!");
         setMarginTop (fEffectiveHeaderHeight);
       }
     }
@@ -527,10 +527,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
         // the margin so that the header fits!
         if (LOGGER.isInfoEnabled ())
           LOGGER.info ("PageSet margin top was changed from " +
-                          getMarginTop () +
-                          " to " +
-                          fEffectiveHeaderHeight +
-                          " so that pageHeader fits!");
+                       getMarginTop () +
+                       " to " +
+                       fEffectiveHeaderHeight +
+                       " so that pageHeader fits!");
         setMarginTop (fEffectiveHeaderHeight);
       }
     }
@@ -561,10 +561,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
         // modify the margin so that the footer fits!
         if (LOGGER.isInfoEnabled ())
           LOGGER.info ("PageSet margin bottom was changed from " +
-                          getMarginBottom () +
-                          " to " +
-                          fEffectiveFooterHeight +
-                          " so that firstPageFooter fits!");
+                       getMarginBottom () +
+                       " to " +
+                       fEffectiveFooterHeight +
+                       " so that firstPageFooter fits!");
         setMarginBottom (fEffectiveFooterHeight);
       }
     }
@@ -595,10 +595,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
         // modify the margin so that the footer fits!
         if (LOGGER.isInfoEnabled ())
           LOGGER.info ("PageSet margin bottom was changed from " +
-                          getMarginBottom () +
-                          " to " +
-                          fEffectiveFooterHeight +
-                          " so that pageFooter fits!");
+                       getMarginBottom () +
+                       " to " +
+                       fEffectiveFooterHeight +
+                       " so that pageFooter fits!");
         setMarginBottom (fEffectiveFooterHeight);
       }
     }
@@ -691,8 +691,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                              " and height " +
                                              fSplitHeight);
 
-              final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fElementPreparedWidth,
-                                                                                               fSplitHeight);
+              final PLSplitResult aSplitResult = aElement.getAsSplittable ()
+                                                         .splitElementVert (fElementPreparedWidth, fSplitHeight);
               if (aSplitResult != null)
                 assert fSplitHeight > 0;
               if (fSplitHeight <= 0)
@@ -756,10 +756,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
               // one element too large for a page
               if (LOGGER.isWarnEnabled ())
                 LOGGER.warn ("The single element " +
-                                aElement.getDebugID () +
-                                " does not fit onto a single page" +
-                                (bIsVertSplittable ? " even though it is vertically splittable!"
-                                                   : " and is not vertically splittable!"));
+                             aElement.getDebugID () +
+                             " does not fit onto a single page" +
+                             (bIsVertSplittable ? " even though it is vertically splittable!"
+                                                : " and is not vertically splittable!"));
             }
           }
           else

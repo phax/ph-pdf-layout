@@ -50,10 +50,8 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout4.PLDebugLog;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.AbstractPLRenderableObject;
 import com.helger.pdflayout4.base.IPLRenderableObject;
@@ -61,6 +59,7 @@ import com.helger.pdflayout4.base.IPLSplittableObject;
 import com.helger.pdflayout4.base.IPLVisitor;
 import com.helger.pdflayout4.base.PLElementWithSize;
 import com.helger.pdflayout4.base.PLSplitResult;
+import com.helger.pdflayout4.debug.PLDebugLog;
 import com.helger.pdflayout4.render.PageRenderContext;
 import com.helger.pdflayout4.render.PreparationContext;
 import com.helger.pdflayout4.spec.HeightSpec;
@@ -602,8 +601,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           {
             fUsedAutoHeightFullForStar += fNewAvailableRowHeight;
             if (!aElement.isVertSplittable ())
-              if (LOGGER.isInfoEnabled ())
-                LOGGER.info ("VBox row element " +
+              if (LOGGER.isWarnEnabled ())
+                LOGGER.warn ("VBox row element " +
                              aElement.getDebugID () +
                              " uses more height (" +
                              fRowHeightFull +
@@ -692,24 +691,14 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     // Small consistency check (with rounding included)
-    if (GlobalDebug.isDebugMode ())
+    if (PLDebugLog.isDebugPrepare ())
     {
       if (fMaxRowWidthFull - fElementWidth > 0.01)
-        if (LOGGER.isWarnEnabled ())
-          LOGGER.warn (getDebugID () +
-                       " uses more width (" +
-                       fMaxRowWidthFull +
-                       ") than available (" +
-                       fElementWidth +
-                       ")!");
+        PLDebugLog.debugPrepare (this,
+                                 "uses more width (" + fMaxRowWidthFull + ") than available (" + fElementWidth + ")!");
       if (fUsedHeightFull - fElementHeight > 0.01 && !isVertSplittable ())
-        if (LOGGER.isWarnEnabled ())
-          LOGGER.warn (getDebugID () +
-                       " uses more height (" +
-                       fUsedHeightFull +
-                       ") than available (" +
-                       fElementHeight +
-                       ")!");
+        PLDebugLog.debugPrepare (this,
+                                 "uses more height (" + fUsedHeightFull + ") than available (" + fElementHeight + ")!");
     }
     return new SizeSpec (fMaxRowWidthFull, fUsedHeightFull);
   }
