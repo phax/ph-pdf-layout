@@ -17,16 +17,14 @@ import com.helger.pdflayout4.spec.FontSpec;
  * @author Philip Helger
  * @since 5.1.0
  */
-public class BulletPointCreatorNumeric implements IBulletPointCreator
+public class BulletPointCreatorNumeric extends AbstractBulletPointCreatorFontBased <BulletPointCreatorNumeric>
 {
-  private final FontSpec m_aFontSpec;
   private final IntFunction <String> m_aFormatter;
 
   public BulletPointCreatorNumeric (@Nonnull final IntFunction <String> aFormatter, @Nonnull final FontSpec aFontSpec)
   {
-    ValueEnforcer.notNull (aFontSpec, "FontSpec");
+    super (aFontSpec);
     ValueEnforcer.notNull (aFormatter, "Formatter");
-    m_aFontSpec = aFontSpec;
     m_aFormatter = aFormatter;
   }
 
@@ -44,14 +42,9 @@ public class BulletPointCreatorNumeric implements IBulletPointCreator
   }
 
   @Nonnull
-  public final FontSpec getFontSpec ()
-  {
-    return m_aFontSpec;
-  }
-
-  @Nonnull
   public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    return new PLText (getBulletPointText (nBulletPointIndex), m_aFontSpec);
+    return new PLText (getBulletPointText (nBulletPointIndex), getFontSpec ()).setVertSplittable (false)
+                                                                              .setPadding (getPadding ());
   }
 }

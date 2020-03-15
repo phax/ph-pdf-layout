@@ -26,7 +26,6 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.callback.IThrowingRunnable;
 import com.helger.pdflayout4.base.IPLBlockElement;
 import com.helger.pdflayout4.base.IPLInlineElement;
-import com.helger.pdflayout4.base.IPLObject;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 
@@ -63,7 +62,7 @@ public final class PLDebugRender
   public static interface IDebugColorProvider
   {
     @Nullable
-    Color getDebugColor (@Nonnull IPLObject <?> aObject);
+    Color getDebugColor (@Nonnull Object aObject);
 
     @Nonnull
     static IDebugColorProvider getDefaultOutlineProvider ()
@@ -89,7 +88,7 @@ public final class PLDebugRender
   public static interface IDebugBorderProvider
   {
     @Nullable
-    BorderStyleSpec getDebugBorder (@Nonnull IPLObject <?> aObject);
+    BorderStyleSpec getDebugBorder (@Nonnull Object aObject);
 
     @Nonnull
     static IDebugBorderProvider getDefaultBorderProvider ()
@@ -156,7 +155,7 @@ public final class PLDebugRender
   }
 
   @Nullable
-  public static Color getDebugOutlineColor (@Nonnull final IPLObject <?> aObject)
+  public static Color getDebugOutlineColor (@Nonnull final Object aObject)
   {
     return s_aDebugOutlineColorProvider.getDebugColor (aObject);
   }
@@ -168,7 +167,7 @@ public final class PLDebugRender
   }
 
   @Nullable
-  public static BorderStyleSpec getDebugBorder (@Nonnull final IPLObject <?> aObject)
+  public static BorderStyleSpec getDebugBorder (@Nonnull final Object aObject)
   {
     return s_aDebugBorderProvider.getDebugBorder (aObject);
   }

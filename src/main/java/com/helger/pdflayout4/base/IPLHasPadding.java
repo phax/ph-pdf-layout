@@ -18,6 +18,7 @@ package com.helger.pdflayout4.base;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.traits.IGenericImplTrait;
 import com.helger.pdflayout4.spec.PaddingSpec;
 
 /**
@@ -27,7 +28,9 @@ import com.helger.pdflayout4.spec.PaddingSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
+public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> extends
+                               IPLHasOutline,
+                               IGenericImplTrait <IMPLTYPE>
 {
   PaddingSpec DEFAULT_PADDING = PaddingSpec.PADDING0;
 

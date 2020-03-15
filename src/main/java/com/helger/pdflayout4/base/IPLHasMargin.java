@@ -18,6 +18,7 @@ package com.helger.pdflayout4.base;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.traits.IGenericImplTrait;
 import com.helger.pdflayout4.spec.MarginSpec;
 
 /**
@@ -27,9 +28,11 @@ import com.helger.pdflayout4.spec.MarginSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
+public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
+                              IPLHasOutline,
+                              IGenericImplTrait <IMPLTYPE>
 {
-  MarginSpec DEFAULT_MARGIN = MarginSpec.MARGIN0;
+  final MarginSpec DEFAULT_MARGIN = MarginSpec.MARGIN0;
 
   /**
    * Set all margin values (left, top, right, bottom) to the same value.

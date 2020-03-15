@@ -28,9 +28,8 @@ public class BulletPointCreatorSymbol extends BulletPointCreatorConstant
   public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
     final PLText ret = (PLText) super.getBulletPointElement (nBulletPointIndex);
-    ret.setPaddingLeft (5f).setPaddingRight (5f);
     // Vertical align
-    ret.setCustomAscent (PLConvert.getWidthForFontSize (450, getFontSpec ().getFontSize ()));
+    ret.setCustomAscentFirstLine (PLConvert.getWidthForFontSize (450, getFontSpec ().getFontSize ()));
     return ret;
   }
 

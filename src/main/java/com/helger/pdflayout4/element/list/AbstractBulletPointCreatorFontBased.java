@@ -1,0 +1,51 @@
+package com.helger.pdflayout4.element.list;
+
+import javax.annotation.Nonnull;
+
+import com.helger.commons.ValueEnforcer;
+import com.helger.pdflayout4.base.IPLHasPadding;
+import com.helger.pdflayout4.spec.FontSpec;
+import com.helger.pdflayout4.spec.PaddingSpec;
+
+/**
+ * An abstract implementation of {@link IBulletPointCreator} that uses a Font
+ * based character.
+ *
+ * @author Philip Helger
+ * @param <IMPLTYPE>
+ *        Implementation type
+ * @since 5.1.0
+ */
+public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends AbstractBulletPointCreatorFontBased <IMPLTYPE>>
+                                                          implements
+                                                          IBulletPointCreator,
+                                                          IPLHasPadding <IMPLTYPE>
+{
+  private final FontSpec m_aFontSpec;
+  private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
+
+  public AbstractBulletPointCreatorFontBased (@Nonnull final FontSpec aFontSpec)
+  {
+    ValueEnforcer.notNull (aFontSpec, "FontSpec");
+    m_aFontSpec = aFontSpec;
+  }
+
+  @Nonnull
+  public final FontSpec getFontSpec ()
+  {
+    return m_aFontSpec;
+  }
+
+  public final PaddingSpec getPadding ()
+  {
+    return m_aPadding;
+  }
+
+  @Nonnull
+  public final IMPLTYPE setPadding (@Nonnull final PaddingSpec aPadding)
+  {
+    ValueEnforcer.notNull (aPadding, "Padding");
+    m_aPadding = aPadding;
+    return thisAsT ();
+  }
+}

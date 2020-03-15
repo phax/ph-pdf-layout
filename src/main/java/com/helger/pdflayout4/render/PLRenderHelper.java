@@ -226,12 +226,12 @@ public final class PLRenderHelper
    *        Type that implements {@link IPLHasFillColor} and
    *        {@link IPLHasMarginBorderPadding}
    */
-  public static <T extends IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorder (@Nonnull final T aElement,
-                                                                                                          final float fLeft,
-                                                                                                          final float fTop,
-                                                                                                          final float fWidth,
-                                                                                                          final float fHeight,
-                                                                                                          @Nonnull final PDPageContentStreamWithCache aContentStream) throws IOException
+  public static <T extends IPLObject <T> & IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorder (@Nonnull final T aElement,
+                                                                                                                          final float fLeft,
+                                                                                                                          final float fTop,
+                                                                                                                          final float fWidth,
+                                                                                                                          final float fHeight,
+                                                                                                                          @Nonnull final PDPageContentStreamWithCache aContentStream) throws IOException
   {
     final boolean bDebugRender = PLDebugRender.isDebugRender ();
     if (bDebugRender)

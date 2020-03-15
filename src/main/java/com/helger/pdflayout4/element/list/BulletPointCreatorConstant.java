@@ -15,16 +15,14 @@ import com.helger.pdflayout4.spec.FontSpec;
  * @author Philip Helger
  * @since 5.1.0
  */
-public class BulletPointCreatorConstant implements IBulletPointCreator
+public class BulletPointCreatorConstant extends AbstractBulletPointCreatorFontBased <BulletPointCreatorConstant>
 {
   private final String m_sText;
-  private final FontSpec m_aFontSpec;
 
   public BulletPointCreatorConstant (@Nonnull final String sText, @Nonnull final FontSpec aFontSpec)
   {
-    ValueEnforcer.notNull (aFontSpec, "FontSpec");
+    super (aFontSpec);
     ValueEnforcer.notNull (sText, "Text");
-    m_aFontSpec = aFontSpec;
     m_sText = sText;
   }
 
@@ -35,14 +33,8 @@ public class BulletPointCreatorConstant implements IBulletPointCreator
   }
 
   @Nonnull
-  public final FontSpec getFontSpec ()
-  {
-    return m_aFontSpec;
-  }
-
-  @Nonnull
   public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    return new PLText (m_sText, m_aFontSpec).setVertSplittable (false);
+    return new PLText (m_sText, getFontSpec ()).setVertSplittable (false).setPadding (getPadding ());
   }
 }

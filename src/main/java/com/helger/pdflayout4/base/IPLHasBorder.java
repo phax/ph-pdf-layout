@@ -21,6 +21,7 @@ import java.awt.Color;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.traits.IGenericImplTrait;
 import com.helger.pdflayout4.spec.BorderSpec;
 import com.helger.pdflayout4.spec.BorderStyleSpec;
 
@@ -31,7 +32,9 @@ import com.helger.pdflayout4.spec.BorderStyleSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
+public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
+                              IPLHasOutline,
+                              IGenericImplTrait <IMPLTYPE>
 {
   BorderSpec DEFAULT_BORDER = BorderSpec.BORDER0;
 

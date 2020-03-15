@@ -83,7 +83,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private transient LoadedFont m_aLoadedFont;
   protected float m_fTextHeight;
   protected float m_fDescent;
-  private float m_fCustomAscent = 0f;
+  private float m_fCustomAscentFirstLine = 0f;
   protected int m_nPreparedLineCountUnmodified = CGlobal.ILLEGAL_UINT;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLinesUnmodified;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLines;
@@ -281,23 +281,23 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    * @return A custom ascent to the first line. Defaults to 0.
    * @since 5.1.0
    */
-  public final float getCustomAscent ()
+  public final float getCustomAscentFirstLine ()
   {
-    return m_fCustomAscent;
+    return m_fCustomAscentFirstLine;
   }
 
   /**
    * Set a custom ascent to the first line
    *
-   * @param fCustomAscent
+   * @param fCustomAscentFirstLine
    *        The value to use. 0 means no change.
    * @return this for chaining
    * @since 5.1.0
    */
   @Nonnull
-  public final IMPLTYPE setCustomAscent (final float fCustomAscent)
+  public final IMPLTYPE setCustomAscentFirstLine (final float fCustomAscentFirstLine)
   {
-    m_fCustomAscent = fCustomAscent;
+    m_fCustomAscentFirstLine = fCustomAscentFirstLine;
     return thisAsT ();
   }
 
@@ -636,7 +636,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       {
         // Initial move - only partial line height!
         aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX,
-                                                 fRenderTop - fTextHeight - m_fDescent + m_fCustomAscent);
+                                                 fRenderTop - fTextHeight - m_fDescent + m_fCustomAscentFirstLine);
       }
       else
         if (fIndentX != 0)

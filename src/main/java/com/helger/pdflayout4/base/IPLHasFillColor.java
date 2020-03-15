@@ -21,6 +21,8 @@ import java.awt.Color;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.traits.IGenericImplTrait;
+
 /**
  * Base interface for objects with a fill color
  *
@@ -28,7 +30,7 @@ import javax.annotation.Nullable;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> extends IPLObject <IMPLTYPE>
+public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> extends IGenericImplTrait <IMPLTYPE>
 {
   Color DEFAULT_FILL_COLOR = null;
 
