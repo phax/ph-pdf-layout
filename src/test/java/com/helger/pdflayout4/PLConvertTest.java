@@ -28,15 +28,17 @@ import org.junit.Test;
  */
 public final class PLConvertTest
 {
+  private static final float DELTA = 0.001f;
+
   @Test
   public void testBasic ()
   {
-    assertEquals (PDRectangle.A4.getWidth (), PLConvert.mm2units (210), 0.001f);
-    assertEquals (PDRectangle.A4.getWidth (), PLConvert.cm2units (21), 0.001f);
+    assertEquals (PDRectangle.A4.getWidth (), PLConvert.mm2units (210), DELTA);
+    assertEquals (PDRectangle.A4.getWidth (), PLConvert.cm2units (21), DELTA);
 
-    assertEquals (210f, PLConvert.units2mm (PDRectangle.A4.getWidth ()), 0.001f);
-    assertEquals (297f, PLConvert.units2mm (PDRectangle.A4.getHeight ()), 0.001f);
-    assertEquals (21.0f, PLConvert.units2cm (PDRectangle.A4.getWidth ()), 0.001f);
-    assertEquals (29.7f, PLConvert.units2cm (PDRectangle.A4.getHeight ()), 0.001f);
+    assertEquals (210f, PLConvert.units2mm (PDRectangle.A4.getWidth ()), DELTA);
+    assertEquals (297f, PLConvert.units2mm (PDRectangle.A4.getHeight ()), DELTA);
+    assertEquals (21.0f, PLConvert.units2cm (PDRectangle.A4.getWidth ()), DELTA);
+    assertEquals (29.7f, PLConvert.units2cm (PDRectangle.A4.getHeight ()), DELTA);
   }
 }

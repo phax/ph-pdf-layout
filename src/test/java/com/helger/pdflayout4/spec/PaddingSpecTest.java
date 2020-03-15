@@ -16,9 +16,13 @@
  */
 package com.helger.pdflayout4.spec;
 
+import static org.junit.Assert.assertSame;
+
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Test;
 
 import com.helger.commons.mock.CommonsAssert;
+import com.helger.commons.mock.CommonsTestHelper;
 
 /**
  * Test class for class {@link PaddingSpec}.
@@ -62,12 +66,19 @@ public final class PaddingSpecTest
     CommonsAssert.assertEquals (0, p.getRight ());
     CommonsAssert.assertEquals (0, p.getBottom ());
     CommonsAssert.assertEquals (f1, p.getLeft ());
+
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (p, new PaddingSpec (p));
+    CommonsTestHelper.testDefaultSerialization (p);
   }
 
   @Test
-  public void testGetClontWith ()
+  public void testGetCloneWith ()
   {
     final PaddingSpec p = new PaddingSpec (f1);
+    assertSame (p, p.getCloneWithTop (f1));
+    assertSame (p, p.getCloneWithRight (f1));
+    assertSame (p, p.getCloneWithBottom (f1));
+    assertSame (p, p.getCloneWithLeft (f1));
 
     PaddingSpec p2 = p.getCloneWithTop (f2);
     CommonsAssert.assertEquals (f2, p2.getTop ());
@@ -92,5 +103,30 @@ public final class PaddingSpecTest
     CommonsAssert.assertEquals (f1, p2.getRight ());
     CommonsAssert.assertEquals (f1, p2.getBottom ());
     CommonsAssert.assertEquals (f2, p2.getLeft ());
+  }
+
+  @Test
+  public void testConvert ()
+  {
+    final float f = PDRectangle.A4.getWidth ();
+    final float g = PDRectangle.A4.getHeight ();
+
+    PaddingSpec p = PaddingSpec.createMM (210f);
+    CommonsAssert.assertEquals (f, p.getTop ());
+    CommonsAssert.assertEquals (f, p.getRight ());
+    CommonsAssert.assertEquals (f, p.getBottom ());
+    CommonsAssert.assertEquals (f, p.getLeft ());
+
+    p = PaddingSpec.createMM (210f, 297f);
+    CommonsAssert.assertEquals (f, p.getTop ());
+    CommonsAssert.assertEquals (g, p.getRight ());
+    CommonsAssert.assertEquals (f, p.getBottom ());
+    CommonsAssert.assertEquals (g, p.getLeft ());
+
+    p = PaddingSpec.createMM (210f, 297f, 297f, 210f);
+    CommonsAssert.assertEquals (f, p.getTop ());
+    CommonsAssert.assertEquals (g, p.getRight ());
+    CommonsAssert.assertEquals (g, p.getBottom ());
+    CommonsAssert.assertEquals (f, p.getLeft ());
   }
 }
