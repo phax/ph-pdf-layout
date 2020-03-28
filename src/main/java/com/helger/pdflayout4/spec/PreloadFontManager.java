@@ -17,7 +17,6 @@
 package com.helger.pdflayout4.spec;
 
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -142,21 +141,21 @@ public class PreloadFontManager implements IPreloadFontResolver
   {
     if (sID == null)
       return null;
-    return m_aRWLock.readLocked ( () -> m_aMap.get (sID));
+    return m_aRWLock.readLockedGet ( () -> m_aMap.get (sID));
   }
 
   @Nonnull
   @ReturnsMutableCopy
   public ICommonsList <PreloadFont> getAllPreloadFonts ()
   {
-    return m_aRWLock.readLocked ((Supplier <ICommonsList <PreloadFont>>) m_aMap::copyOfValues);
+    return m_aRWLock.readLockedGet (m_aMap::copyOfValues);
   }
 
   @Nonnull
   @ReturnsMutableCopy
   public ICommonsList <PreloadFont> getAllPreloadFonts (@Nullable final Predicate <? super PreloadFont> aFilter)
   {
-    return m_aRWLock.readLocked ( () -> m_aMap.copyOfValues (aFilter));
+    return m_aRWLock.readLockedGet ( () -> m_aMap.copyOfValues (aFilter));
   }
 
   @Override
