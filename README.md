@@ -14,9 +14,21 @@ The basic elements provided are:
   * The most complex element is a table, which consists of a number of "h-boxes" (rows) which itself consist of a number of "v-boxes" (columns) plus comes with repeating headlines etc.
   * Elements can have min-size, max-size, margin, padding, border and fill-color - if you know CSS you should be familiar with it.
 
+# Maven usage
+
+Add the following to your pom.xml to use this artifact:
+
+```xml
+<dependency>
+  <groupId>com.helger</groupId>
+  <artifactId>ph-pdf-layout4</artifactId>
+  <version>5.1.0</version>
+</dependency>
+```
+
 # News and Noteworthy
 
-* v5.1.0 - work in progress
+* v5.1.0 - 2020-03-29
     * Updated to PDFBox 2.0.19
     * Updated to jbig2-imageio 3.0.3
     * Fixed line spacing on page break (see [issue #10](https://github.com/phax/ph-pdf-layout/issues/10))
@@ -109,20 +121,7 @@ The basic elements provided are:
     * Still on PDFBox 2.0.0 because of problems with 2.0.1 and 2.0.2
 
 Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x.
-Note: version 3.5.2 is not actively developed - in the meantime ph-pdf-layout 4 is the way forward.
 Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_112 or later should work.
-
-# Maven usage
-
-Add the following to your pom.xml to use this artifact:
-
-```xml
-<dependency>
-  <groupId>com.helger</groupId>
-  <artifactId>ph-pdf-layout4</artifactId>
-  <version>5.0.9</version>
-</dependency>
-```
 
 ---
 
