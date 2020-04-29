@@ -1,0 +1,237 @@
+%PDF-1.4
+%öäüß
+1 0 obj
+<<
+/Type /Catalog
+/Version /1.4
+/Pages 2 0 R
+>>
+endobj
+3 0 obj
+<<
+/Author (Philip Helger www.helger.com)
+/CreationDate (D:20200429085102+02'00')
+/Creator (Philip Helger)
+/Producer (ph-pdf-layout 5.1.1-SNAPSHOT - https://github.com/phax/ph-pdf-layout)
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Kids [4 0 R]
+/Count 1
+>>
+endobj
+4 0 obj
+<<
+/Type /Page
+/MediaBox [0.0 0.0 595.27563 841.8898]
+/Parent 2 0 R
+/Contents 5 0 R
+/Resources 6 0 R
+>>
+endobj
+5 0 obj
+<<
+/Length 3532
+>>
+stream
+/DeviceRGB CS
+1 0 0 SC
+1 w
+0.5 701.6698 593.96979 139.72 re
+S
+BT
+/F1 10 Tf
+1 831.39978 Td
+({\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}{\\f1 Verdana;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255) Tj
+0 -11.56 Td
+(;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1\\f1\\fs20 Line Number;}{\\*\\cs3\\ul\\cf1) Tj
+0 -11.56 Td
+(Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal) Tj
+0 -11.56 Td
+(Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tsce) Tj
+0 -11.56 Td
+(llpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple) Tj
+0 -11.56 Td
+(1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql{\\f1\\fs20\\cf0 vielen Dank f\\u252\\'fcr Ihre) Tj
+0 -11.56 Td
+(Bestellung.}\\f1\\fs20\\cf0\\par}{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255) Tj
+0 -11.56 Td
+(;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1 Line Number;}{\\*\\cs3\\ul\\cf1) Tj
+0 -11.56 Td
+(Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal) Tj
+0 -11.56 Td
+(Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tsce) Tj
+0 -11.56 Td
+(llpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple) Tj
+0 -11.56 Td
+(1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql\\par}) Tj
+ET
+0 1 0 SC
+0.5 688.1098 567.71997 12.56 re
+S
+BT
+1 690.67981 Td
+(Chars 32-127:  !"#$%&'\(\)*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~) Tj
+ET
+1 0 0 SC
+0.5 674.5498 17.68 12.56 re
+S
+BT
+1 677.11981 Td
+(Left) Tj
+ET
+/DeviceRGB cs
+1 0.68627 0.68627 sc
+0 648.92981 65.93001 25.12 re
+f
+0.5 649.42981 64.93001 24.12 re
+S
+BT
+0 0 0 sc
+1 663.55981 Td
+(Left and) Tj
+0 -11.56 Td
+(Left but longer) Tj
+ET
+0.5 635.86981 31.01 12.56 re
+S
+BT
+1 638.43982 Td
+(Center) Tj
+ET
+1 0.68627 0.68627 sc
+0 610.24982 79.26 25.12 re
+f
+0.5 610.74982 78.26 24.12 re
+S
+BT
+0 0 0 sc
+14.895 624.87982 Td
+(Center and) Tj
+-13.895 -11.56 Td
+(Center but longer) Tj
+ET
+0.5 597.18982 24.34 12.56 re
+S
+BT
+1 599.75983 Td
+(Right) Tj
+ET
+1 0.68627 0.68627 sc
+0 571.56982 72.59 25.12 re
+f
+0.5 572.06982 71.59 24.12 re
+S
+BT
+0 0 0 sc
+28.79 586.19983 Td
+(Right and) Tj
+-27.79 -11.56 Td
+(Right but longer) Tj
+ET
+1 0.68627 0.68627 sc
+0 536.44983 94.26 35.12 re
+f
+0.5 536.94983 93.26 34.12 re
+S
+BT
+0 0 0 sc
+45.46 556.07983 Td
+(Right and) Tj
+-39.46 -11.56 Td
+(Right with padding) Tj
+ET
+1 0.68627 0.68627 sc
+5 506.32983 75.35999 25.12 re
+f
+5.5 506.82983 74.35999 24.12 re
+S
+BT
+0 0 0 sc
+36.55999 520.95984 Td
+(Right and) Tj
+-30.55999 -11.56 Td
+(Right but margin) Tj
+ET
+1 0.68627 0.68627 sc
+5 472.76984 143.16998 23.56 re
+f
+5.5 473.26984 142.16998 22.56 re
+S
+BT
+0 0 0 sc
+11 480.83984 Td
+(Text with margin and padding) Tj
+ET
+1 1 0 sc
+5 419.64984 138.37999 43.12 re
+f
+5 w
+5 460.26984 m
+138.37999 460.26984 l
+S
+0 1 0 SC
+140.87999 462.76984 m
+140.87999 424.64984 l
+S
+0 0 1 SC
+10 422.14984 m
+143.37999 422.14984 l
+S
+1 0 1 SC
+7.5 457.76984 m
+7.5 419.64984 l
+S
+S
+BT
+0 0 0 sc
+15 443.27985 Td
+(Text with different borders,) Tj
+0 -11.56 Td
+10 0 Td
+(margins and paddings) Tj
+ET
+
+endstream
+endobj
+6 0 obj
+<<
+/Font 7 0 R
+>>
+endobj
+7 0 obj
+<<
+/F1 8 0 R
+>>
+endobj
+8 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+>>
+endobj
+xref
+0 9
+0000000000 65535 f
+0000000015 00000 n
+0000000284 00000 n
+0000000078 00000 n
+0000000341 00000 n
+0000000460 00000 n
+0000004046 00000 n
+0000004079 00000 n
+0000004110 00000 n
+trailer
+<<
+/Root 1 0 R
+/Info 3 0 R
+/ID [<E030BD5CBB1A71992C4FCC0162757505> <E030BD5CBB1A71992C4FCC0162757505>]
+/Size 9
+>>
+startxref
+4207
+%%EOF

@@ -14,6 +14,8 @@ The basic elements provided are:
   * The most complex element is a table, which consists of a number of "h-boxes" (rows) which itself consist of a number of "v-boxes" (columns) plus comes with repeating headlines etc.
   * Elements can have min-size, max-size, margin, padding, border and fill-color - if you know CSS you should be familiar with it.
 
+A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files).
+
 # Maven usage
 
 Add the following to your pom.xml to use this artifact:
