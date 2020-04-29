@@ -51,7 +51,7 @@ public enum EHorzAlignment implements IHasID <String>
 
   private final String m_sID;
 
-  private EHorzAlignment (@Nonnull @Nonempty final String sID)
+  EHorzAlignment (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

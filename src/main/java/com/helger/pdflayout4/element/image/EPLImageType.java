@@ -38,7 +38,7 @@ public enum EPLImageType implements IHasID <String>
 
   private final String m_sID;
 
-  private EPLImageType (@Nonnull @Nonempty final String sID)
+  EPLImageType (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

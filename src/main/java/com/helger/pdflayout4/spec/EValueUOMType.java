@@ -41,7 +41,7 @@ public enum EValueUOMType implements IHasID <String>
 
   private final String m_sID;
 
-  private EValueUOMType (@Nonnull @Nonempty final String sID)
+  EValueUOMType (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

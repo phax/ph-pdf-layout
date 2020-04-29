@@ -52,7 +52,7 @@ public enum EPLPlaceholder
   private final int m_nEstimatedCharCount;
   private final String m_sEstimatedPrepareText;
 
-  private EPLPlaceholder (@Nonnull @Nonempty final String sVariable, @Nonnegative final int nEstimatedCharCount)
+  EPLPlaceholder (@Nonnull @Nonempty final String sVariable, @Nonnegative final int nEstimatedCharCount)
   {
     m_sVariable = sVariable;
     m_nEstimatedCharCount = nEstimatedCharCount;
@@ -101,7 +101,7 @@ public enum EPLPlaceholder
   @ReturnsMutableCopy
   public static ICommonsMap <String, String> getEstimationReplacements ()
   {
-    final ICommonsMap <String, String> ret = new CommonsHashMap<> ();
+    final ICommonsMap <String, String> ret = new CommonsHashMap <> ();
     for (final EPLPlaceholder e : values ())
       ret.put (e.m_sVariable, e.m_sEstimatedPrepareText);
     return ret;

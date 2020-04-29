@@ -145,10 +145,7 @@ public enum EPLTableGridType implements IPLTableGridType
             final boolean bLastRow = nRowIndex == nEndRowIncl;
             final boolean bFirstCol = nEffectiveCellStartIndex == nStartColumnIncl;
             final boolean bLastCol = nEffectiveCellEndIndex - 1 == nEndColumnIncl;
-            aCell.setBorder (bFirstRow ? aBSS : null,
-                             bLastCol ? aBSS : null,
-                             bLastRow ? aBSS : null,
-                             bFirstCol ? aBSS : null);
+            aCell.setBorder (bFirstRow ? aBSS : null, bLastCol ? aBSS : null, bLastRow ? aBSS : null, bFirstCol ? aBSS : null);
           }
         });
       });
@@ -329,7 +326,7 @@ public enum EPLTableGridType implements IPLTableGridType
 
   private final String m_sID;
 
-  private EPLTableGridType (@Nonnull @Nonempty final String sID)
+  EPLTableGridType (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

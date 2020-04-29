@@ -43,7 +43,7 @@ public enum EVertAlignment implements IHasID <String>
 
   private final String m_sID;
 
-  private EVertAlignment (@Nonnull @Nonempty final String sID)
+  EVertAlignment (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }
