@@ -21,6 +21,9 @@ import java.io.Serializable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
+import org.apache.pdfbox.cos.COSArray;
+import org.apache.pdfbox.cos.COSFloat;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -74,8 +77,7 @@ public class LineDashPatternSpec implements Serializable
   public LineDashPatternSpec (@Nonnull final float [] aPattern, final float fPhase)
   {
     ValueEnforcer.notNull (aPattern, "Pattern");
-    ValueEnforcer.isTrue (aPattern.length <= 2,
-                          () -> "Too many patterns (" + aPattern.length + ") provided. At max 2 items are allowed.");
+    ValueEnforcer.isTrue (aPattern.length <= 2, () -> "Too many patterns (" + aPattern.length + ") provided. At max 2 items are allowed.");
     for (final float fPatternValue : aPattern)
       ValueEnforcer.isGT0 (fPatternValue, "PatternValue");
 
@@ -91,6 +93,19 @@ public class LineDashPatternSpec implements Serializable
   public final float [] getPattern ()
   {
     return ArrayHelper.getCopy (m_aPattern);
+  }
+
+  /**
+   * @return A COS array with 0-2 elements. Never <code>null</code>.
+   */
+  @Nonnull
+  @ReturnsMutableCopy
+  public final COSArray getPatternCOSArray ()
+  {
+    final COSArray ret = new COSArray ();
+    for (final float f : m_aPattern)
+      ret.add (new COSFloat (f));
+    return ret;
   }
 
   /**

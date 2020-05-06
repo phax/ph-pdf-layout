@@ -85,6 +85,7 @@ public class SizeSpec implements Serializable
   @Nonnull
   public PDRectangle getAsRectangle ()
   {
+    // Get as rectangle starting at 0/0
     return new PDRectangle (m_fWidth, m_fHeight);
   }
 
