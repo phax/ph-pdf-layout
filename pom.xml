@@ -86,9 +86,9 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>com.helger</groupId>
+        <groupId>com.helger.font</groupId>
         <artifactId>ph-fonts-parent-pom</artifactId>
-        <version>4.0.2</version>
+        <version>4.1.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -121,7 +121,7 @@
       <artifactId>ph-commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-api</artifactId>
     </dependency>
     <dependency>
@@ -169,37 +169,37 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-alegreya-sans</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-anaheim</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-exo2</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-lato2</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-open-sans</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-roboto</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-source-sans-pro</artifactId>
       <scope>test</scope>
     </dependency>

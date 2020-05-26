@@ -18,18 +18,20 @@ A set of example files as created from the unit test can be found in folder [exa
 
 # Maven usage
 
-Add the following to your pom.xml to use this artifact:
+Add the following to your pom.xml to use this artifact, replacing `x.y.z` with the real version nunber:
 
 ```xml
 <dependency>
   <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout4</artifactId>
-  <version>5.1.0</version>
+  <version>x.y.z</version>
 </dependency>
 ```
 
 # News and Noteworthy
 
+* v5.1.1 - work in progress
+    * Updated to ph-fonts 4.1.0 (changed Maven groupId)
 * v5.1.0 - 2020-03-29
     * Updated to PDFBox 2.0.19
     * Updated to jbig2-imageio 3.0.3
