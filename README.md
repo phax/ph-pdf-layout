@@ -18,7 +18,7 @@ A set of example files as created from the unit test can be found in folder [exa
 
 # Maven usage
 
-Add the following to your pom.xml to use this artifact, replacing `x.y.z` with the real version nunber:
+Add the following to your pom.xml to use this artifact, replacing `x.y.z` with the real version number:
 
 ```xml
 <dependency>
@@ -30,7 +30,7 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 
 # News and Noteworthy
 
-* v5.1.1 - work in progress
+* v5.1.1 - 2020-05-29
     * Updated to ph-fonts 4.1.0 (changed Maven groupId)
 * v5.1.0 - 2020-03-29
     * Updated to PDFBox 2.0.19
