@@ -14,10 +14,12 @@ hs_err_pid*
 target/
 
 # Unit test created PDFs
-/pdf/
+pdf/
 
-/**/.pmd
-**/*.iml
-/.settings/ 
-/.project 
-/.classpath 
+.pmd
+*.iml
+.settings/ 
+.project 
+.classpath 
+example-files/
+release.properties
