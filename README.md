@@ -30,6 +30,8 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 
 # News and Noteworthy
 
+* v5.1.2 - work in progress
+    * Updated to PDFBox 2.0.20
 * v5.1.1 - 2020-05-29
     * Updated to ph-fonts 4.1.0 (changed Maven groupId)
 * v5.1.0 - 2020-03-29
