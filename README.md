@@ -10,6 +10,8 @@ The basic elements provided are:
 * *PL elements* - basic or complex layout elements ("PL" is short for "PDF Layout")
   * Basic (inline) elements are
      * plain text in class `PLText` (Unicode of course)
+       * For custom Open Source fonts to be used see the https://github.com/phax/ph-fonts project
+       * Note: the available characters heavily depend on the used font. So if you get a "?" character, try loading a different font
      * and image in classes `PLImage` and `PLStreamImage` (whatever ImageIO can load).
   * Basic (block) element is box (class `PLBox`)
   * Layout elements are
@@ -44,7 +46,7 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 
 # News and Noteworthy
 
-* v5.1.2 - work in progress
+* v5.1.2 - 2020-06-15
     * Updated to PDFBox 2.0.20
     * Allow different page content height if the first page header and footer have different heights (see [issue #14](https://github.com/phax/ph-pdf-layout/issues/14))
 * v5.1.1 - 2020-05-29
