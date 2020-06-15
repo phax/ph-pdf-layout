@@ -195,6 +195,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
     return this;
   }
 
+  /**
+   * @param aObj
+   *        The object of which the outline should be subtracted.
+   * @return The usable page width without the x-paddings, x-borders and
+   *         x-margins
+   */
   @Nonnegative
   private float _getAvailableWidth (@Nonnull final IPLHasMarginBorderPadding <?> aObj)
   {
@@ -211,6 +217,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
     return _getAvailableWidth (this);
   }
 
+  /**
+   * @param aObj
+   *        The object of which the outline should be subtracted.
+   * @return The usable page height without the y-paddings, y-borders and
+   *         y-margins
+   */
   @Nonnegative
   private float _getAvailableHeight (@Nonnull final IPLHasMarginBorderPadding <?> aObj)
   {
@@ -636,8 +648,12 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
 
     // Prepare all elements
     {
-      final float fAvailWidth = getAvailableWidth ();
-      final float fAvailHeight = getAvailableHeight ();
+      // For splitting reasons use the smaller height between first and other
+      // pages. This is not really nice, but here we don't have a page
+      // assignment yet.
+      // The width should be identical anyway
+      final float fAvailWidth = Math.min (_getAvailableWidth (aFirstPageMBP), _getAvailableWidth (this));
+      final float fAvailHeight = Math.min (_getAvailableHeight (aFirstPageMBP), _getAvailableHeight (this));
 
       if (PLDebugLog.isDebugPrepare ())
         PLDebugLog.debugPrepare (this,
