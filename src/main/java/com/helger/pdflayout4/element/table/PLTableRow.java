@@ -35,6 +35,11 @@ import com.helger.pdflayout4.spec.MarginSpec;
 import com.helger.pdflayout4.spec.PaddingSpec;
 import com.helger.pdflayout4.spec.WidthSpec;
 
+/**
+ * A special HBox representing a table row.
+ * 
+ * @author Philip Helger
+ */
 public class PLTableRow extends AbstractPLHBox <PLTableRow>
 {
   public PLTableRow ()
@@ -112,9 +117,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
     });
   }
 
-  public void forEachCell (final int nStartIncl,
-                           final int nEndIncl,
-                           @Nonnull final Consumer <? super PLTableCell> aConsumer)
+  public void forEachCell (final int nStartIncl, final int nEndIncl, @Nonnull final Consumer <? super PLTableCell> aConsumer)
   {
     forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
@@ -122,9 +125,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
     });
   }
 
-  public void forEachCell (final int nStartIncl,
-                           final int nEndIncl,
-                           @Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
+  public void forEachCell (final int nStartIncl, final int nEndIncl, @Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
     forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)

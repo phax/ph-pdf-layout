@@ -5,14 +5,28 @@ Java library for creating fluid page layouts with Apache PDFBox.
 Please check the test files to see how to create PDFs with the different elements.
 
 The basic elements provided are:
-* PageLayoutPDF - the entry class, having a list of page sets
-* PLPageSet - a set of pages that share the same size and orientation and contain a fluid set of elements
-* *PL elements* - basic or complex layout elements.
-  * Basic (inline) elements are text (Unicode of course) and image (whatever ImageIO can load).
-  * Basic (block) element is box. 
-  * Layout elements are h-box, v-box, spacer-x, spacer-y, page break
+* `PageLayoutPDF` - the entry class, having a list of page sets
+* `PLPageSet` - a set of pages that share the same size and orientation and contain a set of elements. The assignments to pages happens dynamically.
+* *PL elements* - basic or complex layout elements ("PL" is short for "PDF Layout")
+  * Basic (inline) elements are
+     * plain text in class `PLText` (Unicode of course)
+     * and image in classes `PLImage` and `PLStreamImage` (whatever ImageIO can load).
+  * Basic (block) element is box (class `PLBox`)
+  * Layout elements are
+    * horizontal box or h-box in class `PLHBox` - like a row of a table
+    * vertical box or v-box in class `PLVBox` - like a column of a table
+    * spacer-x in class `PLSpacerX` - a horizontal spacer - just in case you need explicit distance to a certain element
+    * spacer-y in class `PLSpacerY` - a vertical spacer - just in case you need explicit distance to a certain element
+    * page break in class `PLPageBreak` - an explicit page break that starts a new page
   * The most complex element is a table, which consists of a number of "h-boxes" (rows) which itself consist of a number of "v-boxes" (columns) plus comes with repeating headlines etc.
-  * Elements can have min-size, max-size, margin, padding, border and fill-color - if you know CSS you should be familiar with it.
+    * See classes `PLTable`, `PLTableRow` and `PLTableCell` for details
+  * Elements can have the following properties - if you know CSS you should be familiar with it:
+    * "min-size" - the minimum element size
+    * "max-size" - the maximum element size
+    * "margin" - a transparent outer border (outside of the border)
+    * "border" - a visible border with different styles (between padding and margin) 
+    * "padding" - a transparent inner border (inside of the border)
+    * "fill-color" - the background or fill color of an element
 
 A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files).
 
