@@ -29,19 +29,49 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 
 /**
- * Page set preparae result. Used only internally.
+ * Page set prepare result. Used only internally.
  *
  * @author Philip Helger
  */
 public final class PLPageSetPrepareResult implements Serializable
 {
+  private PLMarginBorderPadding m_aFirstPageMBP;
+  private float m_fFirstHeaderHeight = Float.NaN;
   private float m_fHeaderHeight = Float.NaN;
   private final ICommonsList <PLElementWithSize> m_aContentHeight = new CommonsArrayList <> ();
+  private float m_fFirstFooterHeight = Float.NaN;
   private float m_fFooterHeight = Float.NaN;
   private final ICommonsList <ICommonsList <PLElementWithSize>> m_aPerPageElements = new CommonsArrayList <> ();
 
   PLPageSetPrepareResult ()
   {}
+
+  @Nonnull
+  PLMarginBorderPadding getFirstPageMBP ()
+  {
+    final PLMarginBorderPadding ret = m_aFirstPageMBP;
+    if (ret == null)
+      throw new IllegalStateException ("No first page margin border padding present");
+    return ret;
+  }
+
+  void setFirstPageMBP (@Nonnull final PLMarginBorderPadding aFirstPageMBP)
+  {
+    ValueEnforcer.notNull (aFirstPageMBP, "FirstPageMBP");
+    m_aFirstPageMBP = aFirstPageMBP;
+  }
+
+  /**
+   * @param nPageIndex
+   *        0-based page index
+   * @return Page header height without margin, border and padding.
+   */
+  float getHeaderHeight (@Nonnegative final int nPageIndex)
+  {
+    if (nPageIndex == 0 && !Float.isNaN (m_fFirstHeaderHeight))
+      return m_fFirstHeaderHeight;
+    return m_fHeaderHeight;
+  }
 
   /**
    * Set the page header height.
@@ -59,11 +89,17 @@ public final class PLPageSetPrepareResult implements Serializable
   }
 
   /**
-   * @return Page header height without margin, border and padding.
+   * Set the page header height of the first page. This method may only be
+   * called once.
+   *
+   * @param fFooterHeight
+   *        Height without padding or margin.
    */
-  public float getHeaderHeight ()
+  void setFirstHeaderHeight (final float fHeaderHeight)
   {
-    return m_fHeaderHeight;
+    // Set the maximum value only
+    ValueEnforcer.isTrue (Float.isNaN (m_fFirstHeaderHeight), "First header height was already set");
+    m_fFirstHeaderHeight = fHeaderHeight;
   }
 
   /**
@@ -88,27 +124,11 @@ public final class PLPageSetPrepareResult implements Serializable
     return m_aContentHeight.getClone ();
   }
 
-  /**
-   * Set the page footer height. The maximum height is used.
-   *
-   * @param fFooterHeight
-   *        Height without padding or margin.
-   */
-  void setFooterHeight (final float fFooterHeight)
+  @Nonnull
+  @ReturnsMutableObject ("speed")
+  ICommonsList <ICommonsList <PLElementWithSize>> directGetPerPageElements ()
   {
-    // Set the maximum value only
-    if (Float.isNaN (m_fFooterHeight))
-      m_fFooterHeight = fFooterHeight;
-    else
-      m_fFooterHeight = Math.max (m_fFooterHeight, fFooterHeight);
-  }
-
-  /**
-   * @return Page footer height without padding or margin.
-   */
-  public float getFooterHeight ()
-  {
-    return m_fFooterHeight;
+    return m_aPerPageElements;
   }
 
   /**
@@ -136,10 +156,44 @@ public final class PLPageSetPrepareResult implements Serializable
     return getPageCount () + 1;
   }
 
-  @Nonnull
-  @ReturnsMutableObject ("speed")
-  ICommonsList <ICommonsList <PLElementWithSize>> directGetPerPageElements ()
+  /**
+   * @param nPageIndex
+   *        0-based page index
+   * @return Page footer height without padding or margin.
+   */
+  float getFooterHeight (@Nonnegative final int nPageIndex)
   {
-    return m_aPerPageElements;
+    if (nPageIndex == 0 && !Float.isNaN (m_fFirstFooterHeight))
+      return m_fFirstFooterHeight;
+    return m_fFooterHeight;
+  }
+
+  /**
+   * Set the page footer height of the first page. This method may only be
+   * called once.
+   *
+   * @param fFooterHeight
+   *        Height without padding or margin.
+   */
+  void setFirstFooterHeight (final float fFooterHeight)
+  {
+    // Set the maximum value only
+    ValueEnforcer.isTrue (Float.isNaN (m_fFirstFooterHeight), "First footer height was already set");
+    m_fFirstFooterHeight = fFooterHeight;
+  }
+
+  /**
+   * Set the page footer height. The maximum height is used.
+   *
+   * @param fFooterHeight
+   *        Height without padding or margin.
+   */
+  void setFooterHeight (final float fFooterHeight)
+  {
+    // Set the maximum value only
+    if (Float.isNaN (m_fFooterHeight))
+      m_fFooterHeight = fFooterHeight;
+    else
+      m_fFooterHeight = Math.max (m_fFooterHeight, fFooterHeight);
   }
 }
