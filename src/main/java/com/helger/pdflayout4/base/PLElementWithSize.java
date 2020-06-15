@@ -51,7 +51,8 @@ public final class PLElementWithSize implements Serializable
   }
 
   /**
-   * Constructor
+   * Constructor. This constructor is only present for the unlikely case that
+   * the full size differs from the raw size with all the outlines added.
    *
    * @param aElement
    *        Element itself.
