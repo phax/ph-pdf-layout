@@ -21,5 +21,4 @@ pdf/
 .settings/ 
 .project 
 .classpath 
-example-files/
 release.properties
