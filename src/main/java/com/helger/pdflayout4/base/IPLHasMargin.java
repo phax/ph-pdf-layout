@@ -28,11 +28,9 @@ import com.helger.pdflayout4.spec.MarginSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
-                              IPLHasOutline,
-                              IGenericImplTrait <IMPLTYPE>
+public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends IPLHasOutline, IGenericImplTrait <IMPLTYPE>
 {
-  final MarginSpec DEFAULT_MARGIN = MarginSpec.MARGIN0;
+  MarginSpec DEFAULT_MARGIN = MarginSpec.MARGIN0;
 
   /**
    * Set all margin values (left, top, right, bottom) to the same value.
@@ -76,10 +74,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    * @return this
    */
   @Nonnull
-  default IMPLTYPE setMargin (final float fMarginTop,
-                              final float fMarginRight,
-                              final float fMarginBottom,
-                              final float fMarginLeft)
+  default IMPLTYPE setMargin (final float fMarginTop, final float fMarginRight, final float fMarginBottom, final float fMarginLeft)
   {
     return setMargin (new MarginSpec (fMarginTop, fMarginRight, fMarginBottom, fMarginLeft));
   }
