@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout4.base;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -33,11 +31,7 @@ import com.helger.commons.traits.IGenericImplTrait;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
-                           IHasID <String>,
-                           IGenericImplTrait <IMPLTYPE>,
-                           IPLVisitable,
-                           Serializable
+public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends IHasID <String>, IGenericImplTrait <IMPLTYPE>, IPLVisitable
 {
   default boolean hasID (@Nullable final String sID)
   {

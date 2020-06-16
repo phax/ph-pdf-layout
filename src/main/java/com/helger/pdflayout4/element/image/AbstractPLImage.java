@@ -43,8 +43,7 @@ import com.helger.pdflayout4.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYPE>> extends
-                                      AbstractPLInlineElement <IMPLTYPE>
+public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYPE>> extends AbstractPLInlineElement <IMPLTYPE>
 {
   public static final EPLImageType DEFAULT_IMAGE_TYPE = EPLImageType.JPEG;
 
@@ -53,7 +52,7 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   private EPLImageType m_eImageType = DEFAULT_IMAGE_TYPE;
 
   // Status var
-  private transient PDImageXObject m_aXObject;
+  private PDImageXObject m_aXObject;
 
   public AbstractPLImage (@Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
   {
