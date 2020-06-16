@@ -40,10 +40,8 @@ import com.helger.commons.datetime.PDTConfig;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.file.FileHelper;
 import com.helger.commons.io.stream.StreamHelper;
-import com.helger.commons.serialize.SerializationHelper;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.StringHelper;
-import com.helger.commons.system.SystemProperties;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.pdflayout4.base.IPLVisitable;
 import com.helger.pdflayout4.base.IPLVisitor;
@@ -250,14 +248,6 @@ public class PageLayoutPDF implements IPLVisitable
   {
     ValueEnforcer.notNull (aOS, "OutputStream");
 
-    if (false)
-    {
-      // For Serialization testing only
-      SystemProperties.setPropertyValue ("sun.io.serialization.extendedDebugInfo", true);
-      for (final PLPageSet aPageSet : m_aPageSets)
-        SerializationHelper.getSerializedByteArray (aPageSet);
-    }
-
     // create a new document
     // Use a buffered OS - approx 30% faster!
     try (final PDDocument aDoc = new PDDocument (); final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
@@ -310,13 +300,7 @@ public class PageLayoutPDF implements IPLVisitable
       for (final PLPageSet aPageSet : m_aPageSets)
       {
         final PLPageSetPrepareResult aPR = aPRs[nPageSetIndex];
-        aPageSet.renderAllPages (aPR,
-                                 aDoc,
-                                 m_bCompressPDF,
-                                 nPageSetIndex,
-                                 nPageSetCount,
-                                 nTotalPageIndex,
-                                 nTotalPageCount);
+        aPageSet.renderAllPages (aPR, aDoc, m_bCompressPDF, nPageSetIndex, nPageSetCount, nTotalPageIndex, nTotalPageCount);
         // Inc afterwards
         nTotalPageIndex += aPR.getPageCount ();
         nPageSetIndex++;

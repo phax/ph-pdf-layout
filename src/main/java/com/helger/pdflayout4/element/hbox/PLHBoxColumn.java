@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout4.element.hbox;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -33,7 +31,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
  * @author Philip Helger
  */
 @NotThreadSafe
-public final class PLHBoxColumn implements Serializable
+public final class PLHBoxColumn
 {
   private IPLRenderableObject <?> m_aElement;
   private WidthSpec m_aWidth;

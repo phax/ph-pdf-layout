@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout4.element.table;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
@@ -29,7 +27,7 @@ import com.helger.pdflayout4.spec.BorderStyleSpec;
  *
  * @author Philip Helger
  */
-public interface IPLTableGridType extends IHasID <String>, Serializable
+public interface IPLTableGridType extends IHasID <String>
 {
   /**
    * Apply this grid to the whole provided table.
@@ -56,9 +54,7 @@ public interface IPLTableGridType extends IHasID <String>, Serializable
    * @param aBSS
    *        Border style specification to be used. May not be <code>null</code>.
    */
-  default void applyGridToTable (@Nonnull final PLTable aTable,
-                                 @Nonnull final IPLCellRange aCellRange,
-                                 @Nonnull final BorderStyleSpec aBSS)
+  default void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final IPLCellRange aCellRange, @Nonnull final BorderStyleSpec aBSS)
   {
     ValueEnforcer.notNull (aTable, "Table");
     ValueEnforcer.notNull (aCellRange, "CellRange");

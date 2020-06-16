@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout4.base;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
@@ -33,7 +31,7 @@ import com.helger.commons.collection.impl.ICommonsList;
  *
  * @author Philip Helger
  */
-public final class PLPageSetPrepareResult implements Serializable
+public final class PLPageSetPrepareResult
 {
   private PLMarginBorderPadding m_aFirstPageMBP;
   private float m_fFirstHeaderHeight = Float.NaN;

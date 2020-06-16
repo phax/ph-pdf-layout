@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout4.element.table;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
@@ -26,10 +24,10 @@ import com.helger.commons.math.MathHelper;
 
 /**
  * Read-only version of the cell range.
- * 
+ *
  * @author Philip Helger
  */
-public interface IPLCellRange extends Serializable
+public interface IPLCellRange
 {
   /**
    * @return row number for the upper left hand corner

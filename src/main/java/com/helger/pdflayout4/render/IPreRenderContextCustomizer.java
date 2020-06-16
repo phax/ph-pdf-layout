@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout4.render;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -25,7 +23,7 @@ import javax.annotation.Nonnull;
  *
  * @author Philip Helger
  */
-public interface IPreRenderContextCustomizer extends Serializable
+public interface IPreRenderContextCustomizer
 {
   /**
    * Customize the passed pre-rendering context. This can e.g. be used to add

@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout4.base;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
@@ -31,7 +29,7 @@ import com.helger.pdflayout4.spec.SizeSpec;
  * @author Philip Helger
  */
 @Immutable
-public final class PLElementWithSize implements Serializable
+public final class PLElementWithSize
 {
   private final IPLRenderableObject <?> m_aElement;
   private final SizeSpec m_aSize;
