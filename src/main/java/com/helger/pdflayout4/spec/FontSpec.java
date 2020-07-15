@@ -52,9 +52,7 @@ public class FontSpec implements Serializable
     this (aPreloadFont, fFontSize, DEFAULT_COLOR);
   }
 
-  public FontSpec (@Nonnull final PreloadFont aPreloadFont,
-                   @Nonnegative final float fFontSize,
-                   @Nonnull final Color aColor)
+  public FontSpec (@Nonnull final PreloadFont aPreloadFont, @Nonnegative final float fFontSize, @Nonnull final Color aColor)
   {
     ValueEnforcer.notNull (aPreloadFont, "Font");
     ValueEnforcer.isFalse (Float.isNaN (fFontSize), "FontSize may not be NaN");

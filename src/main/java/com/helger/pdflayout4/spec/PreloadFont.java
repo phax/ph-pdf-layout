@@ -141,8 +141,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
       }
   }
 
-  private void readObject (@Nonnull @WillNotClose final ObjectInputStream aOIS) throws IOException,
-                                                                                ClassNotFoundException
+  private void readObject (@Nonnull @WillNotClose final ObjectInputStream aOIS) throws IOException, ClassNotFoundException
   {
     m_sID = StreamHelper.readSafeUTF (aOIS);
     final String sBaseFontName = StreamHelper.readSafeUTF (aOIS);
@@ -250,11 +249,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aFont)
-                                       .append (m_aFontRes)
-                                       .append (m_bEmbed)
-                                       .append (m_nFallbackCodePoint)
-                                       .getHashCode ();
+    return new HashCodeGenerator (this).append (m_aFont).append (m_aFontRes).append (m_bEmbed).append (m_nFallbackCodePoint).getHashCode ();
   }
 
   @Override

@@ -79,18 +79,12 @@ public final class PLRenderHelper
 
       if (PLDebugLog.isDebugRender ())
         PLDebugLog.debugRender (aElement,
-                                "Border around " +
-                                          PLDebugLog.getXYWH (fLeft, fTop, fWidth, fHeight) +
-                                          " with line width " +
-                                          fLineWidth);
+                                "Border around " + PLDebugLog.getXYWH (fLeft, fTop, fWidth, fHeight) + " with line width " + fLineWidth);
 
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
       aContentStream.setLineWidth (fLineWidth);
-      aContentStream.addRect (fLeft + fHalfLineWidth,
-                              fBottom + fHalfLineWidth,
-                              fWidth - fLineWidth,
-                              fHeight - fLineWidth);
+      aContentStream.addRect (fLeft + fHalfLineWidth, fBottom + fHalfLineWidth, fWidth - fLineWidth, fHeight - fLineWidth);
       aContentStream.stroke ();
     }
     else
@@ -110,10 +104,7 @@ public final class PLRenderHelper
         {
           if (PLDebugLog.isDebugRender ())
             PLDebugLog.debugRender (aElement,
-                                    "Border top " +
-                                              PLDebugLog.getXYWH (fLeft, fTop, fWidth, 0) +
-                                              " with line width " +
-                                              fTopWidth);
+                                    "Border top " + PLDebugLog.getXYWH (fLeft, fTop, fWidth, 0) + " with line width " + fTopWidth);
 
           final float fDelta = fTopWidth / 2f;
           aContentStream.setStrokingColor (aTop.getColor ());
@@ -126,10 +117,7 @@ public final class PLRenderHelper
         {
           if (PLDebugLog.isDebugRender ())
             PLDebugLog.debugRender (aElement,
-                                    "Border right " +
-                                              PLDebugLog.getXYWH (fRight, fTop, 0, fHeight) +
-                                              " with line width " +
-                                              fRightWidth);
+                                    "Border right " + PLDebugLog.getXYWH (fRight, fTop, 0, fHeight) + " with line width " + fRightWidth);
 
           final float fDelta = fRightWidth / 2f;
           aContentStream.setStrokingColor (aRight.getColor ());
@@ -142,10 +130,7 @@ public final class PLRenderHelper
         {
           if (PLDebugLog.isDebugRender ())
             PLDebugLog.debugRender (aElement,
-                                    "Border bottom " +
-                                              PLDebugLog.getXYWH (fLeft, fBottom, fWidth, 0) +
-                                              " with line width " +
-                                              fBottomWidth);
+                                    "Border bottom " + PLDebugLog.getXYWH (fLeft, fBottom, fWidth, 0) + " with line width " + fBottomWidth);
 
           final float fDelta = fBottomWidth / 2f;
           aContentStream.setStrokingColor (aBottom.getColor ());
@@ -158,10 +143,7 @@ public final class PLRenderHelper
         {
           if (PLDebugLog.isDebugRender ())
             PLDebugLog.debugRender (aElement,
-                                    "Border left " +
-                                              PLDebugLog.getXYWH (fLeft, fTop, 0, fHeight) +
-                                              " with line width " +
-                                              fLeftWidth);
+                                    "Border left " + PLDebugLog.getXYWH (fLeft, fTop, 0, fHeight) + " with line width " + fLeftWidth);
 
           final float fDelta = fLeftWidth / 2f;
           aContentStream.setStrokingColor (aLeft.getColor ());

@@ -57,8 +57,6 @@ public class PLSplitResult
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("firstElement", m_aFirstElement)
-                                       .append ("secondElement", m_aSecondElement)
-                                       .getToString ();
+    return new ToStringGenerator (this).append ("firstElement", m_aFirstElement).append ("secondElement", m_aSecondElement).getToString ();
   }
 }

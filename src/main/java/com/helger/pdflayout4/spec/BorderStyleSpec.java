@@ -180,10 +180,7 @@ public class BorderStyleSpec implements Serializable
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aColor)
-                                       .append (m_aLineDashPattern)
-                                       .append (m_fLineWidth)
-                                       .getHashCode ();
+    return new HashCodeGenerator (this).append (m_aColor).append (m_aLineDashPattern).append (m_fLineWidth).getHashCode ();
   }
 
   @Override

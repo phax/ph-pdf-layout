@@ -57,9 +57,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLRenderableObject <PLTable> implements
-                     IPLSplittableObject <PLTable, PLTable>,
-                     IPLHasMargin <PLTable>
+public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPLSplittableObject <PLTable, PLTable>, IPLHasMargin <PLTable>
 {
   // All column widths
   private final ICommonsList <WidthSpec> m_aWidths;
@@ -120,10 +118,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
             bDifferentWidthTypes = true;
           }
           else
-            throw new IllegalArgumentException ("All widths must be of the same type! Found " +
-                                                eWidthType +
-                                                " and " +
-                                                eCurWidth);
+            throw new IllegalArgumentException ("All widths must be of the same type! Found " + eWidthType + " and " + eCurWidth);
         }
     }
 
@@ -231,8 +226,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    * @return the added table row and never <code>null</code>.
    */
   @Nonnull
-  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells,
-                                     @Nonnull final HeightSpec aHeight)
+  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells, @Nonnull final HeightSpec aHeight)
   {
     ValueEnforcer.notNull (aCells, "Cells");
 
@@ -245,11 +239,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
         else
           nUsedCols += aCell.getColSpan ();
       if (nUsedCols > m_aWidths.size ())
-        throw new IllegalArgumentException ("More cells in row (" +
-                                            nUsedCols +
-                                            ") than defined in the table (" +
-                                            m_aWidths.size () +
-                                            ")!");
+        throw new IllegalArgumentException ("More cells in row (" + nUsedCols + ") than defined in the table (" + m_aWidths.size () + ")!");
     }
 
     final PLTableRow aRow = new PLTableRow ();
@@ -360,9 +350,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     m_aRows.forEachRowByIndex ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
   }
 
-  public void forEachRow (final int nStartRowIncl,
-                          final int nEndRowIncl,
-                          @Nonnull final Consumer <? super PLTableRow> aConsumer)
+  public void forEachRow (final int nStartRowIncl, final int nEndRowIncl, @Nonnull final Consumer <? super PLTableRow> aConsumer)
   {
     forEachRowByIndex ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
@@ -370,9 +358,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     });
   }
 
-  public void forEachRow (final int nStartRowIncl,
-                          final int nEndRowIncl,
-                          @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
+  public void forEachRow (final int nStartRowIncl, final int nEndRowIncl, @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
     forEachRowByIndex ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
@@ -420,9 +406,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
-    final PreparationContext aChildCtx = new PreparationContext (aCtx.getGlobalContext (),
-                                                                 fElementWidth,
-                                                                 fElementHeight);
+    final PreparationContext aChildCtx = new PreparationContext (aCtx.getGlobalContext (), fElementWidth, fElementHeight);
     final SizeSpec aVBoxPreparedSize = m_aRows.prepare (aChildCtx);
     return aVBoxPreparedSize.plus (m_aRows.getOutlineXSum (), m_aRows.getOutlineYSum ());
   }

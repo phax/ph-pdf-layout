@@ -32,8 +32,7 @@ import com.helger.pdflayout4.spec.PaddingSpec;
  *        Implementation type
  * @since 5.1.0
  */
-public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends AbstractBulletPointCreatorFontBased <IMPLTYPE>>
-                                                          implements
+public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends AbstractBulletPointCreatorFontBased <IMPLTYPE>> implements
                                                           IBulletPointCreator,
                                                           IPLHasPadding <IMPLTYPE>
 {

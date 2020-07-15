@@ -60,8 +60,7 @@ import com.helger.pdflayout4.spec.TextAndWidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends
-                                     AbstractPLInlineElement <IMPLTYPE> implements
+public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>> extends AbstractPLInlineElement <IMPLTYPE> implements
                                      IPLHasHorizontalAlignment <IMPLTYPE>,
                                      IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
@@ -329,9 +328,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
   }
 
-  final void internalSetPreparedFontData (@Nonnull final LoadedFont aLoadedFont,
-                                          final float fTextHeight,
-                                          final float fDescent)
+  final void internalSetPreparedFontData (@Nonnull final LoadedFont aLoadedFont, final float fTextHeight, final float fDescent)
   {
     ValueEnforcer.notNull (aLoadedFont, "LoadedFont");
     m_aLoadedFont = aLoadedFont;
@@ -443,8 +440,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return new CommonsArrayList <> (m_aPreparedLinesUnmodified);
   }
 
-  protected final float getDisplayHeightOfLineCount (@Nonnegative final int nLineCount,
-                                                     final boolean bLineSpacingAlsoOnLastLine)
+  protected final float getDisplayHeightOfLineCount (@Nonnegative final int nLineCount, final boolean bLineSpacingAlsoOnLastLine)
   {
     if (nLineCount == 0)
       return 0f;
@@ -500,8 +496,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Get the lines in the correct order from top to bottom
     final ICommonsList <TextAndWidthSpec> aLines = m_aPreparedLines;
 
-    int nLineCount = (int) ((fAvailableHeight + (m_fLineSpacing - 1f) * m_fTextHeight) /
-                            (m_fTextHeight * m_fLineSpacing));
+    int nLineCount = (int) ((fAvailableHeight + (m_fLineSpacing - 1f) * m_fTextHeight) / (m_fTextHeight * m_fLineSpacing));
     if (nLineCount <= 0)
     {
       // Splitting makes no sense because the resulting text 1 would be empty
@@ -557,10 +552,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // First elements does not need to be splittable anymore
     final PLElementWithSize aText1 = _splitGetCopy (fElementWidth, aLines.subList (0, nLineCount), false, "-1");
     // Second element may need additional splitting
-    final PLElementWithSize aText2 = _splitGetCopy (fElementWidth,
-                                                    aLines.subList (nLineCount, aLines.size ()),
-                                                    true,
-                                                    "-2");
+    final PLElementWithSize aText2 = _splitGetCopy (fElementWidth, aLines.subList (nLineCount, aLines.size ()), true, "-2");
 
     return new PLSplitResult (aText1, aText2);
   }
@@ -601,10 +593,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     if (PLDebugLog.isDebugRender ())
       PLDebugLog.debugRender (this,
                               "Display at " +
-                                    PLDebugLog.getXYWH (fRenderLeft,
-                                                        fRenderTop,
-                                                        getRenderWidth (),
-                                                        getRenderHeight ()) +
+                                    PLDebugLog.getXYWH (fRenderLeft, fRenderTop, getRenderWidth (), getRenderHeight ()) +
                                     " with " +
                                     m_aPreparedLines.size () +
                                     " lines");
@@ -635,8 +624,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       if (nIndex == 0)
       {
         // Initial move - only partial line height!
-        aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX,
-                                                 fRenderTop - fTextHeight - m_fDescent + m_fCustomAscentFirstLine);
+        aContentStream.moveTextPositionByAmount (fRenderLeft + fIndentX, fRenderTop - fTextHeight - m_fDescent + m_fCustomAscentFirstLine);
       }
       else
         if (fIndentX != 0)

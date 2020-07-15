@@ -133,11 +133,7 @@ public abstract class AbstractRectSpec implements Serializable
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_fTop)
-                                       .append (m_fRight)
-                                       .append (m_fBottom)
-                                       .append (m_fLeft)
-                                       .getHashCode ();
+    return new HashCodeGenerator (this).append (m_fTop).append (m_fRight).append (m_fBottom).append (m_fLeft).getHashCode ();
   }
 
   @Override

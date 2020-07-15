@@ -117,8 +117,7 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   }
 
   @Nullable
-  public final PLSplitResult splitElementVert (@Nonnegative final float fAvailableWidth,
-                                               @Nonnegative final float fAvailableHeight)
+  public final PLSplitResult splitElementVert (@Nonnegative final float fAvailableWidth, @Nonnegative final float fAvailableHeight)
   {
     return m_aTable.splitElementVert (fAvailableWidth, fAvailableHeight);
   }

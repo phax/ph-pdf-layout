@@ -32,9 +32,7 @@ import com.helger.pdflayout4.spec.BorderStyleSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
-                              IPLHasOutline,
-                              IGenericImplTrait <IMPLTYPE>
+public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends IPLHasOutline, IGenericImplTrait <IMPLTYPE>
 {
   BorderSpec DEFAULT_BORDER = BorderSpec.BORDER0;
 

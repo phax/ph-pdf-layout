@@ -72,8 +72,7 @@ import com.helger.pdflayout4.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends
-                                     AbstractPLRenderableObject <IMPLTYPE> implements
+public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>> extends AbstractPLRenderableObject <IMPLTYPE> implements
                                      IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
   public static final boolean DEFAULT_FULL_WIDTH = true;
@@ -260,8 +259,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return the created row
    */
   @Nonnull
-  public final PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement,
-                                          @Nonnull final HeightSpec aHeight)
+  public final PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
   {
     internalCheckNotPrepared ();
     return _addAndReturnRow (-1, aElement, aHeight);
@@ -329,9 +327,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return this for chaining
    */
   @Nonnull
-  public IMPLTYPE addRow (@Nonnegative final int nIndex,
-                          @Nonnull final IPLRenderableObject <?> aElement,
-                          @Nonnull final HeightSpec aHeight)
+  public IMPLTYPE addRow (@Nonnegative final int nIndex, @Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
   {
     addAndReturnRow (nIndex, aElement, aHeight);
     return thisAsT ();
@@ -568,8 +564,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
           // Percentage of used height compared to total used height of all too
           // high rows (0-1)
-          final float fAvailableRowHeightPerc = fUsedHeightAutoTooHigh == 0 ? 0 : fTooHighRowHeight /
-                                                                                  fUsedHeightAutoTooHigh;
+          final float fAvailableRowHeightPerc = fUsedHeightAutoTooHigh == 0 ? 0 : fTooHighRowHeight / fUsedHeightAutoTooHigh;
 
           // Use x% of remaining height
           // Ensure the height is not smaller than the minimum height - may be
@@ -659,9 +654,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
           // Update used height
           // If no height is left, use the net size of the element
-          final float fRowHeightFull = bTooSmallRestHeight ? aElementPreparedSize.getHeight () +
-                                                             aElement.getOutlineYSum ()
-                                                           : fRowHeight;
+          final float fRowHeightFull = bTooSmallRestHeight ? aElementPreparedSize.getHeight () + aElement.getOutlineYSum () : fRowHeight;
           fUsedHeightFull += fRowHeightFull;
           // Don't change rest-height!
 
@@ -694,11 +687,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (PLDebugLog.isDebugPrepare ())
     {
       if (fMaxRowWidthFull - fElementWidth > 0.01)
-        PLDebugLog.debugPrepare (this,
-                                 "uses more width (" + fMaxRowWidthFull + ") than available (" + fElementWidth + ")!");
+        PLDebugLog.debugPrepare (this, "uses more width (" + fMaxRowWidthFull + ") than available (" + fElementWidth + ")!");
       if (fUsedHeightFull - fElementHeight > 0.01 && !isVertSplittable ())
-        PLDebugLog.debugPrepare (this,
-                                 "uses more height (" + fUsedHeightFull + ") than available (" + fElementHeight + ")!");
+        PLDebugLog.debugPrepare (this, "uses more height (" + fUsedHeightFull + ") than available (" + fElementHeight + ")!");
     }
     return new SizeSpec (fMaxRowWidthFull, fUsedHeightFull);
   }
@@ -728,10 +719,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLVBox <?> aVBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
-                                                                                   .setVertSplittable (false);
-    final AbstractPLVBox <?> aVBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
-                                                                                   .setVertSplittable (true);
+    final AbstractPLVBox <?> aVBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1").setVertSplittable (false);
+    final AbstractPLVBox <?> aVBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2").setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
     final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList <> (nTotalRows);
@@ -791,8 +780,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                            PLDebugLog.getWH (fSplitWidth, fSplitHeight));
 
             // Try to split the element contained in the row
-            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ()
-                                                          .splitElementVert (fSplitWidth, fSplitHeight);
+            final PLSplitResult aSplitResult = aRowElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
             if (aSplitResult != null)
             {
               final IPLRenderableObject <?> aVBox1RowElement = aSplitResult.getFirstElement ().getElement ();
@@ -840,11 +828,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
             {
               if (PLDebugLog.isDebugSplit ())
                 PLDebugLog.debugSplit (this,
-                                       "Failed to split row element " +
-                                             aRowElement.getDebugID () +
-                                             " (Row " +
-                                             nRow +
-                                             ") into pieces");
+                                       "Failed to split row element " + aRowElement.getDebugID () + " (Row " + nRow + ") into pieces");
             }
           }
 

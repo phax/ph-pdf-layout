@@ -44,9 +44,7 @@ public final class MainIssue3170
       final PDPage page = new PDPage (PDRectangle.A4);
       doc.addPage (page);
 
-      final PDFont font = PDType0Font.load (doc,
-                                            EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
-                                                                                  .getInputStream ());
+      final PDFont font = PDType0Font.load (doc, EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ().getInputStream ());
 
       try (final PDPageContentStream contents = new PDPageContentStream (doc, page))
       {

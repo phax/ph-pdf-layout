@@ -48,9 +48,7 @@ public final class BorderSpecMicroTypeConverter implements IMicroTypeConverter <
 
     aElement.appendChild (MicroTypeConverter.convertToMicroElement (aValue.getTop (), sNamespaceURI, ELEMENT_TOP));
     aElement.appendChild (MicroTypeConverter.convertToMicroElement (aValue.getRight (), sNamespaceURI, ELEMENT_RIGHT));
-    aElement.appendChild (MicroTypeConverter.convertToMicroElement (aValue.getBottom (),
-                                                                    sNamespaceURI,
-                                                                    ELEMENT_BOTTOM));
+    aElement.appendChild (MicroTypeConverter.convertToMicroElement (aValue.getBottom (), sNamespaceURI, ELEMENT_BOTTOM));
     aElement.appendChild (MicroTypeConverter.convertToMicroElement (aValue.getLeft (), sNamespaceURI, ELEMENT_LEFT));
     return aElement;
   }
@@ -58,14 +56,12 @@ public final class BorderSpecMicroTypeConverter implements IMicroTypeConverter <
   @Nonnull
   public BorderSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
-    final BorderStyleSpec aTop = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_TOP),
-                                                                     BorderStyleSpec.class);
+    final BorderStyleSpec aTop = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_TOP), BorderStyleSpec.class);
     final BorderStyleSpec aRight = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_RIGHT),
                                                                        BorderStyleSpec.class);
     final BorderStyleSpec aBottom = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_BOTTOM),
                                                                         BorderStyleSpec.class);
-    final BorderStyleSpec aLeft = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_LEFT),
-                                                                      BorderStyleSpec.class);
+    final BorderStyleSpec aLeft = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_LEFT), BorderStyleSpec.class);
     return new BorderSpec (aTop, aRight, aBottom, aLeft);
   }
 }

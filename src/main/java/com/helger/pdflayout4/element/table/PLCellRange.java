@@ -171,19 +171,12 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final PLCellRange rhs = (PLCellRange) o;
-    return m_nFirstRow == rhs.m_nFirstRow &&
-           m_nLastRow == rhs.m_nLastRow &&
-           m_nFirstCol == rhs.m_nFirstCol &&
-           m_nLastCol == rhs.m_nLastCol;
+    return m_nFirstRow == rhs.m_nFirstRow && m_nLastRow == rhs.m_nLastRow && m_nFirstCol == rhs.m_nFirstCol && m_nLastCol == rhs.m_nLastCol;
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_nFirstRow)
-                                       .append (m_nLastRow)
-                                       .append (m_nFirstCol)
-                                       .append (m_nLastCol)
-                                       .getHashCode ();
+    return new HashCodeGenerator (this).append (m_nFirstRow).append (m_nLastRow).append (m_nFirstCol).append (m_nLastCol).getHashCode ();
   }
 }

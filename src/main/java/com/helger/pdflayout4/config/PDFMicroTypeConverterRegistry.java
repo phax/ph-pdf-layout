@@ -63,8 +63,7 @@ public final class PDFMicroTypeConverterRegistry
     aRegistry.registerMicroElementTypeConverter (BorderStyleSpec.class, new BorderStyleSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (FontSpec.class, new FontSpecMicroTypeConverter (aPreloadFontResolver));
     aRegistry.registerMicroElementTypeConverter (HeightSpec.class, new HeightSpecMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (LineDashPatternSpec.class,
-                                                 new LineDashPatternSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (LineDashPatternSpec.class, new LineDashPatternSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (MarginSpec.class, new MarginSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (PaddingSpec.class, new PaddingSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (PLCellRange.class, new PLCellRangeMicroTypeConverter ());

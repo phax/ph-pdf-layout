@@ -47,9 +47,7 @@ public class PLStreamImage extends AbstractPLImage <PLStreamImage>
 {
   private final IHasInputStream m_aIIS;
 
-  public PLStreamImage (@Nonnull final IHasInputStream aImage,
-                        @Nonnegative final float fImageWidth,
-                        @Nonnegative final float fImageHeight)
+  public PLStreamImage (@Nonnull final IHasInputStream aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
   {
     super (fImageWidth, fImageHeight);
     ValueEnforcer.notNull (aImage, "Image");

@@ -75,24 +75,19 @@ public final class PLTableTest
     aPS1.addElement (new PLText ("First dummy line", r10));
 
     // Start table
-    final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
-                                : PLTable.createWithPercentage (10, 40, 25, 25);
+    final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4) : PLTable.createWithPercentage (10, 40, 25, 25);
     aTable.setHeaderRowCount (1);
     aTable.setMargin (40);
 
     // Add row
-    final PLTableRow aHeaderRow = aTable.addAndReturnRow (new PLTableCell (new PLText ("ID",
-                                                                                       r14b).setPadding (aPadding)
-                                                                                            .setFillColor (Color.YELLOW)),
-                                                          new PLTableCell (new PLText ("Name",
-                                                                                       r14b).setPadding (aPadding)
-                                                                                            .setFillColor (Color.YELLOW)),
-                                                          new PLTableCell (new PLText ("Sum1",
-                                                                                       r14b).setPadding (aPadding)
-                                                                                            .setFillColor (Color.YELLOW)),
-                                                          new PLTableCell (new PLText ("Sum2",
-                                                                                       r14b).setPadding (aPadding)
-                                                                                            .setFillColor (Color.YELLOW)));
+    final PLTableRow aHeaderRow = aTable.addAndReturnRow (new PLTableCell (new PLText ("ID", r14b).setPadding (aPadding)
+                                                                                                  .setFillColor (Color.YELLOW)),
+                                                          new PLTableCell (new PLText ("Name", r14b).setPadding (aPadding)
+                                                                                                    .setFillColor (Color.YELLOW)),
+                                                          new PLTableCell (new PLText ("Sum1", r14b).setPadding (aPadding)
+                                                                                                    .setFillColor (Color.YELLOW)),
+                                                          new PLTableCell (new PLText ("Sum2", r14b).setPadding (aPadding)
+                                                                                                    .setFillColor (Color.YELLOW)));
     aHeaderRow.setFillColor (Color.GRAY);
     aHeaderRow.getCellAtIndex (2).setHorzAlign (EHorzAlignment.CENTER);
     aHeaderRow.getCellAtIndex (3).setHorzAlign (EHorzAlignment.RIGHT);
@@ -111,19 +106,14 @@ public final class PLTableTest
     {
       // Width is determined by the width passed to the table creating method
       aTable.addRow (new PLTableCell (new PLText (Integer.toString (i), r10).setPadding (aPadding).setMargin (aMargin)),
-                     new PLTableCell (new PLText ("Name " +
-                                                  i +
-                                                  (i == 2 ? " this is extra text for row 2 that makes this line longer"
-                                                          : ""),
+                     new PLTableCell (new PLText ("Name " + i + (i == 2 ? " this is extra text for row 2 that makes this line longer" : ""),
                                                   r10.getCloneWithDifferentColor (i % 3 == 0 ? Color.RED : Color.BLACK))
                                                                                                                         .setPadding (aPadding)
                                                                                                                         .setMargin (aMargin)),
-                     new PLTableCell (new PLText (Integer.toString (i * i),
-                                                  r10).setPadding (aPadding)
-                                                      .setMargin (aMargin)).setHorzAlign (EHorzAlignment.CENTER),
-                     new PLTableCell (new PLText (Integer.toString (i + i),
-                                                  r10).setPadding (aPadding)
-                                                      .setMargin (aMargin)).setHorzAlign (EHorzAlignment.RIGHT));
+                     new PLTableCell (new PLText (Integer.toString (i * i), r10).setPadding (aPadding)
+                                                                                .setMargin (aMargin)).setHorzAlign (EHorzAlignment.CENTER),
+                     new PLTableCell (new PLText (Integer.toString (i + i), r10).setPadding (aPadding)
+                                                                                .setMargin (aMargin)).setHorzAlign (EHorzAlignment.RIGHT));
     }
     EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.PINK, 1));
     aPS1.addElement (aTable);
@@ -177,9 +167,7 @@ public final class PLTableTest
     final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
     aCellFcts = new CommonsArrayList <> (x -> x,
                                          x -> x.setFillColor (aBGCell),
-                                         x -> ((PLText) x.getElement ()).getText ()
-                                                                        .startsWith ("Cell 2") ? x.setFillColor (aBGCell)
-                                                                                               : x);
+                                         x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2") ? x.setFillColor (aBGCell) : x);
 
     final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts;
     aElementFcts = new CommonsArrayList <> (x -> x,
@@ -188,10 +176,7 @@ public final class PLTableTest
                                             x -> x.setBorder (aBorder).setFillColor (aBGElement),
                                             x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
                                             x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder)
-                                                  .setPadding (aPadding)
-                                                  .setMargin (aMargin)
-                                                  .setFillColor (aBGElement));
+                                            x -> x.setBorder (aBorder).setPadding (aPadding).setMargin (aMargin).setFillColor (aBGElement));
 
     int nRowFunc = 0;
     for (final Function <PLTableRow, PLTableRow> aRowFct : aRowFcts)
@@ -245,23 +230,18 @@ public final class PLTableTest
       aPS1.addElement (new PLText ("Following is a table with grid type " + eGridType, r10));
 
       // Start table
-      final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
-                                  : PLTable.createWithPercentage (10, 40, 25, 25);
+      final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4) : PLTable.createWithPercentage (10, 40, 25, 25);
       aTable.setHeaderRowCount (1);
 
       // Add row
-      final PLTableRow aHeaderRow = aTable.addAndReturnRow (new PLTableCell (new PLText ("ID",
-                                                                                         r14b).setPadding (aPadding)
-                                                                                              .setFillColor (Color.YELLOW)),
-                                                            new PLTableCell (new PLText ("Name",
-                                                                                         r14b).setPadding (aPadding)
-                                                                                              .setFillColor (Color.YELLOW)),
-                                                            new PLTableCell (new PLText ("Sum1",
-                                                                                         r14b).setPadding (aPadding)
-                                                                                              .setFillColor (Color.YELLOW)),
-                                                            new PLTableCell (new PLText ("Sum2",
-                                                                                         r14b).setPadding (aPadding)
-                                                                                              .setFillColor (Color.YELLOW)));
+      final PLTableRow aHeaderRow = aTable.addAndReturnRow (new PLTableCell (new PLText ("ID", r14b).setPadding (aPadding)
+                                                                                                    .setFillColor (Color.YELLOW)),
+                                                            new PLTableCell (new PLText ("Name", r14b).setPadding (aPadding)
+                                                                                                      .setFillColor (Color.YELLOW)),
+                                                            new PLTableCell (new PLText ("Sum1", r14b).setPadding (aPadding)
+                                                                                                      .setFillColor (Color.YELLOW)),
+                                                            new PLTableCell (new PLText ("Sum2", r14b).setPadding (aPadding)
+                                                                                                      .setFillColor (Color.YELLOW)));
       aHeaderRow.getCellAtIndex (2).setHorzAlign (EHorzAlignment.CENTER);
       aHeaderRow.getCellAtIndex (3).setHorzAlign (EHorzAlignment.RIGHT);
       aHeaderRow.setFillColor (Color.GRAY);
@@ -311,26 +291,18 @@ public final class PLTableTest
       aTable.setHeaderRowCount (1);
 
       // Add row
-      final PLTableRow aHeaderRow = aTable.addAndReturnRow (new PLTableCell (new PLText ("ID",
-                                                                                         r14b).setPadding (aPadding)
-                                                                                              .setFillColor (Color.YELLOW)),
-                                                            new PLTableCell (new PLText ("Name",
-                                                                                         r14b).setPadding (aPadding)
-                                                                                              .setFillColor (Color.YELLOW)),
-                                                            new PLTableCell (new PLText ("Sum1",
-                                                                                         r14b).setPadding (aPadding)
-                                                                                              .setFillColor (Color.YELLOW)),
-                                                            new PLTableCell (new PLText ("Sum2",
-                                                                                         r14b).setPadding (aPadding)
-                                                                                              .setFillColor (Color.YELLOW)),
-                                                            new PLTableCell (new PLText ("ID",
-                                                                                         r14b).setPadding (aPadding)),
-                                                            new PLTableCell (new PLText ("Name",
-                                                                                         r14b).setPadding (aPadding)),
-                                                            new PLTableCell (new PLText ("Sum1",
-                                                                                         r14b).setPadding (aPadding)),
-                                                            new PLTableCell (new PLText ("Sum2",
-                                                                                         r14b).setPadding (aPadding)));
+      final PLTableRow aHeaderRow = aTable.addAndReturnRow (new PLTableCell (new PLText ("ID", r14b).setPadding (aPadding)
+                                                                                                    .setFillColor (Color.YELLOW)),
+                                                            new PLTableCell (new PLText ("Name", r14b).setPadding (aPadding)
+                                                                                                      .setFillColor (Color.YELLOW)),
+                                                            new PLTableCell (new PLText ("Sum1", r14b).setPadding (aPadding)
+                                                                                                      .setFillColor (Color.YELLOW)),
+                                                            new PLTableCell (new PLText ("Sum2", r14b).setPadding (aPadding)
+                                                                                                      .setFillColor (Color.YELLOW)),
+                                                            new PLTableCell (new PLText ("ID", r14b).setPadding (aPadding)),
+                                                            new PLTableCell (new PLText ("Name", r14b).setPadding (aPadding)),
+                                                            new PLTableCell (new PLText ("Sum1", r14b).setPadding (aPadding)),
+                                                            new PLTableCell (new PLText ("Sum2", r14b).setPadding (aPadding)));
       aHeaderRow.getCellAtIndex (2).setHorzAlign (EHorzAlignment.CENTER);
       aHeaderRow.getCellAtIndex (3).setHorzAlign (EHorzAlignment.RIGHT);
       aHeaderRow.setFillColor (Color.GRAY);
@@ -380,8 +352,7 @@ public final class PLTableTest
       aPS1.addElement (new PLText ("Following is a table with grid type " + eGridType, r10));
 
       // Start table
-      final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
-                                  : PLTable.createWithPercentage (10, 40, 25, 25);
+      final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4) : PLTable.createWithPercentage (10, 40, 25, 25);
       aTable.setHeaderRowCount (1);
 
       // Add content lines
@@ -505,8 +476,7 @@ public final class PLTableTest
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (3).setID ("table");
     aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("celllongtext"),
                             new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),
-                            new PLTableCell (new PLText ("Short text",
-                                                         r10).setID ("shorttext")).setID ("cellshorttext"))
+                            new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID ("cellshorttext"))
           .setID ("row");
     EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.RED));
     aPS1.addElement (aTable);
@@ -532,11 +502,9 @@ public final class PLTableTest
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (3).setID ("table");
     for (int i = 0; i < 12; ++i)
     {
-      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")
-                                                                          .setPadding (2)).setID ("celllongtext"),
+      aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext").setPadding (2)).setID ("celllongtext"),
                               new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),
-                              new PLTableCell (new PLText ("Short text",
-                                                           r10).setID ("shorttext")).setID ("cellshorttext"))
+                              new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID ("cellshorttext"))
             .setID ("row" + i);
     }
     EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.RED));
@@ -565,15 +533,11 @@ public final class PLTableTest
     {
       final PLTable aInnerTable = PLTable.createWithPercentage (70, 30).setID ("inner-table-" + i);
       for (int j = 0; j < 20; ++j)
-        aInnerTable.addAndReturnRow (new PLTableCell (new PLText (sLongText,
-                                                                  r10).setID ("longtext")
-                                                                      .setPadding (2)).setID ("celllongtext"),
-                                     new PLTableCell (new PLText ("Short text",
-                                                                  r10).setID ("shorttext")).setID ("cellshorttext"))
+        aInnerTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext").setPadding (2)).setID ("celllongtext"),
+                                     new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID ("cellshorttext"))
                    .setID ("inner-row-" + i + "-" + j);
       EPLTableGridType.FULL.applyGridToTable (aInnerTable, new BorderStyleSpec (Color.BLUE));
-      aTable.addAndReturnRow (new PLTableCell (new PLText ("First column", r10)),
-                              new PLTableCell (aInnerTable).setID ("cellshorttext"))
+      aTable.addAndReturnRow (new PLTableCell (new PLText ("First column", r10)), new PLTableCell (aInnerTable).setID ("cellshorttext"))
             .setID ("row-" + i);
     }
     EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.RED));
@@ -614,14 +578,11 @@ public final class PLTableTest
       aTable.addAndReturnRow (new PLTableCell (new PLText (Integer.toString (i), r10).setID ("idx")).setID ("cell-idx"),
                               new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("cell-longtext"),
                               new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cell-empty"),
-                              new PLTableCell (new PLText ("Short text",
-                                                           r10).setID ("shorttext")).setID ("cell-shorttext"))
+                              new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID ("cell-shorttext"))
             .setID ("row-content-" + i)
             .setPadding (2);
-      aTable.addAndReturnRow (new PLTableCell (new PLText (sMediumText, r10).setID ("spanned")
-                                                                            .setHorzAlign (EHorzAlignment.RIGHT),
-                                               aTable.getColumnCount ()).setID ("cell-spanned")
-                                                                        .setHorzAlign (EHorzAlignment.RIGHT))
+      aTable.addAndReturnRow (new PLTableCell (new PLText (sMediumText, r10).setID ("spanned").setHorzAlign (EHorzAlignment.RIGHT),
+                                               aTable.getColumnCount ()).setID ("cell-spanned").setHorzAlign (EHorzAlignment.RIGHT))
             .setID ("row-summary-" + i)
             .setPadding (2);
     }

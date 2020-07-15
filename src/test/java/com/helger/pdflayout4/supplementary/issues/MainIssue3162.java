@@ -38,10 +38,7 @@ public final class MainIssue3162
       try (final PDPageContentStream contents = new PDPageContentStream (doc, page))
       {
         contents.beginText ();
-        contents.setFont (PDType0Font.load (doc,
-                                            EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
-                                                                                  .getInputStream ()),
-                          12);
+        contents.setFont (PDType0Font.load (doc, EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ().getInputStream ()), 12);
         contents.endText ();
       }
       // No need to save

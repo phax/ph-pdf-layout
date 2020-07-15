@@ -118,9 +118,7 @@ public class BorderSpec implements Serializable
    */
   public boolean areAllBordersEqual ()
   {
-    return EqualsHelper.equals (m_aLeft, m_aTop) &&
-           EqualsHelper.equals (m_aLeft, m_aRight) &&
-           EqualsHelper.equals (m_aLeft, m_aBottom);
+    return EqualsHelper.equals (m_aLeft, m_aTop) && EqualsHelper.equals (m_aLeft, m_aRight) && EqualsHelper.equals (m_aLeft, m_aBottom);
   }
 
   /**
@@ -260,11 +258,7 @@ public class BorderSpec implements Serializable
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aTop)
-                                       .append (m_aRight)
-                                       .append (m_aBottom)
-                                       .append (m_aLeft)
-                                       .getHashCode ();
+    return new HashCodeGenerator (this).append (m_aTop).append (m_aRight).append (m_aBottom).append (m_aLeft).getHashCode ();
   }
 
   @Override

@@ -31,8 +31,8 @@ import com.helger.pdflayout4.spec.EVertAlignment;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>> extends
-                                             AbstractPLElement <IMPLTYPE> implements
+public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
+                                             implements
                                              IPLBlockElement <IMPLTYPE>
 {
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;

@@ -64,12 +64,8 @@ public final class PLVBoxTest
 
     // Check horizontal alignment
     aVBox.addRow (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (Color.RED).setID ("left1"));
-    aVBox.addRow (new PLText ("Left\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
-                                                           .setBorder (Color.RED)
-                                                           .setID ("left2"));
-    aVBox.addRow (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                            .setBorder (Color.RED)
-                                            .setID ("center1"));
+    aVBox.addRow (new PLText ("Left\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (Color.RED).setID ("left2"));
+    aVBox.addRow (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (Color.RED).setID ("center1"));
     aVBox.addRow (new PLText ("Center\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
                                                                .setBorder (Color.RED)
                                                                .setID ("center2"));
@@ -101,15 +97,13 @@ public final class PLVBoxTest
                                                                                 .setVertAlign (EVertAlignment.TOP)
                                                                                 .setFillColor (Color.YELLOW),
                   HeightSpec.star ());
-    aVBox.addRow (new PLBox (new PLText ("Center/middle",
-                                         r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.CENTER)
-                                                                    .setVertAlign (EVertAlignment.MIDDLE)
-                                                                    .setFillColor (Color.PINK),
+    aVBox.addRow (new PLBox (new PLText ("Center/middle", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.CENTER)
+                                                                                     .setVertAlign (EVertAlignment.MIDDLE)
+                                                                                     .setFillColor (Color.PINK),
                   HeightSpec.star ());
-    aVBox.addRow (new PLBox (new PLText ("Right/bottom",
-                                         r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                    .setVertAlign (EVertAlignment.BOTTOM)
-                                                                    .setFillColor (Color.MAGENTA),
+    aVBox.addRow (new PLBox (new PLText ("Right/bottom", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                    .setVertAlign (EVertAlignment.BOTTOM)
+                                                                                    .setFillColor (Color.MAGENTA),
                   HeightSpec.star ());
     aPS1.addElement (aVBox);
 
@@ -128,8 +122,7 @@ public final class PLVBoxTest
     aVBox.addRow (new PLText ("This is a test String determining the width of the content", r10).setBorder (Color.RED));
 
     // Check horizontal alignment
-    aVBox.addRow (new PLBox (new PLText ("Left", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.LEFT)
-                                                                            .setFillColor (Color.YELLOW),
+    aVBox.addRow (new PLBox (new PLText ("Left", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.LEFT).setFillColor (Color.YELLOW),
                   HeightSpec.star ());
     aVBox.addRow (new PLBox (new PLText ("Center", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.CENTER)
                                                                               .setFillColor (Color.PINK),
@@ -159,8 +152,7 @@ public final class PLVBoxTest
           for (int k = 0; k < 2; ++k)
           {
             final PLVBox aVBox = new PLVBox ().setFullWidth (h == 0);
-            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.",
-                                      r10).setBorder (Color.RED));
+            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.", r10).setBorder (Color.RED));
             aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
             aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW), HeightSpec.auto ());
             aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.GREEN), HeightSpec.auto ());
@@ -174,8 +166,7 @@ public final class PLVBoxTest
           for (int k = 0; k < 2; ++k)
           {
             final PLVBox aVBox = new PLVBox ().setFullWidth (h == 0);
-            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.",
-                                      r10).setBorder (Color.RED));
+            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.", r10).setBorder (Color.RED));
             aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
             aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW), HeightSpec.auto ());
             aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.GREEN), HeightSpec.auto ());
@@ -190,8 +181,7 @@ public final class PLVBoxTest
           for (int k = 0; k < 2; ++k)
           {
             final PLVBox aVBox = new PLVBox ().setFullWidth (h == 0);
-            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.",
-                                      r10).setBorder (Color.RED));
+            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.", r10).setBorder (Color.RED));
             aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), HeightSpec.star ());
             aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
             aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW), HeightSpec.auto ());
@@ -206,8 +196,7 @@ public final class PLVBoxTest
           for (int k = 0; k < 2; ++k)
           {
             final PLVBox aVBox = new PLVBox ().setFullWidth (h == 0);
-            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.",
-                                      r10).setBorder (Color.RED));
+            aVBox.addRow (new PLText ("This should be a " + (h == 0 ? "full-width " : "") + "example.", r10).setBorder (Color.RED));
             aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), HeightSpec.star ());
             aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), HeightSpec.auto ());
             aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.YELLOW), HeightSpec.auto ());
@@ -244,40 +233,29 @@ public final class PLVBoxTest
             }
 
             final String sIDPrefix = h + "-" + i + "-" + j + "-" + k + "-";
-            final PLVBox aVBox = new PLVBox ().setID (sIDPrefix + "vbox")
-                                              .setFullWidth (h == 0)
-                                              .setVertSplittable (true);
-            aVBox.addRow (new PLText ("This is a " +
-                                      (h == 0 ? "full-width" : "regular width") +
-                                      " example (" +
-                                      sIDPrefix +
-                                      ").",
+            final PLVBox aVBox = new PLVBox ().setID (sIDPrefix + "vbox").setFullWidth (h == 0).setVertSplittable (true);
+            aVBox.addRow (new PLText ("This is a " + (h == 0 ? "full-width" : "regular width") + " example (" + sIDPrefix + ").",
                                       r10).setBorder (Color.RED));
-            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix +
-                                                                                  "t1")).setID (sIDPrefix + "star1")
-                                                                                        .setBorder (Color.BLUE),
+            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix + "t1")).setID (sIDPrefix + "star1")
+                                                                                                    .setBorder (Color.BLUE),
                           HeightSpec.star ());
-            aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s3,
-                                                 r10).setID (sIDPrefix + "t2")
-                                                     .setVertSplittable (true)).setID (sIDPrefix + "auto1")
-                                                                               .setBorder (Color.RED)
-                                                                               .setVertSplittable (true),
+            aVBox.addRow (new PLBox (new PLText (i == 0 ? s1 : s3, r10).setID (sIDPrefix + "t2")
+                                                                       .setVertSplittable (true)).setID (sIDPrefix + "auto1")
+                                                                                                 .setBorder (Color.RED)
+                                                                                                 .setVertSplittable (true),
                           HeightSpec.auto ());
-            aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s3,
-                                                 r10).setID (sIDPrefix + "t3")
-                                                     .setVertSplittable (true)).setID (sIDPrefix + "auto2")
-                                                                               .setBorder (Color.YELLOW)
-                                                                               .setVertSplittable (true),
+            aVBox.addRow (new PLBox (new PLText (j == 0 ? s1 : s3, r10).setID (sIDPrefix + "t3")
+                                                                       .setVertSplittable (true)).setID (sIDPrefix + "auto2")
+                                                                                                 .setBorder (Color.YELLOW)
+                                                                                                 .setVertSplittable (true),
                           HeightSpec.auto ());
-            aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s3,
-                                                 r10).setID (sIDPrefix + "t4")
-                                                     .setVertSplittable (true)).setID (sIDPrefix + "auto3")
-                                                                               .setBorder (Color.GREEN)
-                                                                               .setVertSplittable (true),
+            aVBox.addRow (new PLBox (new PLText (k == 0 ? s1 : s3, r10).setID (sIDPrefix + "t4")
+                                                                       .setVertSplittable (true)).setID (sIDPrefix + "auto3")
+                                                                                                 .setBorder (Color.GREEN)
+                                                                                                 .setVertSplittable (true),
                           HeightSpec.auto ());
-            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix +
-                                                                                  "t5")).setID (sIDPrefix + "star2")
-                                                                                        .setBorder (Color.BLUE),
+            aVBox.addRow (new PLBox (new PLText ("Ich bin ein Stern", r10).setID (sIDPrefix + "t5")).setID (sIDPrefix + "star2")
+                                                                                                    .setBorder (Color.BLUE),
                           HeightSpec.star ());
             aPS1.addElement (aVBox);
           }
@@ -318,8 +296,7 @@ public final class PLVBoxTest
     {
       final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
       for (int j = 0; j < 10; ++j)
-        aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20))
-                                                                .setVertSplittable (true),
+        aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20)).setVertSplittable (true),
                          WidthSpec.star ());
       aVBox.addRow (aHBox);
     }
@@ -343,8 +320,7 @@ public final class PLVBoxTest
     {
       final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
       for (int j = 0; j < 10; ++j)
-        aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20))
-                                                                .setVertSplittable (false),
+        aHBox.addColumn (new PLText (s + (j == 0 ? s : ""), r10).setBorder (new Color (j, j * 10, j * 20)).setVertSplittable (false),
                          WidthSpec.star ());
       aVBox.addRow (aHBox);
     }

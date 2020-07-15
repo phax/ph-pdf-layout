@@ -37,8 +37,8 @@ import com.helger.pdflayout4.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends
-                                        AbstractPLRenderableObject <IMPLTYPE> implements
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends AbstractPLRenderableObject <IMPLTYPE>
+                                        implements
                                         IPLElement <IMPLTYPE>
 {
   private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;

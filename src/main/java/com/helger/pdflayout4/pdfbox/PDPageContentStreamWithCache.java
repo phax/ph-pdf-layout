@@ -173,10 +173,7 @@ public class PDPageContentStreamWithCache
     m_aStream.fill ();
   }
 
-  public void addRect (final float fLeft,
-                       final float fBottom,
-                       final float fWidth,
-                       final float fHeight) throws IOException
+  public void addRect (final float fLeft, final float fBottom, final float fWidth, final float fHeight) throws IOException
   {
     m_aStream.addRect (fLeft, fBottom, fWidth, fHeight);
   }

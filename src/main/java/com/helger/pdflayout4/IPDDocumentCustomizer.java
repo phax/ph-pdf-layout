@@ -70,8 +70,7 @@ public interface IPDDocumentCustomizer
    */
   @Nullable
   @CheckReturnValue
-  static IPDDocumentCustomizer and (@Nullable final IPDDocumentCustomizer aCustomizer1,
-                                    @Nullable final IPDDocumentCustomizer aCustomizer2)
+  static IPDDocumentCustomizer and (@Nullable final IPDDocumentCustomizer aCustomizer1, @Nullable final IPDDocumentCustomizer aCustomizer2)
   {
     if (aCustomizer1 != null)
     {

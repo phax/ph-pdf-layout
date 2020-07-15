@@ -26,8 +26,9 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLInlineElement <IMPLTYPE extends AbstractPLInlineElement <IMPLTYPE>> extends
-                                              AbstractPLElement <IMPLTYPE> implements IPLInlineElement <IMPLTYPE>
+public abstract class AbstractPLInlineElement <IMPLTYPE extends AbstractPLInlineElement <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
+                                              implements
+                                              IPLInlineElement <IMPLTYPE>
 {
   public AbstractPLInlineElement ()
   {}

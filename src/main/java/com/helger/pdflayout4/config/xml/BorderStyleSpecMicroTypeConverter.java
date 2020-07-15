@@ -53,9 +53,7 @@ public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConver
 
     final LineDashPatternSpec aLDPSpec = aValue.getLineDashPattern ();
     if (aLDPSpec != BorderStyleSpec.DEFAULT_LINE_DASH_PATTERN)
-      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aLDPSpec,
-                                                                      sNamespaceURI,
-                                                                      ELEMENT_LINE_DASH_PATTERN));
+      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aLDPSpec, sNamespaceURI, ELEMENT_LINE_DASH_PATTERN));
 
     aElement.setAttribute (ATTR_LINE_WIDTH, aValue.getLineWidth ());
 

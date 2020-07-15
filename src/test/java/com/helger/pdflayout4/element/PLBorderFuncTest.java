@@ -73,17 +73,11 @@ public final class PLBorderFuncTest
     aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
     aPS1.addElement (new PLText ("Border top left", r10).setID ("top left").setBorderTop (aTop).setBorderLeft (aLeft));
     aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
-    aPS1.addElement (new PLText ("Border top right", r10).setID ("top right")
-                                                         .setBorderTop (aTop)
-                                                         .setBorderRight (aRight));
+    aPS1.addElement (new PLText ("Border top right", r10).setID ("top right").setBorderTop (aTop).setBorderRight (aRight));
     aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
-    aPS1.addElement (new PLText ("Border bottom right", r10).setID ("bottom right")
-                                                            .setBorderBottom (aBottom)
-                                                            .setBorderRight (aRight));
+    aPS1.addElement (new PLText ("Border bottom right", r10).setID ("bottom right").setBorderBottom (aBottom).setBorderRight (aRight));
     aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
-    aPS1.addElement (new PLText ("Border bottom left", r10).setID ("bottom left")
-                                                           .setBorderBottom (aBottom)
-                                                           .setBorderLeft (aLeft));
+    aPS1.addElement (new PLText ("Border bottom left", r10).setID ("bottom left").setBorderBottom (aBottom).setBorderLeft (aLeft));
     aPS1.addElement (new PLSpacerY (10).setID ("spacer"));
     aPS1.addElement (new PLText ("Border top right left", r10).setID ("top right left")
                                                               .setBorderTop (aTop)
@@ -132,20 +126,16 @@ public final class PLBorderFuncTest
     final BorderStyleSpec aAll = new BorderStyleSpec (Color.GRAY, fValue);
 
     // Use simple numbers - approx. A4
-    final PLPageSet aPS1 = new PLPageSet (new PDRectangle (500,
-                                                           800)).setID ("pageset")
-                                                                .setMargin (fValue)
-                                                                .setFillColor (Color.GREEN)
-                                                                .setBorder (new BorderSpec (new BorderStyleSpec (Color.PINK,
-                                                                                                                 fValue)));
+    final PLPageSet aPS1 = new PLPageSet (new PDRectangle (500, 800)).setID ("pageset")
+                                                                     .setMargin (fValue)
+                                                                     .setFillColor (Color.GREEN)
+                                                                     .setBorder (new BorderSpec (new BorderStyleSpec (Color.PINK, fValue)));
 
     // Works!
     if (true)
     {
       // Border around the box
-      aPS1.addElement (new PLText ("Border around the box:", r10).setID ("text")
-                                                                 .setPadding (fValue, 0)
-                                                                 .setFillColor (Color.WHITE));
+      aPS1.addElement (new PLText ("Border around the box:", r10).setID ("text").setPadding (fValue, 0).setFillColor (Color.WHITE));
       {
         final PLHBox aHBox = new PLHBox ().setID ("hbox1a");
         aHBox.addColumn (new PLText ("Column1", r10), WidthSpec.star ());
@@ -200,9 +190,7 @@ public final class PLBorderFuncTest
     if (true)
     {
       // Using column border
-      aPS1.addElement (new PLText ("Using column border:", r10).setID ("text")
-                                                               .setPadding (fValue, 0)
-                                                               .setFillColor (Color.WHITE));
+      aPS1.addElement (new PLText ("Using column border:", r10).setID ("text").setPadding (fValue, 0).setFillColor (Color.WHITE));
       {
         final PLHBox aHBox = new PLHBox ().setID ("hbox1b");
         aHBox.addColumn (new PLText ("Column1", r10), WidthSpec.star ());
@@ -297,10 +285,8 @@ public final class PLBorderFuncTest
       aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
       {
         final PLHBox aHBox = new PLHBox ().setID ("hbox6c");
-        aHBox.addColumn (new PLText ("Column1", r10).setBorderLeft (aLeft).setBorderBottom (aBottom),
-                         WidthSpec.star ());
-        aHBox.addColumn (new PLText ("Column2", r10).setBorderLeft (aLeft).setBorderBottom (aBottom),
-                         WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column1", r10).setBorderLeft (aLeft).setBorderBottom (aBottom), WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10).setBorderLeft (aLeft).setBorderBottom (aBottom), WidthSpec.star ());
         aPS1.addElement (aHBox);
       }
       aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
@@ -316,8 +302,9 @@ public final class PLBorderFuncTest
     if (true)
     {
       // Using border around column elements
-      aPS1.addElement (new PLText ("Using column border and border around column elements:",
-                                   r10).setID ("text").setPadding (fValue, 0).setFillColor (Color.WHITE));
+      aPS1.addElement (new PLText ("Using column border and border around column elements:", r10).setID ("text")
+                                                                                                 .setPadding (fValue, 0)
+                                                                                                 .setFillColor (Color.WHITE));
       {
         final PLHBox aHBox = new PLHBox ().setID ("hbox1d");
         aHBox.addColumn (new PLText ("Column1", r10).setBorderTop (aTop), WidthSpec.star ());
@@ -355,10 +342,8 @@ public final class PLBorderFuncTest
       aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
       {
         final PLHBox aHBox = new PLHBox ().setID ("hbox6d");
-        aHBox.addColumn (new PLText ("Column1", r10).setBorderLeft (aLeft).setBorderBottom (aBottom),
-                         WidthSpec.star ());
-        aHBox.addColumn (new PLText ("Column2", r10).setBorderLeft (aLeft).setBorderBottom (aBottom),
-                         WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column1", r10).setBorderLeft (aLeft).setBorderBottom (aBottom), WidthSpec.star ());
+        aHBox.addColumn (new PLText ("Column2", r10).setBorderLeft (aLeft).setBorderBottom (aBottom), WidthSpec.star ());
         aPS1.addElement (aHBox);
       }
       aPS1.addElement (new PLSpacerY (fSpacer).setID ("spacer"));
@@ -389,20 +374,16 @@ public final class PLBorderFuncTest
     final BorderStyleSpec aAll = new BorderStyleSpec (Color.GRAY, fValue);
 
     // Use simple numbers - approx. A4
-    final PLPageSet aPS1 = new PLPageSet (new PDRectangle (500,
-                                                           800)).setID ("pageset")
-                                                                .setMargin (fValue)
-                                                                .setFillColor (Color.GREEN)
-                                                                .setBorder (new BorderSpec (new BorderStyleSpec (Color.PINK,
-                                                                                                                 fValue)));
+    final PLPageSet aPS1 = new PLPageSet (new PDRectangle (500, 800)).setID ("pageset")
+                                                                     .setMargin (fValue)
+                                                                     .setFillColor (Color.GREEN)
+                                                                     .setBorder (new BorderSpec (new BorderStyleSpec (Color.PINK, fValue)));
 
     // Works!
     if (true)
     {
       // Border around the box
-      aPS1.addElement (new PLText ("Border around the box:", r10).setID ("text")
-                                                                 .setPadding (fValue, 0)
-                                                                 .setFillColor (Color.WHITE));
+      aPS1.addElement (new PLText ("Border around the box:", r10).setID ("text").setPadding (fValue, 0).setFillColor (Color.WHITE));
       {
         final PLVBox aVBox = new PLVBox ().setID ("vbox1a");
         aVBox.addRow (new PLText ("Row1", r10));
@@ -457,9 +438,7 @@ public final class PLBorderFuncTest
     if (true)
     {
       // Using column border
-      aPS1.addElement (new PLText ("Using row border:", r10).setID ("text")
-                                                            .setPadding (fValue, 0)
-                                                            .setFillColor (Color.WHITE));
+      aPS1.addElement (new PLText ("Using row border:", r10).setID ("text").setPadding (fValue, 0).setFillColor (Color.WHITE));
       {
         final PLVBox aVBox = new PLVBox ().setID ("vbox1b");
         aVBox.addRow (new PLText ("Row1", r10));

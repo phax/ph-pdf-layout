@@ -194,11 +194,7 @@ public class LoadedFont
       catch (final IllegalArgumentException ex2)
       {
         if (PLDebugLog.isDebugFont ())
-          PLDebugLog.debugFont (aFont.toString (),
-                                "No fallback code point " +
-                                                   nFallbackCodepoint +
-                                                   " in this font - " +
-                                                   ex2.getMessage ());
+          PLDebugLog.debugFont (aFont.toString (), "No fallback code point " + nFallbackCodepoint + " in this font - " + ex2.getMessage ());
         throw ex2;
       }
     }

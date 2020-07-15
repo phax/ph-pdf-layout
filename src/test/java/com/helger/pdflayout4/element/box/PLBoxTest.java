@@ -58,50 +58,41 @@ public final class PLBoxTest
 
     // Check horizontal alignment
     aPS1.addElement (new PLBox (new PLText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT)
-                                                        .setBorder (Color.RED)).setPadding (2)
-                                                                               .setMargin (5)
-                                                                               .setFillColor (Color.YELLOW));
-    aPS1.addElement (new PLBox (new PLText ("Left and\nLeft but longer",
-                                            r10).setHorzAlign (EHorzAlignment.LEFT)
-                                                .setBorder (Color.RED)
-                                                .setFillColor (Color.PINK)).setPadding (2).setFillColor (Color.YELLOW));
+                                                        .setBorder (Color.RED)).setPadding (2).setMargin (5).setFillColor (Color.YELLOW));
+    aPS1.addElement (new PLBox (new PLText ("Left and\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
+                                                                             .setBorder (Color.RED)
+                                                                             .setFillColor (Color.PINK)).setPadding (2)
+                                                                                                        .setFillColor (Color.YELLOW));
     aPS1.addElement (new PLBox (new PLText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                                          .setBorder (Color.RED)).setPadding (2)
-                                                                                 .setMargin (5)
-                                                                                 .setFillColor (Color.YELLOW));
-    aPS1.addElement (new PLBox (new PLText ("Center and\nCenter but longer",
-                                            r10).setHorzAlign (EHorzAlignment.CENTER)
-                                                .setBorder (Color.RED)
-                                                .setFillColor (Color.PINK)).setPadding (2).setFillColor (Color.YELLOW));
+                                                          .setBorder (Color.RED)).setPadding (2).setMargin (5).setFillColor (Color.YELLOW));
+    aPS1.addElement (new PLBox (new PLText ("Center and\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                                                 .setBorder (Color.RED)
+                                                                                 .setFillColor (Color.PINK)).setPadding (2)
+                                                                                                            .setFillColor (Color.YELLOW));
     aPS1.addElement (new PLBox (new PLText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                         .setBorder (Color.RED)).setPadding (2)
+                                                         .setBorder (Color.RED)).setPadding (2).setMargin (5).setFillColor (Color.YELLOW));
+    aPS1.addElement (new PLBox (new PLText ("Right and\nRight but longer", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                               .setBorder (Color.RED)
+                                                                               .setFillColor (Color.PINK)).setPadding (2)
+                                                                                                          .setFillColor (Color.YELLOW));
+    aPS1.addElement (new PLBox (new PLText ("Right and\nRight with padding", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                 .setBorder (Color.RED)
+                                                                                 .setPadding (5)
+                                                                                 .setFillColor (Color.PINK)).setPadding (2)
+                                                                                                            .setMargin (5)
+                                                                                                            .setFillColor (Color.YELLOW));
+    aPS1.addElement (new PLBox (new PLText ("Right and\nRight but margin", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                               .setBorder (Color.RED)
+                                                                               .setMargin (5)
+                                                                               .setFillColor (Color.PINK)).setPadding (2)
+                                                                                                          .setMargin (5)
+                                                                                                          .setFillColor (Color.YELLOW));
+    aPS1.addElement (new PLBox (new PLText ("Text with margin and padding", r10).setBorder (Color.RED)
                                                                                 .setMargin (5)
-                                                                                .setFillColor (Color.YELLOW));
-    aPS1.addElement (new PLBox (new PLText ("Right and\nRight but longer",
-                                            r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                .setBorder (Color.RED)
-                                                .setFillColor (Color.PINK)).setPadding (2).setFillColor (Color.YELLOW));
-    aPS1.addElement (new PLBox (new PLText ("Right and\nRight with padding",
-                                            r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                .setBorder (Color.RED)
-                                                .setPadding (5)
-                                                .setFillColor (Color.PINK)).setPadding (2)
-                                                                           .setMargin (5)
-                                                                           .setFillColor (Color.YELLOW));
-    aPS1.addElement (new PLBox (new PLText ("Right and\nRight but margin",
-                                            r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                .setBorder (Color.RED)
-                                                .setMargin (5)
-                                                .setFillColor (Color.PINK)).setPadding (2)
-                                                                           .setMargin (5)
-                                                                           .setFillColor (Color.YELLOW));
-    aPS1.addElement (new PLBox (new PLText ("Text with margin and padding",
-                                            r10).setBorder (Color.RED)
-                                                .setMargin (5)
-                                                .setPadding (5)
-                                                .setFillColor (Color.PINK)).setPadding (2)
-                                                                           .setMargin (5)
-                                                                           .setFillColor (Color.YELLOW));
+                                                                                .setPadding (5)
+                                                                                .setFillColor (Color.PINK)).setPadding (2)
+                                                                                                           .setMargin (5)
+                                                                                                           .setFillColor (Color.YELLOW));
     aPS1.addElement (new PLBox (new PLText ("Text with different borders,\nmargins and paddings",
                                             r10).setHorzAlign (EHorzAlignment.CENTER)
                                                 .setBorder (new BorderStyleSpec (Color.RED, 5),
@@ -112,14 +103,10 @@ public final class PLBoxTest
                                                 .setPadding (5)
                                                 .setFillColor (Color.YELLOW)).setPadding (2)
                                                                              .setMargin (5)
-                                                                             .setBorder (new BorderStyleSpec (Color.GREEN,
-                                                                                                              5),
-                                                                                         new BorderStyleSpec (Color.BLUE,
-                                                                                                              5),
-                                                                                         new BorderStyleSpec (Color.MAGENTA,
-                                                                                                              5),
-                                                                                         new BorderStyleSpec (Color.RED,
-                                                                                                              5))
+                                                                             .setBorder (new BorderStyleSpec (Color.GREEN, 5),
+                                                                                         new BorderStyleSpec (Color.BLUE, 5),
+                                                                                         new BorderStyleSpec (Color.MAGENTA, 5),
+                                                                                         new BorderStyleSpec (Color.RED, 5))
                                                                              .setFillColor (Color.GRAY));
 
     aPS1.addElement (new PLBox (new PLBox (new PLText ("Text with MBP in Box in Box",
@@ -135,21 +122,17 @@ public final class PLBoxTest
                                                                                                              .setBorder (Color.BLUE));
 
     final BorderStyleSpec aBSS = new BorderStyleSpec (Color.BLACK, 1);
-    aPS1.addElement (new PLBox (new PLText ("Table cell example",
-                                            r10).setBorder (Color.RED)
-                                                .setPadding (5)
-                                                .setFillColor (Color.PINK)).setPadding (2)
-                                                                           .setMinWidth (200)
-                                                                           .setBorder (aBSS)
-                                                                           .setFillColor (Color.YELLOW));
+    aPS1.addElement (new PLBox (new PLText ("Table cell example", r10).setBorder (Color.RED)
+                                                                      .setPadding (5)
+                                                                      .setFillColor (Color.PINK)).setPadding (2)
+                                                                                                 .setMinWidth (200)
+                                                                                                 .setBorder (aBSS)
+                                                                                                 .setFillColor (Color.YELLOW));
     aPS1.addElement (new PLBox (new PLText ("Next row", r10).setBorder (Color.RED)
                                                             .setPadding (5)
                                                             .setFillColor (Color.PINK)).setPadding (2)
                                                                                        .setMinWidth (200)
-                                                                                       .setBorder (null,
-                                                                                                   aBSS,
-                                                                                                   aBSS,
-                                                                                                   aBSS)
+                                                                                       .setBorder (null, aBSS, aBSS, aBSS)
                                                                                        .setFillColor (Color.YELLOW));
     // Use min size on text as well
     aPS1.addElement (new PLBox (new PLText ("Third row", r10).setBorder (Color.RED)
@@ -194,11 +177,7 @@ public final class PLBoxTest
 
     for (final EHorzAlignment eH : EHorzAlignment.values ())
       for (final EVertAlignment eV : EVertAlignment.values ())
-        aPS1.addElement (new PLBox (new PLText ("Text " +
-                                                eH.getID () +
-                                                " / " +
-                                                eV.getID () +
-                                                "\nText is always centered\nLine 3",
+        aPS1.addElement (new PLBox (new PLText ("Text " + eH.getID () + " / " + eV.getID () + "\nText is always centered\nLine 3",
                                                 r10).setHorzAlign (EHorzAlignment.CENTER)
                                                     .setFillColor (Color.PINK)).setFillColor (Color.YELLOW)
                                                                                .setExactSize (150, 50)

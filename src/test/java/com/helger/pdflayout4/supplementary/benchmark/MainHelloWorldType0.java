@@ -48,18 +48,12 @@ public final class MainHelloWorldType0
       final PDPage page = new PDPage ();
       doc.addPage (page);
 
-      final PDFont font = PDType0Font.load (doc,
-                                            EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
-                                                                                  .getInputStream ());
+      final PDFont font = PDType0Font.load (doc, EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ().getInputStream ());
       LOGGER.info ("Finished loading font at " + (System.currentTimeMillis () - nStart) + "ms");
 
       for (int i = 0; i < 100; ++i)
         font.getStringWidth (message);
-      LOGGER.info ("Finished string width (" +
-                      message.length () +
-                      " chars) after " +
-                      (System.currentTimeMillis () - nStart) +
-                      "ms");
+      LOGGER.info ("Finished string width (" + message.length () + " chars) after " + (System.currentTimeMillis () - nStart) + "ms");
 
       try (final PDPageContentStream contents = new PDPageContentStream (doc, page))
       {

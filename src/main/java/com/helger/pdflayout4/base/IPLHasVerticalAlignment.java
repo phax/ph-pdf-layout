@@ -28,8 +28,7 @@ import com.helger.pdflayout4.spec.EVertAlignment;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignment <IMPLTYPE>>
-                                         extends IPLRenderableObject <IMPLTYPE>
+public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignment <IMPLTYPE>> extends IPLRenderableObject <IMPLTYPE>
 {
   EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
 

@@ -52,8 +52,7 @@ public final class PLBulletPointListTest
 
     // This is the "Bullet point" in "Symbol font" (char 183)
     {
-      final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (15f),
-                                                             BulletPointCreatorSymbol.createFilledDot (10f));
+      final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (15f), BulletPointCreatorSymbol.createFilledDot (10f));
       for (int i = 0; i < 10; ++i)
         aList.addBulletPoint (new PLText ("Bullet point item " + i, r10));
       aPS1.addElement (aList);
@@ -62,16 +61,13 @@ public final class PLBulletPointListTest
     // Numbered items
     {
       final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (25f),
-                                                             new BulletPointCreatorNumeric (x -> "[" + (x + 1) + ".)",
-                                                                                            r10));
+                                                             new BulletPointCreatorNumeric (x -> "[" + (x + 1) + ".)", r10));
       for (int i = 0; i < 10; ++i)
         aList.addBulletPoint (new PLText ("Bullet point item " + i, r10));
       aPS1.addElement (aList);
     }
 
-    new PageLayoutPDF ().addPageSet (aPS1)
-                        .setCompressPDF (false)
-                        .renderTo (new File ("pdf/plbulletpointlist/basic.pdf"));
+    new PageLayoutPDF ().addPageSet (aPS1).setCompressPDF (false).renderTo (new File ("pdf/plbulletpointlist/basic.pdf"));
   }
 
   @Test
@@ -83,15 +79,12 @@ public final class PLBulletPointListTest
     final String sBaseText = StringHelper.getRepeated ("In typography, cap height is the height of a capital letter above the baseline for a particular typeface.[1] It specifically is the height of capital letters that are flat—such as H or I—as opposed to round letters such as O, or pointed letters like A, both of which may display overshoot. The height of the small letters is the x-height. ",
                                                        5);
 
-    final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (15f),
-                                                           BulletPointCreatorSymbol.createEmptyDot (10f));
+    final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (15f), BulletPointCreatorSymbol.createEmptyDot (10f));
     for (int i = 0; i < 10; ++i)
       aList.addBulletPoint (new PLText (sBaseText, r10));
     aPS1.addElement (aList);
 
-    new PageLayoutPDF ().addPageSet (aPS1)
-                        .setCompressPDF (false)
-                        .renderTo (new File ("pdf/plbulletpointlist/basic-multiline.pdf"));
+    new PageLayoutPDF ().addPageSet (aPS1).setCompressPDF (false).renderTo (new File ("pdf/plbulletpointlist/basic-multiline.pdf"));
   }
 
   @Test
@@ -100,15 +93,12 @@ public final class PLBulletPointListTest
     final FontSpec r30 = new FontSpec (PreloadFont.REGULAR, 30);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
-    final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (30f),
-                                                           BulletPointCreatorSymbol.createFilledDot (30f));
+    final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (30f), BulletPointCreatorSymbol.createFilledDot (30f));
     for (int i = 0; i < 10; ++i)
       aList.addBulletPoint (new PLText ("Bullet point item " + i, r30).setFillColor (Color.GREEN));
     aPS1.addElement (aList);
 
-    new PageLayoutPDF ().addPageSet (aPS1)
-                        .setCompressPDF (false)
-                        .renderTo (new File ("pdf/plbulletpointlist/big-bullets.pdf"));
+    new PageLayoutPDF ().addPageSet (aPS1).setCompressPDF (false).renderTo (new File ("pdf/plbulletpointlist/big-bullets.pdf"));
   }
 
   @Test
@@ -120,14 +110,11 @@ public final class PLBulletPointListTest
     {
       final float f = i * 5;
       final FontSpec r = new FontSpec (PreloadFont.REGULAR, f);
-      final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (f + 10),
-                                                             BulletPointCreatorSymbol.createFilledDot (f));
+      final PLBulletPointList aList = new PLBulletPointList (WidthSpec.abs (f + 10), BulletPointCreatorSymbol.createFilledDot (f));
       aList.addBulletPoint (new PLText ("Bullet point item " + f, r));
       aPS1.addElement (aList);
     }
 
-    new PageLayoutPDF ().addPageSet (aPS1)
-                        .setCompressPDF (false)
-                        .renderTo (new File ("pdf/plbulletpointlist/different-bullet-sizes.pdf"));
+    new PageLayoutPDF ().addPageSet (aPS1).setCompressPDF (false).renderTo (new File ("pdf/plbulletpointlist/different-bullet-sizes.pdf"));
   }
 }
