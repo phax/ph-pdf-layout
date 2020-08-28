@@ -73,7 +73,7 @@
   </developers>
 
   <properties>
-    <pdfbox.version>2.0.20</pdfbox.version>
+    <pdfbox.version>2.0.21</pdfbox.version>
   </properties>
 
   <dependencyManagement>
@@ -81,7 +81,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>9.4.6</version>
+        <version>9.4.7</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

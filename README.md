@@ -46,6 +46,8 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 
 # News and Noteworthy
 
+* v5.1.3 - work in progress
+    * Updated to PDFBox 2.0.21
 * v5.1.2 - 2020-06-15
     * Updated to PDFBox 2.0.20
     * Allow different page content height if the first page header and footer have different heights (see [issue #14](https://github.com/phax/ph-pdf-layout/issues/14))
