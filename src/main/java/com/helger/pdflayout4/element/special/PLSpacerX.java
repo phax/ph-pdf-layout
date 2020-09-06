@@ -34,7 +34,7 @@ import com.helger.pdflayout4.spec.SizeSpec;
  */
 public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX>
 {
-  private float m_fWidth;
+  private float m_fWidth = -1;
 
   public PLSpacerX ()
   {}
