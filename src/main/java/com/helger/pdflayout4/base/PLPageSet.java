@@ -353,6 +353,13 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
     m_aElements.forEach (aConsumer);
   }
 
+  /**
+   * Add an element to this page set.
+   *
+   * @param aElement
+   *        The element to add. May not be <code>null</code>.
+   * @return this for chaining.
+   */
   @Nonnull
   public PLPageSet addElement (@Nonnull final IPLRenderableObject <?> aElement)
   {
