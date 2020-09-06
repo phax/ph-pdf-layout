@@ -199,7 +199,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       // Recalculate, e.g. for min-max size change
       final SizeSpec aOldRenderSize = m_aRenderSize;
       m_aRenderSize = getRenderSize (m_aPreparedSize);
-      if (PLDebugLog.isDebugPrepare ())
+      if (PLDebugLog.isDebugPrepare () && !aOldRenderSize.equals (m_aRenderSize))
         PLDebugLog.debugPrepare (this,
                                  "RenderSize changed from " +
                                        PLDebugLog.getWH (aOldRenderSize) +
