@@ -27,6 +27,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import com.helger.commons.ValueEnforcer;
 import com.helger.pdflayout4.base.IPLRenderableObject;
 import com.helger.pdflayout4.element.box.AbstractPLBox;
+import com.helger.pdflayout4.element.special.PLSpacerX;
 import com.helger.pdflayout4.render.PageRenderContext;
 
 /**
@@ -89,5 +90,17 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   {
     // No further ado
     super.onRender (aCtx);
+  }
+
+  /**
+   * Utility method to create an empty cell.
+   *
+   * @return The new empty table cell.
+   * @since 5.1.3
+   */
+  @Nonnull
+  public static PLTableCell createEmptyCell ()
+  {
+    return new PLTableCell (new PLSpacerX ());
   }
 }

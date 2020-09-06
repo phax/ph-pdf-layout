@@ -16,12 +16,17 @@
  */
 package com.helger.pdflayout4.element.table;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
 import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -31,6 +36,7 @@ import org.junit.rules.TestRule;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.io.resource.FileSystemResource;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout4.PDFCreationException;
 import com.helger.pdflayout4.PLDebugTestRule;
@@ -38,6 +44,8 @@ import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.debug.PLDebugRender;
+import com.helger.pdflayout4.element.hbox.PLHBox;
+import com.helger.pdflayout4.element.image.PLImage;
 import com.helger.pdflayout4.element.special.PLPageBreak;
 import com.helger.pdflayout4.element.special.PLSpacerX;
 import com.helger.pdflayout4.element.special.PLSpacerY;
@@ -698,5 +706,37 @@ public final class PLTableTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (new File ("pdf/pltable/different-width-types-too-wide.pdf"));
+  }
+
+  @Test
+  public void testWithImage () throws PDFCreationException, IOException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    // Source image has 33x33 pixels
+    final BufferedImage aImg = ImageIO.read (new FileSystemResource ("src/test/resources/images/test1.jpg").getInputStream ());
+    assertNotNull (aImg);
+
+    // Start table
+    final PLTable aTable = PLTable.createWithEvenlySizedColumns (3);
+    for (int i = 0; i < 12; ++i)
+    {
+      // Scale image
+      final PLImage aPLImage = new PLImage (aImg, 20 + i * 3, 20 + i * 3);
+      final PLHBox aImageAndText = new PLHBox ();
+      aImageAndText.addColumn (new PLTableCell (aPLImage), WidthSpec.abs (aPLImage.getImageWidth () + 5));
+      aImageAndText.addColumn (new PLText ("This is a text", r10), WidthSpec.star ());
+
+      aTable.addRow (i % 3 == 0 ? new PLTableCell (aPLImage) : PLTableCell.createEmptyCell (),
+                     i % 3 == 1 ? new PLTableCell (aImageAndText) : PLTableCell.createEmptyCell (),
+                     i % 3 == 2 ? new PLTableCell (aPLImage) : PLTableCell.createEmptyCell ());
+    }
+    EPLTableGridType.FULL_NO_BORDER.applyGridToTable (aTable, new BorderStyleSpec (Color.RED));
+    aPS1.addElement (aTable);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (new File ("pdf/pltable/table-with-images.pdf"));
   }
 }
