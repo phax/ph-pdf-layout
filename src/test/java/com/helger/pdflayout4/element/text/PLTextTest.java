@@ -35,6 +35,8 @@ import com.helger.font.api.IHasFontResource;
 import com.helger.font.exo2.EFontResourceExo2;
 import com.helger.font.lato2.EFontResourceLato2;
 import com.helger.font.markazi.EFontResourceMarkazi;
+import com.helger.font.noto_sans_hk.EFontResourceNotoSansHK;
+import com.helger.font.noto_sans_sc.EFontResourceNotoSansSC;
 import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.font.roboto.EFontResourceRoboto;
 import com.helger.font.source_sans_pro.EFontResourceSourceSansPro;
@@ -230,7 +232,7 @@ public final class PLTextTest
   }
 
   @Test
-  public void testCustomFont () throws PDFCreationException
+  public void testArabicCharacters () throws PDFCreationException
   {
     // Load TTF font
     final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceMarkazi.MARKAZI_NORMAL.getFontResource ());
@@ -246,6 +248,44 @@ public final class PLTextTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (new File ("pdf/pltext/font-markazi.pdf"));
+  }
+
+  @Test
+  public void testSimplifiedChineseCharacters () throws PDFCreationException
+  {
+    // Load TTF font
+    final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceNotoSansSC.NOTO_SANS_SC_REGULAR.getFontResource ());
+    final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceNotoSansSC.NOTO_SANS_SC_BOLD.getFontResource ());
+
+    final String s = "Ascii line 1\n" + "他们所有的设备和仪器彷佛都是有生命的。\n" + "Ascii EOL";
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (new File ("pdf/pltext/font-noto-sans-sc.pdf"));
+  }
+
+  @Test
+  public void testChineseCharacters () throws PDFCreationException
+  {
+    // Load TTF font
+    final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceNotoSansHK.NOTO_SANS_HK_REGULAR.getFontResource ());
+    final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceNotoSansHK.NOTO_SANS_HK_BOLD.getFontResource ());
+
+    final String s = "Ascii line 1\n" + "他们所有的设备和仪器彷佛都是有生命的。\n" + "Ascii EOL";
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (new File ("pdf/pltext/font-noto-sans-hk.pdf"));
   }
 
   @Test

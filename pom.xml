@@ -88,7 +88,7 @@
       <dependency>
         <groupId>com.helger.font</groupId>
         <artifactId>ph-fonts-parent-pom</artifactId>
-        <version>4.1.1</version>
+        <version>4.1.2</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -206,6 +206,16 @@
     <dependency>
       <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-markazi</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger.font</groupId>
+      <artifactId>ph-fonts-noto-sans-hk</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger.font</groupId>
+      <artifactId>ph-fonts-noto-sans-sc</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
