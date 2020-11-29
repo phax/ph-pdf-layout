@@ -194,7 +194,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   @Nonnull
   public final IMPLTYPE setLineSpacing (@Nonnegative final float fLineSpacing)
   {
-    m_fLineSpacing = ValueEnforcer.isGT0 (fLineSpacing, "LineSpacing");
+    ValueEnforcer.isGE0 (fLineSpacing, "LineSpacing");
+    m_fLineSpacing = fLineSpacing;
     return thisAsT ();
   }
 
