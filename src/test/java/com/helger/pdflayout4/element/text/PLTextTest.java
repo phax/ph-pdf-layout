@@ -257,14 +257,18 @@ public final class PLTextTest
     final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceNotoSansSC.NOTO_SANS_SC_REGULAR.getFontResource ());
     final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceNotoSansSC.NOTO_SANS_SC_BOLD.getFontResource ());
 
-    final String s = "Ascii line 1\n" + "他们所有的设备和仪器彷佛都是有生命的。\n" + "Ascii EOL";
+    final String s = "Ascii line 1\n" + "Ascii line 2\n" + "他们所有的设备和仪器彷佛都是有生命的。\n" + "Ascii before EOL\n" + "Ascii EOL";
+    final String sAsciiOnly = "Ascii line 3\n" + "Ascii line 4\n" + "Ascii 5";
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
+    final float fLineSpacing = 0.5f;
+    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)).setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLText (sAsciiOnly, new FontSpec (aFont, 10)).setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)).setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLText (sAsciiOnly, new FontSpec (aFont2, 10)).setLineSpacing (fLineSpacing));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (new File ("pdf/pltext/font-noto-sans-sc.pdf"));
   }
@@ -276,14 +280,14 @@ public final class PLTextTest
     final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceNotoSansHK.NOTO_SANS_HK_REGULAR.getFontResource ());
     final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceNotoSansHK.NOTO_SANS_HK_BOLD.getFontResource ());
 
-    final String s = "Ascii line 1\n" + "他们所有的设备和仪器彷佛都是有生命的。\n" + "Ascii EOL";
+    final String s = "Ascii line 1\n" + "Ascii line 2\n" + "他们所有的设备和仪器彷佛都是有生命的。\n" + "Ascii before EOL\n" + "Ascii EOL";
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
     aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
     aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
 
-    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (new File ("pdf/pltext/font-noto-sans-hk.pdf"));
   }
