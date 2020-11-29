@@ -12,6 +12,7 @@
 hs_err_pid*
 
 target/
+bin/
 
 # Unit test created PDFs
 pdf/
