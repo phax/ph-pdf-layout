@@ -47,6 +47,7 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 # News and Noteworthy
 
 * v5.1.3 - work in progress
+    * Updated to ph-commons 10
     * Updated to PDFBox 2.0.22
     * Add syntactic sugar method `PLTableCell.createEmptyCell()`
 * v5.1.2 - 2020-06-15

@@ -79,16 +79,16 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.helger</groupId>
+        <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>9.5.5</version>
+        <version>10.0.0-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger.font</groupId>
         <artifactId>ph-fonts-parent-pom</artifactId>
-        <version>4.1.2</version>
+        <version>4.1.3-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -117,16 +117,16 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.commons</groupId>
       <artifactId>ph-commons</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.helger.commons</groupId>
+      <artifactId>ph-collection</artifactId>
     </dependency>
     <dependency>
       <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>ph-collection</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
@@ -138,7 +138,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.commons</groupId>
       <artifactId>ph-xml</artifactId>
       <optional>true</optional>
     </dependency>
