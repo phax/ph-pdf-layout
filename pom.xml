@@ -73,7 +73,7 @@
   </developers>
 
   <properties>
-    <pdfbox.version>2.0.22</pdfbox.version>
+    <pdfbox.version>2.0.23</pdfbox.version>
   </properties>
 
   <dependencyManagement>
