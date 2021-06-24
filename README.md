@@ -46,6 +46,8 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 
 # News and Noteworthy
 
+* v5.2.2 - work in progress
+    * Updated to PDFBox 2.0.24
 * v5.2.1 - 2021-03-22
     * Updated to PDFBox 2.0.23
 * v5.2.0 - 2021-03-21
