@@ -38,7 +38,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * <li>percentage - element width is a certain percentage of the surrounding
  * element</li>
  * <li>star - element width is a relative part of the unused width of the
- * surrounding element</li>
+ * surrounding element. All star elements evenly share the available width.</li>
+ * <li>auto - elements takes the width it needs</li>
  * </ul>
  *
  * @author Philip Helger

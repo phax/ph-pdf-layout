@@ -38,7 +38,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * <li>percentage - element height is a certain percentage of the surrounding
  * element</li>
  * <li>star - element height is a relative part of the unused height of the
- * surrounding element</li>
+ * surrounding element. All star elements evenly share the available
+ * height.</li>
+ * <li>auto - elements takes the height it needs</li>
  * </ul>
  *
  * @author Philip Helger
