@@ -142,6 +142,34 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   }
 
   /**
+   * Set the left margin left AND right value.
+   *
+   * @param fMargin
+   *        The value to use.
+   * @return this
+   * @since 5.2.2
+   */
+  @Nonnull
+  default IMPLTYPE setMarginX (final float fMargin)
+  {
+    return setMarginLeft (fMargin).setMarginRight (fMargin);
+  }
+
+  /**
+   * Set the left margin top AND bottom value.
+   *
+   * @param fMargin
+   *        The value to use.
+   * @return this
+   * @since 5.2.2
+   */
+  @Nonnull
+  default IMPLTYPE setMarginY (final float fMargin)
+  {
+    return setMarginTop (fMargin).setMarginBottom (fMargin);
+  }
+
+  /**
    * Add to the top margin value.
    *
    * @param fMargin
@@ -199,6 +227,34 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
     if (fMargin == 0f)
       return thisAsT ();
     return setMarginLeft (getMarginLeft () + fMargin);
+  }
+
+  /**
+   * Add to the left margin left AND right value.
+   *
+   * @param fMargin
+   *        The value to add.
+   * @return this
+   * @since 5.2.2
+   */
+  @Nonnull
+  default IMPLTYPE addMarginX (final float fMargin)
+  {
+    return addMarginLeft (fMargin).addMarginRight (fMargin);
+  }
+
+  /**
+   * Add to the left margin top AND bottom value.
+   *
+   * @param fMargin
+   *        The value to add.
+   * @return this
+   * @since 5.2.2
+   */
+  @Nonnull
+  default IMPLTYPE addMarginY (final float fMargin)
+  {
+    return addMarginTop (fMargin).addMarginBottom (fMargin);
   }
 
   /**

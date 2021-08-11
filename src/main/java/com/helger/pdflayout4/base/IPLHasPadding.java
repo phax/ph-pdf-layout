@@ -142,6 +142,34 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   }
 
   /**
+   * Set the left padding left AND right value.
+   *
+   * @param fPadding
+   *        The value to use.
+   * @return this
+   * @since 5.2.2
+   */
+  @Nonnull
+  default IMPLTYPE setPaddingX (final float fPadding)
+  {
+    return setPaddingLeft (fPadding).setPaddingRight (fPadding);
+  }
+
+  /**
+   * Set the left padding top AND bottom value.
+   *
+   * @param fPadding
+   *        The value to use.
+   * @return this
+   * @since 5.2.2
+   */
+  @Nonnull
+  default IMPLTYPE setPaddingY (final float fPadding)
+  {
+    return setPaddingTop (fPadding).setPaddingBottom (fPadding);
+  }
+
+  /**
    * Add to the top padding value.
    *
    * @param fPadding
@@ -199,6 +227,34 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
     if (fPadding == 0f)
       return thisAsT ();
     return setPaddingLeft (getPaddingLeft () + fPadding);
+  }
+
+  /**
+   * Add to the left padding left AND right value.
+   *
+   * @param fPadding
+   *        The value to add.
+   * @return this
+   * @since 5.2.2
+   */
+  @Nonnull
+  default IMPLTYPE addPaddingX (final float fPadding)
+  {
+    return addPaddingLeft (fPadding).addPaddingRight (fPadding);
+  }
+
+  /**
+   * Add to the left padding top AND bottom value.
+   *
+   * @param fPadding
+   *        The value to add.
+   * @return this
+   * @since 5.2.2
+   */
+  @Nonnull
+  default IMPLTYPE addPaddingY (final float fPadding)
+  {
+    return addPaddingTop (fPadding).addPaddingBottom (fPadding);
   }
 
   /**
