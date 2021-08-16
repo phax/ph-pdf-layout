@@ -37,7 +37,7 @@ import com.helger.pdflayout4.spec.WidthSpec;
 
 /**
  * A special HBox representing a table row.
- * 
+ *
  * @author Philip Helger
  */
 public class PLTableRow extends AbstractPLHBox <PLTableRow>
@@ -184,6 +184,20 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
   }
 
   @Nonnull
+  public PLTableRow setBorderX (@Nullable final BorderStyleSpec aBorder)
+  {
+    forEachCell (x -> x.setBorderX (aBorder));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setBorderY (@Nullable final BorderStyleSpec aBorder)
+  {
+    forEachCell (x -> x.setBorderY (aBorder));
+    return this;
+  }
+
+  @Nonnull
   public PLTableRow setMargin (@Nonnull final MarginSpec aMargin)
   {
     forEachCell (x -> x.setMargin (aMargin));
@@ -226,6 +240,20 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
   }
 
   @Nonnull
+  public PLTableRow setMarginX (final float fMargin)
+  {
+    forEachCell (x -> x.setMarginX (fMargin));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setMarginY (final float fMargin)
+  {
+    forEachCell (x -> x.setMarginY (fMargin));
+    return this;
+  }
+
+  @Nonnull
   public PLTableRow setPadding (@Nonnull final PaddingSpec aPadding)
   {
     forEachCell (x -> x.setPadding (aPadding));
@@ -264,6 +292,20 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
   public PLTableRow setPaddingLeft (final float fPadding)
   {
     forEachCell (x -> x.setPaddingLeft (fPadding));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setPaddingX (final float fPadding)
+  {
+    forEachCell (x -> x.setPaddingX (fPadding));
+    return this;
+  }
+
+  @Nonnull
+  public PLTableRow setPaddingY (final float fPadding)
+  {
+    forEachCell (x -> x.setPaddingY (fPadding));
     return this;
   }
 }

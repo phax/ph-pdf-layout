@@ -174,6 +174,34 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
   }
 
   /**
+   * Set the left and right border value. This method may not be called after an
+   * element got prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE setBorderX (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorderLeft (aBorder).setBorderRight (aBorder);
+  }
+
+  /**
+   * Set the top and bottom border value. This method may not be called after an
+   * element got prepared!
+   *
+   * @param aBorder
+   *        The value to use. May be <code>null</code>.
+   * @return this
+   */
+  @Nonnull
+  default IMPLTYPE setBorderY (@Nullable final BorderStyleSpec aBorder)
+  {
+    return setBorderTop (aBorder).setBorderBottom (aBorder);
+  }
+
+  /**
    * @return The current border. Never <code>null</code>.
    */
   @Nonnull
