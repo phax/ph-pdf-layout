@@ -26,6 +26,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.DevelopersNote;
 import com.helger.commons.annotation.Nonempty;
@@ -59,6 +62,8 @@ import com.helger.pdflayout4.spec.WidthSpec;
  */
 public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPLSplittableObject <PLTable, PLTable>, IPLHasMargin <PLTable>
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (PLTable.class);
+
   // All column widths
   private final ICommonsList <WidthSpec> m_aWidths;
   // With type to use - may be null
@@ -130,6 +135,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   @OverridingMethodsMustInvokeSuper
   protected void onAfterSetID ()
   {
+    // Also change the derived ID
     m_aRows.setID (getID () + "-vbox");
   }
 
@@ -294,13 +300,28 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
     return this;
   }
 
+  /**
+   * Don't call this.
+   *
+   * @return this for chaining
+   */
   @Nonnull
   @Deprecated
   public PLTable addRow ()
   {
+    LOGGER.warn ("You are calling the no-operation method 'PLTable.addRow()' - no row is added!!!");
     return this;
   }
 
+  /**
+   * Add a new table row with auto height. All contained elements are added with
+   * the specified width in the constructor. <code>null</code> elements are
+   * represented as empty cells.
+   *
+   * @param aCells
+   *        The cells to add. May not be <code>null</code>.
+   * @return this
+   */
   @Nonnull
   public PLTable addRow (@Nonnull final PLTableCell... aCells)
   {

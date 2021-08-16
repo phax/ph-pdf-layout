@@ -27,7 +27,6 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
-import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
@@ -53,7 +52,9 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   }
 
   /**
-   * @return The unique element ID. Never <code>null</code>.
+   * @return The unique element ID. Never <code>null</code>. By default this ID
+   *         is automatically generated, by it might be overridden by
+   *         {@link #setID(String)}.
    */
   public final String getID ()
   {
@@ -61,25 +62,40 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   }
 
   /**
-   * Callback invoked after an ID change
+   * Callback invoked after an ID change. Overwrite this method to do local
+   * actions (if needed)
    */
   @OverrideOnDemand
   protected void onAfterSetID ()
   {}
 
+  /**
+   * Set the ID of this element. This methods calls <code>onAfterSetID</code>
+   * after any change, even if the values were the same.
+   *
+   * @param sID
+   *        The new ID to use. May neither be <code>null</code> nor empty.
+   * @return this for chaining
+   */
   @Nonnull
-  @OverridingMethodsMustInvokeSuper
   public final IMPLTYPE setID (@Nonnull @Nonempty final String sID)
   {
     ValueEnforcer.notEmpty (sID, "ID");
-    if (StringHelper.hasText (m_sElementID) && m_sDebugID != null)
+
+    // String sOldElementID = m_sElementID;
+
+    // If debug ID is set, it means that the ID was most likely already "used"
+    // or "displayed", so we're using this as a usage indicator
+    if (m_sDebugID != null)
     {
       if (LOGGER.isWarnEnabled ())
         LOGGER.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
-      // Disable caching
+      // Clear cached value
       m_sDebugID = null;
     }
     m_sElementID = sID;
+
+    // Call callback afterwards
     onAfterSetID ();
     return thisAsT ();
   }
