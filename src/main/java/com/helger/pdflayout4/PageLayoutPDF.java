@@ -362,11 +362,16 @@ public class PageLayoutPDF implements IPLVisitable
    * @return this for chaining
    * @throws PDFCreationException
    *         In case of an error
+   * @throws IllegalArgumentException
+   *         In case the file cannot be opened for writing
    * @since 5.1.0
    */
   @Nonnull
   public PageLayoutPDF renderTo (@Nonnull final File aFile) throws PDFCreationException
   {
-    return renderTo (FileHelper.getOutputStream (aFile));
+    final OutputStream aOS = FileHelper.getOutputStream (aFile);
+    if (aOS == null)
+      throw new IllegalArgumentException ("Failed to open file '" + aFile.getAbsolutePath () + "' for writing");
+    return renderTo (aOS);
   }
 }
