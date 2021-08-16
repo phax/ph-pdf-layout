@@ -42,6 +42,8 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLObject.class);
 
   private String m_sElementID;
+
+  // Status variable
   private transient String m_sDebugID;
 
   public AbstractPLObject ()
