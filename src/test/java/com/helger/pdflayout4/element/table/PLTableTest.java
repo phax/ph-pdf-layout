@@ -44,6 +44,7 @@ import com.helger.pdflayout4.PageLayoutPDF;
 import com.helger.pdflayout4.base.AbstractPLElement;
 import com.helger.pdflayout4.base.PLPageSet;
 import com.helger.pdflayout4.debug.PLDebugRender;
+import com.helger.pdflayout4.element.box.PLBox;
 import com.helger.pdflayout4.element.hbox.PLHBox;
 import com.helger.pdflayout4.element.image.PLImage;
 import com.helger.pdflayout4.element.special.PLPageBreak;
@@ -771,5 +772,39 @@ public final class PLTableTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (new File ("pdf/pltable/issue21.pdf"));
+  }
+
+  @Test
+  public void testIssue21_BoxWithPadding () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
+
+    final String sLongText = "Line 1\n  Line 2\nLine 3\n  Line 4\nLine 5";
+    final String sShortText = "Dummy";
+
+    // Outer table
+    final PLTable aOuterTable = new PLTable (WidthSpec.perc (25), WidthSpec.star ()).setID ("outer-table");
+    for (int i = 0; i < 25; ++i)
+    {
+      final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70));
+      for (int j = 0; j < 4; ++j)
+        aInnerTable.addAndReturnRow (new PLTableCell (new PLText (sShortText, r10)), new PLTableCell (new PLText (sShortText, r10)));
+      EPLTableGridType.FULL.applyGridToTable (aInnerTable, new BorderStyleSpec (Color.GREEN));
+
+      // Place text in box, and add padding to box instead of the table
+      aOuterTable.addAndReturnRow (new PLTableCell (new PLBox (new PLText (sLongText, r10)).setPadding (5)), new PLTableCell (aInnerTable))
+                 .setID ("row" + i);
+    }
+    EPLTableGridType.FULL.applyGridToTable (aOuterTable, new BorderStyleSpec (Color.RED));
+    aPS1.addElement (aOuterTable);
+
+    aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (new File ("pdf/pltable/issue21a.pdf"));
   }
 }
