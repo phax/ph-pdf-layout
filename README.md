@@ -32,6 +32,9 @@ The basic elements provided are:
 
 A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files). The source code for these examples is https://github.com/phax/ph-pdf-layout/tree/master/src/test/java/com/helger/pdflayout4
 
+Similar libraries in this context:
+* https://github.com/ralfstuckert/pdfbox-layout - seems to focus more on text layouting
+
 # Maven usage
 
 Add the following to your pom.xml to use this artifact, replacing `x.y.z` with the real version number:
