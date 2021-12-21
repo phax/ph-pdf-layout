@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout4.spec;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Test;
 
@@ -29,31 +31,32 @@ import com.helger.commons.mock.CommonsTestHelper;
  */
 public final class SizeSpecTest
 {
-  private static final float w = 5.2f;
-  private static final float h = 17.4f;
+  private static final float FLOAT_ALLOWED_ROUNDING_DIFFERENCE = 0.000_1f;
+  private static final float W = 5.2f;
+  private static final float H = 17.4f;
 
   @Test
   public void testBasic ()
   {
-    SizeSpec s = new SizeSpec (w, h);
-    CommonsAssert.assertEquals (w, s.getWidth ());
-    CommonsAssert.assertEquals (h, s.getHeight ());
+    SizeSpec s = new SizeSpec (W, H);
+    CommonsAssert.assertEquals (W, s.getWidth ());
+    CommonsAssert.assertEquals (H, s.getHeight ());
 
-    s = SizeSpec.width (w);
-    CommonsAssert.assertEquals (w, s.getWidth ());
+    s = SizeSpec.width (W);
+    CommonsAssert.assertEquals (W, s.getWidth ());
     CommonsAssert.assertEquals (0, s.getHeight ());
 
-    s = SizeSpec.height (h);
+    s = SizeSpec.height (H);
     CommonsAssert.assertEquals (0, s.getWidth ());
-    CommonsAssert.assertEquals (h, s.getHeight ());
+    CommonsAssert.assertEquals (H, s.getHeight ());
 
-    s = s.withWidth (h);
-    CommonsAssert.assertEquals (h, s.getWidth ());
-    CommonsAssert.assertEquals (h, s.getHeight ());
+    s = s.withWidth (H);
+    CommonsAssert.assertEquals (H, s.getWidth ());
+    CommonsAssert.assertEquals (H, s.getHeight ());
 
-    s = s.withHeight (w);
-    CommonsAssert.assertEquals (h, s.getWidth ());
-    CommonsAssert.assertEquals (w, s.getHeight ());
+    s = s.withHeight (W);
+    CommonsAssert.assertEquals (H, s.getWidth ());
+    CommonsAssert.assertEquals (W, s.getHeight ());
 
     CommonsTestHelper.testDefaultImplementationWithEqualContentObject (s, SizeSpec.create (s.getAsRectangle ()));
     CommonsTestHelper.testDefaultSerialization (s);
@@ -62,21 +65,21 @@ public final class SizeSpecTest
   @Test
   public void testPlusMinus ()
   {
-    final SizeSpec s = new SizeSpec (w, h);
+    final SizeSpec s = new SizeSpec (W, H);
 
     SizeSpec s2 = s.plus (s);
-    CommonsAssert.assertEquals (w * 2, s2.getWidth ());
-    CommonsAssert.assertEquals (h * 2, s2.getHeight ());
+    CommonsAssert.assertEquals (W * 2, s2.getWidth ());
+    CommonsAssert.assertEquals (H * 2, s2.getHeight ());
 
-    s2 = s.plus (w, h);
-    CommonsAssert.assertEquals (w * 2, s2.getWidth ());
-    CommonsAssert.assertEquals (h * 2, s2.getHeight ());
+    s2 = s.plus (W, H);
+    CommonsAssert.assertEquals (W * 2, s2.getWidth ());
+    CommonsAssert.assertEquals (H * 2, s2.getHeight ());
 
     s2 = s.minus (s);
     CommonsAssert.assertEquals (0, s2.getWidth ());
     CommonsAssert.assertEquals (0, s2.getHeight ());
 
-    s2 = s.minus (w, h);
+    s2 = s.minus (W, H);
     CommonsAssert.assertEquals (0, s2.getWidth ());
     CommonsAssert.assertEquals (0, s2.getHeight ());
   }
@@ -88,11 +91,11 @@ public final class SizeSpecTest
     final float g = PDRectangle.A4.getHeight ();
 
     final SizeSpec s = SizeSpec.createMM (210f, 297f);
-    CommonsAssert.assertEquals (f, s.getWidth ());
-    CommonsAssert.assertEquals (g, s.getHeight ());
+    assertEquals (f, s.getWidth (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, s.getHeight (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
 
     final PDRectangle r = s.getAsRectangle ();
-    CommonsAssert.assertEquals (f, r.getWidth ());
-    CommonsAssert.assertEquals (g, r.getHeight ());
+    assertEquals (f, r.getWidth (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, r.getHeight (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
   }
 }

@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout4.spec;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -31,41 +32,42 @@ import com.helger.commons.mock.CommonsTestHelper;
  */
 public final class MarginSpecTest
 {
-  private static final float f1 = 5.2f;
-  private static final float f2 = 17.4f;
+  private static final float FLOAT_ALLOWED_ROUNDING_DIFFERENCE = 0.000_1f;
+  private static final float F1 = 5.2f;
+  private static final float F2 = 17.4f;
 
   @Test
   public void testBasic ()
   {
-    MarginSpec m = new MarginSpec (f1);
-    CommonsAssert.assertEquals (f1, m.getTop ());
-    CommonsAssert.assertEquals (f1, m.getRight ());
-    CommonsAssert.assertEquals (f1, m.getBottom ());
-    CommonsAssert.assertEquals (f1, m.getLeft ());
+    MarginSpec m = new MarginSpec (F1);
+    CommonsAssert.assertEquals (F1, m.getTop ());
+    CommonsAssert.assertEquals (F1, m.getRight ());
+    CommonsAssert.assertEquals (F1, m.getBottom ());
+    CommonsAssert.assertEquals (F1, m.getLeft ());
 
-    m = MarginSpec.top (f1);
-    CommonsAssert.assertEquals (f1, m.getTop ());
+    m = MarginSpec.top (F1);
+    CommonsAssert.assertEquals (F1, m.getTop ());
     CommonsAssert.assertEquals (0, m.getRight ());
     CommonsAssert.assertEquals (0, m.getBottom ());
     CommonsAssert.assertEquals (0, m.getLeft ());
 
-    m = MarginSpec.right (f1);
+    m = MarginSpec.right (F1);
     CommonsAssert.assertEquals (0, m.getTop ());
-    CommonsAssert.assertEquals (f1, m.getRight ());
+    CommonsAssert.assertEquals (F1, m.getRight ());
     CommonsAssert.assertEquals (0, m.getBottom ());
     CommonsAssert.assertEquals (0, m.getLeft ());
 
-    m = MarginSpec.bottom (f1);
+    m = MarginSpec.bottom (F1);
     CommonsAssert.assertEquals (0, m.getTop ());
     CommonsAssert.assertEquals (0, m.getRight ());
-    CommonsAssert.assertEquals (f1, m.getBottom ());
+    CommonsAssert.assertEquals (F1, m.getBottom ());
     CommonsAssert.assertEquals (0, m.getLeft ());
 
-    m = MarginSpec.left (f1);
+    m = MarginSpec.left (F1);
     CommonsAssert.assertEquals (0, m.getTop ());
     CommonsAssert.assertEquals (0, m.getRight ());
     CommonsAssert.assertEquals (0, m.getBottom ());
-    CommonsAssert.assertEquals (f1, m.getLeft ());
+    CommonsAssert.assertEquals (F1, m.getLeft ());
 
     CommonsTestHelper.testDefaultImplementationWithEqualContentObject (m, new MarginSpec (m));
     CommonsTestHelper.testDefaultSerialization (m);
@@ -74,35 +76,35 @@ public final class MarginSpecTest
   @Test
   public void testGetCloneWith ()
   {
-    final MarginSpec m = new MarginSpec (f1);
-    assertSame (m, m.getCloneWithTop (f1));
-    assertSame (m, m.getCloneWithRight (f1));
-    assertSame (m, m.getCloneWithBottom (f1));
-    assertSame (m, m.getCloneWithLeft (f1));
+    final MarginSpec m = new MarginSpec (F1);
+    assertSame (m, m.getCloneWithTop (F1));
+    assertSame (m, m.getCloneWithRight (F1));
+    assertSame (m, m.getCloneWithBottom (F1));
+    assertSame (m, m.getCloneWithLeft (F1));
 
-    MarginSpec m2 = m.getCloneWithTop (f2);
-    CommonsAssert.assertEquals (f2, m2.getTop ());
-    CommonsAssert.assertEquals (f1, m2.getRight ());
-    CommonsAssert.assertEquals (f1, m2.getBottom ());
-    CommonsAssert.assertEquals (f1, m2.getLeft ());
+    MarginSpec m2 = m.getCloneWithTop (F2);
+    CommonsAssert.assertEquals (F2, m2.getTop ());
+    CommonsAssert.assertEquals (F1, m2.getRight ());
+    CommonsAssert.assertEquals (F1, m2.getBottom ());
+    CommonsAssert.assertEquals (F1, m2.getLeft ());
 
-    m2 = m.getCloneWithRight (f2);
-    CommonsAssert.assertEquals (f1, m2.getTop ());
-    CommonsAssert.assertEquals (f2, m2.getRight ());
-    CommonsAssert.assertEquals (f1, m2.getBottom ());
-    CommonsAssert.assertEquals (f1, m2.getLeft ());
+    m2 = m.getCloneWithRight (F2);
+    CommonsAssert.assertEquals (F1, m2.getTop ());
+    CommonsAssert.assertEquals (F2, m2.getRight ());
+    CommonsAssert.assertEquals (F1, m2.getBottom ());
+    CommonsAssert.assertEquals (F1, m2.getLeft ());
 
-    m2 = m.getCloneWithBottom (f2);
-    CommonsAssert.assertEquals (f1, m2.getTop ());
-    CommonsAssert.assertEquals (f1, m2.getRight ());
-    CommonsAssert.assertEquals (f2, m2.getBottom ());
-    CommonsAssert.assertEquals (f1, m2.getLeft ());
+    m2 = m.getCloneWithBottom (F2);
+    CommonsAssert.assertEquals (F1, m2.getTop ());
+    CommonsAssert.assertEquals (F1, m2.getRight ());
+    CommonsAssert.assertEquals (F2, m2.getBottom ());
+    CommonsAssert.assertEquals (F1, m2.getLeft ());
 
-    m2 = m.getCloneWithLeft (f2);
-    CommonsAssert.assertEquals (f1, m2.getTop ());
-    CommonsAssert.assertEquals (f1, m2.getRight ());
-    CommonsAssert.assertEquals (f1, m2.getBottom ());
-    CommonsAssert.assertEquals (f2, m2.getLeft ());
+    m2 = m.getCloneWithLeft (F2);
+    CommonsAssert.assertEquals (F1, m2.getTop ());
+    CommonsAssert.assertEquals (F1, m2.getRight ());
+    CommonsAssert.assertEquals (F1, m2.getBottom ());
+    CommonsAssert.assertEquals (F2, m2.getLeft ());
   }
 
   @Test
@@ -112,21 +114,21 @@ public final class MarginSpecTest
     final float g = PDRectangle.A4.getHeight ();
 
     MarginSpec m = MarginSpec.createMM (210f);
-    CommonsAssert.assertEquals (f, m.getTop ());
-    CommonsAssert.assertEquals (f, m.getRight ());
-    CommonsAssert.assertEquals (f, m.getBottom ());
-    CommonsAssert.assertEquals (f, m.getLeft ());
+    assertEquals (f, m.getTop (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, m.getRight (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, m.getBottom (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, m.getLeft (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
 
     m = MarginSpec.createMM (210f, 297f);
-    CommonsAssert.assertEquals (f, m.getTop ());
-    CommonsAssert.assertEquals (g, m.getRight ());
-    CommonsAssert.assertEquals (f, m.getBottom ());
-    CommonsAssert.assertEquals (g, m.getLeft ());
+    assertEquals (f, m.getTop (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, m.getRight (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, m.getBottom (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, m.getLeft (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
 
     m = MarginSpec.createMM (210f, 297f, 297f, 210f);
-    CommonsAssert.assertEquals (f, m.getTop ());
-    CommonsAssert.assertEquals (g, m.getRight ());
-    CommonsAssert.assertEquals (g, m.getBottom ());
-    CommonsAssert.assertEquals (f, m.getLeft ());
+    assertEquals (f, m.getTop (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, m.getRight (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, m.getBottom (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, m.getLeft (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
   }
 }

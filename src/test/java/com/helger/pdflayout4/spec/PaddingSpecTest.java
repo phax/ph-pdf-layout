@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout4.spec;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -31,41 +32,43 @@ import com.helger.commons.mock.CommonsTestHelper;
  */
 public final class PaddingSpecTest
 {
-  private static final float f1 = 5.2f;
-  private static final float f2 = 17.4f;
+  private static final float FLOAT_ALLOWED_ROUNDING_DIFFERENCE = 0.000_1f;
+
+  private static final float F1 = 5.2f;
+  private static final float F2 = 17.4f;
 
   @Test
   public void testBasic ()
   {
-    PaddingSpec p = new PaddingSpec (f1);
-    CommonsAssert.assertEquals (f1, p.getTop ());
-    CommonsAssert.assertEquals (f1, p.getRight ());
-    CommonsAssert.assertEquals (f1, p.getBottom ());
-    CommonsAssert.assertEquals (f1, p.getLeft ());
+    PaddingSpec p = new PaddingSpec (F1);
+    CommonsAssert.assertEquals (F1, p.getTop ());
+    CommonsAssert.assertEquals (F1, p.getRight ());
+    CommonsAssert.assertEquals (F1, p.getBottom ());
+    CommonsAssert.assertEquals (F1, p.getLeft ());
 
-    p = PaddingSpec.top (f1);
-    CommonsAssert.assertEquals (f1, p.getTop ());
+    p = PaddingSpec.top (F1);
+    CommonsAssert.assertEquals (F1, p.getTop ());
     CommonsAssert.assertEquals (0, p.getRight ());
     CommonsAssert.assertEquals (0, p.getBottom ());
     CommonsAssert.assertEquals (0, p.getLeft ());
 
-    p = PaddingSpec.right (f1);
+    p = PaddingSpec.right (F1);
     CommonsAssert.assertEquals (0, p.getTop ());
-    CommonsAssert.assertEquals (f1, p.getRight ());
+    CommonsAssert.assertEquals (F1, p.getRight ());
     CommonsAssert.assertEquals (0, p.getBottom ());
     CommonsAssert.assertEquals (0, p.getLeft ());
 
-    p = PaddingSpec.bottom (f1);
+    p = PaddingSpec.bottom (F1);
     CommonsAssert.assertEquals (0, p.getTop ());
     CommonsAssert.assertEquals (0, p.getRight ());
-    CommonsAssert.assertEquals (f1, p.getBottom ());
+    CommonsAssert.assertEquals (F1, p.getBottom ());
     CommonsAssert.assertEquals (0, p.getLeft ());
 
-    p = PaddingSpec.left (f1);
+    p = PaddingSpec.left (F1);
     CommonsAssert.assertEquals (0, p.getTop ());
     CommonsAssert.assertEquals (0, p.getRight ());
     CommonsAssert.assertEquals (0, p.getBottom ());
-    CommonsAssert.assertEquals (f1, p.getLeft ());
+    CommonsAssert.assertEquals (F1, p.getLeft ());
 
     CommonsTestHelper.testDefaultImplementationWithEqualContentObject (p, new PaddingSpec (p));
     CommonsTestHelper.testDefaultSerialization (p);
@@ -74,35 +77,35 @@ public final class PaddingSpecTest
   @Test
   public void testGetCloneWith ()
   {
-    final PaddingSpec p = new PaddingSpec (f1);
-    assertSame (p, p.getCloneWithTop (f1));
-    assertSame (p, p.getCloneWithRight (f1));
-    assertSame (p, p.getCloneWithBottom (f1));
-    assertSame (p, p.getCloneWithLeft (f1));
+    final PaddingSpec p = new PaddingSpec (F1);
+    assertSame (p, p.getCloneWithTop (F1));
+    assertSame (p, p.getCloneWithRight (F1));
+    assertSame (p, p.getCloneWithBottom (F1));
+    assertSame (p, p.getCloneWithLeft (F1));
 
-    PaddingSpec p2 = p.getCloneWithTop (f2);
-    CommonsAssert.assertEquals (f2, p2.getTop ());
-    CommonsAssert.assertEquals (f1, p2.getRight ());
-    CommonsAssert.assertEquals (f1, p2.getBottom ());
-    CommonsAssert.assertEquals (f1, p2.getLeft ());
+    PaddingSpec p2 = p.getCloneWithTop (F2);
+    CommonsAssert.assertEquals (F2, p2.getTop ());
+    CommonsAssert.assertEquals (F1, p2.getRight ());
+    CommonsAssert.assertEquals (F1, p2.getBottom ());
+    CommonsAssert.assertEquals (F1, p2.getLeft ());
 
-    p2 = p.getCloneWithRight (f2);
-    CommonsAssert.assertEquals (f1, p2.getTop ());
-    CommonsAssert.assertEquals (f2, p2.getRight ());
-    CommonsAssert.assertEquals (f1, p2.getBottom ());
-    CommonsAssert.assertEquals (f1, p2.getLeft ());
+    p2 = p.getCloneWithRight (F2);
+    CommonsAssert.assertEquals (F1, p2.getTop ());
+    CommonsAssert.assertEquals (F2, p2.getRight ());
+    CommonsAssert.assertEquals (F1, p2.getBottom ());
+    CommonsAssert.assertEquals (F1, p2.getLeft ());
 
-    p2 = p.getCloneWithBottom (f2);
-    CommonsAssert.assertEquals (f1, p2.getTop ());
-    CommonsAssert.assertEquals (f1, p2.getRight ());
-    CommonsAssert.assertEquals (f2, p2.getBottom ());
-    CommonsAssert.assertEquals (f1, p2.getLeft ());
+    p2 = p.getCloneWithBottom (F2);
+    CommonsAssert.assertEquals (F1, p2.getTop ());
+    CommonsAssert.assertEquals (F1, p2.getRight ());
+    CommonsAssert.assertEquals (F2, p2.getBottom ());
+    CommonsAssert.assertEquals (F1, p2.getLeft ());
 
-    p2 = p.getCloneWithLeft (f2);
-    CommonsAssert.assertEquals (f1, p2.getTop ());
-    CommonsAssert.assertEquals (f1, p2.getRight ());
-    CommonsAssert.assertEquals (f1, p2.getBottom ());
-    CommonsAssert.assertEquals (f2, p2.getLeft ());
+    p2 = p.getCloneWithLeft (F2);
+    CommonsAssert.assertEquals (F1, p2.getTop ());
+    CommonsAssert.assertEquals (F1, p2.getRight ());
+    CommonsAssert.assertEquals (F1, p2.getBottom ());
+    CommonsAssert.assertEquals (F2, p2.getLeft ());
   }
 
   @Test
@@ -112,21 +115,21 @@ public final class PaddingSpecTest
     final float g = PDRectangle.A4.getHeight ();
 
     PaddingSpec p = PaddingSpec.createMM (210f);
-    CommonsAssert.assertEquals (f, p.getTop ());
-    CommonsAssert.assertEquals (f, p.getRight ());
-    CommonsAssert.assertEquals (f, p.getBottom ());
-    CommonsAssert.assertEquals (f, p.getLeft ());
+    assertEquals (f, p.getTop (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, p.getRight (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, p.getBottom (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, p.getLeft (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
 
     p = PaddingSpec.createMM (210f, 297f);
-    CommonsAssert.assertEquals (f, p.getTop ());
-    CommonsAssert.assertEquals (g, p.getRight ());
-    CommonsAssert.assertEquals (f, p.getBottom ());
-    CommonsAssert.assertEquals (g, p.getLeft ());
+    assertEquals (f, p.getTop (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, p.getRight (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, p.getBottom (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, p.getLeft (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
 
     p = PaddingSpec.createMM (210f, 297f, 297f, 210f);
-    CommonsAssert.assertEquals (f, p.getTop ());
-    CommonsAssert.assertEquals (g, p.getRight ());
-    CommonsAssert.assertEquals (g, p.getBottom ());
-    CommonsAssert.assertEquals (f, p.getLeft ());
+    assertEquals (f, p.getTop (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, p.getRight (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (g, p.getBottom (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
+    assertEquals (f, p.getLeft (), FLOAT_ALLOWED_ROUNDING_DIFFERENCE);
   }
 }
