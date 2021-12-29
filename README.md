@@ -52,7 +52,7 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 
 # News and Noteworthy
 
-* v5.2.2 - work in progress
+* v5.2.2 - 2021-12-29
     * Updated to PDFBox 2.0.25
     * Extended `IPLHasMargin` with `(set|add)Margin(X|Y)` to set or add to vertical or horizontal margin at once
     * Extended `IPLHasPadding` with `(set|add)Padding(X|Y)` to set or add to vertical or horizontal padding at once
