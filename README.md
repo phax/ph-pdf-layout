@@ -1,5 +1,8 @@
 # ph-pdf-layout
 
+[![javadoc](https://javadoc.io/badge2/com.helger/ph-pdf-layout4/javadoc.svg)](https://javadoc.io/doc/com.helger/ph-pdf-layout4)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout4/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout4) 
+
 Java library for creating fluid page layouts with Apache PDFBox.
 
 Please check the test files to see how to create PDFs with the different elements.
@@ -50,7 +53,7 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 # News and Noteworthy
 
 * v5.2.2 - work in progress
-    * Updated to PDFBox 2.0.245
+    * Updated to PDFBox 2.0.25
     * Extended `IPLHasMargin` with `(set|add)Margin(X|Y)` to set or add to vertical or horizontal margin at once
     * Extended `IPLHasPadding` with `(set|add)Padding(X|Y)` to set or add to vertical or horizontal padding at once
 * v5.2.1 - 2021-03-22
