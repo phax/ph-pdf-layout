@@ -33,7 +33,7 @@ The basic elements provided are:
     * "padding" - a transparent inner border (inside of the border)
     * "fill-color" - the background or fill color of an element
 
-A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files). The source code for these examples is https://github.com/phax/ph-pdf-layout/tree/master/src/test/java/com/helger/pdflayout4
+A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files). The source code for these examples is https://github.com/phax/ph-pdf-layout/tree/master/src/test/java/com/helger/pdflayout
 
 Similar libraries in this context:
 * https://github.com/ralfstuckert/pdfbox-layout - seems to focus more on text layouting
@@ -50,8 +50,13 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 </dependency>
 ```
 
+Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
+
 # News and Noteworthy
 
+* v6.0.0 - 2022-01-05
+    * Changed artifactId from `ph-pdf-layout4` to `ph-pdf-layout`
+    * Changed Java namespaces `com.helger.pdflayout4.*` to `com.helger.pdflayout.*`
 * v5.2.2 - 2021-12-29
     * Updated to PDFBox 2.0.25
     * Extended `IPLHasMargin` with `(set|add)Margin(X|Y)` to set or add to vertical or horizontal margin at once

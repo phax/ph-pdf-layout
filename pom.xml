@@ -24,8 +24,8 @@
     <artifactId>parent-pom</artifactId>
     <version>1.11.4</version>
   </parent>
-  <artifactId>ph-pdf-layout4</artifactId>
-  <version>5.2.3-SNAPSHOT</version>
+  <artifactId>ph-pdf-layout</artifactId>
+  <version>6.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
@@ -256,13 +256,13 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Automatic-Module-Name>com.helger.pdflayout4</Automatic-Module-Name>
+            <Automatic-Module-Name>com.helger.pdflayout</Automatic-Module-Name>
             <Export-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout4.*</Export-Package>
+              com.helger.pdflayout.*</Export-Package>
             <Private-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout4.*</Private-Package>
+              com.helger.pdflayout.*</Private-Package>
             <Import-Package>!javax.annotation.*,*</Import-Package>
             <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"</Require-Capability>
             <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.helger.commons.thirdparty.IThirdPartyModuleProviderSPI</Provide-Capability>
