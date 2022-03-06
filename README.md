@@ -54,6 +54,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+* v6.0.1 - work in progress
+    * Updated to jbig2-imageio 3.0.4
 * v6.0.0 - 2022-01-05
     * Changed artifactId from `ph-pdf-layout4` to `ph-pdf-layout`
     * Changed Java namespaces `com.helger.pdflayout4.*` to `com.helger.pdflayout.*`

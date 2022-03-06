@@ -42,7 +42,7 @@ public final class ThirdPartyModuleProvider_ph_pdf_layout implements IThirdParty
   public static final IThirdPartyModule JBIG_IMAGEIO = new ThirdPartyModule ("Apache PDFBox ImageIO",
                                                                              "Apache",
                                                                              ELicense.APACHE2,
-                                                                             new Version (3, 0, 3),
+                                                                             new Version (3, 0, 4),
                                                                              "http://pdfbox.apache.org/");
 
   @Nullable
