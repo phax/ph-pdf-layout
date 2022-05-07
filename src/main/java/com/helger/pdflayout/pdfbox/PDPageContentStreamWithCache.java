@@ -64,13 +64,13 @@ public class PDPageContentStreamWithCache
   }
 
   @Nonnull
-  public PDDocument getDocument ()
+  public final PDDocument getDocument ()
   {
     return m_aDocument;
   }
 
   @Nonnull
-  public PDPage getPage ()
+  public final PDPage getPage ()
   {
     return m_aPage;
   }
