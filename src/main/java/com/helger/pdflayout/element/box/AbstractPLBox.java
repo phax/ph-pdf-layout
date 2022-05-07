@@ -317,6 +317,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx, fStartLeft, fStartTop, getRenderWidth (), getRenderHeight ());
       m_aElement.render (aElementCtx);
     }
+    else
+      PLDebugLog.debugRender (this, "Not rendering the box, because no element is contained");
   }
 
   @Override

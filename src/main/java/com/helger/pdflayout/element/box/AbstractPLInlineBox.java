@@ -45,6 +45,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        Implementation type
+ * @since 6.0.1
  */
 public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE> implements
                                           IPLSplittableObject <IMPLTYPE, IMPLTYPE>
@@ -296,6 +297,8 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx, fStartLeft, fStartTop, getRenderWidth (), getRenderHeight ());
       m_aElement.render (aElementCtx);
     }
+    else
+      PLDebugLog.debugRender (this, "Not rendering the inline box, because no element is contained");
   }
 
   @Override
