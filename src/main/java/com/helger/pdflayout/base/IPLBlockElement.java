@@ -19,8 +19,10 @@ package com.helger.pdflayout.base;
 import javax.annotation.Nonnull;
 
 /**
- * Base interface for block elements. They additionally have a horizontal and
- * vertical alignment.
+ * Base interface for block elements. Compared to normal elements
+ * ({@link IPLElement}) they additionally have a horizontal alignment
+ * ({@link IPLHasHorizontalAlignment}) and vertical alignment
+ * ({@link IPLHasVerticalAlignment}).
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
@@ -31,6 +33,9 @@ public interface IPLBlockElement <IMPLTYPE extends IPLBlockElement <IMPLTYPE>> e
                                  IPLHasHorizontalAlignment <IMPLTYPE>,
                                  IPLHasVerticalAlignment <IMPLTYPE>
 {
+  /**
+   * By default all block elements are full width.
+   */
   boolean DEFAULT_FULL_WIDTH = true;
 
   /**
@@ -48,5 +53,5 @@ public interface IPLBlockElement <IMPLTYPE extends IPLBlockElement <IMPLTYPE>> e
    * @return this for chaining
    */
   @Nonnull
-  IMPLTYPE setFullWidth (final boolean bFullWidth);
+  IMPLTYPE setFullWidth (boolean bFullWidth);
 }

@@ -174,11 +174,14 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
+    if (m_aElement == null)
+    {
+      // No content - no size
+      return SizeSpec.SIZE0;
+    }
+
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
-
-    if (m_aElement == null)
-      return SizeSpec.SIZE0;
 
     final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (), fElementWidth, fElementHeight);
     internalSetElementPreparedSize (m_aElement.prepare (aElementCtx));
