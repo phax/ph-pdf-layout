@@ -22,6 +22,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 
 /**
@@ -159,5 +160,17 @@ public final class PageRenderContext
   public float getHeight ()
   {
     return m_fHeight;
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("ElementType", m_eElementType)
+                                       .append ("ContentStream", m_aCS)
+                                       .append ("StartLeft", m_fStartLeft)
+                                       .append ("StartTop", m_fStartTop)
+                                       .append ("Width", m_fWidth)
+                                       .append ("Height", m_fHeight)
+                                       .getToString ();
   }
 }

@@ -24,7 +24,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pdflayout.base.AbstractPLBlockElement;
+import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
@@ -46,17 +46,16 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> extends AbstractPLBlockElement <IMPLTYPE> implements
-                                    IPLSplittableObject <IMPLTYPE, IMPLTYPE>
+public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE> implements
+                                          IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
   private IPLRenderableObject <?> m_aElement;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
   // Status vars
   private SizeSpec m_aElementPreparedSize;
-  private SizeSpec m_aRenderOffset = SizeSpec.SIZE0;
 
-  public AbstractPLBox (@Nullable final IPLRenderableObject <?> aElement)
+  public AbstractPLInlineBox (@Nullable final IPLRenderableObject <?> aElement)
   {
     setElement (aElement);
   }
@@ -152,26 +151,6 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   }
 
   @Override
-  @Nonnull
-  protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
-  {
-    SizeSpec aRenderSize = super.getRenderSize (aPreparedSize);
-
-    if (isFullWidth ())
-    {
-      // Change render size before render offset, so that internal alignment
-      // works
-      aRenderSize = aRenderSize.withWidth (getPrepareAvailableSize ().getWidth () - getOutlineXSum ());
-    }
-
-    // Handle horizontal and vertical alignment here
-    m_aRenderOffset = new SizeSpec (getIndentX (aRenderSize.getWidth (), aPreparedSize.getWidth ()),
-                                    getIndentY (aRenderSize.getHeight (), aPreparedSize.getHeight ()));
-
-    return aRenderSize;
-  }
-
-  @Override
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     if (m_aElement == null)
@@ -218,8 +197,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1").setVertSplittable (false);
-    final AbstractPLBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2").setVertSplittable (true);
+    final AbstractPLInlineBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1").setVertSplittable (false);
+    final AbstractPLInlineBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2").setVertSplittable (true);
 
     // Set min width/max width from source
     // Don't use the height, because on vertically split elements, the height is
@@ -268,7 +247,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
 
     if (PLDebugLog.isDebugSplit ())
       PLDebugLog.debugSplit (this,
-                             "Split box element " +
+                             "Split inline-box element " +
                                    aElement.getDebugID () +
                                    " into pieces: " +
                                    aBox1Element.getDebugID () +
@@ -312,8 +291,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
 
     if (m_aElement != null)
     {
-      final float fStartLeft = aCtx.getStartLeft () + getOutlineLeft () + m_aRenderOffset.getWidth ();
-      final float fStartTop = aCtx.getStartTop () - getOutlineTop () - m_aRenderOffset.getHeight ();
+      final float fStartLeft = aCtx.getStartLeft () + getOutlineLeft ();
+      final float fStartTop = aCtx.getStartTop () - getOutlineTop ();
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx, fStartLeft, fStartTop, getRenderWidth (), getRenderHeight ());
       m_aElement.render (aElementCtx);
     }
@@ -326,7 +305,6 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
                             .appendIfNotNull ("Element", m_aElement)
                             .append ("VertSplittable", m_bVertSplittable)
                             .appendIfNotNull ("ElementPreparedSize", m_aElementPreparedSize)
-                            .appendIfNotNull ("RenderOffset", m_aRenderOffset)
                             .getToString ();
   }
 }
