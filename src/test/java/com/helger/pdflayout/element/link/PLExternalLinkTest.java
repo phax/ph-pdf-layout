@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
@@ -96,5 +97,25 @@ public final class PLExternalLinkTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (new File ("pdf/plexternallink/basic.pdf"));
+  }
+
+  @Test
+  public void testPageBreak () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 20);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (10);
+
+    for (int i = 0; i < 12; ++i)
+      aPS1.addElement (new PLExternalLink (new PLText ("Text " +
+                                                       i +
+                                                       " with a link\nBut this text spawns multiple lines\n" +
+                                                       StringHelper.getRepeated ("And on and on and on\n", 10) +
+                                                       "full stop",
+                                                       r10).setFillColor (Color.PINK)).setURI ("https://example.org/" + i)
+                                                                                      .setBorder (Color.BLACK));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (new File ("pdf/plexternallink/pagebreak.pdf"));
   }
 }
