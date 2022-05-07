@@ -54,9 +54,10 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-* v6.0.1 - work in progress
+* v6.0.1 - 2022-05-07
     * Updated to jbig2-imageio 3.0.4
     * Updated to PDFBox 2.0.26
+    * Added support for creating external links via new class `PLExternalLink`. See [issue #14](https://github.com/phax/ph-pdf-layout/issues/14) - thx @rgarg-atheer and @martin19
 * v6.0.0 - 2022-01-05
     * Changed artifactId from `ph-pdf-layout4` to `ph-pdf-layout`
     * Changed Java namespaces `com.helger.pdflayout4.*` to `com.helger.pdflayout.*`
@@ -72,7 +73,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
     * Add syntactic sugar method `PLTableCell.createEmptyCell()`
 * v5.1.2 - 2020-06-15
     * Updated to PDFBox 2.0.20
-    * Allow different page content height if the first page header and footer have different heights (see [issue #14](https://github.com/phax/ph-pdf-layout/issues/14))
+    * Allow different page content height if the first page header and footer have different heights. See [issue #14](https://github.com/phax/ph-pdf-layout/issues/14).
 * v5.1.1 - 2020-05-29
     * Updated to ph-fonts 4.1.0 (changed Maven groupId)
 * v5.1.0 - 2020-03-29
