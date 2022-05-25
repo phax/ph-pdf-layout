@@ -54,6 +54,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+* v6.0.2 - 2022-05-25
+    * Extended `PDPageContentStreamWithCache` API. See [issue #23](https://github.com/phax/ph-pdf-layout/issues/23) - thx @schneidh
 * v6.0.1 - 2022-05-07
     * Updated to jbig2-imageio 3.0.4
     * Updated to PDFBox 2.0.26
