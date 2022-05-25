@@ -55,24 +55,43 @@ public class PDPageContentStreamWithCache
 
   public PDPageContentStreamWithCache (@Nonnull final PDDocument aDocument,
                                        @Nonnull final PDPage aSourcePage,
-                                       final PDPageContentStream.AppendMode bAppendContent,
+                                       @Nonnull final PDPageContentStream.AppendMode aAppendContent,
                                        final boolean bCompress) throws IOException
   {
     m_aDocument = aDocument;
     m_aPage = aSourcePage;
-    m_aStream = new PDPageContentStreamExt (aDocument, aSourcePage, bAppendContent, bCompress);
+    m_aStream = new PDPageContentStreamExt (aDocument, aSourcePage, aAppendContent, bCompress);
   }
 
+  /**
+   * @return The {@link PDDocument} this stream is working on. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public final PDDocument getDocument ()
   {
     return m_aDocument;
   }
 
+  /**
+   * @return The {@link PDPage} this stream is working on. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public final PDPage getPage ()
   {
     return m_aPage;
+  }
+
+  /**
+   * @return The internal page content stream. Never <code>null</code>. Handle
+   *         with care.
+   * @since 6.0.2
+   */
+  @Nonnull
+  public final PDPageContentStreamExt getContentStream ()
+  {
+    return m_aStream;
   }
 
   public void setFont (@Nonnull final LoadedFont aLoadedFont, @Nonnull final FontSpec aFontSpec) throws IOException
@@ -173,7 +192,10 @@ public class PDPageContentStreamWithCache
     m_aStream.fill ();
   }
 
-  public void addRect (final float fLeft, final float fBottom, final float fWidth, final float fHeight) throws IOException
+  public void addRect (final float fLeft,
+                       final float fBottom,
+                       final float fWidth,
+                       final float fHeight) throws IOException
   {
     m_aStream.addRect (fLeft, fBottom, fWidth, fHeight);
   }
