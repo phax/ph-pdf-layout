@@ -19,18 +19,13 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.helger</groupId>
-    <artifactId>parent-pom</artifactId>
-    <version>1.11.4</version>
-  </parent>
+  <groupId>com.plenigo</groupId>
   <artifactId>ph-pdf-layout</artifactId>
   <version>6.0.3-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
-  <url>https://github.com/phax/ph-pdf-layout</url>
-  <inceptionYear>2014</inceptionYear>
+    <url>https://www.plenigo.com</url>
 
   <licenses>
     <license>
@@ -51,30 +46,23 @@
     </repository>
   </repositories>
 
-  <scm>
-    <connection>scm:git:git@github.com:phax/ph-pdf-layout.git</connection>
-    <developerConnection>scm:git:git@github.com:phax/ph-pdf-layout.git</developerConnection>
-    <url>http://github.com/phax/ph-pdf-layout</url>
-    <tag>HEAD</tag>
-  </scm>
+    <scm>
+        <connection>scm:git:git@github.com:com:plenigo/ph-pdf-layout.git</connection>
+        <developerConnection>scm:git:git@github.com:com:plenigo/ph-pdf-layout.git</developerConnection>
+        <url>http://github.com/com:plenigo/ph-pdf-layout</url>
+        <tag>HEAD</tag>
+    </scm>
 
-  <organization>
-    <name>Philip Helger</name>
-    <url>http://www.helger.com</url>
-  </organization>
+    <organization>
+        <name>plenigo GmbH</name>
+        <url>http://www.plenigo.com</url>
+    </organization>
 
-  <developers>
-    <developer>
-      <id>philip</id>
-      <name>Philip Helger</name>
-      <email>ph(at)helger.com</email>
-      <url>http://www.helger.com</url>
-    </developer>
-  </developers>
-
-  <properties>
-    <pdfbox.version>2.0.26</pdfbox.version>
-  </properties>
+    <properties>
+        <pdfbox.version>2.0.26</pdfbox.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -218,16 +206,20 @@
       <artifactId>ph-fonts-noto-sans-sc</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.pdfbox</groupId>
-      <artifactId>pdfbox-examples</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.pdfbox</groupId>
-      <artifactId>pdfbox-app</artifactId>
-      <scope>test</scope>
-    </dependency>
+      <dependency>
+          <groupId>org.apache.pdfbox</groupId>
+          <artifactId>pdfbox-examples</artifactId>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.pdfbox</groupId>
+          <artifactId>pdfbox-app</artifactId>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.helger.font</groupId>
+          <artifactId>ph-fonts-open-sans</artifactId>
+      </dependency>
   </dependencies>
 
   <build>
