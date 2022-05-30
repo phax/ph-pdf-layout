@@ -20,6 +20,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
@@ -41,6 +42,7 @@ import com.helger.font.api.IHasFontResource;
 public class PreloadFontManager implements IPreloadFontResolver
 {
   private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock ();
+  @GuardedBy ("m_aRWLock")
   private final ICommonsMap <String, PreloadFont> m_aMap = new CommonsHashMap <> ();
 
   /**

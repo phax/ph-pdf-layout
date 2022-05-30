@@ -47,12 +47,33 @@ public class FontSpec implements Serializable
   private final float m_fFontSize;
   private final Color m_aColor;
 
+  /**
+   * Constructor with a {@link PreloadFont} and a font size, using the default
+   * color {@link #DEFAULT_COLOR}.
+   *
+   * @param aPreloadFont
+   *        Preload font to use. May not be <code>null</code>.
+   * @param fFontSize
+   *        Font size to use. Must be &gt; 0.
+   */
   public FontSpec (@Nonnull final PreloadFont aPreloadFont, @Nonnegative final float fFontSize)
   {
     this (aPreloadFont, fFontSize, DEFAULT_COLOR);
   }
 
-  public FontSpec (@Nonnull final PreloadFont aPreloadFont, @Nonnegative final float fFontSize, @Nonnull final Color aColor)
+  /**
+   * Constructor with a {@link PreloadFont}, a font size and a custom color.
+   *
+   * @param aPreloadFont
+   *        Preload font to use. May not be <code>null</code>.
+   * @param fFontSize
+   *        Font size to use. Must be &gt; 0.
+   * @param aColor
+   *        The color to use. May not be <code>null</code>.
+   */
+  public FontSpec (@Nonnull final PreloadFont aPreloadFont,
+                   @Nonnegative final float fFontSize,
+                   @Nonnull final Color aColor)
   {
     ValueEnforcer.notNull (aPreloadFont, "Font");
     ValueEnforcer.isFalse (Float.isNaN (fFontSize), "FontSize may not be NaN");

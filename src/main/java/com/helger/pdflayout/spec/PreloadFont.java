@@ -141,7 +141,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
       }
   }
 
-  private void readObject (@Nonnull @WillNotClose final ObjectInputStream aOIS) throws IOException, ClassNotFoundException
+  private void readObject (@Nonnull @WillNotClose final ObjectInputStream aOIS) throws IOException,
+                                                                                ClassNotFoundException
   {
     m_sID = StreamHelper.readSafeUTF (aOIS);
     final String sBaseFontName = StreamHelper.readSafeUTF (aOIS);
@@ -172,14 +173,16 @@ public final class PreloadFont implements IHasID <String>, Serializable
     m_nFallbackCodePoint = nFallbackCodePoint;
   }
 
-  private PreloadFont (@Nonnull final IFontResource aFontRes, final boolean bEmbed) throws IOException
+  private PreloadFont (@Nonnull final IFontResource aFontRes,
+                       final boolean bEmbed,
+                       final int nFallbackCodePoint) throws IOException
   {
     ValueEnforcer.notNull (aFontRes, "FontResource");
     m_sID = aFontRes.getID ();
     m_aFont = null;
     m_aFontRes = aFontRes;
     m_bEmbed = bEmbed;
-    m_nFallbackCodePoint = DEFAULT_FALLBACK_CODE_POINT;
+    m_nFallbackCodePoint = nFallbackCodePoint;
     // Not loaded custom font
     _parseFontRes ();
   }
@@ -224,7 +227,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   }
 
   /**
-   * @return THe fallback code point to be used if a character is not contained
+   * @return The fallback code point to be used if a character is not contained
    *         in the font. Defaults to '?'.
    */
   public int getFallbackCodePoint ()
@@ -249,7 +252,11 @@ public final class PreloadFont implements IHasID <String>, Serializable
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aFont).append (m_aFontRes).append (m_bEmbed).append (m_nFallbackCodePoint).getHashCode ();
+    return new HashCodeGenerator (this).append (m_aFont)
+                                       .append (m_aFontRes)
+                                       .append (m_bEmbed)
+                                       .append (m_nFallbackCodePoint)
+                                       .getHashCode ();
   }
 
   @Override
@@ -262,13 +269,23 @@ public final class PreloadFont implements IHasID <String>, Serializable
                                        .getToString ();
   }
 
+  /**
+   * Create a new {@link PreloadFont} from an existing {@link IFontResource}
+   * where the subset cannot be embedded into the resulting PDF.
+   *
+   * @param aFontRes
+   *        The font resource to include. May not be <code>null</code>.
+   * @return Never <code>null</code>.
+   * @throws IllegalArgumentException
+   *         If the font could not be loaded.
+   */
   @Nonnull
   public static PreloadFont createNonEmbedding (@Nonnull final IFontResource aFontRes)
   {
     ValueEnforcer.notNull (aFontRes, "FontRes");
     try
     {
-      return new PreloadFont (aFontRes, false);
+      return new PreloadFont (aFontRes, false, DEFAULT_FALLBACK_CODE_POINT);
     }
     catch (final IOException ex)
     {
@@ -276,13 +293,23 @@ public final class PreloadFont implements IHasID <String>, Serializable
     }
   }
 
+  /**
+   * Create a new {@link PreloadFont} from an existing {@link IFontResource}
+   * where the subset can be embedded into the resulting PDF.
+   *
+   * @param aFontRes
+   *        The font resource to include. May not be <code>null</code>.
+   * @return Never <code>null</code>.
+   * @throws IllegalArgumentException
+   *         If the font could not be loaded.
+   */
   @Nonnull
   public static PreloadFont createEmbedding (@Nonnull final IFontResource aFontRes)
   {
     ValueEnforcer.notNull (aFontRes, "FontRes");
     try
     {
-      return new PreloadFont (aFontRes, true);
+      return new PreloadFont (aFontRes, true, DEFAULT_FALLBACK_CODE_POINT);
     }
     catch (final IOException ex)
     {
