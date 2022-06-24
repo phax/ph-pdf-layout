@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.plenigo</groupId>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>6.0.4-SNAPSHOT</version>
+  <version>6.0.4</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
@@ -35,34 +35,23 @@
     </license>
   </licenses>
 
-  <repositories>
-    <repository>
-      <id>ApacheSnapshot</id>
-      <name>Apache Repository</name>
-      <url>https://repository.apache.org/content/groups/snapshots/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
+  <scm>
+      <connection>scm:git:git@github.com:com:plenigo/ph-pdf-layout.git</connection>
+      <developerConnection>scm:git:git@github.com:com:plenigo/ph-pdf-layout.git</developerConnection>
+      <url>http://github.com/com:plenigo/ph-pdf-layout</url>
+      <tag>HEAD</tag>
+  </scm>
 
-    <scm>
-        <connection>scm:git:git@github.com:com:plenigo/ph-pdf-layout.git</connection>
-        <developerConnection>scm:git:git@github.com:com:plenigo/ph-pdf-layout.git</developerConnection>
-        <url>http://github.com/com:plenigo/ph-pdf-layout</url>
-        <tag>HEAD</tag>
-    </scm>
+  <organization>
+      <name>plenigo GmbH</name>
+      <url>http://www.plenigo.com</url>
+  </organization>
 
-    <organization>
-        <name>plenigo GmbH</name>
-        <url>http://www.plenigo.com</url>
-    </organization>
-
-    <properties>
-        <pdfbox.version>2.0.26</pdfbox.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-    </properties>
+  <properties>
+      <pdfbox.version>2.0.26</pdfbox.version>
+      <maven.compiler.source>17</maven.compiler.source>
+      <maven.compiler.target>17</maven.compiler.target>
+  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -100,6 +89,11 @@
         <artifactId>jbig2-imageio</artifactId>
         <version>3.0.4</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>xmpbox</artifactId>
+        <version>2.0.26</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -119,6 +113,10 @@
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.pdfbox</groupId>
+      <artifactId>xmpbox</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -174,11 +172,6 @@
     <dependency>
       <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-lato2</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.helger.font</groupId>
-      <artifactId>ph-fonts-open-sans</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -245,44 +238,24 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <version>5.1.6</version>
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Automatic-Module-Name>com.helger.pdflayout</Automatic-Module-Name>
+            <Automatic-Module-Name>com.plenigo.pdflayout</Automatic-Module-Name>
             <Export-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*</Export-Package>
+              com.plenigo.pdflayout.*</Export-Package>
             <Private-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*</Private-Package>
+              com.plenigo.pdflayout.*</Private-Package>
             <Import-Package>!javax.annotation.*,*</Import-Package>
             <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"</Require-Capability>
             <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.helger.commons.thirdparty.IThirdPartyModuleProviderSPI</Provide-Capability>
           </instructions>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>de.thetaphi</groupId>
-        <artifactId>forbiddenapis</artifactId>
-        <configuration>
-          <signaturesArtifacts>
-            <signaturesArtifact>
-              <groupId>com.helger</groupId>
-              <artifactId>ph-forbidden-apis</artifactId>
-              <version>1.1.1</version>
-              <type>jar</type>
-              <path>forbidden-apis-java9.txt</path>
-            </signaturesArtifact>
-          </signaturesArtifacts>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <source>8</source>
-        </configuration>
-      </plugin> 
+
     </plugins>
   </build>
 </project>

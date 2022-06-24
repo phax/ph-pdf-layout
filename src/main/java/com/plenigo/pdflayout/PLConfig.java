@@ -35,7 +35,7 @@ public final class PLConfig
   /** Project name */
   public static final String PROJECT_NAME = "ph-pdf-layout";
   /** Project URL */
-  public static final String PROJECT_URL = "https://github.com/phax/ph-pdf-layout";
+  public static final String PROJECT_URL = "https://github.com/plenigo/ph-pdf-layout";
   /** Current version - from properties file */
   public static final String PROJECT_VERSION;
 

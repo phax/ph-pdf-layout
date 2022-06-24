@@ -86,6 +86,7 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
     private IPLRenderableObject<?> m_aPageFooter;
     private IPreRenderContextCustomizer m_aPRCCustomizer;
     private IRenderContextCustomizer m_aRCCustomizer;
+    private IPLRenderableObject<?> m_aFirstPageBackgroundHeader;
     private boolean m_bFoldMark;
     private String m_sWaterMark;
     private final PreloadFont m_FontLight;
@@ -459,6 +460,39 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
     }
 
     /**
+     * @return The global first page background header. May be <code>null</code>.
+     *
+     * @since 6.0.4
+     */
+    @Nullable
+    public IPLRenderableObject<?> getFirstPageBackgroundHeader() {
+        return m_aFirstPageBackgroundHeader;
+    }
+
+    /**
+     * @return <code>true</code> if a global first page background header is present,
+     * <code>false</code> if not.
+     *
+     * @since 6.0.4
+     */
+    public boolean hasFirstPageBackgroundHeader() {
+        return m_aFirstPageBackgroundHeader != null;
+    }
+
+    /**
+     * Set the global first page background header.
+     *
+     * @return this
+     *
+     * @since 6.0.4
+     */
+    @Nonnull
+    public PLPageSet setFirstPageBackgroundHeader(@Nullable final IPLRenderableObject<?> aPageHeader) {
+        m_aFirstPageBackgroundHeader = aPageHeader;
+        return this;
+    }
+
+    /**
      * @return <code>true</code> if a global fold mark is present,
      * <code>false</code> if not.
      */
@@ -498,6 +532,96 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
         return this;
     }
 
+    /**
+     * Gets font light.
+     *
+     * @return the font light
+     */
+    public PreloadFont getFontLight() {
+        return m_FontLight;
+    }
+
+    /**
+     * Gets font light italic.
+     *
+     * @return the font light italic
+     */
+    public PreloadFont getFontLightItalic() {
+        return m_FontLightItalic;
+    }
+
+    /**
+     * Gets font normal.
+     *
+     * @return the font normal
+     */
+    public PreloadFont getFontNormal() {
+        return m_FontNormal;
+    }
+
+    /**
+     * Gets font normal italic.
+     *
+     * @return the font normal italic
+     */
+    public PreloadFont getFontNormalItalic() {
+        return m_FontNormalItalic;
+    }
+
+    /**
+     * Gets font semi bold.
+     *
+     * @return the font semi bold
+     */
+    public PreloadFont getFontSemiBold() {
+        return m_FontSemiBold;
+    }
+
+    /**
+     * Gets font semi bold italic.
+     *
+     * @return the font semi bold italic
+     */
+    public PreloadFont getFontSemiBoldItalic() {
+        return m_FontSemiBoldItalic;
+    }
+
+    /**
+     * Gets font bold.
+     *
+     * @return the font bold
+     */
+    public PreloadFont getFontBold() {
+        return m_FontBold;
+    }
+
+    /**
+     * Gets font bold italic.
+     *
+     * @return the font bold italic
+     */
+    public PreloadFont getFontBoldItalic() {
+        return m_FontBoldItalic;
+    }
+
+    /**
+     * Gets font extra bold.
+     *
+     * @return the font extra bold
+     */
+    public PreloadFont getFontExtraBold() {
+        return m_FontExtraBold;
+    }
+
+    /**
+     * Gets font extra bold italic.
+     *
+     * @return the font extra bold italic
+     */
+    public PreloadFont getFontExtraBoldItalic() {
+        return m_FontExtraBoldItalic;
+    }
+
     private float _getYTop(@Nonnull final IPLHasMarginBorderPadding<?> aObj) {
         return m_aPageSize.getHeight() - aObj.getOutlineTop();
     }
@@ -518,6 +642,8 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
             ret = ret.or(m_aFirstPageHeader.visit(aVisitor));
         if (m_aPageHeader != null)
             ret = ret.or(m_aPageHeader.visit(aVisitor));
+        if (m_aFirstPageBackgroundHeader != null)
+            ret = ret.or(m_aFirstPageBackgroundHeader.visit(aVisitor));
         if (m_bDifferentFirstPageFooter && m_aFirstPageFooter != null)
             ret = ret.or(m_aFirstPageFooter.visit(aVisitor));
         if (m_aPageFooter != null)
@@ -596,6 +722,21 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                             " so that pageHeader fits!");
                 setMarginTop(fEffectiveHeaderHeight);
             }
+        }
+
+        // Prepare first page background header
+        if (m_aFirstPageBackgroundHeader != null) {
+            // Page header does not care about page padding
+            final PreparationContext aRPC = new PreparationContext(aGlobalCtx, m_aPageSize.getWidth() - getMarginXSum(), getMarginTop());
+
+            if (PLDebugLog.isDebugPrepare())
+                PLDebugLog.debugPrepare(this,
+                        "Start preparing first page background header on width=" +
+                                aRPC.getAvailableWidth() +
+                                " and height=" +
+                                aRPC.getAvailableHeight());
+
+            m_aFirstPageBackgroundHeader.prepare(aRPC);
         }
 
         // Prepare first page footer
@@ -982,7 +1123,25 @@ public class PLPageSet extends AbstractPLObject<PLPageSet> implements IPLHasMarg
                         m_aRCCustomizer.customizeRenderContext(aRCtx);
                     aPageHeader.render(aRCtx);
                 }
-
+                // Start with the page rectangle
+                if (bFirstPage && m_aFirstPageBackgroundHeader != null) {
+                    // Page header does not care about page padding
+                    // header top-left
+                    final float fStartLeft = aMBP.getMarginLeft();
+                    final float fStartTop = m_aPageSize.getHeight();
+                    final float fWidth = m_aPageSize.getWidth() - aMBP.getMarginXSum();
+                    final float fHeight = aPrepareResult.getHeaderHeight(nPageIndex);
+                    final PageRenderContext aRCtx = new PageRenderContext(ERenderingElementType.PAGE_HEADER,
+                            aContentStream,
+                            fStartLeft,
+                            fStartTop,
+                            fWidth,
+                            fHeight);
+                    if (m_aRCCustomizer != null)
+                        m_aRCCustomizer.customizeRenderContext(aRCtx);
+                    m_aFirstPageBackgroundHeader.render(aRCtx);
+                }
+                
                 float fCurY = _getYTop(aMBP);
                 for (final PLElementWithSize aElementWithHeight : aPerPage) {
                     final IPLRenderableObject<?> aElement = aElementWithHeight.getElement();
