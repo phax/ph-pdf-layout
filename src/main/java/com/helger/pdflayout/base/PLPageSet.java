@@ -62,7 +62,9 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMarginBorderPadding <PLPageSet>, IPLHasFillColor <PLPageSet>
+public class PLPageSet extends AbstractPLObject <PLPageSet> implements
+                       IPLHasMarginBorderPadding <PLPageSet>,
+                       IPLHasFillColor <PLPageSet>
 {
   public static final boolean DEFAULT_DIFFERENT_FIRST_PAGE_HEADER = false;
   public static final boolean DEFAULT_DIFFERENT_FIRST_PAGE_FOOTER = false;
@@ -73,13 +75,17 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
   private PaddingSpec m_aPadding = DEFAULT_PADDING;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private Color m_aFillColor = DEFAULT_FILL_COLOR;
+
   private boolean m_bDifferentFirstPageHeader = DEFAULT_DIFFERENT_FIRST_PAGE_HEADER;
   private IPLRenderableObject <?> m_aFirstPageHeader;
   private IPLRenderableObject <?> m_aPageHeader;
+
   private final ICommonsList <IPLRenderableObject <?>> m_aElements = new CommonsArrayList <> ();
+
   private boolean m_bDifferentFirstPageFooter = DEFAULT_DIFFERENT_FIRST_PAGE_FOOTER;
   private IPLRenderableObject <?> m_aFirstPageFooter;
   private IPLRenderableObject <?> m_aPageFooter;
+
   private IPreRenderContextCustomizer m_aPRCCustomizer;
   private IRenderContextCustomizer m_aRCCustomizer;
 
@@ -98,17 +104,35 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
     m_aPageSize = ValueEnforcer.notNull (aPageSize, "PageSize");
   }
 
+  /**
+   * @return The page size as specified in the constructor. Never
+   *         <code>null</code>.
+   * @see #getPageWidth()
+   * @see #getPageHeight()
+   */
   @Nonnull
   public final SizeSpec getPageSize ()
   {
     return m_aPageSize;
   }
 
+  /**
+   * @return The page width as specified in the constructor. Never
+   *         <code>null</code>.
+   * @see #getPageSize()
+   * @see #getPageHeight()
+   */
   public final float getPageWidth ()
   {
     return m_aPageSize.getWidth ();
   }
 
+  /**
+   * @return The page height as specified in the constructor. Never
+   *         <code>null</code>.
+   * @see #getPageSize()
+   * @see #getPageWidth()
+   */
   public final float getPageHeight ()
   {
     return m_aPageSize.getHeight ();
@@ -544,7 +568,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
     if (m_aPageHeader != null)
     {
       // Page header does not care about page padding
-      final PreparationContext aRPC = new PreparationContext (aGlobalCtx, m_aPageSize.getWidth () - getMarginXSum (), getMarginTop ());
+      final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
+                                                              m_aPageSize.getWidth () - getMarginXSum (),
+                                                              getMarginTop ());
 
       if (PLDebugLog.isDebugPrepare ())
         PLDebugLog.debugPrepare (this,
@@ -610,7 +636,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
     if (m_aPageFooter != null)
     {
       // Page footer does not care about page padding
-      final PreparationContext aRPC = new PreparationContext (aGlobalCtx, m_aPageSize.getWidth () - getMarginXSum (), getMarginBottom ());
+      final PreparationContext aRPC = new PreparationContext (aGlobalCtx,
+                                                              m_aPageSize.getWidth () - getMarginXSum (),
+                                                              getMarginBottom ());
 
       if (PLDebugLog.isDebugPrepare ())
         PLDebugLog.debugPrepare (this,
@@ -740,7 +768,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
                                              " and height " +
                                              fSplitHeight);
 
-              final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fElementPreparedWidth, fSplitHeight);
+              final PLSplitResult aSplitResult = aElement.getAsSplittable ()
+                                                         .splitElementVert (fElementPreparedWidth, fSplitHeight);
               if (aSplitResult != null)
                 assert fSplitHeight > 0;
               if (fSplitHeight <= 0)
@@ -806,7 +835,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
                 LOGGER.warn ("The single element " +
                              aElement.getDebugID () +
                              " does not fit onto a single page" +
-                             (bIsVertSplittable ? " even though it is vertically splittable!" : " and is not vertically splittable!"));
+                             (bIsVertSplittable ? " even though it is vertically splittable!"
+                                                : " and is not vertically splittable!"));
             }
           }
           else
@@ -817,9 +847,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
 
             if (PLDebugLog.isDebugPrepare ())
             {
-              final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements, x -> x.getElement ().getDebugID ());
+              final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
+                                                                                      x -> x.getElement ()
+                                                                                            .getDebugID ());
               PLDebugLog.debugPrepare (this,
-                                       "Finished page " + ret.getPageNumber () + " with: " + StringHelper.getImploded (aLastPageContent));
+                                       "Finished page " +
+                                             ret.getPageNumber () +
+                                             " with: " +
+                                             StringHelper.getImploded (aLastPageContent));
             }
 
             // Something on the current page -> start a new page
@@ -850,7 +885,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
         // Add elements of last page
         if (PLDebugLog.isDebugSplit ())
         {
-          final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements, x -> x.getElement ().getDebugID ());
+          final ICommonsList <String> aLastPageContent = new CommonsArrayList <> (aCurPageElements,
+                                                                                  x -> x.getElement ().getDebugID ());
           PLDebugLog.debugSplit (this,
                                  "Finished last page " +
                                        ret.getPageNumber () +
@@ -923,8 +959,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements IPLHasMar
       final PDPage aPage = new PDPage (m_aPageSize.getAsRectangle ());
       aDoc.addPage (aPage);
 
-      final IPLRenderableObject <?> aPageHeader = bFirstPage && m_bDifferentFirstPageHeader ? m_aFirstPageHeader : m_aPageHeader;
-      final IPLRenderableObject <?> aPageFooter = bFirstPage && m_bDifferentFirstPageFooter ? m_aFirstPageFooter : m_aPageFooter;
+      final IPLRenderableObject <?> aPageHeader = bFirstPage && m_bDifferentFirstPageHeader ? m_aFirstPageHeader
+                                                                                            : m_aPageHeader;
+      final IPLRenderableObject <?> aPageFooter = bFirstPage && m_bDifferentFirstPageFooter ? m_aFirstPageFooter
+                                                                                            : m_aPageFooter;
 
       {
         final PagePreRenderContext aPreRenderCtx = new PagePreRenderContext (this,

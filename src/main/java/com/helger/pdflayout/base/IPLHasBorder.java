@@ -32,8 +32,13 @@ import com.helger.pdflayout.spec.BorderStyleSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends IPLHasOutline, IGenericImplTrait <IMPLTYPE>
+public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
+                              IPLHasOutline,
+                              IGenericImplTrait <IMPLTYPE>
 {
+  /**
+   * The default border is a 0 border, meaning no border at all.
+   */
   BorderSpec DEFAULT_BORDER = BorderSpec.BORDER0;
 
   /**

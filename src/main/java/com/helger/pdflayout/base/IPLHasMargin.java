@@ -28,8 +28,13 @@ import com.helger.pdflayout.spec.MarginSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends IPLHasOutline, IGenericImplTrait <IMPLTYPE>
+public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
+                              IPLHasOutline,
+                              IGenericImplTrait <IMPLTYPE>
 {
+  /**
+   * The default margin is a 0 margin, meaning no margin at all.
+   */
   MarginSpec DEFAULT_MARGIN = MarginSpec.MARGIN0;
 
   /**
@@ -74,7 +79,10 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    * @return this
    */
   @Nonnull
-  default IMPLTYPE setMargin (final float fMarginTop, final float fMarginRight, final float fMarginBottom, final float fMarginLeft)
+  default IMPLTYPE setMargin (final float fMarginTop,
+                              final float fMarginRight,
+                              final float fMarginBottom,
+                              final float fMarginLeft)
   {
     return setMargin (new MarginSpec (fMarginTop, fMarginRight, fMarginBottom, fMarginLeft));
   }

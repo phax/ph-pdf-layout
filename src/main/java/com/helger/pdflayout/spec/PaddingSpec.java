@@ -33,7 +33,14 @@ import com.helger.pdflayout.PLConvert;
 public class PaddingSpec extends AbstractRectSpec
 {
   public static final float DEFAULT_FLOAT = 0f;
-  public static final PaddingSpec PADDING0 = new PaddingSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT);
+
+  /**
+   * A constant representing no padding.
+   */
+  public static final PaddingSpec PADDING0 = new PaddingSpec (DEFAULT_FLOAT,
+                                                              DEFAULT_FLOAT,
+                                                              DEFAULT_FLOAT,
+                                                              DEFAULT_FLOAT);
 
   /**
    * Pseudo copy constructor.

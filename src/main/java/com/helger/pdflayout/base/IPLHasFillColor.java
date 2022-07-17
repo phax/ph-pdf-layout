@@ -32,6 +32,9 @@ import com.helger.commons.traits.IGenericImplTrait;
  */
 public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> extends IGenericImplTrait <IMPLTYPE>
 {
+  /**
+   * By default nothing is filled, so the default value is <code>null</code>.
+   */
   Color DEFAULT_FILL_COLOR = null;
 
   /**

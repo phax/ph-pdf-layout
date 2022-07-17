@@ -33,6 +33,10 @@ import com.helger.pdflayout.PLConvert;
 public class MarginSpec extends AbstractRectSpec
 {
   public static final float DEFAULT_FLOAT = 0f;
+
+  /**
+   * A constant representing no margin.
+   */
   public static final MarginSpec MARGIN0 = new MarginSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT);
 
   /**
