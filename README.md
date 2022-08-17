@@ -54,7 +54,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-* v6.0.3 - work in progress
+* v6.0.3 - 2022-08-17
     * Added support for PDF/A creation in `PageLayoutPDF` - thx @robertholfeld for publishing this in his branch
 * v6.0.2 - 2022-05-25
     * Extended `PDPageContentStreamWithCache` API. See [issue #23](https://github.com/phax/ph-pdf-layout/issues/23) - thx @schneidh
