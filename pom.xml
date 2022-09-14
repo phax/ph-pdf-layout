@@ -22,10 +22,10 @@
   <parent>
     <groupId>com.helger</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>1.11.5</version>
+    <version>2.0.0</version>
   </parent>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>6.0.4-SNAPSHOT</version>
+  <version>7.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
@@ -81,14 +81,14 @@
       <dependency>
         <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>10.2.0</version>
+        <version>11.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger.font</groupId>
         <artifactId>ph-fonts-parent-pom</artifactId>
-        <version>4.2.0</version>
+        <version>5.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

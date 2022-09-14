@@ -54,6 +54,9 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+* v7.0.0 - 2022-09-14
+    * Using Java 11 as the baseline
+    * Updated to ph-commons 11
 * v6.0.3 - 2022-08-17
     * Added support for PDF/A creation in `PageLayoutPDF` - thx @robertholfeld for publishing this in his branch
 * v6.0.2 - 2022-05-25
