@@ -88,8 +88,7 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     // or "displayed", so we're using this as a usage indicator
     if (m_sDebugID != null)
     {
-      if (LOGGER.isWarnEnabled ())
-        LOGGER.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
+      LOGGER.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
       // Clear cached value
       m_sDebugID = null;
     }

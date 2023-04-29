@@ -184,7 +184,6 @@ public class LoadedFont
     {
       if (PLDebugLog.isDebugFont ())
         PLDebugLog.debugFont (aFont.toString (), "No code point " + nCodepoint + " in this font - " + ex.getMessage ());
-
       try
       {
         // Use fallback code point
@@ -194,7 +193,11 @@ public class LoadedFont
       catch (final IllegalArgumentException ex2)
       {
         if (PLDebugLog.isDebugFont ())
-          PLDebugLog.debugFont (aFont.toString (), "No fallback code point " + nFallbackCodepoint + " in this font - " + ex2.getMessage ());
+          PLDebugLog.debugFont (aFont.toString (),
+                                "No fallback code point " +
+                                                   nFallbackCodepoint +
+                                                   " in this font - " +
+                                                   ex2.getMessage ());
         throw ex2;
       }
     }
@@ -239,7 +242,6 @@ public class LoadedFont
       // Toooo slow
       return PLConvert.getWidthForFontSize (m_aFont.getStringWidth (sText), fFontSize);
     }
-
     float fWidth = 0;
 
     // Iterate on code point basis
@@ -253,7 +255,6 @@ public class LoadedFont
       // Use code point cache for maximum performance
       fWidth += _getCodePointWidth (nCP);
     }
-
     // The width is in 1000 unit of text space, ie 333 or 777
     return PLConvert.getWidthForFontSize (fWidth, fFontSize);
   }
@@ -308,7 +309,6 @@ public class LoadedFont
     {
       final int nCodePoint = sCurLine.codePointAt (nCodePointOffset);
       final float fCodePointWidth = PLConvert.getWidthForFontSize (_getCodePointWidth (nCodePoint), fFontSize);
-
       if (Character.isWhitespace (nCodePoint))
       {
         // Whitespace is considered a word break and allows us to break the line
@@ -316,7 +316,6 @@ public class LoadedFont
         nCodePointOffsetOfLastWhitespace = nCodePointOffset;
         fSumWidthOfLastWhitespace = fSumWidth;
       }
-
       final float fNewWidth = fSumWidth + fCodePointWidth;
 
       boolean bSplitNow = fNewWidth > fMaxWidth;
@@ -324,17 +323,15 @@ public class LoadedFont
       {
         if (!bWarnedOnTooSmallMaxWidth)
         {
-          if (LOGGER.isWarnEnabled ())
-            LOGGER.warn ("The provided max width (" +
-                         fMaxWidth +
-                         ") is too small to hold a single character! Will create an overlap! Problem string=<" +
-                         sLine +
-                         ">");
+          LOGGER.warn ("The provided max width (" +
+                       fMaxWidth +
+                       ") is too small to hold a single character! Will create an overlap! Problem string=<" +
+                       sLine +
+                       ">");
           bWarnedOnTooSmallMaxWidth = true;
         }
         bSplitNow = false;
       }
-
       if (bSplitNow)
       {
         // Maximum width reached
@@ -353,7 +350,6 @@ public class LoadedFont
           sCurLine = sCurLine.substring (nCodePointOffset);
           ret.add (new TextAndWidthSpec (sPart, fSumWidth));
         }
-
         // Reset counter for the rest of the line
         fSumWidth = 0f;
         nCodePointOffset = 0;
@@ -367,7 +363,6 @@ public class LoadedFont
         fSumWidth = fNewWidth;
       }
     }
-
     // Add the rest (even if it is empty, otherwise empty lines won't get
     // printed)
     ret.add (new TextAndWidthSpec (sCurLine, fSumWidth));
