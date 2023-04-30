@@ -183,4 +183,4 @@ Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_
 ---
 
 My personal [Coding Styleguide](https://github.com/phax/meta/blob/master/CodingStyleguide.md) |
-Kindly supported by [YourKit Java Profiler](https://www.yourkit.com)
+It is appreciated if you star the GitHub project if you like it.
