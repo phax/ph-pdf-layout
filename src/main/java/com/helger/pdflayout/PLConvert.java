@@ -34,7 +34,7 @@ public final class PLConvert
   public static final int DEFAULT_USER_SPACE_UNIT_DPI = 72;
 
   @PresentForCodeCoverage
-  private static final PLConvert s_aInstance = new PLConvert ();
+  private static final PLConvert INSTANCE = new PLConvert ();
 
   private PLConvert ()
   {}
