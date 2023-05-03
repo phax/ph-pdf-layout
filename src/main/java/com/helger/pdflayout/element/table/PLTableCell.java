@@ -103,4 +103,22 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   {
     return new PLTableCell (new PLSpacerX ());
   }
+
+  /**
+   * Utility method to create an array of empty cells.
+   *
+   * @param nCellCount
+   *        The number of cells to create. Must be &ge; 0.
+   * @return The new empty table cell.
+   * @since 7.0.1
+   */
+  @Nonnull
+  public static PLTableCell [] createEmptyCells (@Nonnegative final int nCellCount)
+  {
+    ValueEnforcer.isGE0 (nCellCount, "CellCount");
+    final PLTableCell [] ret = new PLTableCell [nCellCount];
+    for (int i = 0; i < nCellCount; ++i)
+      ret[i] = createEmptyCell ();
+    return ret;
+  }
 }
