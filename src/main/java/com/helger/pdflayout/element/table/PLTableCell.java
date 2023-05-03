@@ -105,6 +105,20 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   }
 
   /**
+   * Utility method to create an empty cell with a colspan.
+   *
+   * @param nColSpan
+   *        The column span to use. Must be &gt; 0.
+   * @return The new empty table cell.
+   * @since 7.0.1
+   */
+  @Nonnull
+  public static PLTableCell createEmptyCell (@Nonnegative final int nColSpan)
+  {
+    return new PLTableCell (new PLSpacerX (), nColSpan);
+  }
+
+  /**
    * Utility method to create an array of empty cells.
    *
    * @param nCellCount
