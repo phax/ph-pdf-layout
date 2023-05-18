@@ -37,6 +37,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
 {
   SizeSpec DEFAULT_MIN_SIZE = SizeSpec.SIZE0;
   SizeSpec DEFAULT_MAX_SIZE = SizeSpec.SIZE_MAX;
+  EPLSimpleRotation DEFAULT_SIMPLE_ROTATION = EPLSimpleRotation.ROTATE_0;
 
   /**
    * @return The minimum size to be used. Excluding outline. Never
@@ -238,4 +239,23 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
     setMinHeight (fHeight);
     return setMaxHeight (fHeight);
   }
+
+  /**
+   * @return The simple rotation to be used. May not be <code>null</code>.
+   *         Defaults to {@link #DEFAULT_SIMPLE_ROTATION}.
+   * @since 7.0.1
+   */
+  @Nonnull
+  EPLSimpleRotation getSimpleRotation ();
+
+  /**
+   * Set the simple rotation to be used.
+   *
+   * @param eSimpleRotation
+   *        Rotation mode to be used. May not be <code>null</code>.
+   * @return this
+   * @since 7.0.1
+   */
+  @Nonnull
+  IMPLTYPE setSimpleRotation (@Nonnull EPLSimpleRotation eSimpleRotation);
 }

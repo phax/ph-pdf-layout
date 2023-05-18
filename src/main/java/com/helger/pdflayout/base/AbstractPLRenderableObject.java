@@ -90,7 +90,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   protected final void internalCheckNotPrepared ()
   {
     if (isPrepared ())
-      throw new IllegalStateException (getDebugID () + " was already prepared and can therefore not be modified: " + toString ());
+      throw new IllegalStateException (getDebugID () +
+                                       " was already prepared and can therefore not be modified: " +
+                                       toString ());
   }
 
   /**
@@ -200,11 +202,13 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       final SizeSpec aOldRenderSize = m_aRenderSize;
       m_aRenderSize = getRenderSize (m_aPreparedSize);
       if (PLDebugLog.isDebugPrepare () && !aOldRenderSize.equals (m_aRenderSize))
+      {
         PLDebugLog.debugPrepare (this,
                                  "RenderSize changed from " +
                                        PLDebugLog.getWH (aOldRenderSize) +
                                        " to " +
                                        PLDebugLog.getWH (m_aRenderSize));
+      }
     }
   }
 
@@ -305,7 +309,10 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     if (PLDebugLog.isDebugRender ())
       PLDebugLog.debugRender (this,
                               "Rendering at " +
-                                    PLDebugLog.getXYWH (aCtx.getStartLeft (), aCtx.getStartTop (), aCtx.getWidth (), aCtx.getHeight ()));
+                                    PLDebugLog.getXYWH (aCtx.getStartLeft (),
+                                                        aCtx.getStartTop (),
+                                                        aCtx.getWidth (),
+                                                        aCtx.getHeight ()));
 
     // Main perform after border
     onRender (aCtx);

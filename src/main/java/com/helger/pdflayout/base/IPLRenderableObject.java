@@ -35,7 +35,9 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
+public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPLTYPE>> extends
+                                     IPLObject <IMPLTYPE>,
+                                     IPLHasOutline
 {
   /**
    * @return <code>true</code> if this object was already prepared,
@@ -74,24 +76,6 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
   }
 
   /**
-   * @return The render size or <code>null</code> if this object was not yet
-   *         prepared. The render size includes the min/max size.
-   * @see #isPrepared()
-   */
-  @Nullable
-  SizeSpec getRenderSize ();
-
-  default float getRenderWidth ()
-  {
-    return getRenderSize ().getWidth ();
-  }
-
-  default float getRenderHeight ()
-  {
-    return getRenderSize ().getHeight ();
-  }
-
-  /**
    * Prepare this element once for rendering.
    *
    * @param aCtx
@@ -101,7 +85,35 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    * @see #render(PageRenderContext)
    */
   @Nonnull
-  SizeSpec prepare (@Nonnull final PreparationContext aCtx);
+  SizeSpec prepare (@Nonnull PreparationContext aCtx);
+
+  /**
+   * @return The render size or <code>null</code> if this object was not yet
+   *         prepared. The render size includes the min/max size.
+   * @see #isPrepared()
+   */
+  @Nullable
+  SizeSpec getRenderSize ();
+
+  /**
+   * @return The render width. Must only be called after preparing.
+   * @see #getRenderSize()
+   * @see #isPrepared()
+   */
+  default float getRenderWidth ()
+  {
+    return getRenderSize ().getWidth ();
+  }
+
+  /**
+   * @return The render height. Must only be called after preparing.
+   * @see #getRenderSize()
+   * @see #isPrepared()
+   */
+  default float getRenderHeight ()
+  {
+    return getRenderSize ().getHeight ();
+  }
 
   /**
    * Called after the page was created but before the content stream is created.
@@ -131,5 +143,5 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    * @see #prepare(PreparationContext)
    */
   @Nonnegative
-  void render (@Nonnull final PageRenderContext aCtx) throws IOException;
+  void render (@Nonnull PageRenderContext aCtx) throws IOException;
 }

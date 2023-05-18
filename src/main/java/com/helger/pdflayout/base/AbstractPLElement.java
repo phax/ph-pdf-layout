@@ -37,12 +37,13 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends AbstractPLRenderableObject <IMPLTYPE>
-                                        implements
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends
+                                        AbstractPLRenderableObject <IMPLTYPE> implements
                                         IPLElement <IMPLTYPE>
 {
   private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
   private SizeSpec m_aMaxSize = DEFAULT_MAX_SIZE;
+  private EPLSimpleRotation m_eSimpleRotation = DEFAULT_SIMPLE_ROTATION;
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private PaddingSpec m_aPadding = DEFAULT_PADDING;
@@ -57,6 +58,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
+    setSimpleRotation (aSource.getSimpleRotation ());
     setMargin (aSource.getMargin ());
     setBorder (aSource.getBorder ());
     setPadding (aSource.getPadding ());
@@ -88,6 +90,20 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public final IMPLTYPE setMaxSize (@Nonnull final SizeSpec aMaxSize)
   {
     m_aMaxSize = ValueEnforcer.notNull (aMaxSize, "MaxSize");
+    onRenderSizeChange ();
+    return thisAsT ();
+  }
+
+  @Nonnull
+  public final EPLSimpleRotation getSimpleRotation ()
+  {
+    return m_eSimpleRotation;
+  }
+
+  @Nonnull
+  public final IMPLTYPE setSimpleRotation (@Nonnull final EPLSimpleRotation eSimpleRotation)
+  {
+    m_eSimpleRotation = ValueEnforcer.notNull (eSimpleRotation, "SimpleRotation");
     onRenderSizeChange ();
     return thisAsT ();
   }
@@ -162,6 +178,11 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     fRealWidth = Math.min (m_aMaxSize.getWidth (), fRealWidth);
     fRealHeight = Math.min (m_aMaxSize.getHeight (), fRealHeight);
 
+    if (m_eSimpleRotation.isRotateBox ())
+    {
+      // Swap width and height
+      return new SizeSpec (fRealHeight, fRealWidth);
+    }
     return new SizeSpec (fRealWidth, fRealHeight);
   }
 
@@ -171,6 +192,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("MinSize", m_aMinSize)
                             .append ("MaxSize", m_aMaxSize)
+                            .append ("SimpleRotation", m_eSimpleRotation)
                             .append ("Margin", m_aMargin)
                             .append ("Border", m_aBorder)
                             .append ("Padding", m_aPadding)
