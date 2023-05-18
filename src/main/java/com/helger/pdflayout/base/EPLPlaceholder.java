@@ -27,6 +27,12 @@ import com.helger.commons.collection.impl.CommonsHashMap;
 import com.helger.commons.collection.impl.ICommonsMap;
 import com.helger.commons.string.StringHelper;
 
+/**
+ * Contains a list of supported textual placeholders to be replaced when
+ * creating a PDF.
+ *
+ * @author Philip Helger
+ */
 public enum EPLPlaceholder
 {
   /** 0-based index of current pageset */
@@ -56,6 +62,7 @@ public enum EPLPlaceholder
   {
     m_sVariable = sVariable;
     m_nEstimatedCharCount = nEstimatedCharCount;
+    // X is a good match for width of numbers 0..9
     m_sEstimatedPrepareText = StringHelper.getRepeated ('X', nEstimatedCharCount);
   }
 
