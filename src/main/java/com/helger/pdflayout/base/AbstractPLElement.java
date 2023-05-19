@@ -17,13 +17,21 @@
 package com.helger.pdflayout.base;
 
 import java.awt.Color;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.util.Matrix;
+
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.debug.PLDebugLog;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamExt;
+import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
@@ -184,6 +192,43 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
       return new SizeSpec (fRealHeight, fRealWidth);
     }
     return new SizeSpec (fRealWidth, fRealHeight);
+  }
+
+  @Override
+  @OverrideOnDemand
+  @OverridingMethodsMustInvokeSuper
+  protected void onBeforeRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    if (m_eSimpleRotation.isTransformNeeded ())
+    {
+      if (PLDebugLog.isDebugRender ())
+        PLDebugLog.debugRender (this, "Rotating object by " + m_eSimpleRotation.getDegrees () + " degrees");
+
+      final PDPageContentStreamExt cs = aCtx.getContentStream ().getContentStream ();
+      cs.saveGraphicsState ();
+
+      final PDPage page = aCtx.getContentStream ().getPage ();
+      final float fTranslateX = m_eSimpleRotation.hasTx () ? false ? aCtx.getWidth () : page.getCropBox ().getWidth () +
+                                                                                        page.getCropBox ()
+                                                                                            .getLowerLeftX () : 0;
+      final float fTranslateY = m_eSimpleRotation.hasTy () ? false ? aCtx.getHeight () : page.getCropBox ()
+                                                                                             .getHeight () +
+                                                                                         page.getCropBox ()
+                                                                                             .getLowerLeftY () : 0;
+      cs.transform (Matrix.getRotateInstance (m_eSimpleRotation.getRadians (), fTranslateX, fTranslateY));
+    }
+  }
+
+  @Override
+  @OverrideOnDemand
+  @OverridingMethodsMustInvokeSuper
+  protected void onAfterRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    if (m_eSimpleRotation.isTransformNeeded ())
+    {
+      final PDPageContentStreamExt cs = aCtx.getContentStream ().getContentStream ();
+      cs.restoreGraphicsState ();
+    }
   }
 
   @Override

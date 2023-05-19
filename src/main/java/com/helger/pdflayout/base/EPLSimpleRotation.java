@@ -36,8 +36,23 @@ public enum EPLSimpleRotation
     return this != ROTATE_0;
   }
 
+  /**
+   * @return <code>true</code> if the resulting box will have width and height
+   *         swapped, <code>false</code> if width stays width, and height stays
+   *         height.
+   */
   public boolean isRotateBox ()
   {
     return this == ROTATE_90 || this == ROTATE_270;
+  }
+
+  public boolean hasTx ()
+  {
+    return this == ROTATE_90 || this == ROTATE_180;
+  }
+
+  public boolean hasTy ()
+  {
+    return this == ROTATE_180 || this == ROTATE_270;
   }
 }

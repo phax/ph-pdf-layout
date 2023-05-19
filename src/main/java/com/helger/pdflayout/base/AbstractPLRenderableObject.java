@@ -291,6 +291,19 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
+   * Placeholder method to be implemented by subclasses.
+   *
+   * @param aCtx
+   *        Rendering context. Never <code>null</code>.
+   * @throws IOException
+   *         In case of a PDFBox error
+   * @since 7.0.1
+   */
+  @OverrideOnDemand
+  protected void onBeforeRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  {}
+
+  /**
    * Abstract method to be implemented by subclasses.
    *
    * @param aCtx
@@ -301,21 +314,46 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   @OverrideOnDemand
   protected abstract void onRender (@Nonnull PageRenderContext aCtx) throws IOException;
 
+  /**
+   * Placeholder method to be implemented by subclasses.
+   *
+   * @param aCtx
+   *        Rendering context. Never <code>null</code>.
+   * @throws IOException
+   *         In case of a PDFBox error
+   * @since 7.0.1
+   */
+  @OverrideOnDemand
+  protected void onAfterRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  {}
+
   @Nonnegative
   public final void render (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     internalCheckAlreadyPrepared ();
 
     if (PLDebugLog.isDebugRender ())
+    {
       PLDebugLog.debugRender (this,
                               "Rendering at " +
                                     PLDebugLog.getXYWH (aCtx.getStartLeft (),
                                                         aCtx.getStartTop (),
                                                         aCtx.getWidth (),
                                                         aCtx.getHeight ()));
+    }
 
-    // Main perform after border
-    onRender (aCtx);
+    // E.g. for rotation
+    onBeforeRender (aCtx);
+    try
+    {
+      // Main perform after border
+      onRender (aCtx);
+    }
+    finally
+    {
+      // E.g. for rotation
+      onAfterRender (aCtx);
+    }
   }
 
   @Override
