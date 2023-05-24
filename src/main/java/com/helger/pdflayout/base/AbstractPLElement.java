@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.util.Matrix;
 
 import com.helger.commons.ValueEnforcer;
@@ -197,8 +196,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   @Override
   @OverrideOnDemand
   @OverridingMethodsMustInvokeSuper
-  protected void onBeforeRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void rotateBeforeRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
+    // For all != 0°
     if (m_eSimpleRotation.isTransformNeeded ())
     {
       if (PLDebugLog.isDebugRender ())
@@ -207,14 +207,11 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
       final PDPageContentStreamExt cs = aCtx.getContentStream ().getContentStream ();
       cs.saveGraphicsState ();
 
-      final PDPage page = aCtx.getContentStream ().getPage ();
-      final float fTranslateX = m_eSimpleRotation.hasTx () ? false ? aCtx.getWidth () : page.getCropBox ().getWidth () +
-                                                                                        page.getCropBox ()
-                                                                                            .getLowerLeftX () : 0;
-      final float fTranslateY = m_eSimpleRotation.hasTy () ? false ? aCtx.getHeight () : page.getCropBox ()
-                                                                                             .getHeight () +
-                                                                                         page.getCropBox ()
-                                                                                             .getLowerLeftY () : 0;
+      final float fx = m_eSimpleRotation.isRotateBox () ? getPreparedHeight () : getPreparedWidth ();
+      final float fy = m_eSimpleRotation.isRotateBox () ? getPreparedWidth () : getPreparedHeight ();
+
+      final float fTranslateX = m_eSimpleRotation.hasTx () ? fx : 0;
+      final float fTranslateY = m_eSimpleRotation.hasTy () ? fy : 0;
       cs.transform (Matrix.getRotateInstance (m_eSimpleRotation.getRadians (), fTranslateX, fTranslateY));
     }
   }
@@ -222,7 +219,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   @Override
   @OverrideOnDemand
   @OverridingMethodsMustInvokeSuper
-  protected void onAfterRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void rotateAfterRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     if (m_eSimpleRotation.isTransformNeeded ())
     {

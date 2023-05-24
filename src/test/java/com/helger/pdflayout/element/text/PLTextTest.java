@@ -18,10 +18,17 @@ package com.helger.pdflayout.element.text;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.util.Matrix;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -48,9 +55,12 @@ import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLPageBreak;
+import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
+import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
+import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.WidthSpec;
 
@@ -434,16 +444,99 @@ public final class PLTextTest
   }
 
   @Test
-  public void testWithTextRotate90 () throws PDFCreationException
+  public void testWithTextRotate () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
-    aPS1.addElement (new PLText ("Hello rotated world", r10).setBorder (Color.RED)
-                                                            .setSimpleRotation (EPLSimpleRotation.ROTATE_180));
+    final PLVBox aVBox = new PLVBox ();
+    aVBox.setFullWidth (true);
+    for (final EPLSimpleRotation e : EPLSimpleRotation.values ())
+    {
+      final PLBox aBox = new PLBox ();
+      aBox.setBorder (new BorderStyleSpec (Color.GREEN, 2));
+      aBox.setMinWidth (aPS1.getAvailableWidth ());
+      aBox.setMinHeight (aPS1.getAvailableHeight ());
+      aBox.setElement (new PLText ("Hello rotated world [" + e.getDegrees () + "]", r10).setBorder (Color.RED)
+                                                                                        .setSimpleRotation (e));
+      aBox.setHorzAlign (EHorzAlignment.CENTER);
+      aBox.setVertAlign (EVertAlignment.MIDDLE);
+      aVBox.addRow (aBox, HeightSpec.star ());
+    }
+    aPS1.addElement (aVBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/rotate-90.pdf"));
+    aPageLayout.renderTo (new File ("pdf/pltext/rotated-text.pdf"));
+  }
+
+  @Test
+  public void testRotateStackOverflow1 () throws IOException
+  {
+    final PDDocument doc = new PDDocument ();
+    final PDPage page1 = new PDPage ();
+    doc.addPage (page1);
+    final PDPage page2 = new PDPage ();
+    doc.addPage (page2);
+    final PDPage page3 = new PDPage ();
+    doc.addPage (page3);
+
+    final PDFont font = PDType1Font.HELVETICA;
+    final float fontSize = 20;
+    final int xPos = 100;
+    final int yPos = 400;
+    final float titleWidth = font.getStringWidth ("Test") / 1000;
+    final float titleHeight = fontSize;
+    final float tx = titleWidth / 2;
+    final float ty = titleHeight / 2;
+
+    try (PDPageContentStream contentStream = new PDPageContentStream (doc, page1))
+    {
+      contentStream.beginText ();
+
+      contentStream.newLineAtOffset (xPos, yPos);
+
+      contentStream.setFont (font, fontSize);
+      contentStream.showText ("Tets");
+      contentStream.endText ();
+    }
+
+    // classic case of rotated page
+    try (PDPageContentStream contentStream = new PDPageContentStream (doc, page2))
+    {
+      contentStream.beginText ();
+
+      final Matrix matrix = Matrix.getRotateInstance (Math.toRadians (90), 0, 0);
+      matrix.translate (0, -page2.getMediaBox ().getWidth ());
+
+      contentStream.setTextMatrix (matrix);
+
+      contentStream.newLineAtOffset (xPos, yPos);
+
+      contentStream.setFont (font, fontSize);
+      contentStream.showText ("Tets");
+      contentStream.endText ();
+    }
+
+    // rotation around text
+    try (PDPageContentStream contentStream = new PDPageContentStream (doc, page3))
+    {
+      contentStream.beginText ();
+
+      final Matrix matrix = Matrix.getRotateInstance (Math.toRadians (90), 0, 0);
+      matrix.translate (0, -page3.getMediaBox ().getWidth ());
+
+      contentStream.setTextMatrix (matrix);
+
+      contentStream.newLineAtOffset (yPos - titleWidth / 2 - fontSize,
+                                     page3.getMediaBox ().getWidth () - xPos - titleWidth / 2 - fontSize);
+
+      contentStream.setFont (font, fontSize);
+      contentStream.showText ("Tets");
+      contentStream.endText ();
+    }
+    doc.save ("saved.pdf");
+    doc.close ();
   }
 }

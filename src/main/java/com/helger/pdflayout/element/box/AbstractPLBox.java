@@ -272,6 +272,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     aBox2ElementPreparedSize = aSplitResult.getSecondElement ().getSize ();
 
     if (PLDebugLog.isDebugSplit ())
+    {
       PLDebugLog.debugSplit (this,
                              "Split box element " +
                                    aElement.getDebugID () +
@@ -296,6 +297,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
                                    "+" +
                                    aBox2Element.getOutlineYSum () +
                                    ")");
+    }
 
     // Excluding padding/margin
     aBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox1UsedHeight));
@@ -327,7 +329,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
       m_aElement.render (aElementCtx);
     }
     else
-      PLDebugLog.debugRender (this, "Not rendering the box, because no element is contained");
+      PLDebugLog.debugRender (this, "Not rendering the box content, because no element is contained");
   }
 
   @Override

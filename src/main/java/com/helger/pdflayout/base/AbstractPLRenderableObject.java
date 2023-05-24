@@ -300,7 +300,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @since 7.0.1
    */
   @OverrideOnDemand
-  protected void onBeforeRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void rotateBeforeRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 
   /**
@@ -324,7 +324,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @since 7.0.1
    */
   @OverrideOnDemand
-  protected void onAfterRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void rotateAfterRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {}
 
   @Nonnegative
@@ -332,27 +332,28 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   {
     internalCheckAlreadyPrepared ();
 
-    if (PLDebugLog.isDebugRender ())
-    {
-      PLDebugLog.debugRender (this,
-                              "Rendering at " +
-                                    PLDebugLog.getXYWH (aCtx.getStartLeft (),
-                                                        aCtx.getStartTop (),
-                                                        aCtx.getWidth (),
-                                                        aCtx.getHeight ()));
-    }
-
     // E.g. for rotation
-    onBeforeRender (aCtx);
+    rotateBeforeRender (aCtx);
     try
     {
+      // Debug render with rotation
+      if (PLDebugLog.isDebugRender ())
+      {
+        PLDebugLog.debugRender (this,
+                                "Rendering at " +
+                                      PLDebugLog.getXYWH (aCtx.getStartLeft (),
+                                                          aCtx.getStartTop (),
+                                                          aCtx.getWidth (),
+                                                          aCtx.getHeight ()));
+      }
+
       // Main perform after border
       onRender (aCtx);
     }
     finally
     {
       // E.g. for rotation
-      onAfterRender (aCtx);
+      rotateAfterRender (aCtx);
     }
   }
 
