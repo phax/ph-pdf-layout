@@ -446,7 +446,7 @@ public class PageLayoutPDF implements IPLVisitable
               dublinCoreSchema.addSubject (m_sDocumentSubject);
             dublinCoreSchema.addDate (aCreationDate);
 
-            final PDFAIdentificationSchema aIdentificationSchema = xmpMetadata.createAndAddPFAIdentificationSchema ();
+            final PDFAIdentificationSchema aIdentificationSchema = xmpMetadata.createAndAddPDFAIdentificationSchema ();
             aIdentificationSchema.setPart (Integer.valueOf (3));
             aIdentificationSchema.setConformance ("A");
 
