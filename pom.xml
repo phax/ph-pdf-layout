@@ -169,8 +169,8 @@
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
-      <optional>true</optional>
       <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
