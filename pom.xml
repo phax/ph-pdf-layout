@@ -81,7 +81,7 @@
       <dependency>
         <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>11.0.6</version>
+        <version>11.1.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -166,6 +166,12 @@
       <optional>true</optional>
     </dependency>
     -->
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <optional>true</optional>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>

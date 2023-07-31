@@ -54,8 +54,10 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-* v7.0.1 - work in progress
+* v7.0.1 - 2023-07-31
     * Updated to PDFBox 2.0.29
+    * Updated to ph-commons 11.1.0
+    * Improved API to create an empty cell. See [issue #29](https://github.com/phax/ph-pdf-layout/issues/29) - thx @fheldt
 * v7.0.0 - 2022-09-14
     * Using Java 11 as the baseline
     * Updated to ph-commons 11
