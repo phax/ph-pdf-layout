@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import javax.annotation.WillClose;
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -303,7 +304,7 @@ public class PageLayoutPDF implements IPLVisitable
       // create a new document
       // Use a buffered OS - approx 30% faster!
       try (final PDDocument aDoc = new PDDocument ();
-          final OutputStream aBufferedOS = StreamHelper.getBuffered (m_bCreatePDF_A ? aTmpOS : aOS))
+           final OutputStream aBufferedOS = StreamHelper.getBuffered (m_bCreatePDF_A ? aTmpOS : aOS))
       {
         // Small consistency check to avoid creating empty, invalid PDFs
         int nTotalElements = 0;
@@ -394,9 +395,8 @@ public class PageLayoutPDF implements IPLVisitable
           LOGGER.debug ("Start adding PDF/A information");
 
         // Add metadata (needed by PDF/A)
-        try (final NonBlockingByteArrayInputStream pdfInputStream = aTmpOS.getAsInputStream ();
-            final PDDocument aDoc = PDDocument.load (pdfInputStream);
-            final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
+        try (final PDDocument aDoc = Loader.loadPDF (aTmpOS.getBufferOrCopy ());
+             final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
         {
 
           final Calendar aCreationDate = m_aDocumentCreationDate == null ? PDTFactory.createCalendar ()
@@ -506,7 +506,6 @@ public class PageLayoutPDF implements IPLVisitable
     } // close aTmpOS
 
     return this;
-
   }
 
   /**

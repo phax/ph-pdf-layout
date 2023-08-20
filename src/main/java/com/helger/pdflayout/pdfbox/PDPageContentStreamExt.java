@@ -21,6 +21,7 @@ import java.awt.geom.AffineTransform;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -57,7 +58,6 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage;
 import org.apache.pdfbox.pdmodel.graphics.shading.PDShading;
 import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceStream;
-import org.apache.pdfbox.util.Charsets;
 import org.apache.pdfbox.util.Matrix;
 import org.apache.pdfbox.util.NumberFormatUtil;
 
@@ -262,7 +262,9 @@ public final class PDPageContentStreamExt implements Closeable
    * @param outputStream
    *        The appearances output stream to write to.
    */
-  public PDPageContentStreamExt (final PDDocument aDoc, final PDAppearanceStream appearance, final OutputStream outputStream)
+  public PDPageContentStreamExt (final PDDocument aDoc,
+                                 final PDAppearanceStream appearance,
+                                 final OutputStream outputStream)
   {
     m_aDoc = aDoc;
 
@@ -274,7 +276,7 @@ public final class PDPageContentStreamExt implements Closeable
   }
 
   @Nonnull
-  final OutputStream getOutput ()
+  OutputStream getOutput ()
   {
     return m_aOS;
   }
@@ -495,7 +497,11 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IllegalStateException
    *         If the method was called within a text block.
    */
-  public void drawImage (final PDImageXObject image, final float x, final float y, final float width, final float height) throws IOException
+  public void drawImage (final PDImageXObject image,
+                         final float x,
+                         final float y,
+                         final float width,
+                         final float height) throws IOException
   {
     if (m_bInTextMode)
       throw new IllegalStateException ("Error: drawImage is not allowed within a text block.");
@@ -733,7 +739,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setStrokingColor (@Nonnull final Color color) throws IOException
   {
-    final float [] components = new float [] { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
+    final float [] components = { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
     final PDColor pdColor = new PDColor (components, PDDeviceRGB.INSTANCE);
     setStrokingColor (pdColor);
   }
@@ -781,9 +787,20 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setStrokingColor (final float c, final float m, final float y, final float k) throws IOException
   {
-    if (_isOutsideOneInterval (c) || _isOutsideOneInterval (m) || _isOutsideOneInterval (y) || _isOutsideOneInterval (k))
+    if (_isOutsideOneInterval (c) ||
+        _isOutsideOneInterval (m) ||
+        _isOutsideOneInterval (y) ||
+        _isOutsideOneInterval (k))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..1, but are (" + c + "," + m + "," + y + "," + k + ")");
+      throw new IllegalArgumentException ("Parameters must be within 0..1, but are (" +
+                                          c +
+                                          "," +
+                                          m +
+                                          "," +
+                                          y +
+                                          "," +
+                                          k +
+                                          ")");
     }
     writeOperand (c);
     writeOperand (m);
@@ -863,7 +880,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setNonStrokingColor (@Nonnull final Color color) throws IOException
   {
-    final float [] components = new float [] { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
+    final float [] components = { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
     final PDColor pdColor = new PDColor (components, PDDeviceRGB.INSTANCE);
     setNonStrokingColor (pdColor);
   }
@@ -911,9 +928,20 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setNonStrokingColor (final int c, final int m, final int y, final int k) throws IOException
   {
-    if (_isOutside255Interval (c) || _isOutside255Interval (m) || _isOutside255Interval (y) || _isOutside255Interval (k))
+    if (_isOutside255Interval (c) ||
+        _isOutside255Interval (m) ||
+        _isOutside255Interval (y) ||
+        _isOutside255Interval (k))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..255, but are (" + c + "," + m + "," + y + "," + k + ")");
+      throw new IllegalArgumentException ("Parameters must be within 0..255, but are (" +
+                                          c +
+                                          "," +
+                                          m +
+                                          "," +
+                                          y +
+                                          "," +
+                                          k +
+                                          ")");
     }
 
     setNonStrokingColor (c / 255f, m / 255f, y / 255f, k / 255f);
@@ -935,9 +963,20 @@ public final class PDPageContentStreamExt implements Closeable
    */
   public void setNonStrokingColor (final double c, final double m, final double y, final double k) throws IOException
   {
-    if (_isOutsideOneInterval (c) || _isOutsideOneInterval (m) || _isOutsideOneInterval (y) || _isOutsideOneInterval (k))
+    if (_isOutsideOneInterval (c) ||
+        _isOutsideOneInterval (m) ||
+        _isOutsideOneInterval (y) ||
+        _isOutsideOneInterval (k))
     {
-      throw new IllegalArgumentException ("Parameters must be within 0..1, but are (" + c + "," + m + "," + y + "," + k + ")");
+      throw new IllegalArgumentException ("Parameters must be within 0..1, but are (" +
+                                          c +
+                                          "," +
+                                          m +
+                                          "," +
+                                          y +
+                                          "," +
+                                          k +
+                                          ")");
     }
 
     writeOperand ((float) c);
@@ -1034,7 +1073,8 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IllegalStateException
    *         If the method was called within a text block.
    */
-  public void curveTo (final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) throws IOException
+  public void curveTo (final float x1, final float y1, final float x2, final float y2, final float x3, final float y3)
+                                                                                                                       throws IOException
   {
     if (m_bInTextMode)
       throw new IllegalStateException ("Error: curveTo is not allowed within a text block.");
@@ -1470,7 +1510,9 @@ public final class PDPageContentStreamExt implements Closeable
    */
   protected void writeOperand (final float real) throws IOException
   {
-    final int byteCount = NumberFormatUtil.formatFloatFast (real, m_aFormatDecimal.getMaximumFractionDigits (), m_aFormatBuffer);
+    final int byteCount = NumberFormatUtil.formatFloatFast (real,
+                                                            m_aFormatDecimal.getMaximumFractionDigits (),
+                                                            m_aFormatBuffer);
 
     if (byteCount == -1)
     {
@@ -1536,7 +1578,7 @@ public final class PDPageContentStreamExt implements Closeable
    */
   private void write (final String text) throws IOException
   {
-    write (text.getBytes (Charsets.US_ASCII));
+    write (text.getBytes (StandardCharsets.US_ASCII));
   }
 
   /**

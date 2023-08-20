@@ -19,6 +19,7 @@ package com.helger.pdflayout.supplementary.issues;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public final class MainIssue3204
       if (f.isFile () && f.getName ().endsWith (".pdf"))
       {
         LOGGER.info (f.getAbsolutePath ());
-        try (PDDocument aDoc = PDDocument.load (f))
+        try (PDDocument aDoc = Loader.loadPDF (f))
         {
           new PDFRenderer (aDoc).renderImageWithDPI (0, 195);
           n++;

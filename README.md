@@ -54,6 +54,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+* v7.1.0 - 2023-08-20
+    * Updated to PDFBox 3.0.0
 * v7.0.1 - 2023-07-31
     * Updated to PDFBox 2.0.29
     * Updated to ph-commons 11.1.0

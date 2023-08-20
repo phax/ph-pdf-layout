@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.apache.fontbox.ttf.TTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
+import org.apache.pdfbox.io.RandomAccessReadBuffer;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -37,7 +38,8 @@ public final class MainIssue3337
 
   public static void main (final String [] args) throws IOException
   {
-    final TrueTypeFont aTTF = new TTFParser ().parse (EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ().getInputStream ());
+    final TrueTypeFont aTTF = new TTFParser ().parse (new RandomAccessReadBuffer (EFontResourceOpenSans.OPEN_SANS_NORMAL.getFontResource ()
+                                                                                                                        .getInputStream ()));
 
     for (int i = 0; i < 2; ++i)
     {
