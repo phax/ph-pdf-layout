@@ -1,7 +1,7 @@
 # ph-pdf-layout
 
-[![javadoc](https://javadoc.io/badge2/com.helger/ph-pdf-layout4/javadoc.svg)](https://javadoc.io/doc/com.helger/ph-pdf-layout4)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout4/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout4) 
+[![javadoc](https://javadoc.io/badge2/com.helger/ph-pdf-layout/javadoc.svg)](https://javadoc.io/doc/com.helger/ph-pdf-layout)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout) 
 
 Java library for creating fluid page layouts with Apache PDFBox.
 
