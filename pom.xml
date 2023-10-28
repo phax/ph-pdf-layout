@@ -52,8 +52,8 @@
   </repositories>
 
   <scm>
-    <connection>scm:git:git@github.com:phax/ph-pdf-layout.git</connection>
-    <developerConnection>scm:git:git@github.com:phax/ph-pdf-layout.git</developerConnection>
+    <connection>scm:git:https://github.com/phax/ph-pdf-layout.git</connection>
+    <developerConnection>scm:git:https://github.com/phax/ph-pdf-layout.git</developerConnection>
     <url>http://github.com/phax/ph-pdf-layout</url>
     <tag>HEAD</tag>
   </scm>
