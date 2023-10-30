@@ -285,6 +285,31 @@ public class PageLayoutPDF implements IPLVisitable
   }
 
   /**
+   * Explicitly prepare all available page sets. That means that the page sets
+   * cannot be modified again, but the content sizes can be determined.
+   *
+   * @since 7.3.1
+   */
+  public void prepareAllPageSets ()
+  {
+    // Dummy document
+    try (final PDDocument aDoc = new PDDocument ())
+    {
+      // Global context
+      final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal (aDoc);
+      // Through all page sets
+      for (final PLPageSet aPageSet : m_aPageSets)
+      {
+        aPageSet.prepareAllPages (aGlobalPrepareCtx);
+      }
+    }
+    catch (final IOException ex)
+    {
+      LOGGER.error ("Failed to prepare page sets", ex);
+    }
+  }
+
+  /**
    * Render this layout to an OutputStream.
    *
    * @param aOS
@@ -345,7 +370,13 @@ public class PageLayoutPDF implements IPLVisitable
         int nTotalPageCount = 0;
         for (final PLPageSet aPageSet : m_aPageSets)
         {
-          final PLPageSetPrepareResult aPR = aPageSet.prepareAllPages (aGlobalPrepareCtx);
+          final PLPageSetPrepareResult aPR;
+
+          // Handle pre prepared page sets
+          if (aPageSet.isPrepared ())
+            aPR = aPageSet.internalGetPrepareResult ();
+          else
+            aPR = aPageSet.prepareAllPages (aGlobalPrepareCtx);
           aPRs[nPageSetIndex] = aPR;
           nTotalPageCount += aPR.getPageCount ();
           nPageSetIndex++;

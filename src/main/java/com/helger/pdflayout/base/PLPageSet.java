@@ -85,6 +85,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   private IPLRenderableObject <?> m_aFirstPageFooter;
   private IPLRenderableObject <?> m_aPageFooter;
 
+  private boolean m_bPrepared = false;
+  private PLPageSetPrepareResult m_aPrepareResult;
+
   private IPreRenderContextCustomizer m_aPRCCustomizer;
   private IRenderContextCustomizer m_aRCCustomizer;
 
@@ -137,6 +140,19 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
     return m_aPageSize.getHeight ();
   }
 
+  /**
+   * Throw an exception, if this object was already prepared.
+   *
+   * @throws IllegalStateException
+   *         if already prepared
+   */
+  protected final void internalCheckNoPrepared ()
+  {
+    if (isPrepared ())
+      throw new IllegalStateException (getDebugID () +
+                                       " PageSet is already prepared - cannot modify it or prepare it again");
+  }
+
   @Nonnull
   public final MarginSpec getMargin ()
   {
@@ -147,6 +163,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   public final PLPageSet setMargin (@Nonnull final MarginSpec aMargin)
   {
     ValueEnforcer.notNull (aMargin, "Mergin");
+    internalCheckNoPrepared ();
     m_aMargin = aMargin;
     return this;
   }
@@ -161,6 +178,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   public final PLPageSet setPadding (@Nonnull final PaddingSpec aPadding)
   {
     ValueEnforcer.notNull (aPadding, "Padding");
+    internalCheckNoPrepared ();
     m_aPadding = aPadding;
     return this;
   }
@@ -175,6 +193,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   public final PLPageSet setBorder (@Nonnull final BorderSpec aBorder)
   {
     ValueEnforcer.notNull (aBorder, "Border");
+    internalCheckNoPrepared ();
     m_aBorder = aBorder;
     return this;
   }
@@ -188,6 +207,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   @Nonnull
   public final PLPageSet setFillColor (@Nullable final PLColor aFillColor)
   {
+    internalCheckNoPrepared ();
     m_aFillColor = aFillColor;
     return this;
   }
@@ -285,6 +305,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   @Nonnull
   public PLPageSet setDifferentFirstPageHeader (final boolean bDifferentFirstPageHeader)
   {
+    internalCheckNoPrepared ();
     m_bDifferentFirstPageHeader = bDifferentFirstPageHeader;
     return this;
   }
@@ -322,6 +343,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   @Nonnull
   public PLPageSet setFirstPageHeader (@Nullable final IPLRenderableObject <?> aPageHeader)
   {
+    internalCheckNoPrepared ();
     m_aFirstPageHeader = aPageHeader;
     return this;
   }
@@ -354,6 +376,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   @Nonnull
   public PLPageSet setPageHeader (@Nullable final IPLRenderableObject <?> aPageHeader)
   {
+    internalCheckNoPrepared ();
     m_aPageHeader = aPageHeader;
     return this;
   }
@@ -387,6 +410,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   public PLPageSet addElement (@Nonnull final IPLRenderableObject <?> aElement)
   {
     ValueEnforcer.notNull (aElement, "Element");
+    internalCheckNoPrepared ();
     m_aElements.add (aElement);
     return this;
   }
@@ -414,6 +438,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   @Nonnull
   public PLPageSet setDifferentFirstPageFooter (final boolean bDifferentFirstPageFooter)
   {
+    internalCheckNoPrepared ();
     m_bDifferentFirstPageFooter = bDifferentFirstPageFooter;
     return this;
   }
@@ -451,6 +476,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   @Nonnull
   public PLPageSet setFirstPageFooter (@Nullable final IPLRenderableObject <?> aFirstPageFooter)
   {
+    internalCheckNoPrepared ();
     m_aFirstPageFooter = aFirstPageFooter;
     return this;
   }
@@ -483,6 +509,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   @Nonnull
   public PLPageSet setPageFooter (@Nullable final IPLRenderableObject <?> aPageFooter)
   {
+    internalCheckNoPrepared ();
     m_aPageFooter = aPageFooter;
     return this;
   }
@@ -520,9 +547,23 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
     return ret;
   }
 
+  public final boolean isPrepared ()
+  {
+    return m_bPrepared;
+  }
+
+  @Nullable
+  public final PLPageSetPrepareResult internalGetPrepareResult ()
+  {
+    return m_aPrepareResult;
+  }
+
   @Nonnull
   public PLPageSetPrepareResult prepareAllPages (@Nonnull final PreparationContextGlobal aGlobalCtx)
   {
+    // Prepare only once!
+    internalCheckNoPrepared ();
+
     // The result element
     final PLPageSetPrepareResult ret = new PLPageSetPrepareResult ();
 
@@ -561,6 +602,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
         aFirstPageMBP.setMarginTop (fEffectiveHeaderHeight);
       }
     }
+
     // Prepare default page header
     if (m_aPageHeader != null)
     {
@@ -593,6 +635,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
         setMarginTop (fEffectiveHeaderHeight);
       }
     }
+
     // Prepare first page footer
     if (m_bDifferentFirstPageFooter && m_aFirstPageFooter != null)
     {
@@ -625,6 +668,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
         aFirstPageMBP.setMarginBottom (fEffectiveFooterHeight);
       }
     }
+
     // Prepare default page footer
     if (m_aPageFooter != null)
     {
@@ -657,6 +701,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
         setMarginBottom (fEffectiveFooterHeight);
       }
     }
+
     if (aFirstPageMBP.getMarginYSum () > m_aPageSize.getHeight ())
       throw new IllegalStateException ("First page header and footer together (" +
                                        aFirstPageMBP.getMarginYSum () +
@@ -704,6 +749,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       if (PLDebugLog.isDebugPrepare ())
         PLDebugLog.debugPrepare (this, "Finished preparing elements");
     }
+
     // Split into pieces that fit onto a page
     // final float fYTop = getYTop ();
     // final float fYLeast = getOutlineBottom ();
@@ -879,6 +925,10 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this, "Finished splitting elements");
     }
+
+    // Remember at the end
+    m_bPrepared = true;
+    m_aPrepareResult = ret;
     return ret;
   }
 
@@ -910,6 +960,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                               @Nonnegative final int nTotalPageStartIndex,
                               @Nonnegative final int nTotalPageCount) throws IOException
   {
+    if (!m_bPrepared)
+      throw new IllegalStateException ("Cannot render PageSet that is not prepared");
+
     // Start at the left top
     final float fXLeft = getOutlineLeft ();
 
@@ -1065,6 +1118,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                             .appendIfNotNull ("PageFooter", m_aPageFooter)
                             .appendIfNotNull ("PRCCustomizer", m_aPRCCustomizer)
                             .appendIfNotNull ("RCCustomizer", m_aRCCustomizer)
+                            .append ("Prepared", m_bPrepared)
+                            .appendIfNotNull ("PrepareResult", m_aPrepareResult)
                             .getToString ();
   }
 }

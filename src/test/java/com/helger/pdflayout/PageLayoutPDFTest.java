@@ -25,6 +25,8 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.pdflayout.base.EPLPlaceholder;
@@ -33,6 +35,8 @@ import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.special.PLSpacerY;
+import com.helger.pdflayout.element.table.PLTable;
+import com.helger.pdflayout.element.table.PLTableCell;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.spec.BorderStyleSpec;
@@ -49,6 +53,8 @@ import com.helger.pdflayout.spec.WidthSpec;
  */
 public final class PageLayoutPDFTest
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (PageLayoutPDFTest.class);
+
   @Rule
   public final TestRule m_aRule = new PLDebugTestRule ();
 
@@ -296,5 +302,34 @@ public final class PageLayoutPDFTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.renderTo (new File ("pdf/test-din-letter.pdf"));
+  }
+
+  @Test
+  public void testIssue33 () throws PDFCreationException
+  {
+    final PLPageSet pageSet = new PLPageSet (6 * 72, 9 * 72);
+    pageSet.setMargin (75, 75, 75, 75);
+
+    final FontSpec footerFont = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLText footer = new PLText ("This is the footer for page " + EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable (),
+                                      footerFont);
+    footer.setReplacePlaceholder (true);
+    pageSet.setPageFooter (footer);
+
+    final FontSpec clueFont = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLTable table = PLTable.createWithPercentage (100);
+    final PLTableCell cell = new PLTableCell (new PLText ("This is a cell", clueFont));
+    table.addRow (cell);
+    pageSet.addElement (table);
+
+    final PageLayoutPDF pageLayout = new PageLayoutPDF ();
+    pageLayout.addPageSet (pageSet);
+
+    // New
+    pageLayout.prepareAllPageSets ();
+
+    LOGGER.info ("Table height is " + table.getPreparedHeight ());
+
+    pageLayout.renderTo (new File ("pdf/test-issue-33.pdf"));
   }
 }
