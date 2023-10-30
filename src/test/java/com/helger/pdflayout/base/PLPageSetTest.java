@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.base;
 
-import java.awt.Color;
 import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -56,10 +55,11 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (100, 50, 30, 20);
 
-    aPS1.setPageHeader (new PLBox (new PLText (sHeader + sHeader + "last line of header",
-                                               r10).setBorder (Color.RED)).setBorder (Color.GREEN));
-    aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
-    aPS1.addElement (new PLBox (new PLText ("Second body line", r10).setBorder (Color.BLUE)).setBorder (Color.PINK));
+    aPS1.setPageHeader (new PLBox (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED))
+                                                                                                                       .setBorder (PLColor.GREEN));
+    aPS1.addElement (new PLText ("First body line", r10).setBorder (PLColor.BLUE));
+    aPS1.addElement (new PLBox (new PLText ("Second body line", r10).setBorder (PLColor.BLUE)).setBorder (
+                                                                                                          PLColor.PINK));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -74,9 +74,9 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.setPageHeader (new PLBox (new PLText (sHeader + sHeader + "last line of header",
-                                               r10).setFillColor (Color.PINK)).setHorzAlign (EHorzAlignment.RIGHT));
-    aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
+    aPS1.setPageHeader (new PLBox (new PLText (sHeader + sHeader + "last line of header", r10).setFillColor (
+                                                                                                             PLColor.PINK)).setHorzAlign (EHorzAlignment.RIGHT));
+    aPS1.addElement (new PLText ("First body line", r10).setBorder (PLColor.BLUE));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -92,10 +92,10 @@ public final class PLPageSetTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
     final PLTable aTable = new PLTable (WidthSpec.star ());
-    aTable.addRow (new PLTableCell (new PLText (sHeader + sHeader + "last line of header",
-                                                r10).setFillColor (Color.PINK)).setHorzAlign (EHorzAlignment.RIGHT));
+    aTable.addRow (new PLTableCell (new PLText (sHeader + sHeader + "last line of header", r10).setFillColor (
+                                                                                                              PLColor.PINK)).setHorzAlign (EHorzAlignment.RIGHT));
     aPS1.setPageHeader (aTable);
-    aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
+    aPS1.addElement (new PLText ("First body line", r10).setBorder (PLColor.BLUE));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -110,8 +110,8 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setBorder (Color.RED));
-    aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setBorder (PLColor.RED));
+    aPS1.addElement (new PLText ("First body line", r10).setBorder (PLColor.BLUE));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -126,9 +126,9 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (Color.PINK)
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (PLColor.PINK)
                                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
-    aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
+    aPS1.addElement (new PLText ("First body line", r10).setBorder (PLColor.BLUE));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -144,11 +144,11 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED)
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED)
                                                                                    .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (Color.PINK)
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (PLColor.PINK)
                                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
-    aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
+    aPS1.addElement (new PLText ("First body line", r10).setBorder (PLColor.BLUE));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -164,16 +164,16 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
-    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED)
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED)
                                                                                    .setHorzAlign (EHorzAlignment.CENTER)
                                                                                    .setPadding (5)
                                                                                    .setMargin (5)
-                                                                                   .setFillColor (Color.YELLOW));
+                                                                                   .setFillColor (PLColor.YELLOW));
     aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setPadding (5)
                                                                                    .setMargin (5)
-                                                                                   .setFillColor (Color.PINK)
+                                                                                   .setFillColor (PLColor.PINK)
                                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
-    aPS1.addElement (new PLText ("First body line", r10).setBorder (Color.BLUE));
+    aPS1.addElement (new PLText ("First body line", r10).setBorder (PLColor.BLUE));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -206,18 +206,16 @@ public final class PLPageSetTest
                                                " / ${custom-var}",
                                                r10).setID ("header")
                                                    .setReplacePlaceholder (true)
-                                                   .setFillColor (Color.PINK)).setID ("headerbox")
-                                                                              .setHorzAlign (EHorzAlignment.CENTER)
-                                                                              .setBorder (Color.GREEN));
+                                                   .setFillColor (PLColor.PINK)).setID ("headerbox")
+                                                                                .setHorzAlign (EHorzAlignment.CENTER)
+                                                                                .setBorder (PLColor.GREEN));
 
     final StringBuilder aText = new StringBuilder ();
     for (int i = 0; i < 80; ++i)
       aText.append ("Line ").append (i).append ('\n');
     aPS1.addElement (new PLText (aText.toString (), r10).setVertSplittable (true).setID ("content"));
 
-    aPS1.setPreRenderContextCustomizer (aCtx -> {
-      aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)");
-    });
+    aPS1.setPreRenderContextCustomizer (aCtx -> { aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)"); });
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -233,9 +231,9 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
 
-    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED)
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED)
                                                                                    .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (Color.PINK)
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (PLColor.PINK)
                                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
 
     for (int i = 0; i < 80; ++i)
@@ -256,7 +254,7 @@ public final class PLPageSetTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (5)
                                                          .setPadding (5)
                                                          .setBorder (new BorderStyleSpec (5))
-                                                         .setFillColor (Color.ORANGE);
+                                                         .setFillColor (PLColor.ORANGE);
 
     aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10));
     aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10));
@@ -278,11 +276,11 @@ public final class PLPageSetTest
                                                          .setDifferentFirstPageHeader (true)
                                                          .setDifferentFirstPageFooter (true);
 
-    aPS1.setFirstPageHeader (new PLBox (new PLText ("First page header only", r10)).setBorder (Color.BLUE));
-    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED)
+    aPS1.setFirstPageHeader (new PLBox (new PLText ("First page header only", r10)).setBorder (PLColor.BLUE));
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED)
                                                                                    .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setFirstPageFooter (new PLBox (new PLText ("First page footer only", r10)).setBorder (Color.BLUE));
-    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (Color.PINK)
+    aPS1.setFirstPageFooter (new PLBox (new PLText ("First page footer only", r10)).setBorder (PLColor.BLUE));
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (PLColor.PINK)
                                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
 
     for (int i = 0; i < 1000; ++i)
@@ -302,10 +300,10 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30).setDifferentFirstPageHeader (true);
 
-    aPS1.setFirstPageHeader (new PLBox (new PLText ("First page header only", r10)).setBorder (Color.BLUE));
-    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED)
+    aPS1.setFirstPageHeader (new PLBox (new PLText ("First page header only", r10)).setBorder (PLColor.BLUE));
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED)
                                                                                    .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (Color.PINK)
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (PLColor.PINK)
                                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
 
     for (int i = 0; i < 1000; ++i)
@@ -325,10 +323,10 @@ public final class PLPageSetTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30).setDifferentFirstPageFooter (true);
 
-    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED)
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED)
                                                                                    .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setFirstPageFooter (new PLBox (new PLText ("First page footer only", r10)).setBorder (Color.BLUE));
-    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (Color.PINK)
+    aPS1.setFirstPageFooter (new PLBox (new PLText ("First page footer only", r10)).setBorder (PLColor.BLUE));
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (PLColor.PINK)
                                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
 
     for (int i = 0; i < 1000; ++i)
@@ -350,9 +348,9 @@ public final class PLPageSetTest
                                                          .setDifferentFirstPageHeader (true)
                                                          .setDifferentFirstPageFooter (true);
 
-    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (Color.RED)
+    aPS1.setPageHeader (new PLText (sHeader + sHeader + "last line of header", r10).setBorder (PLColor.RED)
                                                                                    .setHorzAlign (EHorzAlignment.CENTER));
-    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (Color.PINK)
+    aPS1.setPageFooter (new PLText (sFooter + sFooter + "last line of footer", r10).setFillColor (PLColor.PINK)
                                                                                    .setHorzAlign (EHorzAlignment.RIGHT));
 
     for (int i = 0; i < 1000; ++i)
@@ -371,8 +369,8 @@ public final class PLPageSetTest
                                                          .setDifferentFirstPageHeader (true)
                                                          .setDifferentFirstPageFooter (true);
 
-    aPS1.setFirstPageHeader (new PLBox (new PLText ("First page header only", r10)).setBorder (Color.BLUE));
-    aPS1.setFirstPageFooter (new PLBox (new PLText ("First page footer only", r10)).setBorder (Color.BLUE));
+    aPS1.setFirstPageHeader (new PLBox (new PLText ("First page header only", r10)).setBorder (PLColor.BLUE));
+    aPS1.setFirstPageFooter (new PLBox (new PLText ("First page footer only", r10)).setBorder (PLColor.BLUE));
 
     for (int i = 0; i < 1000; ++i)
       aPS1.addElement (new PLText ("Dummy line " + i, r10).setMargin (3, 0));
@@ -390,13 +388,13 @@ public final class PLPageSetTest
                                                          .setDifferentFirstPageHeader (true)
                                                          .setDifferentFirstPageFooter (true);
 
-    aPS1.setFirstPageHeader (new PLBox (new PLText (StringHelper.getRepeated ("First page header. It is so exiciting. ", 30),
-                                                    r10)).setBorder (Color.BLUE));
-    aPS1.setPageHeader (new PLBox (new PLText ("Regular page header. Boring.", r10)).setBorder (Color.RED));
+    aPS1.setFirstPageHeader (new PLBox (new PLText (StringHelper.getRepeated ("First page header. It is so exiciting. ",
+                                                                              30), r10)).setBorder (PLColor.BLUE));
+    aPS1.setPageHeader (new PLBox (new PLText ("Regular page header. Boring.", r10)).setBorder (PLColor.RED));
 
-    aPS1.setFirstPageFooter (new PLBox (new PLText (StringHelper.getRepeated ("First page footer. It is so exiciting. ", 30),
-                                                    r10)).setBorder (Color.BLUE));
-    aPS1.setPageFooter (new PLBox (new PLText ("Regular page footer. Boring.", r10)).setBorder (Color.RED));
+    aPS1.setFirstPageFooter (new PLBox (new PLText (StringHelper.getRepeated ("First page footer. It is so exiciting. ",
+                                                                              30), r10)).setBorder (PLColor.BLUE));
+    aPS1.setPageFooter (new PLBox (new PLText ("Regular page footer. Boring.", r10)).setBorder (PLColor.RED));
 
     for (int i = 0; i < 200; ++i)
       aPS1.addElement (new PLText ("Dummy line " + i, r10).setMargin (3, 0));
@@ -414,13 +412,13 @@ public final class PLPageSetTest
                                                          .setDifferentFirstPageHeader (true)
                                                          .setDifferentFirstPageFooter (true);
 
-    aPS1.setFirstPageHeader (new PLBox (new PLText ("First page header. Boring.", r10)).setBorder (Color.RED));
-    aPS1.setPageHeader (new PLBox (new PLText (StringHelper.getRepeated ("Regular page header. It is so exiciting. ", 30),
-                                               r10)).setBorder (Color.BLUE));
+    aPS1.setFirstPageHeader (new PLBox (new PLText ("First page header. Boring.", r10)).setBorder (PLColor.RED));
+    aPS1.setPageHeader (new PLBox (new PLText (StringHelper.getRepeated ("Regular page header. It is so exiciting. ",
+                                                                         30), r10)).setBorder (PLColor.BLUE));
 
-    aPS1.setFirstPageFooter (new PLBox (new PLText ("First page footer. Boring.", r10)).setBorder (Color.RED));
-    aPS1.setPageFooter (new PLBox (new PLText (StringHelper.getRepeated ("Regular page footer. It is so exiciting. ", 30),
-                                               r10)).setBorder (Color.BLUE));
+    aPS1.setFirstPageFooter (new PLBox (new PLText ("First page footer. Boring.", r10)).setBorder (PLColor.RED));
+    aPS1.setPageFooter (new PLBox (new PLText (StringHelper.getRepeated ("Regular page footer. It is so exiciting. ",
+                                                                         30), r10)).setBorder (PLColor.BLUE));
 
     for (int i = 0; i < 200; ++i)
       aPS1.addElement (new PLText ("Dummy line " + i, r10).setMargin (3, 0));

@@ -19,7 +19,6 @@ package com.helger.pdflayout;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.awt.Color;
 import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -29,6 +28,7 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.pdflayout.base.EPLPlaceholder;
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLSpacerX;
@@ -58,14 +58,14 @@ public final class PageLayoutPDFTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final FontSpec r12 = r10.getCloneWithDifferentFontSize (12);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (50, 30).setPadding (15);
-    aPS1.setPageHeader (new PLText ("Das ist die Kopfzeile", r10).setBorderBottom (new BorderStyleSpec (Color.BLACK))
+    aPS1.setPageHeader (new PLText ("Das ist die Kopfzeile", r10).setBorderBottom (new BorderStyleSpec (PLColor.BLACK))
                                                                  .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLText ("Das ist die Fusszeile, Seite " +
                                     EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable () +
                                     " von " +
                                     EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable (),
                                     r10).setReplacePlaceholder (true)
-                                        .setBorderTop (new BorderStyleSpec (Color.BLACK))
+                                        .setBorderTop (new BorderStyleSpec (PLColor.BLACK))
                                         .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.addElement (new PLText ("Zeile 1", r10));
     {
@@ -75,48 +75,49 @@ public final class PageLayoutPDFTest
                                    r10).setMargin (10)
                                        .setPadding (5)
                                        .setHorzAlign (EHorzAlignment.LEFT)
-                                       .setBorder (new BorderStyleSpec (Color.GREEN),
-                                                   new BorderStyleSpec (Color.BLUE),
-                                                   new BorderStyleSpec (Color.CYAN),
-                                                   new BorderStyleSpec (Color.RED)),
-                       WidthSpec.perc (30));
+                                       .setBorder (new BorderStyleSpec (PLColor.GREEN),
+                                                   new BorderStyleSpec (PLColor.BLUE),
+                                                   new BorderStyleSpec (PLColor.CYAN),
+                                                   new BorderStyleSpec (PLColor.RED)), WidthSpec.perc (30));
       // Remaining columns use each the same part of the space: WidthSpec.star()
       aHBox.addColumn (new PLText ("Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text Spalte 2 mit Text ",
-                                   r10.getCloneWithDifferentColor (Color.BLUE)).setBorder (new BorderStyleSpec (Color.RED))
-                                                                               .setHorzAlign (EHorzAlignment.CENTER)
-                                                                               .setMaxRows (3),
-                       WidthSpec.star ());
-      aHBox.addColumn (new PLText ("Spalte 3 mit Text Spalte 3 mit Text Spalte 3 mit Text Ende",
-                                   r10).setMarginTop (10)
-                                       .setPadding (5)
-                                       .setBorder (new BorderStyleSpec (Color.GREEN, LineDashPatternSpec.DASHED_3))
-                                       .setHorzAlign (EHorzAlignment.RIGHT),
+                                   r10.getCloneWithDifferentColor (PLColor.BLUE)).setBorder (new BorderStyleSpec (PLColor.RED))
+                                                                                 .setHorzAlign (EHorzAlignment.CENTER)
+                                                                                 .setMaxRows (3), WidthSpec.star ());
+      aHBox.addColumn (new PLText ("Spalte 3 mit Text Spalte 3 mit Text Spalte 3 mit Text Ende", r10).setMarginTop (10)
+                                                                                                     .setPadding (5)
+                                                                                                     .setBorder (new BorderStyleSpec (PLColor.GREEN,
+                                                                                                                                      LineDashPatternSpec.DASHED_3))
+                                                                                                     .setHorzAlign (EHorzAlignment.RIGHT),
                        WidthSpec.star ());
       aHBox.addColumn (new PLText ("Spalte 4 mit Text Spalte 4 mit Text Spalte 4 mit Text Ende",
-                                   r10.getCloneWithDifferentFont (PreloadFont.REGULAR_ITALIC)).setBorder (new BorderStyleSpec (Color.RED))
+                                   r10.getCloneWithDifferentFont (PreloadFont.REGULAR_ITALIC)).setBorder (new BorderStyleSpec (PLColor.RED))
                                                                                               .setHorzAlign (EHorzAlignment.LEFT),
                        WidthSpec.star ());
       aPS1.addElement (aHBox);
     }
     {
       final PLHBox h = new PLHBox ();
-      h.addColumn (new PLText ("Column 1", r10.getCloneWithDifferentFontSize (24)).setHorzAlign (EHorzAlignment.CENTER), WidthSpec.star ());
+      h.addColumn (new PLText ("Column 1", r10.getCloneWithDifferentFontSize (24)).setHorzAlign (EHorzAlignment.CENTER),
+                   WidthSpec.star ());
       final PLVBox v = new PLVBox ();
       v.addRow (new PLText ("Column 2, Row 1", r10));
-      v.addRow (new PLText ("Column 2, Row 2", r12.getCloneWithDifferentColor (Color.RED)).setFillColor (new Color (0xdddddd)));
+      v.addRow (new PLText ("Column 2, Row 2", r12.getCloneWithDifferentColor (PLColor.RED)).setFillColor (PLColor
+                                                                                                                  .gray (0xdd)));
       v.addRow (new PLText ("Column 2, Row 3", r12));
       h.addColumn (v, WidthSpec.star ());
       final PLVBox v2 = new PLVBox ();
       v2.addRow (new PLText ("Column 3, Row 1", r10));
       v2.addRow (new PLText ("Column 3, Row 2", r10));
-      v2.addRow (new PLText ("Column 3, Row 3", r10).setFillColor (new Color (0xdddddd)));
+      v2.addRow (new PLText ("Column 3, Row 3", r10).setFillColor (PLColor.gray (0xdd)));
       h.addColumn (v2, WidthSpec.star ());
       aPS1.addElement (h);
     }
     aPS1.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
-                                 r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (new BorderStyleSpec (Color.BLACK)));
+                                 r10).setHorzAlign (EHorzAlignment.CENTER)
+                                     .setBorder (new BorderStyleSpec (PLColor.BLACK)));
     aPS1.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
-                                 r12).setHorzAlign (EHorzAlignment.RIGHT).setFillColor (new Color (0xff0000)).setPadding (0, 5));
+                                 r12).setHorzAlign (EHorzAlignment.RIGHT).setFillColor (PLColor.RED).setPadding (0, 5));
     aPS1.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
                                  new FontSpec (PreloadFont.MONOSPACE, 14)));
     aPS1.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
@@ -134,18 +135,20 @@ public final class PageLayoutPDFTest
     aPS1.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
                                  r12).setHorzAlign (EHorzAlignment.CENTER));
 
-    final PLPageSet aPS2 = new PLPageSet (PDRectangle.A4.getWidth (), PDRectangle.A4.getWidth ()).setMargin (50, 30).setPadding (15);
+    final PLPageSet aPS2 = new PLPageSet (PDRectangle.A4.getWidth (), PDRectangle.A4.getWidth ()).setMargin (50, 30)
+                                                                                                 .setPadding (15);
     aPS2.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
                                  r10).setHorzAlign (EHorzAlignment.RIGHT));
     aPS2.addElement (new PLText ("Zeile 2\nZeile 3\nTäst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort Täst Täst Täst Täst Täst Tästlangeswort ",
                                  r12));
 
-    final PLPageSet aPS3 = new PLPageSet (PDRectangle.A4.getHeight (), PDRectangle.A4.getWidth ()).setMargin (50, 30).setPadding (15);
+    final PLPageSet aPS3 = new PLPageSet (PDRectangle.A4.getHeight (), PDRectangle.A4.getWidth ()).setMargin (50, 30)
+                                                                                                  .setPadding (15);
     aPS3.setPreRenderContextCustomizer (aCtx -> {
       final int nTotal = aCtx.getPlaceholderAsInt (EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable (), -1);
       aCtx.addPlaceholder ("${pages-1}", nTotal - 1);
     });
-    aPS3.setPageHeader (new PLText ("Das ist die Kopfzeile3", r10).setBorderBottom (new BorderStyleSpec (Color.BLACK))
+    aPS3.setPageHeader (new PLText ("Das ist die Kopfzeile3", r10).setBorderBottom (new BorderStyleSpec (PLColor.BLACK))
                                                                   .setHorzAlign (EHorzAlignment.CENTER));
     aPS3.setPageFooter (new PLText ("Das ist die Fusszeile3, Seite " +
                                     EPLPlaceholder.PAGESET_PAGE_NUMBER.getVariable () +
@@ -157,7 +160,7 @@ public final class PageLayoutPDFTest
                                     EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable () +
                                     "; my value: ${pages-1}",
                                     r10).setReplacePlaceholder (true)
-                                        .setBorderTop (new BorderStyleSpec (Color.BLACK))
+                                        .setBorderTop (new BorderStyleSpec (PLColor.BLACK))
                                         .setHorzAlign (EHorzAlignment.CENTER));
     aPS3.addElement (new PLText ("Zeile 1\n\nZeile 3", r10));
 
@@ -198,8 +201,8 @@ public final class PageLayoutPDFTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (20, 30, 40, 10)
                                                          .setPadding (20, 30, 40, 10)
-                                                         .setFillColor (new Color (0xeeeeee));
-    aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (Color.BLACK))
+                                                         .setFillColor (PLColor.gray (0xee));
+    aPS1.setPageHeader (new PLText ("Headline", r10).setBorder (new BorderStyleSpec (PLColor.BLACK))
                                                     .setPadding (4, 0)
                                                     .setHorzAlign (EHorzAlignment.CENTER));
     aPS1.setPageFooter (new PLText ("Page " +
@@ -207,7 +210,7 @@ public final class PageLayoutPDFTest
                                     " of " +
                                     EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable (),
                                     r10).setReplacePlaceholder (true)
-                                        .setBorder (new BorderStyleSpec (Color.BLACK))
+                                        .setBorder (new BorderStyleSpec (PLColor.BLACK))
                                         .setMarginTop (10)
                                         .setPadding (4, 10)
                                         .setHorzAlign (EHorzAlignment.RIGHT));
@@ -217,38 +220,46 @@ public final class PageLayoutPDFTest
       h.addColumn (new PLText (sLID, r10).setHorzAlign (EHorzAlignment.CENTER).setPadding (0, 20), WidthSpec.star ());
 
       final PLVBox v1 = new PLVBox ();
-      v1.addRow (new PLText (sLIDShort, r10).setMargin (0).setPadding (10).setBorder (new BorderStyleSpec (Color.BLUE)));
+      v1.addRow (new PLText (sLIDShort, r10).setMargin (0)
+                                            .setPadding (10)
+                                            .setBorder (new BorderStyleSpec (PLColor.BLUE)));
       v1.addRow (new PLText (sLIDShort, r10).setMargin (5)
                                             .setPadding (5)
-                                            .setBorder (new BorderStyleSpec (Color.BLUE, LineDashPatternSpec.DASHED_2)));
-      v1.addRow (new PLText (sLIDShort, r10).setMargin (10).setPadding (0).setBorder (new BorderStyleSpec (Color.BLUE)));
+                                            .setBorder (new BorderStyleSpec (PLColor.BLUE,
+                                                                             LineDashPatternSpec.DASHED_2)));
+      v1.addRow (new PLText (sLIDShort, r10).setMargin (10)
+                                            .setPadding (0)
+                                            .setBorder (new BorderStyleSpec (PLColor.BLUE)));
       h.addColumn (v1, WidthSpec.star ());
 
       final PLVBox v2 = new PLVBox ();
       v2.addRow (new PLText (sLIDShort, r10).setHorzAlign (EHorzAlignment.RIGHT));
-      v2.addRow (new PLText (sLIDShort, r10).setHorzAlign (EHorzAlignment.RIGHT).setFillColor (new Color (0xdddddd)));
+      v2.addRow (new PLText (sLIDShort, r10).setHorzAlign (EHorzAlignment.RIGHT).setFillColor (PLColor.gray (0xdd)));
       v2.addRow (new PLText (sLIDShort, r10).setHorzAlign (EHorzAlignment.RIGHT));
       h.addColumn (v2, WidthSpec.star ());
       aPS1.addElement (h);
     }
     if (true)
     {
-      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.WHITE)).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                      .setBorder (new BorderStyleSpec (Color.BLACK))
-                                                                                      .setFillColor (Color.RED)
-                                                                                      .setMargin (0)
-                                                                                      .setPadding (10));
-      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                    .setBorder (new BorderStyleSpec (Color.BLACK))
-                                                                                    .setFillColor (Color.GREEN)
-                                                                                    .setMargin (5)
-                                                                                    .setPadding (5));
-      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (Color.WHITE)).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                      .setBorder (new BorderStyleSpec (Color.BLACK))
-                                                                                      .setFillColor (Color.BLUE)
-                                                                                      .setMargin (10)
-                                                                                      .setPadding (0));
-      aPS1.addElement (new PLText (sLID, r10).setFillColor (new Color (0xabcdef)));
+      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (PLColor.WHITE)).setHorzAlign (
+                                                                                                       EHorzAlignment.RIGHT)
+                                                                                        .setBorder (new BorderStyleSpec (PLColor.BLACK))
+                                                                                        .setFillColor (PLColor.RED)
+                                                                                        .setMargin (0)
+                                                                                        .setPadding (10));
+      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (PLColor.RED)).setHorzAlign (
+                                                                                                     EHorzAlignment.RIGHT)
+                                                                                      .setBorder (new BorderStyleSpec (PLColor.BLACK))
+                                                                                      .setFillColor (PLColor.GREEN)
+                                                                                      .setMargin (5)
+                                                                                      .setPadding (5));
+      aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (PLColor.WHITE)).setHorzAlign (
+                                                                                                       EHorzAlignment.RIGHT)
+                                                                                        .setBorder (new BorderStyleSpec (PLColor.BLACK))
+                                                                                        .setFillColor (PLColor.BLUE)
+                                                                                        .setMargin (10)
+                                                                                        .setPadding (0));
+      aPS1.addElement (new PLText (sLID, r10).setFillColor (new PLColor (0xab, 0xcd, 0xef)));
     }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -269,7 +280,8 @@ public final class PageLayoutPDFTest
       {
         final PLVBox aWindow = new PLVBox ();
         aWindow.addRow (new PLSpacerY (PLConvert.mm2units (42)));
-        aWindow.addRow (new PLText ("Hr. MaxMustermann\nMusterstraße 15\nA-1010 Wien", r10).setExactSize (PLConvert.mm2units (90),
+        aWindow.addRow (new PLText ("Hr. MaxMustermann\nMusterstraße 15\nA-1010 Wien", r10).setExactSize (PLConvert
+                                                                                                                   .mm2units (90),
                                                                                                           PLConvert.mm2units (45)));
         aWindow.addRow (new PLSpacerY (PLConvert.mm2units (12)));
         aHBox.addColumn (aWindow, WidthSpec.abs (PLConvert.mm2units (90)));

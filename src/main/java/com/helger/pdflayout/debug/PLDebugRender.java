@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout.debug;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -26,6 +24,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.callback.IThrowingRunnable;
 import com.helger.pdflayout.base.IPLBlockElement;
 import com.helger.pdflayout.base.IPLInlineElement;
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 
@@ -40,18 +39,18 @@ public final class PLDebugRender
 {
   public static final boolean DEFAULT_DEBUG_RENDER = false;
 
-  public static final Color DEFAULT_COLOR_OUTLINE_PAGESET = new Color (0x80, 0x80, 0x80);
-  public static final Color DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT = new Color (0xa0, 0xa0, 0xa0);
-  public static final Color DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT = new Color (0xc0, 0xc0, 0xc0);
+  public static final PLColor DEFAULT_COLOR_OUTLINE_PAGESET = new PLColor (0x80, 0x80, 0x80);
+  public static final PLColor DEFAULT_COLOR_OUTLINE_BLOCK_ELEMENT = new PLColor (0xa0, 0xa0, 0xa0);
+  public static final PLColor DEFAULT_COLOR_OUTLINE_INLINE_ELEMENT = new PLColor (0xc0, 0xc0, 0xc0);
 
   /** red */
-  public static final BorderStyleSpec DEFAULT_BORDER_PAGESET = new BorderStyleSpec (Color.RED);
+  public static final BorderStyleSpec DEFAULT_BORDER_PAGESET = new BorderStyleSpec (PLColor.RED);
 
   /** green */
-  public static final BorderStyleSpec DEFAULT_BORDER_BLOCK_ELEMENT = new BorderStyleSpec (Color.BLUE);
+  public static final BorderStyleSpec DEFAULT_BORDER_BLOCK_ELEMENT = new BorderStyleSpec (PLColor.BLUE);
 
   /** blue */
-  public static final BorderStyleSpec DEFAULT_BORDER_INLINE_ELEMENT = new BorderStyleSpec (Color.GREEN);
+  public static final BorderStyleSpec DEFAULT_BORDER_INLINE_ELEMENT = new BorderStyleSpec (PLColor.GREEN);
 
   /**
    * Provide the debug color for elements.
@@ -59,10 +58,10 @@ public final class PLDebugRender
    * @author Philip Helger
    */
   @FunctionalInterface
-  public static interface IDebugColorProvider
+  public interface IDebugColorProvider
   {
     @Nullable
-    Color getDebugColor (@Nonnull Object aObject);
+    PLColor getDebugColor (@Nonnull Object aObject);
 
     @Nonnull
     static IDebugColorProvider getDefaultOutlineProvider ()
@@ -85,7 +84,7 @@ public final class PLDebugRender
    * @author Philip Helger
    */
   @FunctionalInterface
-  public static interface IDebugBorderProvider
+  public interface IDebugBorderProvider
   {
     @Nullable
     BorderStyleSpec getDebugBorder (@Nonnull Object aObject);
@@ -155,7 +154,7 @@ public final class PLDebugRender
   }
 
   @Nullable
-  public static Color getDebugOutlineColor (@Nonnull final Object aObject)
+  public static PLColor getDebugOutlineColor (@Nonnull final Object aObject)
   {
     return s_aDebugOutlineColorProvider.getDebugColor (aObject);
   }

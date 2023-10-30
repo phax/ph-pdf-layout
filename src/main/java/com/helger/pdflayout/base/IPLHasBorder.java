@@ -50,7 +50,23 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    * @return this
    */
   @Nonnull
+  @Deprecated (forRemoval = true, since = "7.2.0")
   default IMPLTYPE setBorder (@Nonnull final Color aColor)
+  {
+    return setBorder (PLColor.of (aColor));
+  }
+
+  /**
+   * Set all border values (left, top, right, bottom) to the same value. This
+   * method may not be called after an element got prepared!
+   *
+   * @param aColor
+   *        The color to use. May not be <code>null</code>.
+   * @return this
+   * @since 7.2.0
+   */
+  @Nonnull
+  default IMPLTYPE setBorder (@Nonnull final PLColor aColor)
   {
     return setBorder (new BorderStyleSpec (aColor));
   }

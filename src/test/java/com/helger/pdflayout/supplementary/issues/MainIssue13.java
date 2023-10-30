@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.supplementary.issues;
 
-import java.awt.Color;
 import java.io.File;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -25,11 +24,11 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
-import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
-import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
+
+import com.helger.pdflayout.base.PLColor;
 
 public class MainIssue13
 {
@@ -51,9 +50,7 @@ public class MainIssue13
         txtLink.setBorderStyle (linkBorder);
 
         // Border color
-        final Color color = Color.GREEN;
-        final float [] components = { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
-        txtLink.setColor (new PDColor (components, PDDeviceRGB.INSTANCE));
+        txtLink.setColor (PLColor.GREEN.getAsPDColor ());
 
         // Destination URI
         final PDActionURI action = new PDActionURI ();

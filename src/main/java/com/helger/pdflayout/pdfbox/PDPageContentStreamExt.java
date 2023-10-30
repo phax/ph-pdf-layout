@@ -63,6 +63,7 @@ import org.apache.pdfbox.util.NumberFormatUtil;
 
 import com.helger.commons.annotation.CodingStyleguideUnaware;
 import com.helger.commons.collection.NonBlockingStack;
+import com.helger.pdflayout.base.PLColor;
 
 /**
  * Provides the ability to write to a page content stream.<br>
@@ -732,16 +733,30 @@ public final class PDPageContentStreamExt implements Closeable
    * Set the stroking color using an AWT color. Conversion uses the default sRGB
    * color space.
    *
-   * @param color
+   * @param aColor
+   *        The color to set.
+   * @throws IOException
+   *         If an IO error occurs while writing to the stream.
+   * @since 7.2.0
+   */
+  public void setStrokingColor (@Nonnull final PLColor aColor) throws IOException
+  {
+    setStrokingColor (aColor.getAsPDColor ());
+  }
+
+  /**
+   * Set the stroking color using an AWT color. Conversion uses the default sRGB
+   * color space.
+   *
+   * @param aColor
    *        The color to set.
    * @throws IOException
    *         If an IO error occurs while writing to the stream.
    */
-  public void setStrokingColor (@Nonnull final Color color) throws IOException
+  @Deprecated (forRemoval = true, since = "7.2.0")
+  public void setStrokingColor (@Nonnull final Color aColor) throws IOException
   {
-    final float [] components = { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
-    final PDColor pdColor = new PDColor (components, PDDeviceRGB.INSTANCE);
-    setStrokingColor (pdColor);
+    setStrokingColor (PLColor.of (aColor));
   }
 
   /**
@@ -873,16 +888,30 @@ public final class PDPageContentStreamExt implements Closeable
    * Set the non-stroking color using an AWT color. Conversion uses the default
    * sRGB color space.
    *
-   * @param color
+   * @param aColor
+   *        The color to set.
+   * @throws IOException
+   *         If an IO error occurs while writing to the stream.
+   * @since 7.2.0
+   */
+  public void setNonStrokingColor (@Nonnull final PLColor aColor) throws IOException
+  {
+    setNonStrokingColor (aColor.getAsPDColor ());
+  }
+
+  /**
+   * Set the non-stroking color using an AWT color. Conversion uses the default
+   * sRGB color space.
+   *
+   * @param aColor
    *        The color to set.
    * @throws IOException
    *         If an IO error occurs while writing to the stream.
    */
-  public void setNonStrokingColor (@Nonnull final Color color) throws IOException
+  @Deprecated (forRemoval = true, since = "7.2.0")
+  public void setNonStrokingColor (@Nonnull final Color aColor) throws IOException
   {
-    final float [] components = { color.getRed () / 255f, color.getGreen () / 255f, color.getBlue () / 255f };
-    final PDColor pdColor = new PDColor (components, PDDeviceRGB.INSTANCE);
-    setNonStrokingColor (pdColor);
+    setNonStrokingColor (PLColor.of (aColor));
   }
 
   /**

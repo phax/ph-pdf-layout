@@ -16,11 +16,10 @@
  */
 package com.helger.pdflayout.config.xml;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.xml.microdom.IMicroElement;
@@ -47,13 +46,15 @@ public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConver
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-    final Color aColor = aValue.getColor ();
+    final PLColor aColor = aValue.getColor ();
     if (aColor != BorderStyleSpec.DEFAULT_COLOR)
       aElement.appendChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
 
     final LineDashPatternSpec aLDPSpec = aValue.getLineDashPattern ();
     if (aLDPSpec != BorderStyleSpec.DEFAULT_LINE_DASH_PATTERN)
-      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aLDPSpec, sNamespaceURI, ELEMENT_LINE_DASH_PATTERN));
+      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aLDPSpec,
+                                                                      sNamespaceURI,
+                                                                      ELEMENT_LINE_DASH_PATTERN));
 
     aElement.setAttribute (ATTR_LINE_WIDTH, aValue.getLineWidth ());
 
@@ -63,9 +64,9 @@ public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConver
   @Nonnull
   public BorderStyleSpec convertToNative (@Nonnull final IMicroElement aElement)
   {
-    final Color aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
-                                                             Color.class,
-                                                             BorderStyleSpec.DEFAULT_COLOR);
+    final PLColor aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
+                                                               PLColor.class,
+                                                               BorderStyleSpec.DEFAULT_COLOR);
     final LineDashPatternSpec aLDPSpec = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_LINE_DASH_PATTERN),
                                                                              LineDashPatternSpec.class,
                                                                              BorderStyleSpec.DEFAULT_LINE_DASH_PATTERN);

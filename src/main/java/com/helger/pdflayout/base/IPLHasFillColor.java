@@ -35,7 +35,18 @@ public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> e
   /**
    * By default nothing is filled, so the default value is <code>null</code>.
    */
-  Color DEFAULT_FILL_COLOR = null;
+  PLColor DEFAULT_FILL_COLOR = null;
+
+  /**
+   * Set the element fill color.
+   *
+   * @param aFillColor
+   *        The fill color to use. May be <code>null</code>.
+   * @return this
+   * @since 7.2.0
+   */
+  @Nonnull
+  IMPLTYPE setFillColor (@Nullable PLColor aFillColor);
 
   /**
    * Set the element fill color.
@@ -45,13 +56,17 @@ public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> e
    * @return this
    */
   @Nonnull
-  IMPLTYPE setFillColor (@Nullable Color aFillColor);
+  @Deprecated (forRemoval = true, since = "7.2.0")
+  default IMPLTYPE setFillColor (@Nullable final Color aFillColor)
+  {
+    return setFillColor (PLColor.of (aFillColor));
+  }
 
   /**
    * @return The current fill color. May be <code>null</code>.
    */
   @Nullable
-  Color getFillColor ();
+  PLColor getFillColor ();
 
   default boolean hasFillColor ()
   {

@@ -29,6 +29,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.base.PLColor;
 
 /**
  * Defines a text font specification containing the font, the font size and the
@@ -41,11 +42,11 @@ import com.helger.commons.string.ToStringGenerator;
 public class FontSpec implements Serializable
 {
   /** The default font color: black */
-  public static final Color DEFAULT_COLOR = Color.BLACK;
+  public static final PLColor DEFAULT_COLOR = PLColor.BLACK;
 
   private final PreloadFont m_aPreloadFont;
   private final float m_fFontSize;
-  private final Color m_aColor;
+  private final PLColor m_aColor;
 
   /**
    * Constructor with a {@link PreloadFont} and a font size, using the default
@@ -71,9 +72,27 @@ public class FontSpec implements Serializable
    * @param aColor
    *        The color to use. May not be <code>null</code>.
    */
+  @Deprecated (forRemoval = true, since = "7.2.0")
   public FontSpec (@Nonnull final PreloadFont aPreloadFont,
                    @Nonnegative final float fFontSize,
                    @Nonnull final Color aColor)
+  {
+    this (aPreloadFont, fFontSize, PLColor.of (aColor));
+  }
+
+  /**
+   * Constructor with a {@link PreloadFont}, a font size and a custom color.
+   *
+   * @param aPreloadFont
+   *        Preload font to use. May not be <code>null</code>.
+   * @param fFontSize
+   *        Font size to use. Must be &gt; 0.
+   * @param aColor
+   *        The color to use. May not be <code>null</code>.
+   */
+  public FontSpec (@Nonnull final PreloadFont aPreloadFont,
+                   @Nonnegative final float fFontSize,
+                   @Nonnull final PLColor aColor)
   {
     ValueEnforcer.notNull (aPreloadFont, "Font");
     ValueEnforcer.isFalse (Float.isNaN (fFontSize), "FontSize may not be NaN");
@@ -116,7 +135,7 @@ public class FontSpec implements Serializable
    * @return The text color to use.
    */
   @Nonnull
-  public final Color getColor ()
+  public final PLColor getColor ()
   {
     return m_aColor;
   }
@@ -160,14 +179,29 @@ public class FontSpec implements Serializable
    * @param aNewColor
    *        The new color to use. May not be <code>null</code>.
    * @return this if the colors are equal - a new object otherwise.
+   * @since 7.2.0
    */
   @Nonnull
-  public FontSpec getCloneWithDifferentColor (@Nonnull final Color aNewColor)
+  public FontSpec getCloneWithDifferentColor (@Nonnull final PLColor aNewColor)
   {
     ValueEnforcer.notNull (aNewColor, "NewColor");
     if (aNewColor.equals (m_aColor))
       return this;
     return new FontSpec (m_aPreloadFont, m_fFontSize, aNewColor);
+  }
+
+  /**
+   * Return a clone of this object but with a different color.
+   *
+   * @param aNewColor
+   *        The new color to use. May not be <code>null</code>.
+   * @return this if the colors are equal - a new object otherwise.
+   */
+  @Nonnull
+  @Deprecated (forRemoval = true, since = "7.2.0")
+  public FontSpec getCloneWithDifferentColor (@Nonnull final Color aNewColor)
+  {
+    return getCloneWithDifferentColor (PLColor.of (aNewColor));
   }
 
   @Override

@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.supplementary.issues;
 
-import java.awt.Color;
 import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.table.EPLTableGridType;
 import com.helger.pdflayout.element.table.PLTable;
@@ -45,27 +45,27 @@ public class MainIssue16
     // Table1
     final PLTable aTable = PLTable.createWithPercentage (30, 70).setMarginLeft (200).setID ("t1");
     aTable.addAndReturnRow (new PLTableCell (new PLText ("SUMMARY", r13)), new PLTableCell (new PLText ("", r13)))
-          .setFillColor (Color.BLUE)
+          .setFillColor (PLColor.BLUE)
           .setID ("headerrow");
     for (int i = 0; i < 4; ++i)
     {
-      aTable.addAndReturnRow (new PLTableCell (new PLText (summaryKey[i] + "\n", r10)), new PLTableCell (new PLText ("Duration", r10)))
-            .setID ("row");
+      aTable.addAndReturnRow (new PLTableCell (new PLText (summaryKey[i] + "\n", r10)),
+                              new PLTableCell (new PLText ("Duration", r10))).setID ("row");
     }
 
     // Table2
     final PLTable aTable2 = PLTable.createWithPercentage (30, 70).setMarginLeft (40).setID ("t2");
     aTable2.addAndReturnRow (new PLTableCell (new PLText ("RESOURCE", r13)), new PLTableCell (new PLText ("", r13)))
-           .setFillColor (Color.BLUE)
+           .setFillColor (PLColor.BLUE)
            .setID ("headerrow");
     for (int i = 0; i < 4; ++i)
     {
-      aTable2.addAndReturnRow (new PLTableCell (new PLText (summaryKey[i] + "\n", r10)), new PLTableCell (new PLText ("Duration", r10)))
-             .setID ("row");
+      aTable2.addAndReturnRow (new PLTableCell (new PLText (summaryKey[i] + "\n", r10)),
+                               new PLTableCell (new PLText ("Duration", r10))).setID ("row");
     }
 
-    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (Color.LIGHT_GRAY));
-    EPLTableGridType.FULL.applyGridToTable (aTable2, new BorderStyleSpec (Color.LIGHT_GRAY));
+    EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (PLColor.LIGHT_GRAY));
+    EPLTableGridType.FULL.applyGridToTable (aTable2, new BorderStyleSpec (PLColor.LIGHT_GRAY));
 
     aPS1.addElement (aTable);
     aTable2.setVertSplittable (true);

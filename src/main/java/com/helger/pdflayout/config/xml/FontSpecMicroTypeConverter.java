@@ -16,12 +16,11 @@
  */
 package com.helger.pdflayout.config.xml;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.IPreloadFontResolver;
 import com.helger.pdflayout.spec.PreloadFont;
@@ -59,7 +58,7 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter <Fo
     aElement.setAttribute (ATTR_PRELOAD_FONT_ID, aValue.getPreloadFontID ());
     aElement.setAttribute (ATTR_FONT_SIZE, aValue.getFontSize ());
 
-    final Color aColor = aValue.getColor ();
+    final PLColor aColor = aValue.getColor ();
     if (aColor != FontSpec.DEFAULT_COLOR)
       aElement.appendChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
     return aElement;
@@ -75,9 +74,9 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter <Fo
 
     final float fFontSize = aElement.getAttributeValueAsFloat (ATTR_FONT_SIZE, Float.NaN);
 
-    final Color aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
-                                                             Color.class,
-                                                             FontSpec.DEFAULT_COLOR);
+    final PLColor aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
+                                                               PLColor.class,
+                                                               FontSpec.DEFAULT_COLOR);
     return new FontSpec (aPreloadFont, fFontSize, aColor);
   }
 }

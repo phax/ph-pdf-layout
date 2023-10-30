@@ -37,8 +37,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends AbstractPLRenderableObject <IMPLTYPE>
-                                        implements
+public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMPLTYPE>> extends
+                                        AbstractPLRenderableObject <IMPLTYPE> implements
                                         IPLElement <IMPLTYPE>
 {
   private SizeSpec m_aMinSize = DEFAULT_MIN_SIZE;
@@ -46,7 +46,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
   private PaddingSpec m_aPadding = DEFAULT_PADDING;
-  private Color m_aFillColor = DEFAULT_FILL_COLOR;
+  private PLColor m_aFillColor = DEFAULT_FILL_COLOR;
 
   public AbstractPLElement ()
   {}
@@ -135,16 +135,23 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Nullable
-  public final Color getFillColor ()
+  public final PLColor getFillColor ()
   {
     return m_aFillColor;
   }
 
   @Nonnull
-  public final IMPLTYPE setFillColor (@Nullable final Color aFillColor)
+  public final IMPLTYPE setFillColor (@Nullable final PLColor aFillColor)
   {
     m_aFillColor = aFillColor;
     return thisAsT ();
+  }
+
+  @Nonnull
+  @Deprecated (forRemoval = true, since = "7.2.0")
+  public final IMPLTYPE setFillColor (@Nullable final Color aFillColor)
+  {
+    return setFillColor (PLColor.of (aFillColor));
   }
 
   @Override

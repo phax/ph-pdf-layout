@@ -29,6 +29,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.equals.EqualsHelper;
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.pdflayout.spec.LoadedFont;
@@ -48,8 +49,8 @@ public class PDPageContentStreamWithCache
   // Status cache
   private LoadedFont m_aLastUsedLoadedFont;
   private float m_fLastUsedFontSize;
-  private Color m_aLastUsedStrokingColor = Color.BLACK;
-  private Color m_aLastUsedNonStrokingColor = Color.BLACK;
+  private PLColor m_aLastUsedStrokingColor = PLColor.BLACK;
+  private PLColor m_aLastUsedNonStrokingColor = PLColor.BLACK;
   private LineDashPatternSpec m_aLastUsedLineDashPattern = LineDashPatternSpec.SOLID;
   private float m_fLastUsedLineWidth;
 
@@ -110,7 +111,13 @@ public class PDPageContentStreamWithCache
     setNonStrokingColor (aFontSpec.getColor ());
   }
 
+  @Deprecated (forRemoval = true, since = "7.2.0")
   public void setStrokingColor (@Nonnull final Color aColor) throws IOException
+  {
+    setStrokingColor (PLColor.of (aColor));
+  }
+
+  public void setStrokingColor (@Nonnull final PLColor aColor) throws IOException
   {
     ValueEnforcer.notNull (aColor, "Color");
 
@@ -122,12 +129,18 @@ public class PDPageContentStreamWithCache
   }
 
   @Nonnull
-  public Color getLastUsedStrokingColor ()
+  public PLColor getLastUsedStrokingColor ()
   {
     return m_aLastUsedStrokingColor;
   }
 
+  @Deprecated (forRemoval = true, since = "7.2.0")
   public void setNonStrokingColor (@Nonnull final Color aColor) throws IOException
+  {
+    setNonStrokingColor (PLColor.of (aColor));
+  }
+
+  public void setNonStrokingColor (@Nonnull final PLColor aColor) throws IOException
   {
     ValueEnforcer.notNull (aColor, "Color");
 
@@ -139,7 +152,7 @@ public class PDPageContentStreamWithCache
   }
 
   @Nonnull
-  public Color getLastUsedNonStrokingColor ()
+  public PLColor getLastUsedNonStrokingColor ()
   {
     return m_aLastUsedNonStrokingColor;
   }
@@ -192,10 +205,8 @@ public class PDPageContentStreamWithCache
     m_aStream.fill ();
   }
 
-  public void addRect (final float fLeft,
-                       final float fBottom,
-                       final float fWidth,
-                       final float fHeight) throws IOException
+  public void addRect (final float fLeft, final float fBottom, final float fWidth, final float fHeight)
+                                                                                                        throws IOException
   {
     m_aStream.addRect (fLeft, fBottom, fWidth, fHeight);
   }

@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.element.link;
 
-import java.awt.Color;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
@@ -24,14 +23,13 @@ import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
-import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.base.IPLRenderableObject;
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.element.box.AbstractPLInlineBox;
 import com.helger.pdflayout.link.ELinkBorderStyle;
@@ -47,7 +45,8 @@ import com.helger.pdflayout.spec.LineDashPatternSpec;
  *        Implementation type
  * @since 6.0.1
  */
-public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExternalLink <IMPLTYPE>> extends AbstractPLInlineBox <IMPLTYPE>
+public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExternalLink <IMPLTYPE>> extends
+                                             AbstractPLInlineBox <IMPLTYPE>
 {
   private String m_sURI;
   // These are parameterized in preparation for eventual future actions. Until
@@ -55,7 +54,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
   private final ELinkBorderStyle m_eLinkBorderStyle = ELinkBorderStyle.SOLID;
   private final LineDashPatternSpec m_aLinkDashPattern = null;
   private final float m_fLinkBorderWidth = 0;
-  private final Color m_aLinkColor = null;
+  private final PLColor m_aLinkColor = null;
 
   public AbstractPLExternalLink (@Nullable final IPLRenderableObject <?> aElement)
   {
@@ -120,10 +119,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
         if (m_aLinkColor != null)
         {
           // Border color
-          final float [] components = new float [] { m_aLinkColor.getRed () / 255f,
-                                                     m_aLinkColor.getGreen () / 255f,
-                                                     m_aLinkColor.getBlue () / 255f };
-          aLink.setColor (new PDColor (components, PDDeviceRGB.INSTANCE));
+          aLink.setColor (m_aLinkColor.getAsPDColor ());
         }
 
         // Destination URI

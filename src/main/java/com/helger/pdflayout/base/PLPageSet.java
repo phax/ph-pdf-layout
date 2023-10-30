@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.base;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -74,7 +73,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
   private PaddingSpec m_aPadding = DEFAULT_PADDING;
   private BorderSpec m_aBorder = DEFAULT_BORDER;
-  private Color m_aFillColor = DEFAULT_FILL_COLOR;
+  private PLColor m_aFillColor = DEFAULT_FILL_COLOR;
 
   private boolean m_bDifferentFirstPageHeader = DEFAULT_DIFFERENT_FIRST_PAGE_HEADER;
   private IPLRenderableObject <?> m_aFirstPageHeader;
@@ -181,13 +180,13 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   @Nullable
-  public final Color getFillColor ()
+  public final PLColor getFillColor ()
   {
     return m_aFillColor;
   }
 
   @Nonnull
-  public final PLPageSet setFillColor (@Nullable final Color aFillColor)
+  public final PLPageSet setFillColor (@Nullable final PLColor aFillColor)
   {
     m_aFillColor = aFillColor;
     return this;

@@ -403,21 +403,21 @@ public class PageLayoutPDF implements IPLVisitable
                                                                          : GregorianCalendar.from (m_aDocumentCreationDate.atZone (PDTConfig.getDefaultZoneId ()));
           final String sProducer = PLConfig.PROJECT_NAME + " " + PLConfig.PROJECT_VERSION;
 
-          final XMPMetadata xmpMetadata = XMPMetadata.createXMPMetadata ();
-          final AdobePDFSchema pdfSchema = xmpMetadata.createAndAddAdobePDFSchema ();
+          final XMPMetadata aXmpMetadata = XMPMetadata.createXMPMetadata ();
+          final AdobePDFSchema pdfSchema = aXmpMetadata.createAndAddAdobePDFSchema ();
           pdfSchema.setProducer (sProducer);
 
-          final XMPBasicSchema xmpBasicSchema = xmpMetadata.createAndAddXMPBasicSchema ();
-          xmpBasicSchema.setCreatorTool (sProducer);
-          xmpBasicSchema.setCreateDate (aCreationDate);
-          xmpBasicSchema.setModifyDate (aCreationDate);
+          final XMPBasicSchema aXmpBasicSchema = aXmpMetadata.createAndAddXMPBasicSchema ();
+          aXmpBasicSchema.setCreatorTool (sProducer);
+          aXmpBasicSchema.setCreateDate (aCreationDate);
+          aXmpBasicSchema.setModifyDate (aCreationDate);
 
           final PDDocumentCatalog aDocCatalogue = aDoc.getDocumentCatalog ();
 
-          final PDMarkInfo markInfo = new PDMarkInfo ();
-          final PDStructureTreeRoot treeRoot = new PDStructureTreeRoot ();
-          aDocCatalogue.setMarkInfo (markInfo);
-          aDocCatalogue.setStructureTreeRoot (treeRoot);
+          final PDMarkInfo aMarkInfo = new PDMarkInfo ();
+          final PDStructureTreeRoot aTreeRoot = new PDStructureTreeRoot ();
+          aDocCatalogue.setMarkInfo (aMarkInfo);
+          aDocCatalogue.setStructureTreeRoot (aTreeRoot);
           aDocCatalogue.getMarkInfo ().setMarked (true);
 
           final PDDocumentInformation aDocInfo = aDoc.getDocumentInformation ();
@@ -435,25 +435,25 @@ public class PageLayoutPDF implements IPLVisitable
 
           try
           {
-            final DublinCoreSchema dublinCoreSchema = xmpMetadata.createAndAddDublinCoreSchema ();
+            final DublinCoreSchema aDCSchema = aXmpMetadata.createAndAddDublinCoreSchema ();
             if (StringHelper.hasText (m_sDocumentTitle))
-              dublinCoreSchema.setTitle (m_sDocumentTitle);
+              aDCSchema.setTitle (m_sDocumentTitle);
             if (StringHelper.hasText (m_sDocumentCreator))
-              dublinCoreSchema.addCreator (m_sDocumentCreator);
+              aDCSchema.addCreator (m_sDocumentCreator);
             if (StringHelper.hasText (m_sDocumentKeywords))
-              dublinCoreSchema.addDescription ("", m_sDocumentKeywords);
+              aDCSchema.addDescription ("", m_sDocumentKeywords);
             if (StringHelper.hasText (m_sDocumentSubject))
-              dublinCoreSchema.addSubject (m_sDocumentSubject);
-            dublinCoreSchema.addDate (aCreationDate);
+              aDCSchema.addSubject (m_sDocumentSubject);
+            aDCSchema.addDate (aCreationDate);
 
-            final PDFAIdentificationSchema aIdentificationSchema = xmpMetadata.createAndAddPDFAIdentificationSchema ();
+            final PDFAIdentificationSchema aIdentificationSchema = aXmpMetadata.createAndAddPDFAIdentificationSchema ();
             aIdentificationSchema.setPart (Integer.valueOf (3));
             aIdentificationSchema.setConformance ("A");
 
             try (final NonBlockingByteArrayOutputStream aXmpOS = new NonBlockingByteArrayOutputStream ())
             {
               final XmpSerializer aSerializer = new XmpSerializer ();
-              aSerializer.serialize (xmpMetadata, aXmpOS, true);
+              aSerializer.serialize (aXmpMetadata, aXmpOS, true);
 
               final PDMetadata aMetadata = new PDMetadata (aDoc);
               aMetadata.importXMPMetadata (aXmpOS.toByteArray ());
@@ -466,18 +466,18 @@ public class PageLayoutPDF implements IPLVisitable
           }
 
           // Set color profile (needed by PDF/A)
-          final ICC_Profile rgbProfile = ICC_Profile.getInstance (ColorSpace.CS_sRGB);
-          final byte [] aRGBBytes = rgbProfile.getData ();
+          final ICC_Profile aRgbProfile = ICC_Profile.getInstance (ColorSpace.CS_sRGB);
+          final byte [] aRgbBytes = aRgbProfile.getData ();
 
-          try (final NonBlockingByteArrayInputStream colorProfile = new NonBlockingByteArrayInputStream (aRGBBytes))
+          try (final NonBlockingByteArrayInputStream aColorProfile = new NonBlockingByteArrayInputStream (aRgbBytes))
           {
-            final PDOutputIntent intent = new PDOutputIntent (aDoc, colorProfile);
-            intent.setInfo ("sRGB IEC61966-2.1");
-            intent.setOutputCondition ("sRGB IEC61966-2.1");
-            intent.setOutputConditionIdentifier ("sRGB IEC61966-2.1");
-            intent.setRegistryName ("http://www.color.org");
+            final PDOutputIntent aIntent = new PDOutputIntent (aDoc, aColorProfile);
+            aIntent.setInfo ("sRGB IEC61966-2.1");
+            aIntent.setOutputCondition ("sRGB IEC61966-2.1");
+            aIntent.setOutputConditionIdentifier ("sRGB IEC61966-2.1");
+            aIntent.setRegistryName ("http://www.color.org");
 
-            aDocCatalogue.addOutputIntent (intent);
+            aDocCatalogue.addOutputIntent (aIntent);
             aDocCatalogue.setLanguage ("de-DE");
           }
 

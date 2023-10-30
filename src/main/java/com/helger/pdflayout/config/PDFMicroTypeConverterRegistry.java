@@ -18,6 +18,7 @@ package com.helger.pdflayout.config;
 
 import javax.annotation.Nonnull;
 
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.config.xml.BorderSpecMicroTypeConverter;
 import com.helger.pdflayout.config.xml.BorderStyleSpecMicroTypeConverter;
 import com.helger.pdflayout.config.xml.FontSpecMicroTypeConverter;
@@ -25,6 +26,7 @@ import com.helger.pdflayout.config.xml.HeightSpecMicroTypeConverter;
 import com.helger.pdflayout.config.xml.LineDashPatternSpecMicroTypeConverter;
 import com.helger.pdflayout.config.xml.MarginSpecMicroTypeConverter;
 import com.helger.pdflayout.config.xml.PLCellRangeMicroTypeConverter;
+import com.helger.pdflayout.config.xml.PLColorMicroTypeConverter;
 import com.helger.pdflayout.config.xml.PaddingSpecMicroTypeConverter;
 import com.helger.pdflayout.config.xml.SizeSpecMicroTypeConverter;
 import com.helger.pdflayout.config.xml.TextAndWidthSpecMicroTypeConverter;
@@ -63,10 +65,12 @@ public final class PDFMicroTypeConverterRegistry
     aRegistry.registerMicroElementTypeConverter (BorderStyleSpec.class, new BorderStyleSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (FontSpec.class, new FontSpecMicroTypeConverter (aPreloadFontResolver));
     aRegistry.registerMicroElementTypeConverter (HeightSpec.class, new HeightSpecMicroTypeConverter ());
-    aRegistry.registerMicroElementTypeConverter (LineDashPatternSpec.class, new LineDashPatternSpecMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (LineDashPatternSpec.class,
+                                                 new LineDashPatternSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (MarginSpec.class, new MarginSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (PaddingSpec.class, new PaddingSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (PLCellRange.class, new PLCellRangeMicroTypeConverter ());
+    aRegistry.registerMicroElementTypeConverter (PLColor.class, new PLColorMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (SizeSpec.class, new SizeSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (TextAndWidthSpec.class, new TextAndWidthSpecMicroTypeConverter ());
     aRegistry.registerMicroElementTypeConverter (WidthSpec.class, new WidthSpecMicroTypeConverter ());

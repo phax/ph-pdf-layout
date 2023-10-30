@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.mutable.MutableInt;
 import com.helger.pdflayout.base.IPLRenderableObject;
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.element.hbox.AbstractPLHBox;
 import com.helger.pdflayout.element.hbox.PLHBoxColumn;
 import com.helger.pdflayout.render.PageRenderContext;
@@ -117,7 +118,9 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
     });
   }
 
-  public void forEachCell (final int nStartIncl, final int nEndIncl, @Nonnull final Consumer <? super PLTableCell> aConsumer)
+  public void forEachCell (final int nStartIncl,
+                           final int nEndIncl,
+                           @Nonnull final Consumer <? super PLTableCell> aConsumer)
   {
     forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
@@ -125,7 +128,9 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
     });
   }
 
-  public void forEachCell (final int nStartIncl, final int nEndIncl, @Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
+  public void forEachCell (final int nStartIncl,
+                           final int nEndIncl,
+                           @Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
     forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
@@ -142,10 +147,17 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
   }
 
   @Nonnull
-  public PLTableRow setFillColor (@Nullable final Color aFillColor)
+  public PLTableRow setFillColor (@Nullable final PLColor aFillColor)
   {
     forEachCell (x -> x.setFillColor (aFillColor));
     return this;
+  }
+
+  @Nonnull
+  @Deprecated (forRemoval = true, since = "7.2.0")
+  public PLTableRow setFillColor (@Nullable final Color aFillColor)
+  {
+    return setFillColor (PLColor.of (aFillColor));
   }
 
   @Nonnull

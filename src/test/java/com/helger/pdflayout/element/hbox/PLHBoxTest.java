@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.element.hbox;
 
-import java.awt.Color;
 import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -27,6 +26,7 @@ import org.junit.rules.TestRule;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.special.PLPageBreak;
@@ -56,9 +56,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.star ());
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.star ());
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.star ());
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -75,9 +75,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.star ());
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.star ());
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.star ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.star ());
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -94,9 +94,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.perc (20));
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.perc (40));
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.perc (40));
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.perc (20));
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.perc (40));
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.perc (40));
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -113,9 +113,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.perc (20));
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.perc (40));
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.perc (40));
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.perc (20));
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.perc (40));
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.perc (40));
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -132,9 +132,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.abs (80));
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.abs (120));
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.abs (80));
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.abs (80));
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.abs (120));
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.abs (80));
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -151,9 +151,12 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLBox (new PLText (s, r10).setFillColor (Color.YELLOW)).setBorder (Color.RED), WidthSpec.abs (80));
-    aHBox.addColumn (new PLBox (new PLText (s, r10).setFillColor (Color.YELLOW)).setBorder (Color.RED), WidthSpec.abs (120));
-    aHBox.addColumn (new PLBox (new PLText (s, r10).setFillColor (Color.YELLOW)).setBorder (Color.RED), WidthSpec.abs (80));
+    aHBox.addColumn (new PLBox (new PLText (s, r10).setFillColor (PLColor.YELLOW)).setBorder (PLColor.RED),
+                     WidthSpec.abs (80));
+    aHBox.addColumn (new PLBox (new PLText (s, r10).setFillColor (PLColor.YELLOW)).setBorder (PLColor.RED),
+                     WidthSpec.abs (120));
+    aHBox.addColumn (new PLBox (new PLText (s, r10).setFillColor (PLColor.YELLOW)).setBorder (PLColor.RED),
+                     WidthSpec.abs (80));
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -170,9 +173,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.auto ());
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.auto ());
-    aHBox.addColumn (new PLText (s, r10).setBorder (Color.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLText (s, r10).setBorder (PLColor.RED), WidthSpec.auto ());
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -189,9 +192,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED).setMinWidth (200), WidthSpec.auto ());
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.auto ());
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED).setMinWidth (200), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED).setMinWidth (200), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED).setMinWidth (200), WidthSpec.auto ());
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -208,9 +211,9 @@ public final class PLHBoxTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED).setMinWidth (200), WidthSpec.auto ());
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED), WidthSpec.auto ());
-    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (Color.RED).setMinWidth (200), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED).setMinWidth (200), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText (s, r10)).setBorder (PLColor.RED).setMinWidth (200), WidthSpec.auto ());
     aPS1.addElement (aHBox);
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
@@ -232,9 +235,9 @@ public final class PLHBoxTest
         for (int k = 0; k < 2; ++k)
         {
           final PLHBox aHBox = new PLHBox ();
-          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
           aPS1.addElement (aHBox);
         }
     aPS1.addElement (new PLPageBreak (true));
@@ -244,10 +247,11 @@ public final class PLHBoxTest
         for (int k = 0; k < 2; ++k)
         {
           final PLHBox aHBox = new PLHBox ();
-          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), WidthSpec.star ());
+          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (PLColor.BLUE),
+                           WidthSpec.star ());
           aPS1.addElement (aHBox);
         }
     aPS1.addElement (new PLPageBreak (true));
@@ -257,10 +261,11 @@ public final class PLHBoxTest
         for (int k = 0; k < 2; ++k)
         {
           final PLHBox aHBox = new PLHBox ();
-          aHBox.addColumn (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), WidthSpec.star ());
-          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (PLColor.BLUE),
+                           WidthSpec.star ());
+          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
           aPS1.addElement (aHBox);
         }
     aPS1.addElement (new PLPageBreak (true));
@@ -270,11 +275,13 @@ public final class PLHBoxTest
         for (int k = 0; k < 2; ++k)
         {
           final PLHBox aHBox = new PLHBox ();
-          aHBox.addColumn (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (Color.BLUE), WidthSpec.star ());
-          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (Color.RED), WidthSpec.auto ());
-          aHBox.addColumn (new PLBox (new PLText ("Ich bin auch ein Stern", r10)).setBorder (Color.GREEN), WidthSpec.star ());
+          aHBox.addColumn (new PLBox (new PLText ("Ich bin ein Stern", r10)).setBorder (PLColor.BLUE),
+                           WidthSpec.star ());
+          aHBox.addColumn (new PLBox (new PLText (i == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (j == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText (k == 0 ? s1 : s2, r10)).setBorder (PLColor.RED), WidthSpec.auto ());
+          aHBox.addColumn (new PLBox (new PLText ("Ich bin auch ein Stern", r10)).setBorder (PLColor.GREEN),
+                           WidthSpec.star ());
           aPS1.addElement (aHBox);
         }
 
@@ -290,17 +297,16 @@ public final class PLHBoxTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
-    aPS1.addElement (new PLText ("Line before", r10).setBorder (Color.RED));
+    aPS1.addElement (new PLText ("Line before", r10).setBorder (PLColor.RED));
     final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
     for (int i = 0; i < 3; ++i)
       aHBox.addColumn (new PLText (s + s, r10).setMargin (10)
                                               .setPadding (5)
-                                              .setBorder (Color.GRAY)
-                                              .setFillColor (Color.PINK)
-                                              .setVertSplittable (true),
-                       WidthSpec.star ());
+                                              .setBorder (PLColor.GRAY)
+                                              .setFillColor (PLColor.PINK)
+                                              .setVertSplittable (true), WidthSpec.star ());
     aPS1.addElement (aHBox);
-    aPS1.addElement (new PLText ("Line after", r10).setBorder (Color.RED));
+    aPS1.addElement (new PLText ("Line after", r10).setBorder (PLColor.RED));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -314,17 +320,16 @@ public final class PLHBoxTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
-    aPS1.addElement (new PLText ("Line before", r10).setBorder (Color.RED));
+    aPS1.addElement (new PLText ("Line before", r10).setBorder (PLColor.RED));
     final PLHBox aHBox = new PLHBox ().setVertSplittable (true);
     for (int i = 0; i < 3; ++i)
       aHBox.addColumn (new PLText (i == 1 ? "" : s + s, r10).setMargin (10)
                                                             .setPadding (5)
-                                                            .setBorder (Color.GRAY)
-                                                            .setFillColor (Color.PINK)
-                                                            .setVertSplittable (true),
-                       WidthSpec.star ());
+                                                            .setBorder (PLColor.GRAY)
+                                                            .setFillColor (PLColor.PINK)
+                                                            .setVertSplittable (true), WidthSpec.star ());
     aPS1.addElement (aHBox);
-    aPS1.addElement (new PLText ("Line after", r10).setBorder (Color.RED));
+    aPS1.addElement (new PLText ("Line after", r10).setBorder (PLColor.RED));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
@@ -338,18 +343,21 @@ public final class PLHBoxTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
     final PLHBox aHBox = new PLHBox ();
-    aHBox.addColumn (new PLText ("Test string\nto have more\nlines.", r10).setBorder (Color.RED), WidthSpec.auto ());
-    aHBox.addColumn (new PLBox (new PLText ("Bottom/left", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.LEFT)
-                                                                                      .setVertAlign (EVertAlignment.BOTTOM)
-                                                                                      .setFillColor (Color.YELLOW),
+    aHBox.addColumn (new PLText ("Test string\nto have more\nlines.", r10).setBorder (PLColor.RED), WidthSpec.auto ());
+    aHBox.addColumn (new PLBox (new PLText ("Bottom/left", r10).setBorder (PLColor.RED)).setHorzAlign (
+                                                                                                       EHorzAlignment.LEFT)
+                                                                                        .setVertAlign (EVertAlignment.BOTTOM)
+                                                                                        .setFillColor (PLColor.YELLOW),
                      WidthSpec.star ());
-    aHBox.addColumn (new PLBox (new PLText ("Middle/center", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.CENTER)
-                                                                                        .setVertAlign (EVertAlignment.MIDDLE)
-                                                                                        .setFillColor (Color.BLUE),
+    aHBox.addColumn (new PLBox (new PLText ("Middle/center", r10).setBorder (PLColor.RED)).setHorzAlign (
+                                                                                                         EHorzAlignment.CENTER)
+                                                                                          .setVertAlign (EVertAlignment.MIDDLE)
+                                                                                          .setFillColor (PLColor.BLUE),
                      WidthSpec.star ());
-    aHBox.addColumn (new PLBox (new PLText ("Top/right", r10).setBorder (Color.RED)).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                    .setVertAlign (EVertAlignment.TOP)
-                                                                                    .setFillColor (Color.PINK),
+    aHBox.addColumn (new PLBox (new PLText ("Top/right", r10).setBorder (PLColor.RED)).setHorzAlign (
+                                                                                                     EHorzAlignment.RIGHT)
+                                                                                      .setVertAlign (EVertAlignment.TOP)
+                                                                                      .setFillColor (PLColor.PINK),
                      WidthSpec.star ());
     aPS1.addElement (aHBox);
 

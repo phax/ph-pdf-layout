@@ -28,6 +28,7 @@ import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.base.PLColor;
 
 /**
  * This class contains the styling of a single border part. Currently only the
@@ -40,7 +41,7 @@ import com.helger.commons.string.ToStringGenerator;
 public class BorderStyleSpec implements Serializable
 {
   /** The default border color: black */
-  public static final Color DEFAULT_COLOR = Color.BLACK;
+  public static final PLColor DEFAULT_COLOR = PLColor.BLACK;
 
   /** The default border style: solid */
   public static final LineDashPatternSpec DEFAULT_LINE_DASH_PATTERN = LineDashPatternSpec.SOLID;
@@ -53,7 +54,7 @@ public class BorderStyleSpec implements Serializable
 
   public static final BorderStyleSpec EMPTY = new BorderStyleSpec ();
 
-  private final Color m_aColor;
+  private final PLColor m_aColor;
   private final LineDashPatternSpec m_aLineDashPattern;
   private final float m_fLineWidth;
 
@@ -62,7 +63,13 @@ public class BorderStyleSpec implements Serializable
     this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
   }
 
+  @Deprecated (forRemoval = true, since = "7.2.0")
   public BorderStyleSpec (@Nonnull final Color aColor)
+  {
+    this (PLColor.of (aColor));
+  }
+
+  public BorderStyleSpec (@Nonnull final PLColor aColor)
   {
     this (aColor, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
   }
@@ -77,17 +84,37 @@ public class BorderStyleSpec implements Serializable
     this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
   }
 
+  @Deprecated (forRemoval = true, since = "7.2.0")
   public BorderStyleSpec (@Nonnull final Color aColor, final float fLineWidth)
+  {
+    this (PLColor.of (aColor), DEFAULT_LINE_DASH_PATTERN, fLineWidth);
+  }
+
+  public BorderStyleSpec (@Nonnull final PLColor aColor, final float fLineWidth)
   {
     this (aColor, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
   }
 
+  @Deprecated (forRemoval = true, since = "7.2.0")
   public BorderStyleSpec (@Nonnull final Color aColor, @Nonnull final LineDashPatternSpec aLineDashPattern)
+  {
+    this (PLColor.of (aColor), aLineDashPattern, DEFAULT_LINE_WIDTH);
+  }
+
+  public BorderStyleSpec (@Nonnull final PLColor aColor, @Nonnull final LineDashPatternSpec aLineDashPattern)
   {
     this (aColor, aLineDashPattern, DEFAULT_LINE_WIDTH);
   }
 
+  @Deprecated (forRemoval = true, since = "7.2.0")
   public BorderStyleSpec (@Nonnull final Color aColor,
+                          @Nonnull final LineDashPatternSpec aLineDashPattern,
+                          @Nonnegative final float fLineWidth)
+  {
+    this (PLColor.of (aColor), aLineDashPattern, fLineWidth);
+  }
+
+  public BorderStyleSpec (@Nonnull final PLColor aColor,
                           @Nonnull final LineDashPatternSpec aLineDashPattern,
                           @Nonnegative final float fLineWidth)
   {
@@ -105,7 +132,7 @@ public class BorderStyleSpec implements Serializable
    * @return The border color to use. Never <code>null</code>.
    */
   @Nonnull
-  public final Color getColor ()
+  public final PLColor getColor ()
   {
     return m_aColor;
   }
@@ -137,7 +164,14 @@ public class BorderStyleSpec implements Serializable
   }
 
   @Nonnull
+  @Deprecated (forRemoval = true, since = "7.2.0")
   public BorderStyleSpec getCloneWithColor (@Nonnull final Color aNewColor)
+  {
+    return getCloneWithColor (PLColor.of (aNewColor));
+  }
+
+  @Nonnull
+  public BorderStyleSpec getCloneWithColor (@Nonnull final PLColor aNewColor)
   {
     ValueEnforcer.notNull (aNewColor, "NewColor");
     if (aNewColor.equals (m_aColor))
@@ -180,7 +214,10 @@ public class BorderStyleSpec implements Serializable
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aColor).append (m_aLineDashPattern).append (m_fLineWidth).getHashCode ();
+    return new HashCodeGenerator (this).append (m_aColor)
+                                       .append (m_aLineDashPattern)
+                                       .append (m_fLineWidth)
+                                       .getHashCode ();
   }
 
   @Override
