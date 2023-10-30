@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout.base;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -40,21 +38,6 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    * The default border is a 0 border, meaning no border at all.
    */
   BorderSpec DEFAULT_BORDER = BorderSpec.BORDER0;
-
-  /**
-   * Set all border values (left, top, right, bottom) to the same value. This
-   * method may not be called after an element got prepared!
-   *
-   * @param aColor
-   *        The color to use. May not be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  default IMPLTYPE setBorder (@Nonnull final Color aColor)
-  {
-    return setBorder (PLColor.of (aColor));
-  }
 
   /**
    * Set all border values (left, top, right, bottom) to the same value. This

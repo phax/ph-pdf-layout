@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.pdfbox;
 
-import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.io.Closeable;
 import java.io.IOException;
@@ -745,21 +744,6 @@ public final class PDPageContentStreamExt implements Closeable
   }
 
   /**
-   * Set the stroking color using an AWT color. Conversion uses the default sRGB
-   * color space.
-   *
-   * @param aColor
-   *        The color to set.
-   * @throws IOException
-   *         If an IO error occurs while writing to the stream.
-   */
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public void setStrokingColor (@Nonnull final Color aColor) throws IOException
-  {
-    setStrokingColor (PLColor.of (aColor));
-  }
-
-  /**
    * Set the stroking color in the DeviceRGB color space. Range is 0..255.
    *
    * @param r
@@ -897,21 +881,6 @@ public final class PDPageContentStreamExt implements Closeable
   public void setNonStrokingColor (@Nonnull final PLColor aColor) throws IOException
   {
     setNonStrokingColor (aColor.getAsPDColor ());
-  }
-
-  /**
-   * Set the non-stroking color using an AWT color. Conversion uses the default
-   * sRGB color space.
-   *
-   * @param aColor
-   *        The color to set.
-   * @throws IOException
-   *         If an IO error occurs while writing to the stream.
-   */
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public void setNonStrokingColor (@Nonnull final Color aColor) throws IOException
-  {
-    setNonStrokingColor (PLColor.of (aColor));
   }
 
   /**

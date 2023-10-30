@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.spec;
 
-import java.awt.Color;
 import java.io.Serializable;
 
 import javax.annotation.Nonnegative;
@@ -71,24 +70,7 @@ public class FontSpec implements Serializable
    *        Font size to use. Must be &gt; 0.
    * @param aColor
    *        The color to use. May not be <code>null</code>.
-   */
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public FontSpec (@Nonnull final PreloadFont aPreloadFont,
-                   @Nonnegative final float fFontSize,
-                   @Nonnull final Color aColor)
-  {
-    this (aPreloadFont, fFontSize, PLColor.of (aColor));
-  }
-
-  /**
-   * Constructor with a {@link PreloadFont}, a font size and a custom color.
-   *
-   * @param aPreloadFont
-   *        Preload font to use. May not be <code>null</code>.
-   * @param fFontSize
-   *        Font size to use. Must be &gt; 0.
-   * @param aColor
-   *        The color to use. May not be <code>null</code>.
+   * @since 7.2.0
    */
   public FontSpec (@Nonnull final PreloadFont aPreloadFont,
                    @Nonnegative final float fFontSize,
@@ -188,20 +170,6 @@ public class FontSpec implements Serializable
     if (aNewColor.equals (m_aColor))
       return this;
     return new FontSpec (m_aPreloadFont, m_fFontSize, aNewColor);
-  }
-
-  /**
-   * Return a clone of this object but with a different color.
-   *
-   * @param aNewColor
-   *        The new color to use. May not be <code>null</code>.
-   * @return this if the colors are equal - a new object otherwise.
-   */
-  @Nonnull
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public FontSpec getCloneWithDifferentColor (@Nonnull final Color aNewColor)
-  {
-    return getCloneWithDifferentColor (PLColor.of (aNewColor));
   }
 
   @Override

@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.pdfbox;
 
-import java.awt.Color;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
@@ -111,12 +110,6 @@ public class PDPageContentStreamWithCache
     setNonStrokingColor (aFontSpec.getColor ());
   }
 
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public void setStrokingColor (@Nonnull final Color aColor) throws IOException
-  {
-    setStrokingColor (PLColor.of (aColor));
-  }
-
   public void setStrokingColor (@Nonnull final PLColor aColor) throws IOException
   {
     ValueEnforcer.notNull (aColor, "Color");
@@ -132,12 +125,6 @@ public class PDPageContentStreamWithCache
   public PLColor getLastUsedStrokingColor ()
   {
     return m_aLastUsedStrokingColor;
-  }
-
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public void setNonStrokingColor (@Nonnull final Color aColor) throws IOException
-  {
-    setNonStrokingColor (PLColor.of (aColor));
   }
 
   public void setNonStrokingColor (@Nonnull final PLColor aColor) throws IOException

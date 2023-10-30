@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout.base;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -145,13 +143,6 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   {
     m_aFillColor = aFillColor;
     return thisAsT ();
-  }
-
-  @Nonnull
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public final IMPLTYPE setFillColor (@Nullable final Color aFillColor)
-  {
-    return setFillColor (PLColor.of (aFillColor));
   }
 
   @Override

@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout.base;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -47,20 +45,6 @@ public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> e
    */
   @Nonnull
   IMPLTYPE setFillColor (@Nullable PLColor aFillColor);
-
-  /**
-   * Set the element fill color.
-   *
-   * @param aFillColor
-   *        The fill color to use. May be <code>null</code>.
-   * @return this
-   */
-  @Nonnull
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  default IMPLTYPE setFillColor (@Nullable final Color aFillColor)
-  {
-    return setFillColor (PLColor.of (aFillColor));
-  }
 
   /**
    * @return The current fill color. May be <code>null</code>.

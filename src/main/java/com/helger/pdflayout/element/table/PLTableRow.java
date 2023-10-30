@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.element.table;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
@@ -151,13 +150,6 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
   {
     forEachCell (x -> x.setFillColor (aFillColor));
     return this;
-  }
-
-  @Nonnull
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public PLTableRow setFillColor (@Nullable final Color aFillColor)
-  {
-    return setFillColor (PLColor.of (aFillColor));
   }
 
   @Nonnull

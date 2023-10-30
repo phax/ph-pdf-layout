@@ -16,7 +16,6 @@
  */
 package com.helger.pdflayout.spec;
 
-import java.awt.Color;
 import java.io.Serializable;
 
 import javax.annotation.Nonnegative;
@@ -63,12 +62,6 @@ public class BorderStyleSpec implements Serializable
     this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
   }
 
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public BorderStyleSpec (@Nonnull final Color aColor)
-  {
-    this (PLColor.of (aColor));
-  }
-
   public BorderStyleSpec (@Nonnull final PLColor aColor)
   {
     this (aColor, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
@@ -84,34 +77,14 @@ public class BorderStyleSpec implements Serializable
     this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
   }
 
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public BorderStyleSpec (@Nonnull final Color aColor, final float fLineWidth)
-  {
-    this (PLColor.of (aColor), DEFAULT_LINE_DASH_PATTERN, fLineWidth);
-  }
-
   public BorderStyleSpec (@Nonnull final PLColor aColor, final float fLineWidth)
   {
     this (aColor, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
   }
 
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public BorderStyleSpec (@Nonnull final Color aColor, @Nonnull final LineDashPatternSpec aLineDashPattern)
-  {
-    this (PLColor.of (aColor), aLineDashPattern, DEFAULT_LINE_WIDTH);
-  }
-
   public BorderStyleSpec (@Nonnull final PLColor aColor, @Nonnull final LineDashPatternSpec aLineDashPattern)
   {
     this (aColor, aLineDashPattern, DEFAULT_LINE_WIDTH);
-  }
-
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public BorderStyleSpec (@Nonnull final Color aColor,
-                          @Nonnull final LineDashPatternSpec aLineDashPattern,
-                          @Nonnegative final float fLineWidth)
-  {
-    this (PLColor.of (aColor), aLineDashPattern, fLineWidth);
   }
 
   public BorderStyleSpec (@Nonnull final PLColor aColor,
@@ -161,13 +134,6 @@ public class BorderStyleSpec implements Serializable
     return m_aColor.equals (DEFAULT_COLOR) &&
            m_aLineDashPattern.equals (DEFAULT_LINE_DASH_PATTERN) &&
            EqualsHelper.equals (m_fLineWidth, DEFAULT_LINE_WIDTH);
-  }
-
-  @Nonnull
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public BorderStyleSpec getCloneWithColor (@Nonnull final Color aNewColor)
-  {
-    return getCloneWithColor (PLColor.of (aNewColor));
   }
 
   @Nonnull

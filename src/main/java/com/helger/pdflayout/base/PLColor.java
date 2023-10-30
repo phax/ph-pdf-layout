@@ -17,7 +17,6 @@
 package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
@@ -169,12 +168,5 @@ public class PLColor
   public static PLColor gray (final int nPart)
   {
     return new PLColor (nPart, nPart, nPart);
-  }
-
-  @Nullable
-  @Deprecated (forRemoval = true, since = "7.2.0")
-  public static PLColor of (@Nullable final java.awt.Color aColor)
-  {
-    return aColor == null ? null : new PLColor (aColor.getRed (), aColor.getGreen (), aColor.getBlue ());
   }
 }
