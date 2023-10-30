@@ -54,6 +54,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+* v7.2.0 - 2023-10-30
+    * Added new class `PLColor` and deprecated all methods using `java.awt.Color`. Backwards incompatible change. See [issue #32](https://github.com/phax/ph-pdf-layout/issues/32) - thx @AndroidDeveloperLB
 * v7.1.0 - 2023-08-20
     * Updated to PDFBox 3.0.0
 * v7.0.1 - 2023-07-31
