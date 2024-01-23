@@ -51,11 +51,9 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
                                     AbstractPLBlockElement <IMPLTYPE> implements
                                     IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
-  public static final boolean DEFAULT_CLIP_CONTENT = false;
 
   private IPLRenderableObject <?> m_aElement;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
-  private boolean m_bClipContent = DEFAULT_CLIP_CONTENT;
 
   // Status vars
   private SizeSpec m_aElementPreparedSize;
@@ -114,35 +112,6 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
-    return thisAsT ();
-  }
-
-  /**
-   * @return <code>true</code> if any overflowing content should be clipped,
-   *         <code>false</code> if not. Default is
-   *         {@link #DEFAULT_CLIP_CONTENT}.
-   * @since 7.3.1
-   */
-  public final boolean isClipContent ()
-  {
-    return m_bClipContent;
-  }
-
-  /**
-   * Enable the clipping of content, so that only the content inside the
-   * rendering area is shown. Similar to CSS style <code>overflow:hidden</code>.
-   * This usually only makes sense if a maximum width or height is defined
-   * additionally.
-   *
-   * @param bClipContent
-   *        <code>true</code> to enable it, <code>false</code> to disable it.
-   * @return this for chaining
-   * @since 7.3.1
-   */
-  @Nonnull
-  public final IMPLTYPE setClipContent (final boolean bClipContent)
-  {
-    m_bClipContent = bClipContent;
     return thisAsT ();
   }
 
@@ -356,7 +325,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
       final float fRenderHeight = getRenderHeight ();
 
       final PDPageContentStreamWithCache aCSWC = aCtx.getContentStream ();
-      if (m_bClipContent)
+      final boolean bClipContent = isClipContent ();
+      if (bClipContent)
       {
         aCSWC.saveGraphicsState ();
         aCSWC.addRect (fStartLeft, fStartTop - fRenderHeight, fRenderWidth, fRenderHeight);
@@ -370,7 +340,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
                                                                    fRenderHeight);
       m_aElement.render (aElementCtx);
 
-      if (m_bClipContent)
+      if (bClipContent)
       {
         aCSWC.restoreGraphicsState ();
       }
@@ -385,7 +355,6 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     return ToStringGenerator.getDerived (super.toString ())
                             .appendIfNotNull ("Element", m_aElement)
                             .append ("VertSplittable", m_bVertSplittable)
-                            .append ("ClipContent", m_bClipContent)
                             .appendIfNotNull ("ElementPreparedSize", m_aElementPreparedSize)
                             .appendIfNotNull ("RenderOffset", m_aRenderOffset)
                             .getToString ();

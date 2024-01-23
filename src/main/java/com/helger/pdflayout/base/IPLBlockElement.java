@@ -38,6 +38,9 @@ public interface IPLBlockElement <IMPLTYPE extends IPLBlockElement <IMPLTYPE>> e
    */
   boolean DEFAULT_FULL_WIDTH = true;
 
+  /** By default content is not clipped */
+  boolean DEFAULT_CLIP_CONTENT = false;
+
   /**
    * @return Should the element occupy the full width? The default is
    *         {@link #DEFAULT_FULL_WIDTH}.
@@ -54,4 +57,26 @@ public interface IPLBlockElement <IMPLTYPE extends IPLBlockElement <IMPLTYPE>> e
    */
   @Nonnull
   IMPLTYPE setFullWidth (boolean bFullWidth);
+
+  /**
+   * @return <code>true</code> if any overflowing content should be clipped,
+   *         <code>false</code> if not. Default is
+   *         {@link #DEFAULT_CLIP_CONTENT}.
+   * @since 7.3.1
+   */
+  boolean isClipContent ();
+
+  /**
+   * Enable the clipping of content, so that only the content inside the
+   * rendering area is shown. Similar to CSS style <code>overflow:hidden</code>.
+   * This usually only makes sense if a maximum width or height is defined
+   * additionally.
+   *
+   * @param bClipContent
+   *        <code>true</code> to enable it, <code>false</code> to disable it.
+   * @return this for chaining
+   * @since 7.3.1
+   */
+  @Nonnull
+  IMPLTYPE setClipContent (boolean bClipContent);
 }

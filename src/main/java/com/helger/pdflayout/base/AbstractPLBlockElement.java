@@ -31,14 +31,15 @@ import com.helger.pdflayout.spec.EVertAlignment;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
-                                             implements
+public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockElement <IMPLTYPE>> extends
+                                             AbstractPLElement <IMPLTYPE> implements
                                              IPLBlockElement <IMPLTYPE>
 {
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private EVertAlignment m_eVertAlign = DEFAULT_VERT_ALIGNMENT;
   // Always use the full width?
   private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
+  private boolean m_bClipContent = DEFAULT_CLIP_CONTENT;
 
   public AbstractPLBlockElement ()
   {}
@@ -92,6 +93,18 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
     return thisAsT ();
   }
 
+  public final boolean isClipContent ()
+  {
+    return m_bClipContent;
+  }
+
+  @Nonnull
+  public final IMPLTYPE setClipContent (final boolean bClipContent)
+  {
+    m_bClipContent = bClipContent;
+    return thisAsT ();
+  }
+
   @Override
   public String toString ()
   {
@@ -99,6 +112,7 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("VertAlign", m_eVertAlign)
                             .append ("FullWidth", m_bFullWidth)
+                            .append ("ClipContent", m_bClipContent)
                             .getToString ();
   }
 }
