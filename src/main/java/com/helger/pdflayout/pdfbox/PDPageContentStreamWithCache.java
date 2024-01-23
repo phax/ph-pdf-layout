@@ -202,7 +202,6 @@ public class PDPageContentStreamWithCache
   {
     m_aStream.moveTo (xStart, yStart);
     m_aStream.lineTo (xEnd, yEnd);
-    stroke ();
   }
 
   public void fillRect (final float fX, final float fY, final float fWidth, final float fHeight) throws IOException
@@ -251,5 +250,15 @@ public class PDPageContentStreamWithCache
   public void close () throws IOException
   {
     m_aStream.close ();
+  }
+
+  public void saveGraphicsState () throws IOException
+  {
+    m_aStream.saveGraphicsState ();
+  }
+
+  public void restoreGraphicsState () throws IOException
+  {
+    m_aStream.restoreGraphicsState ();
   }
 }
