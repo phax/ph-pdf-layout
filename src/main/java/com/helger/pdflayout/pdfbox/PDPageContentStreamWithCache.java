@@ -47,11 +47,21 @@ public class PDPageContentStreamWithCache
 
   // Status cache
   private LoadedFont m_aLastUsedLoadedFont;
-  private float m_fLastUsedFontSize;
+  private float m_fLastUsedFontSize = 0f;
   private PLColor m_aLastUsedStrokingColor = PLColor.BLACK;
   private PLColor m_aLastUsedNonStrokingColor = PLColor.BLACK;
   private LineDashPatternSpec m_aLastUsedLineDashPattern = LineDashPatternSpec.SOLID;
-  private float m_fLastUsedLineWidth;
+  private float m_fLastUsedLineWidth = 0f;
+
+  private void _resetStatus ()
+  {
+    m_aLastUsedLoadedFont = null;
+    m_fLastUsedFontSize = 0f;
+    m_aLastUsedStrokingColor = PLColor.BLACK;
+    m_aLastUsedNonStrokingColor = PLColor.BLACK;
+    m_aLastUsedLineDashPattern = LineDashPatternSpec.SOLID;
+    m_fLastUsedLineWidth = 0f;
+  }
 
   public PDPageContentStreamWithCache (@Nonnull final PDDocument aDocument,
                                        @Nonnull final PDPage aSourcePage,
@@ -255,6 +265,13 @@ public class PDPageContentStreamWithCache
   public void saveGraphicsState () throws IOException
   {
     m_aStream.saveGraphicsState ();
+    // Make sure, that all status elements are emitted again
+    _resetStatus ();
+  }
+
+  public void clip () throws IOException
+  {
+    m_aStream.clip ();
   }
 
   public void restoreGraphicsState () throws IOException
