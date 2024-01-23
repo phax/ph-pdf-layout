@@ -49,8 +49,8 @@ public class MainIssue16
           .setID ("headerrow");
     for (int i = 0; i < 4; ++i)
     {
-      aTable.addAndReturnRow (new PLTableCell (new PLText (summaryKey[i] + "\n", r10)),
-                              new PLTableCell (new PLText ("Duration", r10))).setID ("row");
+      aTable.addRow (new PLTableCell (new PLText (summaryKey[i] + "\n", r10)),
+                     new PLTableCell (new PLText ("Duration", r10))).setID ("row");
     }
 
     // Table2
@@ -60,8 +60,8 @@ public class MainIssue16
            .setID ("headerrow");
     for (int i = 0; i < 4; ++i)
     {
-      aTable2.addAndReturnRow (new PLTableCell (new PLText (summaryKey[i] + "\n", r10)),
-                               new PLTableCell (new PLText ("Duration", r10))).setID ("row");
+      aTable2.addRow (new PLTableCell (new PLText (summaryKey[i] + "\n", r10)),
+                      new PLTableCell (new PLText ("Duration", r10))).setID ("row");
     }
 
     EPLTableGridType.FULL.applyGridToTable (aTable, new BorderStyleSpec (PLColor.LIGHT_GRAY));
