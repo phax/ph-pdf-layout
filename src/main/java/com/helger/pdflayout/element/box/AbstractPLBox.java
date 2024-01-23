@@ -32,6 +32,7 @@ import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.debug.PLDebugLog;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PLRenderHelper;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
@@ -46,11 +47,15 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> extends AbstractPLBlockElement <IMPLTYPE> implements
+public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> extends
+                                    AbstractPLBlockElement <IMPLTYPE> implements
                                     IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
+  public static final boolean DEFAULT_CLIP_CONTENT = false;
+
   private IPLRenderableObject <?> m_aElement;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+  private boolean m_bClipContent = DEFAULT_CLIP_CONTENT;
 
   // Status vars
   private SizeSpec m_aElementPreparedSize;
@@ -109,6 +114,35 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
+    return thisAsT ();
+  }
+
+  /**
+   * @return <code>true</code> if any overflowing content should be clipped,
+   *         <code>false</code> if not. Default is
+   *         {@link #DEFAULT_CLIP_CONTENT}.
+   * @since 7.3.1
+   */
+  public final boolean isClipContent ()
+  {
+    return m_bClipContent;
+  }
+
+  /**
+   * Enable the clipping of content, so that only the content inside the
+   * rendering area is shown. Similar to CSS style <code>overflow:hidden</code>.
+   * This usually only makes sense if a maximum width or height is defined
+   * additionally.
+   *
+   * @param bClipContent
+   *        <code>true</code> to enable it, <code>false</code> to disable it.
+   * @return this for chaining
+   * @since 7.3.1
+   */
+  @Nonnull
+  public final IMPLTYPE setClipContent (final boolean bClipContent)
+  {
+    m_bClipContent = bClipContent;
     return thisAsT ();
   }
 
@@ -183,7 +217,9 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
-    final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (), fElementWidth, fElementHeight);
+    final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (),
+                                                                   fElementWidth,
+                                                                   fElementHeight);
     internalSetElementPreparedSize (m_aElement.prepare (aElementCtx));
 
     // Add the outer stuff of the contained element as this elements prepared
@@ -218,8 +254,10 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1").setVertSplittable (false);
-    final AbstractPLBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2").setVertSplittable (true);
+    final AbstractPLBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+                                                                                 .setVertSplittable (false);
+    final AbstractPLBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+                                                                                 .setVertSplittable (true);
 
     // Set min width/max width from source
     // Don't use the height, because on vertically split elements, the height is
@@ -314,8 +352,28 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     {
       final float fStartLeft = aCtx.getStartLeft () + getOutlineLeft () + m_aRenderOffset.getWidth ();
       final float fStartTop = aCtx.getStartTop () - getOutlineTop () - m_aRenderOffset.getHeight ();
-      final PageRenderContext aElementCtx = new PageRenderContext (aCtx, fStartLeft, fStartTop, getRenderWidth (), getRenderHeight ());
+      final float fRenderWidth = getRenderWidth ();
+      final float fRenderHeight = getRenderHeight ();
+
+      final PDPageContentStreamWithCache aCSWC = aCtx.getContentStream ();
+      if (m_bClipContent)
+      {
+        aCSWC.saveGraphicsState ();
+        aCSWC.addRect (fStartLeft, fStartTop - fRenderHeight, fRenderWidth, fRenderHeight);
+        aCSWC.clip ();
+      }
+
+      final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
+                                                                   fStartLeft,
+                                                                   fStartTop,
+                                                                   fRenderWidth,
+                                                                   fRenderHeight);
       m_aElement.render (aElementCtx);
+
+      if (m_bClipContent)
+      {
+        aCSWC.restoreGraphicsState ();
+      }
     }
     else
       PLDebugLog.debugRender (this, "Not rendering the box, because no element is contained");
@@ -327,6 +385,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     return ToStringGenerator.getDerived (super.toString ())
                             .appendIfNotNull ("Element", m_aElement)
                             .append ("VertSplittable", m_bVertSplittable)
+                            .append ("ClipContent", m_bClipContent)
                             .appendIfNotNull ("ElementPreparedSize", m_aElementPreparedSize)
                             .appendIfNotNull ("RenderOffset", m_aRenderOffset)
                             .getToString ();
