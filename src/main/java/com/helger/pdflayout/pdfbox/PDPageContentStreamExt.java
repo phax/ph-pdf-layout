@@ -77,7 +77,7 @@ import com.helger.pdflayout.base.PLColor;
  */
 @CodingStyleguideUnaware
 @NotThreadSafe
-public final class PDPageContentStreamExt implements Closeable
+public class PDPageContentStreamExt implements Closeable
 {
   private static final Log LOGGER = LogFactory.getLog (PDPageContentStreamExt.class);
 
@@ -1560,7 +1560,7 @@ public final class PDPageContentStreamExt implements Closeable
    * @throws IOException
    *         In case of IO error
    */
-  protected final void writeOperator (final byte... text) throws IOException
+  public final void writeOperator (final byte... text) throws IOException
   {
     m_aOS.write (text);
     m_aOS.write ('\n');
