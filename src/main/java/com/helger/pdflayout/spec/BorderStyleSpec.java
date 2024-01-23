@@ -189,7 +189,7 @@ public class BorderStyleSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Color", m_aColor)
+    return new ToStringGenerator (null).append ("Color", m_aColor)
                                        .append ("LineDashPattern", m_aLineDashPattern)
                                        .append ("LineWidth", m_fLineWidth)
                                        .getToString ();

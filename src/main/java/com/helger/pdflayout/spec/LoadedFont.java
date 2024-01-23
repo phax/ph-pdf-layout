@@ -408,7 +408,7 @@ public class LoadedFont
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Font", m_aFont)
+    return new ToStringGenerator (null).append ("Font", m_aFont)
                                        .append ("FallbackCodePoint", m_nFallbackCodePoint)
                                        .append ("BBHeight", m_fBBHeight)
                                        .append ("Descent", m_fDescent)

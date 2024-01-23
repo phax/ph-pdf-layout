@@ -77,7 +77,8 @@ public class LineDashPatternSpec implements Serializable
   public LineDashPatternSpec (@Nonnull final float [] aPattern, final float fPhase)
   {
     ValueEnforcer.notNull (aPattern, "Pattern");
-    ValueEnforcer.isTrue (aPattern.length <= 2, () -> "Too many patterns (" + aPattern.length + ") provided. At max 2 items are allowed.");
+    ValueEnforcer.isTrue (aPattern.length <= 2,
+                          () -> "Too many patterns (" + aPattern.length + ") provided. At max 2 items are allowed.");
     for (final float fPatternValue : aPattern)
       ValueEnforcer.isGT0 (fPatternValue, "PatternValue");
 
@@ -136,6 +137,6 @@ public class LineDashPatternSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("pattern", m_aPattern).append ("phase", m_fPhase).getToString ();
+    return new ToStringGenerator (null).append ("Pattern", m_aPattern).append ("Phase", m_fPhase).getToString ();
   }
 }

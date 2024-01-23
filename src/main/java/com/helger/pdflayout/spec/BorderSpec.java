@@ -272,10 +272,10 @@ public class BorderSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).appendIfNotNull ("left", m_aLeft)
-                                       .appendIfNotNull ("top", m_aTop)
-                                       .appendIfNotNull ("right", m_aRight)
-                                       .appendIfNotNull ("bottom", m_aBottom)
+    return new ToStringGenerator (null).appendIfNotNull ("Left", m_aLeft)
+                                       .appendIfNotNull ("Top", m_aTop)
+                                       .appendIfNotNull ("Right", m_aRight)
+                                       .appendIfNotNull ("Bottom", m_aBottom)
                                        .getToString ();
   }
 

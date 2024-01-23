@@ -194,7 +194,7 @@ public class FontSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("PreloadFont", m_aPreloadFont)
+    return new ToStringGenerator (null).append ("PreloadFont", m_aPreloadFont)
                                        .append ("FontSize", m_fFontSize)
                                        .append ("Color", m_aColor)
                                        .getToString ();

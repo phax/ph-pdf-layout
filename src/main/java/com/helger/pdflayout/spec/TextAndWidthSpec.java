@@ -80,6 +80,6 @@ public class TextAndWidthSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (null).append ("text", m_sText).append ("width", m_fWidth).getToString ();
+    return new ToStringGenerator (null).append ("Text", m_sText).append ("Width", m_fWidth).getToString ();
   }
 }
