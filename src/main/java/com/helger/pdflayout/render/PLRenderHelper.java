@@ -120,6 +120,7 @@ public final class PLRenderHelper
           aContentStream.setLineDashPattern (aTop.getLineDashPattern ());
           aContentStream.setLineWidth (fTopWidth);
           aContentStream.drawLine (fLeft, fTop - fDelta, fRight - fRightWidth, fTop - fDelta);
+          aContentStream.stroke ();
         }
 
         if (aRight != null)
@@ -136,6 +137,7 @@ public final class PLRenderHelper
           aContentStream.setLineDashPattern (aRight.getLineDashPattern ());
           aContentStream.setLineWidth (fRightWidth);
           aContentStream.drawLine (fRight - fDelta, fTop, fRight - fDelta, fBottom + fBottomWidth);
+          aContentStream.stroke ();
         }
 
         if (aBottom != null)
@@ -152,6 +154,7 @@ public final class PLRenderHelper
           aContentStream.setLineDashPattern (aBottom.getLineDashPattern ());
           aContentStream.setLineWidth (fBottomWidth);
           aContentStream.drawLine (fLeft + fLeftWidth, fBottom + fDelta, fRight, fBottom + fDelta);
+          aContentStream.stroke ();
         }
 
         if (aLeft != null)
@@ -168,8 +171,8 @@ public final class PLRenderHelper
           aContentStream.setLineDashPattern (aLeft.getLineDashPattern ());
           aContentStream.setLineWidth (fLeftWidth);
           aContentStream.drawLine (fLeft + fDelta, fTop - fTopWidth, fLeft + fDelta, fBottom);
+          aContentStream.stroke ();
         }
-        aContentStream.stroke ();
       }
   }
 
