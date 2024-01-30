@@ -27,7 +27,7 @@ import com.helger.commons.lang.PropertiesHelper;
 
 /**
  * Contains global configuration constants.
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -45,7 +45,7 @@ public final class PLConfig
   static
   {
     String sProjectVersion = null;
-    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout4-version.properties"));
+    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout-version.properties"));
     if (p != null)
       sProjectVersion = p.get ("version");
     if (sProjectVersion == null)
