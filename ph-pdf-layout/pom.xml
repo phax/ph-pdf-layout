@@ -21,15 +21,14 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.helger</groupId>
-    <artifactId>parent-pom</artifactId>
-    <version>2.0.5</version>
+    <artifactId>ph-pdf-layout-parent-pom</artifactId>
+    <version>7.3.2-SNAPSHOT</version>
   </parent>
   <artifactId>ph-pdf-layout</artifactId>
-  <version>7.3.2-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
-  <url>https://github.com/phax/ph-pdf-layout</url>
+  <url>https://github.com/phax/ph-pdf-layout/ph-pdf-layout</url>
   <inceptionYear>2014</inceptionYear>
 
   <licenses>
@@ -39,24 +38,6 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-
-  <repositories>
-    <repository>
-      <id>ApacheSnapshot</id>
-      <name>Apache Repository</name>
-      <url>https://repository.apache.org/content/groups/snapshots/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
-  <scm>
-    <connection>scm:git:https://github.com/phax/ph-pdf-layout.git</connection>
-    <developerConnection>scm:git:https://github.com/phax/ph-pdf-layout.git</developerConnection>
-    <url>https://github.com/phax/ph-pdf-layout</url>
-    <tag>HEAD</tag>
-  </scm>
 
   <organization>
     <name>Philip Helger</name>
@@ -71,54 +52,6 @@
       <url>https://www.helger.com</url>
     </developer>
   </developers>
-
-  <properties>
-    <pdfbox.version>3.0.1</pdfbox.version>
-  </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>com.helger.commons</groupId>
-        <artifactId>ph-commons-parent-pom</artifactId>
-        <version>11.1.4</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.helger.font</groupId>
-        <artifactId>ph-fonts-parent-pom</artifactId>
-        <version>5.0.1</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.pdfbox</groupId>
-        <artifactId>pdfbox</artifactId>
-        <version>${pdfbox.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.pdfbox</groupId>
-        <artifactId>xmpbox</artifactId>
-        <version>${pdfbox.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.pdfbox</groupId>
-        <artifactId>pdfbox-examples</artifactId>
-        <version>${pdfbox.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.pdfbox</groupId>
-        <artifactId>pdfbox-app</artifactId>
-        <version>${pdfbox.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.pdfbox</groupId>
-        <artifactId>jbig2-imageio</artifactId>
-        <version>3.0.4</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -299,13 +232,6 @@
           </signaturesArtifacts>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <source>8</source>
-        </configuration>
-      </plugin> 
     </plugins>
   </build>
 </project>
