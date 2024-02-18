@@ -54,6 +54,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+* v7.3.2 - work in progress
+    * Extracted a parent POM and prepared a submodule structure
 * v7.3.1 - 2024-01-24
     * Updated to PDFBox 3.0.1
     * Added support for clipping content of block elements via `.setClipContent(boolean)`. See [issue #34](https://github.com/phax/ph-pdf-layout/issues/34)
