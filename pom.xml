@@ -27,7 +27,7 @@
   <artifactId>ph-pdf-layout-parent-pom</artifactId>
   <version>7.3.2-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>ph-pdf-layout parent POM</name>
+  <name>ph-pdf-layout-parent-pom</name>
   <description>Parent POM for ibrary for creating nicely layouted PDF documents based on PDFBox</description>
   <url>https://github.com/phax/ph-pdf-layout</url>
   <inceptionYear>2014</inceptionYear>
@@ -116,6 +116,12 @@
         <groupId>org.apache.pdfbox</groupId>
         <artifactId>jbig2-imageio</artifactId>
         <version>3.0.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-pdf-layout</artifactId>
+        <version>${project.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
