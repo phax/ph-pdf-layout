@@ -59,7 +59,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
     * Using https://github.com/red6/pdfcompare to test created PDFs against the stored ones. See [issue #35](https://github.com/phax/ph-pdf-layout/issues/35) - thx @Lolf1010
 * v7.3.1 - 2024-01-24
     * Updated to PDFBox 3.0.1
-    * Added support for clipping content of block elements via `.setClipContent(boolean)`. See [issue #34](https://github.com/phax/ph-pdf-layout/issues/34)
+    * Added support for clipping content of block elements via `.setClipContent(boolean)`. See [issue #34](https://github.com/phax/ph-pdf-layout/issues/34) - thx @terrason
 * v7.3.0 - 2023-10-30
     * Completely removed usage of `java.awt.Color`. Backwards incompatible change. This finalizes [issue #32](https://github.com/phax/ph-pdf-layout/issues/32).
 * v7.2.0 - 2023-10-30
