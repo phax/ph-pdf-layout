@@ -29,6 +29,7 @@ import org.junit.rules.TestRule;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
@@ -100,7 +101,7 @@ public final class PLExternalLinkTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plexternallink/basic.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plexternallink/basic.pdf"));
   }
 
   @Test
@@ -121,6 +122,6 @@ public final class PLExternalLinkTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plexternallink/pagebreak.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plexternallink/pagebreak.pdf"));
   }
 }

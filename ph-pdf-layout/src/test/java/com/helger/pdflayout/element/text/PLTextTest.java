@@ -18,7 +18,6 @@ package com.helger.pdflayout.element.text;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Random;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -40,6 +39,7 @@ import com.helger.font.open_sans.EFontResourceOpenSans;
 import com.helger.font.roboto.EFontResourceRoboto;
 import com.helger.font.source_sans_pro.EFontResourceSourceSansPro;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
@@ -121,7 +121,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/basic.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/basic.pdf"));
   }
 
   @Test
@@ -202,7 +202,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/line-spacing.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/line-spacing.pdf"));
   }
 
   @Test
@@ -222,7 +222,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/font-open-sans.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-open-sans.pdf"));
   }
 
   @Test
@@ -243,7 +243,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/font-lato2.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-lato2.pdf"));
   }
 
   @Test
@@ -262,7 +262,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/font-markazi.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-markazi.pdf"));
   }
 
   @Test
@@ -285,7 +285,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/font-noto-sans-sc.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-noto-sans-sc.pdf"));
   }
 
   @Test
@@ -304,7 +304,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/font-noto-sans-hk.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-noto-sans-hk.pdf"));
   }
 
   @Test
@@ -347,7 +347,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/font-multiple.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-multiple.pdf"));
   }
 
   @Test
@@ -405,13 +405,12 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/horz-alignment.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/horz-alignment.pdf"));
   }
 
   @Test
   public void testWithTextExceedingPage () throws PDFCreationException
   {
-    final Random aRandom = new Random ();
     final StringBuilder aSB = new StringBuilder (5 * CGlobal.BYTES_PER_MEGABYTE);
     for (int i = 0; i < 4000; ++i)
     {
@@ -421,7 +420,7 @@ public final class PLTextTest
         if ((i % 100) == 0)
           aSB.append ('\n');
       if ((i % 100) == 0)
-        aSB.append ((char) ('a' + aRandom.nextInt (26))).append ((char) ('a' + aRandom.nextInt (26)));
+        aSB.append ("<surprise>");
       aSB.append ("This is a dummy");
     }
 
@@ -432,7 +431,7 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/split-vertically.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/split-vertically.pdf"));
   }
 
   @Test
@@ -494,6 +493,6 @@ public final class PLTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltext/center-issue31.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/center-issue31.pdf"));
   }
 }

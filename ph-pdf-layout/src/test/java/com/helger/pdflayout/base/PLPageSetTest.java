@@ -25,6 +25,7 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.element.box.PLBox;
@@ -63,7 +64,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/header.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/header.pdf"));
   }
 
   @Test
@@ -80,7 +81,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/header-aligned.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/header-aligned.pdf"));
   }
 
   @Test
@@ -99,7 +100,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/header-table-aligned.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/header-table-aligned.pdf"));
   }
 
   @Test
@@ -115,7 +116,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/footer.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/footer.pdf"));
   }
 
   @Test
@@ -132,7 +133,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/footer-aligned.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/footer-aligned.pdf"));
   }
 
   @Test
@@ -152,7 +153,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/both.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/both.pdf"));
   }
 
   @Test
@@ -177,7 +178,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/both-styled.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/both-styled.pdf"));
   }
 
   @Test
@@ -219,7 +220,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/placeholder.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/placeholder.pdf"));
   }
 
   @Test
@@ -241,7 +242,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/multiple-pages.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/multiple-pages.pdf"));
   }
 
   @Test
@@ -262,7 +263,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/fillcolor.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/fillcolor.pdf"));
   }
 
   @Test
@@ -288,7 +289,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-different.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/firstpage-different.pdf"));
   }
 
   @Test
@@ -311,7 +312,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-different-header.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/firstpage-different-header.pdf"));
   }
 
   @Test
@@ -334,7 +335,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-different-footer.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/firstpage-different-footer.pdf"));
   }
 
   @Test
@@ -358,7 +359,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-none.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/firstpage-none.pdf"));
   }
 
   @Test
@@ -377,7 +378,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-only.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/firstpage-only.pdf"));
   }
 
   @Test
@@ -401,7 +402,7 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-larger.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/firstpage-larger.pdf"));
   }
 
   @Test
@@ -425,6 +426,6 @@ public final class PLPageSetTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plpageset/firstpage-smaller.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/firstpage-smaller.pdf"));
   }
 }

@@ -25,6 +25,7 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
@@ -86,7 +87,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plvbox/basic.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plvbox/basic.pdf"));
   }
 
   @Test
@@ -118,7 +119,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plvbox/height-star.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plvbox/height-star.pdf"));
   }
 
   @Test
@@ -145,7 +146,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plvbox/height-star-small.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plvbox/height-star-small.pdf"));
   }
 
   @Test
@@ -230,7 +231,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plvbox/auto-advanced.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plvbox/auto-advanced.pdf"));
   }
 
   @Test
@@ -296,7 +297,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plvbox/auto-advanced-splittable.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plvbox/auto-advanced-splittable.pdf"));
   }
 
   @Test
@@ -314,7 +315,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plvbox/splittable-text.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plvbox/splittable-text.pdf"));
   }
 
   @Test
@@ -338,7 +339,7 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plvbox/splittable-content-splittable.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plvbox/splittable-content-splittable.pdf"));
   }
 
   @Test
@@ -362,6 +363,6 @@ public final class PLVBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plvbox/splittable-content-fixed.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plvbox/splittable-content-fixed.pdf"));
   }
 }

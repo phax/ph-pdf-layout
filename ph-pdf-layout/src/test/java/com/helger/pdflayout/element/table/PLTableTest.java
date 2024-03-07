@@ -38,6 +38,7 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.FileSystemResource;
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.AbstractPLElement;
@@ -139,7 +140,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/basic.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/basic.pdf"));
   }
 
   @Nonnull
@@ -236,7 +237,7 @@ public final class PLTableTest
     aPS1.addElement (aTable);
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/variations.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/variations.pdf"));
   }
 
   @Test
@@ -302,7 +303,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/grid-types.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/grid-types.pdf"));
   }
 
   @Test
@@ -379,7 +380,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/grid-types-partial.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/grid-types-partial.pdf"));
   }
 
   @Test
@@ -421,7 +422,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/grid-types-colspan.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/grid-types-colspan.pdf"));
   }
 
   @Nonnull
@@ -473,7 +474,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/nested.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/nested.pdf"));
   }
 
   @Test
@@ -503,7 +504,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/many-rows.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/many-rows.pdf"));
   }
 
   @Test
@@ -531,7 +532,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/cell-spawning-page.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/cell-spawning-page.pdf"));
   }
 
   @Test
@@ -562,7 +563,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/cell-spawning-page2.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/cell-spawning-page2.pdf"));
   }
 
   @Test
@@ -597,7 +598,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/cell-spawning-page-inner-table.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/cell-spawning-page-inner-table.pdf"));
   }
 
   @Test
@@ -647,7 +648,7 @@ public final class PLTableTest
     PLDebugRender.withDebugRender (false, () -> {
       final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
       aPageLayout.addPageSet (aPS1);
-      aPageLayout.renderTo (new File ("pdf/pltable/colspan-right-align.pdf"));
+      PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/colspan-right-align.pdf"));
     });
   }
 
@@ -679,7 +680,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/different-width-types.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/different-width-types.pdf"));
   }
 
   @Test
@@ -710,7 +711,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/different-width-types-not-full-width.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/different-width-types-not-full-width.pdf"));
   }
 
   @Test
@@ -741,7 +742,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/different-width-types-too-wide.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/different-width-types-too-wide.pdf"));
   }
 
   @Test
@@ -773,7 +774,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/table-with-images.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/table-with-images.pdf"));
   }
 
   @Test
@@ -807,7 +808,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/issue21.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/issue21.pdf"));
   }
 
   @Test
@@ -842,7 +843,7 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/issue21a.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/issue21a.pdf"));
   }
 
   @Test
@@ -894,6 +895,6 @@ public final class PLTableTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/pltable/issue30.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/issue30.pdf"));
   }
 }

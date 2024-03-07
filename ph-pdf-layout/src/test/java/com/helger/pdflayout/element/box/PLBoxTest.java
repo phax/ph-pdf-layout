@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
@@ -162,7 +163,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plbox/basic.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plbox/basic.pdf"));
   }
 
   @Test
@@ -183,7 +184,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plbox/alignment.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plbox/alignment.pdf"));
   }
 
   @Test
@@ -209,7 +210,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plbox/alignment-nested.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plbox/alignment-nested.pdf"));
   }
 
   @Test
@@ -230,7 +231,7 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plbox/pagebreak.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plbox/pagebreak.pdf"));
   }
 
   @Test
@@ -250,6 +251,6 @@ public final class PLBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plbox/splittable-pagebreak.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plbox/splittable-pagebreak.pdf"));
   }
 }

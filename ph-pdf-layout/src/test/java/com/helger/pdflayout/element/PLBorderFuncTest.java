@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
@@ -115,7 +116,7 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/border/text.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/border/text.pdf"));
   }
 
   @Test
@@ -372,7 +373,7 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/border/hbox.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/border/hbox.pdf"));
   }
 
   @Test
@@ -625,7 +626,7 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/border/vbox.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/border/vbox.pdf"));
   }
 
   @Test
@@ -659,6 +660,6 @@ public final class PLBorderFuncTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/border/header-footer.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/border/header-footer.pdf"));
   }
 }

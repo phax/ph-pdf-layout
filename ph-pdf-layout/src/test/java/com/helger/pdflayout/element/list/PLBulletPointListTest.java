@@ -25,6 +25,7 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
@@ -69,9 +70,8 @@ public final class PLBulletPointListTest
       aPS1.addElement (aList);
     }
 
-    new PageLayoutPDF ().addPageSet (aPS1)
-                        .setCompressPDF (false)
-                        .renderTo (new File ("pdf/plbulletpointlist/basic.pdf"));
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().addPageSet (aPS1).setCompressPDF (false);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plbulletpointlist/basic.pdf"));
   }
 
   @Test
@@ -89,9 +89,8 @@ public final class PLBulletPointListTest
       aList.addBulletPoint (new PLText (sBaseText, r10));
     aPS1.addElement (aList);
 
-    new PageLayoutPDF ().addPageSet (aPS1)
-                        .setCompressPDF (false)
-                        .renderTo (new File ("pdf/plbulletpointlist/basic-multiline.pdf"));
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().addPageSet (aPS1).setCompressPDF (false);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plbulletpointlist/basic-multiline.pdf"));
   }
 
   @Test
@@ -106,9 +105,8 @@ public final class PLBulletPointListTest
       aList.addBulletPoint (new PLText ("Bullet point item " + i, r30).setFillColor (PLColor.GREEN));
     aPS1.addElement (aList);
 
-    new PageLayoutPDF ().addPageSet (aPS1)
-                        .setCompressPDF (false)
-                        .renderTo (new File ("pdf/plbulletpointlist/big-bullets.pdf"));
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().addPageSet (aPS1).setCompressPDF (false);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plbulletpointlist/big-bullets.pdf"));
   }
 
   @Test
@@ -126,8 +124,7 @@ public final class PLBulletPointListTest
       aPS1.addElement (aList);
     }
 
-    new PageLayoutPDF ().addPageSet (aPS1)
-                        .setCompressPDF (false)
-                        .renderTo (new File ("pdf/plbulletpointlist/different-bullet-sizes.pdf"));
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().addPageSet (aPS1).setCompressPDF (false);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plbulletpointlist/different-bullet-sizes.pdf"));
   }
 }

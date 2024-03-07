@@ -28,6 +28,7 @@ import org.junit.rules.TestRule;
 
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
@@ -78,7 +79,7 @@ public final class PLImageTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plimage/basic.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plimage/basic.pdf"));
   }
 
   @Test
@@ -98,6 +99,6 @@ public final class PLImageTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plimage/text-over-image.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plimage/text-over-image.pdf"));
   }
 }

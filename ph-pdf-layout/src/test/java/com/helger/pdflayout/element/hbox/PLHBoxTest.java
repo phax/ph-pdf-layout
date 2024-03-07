@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.pdflayout.PDFCreationException;
+import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
@@ -63,7 +64,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/star-inline.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/star-inline.pdf"));
   }
 
   @Test
@@ -82,7 +83,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/star-block.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/star-block.pdf"));
   }
 
   @Test
@@ -101,7 +102,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/perc-inline.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/perc-inline.pdf"));
   }
 
   @Test
@@ -120,7 +121,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/perc-block.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/perc-block.pdf"));
   }
 
   @Test
@@ -139,7 +140,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/abs-inline.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/abs-inline.pdf"));
   }
 
   @Test
@@ -161,7 +162,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/abs-block.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/abs-block.pdf"));
   }
 
   @Test
@@ -180,7 +181,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/auto-inline.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/auto-inline.pdf"));
   }
 
   @Test
@@ -199,7 +200,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/auto-block.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/auto-block.pdf"));
   }
 
   @Test
@@ -218,7 +219,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/auto-block-like-star.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/auto-block-like-star.pdf"));
   }
 
   @Test
@@ -287,7 +288,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/star-advanced.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/star-advanced.pdf"));
   }
 
   @Test
@@ -310,7 +311,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/splittable-text.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/splittable-text.pdf"));
   }
 
   @Test
@@ -333,7 +334,7 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/splittable-partially-filled.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/splittable-partially-filled.pdf"));
   }
 
   @Test
@@ -363,6 +364,6 @@ public final class PLHBoxTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    aPageLayout.renderTo (new File ("pdf/plhbox/alignment.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plhbox/alignment.pdf"));
   }
 }
