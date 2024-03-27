@@ -54,7 +54,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-* v7.3.2 - work in progress
+* v7.3.2 - 2024-03-27
     * Updated to ph-commons 11.1.5
     * Created Java 21 compatibility
     * Extracted a parent POM and prepared a submodule structure
