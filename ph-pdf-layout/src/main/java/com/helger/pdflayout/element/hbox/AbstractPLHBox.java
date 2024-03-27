@@ -65,7 +65,8 @@ import com.helger.pdflayout.spec.WidthSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends AbstractPLRenderableObject <IMPLTYPE> implements
+public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>> extends
+                                     AbstractPLRenderableObject <IMPLTYPE> implements
                                      IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
   private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
@@ -137,13 +138,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   @Nullable
   public PLHBoxColumn getFirstColumn ()
   {
-    return m_aColumns.getFirst ();
+    return m_aColumns.getFirstOrNull ();
   }
 
   @Nullable
   public PLHBoxColumn getLastColumn ()
   {
-    return m_aColumns.getLast ();
+    return m_aColumns.getLastOrNull ();
   }
 
   @Nullable
@@ -177,7 +178,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Nonnull
-  public PLHBoxColumn addAndReturnColumn (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final WidthSpec aWidth)
+  public PLHBoxColumn addAndReturnColumn (@Nonnull final IPLRenderableObject <?> aElement,
+                                          @Nonnull final WidthSpec aWidth)
   {
     return addAndReturnColumn (-1, aElement, aWidth);
   }
@@ -314,7 +316,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       float fUsedWidthAutoTooWide = 0;
 
       // Full width of this element
-      final float fAvailableAutoColumnWidth = nAutoColumns + nStarColumns == 0 ? 0 : fRestWidth / (nAutoColumns + nStarColumns);
+      final float fAvailableAutoColumnWidth = nAutoColumns + nStarColumns == 0 ? 0 : fRestWidth /
+                                                                                     (nAutoColumns + nStarColumns);
       final float fAvailableAutoColumnWidthAll = fAvailableAutoColumnWidth * nAutoColumns;
 
       final SizeSpec [] aTooWideAutoCols = new SizeSpec [m_aColumns.size ()];
@@ -381,7 +384,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
           // Percentage of used width compared to total used width of all too
           // wide columns (0-1)
-          final float fAvailableColumnWidthPerc = fUsedWidthAutoTooWide == 0 ? 0 : fTooWideColumnWidth / fUsedWidthAutoTooWide;
+          final float fAvailableColumnWidthPerc = fUsedWidthAutoTooWide == 0 ? 0 : fTooWideColumnWidth /
+                                                                                   fUsedWidthAutoTooWide;
 
           // Use x% of remaining width
           final float fNewAvailableColumnWidth = fRemainingWidthAutoFull * fAvailableColumnWidthPerc;
@@ -461,7 +465,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         {
           final AbstractPLElement <?> aRealElement = (AbstractPLElement <?>) aElement;
           // Set minimum column width and height as prepared width
-          aRealElement.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement.getOutlineXSum (), fMaxContentHeightNet);
+          aRealElement.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement.getOutlineXSum (),
+                                   fMaxContentHeightNet);
         }
         ++nIndex;
       }
@@ -471,9 +476,15 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     if (PLDebugLog.isDebugPrepare ())
     {
       if (fUsedWidthFull - fElementWidth > 0.01)
-        PLDebugLog.debugPrepare (this, "uses more width (" + fUsedWidthFull + ") than available (" + fElementWidth + ")!");
+        PLDebugLog.debugPrepare (this,
+                                 "uses more width (" + fUsedWidthFull + ") than available (" + fElementWidth + ")!");
       if (fMaxColumnHeightFull - fElementHeight > 0.01 && !isVertSplittable ())
-        PLDebugLog.debugPrepare (this, "uses more height (" + fMaxColumnHeightFull + ") than available (" + fElementHeight + ")!");
+        PLDebugLog.debugPrepare (this,
+                                 "uses more height (" +
+                                       fMaxColumnHeightFull +
+                                       ") than available (" +
+                                       fElementHeight +
+                                       ")!");
     }
 
     return new SizeSpec (fUsedWidthFull, fMaxColumnHeightFull);
@@ -555,8 +566,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
     }
 
-    final AbstractPLHBox <?> aHBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1").setVertSplittable (false);
-    final AbstractPLHBox <?> aHBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2").setVertSplittable (true);
+    final AbstractPLHBox <?> aHBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+                                                                                   .setVertSplittable (false);
+    final AbstractPLHBox <?> aHBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+                                                                                   .setVertSplittable (true);
 
     // Fill all columns with empty content
     for (int i = 0; i < nCols; ++i)
@@ -568,9 +581,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
       // Create empty element with the same width as the original element
       final IPLRenderableObject <?> aSrcElement = aColumn.getElement ();
-      aHBox1.addColumn (internalCreateVertSplitEmptyElement (aSrcElement, fColumnWidth, fColumnHeight).setID (aSrcElement.getID () + "-1"),
+      aHBox1.addColumn (internalCreateVertSplitEmptyElement (aSrcElement,
+                                                             fColumnWidth,
+                                                             fColumnHeight).setID (aSrcElement.getID () + "-1"),
                         aColumnWidth);
-      aHBox2.addColumn (internalCreateVertSplitEmptyElement (aSrcElement, fColumnWidth, fColumnHeight).setID (aSrcElement.getID () + "-2"),
+      aHBox2.addColumn (internalCreateVertSplitEmptyElement (aSrcElement,
+                                                             fColumnWidth,
+                                                             fColumnHeight).setID (aSrcElement.getID () + "-2"),
                         aColumnWidth);
     }
 
@@ -608,7 +625,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                        PLDebugLog.getWH (fSplitWidth, fSplitHeight));
 
         // Use width and height without padding and margin!
-        final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
+        final PLSplitResult aSplitResult = aColumnElement.getAsSplittable ()
+                                                         .splitElementVert (fSplitWidth, fSplitHeight);
         if (aSplitResult != null)
         {
           final IPLRenderableObject <?> aHBox1Element = aSplitResult.getFirstElement ().getElement ();
@@ -676,7 +694,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         aHBox1.getColumnAtIndex (nCol).internalSetElement (aColumnElement);
 
         // Use "as-is sizes" and not render sizes
-        aHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aColumnElement.getPreparedHeight () + aColumnElement.getOutlineYSum ());
+        aHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth,
+                                                aColumnElement.getPreparedHeight () + aColumnElement.getOutlineYSum ());
         aHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, 0);
         aHBox1ElementSizes[nCol] = new SizeSpec (fElementWidthNet, aColumnElement.getPreparedHeight ());
         aHBox2ElementSizes[nCol] = new SizeSpec (fElementWidthNet, 0);
@@ -706,7 +725,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         {
           // Set minimum column width and height as prepared width
           final AbstractPLElement <?> aRealElement1 = (AbstractPLElement <?>) aElement1;
-          aRealElement1.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement1.getOutlineXSum (), fHBox1MaxHeightNet);
+          aRealElement1.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement1.getOutlineXSum (),
+                                    fHBox1MaxHeightNet);
         }
 
         final IPLRenderableObject <?> aElement2 = aHBox2.getColumnElementAtIndex (nIndex);
@@ -714,7 +734,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         {
           // Set minimum column width and height as prepared width
           final AbstractPLElement <?> aRealElement2 = (AbstractPLElement <?>) aElement2;
-          aRealElement2.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement2.getOutlineXSum (), fHBox2MaxHeightNet);
+          aRealElement2.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement2.getOutlineXSum (),
+                                    fHBox2MaxHeightNet);
         }
       }
     }

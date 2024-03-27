@@ -55,6 +55,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 # News and Noteworthy
 
 * v7.3.2 - work in progress
+    * Updated to ph-commons 11.1.5
+    * Created Java 21 compatibility
     * Extracted a parent POM and prepared a submodule structure
     * Using https://github.com/red6/pdfcompare to test created PDFs against the stored ones. See [issue #35](https://github.com/phax/ph-pdf-layout/issues/35) - thx @Lolf1010
 * v7.3.1 - 2024-01-24

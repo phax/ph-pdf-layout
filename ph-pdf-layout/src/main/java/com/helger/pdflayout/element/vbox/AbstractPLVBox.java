@@ -166,7 +166,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public PLVBoxRow getFirstRow ()
   {
-    return m_aRows.getFirst ();
+    return m_aRows.getFirstOrNull ();
   }
 
   /**
@@ -175,7 +175,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   @Nullable
   public PLVBoxRow getLastRow ()
   {
-    return m_aRows.getLast ();
+    return m_aRows.getLastOrNull ();
   }
 
   /**
@@ -652,7 +652,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           // Update used height
           // If no height is left, use the net size of the element
           final float fRowHeightFull = bTooSmallRestHeight ? aElementPreparedSize.getHeight () +
-                                                             aElement.getOutlineYSum () : fRowHeight;
+                                                             aElement.getOutlineYSum ()
+                                                           : fRowHeight;
           fUsedHeightFull += fRowHeightFull;
           // Don't change rest-height!
 
