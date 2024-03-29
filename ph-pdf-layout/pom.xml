@@ -197,7 +197,7 @@
     <dependency>
       <groupId>de.redsix</groupId>
       <artifactId>pdfcompare</artifactId>
-      <version>1.2.0</version>
+      <version>${pdfcompare.version}</version>
       <exclusions>
         <exclusion>
           <groupId>ch.qos.logback</groupId>

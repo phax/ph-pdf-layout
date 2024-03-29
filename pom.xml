@@ -73,7 +73,8 @@
   </developers>
 
   <properties>
-    <pdfbox.version>3.0.1</pdfbox.version>
+    <pdfbox.version>3.0.2</pdfbox.version>
+    <pdfcompare.version>1.2.0</pdfcompare.version>
   </properties>
 
   <dependencyManagement>
