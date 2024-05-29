@@ -39,13 +39,17 @@ public class TextAndWidthSpec implements Serializable
 {
   private final String m_sText;
   private final float m_fWidth;
+  private final boolean m_bDisplayAsNewline;
 
-  public TextAndWidthSpec (@Nonnull final String sText, @Nonnegative final float fWidth)
+  public TextAndWidthSpec (@Nonnull final String sText,
+                           @Nonnegative final float fWidth,
+                           final boolean bDisplayAsNewline)
   {
     ValueEnforcer.notNull (sText, "Text");
     ValueEnforcer.isGE0 (fWidth, "Width");
     m_sText = sText;
     m_fWidth = fWidth;
+    m_bDisplayAsNewline = bDisplayAsNewline;
   }
 
   @Nonnull
@@ -60,6 +64,11 @@ public class TextAndWidthSpec implements Serializable
     return m_fWidth;
   }
 
+  public boolean isDisplayAsNewline ()
+  {
+    return m_bDisplayAsNewline;
+  }
+
   @Override
   public boolean equals (final Object o)
   {
@@ -68,18 +77,23 @@ public class TextAndWidthSpec implements Serializable
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final TextAndWidthSpec rhs = (TextAndWidthSpec) o;
-    return m_sText.equals (rhs.m_sText) && EqualsHelper.equals (m_fWidth, rhs.m_fWidth);
+    return m_sText.equals (rhs.m_sText) &&
+           EqualsHelper.equals (m_fWidth, rhs.m_fWidth) &&
+           m_bDisplayAsNewline == rhs.m_bDisplayAsNewline;
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_sText).append (m_fWidth).getHashCode ();
+    return new HashCodeGenerator (this).append (m_sText).append (m_fWidth).append (m_bDisplayAsNewline).getHashCode ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (null).append ("Text", m_sText).append ("Width", m_fWidth).getToString ();
+    return new ToStringGenerator (null).append ("Text", m_sText)
+                                       .append ("Width", m_fWidth)
+                                       .append ("DisplayAsNewline", m_bDisplayAsNewline)
+                                       .getToString ();
   }
 }

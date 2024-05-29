@@ -28,7 +28,8 @@ import com.helger.pdflayout.spec.EHorzAlignment;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>> extends IPLRenderableObject <IMPLTYPE>
+public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAlignment <IMPLTYPE>> extends
+                                           IPLRenderableObject <IMPLTYPE>
 {
   EHorzAlignment DEFAULT_HORZ_ALIGNMENT = EHorzAlignment.DEFAULT;
 
@@ -74,6 +75,7 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
       case RIGHT:
         return Math.max (fAvailableWidth - fElementWidth, 0f);
       case JUSTIFY:
+      case BLOCK:
         return 0f;
       default:
         throw new IllegalStateException ("Unsupported horizontal alignment " + getHorzAlign ());

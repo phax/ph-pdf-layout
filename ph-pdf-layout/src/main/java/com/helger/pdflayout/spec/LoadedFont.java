@@ -300,8 +300,9 @@ public class LoadedFont
     String sCurLine = sLine;
     float fSumWidth = 0f;
     int nCodePointOffset = 0;
-    float fSumWidthOfLastWhitespace = 0f;
     int nCodePointOffsetOfLastWhitespace = 0;
+    float fSumWidthOfLastWhitespace = 0f;
+    boolean bLastWhitespaceWasNewline = false;
     boolean bWarnedOnTooSmallMaxWidth = false;
 
     // For each code point
@@ -315,6 +316,7 @@ public class LoadedFont
         // here, so remember it before the increment
         nCodePointOffsetOfLastWhitespace = nCodePointOffset;
         fSumWidthOfLastWhitespace = fSumWidth;
+        bLastWhitespaceWasNewline = nCodePoint == '\r' || nCodePoint == '\n';
       }
       final float fNewWidth = fSumWidth + fCodePointWidth;
 
@@ -341,14 +343,14 @@ public class LoadedFont
           final String sPart = sCurLine.substring (0, nCodePointOffsetOfLastWhitespace);
           // Skip whitespace char in this case
           sCurLine = sCurLine.substring (nCodePointOffsetOfLastWhitespace + 1);
-          ret.add (new TextAndWidthSpec (sPart, fSumWidthOfLastWhitespace));
+          ret.add (new TextAndWidthSpec (sPart, fSumWidthOfLastWhitespace, bLastWhitespaceWasNewline));
         }
         else
         {
           // No whitespace - use up to but excluding last char
           final String sPart = sCurLine.substring (0, nCodePointOffset);
           sCurLine = sCurLine.substring (nCodePointOffset);
-          ret.add (new TextAndWidthSpec (sPart, fSumWidth));
+          ret.add (new TextAndWidthSpec (sPart, fSumWidth, false));
         }
         // Reset counter for the rest of the line
         fSumWidth = 0f;
@@ -365,7 +367,7 @@ public class LoadedFont
     }
     // Add the rest (even if it is empty, otherwise empty lines won't get
     // printed)
-    ret.add (new TextAndWidthSpec (sCurLine, fSumWidth));
+    ret.add (new TextAndWidthSpec (sCurLine, fSumWidth, true));
   }
 
   @Nonnull
