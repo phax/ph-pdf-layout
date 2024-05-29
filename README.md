@@ -54,8 +54,9 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-* v7.3.3 - work in progress
+* v7.3.3 - 2024-05-29
     * Updated to PDFBox 3.0.2
+    * Added new horizontal alignment type `BLOCK` as a mixture of `LEFT` and `JUSTIFY`. See [issue #36](https://github.com/phax/ph-pdf-layout/issues/36) - thx @istvangaal
 * v7.3.2 - 2024-03-27
     * Updated to ph-commons 11.1.5
     * Created Java 21 compatibility
