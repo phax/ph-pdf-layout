@@ -47,6 +47,7 @@ import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLPageBreak;
+import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
@@ -400,6 +401,16 @@ public final class PLTextTest
 
       final PLHBox aHBox = new PLHBox ();
       aHBox.addColumn (aBox, WidthSpec.perc (50));
+      aPS1.addElement (aHBox);
+    }
+
+    {
+      aPS1.addElement (new PLSpacerY (20));
+      final String s2 = "!" +
+                        StringHelper.getRepeated ("Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.",
+                                                  50);
+      final PLHBox aHBox = new PLHBox ();
+      aHBox.addColumn (new PLText (s2, r10).setHorzAlign (EHorzAlignment.BLOCK), WidthSpec.perc (50));
       aPS1.addElement (aHBox);
     }
 

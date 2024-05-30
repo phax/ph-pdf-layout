@@ -647,29 +647,28 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
           aContentStream.moveTextPositionByAmount (fIndentX, 0);
         }
 
-      if (bDoTextJustify || (bDoTextBlock && !aTW.isDisplayAsNewline ()))
+      if ((bDoTextJustify && bBeforeLastLine) || (bDoTextBlock && !aTW.isDisplayAsNewline ()))
       {
-        if (bBeforeLastLine)
+        // Justify the content of this line
+        // Avoid division by zero
+        float fCharSpacing = 0;
+        if (sDrawText.length () > 1)
         {
-          // Avoid division by zero
-          float fCharSpacing = 0;
-          if (sDrawText.length () > 1)
-          {
-            // Calculate width of space between each character (therefore -1)
-            fCharSpacing = (fPreparedWidth - fTextWidth) / (sDrawText.length () - 1);
-          }
-
-          // Set for each line separately,
-          aContentStream.setCharacterSpacing (fCharSpacing);
+          // Calculate width of space between each character (therefore -1)
+          fCharSpacing = (fPreparedWidth - fTextWidth) / (sDrawText.length () - 1);
         }
-        else
+
+        // Set for each line separately,
+        aContentStream.setCharacterSpacing (fCharSpacing);
+      }
+      else
+        if ((bDoTextJustify && !bBeforeLastLine) || (bDoTextBlock && aTW.isDisplayAsNewline ()))
         {
-          // On last line, no justify
+          // No justification for that line
           // Important to reset back to default after all (if any was set)
           if (nIndex > 0)
             aContentStream.setCharacterSpacing (0);
         }
-      }
 
       // Main draw string
       aContentStream.drawString (sDrawText);
