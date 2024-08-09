@@ -54,6 +54,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+* v7.3.5 - work in progress
+    * Updated to PDFBox 3.0.3
 * v7.3.4 - 2024-05-30
     * Fixed an issue with `BLOCK` horizontal alignment in case of a page break. See [issue #36](https://github.com/phax/ph-pdf-layout/issues/36)
 * v7.3.3 - 2024-05-29
