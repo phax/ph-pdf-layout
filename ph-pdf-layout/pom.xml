@@ -106,17 +106,11 @@
     <!--  
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcmail-jdk15on</artifactId>
+      <artifactId>bcmail-jdk18on</artifactId>
       <version>${bc.version}</version>
       <optional>true</optional>
     </dependency>
     -->
-    <dependency>
-      <groupId>com.github.spotbugs</groupId>
-      <artifactId>spotbugs-annotations</artifactId>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
 
     <dependency>
       <groupId>junit</groupId>

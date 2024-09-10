@@ -29,8 +29,6 @@ import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 /**
  * This class defines a dependent height of an elements:
  * <ul>
@@ -47,7 +45,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-@SuppressFBWarnings ("JCIP_FIELD_ISNT_FINAL_IN_IMMUTABLE_CLASS")
 public class HeightSpec implements Serializable
 {
   private final EValueUOMType m_eType;
@@ -157,7 +154,9 @@ public class HeightSpec implements Serializable
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (null).append ("Type", m_eType).appendIf ("Value", m_fValue, x -> isAbsolute ()).getToString ();
+    return new ToStringGenerator (null).append ("Type", m_eType)
+                                       .appendIf ("Value", m_fValue, x -> isAbsolute ())
+                                       .getToString ();
   }
 
   /**
