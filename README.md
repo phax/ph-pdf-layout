@@ -43,6 +43,7 @@ A set of example files as created from the unit test can be found in folder [exa
 Similar libraries in this context:
 * https://github.com/ralfstuckert/pdfbox-layout - seems to focus more on text layouting; PDFBox 1.x and 2.x only; MIT license
 * https://github.com/TIBCOSoftware/jasperreports - the "big one" - large scale, complex, heavy-weight, declarative approach; LGPL license
+* https://github.com/LibrePDF/OpenPDF/ - an iText 4.x clone; no PDFBox; LGPL / MPL license
 
 # Maven usage
 
@@ -207,7 +208,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
     * Requires JDK 8
     * Still on PDFBox 2.0.0 because of problems with 2.0.1 and 2.0.2
 
-Version starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x.
+Note: Versions starting with 2.1.0 uses PDFBox 2.x, previous versions (up to and including 2.0.0) use PDFBox 1.8.x.
+
 Note: version 4.0.0 has troubles building with JDK 1.8.0_92 - updating to 1.8.0_112 or later should work.
 
 ---
