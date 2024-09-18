@@ -5,7 +5,7 @@
 
 Java library for creating fluid page layouts with Apache PDFBox 3.x.
 
-Please check the examples files to see what kind of PDFs may be created.
+Please check the [examples files](https://github.com/phax/ph-pdf-layout/tree/master/example-files) to see what kind of PDFs may be created.
 Please see the unit tests on how to create and use the different elements.
 
 System requirements:
