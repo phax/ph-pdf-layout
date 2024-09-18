@@ -3,9 +3,14 @@
 [![javadoc](https://javadoc.io/badge2/com.helger/ph-pdf-layout/javadoc.svg)](https://javadoc.io/doc/com.helger/ph-pdf-layout)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.helger/ph-pdf-layout) 
 
-Java library for creating fluid page layouts with Apache PDFBox.
+Java library for creating fluid page layouts with Apache PDFBox 3.x.
 
-Please check the test files to see how to create PDFs with the different elements.
+Please check the examples files to see what kind of PDFs may be created.
+Please see the unit tests on how to create and use the different elements.
+
+System requirements:
+* At least Java 11 - newer versions should work as well
+* GitHub actions test with all LTS version (currently 11, 17 and 21)
 
 The basic elements provided are:
 * `PageLayoutPDF` - the entry class, having a list of page sets
@@ -36,7 +41,8 @@ The basic elements provided are:
 A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files). The source code for these examples is https://github.com/phax/ph-pdf-layout/tree/master/src/test/java/com/helger/pdflayout
 
 Similar libraries in this context:
-* https://github.com/ralfstuckert/pdfbox-layout - seems to focus more on text layouting
+* https://github.com/ralfstuckert/pdfbox-layout - seems to focus more on text layouting; PDFBox 1.x and 2.x only; MIT license
+* https://github.com/TIBCOSoftware/jasperreports - the "big one" - large scale, complex, heavy-weight, declarative approach; LGPL license
 
 # Maven usage
 
