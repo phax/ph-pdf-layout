@@ -44,6 +44,7 @@ Similar libraries in this context:
 * https://github.com/ralfstuckert/pdfbox-layout - seems to focus more on text layouting; PDFBox 1.x and 2.x only; MIT license
 * https://github.com/TIBCOSoftware/jasperreports - the "big one" - large scale, complex, heavy-weight, declarative approach; LGPL license
 * https://github.com/LibrePDF/OpenPDF/ - an iText 4.x clone; no PDFBox; LGPL / MPL license
+* https://github.com/dhorions/boxable - a library to create tables based on PDFBox; Apache 2.0 license
 
 # Maven usage
 
