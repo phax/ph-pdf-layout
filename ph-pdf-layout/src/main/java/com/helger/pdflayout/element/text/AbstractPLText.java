@@ -71,7 +71,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
   private String m_sOriginalText;
   private String m_sTextWithPlaceholdersReplaced;
-  private final FontSpec m_aFontSpec;
+  private FontSpec m_aFontSpec;
   private float m_fLineSpacing = DEFAULT_LINE_SPACING;
 
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
@@ -172,6 +172,27 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public final FontSpec getFontSpec ()
   {
     return m_aFontSpec;
+  }
+
+  /**
+   * Set the font spec after the constructor. This can only be done before the
+   * text is prepared.
+   *
+   * @param aFontSpec
+   *        The new font spec. Must not be <code>null</code>.
+   * @return this for chaining
+   * @since 7.3.5
+   */
+  @Nonnull
+  public final IMPLTYPE setFontSpec (@Nonnull final FontSpec aFontSpec)
+  {
+    ValueEnforcer.notNull (aFontSpec, "FontSpec");
+
+    if (isPrepared ())
+      throw new IllegalStateException ("You cannot change the FontSpec after the object was already prepared");
+
+    m_aFontSpec = aFontSpec;
+    return thisAsT ();
   }
 
   /**
