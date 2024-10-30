@@ -66,17 +66,6 @@ public class LoadedFont
     // Lazy inited
     private Integer m_aEncodedValue;
 
-    private static int _toInt (@Nonnull final byte [] aEncoded)
-    {
-      int ret = 0;
-      for (final byte b : aEncoded)
-      {
-        ret <<= 8;
-        ret |= (b + 256) % 256;
-      }
-      return ret;
-    }
-
     private EncodedCodePoint (final int nCodePoint, @Nonnull final byte [] aEncoded)
     {
       m_nCodePoint = nCodePoint;
@@ -94,6 +83,17 @@ public class LoadedFont
     public void writeEncodedBytes (@Nonnull @WillNotClose final OutputStream aOS) throws IOException
     {
       aOS.write (m_aEncoded);
+    }
+
+    private static int _toInt (@Nonnull final byte [] aEncoded)
+    {
+      int ret = 0;
+      for (final byte b : aEncoded)
+      {
+        ret <<= 8;
+        ret |= (b + 256) % 256;
+      }
+      return ret;
     }
 
     public int getEncodedIntValue ()
