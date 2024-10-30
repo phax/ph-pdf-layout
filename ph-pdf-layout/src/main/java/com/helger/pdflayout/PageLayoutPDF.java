@@ -79,6 +79,7 @@ import com.helger.pdflayout.render.PreparationContextGlobal;
 @NotThreadSafe
 public class PageLayoutPDF implements IPLVisitable
 {
+  public static final String DEFAULT_DOCUMENT_LANGUAGE = "en-US";
   /**
    * By default certain parts of the created PDFs are compressed, to safe space.
    */
@@ -96,6 +97,7 @@ public class PageLayoutPDF implements IPLVisitable
   private String m_sDocumentTitle;
   private String m_sDocumentKeywords;
   private String m_sDocumentSubject;
+  private String m_sDocumentLanguage = DEFAULT_DOCUMENT_LANGUAGE;
   private boolean m_bCompressPDF = DEFAULT_COMPRESS_PDF;
   private boolean m_bCreatePDF_A = DEFAULT_CREATE_PDF_A;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
@@ -231,6 +233,19 @@ public class PageLayoutPDF implements IPLVisitable
   public final PageLayoutPDF setDocumentSubject (@Nullable final String sDocumentSubject)
   {
     m_sDocumentSubject = sDocumentSubject;
+    return this;
+  }
+
+  @Nullable
+  public final String getDocumentLanguage ()
+  {
+    return m_sDocumentLanguage;
+  }
+
+  @Nonnull
+  public final PageLayoutPDF setDocumentLanguage (@Nullable final String sDocumentLanguage)
+  {
+    m_sDocumentLanguage = sDocumentLanguage;
     return this;
   }
 
@@ -509,8 +524,10 @@ public class PageLayoutPDF implements IPLVisitable
             aIntent.setRegistryName ("http://www.color.org");
 
             aDocCatalogue.addOutputIntent (aIntent);
-            aDocCatalogue.setLanguage ("de-DE");
           }
+
+          if (StringHelper.hasText (m_sDocumentLanguage))
+            aDocCatalogue.setLanguage (m_sDocumentLanguage);
 
           for (final PDPage aPage : aDoc.getPages ())
           {
