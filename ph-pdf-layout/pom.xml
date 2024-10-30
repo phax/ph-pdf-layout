@@ -161,6 +161,16 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.helger.font</groupId>
+      <artifactId>ph-fonts-kurinto-mono</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger.font</groupId>
+      <artifactId>ph-fonts-kurinto-sans</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox-examples</artifactId>
       <scope>test</scope>

@@ -31,6 +31,8 @@ import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
 import com.helger.font.anaheim.EFontResourceAnaheim;
 import com.helger.font.api.IHasFontResource;
 import com.helger.font.exo2.EFontResourceExo2;
+import com.helger.font.kurinto.mono.EFontResourceKurintoMono;
+import com.helger.font.kurinto.sans.EFontResourceKurintoSans;
 import com.helger.font.lato2.EFontResourceLato2;
 import com.helger.font.markazi.EFontResourceMarkazi;
 import com.helger.font.noto_sans_hk.EFontResourceNotoSansHK;
@@ -337,7 +339,15 @@ public final class PLTextTest
                                                                     EFontResourceSourceSansPro.SOURCE_SANS_PRO_NORMAL,
                                                                     EFontResourceSourceSansPro.SOURCE_SANS_PRO_BOLD,
                                                                     EFontResourceMarkazi.MARKAZI_NORMAL,
-                                                                    EFontResourceMarkazi.MARKAZI_BOLD))
+                                                                    EFontResourceMarkazi.MARKAZI_BOLD,
+                                                                    EFontResourceNotoSansHK.NOTO_SANS_HK_REGULAR,
+                                                                    EFontResourceNotoSansHK.NOTO_SANS_HK_BLACK,
+                                                                    EFontResourceNotoSansSC.NOTO_SANS_SC_REGULAR,
+                                                                    EFontResourceNotoSansSC.NOTO_SANS_SC_BLACK,
+                                                                    EFontResourceKurintoMono.KURINTO_MONO_REGULAR,
+                                                                    EFontResourceKurintoMono.KURINTO_MONO_BOLD,
+                                                                    EFontResourceKurintoSans.KURINTO_SANS_REGULAR,
+                                                                    EFontResourceKurintoSans.KURINTO_SANS_BOLD))
     {
       // Load TTF font
       final PreloadFont aFont = PreloadFont.createEmbedding (aHasFont.getFontResource ());
