@@ -38,7 +38,9 @@ public class PLMarginBorderPadding implements IPLHasMarginBorderPadding <PLMargi
   private PaddingSpec m_aPadding;
   private BorderSpec m_aBorder;
 
-  public PLMarginBorderPadding (@Nonnull final MarginSpec aMargin, @Nonnull final PaddingSpec aPadding, @Nonnull final BorderSpec aBorder)
+  public PLMarginBorderPadding (@Nonnull final MarginSpec aMargin,
+                                @Nonnull final PaddingSpec aPadding,
+                                @Nonnull final BorderSpec aBorder)
   {
     setMargin (aMargin);
     setPadding (aPadding);
@@ -90,10 +92,9 @@ public class PLMarginBorderPadding implements IPLHasMarginBorderPadding <PLMargi
   @Override
   public String toString ()
   {
-    return ToStringGenerator.getDerived (super.toString ())
-                            .append ("Margin", m_aMargin)
-                            .append ("Padding", m_aPadding)
-                            .append ("Border", m_aBorder)
-                            .getToString ();
+    return new ToStringGenerator (null).append ("Margin", m_aMargin)
+                                       .append ("Padding", m_aPadding)
+                                       .append ("Border", m_aBorder)
+                                       .getToString ();
   }
 }
