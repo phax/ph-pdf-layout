@@ -113,6 +113,7 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   @OverridingMethodsMustInvokeSuper
   public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
+    // Nothing to do here
     return thisAsT ();
   }
 
