@@ -25,14 +25,26 @@ import com.helger.commons.id.IHasID;
 import com.helger.commons.traits.IGenericImplTrait;
 
 /**
- * Base interface for a PDF layout object
+ * Base interface for a PDF layout object. It contains a user-assigned ID as
+ * well as a unique "Debug ID".
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends IHasID <String>, IGenericImplTrait <IMPLTYPE>, IPLVisitable
+public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
+                           IHasID <String>,
+                           IGenericImplTrait <IMPLTYPE>,
+                           IPLVisitable
 {
+  /**
+   * Check if this object has the provided ID
+   *
+   * @param sID
+   *        The ID to check. May be <code>null</code>.
+   * @return <code>true</code> if the provided ID matches this objects ID,
+   *         <code>false</code> otherwise.
+   */
   default boolean hasID (@Nullable final String sID)
   {
     return getID ().equals (sID);
@@ -40,8 +52,8 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends IHasI
 
   /**
    * @return The debug ID of this element. Neither <code>null</code> nor empty.
-   *         The debug ID is usually automatically created automatically from
-   *         the ID.
+   *         The debug ID is a combination of the real class and the user
+   *         provided ID.
    */
   @Nonnull
   @Nonempty
