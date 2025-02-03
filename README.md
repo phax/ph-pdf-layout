@@ -63,6 +63,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 # News and Noteworthy
 
 * v7.3.6 - work in progress
+    * Updated to PDFBox 3.0.4
     * Made PDF/A property "document language" customizable in `PageLayoutPDF`
 * v7.3.5 - 2024-10-09
     * Updated to PDFBox 3.0.3
