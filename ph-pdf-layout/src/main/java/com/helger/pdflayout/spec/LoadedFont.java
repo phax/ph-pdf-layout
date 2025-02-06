@@ -143,7 +143,30 @@ public class LoadedFont
     if (aFD == null)
       throw new IllegalArgumentException ("Failed to determine FontDescriptor from specified font " + aFont);
 
+    // That's how it was before
     m_fBBHeight = aFD.getFontBoundingBox ().getHeight ();
+    if (false)
+    {
+      // Tried a custom algorithm for Kurinto font, but failed
+      final float fCustomHeight = -aFD.getDescent () + aFD.getCapHeight () + aFD.getAscent () + aFD.getLeading ();
+      if (m_fBBHeight != fCustomHeight)
+        LOGGER.info ("  " +
+                     aFD.getFontName () +
+                     " height " +
+                     m_fBBHeight +
+                     " differs from " +
+                     fCustomHeight +
+                     " = -descent (" +
+                     -aFD.getDescent () +
+                     ") + capHeight (" +
+                     aFD.getCapHeight () +
+                     ") + ascent (" +
+                     aFD.getAscent () +
+                     ") + leading (" +
+                     aFD.getLeading () +
+                     ")");
+    }
+
     m_fDescent = aFD.getDescent ();
     m_bFontWillBeSubset = m_aFont.willBeSubset ();
   }
