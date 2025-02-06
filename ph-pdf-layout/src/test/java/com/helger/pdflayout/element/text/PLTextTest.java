@@ -250,6 +250,28 @@ public final class PLTextTest
   }
 
   @Test
+  public void testCustomFontKurintoSans () throws PDFCreationException
+  {
+    // Load OTF font
+    final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceKurintoSans.KURINTO_SANS_REGULAR.getFontResource ());
+    final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceKurintoSans.KURINTO_SANS_BOLD.getFontResource ());
+
+    final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                     "Tataa: €";
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.setCompressPDF (false);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-kurinto-sans.pdf"));
+  }
+
+  @Test
   public void testArabicCharacters () throws PDFCreationException
   {
     // Load TTF font
