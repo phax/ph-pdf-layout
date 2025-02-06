@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2014-2024 Philip Helger (www.helger.com)
+    Copyright (C) 2014-2025 Philip Helger (www.helger.com)
     philip[at]helger[dot]com
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -73,7 +73,7 @@
   </developers>
 
   <properties>
-    <pdfbox.version>3.0.3</pdfbox.version>
+    <pdfbox.version>3.0.4</pdfbox.version>
     <pdfcompare.version>1.2.3</pdfcompare.version>
   </properties>
 
@@ -82,7 +82,7 @@
       <dependency>
         <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>11.1.11</version>
+        <version>11.2.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
