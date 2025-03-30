@@ -102,6 +102,7 @@ public class PageLayoutPDF implements IPLVisitable
   private boolean m_bCreatePDF_A = DEFAULT_CREATE_PDF_A;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
   private IPDDocumentCustomizer m_aDocumentCustomizer;
+  private IXMPMetadataCustomizer m_aMetadataCustomizer;
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class
@@ -287,6 +288,19 @@ public class PageLayoutPDF implements IPLVisitable
   public final PageLayoutPDF setDocumentCustomizer (@Nullable final IPDDocumentCustomizer aDocumentCustomizer)
   {
     m_aDocumentCustomizer = aDocumentCustomizer;
+    return this;
+  }
+
+  @Nullable
+  public final IXMPMetadataCustomizer getMetadataCustomizer ()
+  {
+    return m_aMetadataCustomizer;
+  }
+
+  @Nonnull
+  public final PageLayoutPDF setMetadataCustomizer (@Nullable final IXMPMetadataCustomizer aMetadataCustomizer)
+  {
+    m_aMetadataCustomizer = aMetadataCustomizer;
     return this;
   }
 
@@ -495,6 +509,9 @@ public class PageLayoutPDF implements IPLVisitable
             final PDFAIdentificationSchema aIdentificationSchema = aXmpMetadata.createAndAddPDFAIdentificationSchema ();
             aIdentificationSchema.setPart (Integer.valueOf (3));
             aIdentificationSchema.setConformance ("A");
+
+            if (m_aMetadataCustomizer != null)
+              m_aMetadataCustomizer.customizeMetadata(aXmpMetadata);
 
             try (final NonBlockingByteArrayOutputStream aXmpOS = new NonBlockingByteArrayOutputStream ())
             {
