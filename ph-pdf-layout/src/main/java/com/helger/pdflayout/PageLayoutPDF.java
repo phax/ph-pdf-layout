@@ -358,7 +358,7 @@ public class PageLayoutPDF implements IPLVisitable
       // create a new document
       // Use a buffered OS - approx 30% faster!
       try (final PDDocument aDoc = new PDDocument ();
-           final OutputStream aBufferedOS = StreamHelper.getBuffered (m_bCreatePDF_A ? aTmpOS : aOS))
+          final OutputStream aBufferedOS = StreamHelper.getBuffered (m_bCreatePDF_A ? aTmpOS : aOS))
       {
         // Small consistency check to avoid creating empty, invalid PDFs
         int nTotalElements = 0;
@@ -456,7 +456,7 @@ public class PageLayoutPDF implements IPLVisitable
 
         // Add metadata (needed by PDF/A)
         try (final PDDocument aDoc = Loader.loadPDF (aTmpOS.getBufferOrCopy ());
-             final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
+            final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
         {
 
           final Calendar aCreationDate = m_aDocumentCreationDate == null ? PDTFactory.createCalendar ()
@@ -464,8 +464,8 @@ public class PageLayoutPDF implements IPLVisitable
           final String sProducer = PLConfig.PROJECT_NAME + " " + PLConfig.PROJECT_VERSION;
 
           final XMPMetadata aXmpMetadata = XMPMetadata.createXMPMetadata ();
-          final AdobePDFSchema pdfSchema = aXmpMetadata.createAndAddAdobePDFSchema ();
-          pdfSchema.setProducer (sProducer);
+          final AdobePDFSchema aPDFSchema = aXmpMetadata.createAndAddAdobePDFSchema ();
+          aPDFSchema.setProducer (sProducer);
 
           final XMPBasicSchema aXmpBasicSchema = aXmpMetadata.createAndAddXMPBasicSchema ();
           aXmpBasicSchema.setCreatorTool (sProducer);
@@ -511,7 +511,7 @@ public class PageLayoutPDF implements IPLVisitable
             aIdentificationSchema.setConformance ("A");
 
             if (m_aMetadataCustomizer != null)
-              m_aMetadataCustomizer.customizeMetadata(aXmpMetadata);
+              m_aMetadataCustomizer.customizeMetadata (aXmpMetadata);
 
             try (final NonBlockingByteArrayOutputStream aXmpOS = new NonBlockingByteArrayOutputStream ())
             {
