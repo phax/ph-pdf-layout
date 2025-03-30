@@ -65,6 +65,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 * v7.3.6 - work in progress
     * Updated to PDFBox 3.0.4
     * Made PDF/A property "document language" customizable in `PageLayoutPDF`
+    * Added new interface `IXMPMetadataCustomizer` to be able to customize the `XMPMetadata`. See [ür #44](https://github.com/phax/ph-pdf-layout/pull/44) - thx @stmuecke
 * v7.3.5 - 2024-10-09
     * Updated to PDFBox 3.0.3
     * Updated tests to ph-fonts 5.0.3
