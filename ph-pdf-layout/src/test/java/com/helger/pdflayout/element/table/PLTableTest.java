@@ -180,27 +180,30 @@ public final class PLTableTest
                                nIdx -> new PLTableCell (new PLText ("Col " + (nIdx + 1),
                                                                     r14b.getCloneWithDifferentColor (PLColor.GRAY)).setPadding (aPadding))));
 
-    final ICommonsList <Function <PLTableRow, PLTableRow>> aRowFcts;
-    aRowFcts = new CommonsArrayList <> (x -> x, x -> x.setFillColor (aBGRow));
+    final ICommonsList <Function <PLTableRow, PLTableRow>> aRowFcts = new CommonsArrayList <> (x -> x,
+                                                                                               x -> x.setFillColor (aBGRow));
 
-    final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts;
-    aCellFcts = new CommonsArrayList <> (x -> x,
-                                         x -> x.setFillColor (aBGCell),
-                                         x -> ((PLText) x.getElement ()).getText ().startsWith ("Cell 2") ? x
-                                                                                                             .setFillColor (aBGCell)
-                                                                                                          : x);
+    final ICommonsList <Function <PLTableCell, PLTableCell>> aCellFcts = new CommonsArrayList <> (x -> x,
+                                                                                                  x -> x.setFillColor (aBGCell),
+                                                                                                  x -> ((PLText) x.getElement ()).getText ()
+                                                                                                                                 .startsWith ("Cell 2") ? x.setFillColor (aBGCell)
+                                                                                                                                                        : x);
 
-    final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts;
-    aElementFcts = new CommonsArrayList <> (x -> x,
-                                            x -> x.setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder),
-                                            x -> x.setBorder (aBorder).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder).setPadding (aPadding).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder).setMargin (aMargin).setFillColor (aBGElement),
-                                            x -> x.setBorder (aBorder)
-                                                  .setPadding (aPadding)
-                                                  .setMargin (aMargin)
-                                                  .setFillColor (aBGElement));
+    final ICommonsList <Function <AbstractPLElement <?>, AbstractPLElement <?>>> aElementFcts = new CommonsArrayList <> (x -> x,
+                                                                                                                         x -> x.setFillColor (aBGElement),
+                                                                                                                         x -> x.setBorder (aBorder),
+                                                                                                                         x -> x.setBorder (aBorder)
+                                                                                                                               .setFillColor (aBGElement),
+                                                                                                                         x -> x.setBorder (aBorder)
+                                                                                                                               .setPadding (aPadding)
+                                                                                                                               .setFillColor (aBGElement),
+                                                                                                                         x -> x.setBorder (aBorder)
+                                                                                                                               .setMargin (aMargin)
+                                                                                                                               .setFillColor (aBGElement),
+                                                                                                                         x -> x.setBorder (aBorder)
+                                                                                                                               .setPadding (aPadding)
+                                                                                                                               .setMargin (aMargin)
+                                                                                                                               .setFillColor (aBGElement));
 
     int nRowFunc = 0;
     for (final Function <PLTableRow, PLTableRow> aRowFct : aRowFcts)
@@ -778,6 +781,34 @@ public final class PLTableTest
   }
 
   @Test
+  public void testColumnWidthStar () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+
+    aPS1.addElement (new PLText ("First line", r10).setID ("first-line"));
+
+    final String sShortText = "Dummy";
+    final String sLongText = "This is a cell with a lot more text in it";
+
+    // Outer table
+    final PLTable aOuterTable = new PLTable (WidthSpec.star (), WidthSpec.star ());
+    for (int i = 0; i < 20; ++i)
+    {
+      aOuterTable.addRow (new PLTableCell (new PLText (sShortText, r10)),
+                          new PLTableCell (new PLText (sLongText, r10)));
+    }
+    EPLTableGridType.FULL.applyGridToTable (aOuterTable, new BorderStyleSpec (PLColor.RED));
+    aPS1.addElement (aOuterTable);
+
+    aPS1.addElement (new PLText ("Last line", r10).setID ("last-line"));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/column-width-star.pdf"));
+  }
+
+  @Test
   public void testIssue21 () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
@@ -794,8 +825,8 @@ public final class PLTableTest
     {
       final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70));
       for (int j = 0; j < 4; ++j)
-        aInnerTable.addAndReturnRow (new PLTableCell (new PLText (sShortText, r10)),
-                                     new PLTableCell (new PLText (sShortText, r10)));
+        aInnerTable.addRow (new PLTableCell (new PLText (sShortText, r10)),
+                            new PLTableCell (new PLText (sShortText, r10)));
       EPLTableGridType.FULL.applyGridToTable (aInnerTable, new BorderStyleSpec (PLColor.GREEN));
 
       aOuterTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10)).setPadding (5),
