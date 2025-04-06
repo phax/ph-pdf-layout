@@ -538,4 +538,38 @@ public final class PLTextTest
     aPageLayout.addPageSet (aPS1);
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/center-issue31.pdf"));
   }
+
+  @Test
+  public void testCreateSimpleFooter () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10, PLColor.RED);
+    final FontSpec r12 = new FontSpec (PreloadFont.REGULAR, 12);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    aPS1.setPadding (15);
+    aPS1.setMarginBottom (40);
+
+    aPS1.addElement (new PLText ("This is the main text - bla bla", r12));
+
+    final StringBuilder aSB = new StringBuilder ();
+    for (final String s : new String [] { "Name and whatever else you need",
+                                          "Streetname",
+                                          "Building number or complex, whatever is needed",
+                                          "Postal code or postbox",
+                                          "City or village",
+                                          "Country code",
+                                          "Country name",
+                                          "Anything",
+                                          "Just for testing purposes" })
+    {
+      if (aSB.length () > 0)
+        aSB.append (" • ");
+      aSB.append (s);
+    }
+    aPS1.setPageFooter (new PLBox (new PLText (aSB.toString (), r10)).setPadding (5));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/simple-footer.pdf"));
+  }
 }
