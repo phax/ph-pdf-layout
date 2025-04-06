@@ -65,7 +65,7 @@ public final class PDFTestComparer
       final CompareResult aResult = new PdfComparator <> (fExpected, fTarget).compare ();
       assertTrue ("Difference in file " + fTarget.getAbsolutePath (), aResult.isEqual ());
     }
-    catch (RenderingException | IOException ex)
+    catch (final RenderingException | IOException ex)
     {
       throw new PDFCreationException ("Failed to compare PDFs", ex);
     }
