@@ -60,7 +60,9 @@ import com.helger.pdflayout.spec.WidthSpec;
  *
  * @author Philip Helger
  */
-public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPLSplittableObject <PLTable, PLTable>, IPLHasMargin <PLTable>
+public class PLTable extends AbstractPLRenderableObject <PLTable> implements
+                     IPLSplittableObject <PLTable, PLTable>,
+                     IPLHasMargin <PLTable>
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (PLTable.class);
 
@@ -74,8 +76,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   private MarginSpec m_aMargin = DEFAULT_MARGIN;
 
   /**
-   * Don't use that constructor. Use {@link #PLTable(Iterable)} or
-   * {@link #PLTable(WidthSpec...)}!!!
+   * Don't use that constructor. Use {@link #PLTable(Iterable)} or {@link #PLTable(WidthSpec...)}!!!
    */
   @Deprecated
   @DevelopersNote ("This ctor is only present to indicate if the varargs ctor would be used without parameters")
@@ -86,8 +87,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
 
   /**
    * @param aWidths
-   *        Must all be of the same type! "auto" width is not allowed - only
-   *        "star" may be used.
+   *        Must all be of the same type! "auto" width is not allowed - only "star" may be used.
    */
   public PLTable (@Nonnull @Nonempty final WidthSpec... aWidths)
   {
@@ -96,8 +96,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
 
   /**
    * @param aWidths
-   *        Must all be of the same type! "auto" width is not allowed - only
-   *        "star" may be used.
+   *        Must all be of the same type! "auto" width is not allowed - only "star" may be used.
    */
   public PLTable (@Nonnull @Nonempty final Iterable <? extends WidthSpec> aWidths)
   {
@@ -123,7 +122,10 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
             bDifferentWidthTypes = true;
           }
           else
-            throw new IllegalArgumentException ("All widths must be of the same type! Found " + eWidthType + " and " + eCurWidth);
+            throw new IllegalArgumentException ("All widths must be of the same type! Found " +
+                                                eWidthType +
+                                                " and " +
+                                                eCurWidth);
         }
     }
 
@@ -165,8 +167,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   }
 
   /**
-   * @return A copy of the list with all widths as specified in the constructor.
-   *         Neither <code>null</code> nor empty.
+   * @return A copy of the list with all widths as specified in the constructor. Neither
+   *         <code>null</code> nor empty.
    */
   @Nonnull
   @Nonempty
@@ -205,9 +207,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   }
 
   /**
-   * Add a new table row with auto height. All contained elements are added with
-   * the specified width in the constructor. <code>null</code> elements are
-   * represented as empty cells.
+   * Add a new table row with auto height. All contained elements are added with the specified width
+   * in the constructor. <code>null</code> elements are represented as empty cells.
    *
    * @param aCells
    *        The cells to add. May not be <code>null</code>.
@@ -220,19 +221,18 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   }
 
   /**
-   * Add a new table row. All contained elements are added with the specified
-   * width in the constructor. <code>null</code> elements are represented as
-   * empty cells.
+   * Add a new table row. All contained elements are added with the specified width in the
+   * constructor. <code>null</code> elements are represented as empty cells.
    *
    * @param aCells
-   *        The cells to add. May not be <code>null</code> but may contain
-   *        <code>null</code> values.
+   *        The cells to add. May not be <code>null</code> but may contain <code>null</code> values.
    * @param aHeight
    *        Row height to be used. May not be <code>null</code>.
    * @return the added table row and never <code>null</code>.
    */
   @Nonnull
-  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells, @Nonnull final HeightSpec aHeight)
+  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells,
+                                     @Nonnull final HeightSpec aHeight)
   {
     ValueEnforcer.notNull (aCells, "Cells");
 
@@ -245,26 +245,34 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
         else
           nUsedCols += aCell.getColSpan ();
       if (nUsedCols > m_aWidths.size ())
-        throw new IllegalArgumentException ("More cells in row (" + nUsedCols + ") than defined in the table (" + m_aWidths.size () + ")!");
+        throw new IllegalArgumentException ("More cells in row (" +
+                                            nUsedCols +
+                                            ") than defined in the table (" +
+                                            m_aWidths.size () +
+                                            ")!");
     }
 
     final PLTableRow aRow = new PLTableRow ();
     int nWidthIndex = 0;
     for (final PLTableCell aCell : aCells)
     {
+      // Make sure we don't have null cells
       final PLTableCell aRealCell = aCell != null ? aCell : new PLTableCell (new PLSpacerX ());
+
       final int nColSpan = aRealCell.getColSpan ();
       if (nColSpan == 1)
       {
+        // Simple case - cell spanning 1 column
         aRow.addCell (aRealCell, m_aWidths.get (nWidthIndex));
       }
       else
       {
+        // Apply column span
         if (m_eCommonWidthType == null)
           throw new IllegalArgumentException ("Since columns with different width types are used, 'colspan' must be 1");
 
         final List <WidthSpec> aWidths = m_aWidths.subList (nWidthIndex, nWidthIndex + nColSpan);
-        WidthSpec aRealWidth;
+        final WidthSpec aRealWidth;
         if (m_eCommonWidthType == EValueUOMType.STAR)
         {
           // aggregate
@@ -314,9 +322,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   }
 
   /**
-   * Add a new table row with auto height. All contained elements are added with
-   * the specified width in the constructor. <code>null</code> elements are
-   * represented as empty cells.
+   * Add a new table row with auto height. All contained elements are added with the specified width
+   * in the constructor. <code>null</code> elements are represented as empty cells.
    *
    * @param aCells
    *        The cells to add. May not be <code>null</code>.
@@ -329,9 +336,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   }
 
   /**
-   * Add a new table row with auto height. All contained elements are added with
-   * the specified width in the constructor. <code>null</code> elements are
-   * represented as empty cells.
+   * Add a new table row with auto height. All contained elements are added with the specified width
+   * in the constructor. <code>null</code> elements are represented as empty cells.
    *
    * @param aCells
    *        The cells to add. May not be <code>null</code>.
@@ -344,9 +350,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
   }
 
   /**
-   * Add a new table row. All contained elements are added with the specified
-   * width in the constructor. <code>null</code> elements are represented as
-   * empty cells.
+   * Add a new table row. All contained elements are added with the specified width in the
+   * constructor. <code>null</code> elements are represented as empty cells.
    *
    * @param aCells
    *        The cells to add. May not be <code>null</code>.
@@ -371,7 +376,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
     m_aRows.forEachRowByIndex ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
   }
 
-  public void forEachRow (final int nStartRowIncl, final int nEndRowIncl, @Nonnull final Consumer <? super PLTableRow> aConsumer)
+  public void forEachRow (final int nStartRowIncl,
+                          final int nEndRowIncl,
+                          @Nonnull final Consumer <? super PLTableRow> aConsumer)
   {
     forEachRowByIndex ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
@@ -379,7 +386,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
     });
   }
 
-  public void forEachRow (final int nStartRowIncl, final int nEndRowIncl, @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
+  public void forEachRow (final int nStartRowIncl,
+                          final int nEndRowIncl,
+                          @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
     forEachRowByIndex ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
@@ -427,7 +436,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
-    final PreparationContext aChildCtx = new PreparationContext (aCtx.getGlobalContext (), fElementWidth, fElementHeight);
+    final PreparationContext aChildCtx = new PreparationContext (aCtx.getGlobalContext (),
+                                                                 fElementWidth,
+                                                                 fElementHeight);
     final SizeSpec aVBoxPreparedSize = m_aRows.prepare (aChildCtx);
     return aVBoxPreparedSize.plus (m_aRows.getOutlineXSum (), m_aRows.getOutlineYSum ());
   }
@@ -516,8 +527,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements IPL
    * Create a new table with the specified percentages.
    *
    * @param aPercentages
-   *        The array to use. The sum of all percentages should be &le; 100. May
-   *        neither be <code>null</code> nor empty.
+   *        The array to use. The sum of all percentages should be &le; 100. May neither be
+   *        <code>null</code> nor empty.
    * @return The created {@link PLTable} and never <code>null</code>.
    */
   @Nonnull
