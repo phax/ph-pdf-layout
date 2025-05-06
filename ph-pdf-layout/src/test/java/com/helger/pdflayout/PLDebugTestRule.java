@@ -19,14 +19,13 @@ package com.helger.pdflayout;
 import org.junit.rules.ExternalResource;
 
 import com.helger.pdflayout.debug.PLDebugLog;
-import com.helger.pdflayout.debug.PLDebugLog.IPLDebugOutput;
 
 public class PLDebugTestRule extends ExternalResource
 {
   /** When this rule is used, global debug is enabled. */
   public static final boolean ENABLE_DEBUG = true;
 
-  private static final IPLDebugOutput NO_OP = new IPLDebugOutput ()
+  private static final PLDebugLog.IPLDebugOutput NO_OP = new PLDebugLog.IPLDebugOutput ()
   {
     public boolean isEnabled ()
     {
@@ -68,6 +67,6 @@ public class PLDebugTestRule extends ExternalResource
   {
     // Reset debug stuff to previous state
     PLDebugLog.setDebugAll (m_bOldDebug);
-    PLDebugLog.setDebugOutput (new PLDebugLog.PLDebugOutputLogger ());
+    PLDebugLog.setDebugOutput (PLDebugLog.PLDebugOutputLogger.INSTANCE);
   }
 }

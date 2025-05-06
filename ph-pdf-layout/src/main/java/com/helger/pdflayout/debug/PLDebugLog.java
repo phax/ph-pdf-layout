@@ -41,7 +41,7 @@ public final class PLDebugLog
    * @author Philip Helger
    * @since 5.1.0
    */
-  public static interface IPLDebugOutput
+  public interface IPLDebugOutput
   {
     boolean isEnabled ();
 
@@ -56,6 +56,8 @@ public final class PLDebugLog
    */
   public static class PLDebugOutputLogger implements IPLDebugOutput
   {
+    public static final PLDebugOutputLogger INSTANCE = new PLDebugOutputLogger ();
+
     private static final Logger LOGGER = LoggerFactory.getLogger (PLDebugOutputLogger.class);
 
     public boolean isEnabled ()
@@ -71,7 +73,7 @@ public final class PLDebugLog
 
   public static final boolean DEFAULT_DEBUG = false;
 
-  private static IPLDebugOutput s_aDebugOutput = new PLDebugOutputLogger ();
+  private static IPLDebugOutput s_aDebugOutput = PLDebugOutputLogger.INSTANCE;
   private static boolean s_bDebugText = DEFAULT_DEBUG;
   private static boolean s_bDebugFont = DEFAULT_DEBUG;
   private static boolean s_bDebugSplit = DEFAULT_DEBUG;
