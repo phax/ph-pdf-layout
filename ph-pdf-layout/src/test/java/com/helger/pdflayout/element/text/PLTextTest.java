@@ -253,9 +253,11 @@ public final class PLTextTest
   @Test
   public void testCustomFontKurintoSans () throws PDFCreationException
   {
-    // Load OTF font
+    // Load TTF font
     final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceKurintoSans.KURINTO_SANS_REGULAR.getFontResource ());
+    aFont.setUseFontLineHeightFromHHEA ();
     final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceKurintoSans.KURINTO_SANS_BOLD.getFontResource ());
+    aFont2.setUseFontLineHeightFromHHEA ();
 
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
                      "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
@@ -270,6 +272,30 @@ public final class PLTextTest
     aPageLayout.addPageSet (aPS1);
     aPageLayout.setCompressPDF (false);
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-kurinto-sans.pdf"));
+  }
+
+  @Test
+  public void testCustomFontKurintoMono () throws PDFCreationException
+  {
+    // Load TTF font
+    final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceKurintoMono.KURINTO_MONO_REGULAR.getFontResource ());
+    aFont.setUseFontLineHeightFromHHEA ();
+    final PreloadFont aFont2 = PreloadFont.createEmbedding (EFontResourceKurintoMono.KURINTO_MONO_BOLD.getFontResource ());
+    aFont2.setUseFontLineHeightFromHHEA ();
+
+    final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
+                     "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
+                     "Tataa: €";
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
+
+    aPS1.addElement (new PLText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLText (s, new FontSpec (aFont2, 10)));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.setCompressPDF (false);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/font-kurinto-mono.pdf"));
   }
 
   @Test
@@ -403,7 +429,8 @@ public final class PLTextTest
     {
       // Load TTF font
       final PreloadFont aFont = PreloadFont.createEmbedding (aHasFont.getFontResource ());
-      if (aHasFont.getFontResource ().getFontName ().startsWith ("Noto "))
+      if (aHasFont.getFontResource ().getFontName ().startsWith ("Kurinto ") ||
+          aHasFont.getFontResource ().getFontName ().startsWith ("Noto "))
         aFont.setUseFontLineHeightFromHHEA ();
 
       aPS1.addElement (new PLText ("[External] [" + aHasFont.getFontResourceID () + "]: " + s + "\n",

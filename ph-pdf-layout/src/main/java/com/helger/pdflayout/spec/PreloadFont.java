@@ -26,7 +26,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.WillNotClose;
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.apache.fontbox.ttf.HeaderTable;
 import org.apache.fontbox.ttf.HorizontalHeaderTable;
+import org.apache.fontbox.ttf.OS2WindowsMetricsTable;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.fontbox.ttf.OpenTypeFont;
 import org.apache.fontbox.ttf.TTFParser;
@@ -139,6 +141,20 @@ public final class PreloadFont implements IHasID <String>, Serializable
             PLDebugLog.debugFont (m_aFontRes.toString (), "Loading TTF font");
           m_aOTF = null;
           m_aTTF = new TTFParser ().parse (new RandomAccessReadBuffer (m_aFontRes.getInputStream ()));
+
+          if (false)
+          {
+            final float fFactor = 1000.0f / m_aTTF.getHeader ().getUnitsPerEm ();
+            System.out.println ("head: " + (m_aTTF.getHeader ().getYMax () - m_aTTF.getHeader ().getYMin ()) * fFactor);
+            System.out.println ("hhea: " +
+                                (m_aTTF.getHorizontalHeader ().getAscender () -
+                                 m_aTTF.getHorizontalHeader ().getDescender () +
+                                 m_aTTF.getHorizontalHeader ().getLineGap ()) * fFactor);
+            System.out.println ("os2: " +
+                                (m_aTTF.getOS2Windows ().getTypoAscender () -
+                                 m_aTTF.getOS2Windows ().getTypoDescender () +
+                                 m_aTTF.getOS2Windows ().getTypoLineGap ()) * fFactor);
+          }
           break;
         }
         case OTF:
@@ -272,7 +288,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
 
   /**
    * Set the font line height based on the TTF/OTF font resource <code>hhea</code> table. This
-   * method is especially helpful for the Noto-Sans font family. See issue #46 for details.
+   * method is especially helpful for the "Noto" or the "Kurinto" font family. See issue #46 for
+   * details.
    *
    * @return ESuccess.SUCCESS if the line height was set, ESuccess.FAILURE if not.
    * @since 7.3.7
@@ -282,15 +299,51 @@ public final class PreloadFont implements IHasID <String>, Serializable
   {
     try
     {
-      final HorizontalHeaderTable aHorzHeader = m_aTTF != null ? m_aTTF.getHorizontalHeader () : m_aOTF != null ? m_aOTF
-                                                                                                                        .getHorizontalHeader ()
-                                                                                                                : null;
-      if (aHorzHeader == null)
+      final HeaderTable aHeaderTable = m_aTTF != null ? m_aTTF.getHeader () : m_aOTF != null ? m_aOTF.getHeader ()
+                                                                                             : null;
+      final HorizontalHeaderTable aHorzHeaderTable = m_aTTF != null ? m_aTTF.getHorizontalHeader () : m_aOTF != null
+                                                                                                                     ? m_aOTF.getHorizontalHeader ()
+                                                                                                                     : null;
+      if (aHeaderTable == null || aHorzHeaderTable == null)
         return ESuccess.FAILURE;
 
-      m_fFontLineHeight = aHorzHeader.getAscender () - aHorzHeader.getDescender () + aHorzHeader.getLineGap ();
+      m_fFontLineHeight = (aHorzHeaderTable.getAscender () -
+                           aHorzHeaderTable.getDescender () +
+                           aHorzHeaderTable.getLineGap ()) * (1000.0f / aHeaderTable.getUnitsPerEm ());
       if (PLDebugLog.isDebugFont ())
         PLDebugLog.debugFont (m_aFontRes.toString (), "Loaded font has 'hhea' line height " + m_fFontLineHeight);
+      return ESuccess.SUCCESS;
+    }
+    catch (final IOException ex)
+    {
+      throw new IllegalStateException ("Failed to read the 'hhea' table from the font resource", ex);
+    }
+  }
+
+  /**
+   * Set the font line height based on the TTF/OTF font resource <code>os/2</code> table. See issue
+   * #46 for details.
+   *
+   * @return ESuccess.SUCCESS if the line height was set, ESuccess.FAILURE if not.
+   * @since 7.3.7
+   */
+  @Nonnull
+  public ESuccess setUseFontLineHeightFromOS2 ()
+  {
+    try
+    {
+      final HeaderTable aHeaderTable = m_aTTF != null ? m_aTTF.getHeader () : m_aOTF != null ? m_aOTF.getHeader ()
+                                                                                             : null;
+      final OS2WindowsMetricsTable aOS2Table = m_aTTF != null ? m_aTTF.getOS2Windows () : m_aOTF != null ? m_aOTF
+                                                                                                                 .getOS2Windows ()
+                                                                                                         : null;
+      if (aHeaderTable == null || aOS2Table == null)
+        return ESuccess.FAILURE;
+
+      m_fFontLineHeight = (aOS2Table.getTypoAscender () - aOS2Table.getTypoDescender () + aOS2Table.getTypoLineGap ()) *
+                          (1000.0f / aHeaderTable.getUnitsPerEm ());
+      if (PLDebugLog.isDebugFont ())
+        PLDebugLog.debugFont (m_aFontRes.toString (), "Loaded font has 'os/2' line height " + m_fFontLineHeight);
       return ESuccess.SUCCESS;
     }
     catch (final IOException ex)
