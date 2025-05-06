@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,8 +51,8 @@ import com.helger.pdflayout.PLConvert;
 import com.helger.pdflayout.debug.PLDebugLog;
 
 /**
- * This class represents a wrapper around a {@link PDFont} that is uniquely
- * assigned to a PDDocument.
+ * This class represents a wrapper around a {@link PDFont} that is uniquely assigned to a
+ * PDDocument.
  *
  * @author Philip Helger
  */
@@ -113,18 +114,19 @@ public class LoadedFont
   /** The underlying PDFBox font */
   private final PDFont m_aFont;
   /**
-   * The fallback character to be used in case an unmappable character is
-   * contained
+   * The fallback character to be used in case an unmappable character is contained
    */
   private final int m_nFallbackCodePoint;
   // Status vars
-  private final float m_fBBHeight;
+  private final float m_fLineHeight;
   private final float m_fDescent;
   private final boolean m_bFontWillBeSubset;
   private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <> ();
   private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
 
-  public LoadedFont (@Nonnull final PDFont aFont, final int nFallbackCodePoint)
+  public LoadedFont (@Nonnull final PDFont aFont,
+                     final int nFallbackCodePoint,
+                     @CheckForSigned final float fCustomLineHeight)
   {
     ValueEnforcer.notNull (aFont, "Font");
     m_aFont = aFont;
@@ -143,28 +145,15 @@ public class LoadedFont
     if (aFD == null)
       throw new IllegalArgumentException ("Failed to determine FontDescriptor from specified font " + aFont);
 
-    // That's how it was before
-    m_fBBHeight = aFD.getFontBoundingBox ().getHeight ();
-    if (false)
+    if (fCustomLineHeight > 0)
     {
-      // Tried a custom algorithm for Kurinto font, but failed
-      final float fCustomHeight = -aFD.getDescent () + aFD.getCapHeight () + aFD.getAscent () + aFD.getLeading ();
-      if (m_fBBHeight != fCustomHeight)
-        LOGGER.info ("  " +
-                     aFD.getFontName () +
-                     " height " +
-                     m_fBBHeight +
-                     " differs from " +
-                     fCustomHeight +
-                     " = -descent (" +
-                     -aFD.getDescent () +
-                     ") + capHeight (" +
-                     aFD.getCapHeight () +
-                     ") + ascent (" +
-                     aFD.getAscent () +
-                     ") + leading (" +
-                     aFD.getLeading () +
-                     ")");
+      // Font height from parsing TTF/OTF
+      m_fLineHeight = fCustomLineHeight;
+    }
+    else
+    {
+      // That's the overall font bounding box from the <code>head</code> table of the font
+      m_fLineHeight = aFD.getFontBoundingBox ().getHeight ();
     }
 
     m_fDescent = aFD.getDescent ();
@@ -183,13 +172,13 @@ public class LoadedFont
   @Nonnegative
   public final float getDescent (@Nonnegative final float fFontSize)
   {
-    return PLConvert.getWidthForFontSize (m_fDescent, fFontSize);
+    return PLConvert.getForFontSize (m_fDescent, fFontSize);
   }
 
   @Nonnegative
   public final float getTextHeight (@Nonnegative final float fFontSize)
   {
-    return PLConvert.getWidthForFontSize (m_fBBHeight, fFontSize);
+    return PLConvert.getForFontSize (m_fLineHeight, fFontSize);
   }
 
   @Nonnull
@@ -263,7 +252,7 @@ public class LoadedFont
     if (false)
     {
       // Toooo slow
-      return PLConvert.getWidthForFontSize (m_aFont.getStringWidth (sText), fFontSize);
+      return PLConvert.getForFontSize (m_aFont.getStringWidth (sText), fFontSize);
     }
     float fWidth = 0;
 
@@ -279,7 +268,7 @@ public class LoadedFont
       fWidth += _getCodePointWidth (nCP);
     }
     // The width is in 1000 unit of text space, ie 333 or 777
-    return PLConvert.getWidthForFontSize (fWidth, fFontSize);
+    return PLConvert.getForFontSize (fWidth, fFontSize);
   }
 
   /**
@@ -288,8 +277,7 @@ public class LoadedFont
    *
    * @param sText
    *        Text to be written.
-   * @return The byte array that can be written with the COSWrite. Never
-   *         <code>null</code>.
+   * @return The byte array that can be written with the COSWrite. Never <code>null</code>.
    * @throws IOException
    *         In case something goes wrong
    */
@@ -332,7 +320,7 @@ public class LoadedFont
     while (nCodePointOffset < sCurLine.length ())
     {
       final int nCodePoint = sCurLine.codePointAt (nCodePointOffset);
-      final float fCodePointWidth = PLConvert.getWidthForFontSize (_getCodePointWidth (nCodePoint), fFontSize);
+      final float fCodePointWidth = PLConvert.getForFontSize (_getCodePointWidth (nCodePoint), fFontSize);
       if (Character.isWhitespace (nCodePoint))
       {
         // Whitespace is considered a word break and allows us to break the line
@@ -435,7 +423,7 @@ public class LoadedFont
   {
     return new ToStringGenerator (null).append ("Font", m_aFont)
                                        .append ("FallbackCodePoint", m_nFallbackCodePoint)
-                                       .append ("BBHeight", m_fBBHeight)
+                                       .append ("BBHeight", m_fLineHeight)
                                        .append ("Descent", m_fDescent)
                                        .append ("FontWillBeSubset", m_bFontWillBeSubset)
                                        .getToString ();

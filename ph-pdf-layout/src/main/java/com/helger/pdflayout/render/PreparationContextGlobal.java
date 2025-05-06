@@ -32,9 +32,8 @@ import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * The current global context for preparing an element. This object must be the
- * same for all prepared elements. It keeps all loaded fonts so that they are
- * not included more than once.
+ * The current global context for preparing an element. This object must be the same for all
+ * prepared elements. It keeps all loaded fonts so that they are not included more than once.
  *
  * @author Philip Helger
  */
@@ -57,8 +56,7 @@ public final class PreparationContextGlobal
   }
 
   /**
-   * @return The {@link PDDocument} as provided in the constructor. Never
-   *         <code>null</code>.
+   * @return The {@link PDDocument} as provided in the constructor. Never <code>null</code>.
    */
   @Nonnull
   public PDDocument getDocument ()
@@ -76,7 +74,9 @@ public final class PreparationContextGlobal
       if (PLDebugLog.isDebugFont ())
         PLDebugLog.debugFont (aPreloadFont.toString (), "Loading into current document");
 
-      aLoadedFont = new LoadedFont (aPreloadFont.loadPDFont (m_aDoc), aPreloadFont.getFallbackCodePoint ());
+      aLoadedFont = new LoadedFont (aPreloadFont.loadPDFont (m_aDoc),
+                                    aPreloadFont.getFallbackCodePoint (),
+                                    aPreloadFont.getFontLineHeight ());
       m_aFontCache.put (aPreloadFont, aLoadedFont);
     }
     return aLoadedFont;

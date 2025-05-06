@@ -45,7 +45,7 @@ public class BulletPointCreatorSymbol extends BulletPointCreatorConstant
   {
     final PLText ret = (PLText) super.getBulletPointElement (nBulletPointIndex);
     // Vertical align
-    ret.setCustomAscentFirstLine (PLConvert.getWidthForFontSize (450, getFontSpec ().getFontSize ()));
+    ret.setCustomAscentFirstLine (PLConvert.getForFontSize (450, getFontSpec ().getFontSize ()));
     return ret;
   }
 

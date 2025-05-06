@@ -137,8 +137,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return The original text provided in the constructor, with newlines
-   *         unified. Never <code>null</code>.
+   * @return The original text provided in the constructor, with newlines unified. Never
+   *         <code>null</code>.
    */
   @Nonnull
   public final String getText ()
@@ -147,8 +147,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return <code>true</code> if the contained text has at least one character,
-   *         <code>false</code> if it is empty.
+   * @return <code>true</code> if the contained text has at least one character, <code>false</code>
+   *         if it is empty.
    */
   public final boolean hasText ()
   {
@@ -156,8 +156,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return <code>true</code> if the text provided in the constructor contains
-   *         no character, <code>false</code> otherwise.
+   * @return <code>true</code> if the text provided in the constructor contains no character,
+   *         <code>false</code> otherwise.
    */
   public final boolean hasNoText ()
   {
@@ -165,8 +165,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return The font specification to be used as provided in the constructor.
-   *         Never <code>null</code>.
+   * @return The font specification to be used as provided in the constructor. Never
+   *         <code>null</code>.
    */
   @Nonnull
   public final FontSpec getFontSpec ()
@@ -175,8 +175,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * Set the font spec after the constructor. This can only be done before the
-   * text is prepared.
+   * Set the font spec after the constructor. This can only be done before the text is prepared.
    *
    * @param aFontSpec
    *        The new font spec. Must not be <code>null</code>.
@@ -196,8 +195,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return The line height factor. Defaults to {@link #DEFAULT_LINE_SPACING}
-   *         which means 100%.
+   * @return The line height factor. Defaults to {@link #DEFAULT_LINE_SPACING} which means 100%.
    */
   public final float getLineSpacing ()
   {
@@ -205,9 +203,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * Set the line spacing to use. The line spacing is the distance between 2
-   * consecutive lines. The line spacing is not considered if there is a single
-   * line of text.
+   * Set the line spacing to use. The line spacing is the distance between 2 consecutive lines. The
+   * line spacing is not considered if there is a single line of text.
    *
    * @param fLineSpacing
    *        A value of 1 means 100%, 1.05 means 105% etc. Must be &gt; 0.
@@ -216,7 +213,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   @Nonnull
   public final IMPLTYPE setLineSpacing (@Nonnegative final float fLineSpacing)
   {
-    ValueEnforcer.isGE0 (fLineSpacing, "LineSpacing");
+    ValueEnforcer.isGT0 (fLineSpacing, "LineSpacing");
     m_fLineSpacing = fLineSpacing;
     return thisAsT ();
   }
@@ -235,9 +232,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return The maximum number of rows to be rendered. If this value is &le; 0
-   *         than all rows are rendered. The default value is
-   *         {@link #DEFAULT_MAX_ROWS} meaning all rows are rendered.
+   * @return The maximum number of rows to be rendered. If this value is &le; 0 than all rows are
+   *         rendered. The default value is {@link #DEFAULT_MAX_ROWS} meaning all rows are rendered.
    */
   @CheckForSigned
   public final int getMaxRows ()
@@ -273,9 +269,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return <code>true</code> if placeholders should be replaced,
-   *         <code>false</code> otherwise. The default value is
-   *         {@link #DEFAULT_REPLACE_PLACEHOLDERS} so
+   * @return <code>true</code> if placeholders should be replaced, <code>false</code> otherwise. The
+   *         default value is {@link #DEFAULT_REPLACE_PLACEHOLDERS} so
    *         {@value #DEFAULT_REPLACE_PLACEHOLDERS}.
    */
   public final boolean isReplacePlaceholder ()
@@ -284,12 +279,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * Change whether placeholders should be replaced or not. Enabling this slows
-   * down the execution of rendering. Enable this only if absolutely necessary.
+   * Change whether placeholders should be replaced or not. Enabling this slows down the execution
+   * of rendering. Enable this only if absolutely necessary.
    *
    * @param bReplacePlaceholder
-   *        <code>true</code> if placeholders should be replaced,
-   *        <code>false</code> otherwise.
+   *        <code>true</code> if placeholders should be replaced, <code>false</code> otherwise.
    * @return this for chaining
    */
   @Nonnull
@@ -447,8 +441,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
-   * @return The total number of prepared lines, not taking the maxRows into
-   *         consideration. Always &ge; 0.
+   * @return The total number of prepared lines, not taking the maxRows into consideration. Always
+   *         &ge; 0.
    */
   @Nonnegative
   public int getPreparedLineCountUnmodified ()

@@ -162,6 +162,11 @@
     </dependency>
     <dependency>
       <groupId>com.helger.font</groupId>
+      <artifactId>ph-fonts-noto-sans-tc</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.helger.font</groupId>
       <artifactId>ph-fonts-kurinto-mono</artifactId>
       <scope>test</scope>
     </dependency>
