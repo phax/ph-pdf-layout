@@ -62,6 +62,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+* v7.3.8 - work in progress
+    * Added `ELineJoinStyle` and `ELineCapStyle` enums
 * v7.3.7 - 2025-05-06
     * Updated to PDFBox 3.0.5
     * Added a new method `PreloadFont.setUseFontLineHeightFromHHEA()` to use the line height from the font instead of the default bounding box. This is especially helpful for the "Noto" and "Kurinto" fonts, which have a very large bounding box. Fixes [#46](https://github.com/phax/ph-pdf-layout/issues/46) - thx @mrrao 
