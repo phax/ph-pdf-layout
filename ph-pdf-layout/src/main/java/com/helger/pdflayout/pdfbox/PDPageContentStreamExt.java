@@ -74,6 +74,8 @@ import com.helger.pdflayout.spec.ELineJoinStyle;
  * <li>Removed all deprecated methods</li>
  * <li>Allowing to prepend content</li>
  * </ul>
+ * This class is basically the same as the PDFBox internal class
+ * <code>PDAbstractContentStream</code> just with optimizations
  *
  * @author Ben Litchfield
  */
@@ -167,7 +169,7 @@ public class PDPageContentStreamExt implements Closeable
 
       // Add new stream to contents array
       final COSBase contents = sourcePage.getCOSObject ().getDictionaryObject (COSName.CONTENTS);
-      COSArray array;
+      final COSArray array;
       if (contents instanceof COSArray)
       {
         // If contents is already an array, a new stream is simply appended to
