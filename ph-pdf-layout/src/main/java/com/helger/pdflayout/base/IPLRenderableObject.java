@@ -35,7 +35,9 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
+public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPLTYPE>> extends
+                                     IPLObject <IMPLTYPE>,
+                                     IPLHasOutline
 {
   /**
    * @return <code>true</code> if this object was already prepared,
@@ -81,11 +83,25 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
   @Nullable
   SizeSpec getRenderSize ();
 
+  /**
+   * Get the render width. This method may only be called after preparation was
+   * done.
+   *
+   * @return The render width, including min/max size.
+   * @see #getRenderSize()
+   */
   default float getRenderWidth ()
   {
     return getRenderSize ().getWidth ();
   }
 
+  /**
+   * Get the render height. This method may only be called after preparation was
+   * done.
+   *
+   * @return The render height, including min/max size.
+   * @see #getRenderSize()
+   */
   default float getRenderHeight ()
   {
     return getRenderSize ().getHeight ();

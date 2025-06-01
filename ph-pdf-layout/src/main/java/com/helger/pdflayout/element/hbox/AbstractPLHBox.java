@@ -34,6 +34,7 @@ import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
+import com.helger.pdflayout.base.EPLVerticalSplitMode;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
@@ -70,7 +71,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                      IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
   private final ICommonsList <PLHBoxColumn> m_aColumns = new CommonsArrayList <> ();
-  private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+  private EPLVerticalSplitMode m_eVertSplitMode = DEFAULT_VERT_SPLIT_MODE;
 
   /** prepared column size (with outline of contained element) */
   private SizeSpec [] m_aPreparedColumnSizes;
@@ -86,7 +87,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
-    setVertSplittable (aSource.isVertSplittable ());
+    setVertSplitMode (aSource.getVertSplitMode ());
     return thisAsT ();
   }
 
@@ -220,21 +221,27 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     return thisAsT ();
   }
 
-  public final boolean isVertSplittable ()
+  @Nonnull
+  public final EPLVerticalSplitMode getVertSplitMode ()
   {
-    return m_bVertSplittable;
+    return m_eVertSplitMode;
   }
 
   @Nonnull
-  public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
+  public final IMPLTYPE setVertSplitMode (@Nonnull final EPLVerticalSplitMode eVertSplitMode)
   {
-    m_bVertSplittable = bVertSplittable;
+    ValueEnforcer.notNull (eVertSplitMode, "VertSplitMode");
+    m_eVertSplitMode = eVertSplitMode;
     return thisAsT ();
   }
 
+  // TODO change to enum
   public boolean containsAnyVertSplittableElement ()
   {
-    return m_aColumns.containsAny (x -> x.getElement ().isVertSplittable ());
+    return m_aColumns.containsAny (x -> x.getElement ().isSplittable () &&
+                                        x.getElement ()
+                                         .getAsSplittable ()
+                                         .getVertSplitMode () == EPLVerticalSplitMode.SPLIT);
   }
 
   @Override
@@ -605,13 +612,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     for (int nCol = 0; nCol < nCols; nCol++)
     {
       final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (nCol);
-      final boolean bIsSplittable = aColumnElement.isVertSplittable ();
+      final boolean bIsVertSplittable = aColumnElement.isVertSplittable ();
       final float fColumnWidth = m_aPreparedColumnSizes[nCol].getWidth ();
       final float fColumnHeight = m_aPreparedColumnSizes[nCol].getHeight ();
       final float fElementWidthNet = m_aPreparedElementSizes[nCol].getWidth ();
 
       boolean bDidSplitColumn = false;
-      if (fColumnHeight > fAvailableHeight && bIsSplittable)
+      if (fColumnHeight > fAvailableHeight && bIsVertSplittable)
       {
         final float fSplitWidth = fElementWidthNet;
         final float fSplitHeight = fAvailableHeight - aColumnElement.getOutlineYSum ();
@@ -781,7 +788,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("Columns", m_aColumns)
-                            .append ("VertSplittable", m_bVertSplittable)
+                            .append ("VertSplitMode", m_eVertSplitMode)
                             .appendIfNotNull ("PreparedColumnSize", m_aPreparedColumnSizes)
                             .appendIfNotNull ("PreparedElementSize", m_aPreparedElementSizes)
                             .getToString ();

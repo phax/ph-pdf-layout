@@ -22,10 +22,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
+import com.helger.pdflayout.base.EPLVerticalSplitMode;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
@@ -47,11 +49,12 @@ import com.helger.pdflayout.spec.SizeSpec;
  *        Implementation type
  * @since 6.0.1
  */
-public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE> implements
+public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox <IMPLTYPE>> extends
+                                          AbstractPLElement <IMPLTYPE> implements
                                           IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
   private IPLRenderableObject <?> m_aElement;
-  private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+  private EPLVerticalSplitMode m_eVertSplitMode = DEFAULT_VERT_SPLIT_MODE;
 
   // Status vars
   private SizeSpec m_aElementPreparedSize;
@@ -67,7 +70,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
   public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
-    setVertSplittable (aSource.isVertSplittable ());
+    setVertSplitMode (aSource.getVertSplitMode ());
     return thisAsT ();
   }
 
@@ -97,18 +100,26 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     return thisAsT ();
   }
 
-  public final boolean isVertSplittable ()
+  @Nonnull
+  public final EPLVerticalSplitMode getVertSplitMode ()
   {
-    if (!m_bVertSplittable)
-      return false;
+    if (m_eVertSplitMode == EPLVerticalSplitMode.NO_SPLIT)
+      return m_eVertSplitMode;
     // Empty boxes or boxes with a non-splittable element cannot be split
-    return hasElement () && getElement ().isVertSplittable ();
+    if (hasElement ())
+    {
+      final IPLRenderableObject <?> aElement = getElement ();
+      if (aElement.isSplittable ())
+        return aElement.getAsSplittable ().getVertSplitMode ();
+    }
+    return EPLVerticalSplitMode.NO_SPLIT;
   }
 
   @Nonnull
-  public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
+  public final IMPLTYPE setVertSplitMode (@Nonnull final EPLVerticalSplitMode eVertSplitMode)
   {
-    m_bVertSplittable = bVertSplittable;
+    ValueEnforcer.notNull (eVertSplitMode, "VertSplitMode");
+    m_eVertSplitMode = eVertSplitMode;
     return thisAsT ();
   }
 
@@ -163,7 +174,9 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
-    final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (), fElementWidth, fElementHeight);
+    final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (),
+                                                                   fElementWidth,
+                                                                   fElementHeight);
     internalSetElementPreparedSize (m_aElement.prepare (aElementCtx));
 
     // Add the outer stuff of the contained element as this elements prepared
@@ -198,8 +211,10 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLInlineBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1").setVertSplittable (false);
-    final AbstractPLInlineBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2").setVertSplittable (true);
+    final AbstractPLInlineBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+                                                                                       .setVertSplitMode (EPLVerticalSplitMode.NO_SPLIT);
+    final AbstractPLInlineBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+                                                                                       .setVertSplitMode (m_eVertSplitMode);
 
     // Set min width/max width from source
     // Don't use the height, because on vertically split elements, the height is
@@ -294,7 +309,11 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     {
       final float fStartLeft = aCtx.getStartLeft () + getOutlineLeft ();
       final float fStartTop = aCtx.getStartTop () - getOutlineTop ();
-      final PageRenderContext aElementCtx = new PageRenderContext (aCtx, fStartLeft, fStartTop, getRenderWidth (), getRenderHeight ());
+      final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
+                                                                   fStartLeft,
+                                                                   fStartTop,
+                                                                   getRenderWidth (),
+                                                                   getRenderHeight ());
       m_aElement.render (aElementCtx);
     }
     else
@@ -306,7 +325,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .appendIfNotNull ("Element", m_aElement)
-                            .append ("VertSplittable", m_bVertSplittable)
+                            .append ("VertSplitMode", m_eVertSplitMode)
                             .appendIfNotNull ("ElementPreparedSize", m_aElementPreparedSize)
                             .getToString ();
   }

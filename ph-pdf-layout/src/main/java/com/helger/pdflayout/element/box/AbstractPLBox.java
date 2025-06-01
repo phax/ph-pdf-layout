@@ -22,10 +22,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLBlockElement;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
+import com.helger.pdflayout.base.EPLVerticalSplitMode;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.IPLVisitor;
@@ -53,7 +55,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
 {
 
   private IPLRenderableObject <?> m_aElement;
-  private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+  private EPLVerticalSplitMode m_eVertSplitMode = DEFAULT_VERT_SPLIT_MODE;
 
   // Status vars
   private SizeSpec m_aElementPreparedSize;
@@ -70,7 +72,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
-    setVertSplittable (aSource.isVertSplittable ());
+    setVertSplitMode (aSource.getVertSplitMode ());
     return thisAsT ();
   }
 
@@ -100,18 +102,26 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     return thisAsT ();
   }
 
-  public final boolean isVertSplittable ()
+  @Nonnull
+  public final EPLVerticalSplitMode getVertSplitMode ()
   {
-    if (!m_bVertSplittable)
-      return false;
+    if (m_eVertSplitMode == EPLVerticalSplitMode.NO_SPLIT)
+      return m_eVertSplitMode;
     // Empty boxes or boxes with a non-splittable element cannot be split
-    return hasElement () && getElement ().isVertSplittable ();
+    if (hasElement ())
+    {
+      final IPLRenderableObject <?> aElement = getElement ();
+      if (aElement.isSplittable ())
+        return aElement.getAsSplittable ().getVertSplitMode ();
+    }
+    return EPLVerticalSplitMode.NO_SPLIT;
   }
 
   @Nonnull
-  public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
+  public final IMPLTYPE setVertSplitMode (@Nonnull final EPLVerticalSplitMode eVertSplitMode)
   {
-    m_bVertSplittable = bVertSplittable;
+    ValueEnforcer.notNull (eVertSplitMode, "VertSplitMode");
+    m_eVertSplitMode = eVertSplitMode;
     return thisAsT ();
   }
 
@@ -224,9 +234,9 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
 
     // Create resulting VBoxes - the first one is not splittable again!
     final AbstractPLBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
-                                                                                 .setVertSplittable (false);
+                                                                                 .setVertSplitMode (EPLVerticalSplitMode.NO_SPLIT);
     final AbstractPLBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
-                                                                                 .setVertSplittable (true);
+                                                                                 .setVertSplitMode (m_eVertSplitMode);
 
     // Set min width/max width from source
     // Don't use the height, because on vertically split elements, the height is
@@ -354,7 +364,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .appendIfNotNull ("Element", m_aElement)
-                            .append ("VertSplittable", m_bVertSplittable)
+                            .append ("VertSplitMode", m_eVertSplitMode)
                             .appendIfNotNull ("ElementPreparedSize", m_aElementPreparedSize)
                             .appendIfNotNull ("RenderOffset", m_aRenderOffset)
                             .getToString ();

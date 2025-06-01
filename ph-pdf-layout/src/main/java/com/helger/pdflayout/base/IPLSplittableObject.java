@@ -33,7 +33,9 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
                                      extends
                                      IPLObject <IMPLTYPE>
 {
+  @Deprecated (forRemoval = true, since = "7.4.0")
   boolean DEFAULT_VERT_SPLITTABLE = true;
+  EPLVerticalSplitMode DEFAULT_VERT_SPLIT_MODE = EPLVerticalSplitMode.SPLIT;
 
   /**
    * Create a new object of the same type as this object.
@@ -46,12 +48,11 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
   SPLITTYPE internalCreateNewVertSplitObject (@Nonnull SPLITTYPE aBase);
 
   /**
-   * @return <code>true</code> if this element is vertically splittable,
-   *         <code>false</code> otherwise. The default is
-   *         {@link #DEFAULT_VERT_SPLITTABLE}.
+   * @return The vertical split mode to use. Never <code>null</code>. The
+   *         default is {@link #DEFAULT_VERT_SPLIT_MODE}.
+   * @since 7.4.0
    */
-  @Override
-  boolean isVertSplittable ();
+  EPLVerticalSplitMode getVertSplitMode ();
 
   /**
    * Change the vertical splitability of this object.
@@ -62,7 +63,22 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    * @return this for chaining
    */
   @Nonnull
-  IMPLTYPE setVertSplittable (boolean bVertSplittable);
+  @Deprecated (forRemoval = true, since = "7.4.0")
+  default IMPLTYPE setVertSplittable (final boolean bVertSplittable)
+  {
+    return setVertSplitMode (EPLVerticalSplitMode.valueOf (bVertSplittable));
+  }
+
+  /**
+   * Change the vertical split mode of this object.
+   *
+   * @param eVertSplitMode
+   *        The split mode to use. May not be <code>null</code>.
+   * @return this for chaining
+   * @since 7.4.0
+   */
+  @Nonnull
+  IMPLTYPE setVertSplitMode (@Nonnull EPLVerticalSplitMode eVertSplitMode);
 
   /**
    * Split this element vertically into sub-elements according to the available

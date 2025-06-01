@@ -63,14 +63,14 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
    * @return <code>true</code> if this element is splittable, <code>false</code>
    *         otherwise.
    */
-  default boolean isVertSplittable ()
+  default boolean isSplittable ()
   {
     return this instanceof IPLSplittableObject <?, ?>;
   }
 
   /**
    * @return this as an {@link IPLSplittableObject} - ensure to call it only if
-   *         {@link #isVertSplittable()} returns <code>true</code>.
+   *         {@link #isSplittable()} returns <code>true</code>.
    */
   @Nonnull
   default IPLSplittableObject <?, ?> getAsSplittable ()
