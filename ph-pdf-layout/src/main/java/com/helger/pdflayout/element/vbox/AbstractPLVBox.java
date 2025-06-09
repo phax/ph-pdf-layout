@@ -193,8 +193,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   /**
-   * @return The element in the first row or <code>null</code> if no row is
-   *         present.
+   * @return The element in the first row or <code>null</code> if no row is present.
    */
   @Nullable
   public IPLRenderableObject <?> getFirstRowElement ()
@@ -204,8 +203,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   /**
-   * @return The element in the last row or <code>null</code> if no row is
-   *         present.
+   * @return The element in the last row or <code>null</code> if no row is present.
    */
   @Nullable
   public IPLRenderableObject <?> getLastRowElement ()
@@ -215,8 +213,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   /**
-   * @return The default height to be used for rows if none is provided. May not
-   *         be <code>null</code>.
+   * @return The default height to be used for rows if none is provided. May not be
+   *         <code>null</code>.
    */
   @Nonnull
   public HeightSpec getDefaultHeight ()
@@ -375,8 +373,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   /**
-   * Set the number of header rows in this table. Header rows get repeated on
-   * every page upon rendering.
+   * Set the number of header rows in this table. Header rows get repeated on every page upon
+   * rendering.
    *
    * @param nHeaderRowCount
    *        The number of header rows, to be repeated by page. Must be &ge; 0.
@@ -397,8 +395,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   /**
-   * @return Should the VBox occupy the full width? The default is
-   *         {@link #DEFAULT_FULL_WIDTH}.
+   * @return Should the VBox occupy the full width? The default is {@link #DEFAULT_FULL_WIDTH}.
    */
   public final boolean isFullWidth ()
   {
@@ -409,8 +406,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * Set usage of full width.
    *
    * @param bFullWidth
-   *        <code>true</code> to enable full width, <code>false</code> to use
-   *        only what is available.
+   *        <code>true</code> to enable full width, <code>false</code> to use only what is
+   *        available.
    * @return this for chaining
    */
   @Nonnull
@@ -652,8 +649,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
           // Update used height
           // If no height is left, use the net size of the element
           final float fRowHeightFull = bTooSmallRestHeight ? aElementPreparedSize.getHeight () +
-                                                             aElement.getOutlineYSum ()
-                                                           : fRowHeight;
+                                                             aElement.getOutlineYSum () : fRowHeight;
           fUsedHeightFull += fRowHeightFull;
           // Don't change rest-height!
 
@@ -737,6 +733,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       aVBox1RowSize.add (m_aPreparedRowSize[nRow]);
       aVBox1ElementSize.add (m_aPreparedElementSize[nRow]);
     }
+
     // The height and width after header rows are identical
     final ICommonsList <SizeSpec> aVBox2RowSize = aVBox1RowSize.getClone ();
     final ICommonsList <SizeSpec> aVBox2ElementSize = aVBox1ElementSize.getClone ();
@@ -868,6 +865,18 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         PLDebugLog.debugSplit (this, "Splitting makes no sense, because VBox 2 would be empty");
       return null;
     }
+
+    if (fUsedVBox1RowHeight > fAvailableHeight)
+    {
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this,
+                               "Splitting makes no sense -- VBox1RowHeight: " +
+                                     fUsedVBox1RowHeight +
+                                     " exceeds available height: " +
+                                     fAvailableHeight);
+      return null;
+    }
+
     // Excluding padding/margin
     aVBox1.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight));
     aVBox1.m_aPreparedRowSize = ArrayHelper.newArray (aVBox1RowSize, SizeSpec.class);
