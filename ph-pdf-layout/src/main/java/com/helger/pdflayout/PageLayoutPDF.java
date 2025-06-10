@@ -70,9 +70,8 @@ import com.helger.pdflayout.base.PLPageSetPrepareResult;
 import com.helger.pdflayout.render.PreparationContextGlobal;
 
 /**
- * Main class for creating layouted PDFs. This class contains the meta data as
- * well as a list of {@link PLPageSet} objects that represent a set of pages
- * with a consistent layouting scheme.
+ * Main class for creating layouted PDFs. This class contains the meta data as well as a list of
+ * {@link PLPageSet} objects that represent a set of pages with a consistent layouting scheme.
  *
  * @author Philip Helger
  */
@@ -105,8 +104,7 @@ public class PageLayoutPDF implements IPLVisitable
   private IXMPMetadataCustomizer m_aMetadataCustomizer;
 
   /**
-   * Constructor. Initializes Author, CreationDate and Creator from class
-   * {@link VendorInfo}.
+   * Constructor. Initializes Author, CreationDate and Creator from class {@link VendorInfo}.
    */
   public PageLayoutPDF ()
   {
@@ -125,8 +123,8 @@ public class PageLayoutPDF implements IPLVisitable
 
   /**
    * @param bCompressPDF
-   *        <code>true</code> to enable creation of compressed PDFs,
-   *        <code>false</code> to disable it.
+   *        <code>true</code> to enable creation of compressed PDFs, <code>false</code> to disable
+   *        it.
    * @return this for chaining
    */
   @Nonnull
@@ -147,8 +145,7 @@ public class PageLayoutPDF implements IPLVisitable
 
   /**
    * @param bCreatePDF_A
-   *        <code>true</code> to enable creation of PDF/A, <code>false</code> to
-   *        disable it.
+   *        <code>true</code> to enable creation of PDF/A, <code>false</code> to disable it.
    * @return this for chaining
    * @since 6.0.3
    */
@@ -314,8 +311,8 @@ public class PageLayoutPDF implements IPLVisitable
   }
 
   /**
-   * Explicitly prepare all available page sets. That means that the page sets
-   * cannot be modified again, but the content sizes can be determined.
+   * Explicitly prepare all available page sets. That means that the page sets cannot be modified
+   * again, but the content sizes can be determined.
    *
    * @since 7.3.1
    */
@@ -342,8 +339,7 @@ public class PageLayoutPDF implements IPLVisitable
    * Render this layout to an OutputStream.
    *
    * @param aOS
-   *        The output stream to write to. May not be <code>null</code>. Is
-   *        closed automatically.
+   *        The output stream to write to. May not be <code>null</code>. Is closed automatically.
    * @return this for chaining
    * @throws PDFCreationException
    *         In case of an error
@@ -358,7 +354,7 @@ public class PageLayoutPDF implements IPLVisitable
       // create a new document
       // Use a buffered OS - approx 30% faster!
       try (final PDDocument aDoc = new PDDocument ();
-          final OutputStream aBufferedOS = StreamHelper.getBuffered (m_bCreatePDF_A ? aTmpOS : aOS))
+           final OutputStream aBufferedOS = StreamHelper.getBuffered (m_bCreatePDF_A ? aTmpOS : aOS))
       {
         // Small consistency check to avoid creating empty, invalid PDFs
         int nTotalElements = 0;
@@ -442,11 +438,11 @@ public class PageLayoutPDF implements IPLVisitable
       }
       catch (final IOException ex)
       {
-        throw new PDFCreationException ("IO Error", ex);
+        throw new PDFCreationException ("IO Error writing PDF", ex);
       }
       catch (final Exception ex)
       {
-        throw new PDFCreationException ("Internal error", ex);
+        throw new PDFCreationException ("Internal error rendering PDF", ex);
       }
 
       if (m_bCreatePDF_A)
@@ -456,7 +452,7 @@ public class PageLayoutPDF implements IPLVisitable
 
         // Add metadata (needed by PDF/A)
         try (final PDDocument aDoc = Loader.loadPDF (aTmpOS.getBufferOrCopy ());
-            final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
+             final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
         {
 
           final Calendar aCreationDate = m_aDocumentCreationDate == null ? PDTFactory.createCalendar ()
@@ -577,16 +573,14 @@ public class PageLayoutPDF implements IPLVisitable
    * Render this layout to an OutputStream.
    *
    * @param aCustomizer
-   *        The customizer to be invoked before the document is written to the
-   *        stream. May be <code>null</code>.
+   *        The customizer to be invoked before the document is written to the stream. May be
+   *        <code>null</code>.
    * @param aOS
-   *        The output stream to write to. May not be <code>null</code>. Is
-   *        closed automatically.
+   *        The output stream to write to. May not be <code>null</code>. Is closed automatically.
    * @return this for chaining
    * @throws PDFCreationException
    *         In case of an error
-   * @deprecated Since 5.1.0; Call
-   *             {@link #setDocumentCustomizer(IPDDocumentCustomizer)} and than
+   * @deprecated Since 5.1.0; Call {@link #setDocumentCustomizer(IPDDocumentCustomizer)} and than
    *             {@link #renderTo(OutputStream)}
    */
   @Nonnull
@@ -602,8 +596,7 @@ public class PageLayoutPDF implements IPLVisitable
    * Render this layout to a {@link File}.
    *
    * @param aFile
-   *        The output stream to write to. May not be <code>null</code>. Is
-   *        closed automatically.
+   *        The output stream to write to. May not be <code>null</code>. Is closed automatically.
    * @return this for chaining
    * @throws PDFCreationException
    *         In case of an error
