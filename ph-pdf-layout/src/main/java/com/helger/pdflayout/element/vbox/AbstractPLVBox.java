@@ -770,7 +770,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
             final float fSplitHeight = fAvailableHeight - fUsedVBox1RowHeight - aRowElement.getOutlineYSum ();
             if (PLDebugLog.isDebugSplit ())
               PLDebugLog.debugSplit (this,
-                                     "Trying to split " +
+                                     "[vbox] Trying to split " +
                                            aRowElement.getDebugID () +
                                            " into pieces for split size " +
                                            PLDebugLog.getWH (fSplitWidth, fSplitHeight));

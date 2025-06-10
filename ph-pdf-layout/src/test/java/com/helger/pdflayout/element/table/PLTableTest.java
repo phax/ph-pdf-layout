@@ -813,9 +813,12 @@ public final class PLTableTest
   @Test
   public void testIssue21 () throws PDFCreationException
   {
-    PLDebugLog.setDebugAll (false);
-    PLDebugLog.setDebugSplit (true);
-    PLDebugLog.setDebugOutput (PLDebugOutputLogger.INSTANCE);
+    if (true)
+    {
+      PLDebugLog.setDebugAll (false);
+      PLDebugLog.setDebugSplit (true);
+      PLDebugLog.setDebugOutput (PLDebugOutputLogger.INSTANCE);
+    }
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
@@ -829,14 +832,14 @@ public final class PLTableTest
     final PLTable aOuterTable = new PLTable (WidthSpec.perc (25), WidthSpec.star ()).setID ("outer-table");
     for (int i = 0; i < 25; ++i)
     {
-      final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70));
+      final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70)).setID ("inner-table-" + i);
       for (int j = 0; j < 4; ++j)
-        aInnerTable.addRow (new PLTableCell (new PLText (sShortText, r10)),
-                            new PLTableCell (new PLText (sShortText, r10)));
+        aInnerTable.addAndReturnRow (new PLTableCell (new PLText (sShortText, r10)),
+                                     new PLTableCell (new PLText (sShortText, r10))).setID ("inner-row" + j);
       EPLTableGridType.FULL.applyGridToTable (aInnerTable, new BorderStyleSpec (PLColor.GREEN));
 
       aOuterTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10)).setPadding (5),
-                                   new PLTableCell (aInnerTable)).setID ("row" + i);
+                                   new PLTableCell (aInnerTable)).setID ("outer-row" + i);
     }
     EPLTableGridType.FULL.applyGridToTable (aOuterTable, new BorderStyleSpec (PLColor.RED));
     aPS1.addElement (aOuterTable);

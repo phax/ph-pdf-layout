@@ -473,7 +473,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       return nLineCount * m_fTextHeight * m_fLineSpacing;
     }
 
-    // The line height factor counts only between lines!
+    // The line spacing factor counts only between lines!
     return (nLineCount - 1) * m_fTextHeight * m_fLineSpacing + 1 * m_fTextHeight;
   }
 
@@ -521,6 +521,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
     int nSplitLineCount = (int) ((fAvailableHeight + (m_fLineSpacing - 1f) * m_fTextHeight) /
                                  (m_fTextHeight * m_fLineSpacing));
+    if (false)
+      nSplitLineCount = (int) (fAvailableHeight / (m_fTextHeight * m_fLineSpacing));
+
     if (nSplitLineCount <= 0)
     {
       // Splitting makes no sense because the resulting text 1 would be empty

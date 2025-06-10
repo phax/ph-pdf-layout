@@ -598,7 +598,9 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     final SizeSpec [] aHBox2ElementSizes = new SizeSpec [m_aPreparedElementSizes.length];
 
     // Start splitting columns
-    boolean bDidSplitAnyColumn = false;
+    int nColsOnFirst = 0;
+    int nColsSplit = 0;
+    int nColsOnSecond = 0;
     for (int nCol = 0; nCol < nCols; nCol++)
     {
       final IPLRenderableObject <?> aColumnElement = getColumnElementAtIndex (nCol);
@@ -614,7 +616,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         final float fSplitHeight = fAvailableHeight - aColumnElement.getOutlineYSum ();
         if (PLDebugLog.isDebugSplit ())
           PLDebugLog.debugSplit (this,
-                                 "Trying to split " +
+                                 "[hbox] Trying to split " +
                                        aColumnElement.getDebugID () +
                                        " with height " +
                                        fColumnHeight +
@@ -637,7 +639,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           aHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getSecondElement ().getHeightFull ());
           aHBox1ElementSizes[nCol] = new SizeSpec (fElementWidthNet, aSplitResult.getFirstElement ().getHeight ());
           aHBox2ElementSizes[nCol] = new SizeSpec (fElementWidthNet, aSplitResult.getSecondElement ().getHeight ());
-          bDidSplitAnyColumn = true;
+          nColsSplit++;
 
           if (PLDebugLog.isDebugSplit ())
             PLDebugLog.debugSplit (this,
@@ -702,11 +704,12 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
         aHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, 0);
         aHBox1ElementSizes[nCol] = new SizeSpec (fElementWidthNet, aColumnElement.getPreparedHeight ());
         aHBox2ElementSizes[nCol] = new SizeSpec (fElementWidthNet, 0);
+
+        nColsOnFirst++;
       }
       else
         if (bTo2)
         {
-          // No splitting and cell fits totally in available height
           aHBox2.getColumnAtIndex (nCol).internalSetElement (aColumnElement);
 
           aHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, 0);
@@ -716,6 +719,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                                                 aColumnElement.getOutlineYSum ());
           aHBox1ElementSizes[nCol] = new SizeSpec (fElementWidthNet, 0);
           aHBox2ElementSizes[nCol] = new SizeSpec (fElementWidthNet, aColumnElement.getPreparedHeight ());
+
+          nColsOnSecond++;
         }
 
       // calculate max column height
@@ -724,12 +729,20 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       fHBox1MaxHeightFull = Math.max (fHBox1MaxHeightFull, aHBox1ColumnSizes[nCol].getHeight ());
       fHBox2MaxHeightFull = Math.max (fHBox2MaxHeightFull, aHBox2ColumnSizes[nCol].getHeight ());
     }
+    assert nCols == nColsOnFirst + nColsSplit + nColsOnSecond;
 
-    if (!bDidSplitAnyColumn)
+    if (nCols == nColsOnFirst)
     {
       // Nothing was splitted
       if (PLDebugLog.isDebugSplit ())
-        PLDebugLog.debugSplit (this, "No column was split because its content could not be split!");
+        PLDebugLog.debugSplit (this, "No column was split because all its content fits on the first page!");
+      return PLSplitResult.allOnFirst ();
+    }
+    if (nCols == nColsOnSecond)
+    {
+      // Nothing was splitted
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "No column was split because all its content fits only on the second page!");
       return PLSplitResult.allOnSecond ();
     }
 
