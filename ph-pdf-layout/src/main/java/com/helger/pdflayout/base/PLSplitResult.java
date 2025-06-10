@@ -23,8 +23,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
 
 /**
- * This class represents the result of splitting as defined in
- * {@link IPLSplittableObject}.
+ * This class represents the result of splitting as defined in {@link IPLSplittableObject}.
  *
  * @author Philip Helger
  */
@@ -57,6 +56,8 @@ public class PLSplitResult
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("firstElement", m_aFirstElement).append ("secondElement", m_aSecondElement).getToString ();
+    return new ToStringGenerator (this).append ("FirstElement", m_aFirstElement)
+                                       .append ("SecondElement", m_aSecondElement)
+                                       .getToString ();
   }
 }
