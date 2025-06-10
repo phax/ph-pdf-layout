@@ -55,8 +55,8 @@ import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Represents a single page layout as element. It consists of a page size, a
- * page header and footer as well as a set of page body elements.
+ * Represents a single page layout as element. It consists of a page size, a page header and footer
+ * as well as a set of page body elements.
  *
  * @author Philip Helger
  */
@@ -107,8 +107,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return The page size as specified in the constructor. Never
-   *         <code>null</code>.
+   * @return The page size as specified in the constructor. Never <code>null</code>.
    * @see #getPageWidth()
    * @see #getPageHeight()
    */
@@ -119,8 +118,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return The page width as specified in the constructor. Never
-   *         <code>null</code>.
+   * @return The page width as specified in the constructor. Never <code>null</code>.
    * @see #getPageSize()
    * @see #getPageHeight()
    */
@@ -130,8 +128,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return The page height as specified in the constructor. Never
-   *         <code>null</code>.
+   * @return The page height as specified in the constructor. Never <code>null</code>.
    * @see #getPageSize()
    * @see #getPageWidth()
    */
@@ -241,8 +238,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   /**
    * @param aObj
    *        The object of which the outline should be subtracted.
-   * @return The usable page width without the x-paddings, x-borders and
-   *         x-margins
+   * @return The usable page width without the x-paddings, x-borders and x-margins
    */
   @Nonnegative
   private float _getAvailableWidth (@Nonnull final IPLHasMarginBorderPadding <?> aObj)
@@ -251,8 +247,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return The usable page width without the x-paddings, x-borders and
-   *         x-margins
+   * @return The usable page width without the x-paddings, x-borders and x-margins
    */
   @Nonnegative
   public float getAvailableWidth ()
@@ -263,8 +258,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   /**
    * @param aObj
    *        The object of which the outline should be subtracted.
-   * @return The usable page height without the y-paddings, y-borders and
-   *         y-margins
+   * @return The usable page height without the y-paddings, y-borders and y-margins
    */
   @Nonnegative
   private float _getAvailableHeight (@Nonnull final IPLHasMarginBorderPadding <?> aObj)
@@ -273,8 +267,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return The usable page height without the y-paddings, y-borders and
-   *         y-margins
+   * @return The usable page height without the y-paddings, y-borders and y-margins
    */
   @Nonnegative
   public float getAvailableHeight ()
@@ -283,8 +276,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return <code>true</code> if a special page header should be used on the
-   *         first page, <code>false</code> if the same header should be used.
+   * @return <code>true</code> if a special page header should be used on the first page,
+   *         <code>false</code> if the same header should be used.
    * @since 5.0.2
    */
   public boolean isDifferentFirstPageHeader ()
@@ -293,8 +286,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * Enable/disable usage of special header on the first page. To have an
-   * effect, {@link #setFirstPageHeader(IPLRenderableObject)} must be called
+   * Enable/disable usage of special header on the first page. To have an effect,
+   * {@link #setFirstPageHeader(IPLRenderableObject)} must be called
    *
    * @param bDifferentFirstPageHeader
    *        <code>true</code> for special page header on the first page
@@ -321,8 +314,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return <code>true</code> if a global first page header is present,
-   *         <code>false</code> if not.
+   * @return <code>true</code> if a global first page header is present, <code>false</code> if not.
    * @since 5.0.2
    */
   public boolean hasFirstPageHeader ()
@@ -358,8 +350,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return <code>true</code> if a global page header is present,
-   *         <code>false</code> if not.
+   * @return <code>true</code> if a global page header is present, <code>false</code> if not.
    */
   public boolean hasPageHeader ()
   {
@@ -416,8 +407,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return <code>true</code> if a special page footer should be used on the
-   *         first page, <code>false</code> if the same footer should be used.
+   * @return <code>true</code> if a special page footer should be used on the first page,
+   *         <code>false</code> if the same footer should be used.
    * @since 5.0.2
    */
   public boolean isDifferentFirstPageFooter ()
@@ -426,8 +417,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * Enable/disable usage of special footer on the first page. To have an
-   * effect, {@link #setFirstPageFooter(IPLRenderableObject)} must be called.
+   * Enable/disable usage of special footer on the first page. To have an effect,
+   * {@link #setFirstPageFooter(IPLRenderableObject)} must be called.
    *
    * @param bDifferentFirstPageFooter
    *        <code>true</code> for special page footer on the first page
@@ -454,8 +445,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return <code>true</code> if a global first page footer is present,
-   *         <code>false</code> if not.
+   * @return <code>true</code> if a global first page footer is present, <code>false</code> if not.
    * @since 5.0.2
    */
   public boolean hasFirstPageFooter ()
@@ -491,8 +481,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return <code>true</code> if a global page footer is present,
-   *         <code>false</code> if not.
+   * @return <code>true</code> if a global page footer is present, <code>false</code> if not.
    */
   public boolean hasPageFooter ()
   {
@@ -520,8 +509,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return The y-top of the page excluding top padding, top-border and
-   *         top-margin
+   * @return The y-top of the page excluding top padding, top-border and top-margin
    */
   public float getYTop ()
   {
@@ -803,11 +791,11 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
 
               final PLSplitResult aSplitResult = aElement.getAsSplittable ()
                                                          .splitElementVert (fElementPreparedWidth, fSplitHeight);
-              if (aSplitResult != null)
+              if (aSplitResult.getSplitResultType ().isSplit ())
                 assert fSplitHeight > 0;
               if (fSplitHeight <= 0)
-                assert aSplitResult == null;
-              if (aSplitResult != null)
+                assert !aSplitResult.getSplitResultType ().isSplit ();
+              if (aSplitResult.getSplitResultType ().isSplit ())
               {
                 // Re-add them to the list and try again (they may be splitted
                 // recursively)

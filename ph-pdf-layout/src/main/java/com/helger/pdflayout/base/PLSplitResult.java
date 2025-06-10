@@ -17,6 +17,7 @@
 package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.ValueEnforcer;
@@ -30,24 +31,33 @@ import com.helger.commons.string.ToStringGenerator;
 @Immutable
 public class PLSplitResult
 {
+  private final EPLSplitResultType m_eSplitResultType;
   private final PLElementWithSize m_aFirstElement;
   private final PLElementWithSize m_aSecondElement;
 
-  public PLSplitResult (@Nonnull final PLElementWithSize aFirstElement, @Nonnull final PLElementWithSize aSecondElement)
+  private PLSplitResult (@Nonnull final EPLSplitResultType eSplitResultType,
+                         @Nullable final PLElementWithSize aFirstElement,
+                         @Nullable final PLElementWithSize aSecondElement)
   {
-    ValueEnforcer.notNull (aFirstElement, "FirstElement");
-    ValueEnforcer.notNull (aSecondElement, "SecondElement");
+    ValueEnforcer.notNull (eSplitResultType, "SplitResultType");
+    m_eSplitResultType = eSplitResultType;
     m_aFirstElement = aFirstElement;
     m_aSecondElement = aSecondElement;
   }
 
   @Nonnull
+  public EPLSplitResultType getSplitResultType ()
+  {
+    return m_eSplitResultType;
+  }
+
+  @Nullable
   public PLElementWithSize getFirstElement ()
   {
     return m_aFirstElement;
   }
 
-  @Nonnull
+  @Nullable
   public PLElementWithSize getSecondElement ()
   {
     return m_aSecondElement;
@@ -59,5 +69,26 @@ public class PLSplitResult
     return new ToStringGenerator (this).append ("FirstElement", m_aFirstElement)
                                        .append ("SecondElement", m_aSecondElement)
                                        .getToString ();
+  }
+
+  @Nonnull
+  public static PLSplitResult create (@Nonnull final PLElementWithSize aFirstElement,
+                                      @Nonnull final PLElementWithSize aSecondElement)
+  {
+    ValueEnforcer.notNull (aFirstElement, "FirstElement");
+    ValueEnforcer.notNull (aSecondElement, "SecondElement");
+    return new PLSplitResult (EPLSplitResultType.SPLIT_SUCCESS, aFirstElement, aSecondElement);
+  }
+
+  @Nonnull
+  public static PLSplitResult allOnFirst ()
+  {
+    return new PLSplitResult (EPLSplitResultType.SPLIT_ALL_ON_FIRST, null, null);
+  }
+
+  @Nonnull
+  public static PLSplitResult allOnSecond ()
+  {
+    return new PLSplitResult (EPLSplitResultType.SPLIT_ALL_ON_SECOND, null, null);
   }
 }

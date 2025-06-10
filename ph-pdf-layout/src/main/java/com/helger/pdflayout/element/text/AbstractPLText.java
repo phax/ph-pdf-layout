@@ -468,7 +468,10 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       return m_fTextHeight;
 
     if (bLineSpacingAlsoOnLastLine)
+    {
+      // Use text height and line spacing for each line separately
       return nLineCount * m_fTextHeight * m_fLineSpacing;
+    }
 
     // The line height factor counts only between lines!
     return (nLineCount - 1) * m_fTextHeight * m_fLineSpacing + 1 * m_fTextHeight;
@@ -507,78 +510,78 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return new PLElementWithSize (aNewText, aSize);
   }
 
-  @Nullable
-  public PLSplitResult splitElementVert (final float fElementWidth, final float fAvailableHeight)
+  @Nonnull
+  public final PLSplitResult splitElementVert (final float fElementWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
-      return null;
+      return PLSplitResult.allOnSecond ();
 
     // Get the lines in the correct order from top to bottom
     final ICommonsList <TextAndWidthSpec> aLines = m_aPreparedLines;
 
-    int nLineCount = (int) ((fAvailableHeight + (m_fLineSpacing - 1f) * m_fTextHeight) /
-                            (m_fTextHeight * m_fLineSpacing));
-    if (nLineCount <= 0)
+    int nSplitLineCount = (int) ((fAvailableHeight + (m_fLineSpacing - 1f) * m_fTextHeight) /
+                                 (m_fTextHeight * m_fLineSpacing));
+    if (nSplitLineCount <= 0)
     {
       // Splitting makes no sense because the resulting text 1 would be empty
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this,
                                "Failed to split because the result would be " +
-                                     nLineCount +
+                                     nSplitLineCount +
                                      " lines for available height " +
                                      fAvailableHeight +
                                      " and line height " +
-                                     m_fTextHeight * m_fLineSpacing);
-      return null;
+                                     (m_fTextHeight * m_fLineSpacing));
+      return PLSplitResult.allOnSecond ();
     }
 
-    if (nLineCount >= aLines.size ())
+    if (nSplitLineCount >= aLines.size ())
     {
       // Splitting makes no sense because the resulting text 2 would be empty
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this,
                                "Failed to split because the result of " +
-                                     nLineCount +
+                                     nSplitLineCount +
                                      " lines fits into the available height " +
                                      fAvailableHeight +
                                      " and line height " +
-                                     m_fTextHeight * m_fLineSpacing +
+                                     (m_fTextHeight * m_fLineSpacing) +
                                      " (=" +
-                                     getDisplayHeightOfLineCount (nLineCount, true) +
+                                     getDisplayHeightOfLineCount (nSplitLineCount, true) +
                                      ")");
-      return null;
+      return PLSplitResult.allOnFirst ();
     }
 
-    // Calc estimated height
-    final float fExpectedHeight = getDisplayHeightOfLineCount (nLineCount, true);
+    // Calculate estimated height of the split lines
+    final float fExpectedHeight = getDisplayHeightOfLineCount (nSplitLineCount, true);
     if (fExpectedHeight > fAvailableHeight)
     {
       // Show one line less
-      --nLineCount;
-      if (nLineCount <= 0)
+      --nSplitLineCount;
+      if (nSplitLineCount <= 0)
       {
         // Splitting makes no sense
         if (PLDebugLog.isDebugSplit ())
           PLDebugLog.debugSplit (this,
                                  "Failed to split because the result would be " +
-                                       nLineCount +
+                                       nSplitLineCount +
                                        " lines for available height " +
                                        fAvailableHeight +
                                        " and expected height " +
                                        fExpectedHeight);
-        return null;
+        return PLSplitResult.allOnSecond ();
       }
     }
 
     // First elements does not need to be splittable anymore
-    final PLElementWithSize aText1 = _splitGetCopy (fElementWidth, aLines.subList (0, nLineCount), false, "-1");
+    final PLElementWithSize aText1 = _splitGetCopy (fElementWidth, aLines.subList (0, nSplitLineCount), false, "-1");
     // Second element may need additional splitting
     final PLElementWithSize aText2 = _splitGetCopy (fElementWidth,
-                                                    aLines.subList (nLineCount, aLines.size ()),
+                                                    aLines.subList (nSplitLineCount, aLines.size ()),
                                                     true,
                                                     "-2");
 
-    return new PLSplitResult (aText1, aText2);
+    return PLSplitResult.create (aText1, aText2);
   }
 
   @Override

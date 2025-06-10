@@ -468,7 +468,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     throw new UnsupportedOperationException ();
   }
 
-  @Nullable
+  @Nonnull
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     final float fSplitHeight = fAvailableHeight;
@@ -481,24 +481,24 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
                                    " and height " +
                                    fSplitHeight);
 
-    final PLSplitResult ret = m_aRows.splitElementVert (fAvailableWidth, fSplitHeight);
-    if (ret == null)
-      return ret;
+    final PLSplitResult aSplitResult = m_aRows.splitElementVert (fAvailableWidth, fSplitHeight);
+    if (!aSplitResult.getSplitResultType ().isSplit ())
+      return aSplitResult;
 
     final PLTable aTable1 = new PLTable (m_aWidths);
     aTable1.setID (getID () + "-1");
     aTable1.setBasicDataFrom (this);
-    aTable1.internalMarkAsPrepared (ret.getFirstElement ().getSize ());
-    aTable1.m_aRows = (PLVBox) ret.getFirstElement ().getElement ();
+    aTable1.internalMarkAsPrepared (aSplitResult.getFirstElement ().getSize ());
+    aTable1.m_aRows = (PLVBox) aSplitResult.getFirstElement ().getElement ();
 
     final PLTable aTable2 = new PLTable (m_aWidths);
     aTable2.setID (getID () + "-2");
     aTable2.setBasicDataFrom (this);
-    aTable2.internalMarkAsPrepared (ret.getSecondElement ().getSize ());
-    aTable2.m_aRows = (PLVBox) ret.getSecondElement ().getElement ();
+    aTable2.internalMarkAsPrepared (aSplitResult.getSecondElement ().getSize ());
+    aTable2.m_aRows = (PLVBox) aSplitResult.getSecondElement ().getElement ();
 
-    return new PLSplitResult (new PLElementWithSize (aTable1, ret.getFirstElement ().getSize ()),
-                              new PLElementWithSize (aTable2, ret.getSecondElement ().getSize ()));
+    return PLSplitResult.create (new PLElementWithSize (aTable1, aSplitResult.getFirstElement ().getSize ()),
+                                 new PLElementWithSize (aTable2, aSplitResult.getSecondElement ().getSize ()));
   }
 
   @Override

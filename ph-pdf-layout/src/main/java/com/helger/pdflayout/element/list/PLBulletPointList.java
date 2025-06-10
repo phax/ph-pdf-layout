@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
@@ -116,8 +115,9 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     return this;
   }
 
-  @Nullable
-  public final PLSplitResult splitElementVert (@Nonnegative final float fAvailableWidth, @Nonnegative final float fAvailableHeight)
+  @Nonnull
+  public final PLSplitResult splitElementVert (@Nonnegative final float fAvailableWidth,
+                                               @Nonnegative final float fAvailableHeight)
   {
     return m_aTable.splitElementVert (fAvailableWidth, fAvailableHeight);
   }

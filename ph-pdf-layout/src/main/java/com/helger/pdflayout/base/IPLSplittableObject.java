@@ -18,7 +18,6 @@ package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Base interface for a splittable element
@@ -46,9 +45,8 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
   SPLITTYPE internalCreateNewVertSplitObject (@Nonnull SPLITTYPE aBase);
 
   /**
-   * @return <code>true</code> if this element is vertically splittable,
-   *         <code>false</code> otherwise. The default is
-   *         {@link #DEFAULT_VERT_SPLITTABLE}.
+   * @return <code>true</code> if this element is vertically splittable, <code>false</code>
+   *         otherwise. The default is {@link #DEFAULT_VERT_SPLITTABLE}.
    */
   @Override
   boolean isVertSplittable ();
@@ -57,25 +55,22 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    * Change the vertical splitability of this object.
    *
    * @param bVertSplittable
-   *        <code>true</code> if this element is splittable, <code>false</code>
-   *        otherwise.
+   *        <code>true</code> if this element is splittable, <code>false</code> otherwise.
    * @return this for chaining
    */
   @Nonnull
   IMPLTYPE setVertSplittable (boolean bVertSplittable);
 
   /**
-   * Split this element vertically into sub-elements according to the available
-   * height. Splitting is always done after preparation and must return prepared
-   * objects!
+   * Split this element vertically into sub-elements according to the available height. Splitting is
+   * always done after preparation and must return prepared objects!
    *
    * @param fAvailableWidth
    *        The available width without outline of the element.
    * @param fAvailableHeight
-   *        The available height without outline of this element. Must be &ge;
-   *        0.
-   * @return <code>null</code> if splitting makes no sense.
+   *        The available height without outline of this element. Must be &ge; 0.
+   * @return Never <code>null</code>. The splitting result type should explain the status.
    */
-  @Nullable
+  @Nonnull
   PLSplitResult splitElementVert (@Nonnegative float fAvailableWidth, @Nonnegative float fAvailableHeight);
 }

@@ -30,6 +30,8 @@ import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
+import com.helger.pdflayout.debug.PLDebugLog;
+import com.helger.pdflayout.debug.PLDebugLog.PLDebugOutputLogger;
 import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLPageBreak;

@@ -38,16 +38,16 @@ import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * A box is a simple element that encapsulates another element and has a
- * padding, border and margin itself as well as it can align the contained
- * element.
+ * A box is a simple element that encapsulates another element and has a padding, border and margin
+ * itself as well as it can align the contained element.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        Implementation type
  * @since 6.0.1
  */
-public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE> implements
+public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox <IMPLTYPE>> extends
+                                          AbstractPLElement <IMPLTYPE> implements
                                           IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
   private IPLRenderableObject <?> m_aElement;
@@ -81,8 +81,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
   }
 
   /**
-   * @return <code>true</code> if an element is contained, <code>false</code> if
-   *         not.
+   * @return <code>true</code> if an element is contained, <code>false</code> if not.
    */
   public final boolean hasElement ()
   {
@@ -136,9 +135,8 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
   }
 
   /**
-   * @return The prepared size of the contained element. May be
-   *         <code>null</code> if this box was not yet prepared or if no element
-   *         is contained.
+   * @return The prepared size of the contained element. May be <code>null</code> if this box was
+   *         not yet prepared or if no element is contained.
    */
   @Nullable
   protected final SizeSpec getElementPreparedSize ()
@@ -163,7 +161,9 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
-    final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (), fElementWidth, fElementHeight);
+    final PreparationContext aElementCtx = new PreparationContext (aCtx.getGlobalContext (),
+                                                                   fElementWidth,
+                                                                   fElementHeight);
     internalSetElementPreparedSize (m_aElement.prepare (aElementCtx));
 
     // Add the outer stuff of the contained element as this elements prepared
@@ -180,11 +180,11 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
       ((AbstractPLRenderableObject <?>) m_aElement).internalMarkAsNotPrepared ();
   }
 
-  @Nullable
-  public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
+  @Nonnull
+  public final PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
-      return null;
+      return PLSplitResult.allOnSecond ();
 
     final float fBoxHeight = getPreparedHeight ();
     if (fBoxHeight <= fAvailableHeight)
@@ -192,14 +192,16 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
       // Splitting makes no sense!
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this, "Splitting makes no sense, because Box 2 would be empty");
-      return null;
+      return PLSplitResult.allOnFirst ();
     }
 
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLInlineBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1").setVertSplittable (false);
-    final AbstractPLInlineBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2").setVertSplittable (true);
+    final AbstractPLInlineBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+                                                                                       .setVertSplittable (false);
+    final AbstractPLInlineBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+                                                                                       .setVertSplittable (true);
 
     // Set min width/max width from source
     // Don't use the height, because on vertically split elements, the height is
@@ -211,9 +213,6 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
 
     float fBox1UsedHeight = 0;
     float fBox2UsedHeight = 0;
-
-    SizeSpec aBox1ElementPreparedSize = null;
-    SizeSpec aBox2ElementPreparedSize = null;
 
     // Try split
     final float fSplitWidth = getElementPreparedSize ().getWidth ();
@@ -227,24 +226,24 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
 
     // Try to split the element contained in the row
     final PLSplitResult aSplitResult = aElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
-    if (aSplitResult == null)
+    if (!aSplitResult.getSplitResultType ().isSplit ())
     {
       // Splitting makes no sense!
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this, "Splitting makes no sense, because Box 2 would be empty");
-      return null;
+      return aSplitResult;
     }
 
     // Splitting succeeded
     final IPLRenderableObject <?> aBox1Element = aSplitResult.getFirstElement ().getElement ();
     aBox1.setElement (aBox1Element);
     fBox1UsedHeight += aSplitResult.getFirstElement ().getHeightFull ();
-    aBox1ElementPreparedSize = aSplitResult.getFirstElement ().getSize ();
+    final SizeSpec aBox1ElementPreparedSize = aSplitResult.getFirstElement ().getSize ();
 
     final IPLRenderableObject <?> aBox2Element = aSplitResult.getSecondElement ().getElement ();
     aBox2.setElement (aBox2Element);
     fBox2UsedHeight += aSplitResult.getSecondElement ().getHeightFull ();
-    aBox2ElementPreparedSize = aSplitResult.getSecondElement ().getSize ();
+    final SizeSpec aBox2ElementPreparedSize = aSplitResult.getSecondElement ().getSize ();
 
     if (PLDebugLog.isDebugSplit ())
       PLDebugLog.debugSplit (this,
@@ -279,8 +278,8 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     aBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox2UsedHeight));
     aBox2.internalSetElementPreparedSize (aBox2ElementPreparedSize);
 
-    return new PLSplitResult (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
-                              new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
+    return PLSplitResult.create (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
+                                 new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
   }
 
   @Override
@@ -294,7 +293,11 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     {
       final float fStartLeft = aCtx.getStartLeft () + getOutlineLeft ();
       final float fStartTop = aCtx.getStartTop () - getOutlineTop ();
-      final PageRenderContext aElementCtx = new PageRenderContext (aCtx, fStartLeft, fStartTop, getRenderWidth (), getRenderHeight ());
+      final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
+                                                                   fStartLeft,
+                                                                   fStartTop,
+                                                                   getRenderWidth (),
+                                                                   getRenderHeight ());
       m_aElement.render (aElementCtx);
     }
     else

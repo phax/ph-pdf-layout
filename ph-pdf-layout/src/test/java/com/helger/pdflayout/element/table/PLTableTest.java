@@ -44,6 +44,8 @@ import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
+import com.helger.pdflayout.debug.PLDebugLog;
+import com.helger.pdflayout.debug.PLDebugLog.PLDebugOutputLogger;
 import com.helger.pdflayout.debug.PLDebugRender;
 import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
@@ -811,6 +813,10 @@ public final class PLTableTest
   @Test
   public void testIssue21 () throws PDFCreationException
   {
+    PLDebugLog.setDebugAll (false);
+    PLDebugLog.setDebugSplit (true);
+    PLDebugLog.setDebugOutput (PLDebugOutputLogger.INSTANCE);
+
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 

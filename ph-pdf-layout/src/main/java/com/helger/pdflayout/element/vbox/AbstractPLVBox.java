@@ -699,18 +699,20 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         ((AbstractPLRenderableObject <?>) aRow.getElement ()).internalMarkAsNotPrepared ();
   }
 
-  @Nullable
-  public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
+  @Nonnull
+  public final PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
-      return null;
+      return PLSplitResult.allOnSecond ();
+
     if (!containsAnyVertSplittableElement ())
     {
       // Splitting makes no sense
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this, "Cannot split because no vertical splittable elements are contained");
-      return null;
+      return PLSplitResult.allOnSecond ();
     }
+
     // Create resulting VBoxes - the first one is not splittable again!
     final AbstractPLVBox <?> aVBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
                                                                                    .setVertSplittable (false);
@@ -776,7 +778,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
             // Try to split the element contained in the row
             final PLSplitResult aSplitResult = aRowElement.getAsSplittable ()
                                                           .splitElementVert (fSplitWidth, fSplitHeight);
-            if (aSplitResult != null)
+            if (aSplitResult.getSplitResultType ().isSplit ())
             {
               final IPLRenderableObject <?> aVBox1RowElement = aSplitResult.getFirstElement ().getElement ();
               aVBox1.addRow (aVBox1RowElement);
@@ -800,21 +802,21 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                              aVBox1RowElement.getDebugID () +
                                              " (" +
                                              aSplitResult.getFirstElement ().getWidth () +
-                                             "+" +
+                                             " + " +
                                              aVBox1RowElement.getOutlineXSum () +
                                              " & " +
                                              aSplitResult.getFirstElement ().getHeight () +
-                                             "+" +
+                                             " + " +
                                              aVBox1RowElement.getOutlineYSum () +
                                              ") and " +
                                              aVBox2RowElement.getDebugID () +
                                              " (" +
                                              aSplitResult.getSecondElement ().getWidth () +
-                                             "+" +
+                                             " + " +
                                              aVBox2RowElement.getOutlineXSum () +
                                              " & " +
                                              aSplitResult.getSecondElement ().getHeight () +
-                                             "+" +
+                                             " + " +
                                              aVBox2RowElement.getOutlineYSum () +
                                              ")");
               bSplittedRow = true;
@@ -856,25 +858,14 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       // Splitting makes no sense!
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this, "Splitting makes no sense, because VBox 1 would be empty");
-      return null;
+      return PLSplitResult.allOnSecond ();
     }
     if (aVBox2.getRowCount () == m_nHeaderRowCount)
     {
       // Splitting makes no sense!
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this, "Splitting makes no sense, because VBox 2 would be empty");
-      return null;
-    }
-
-    if (fUsedVBox1RowHeight > fAvailableHeight)
-    {
-      if (PLDebugLog.isDebugSplit ())
-        PLDebugLog.debugSplit (this,
-                               "Splitting makes no sense -- VBox1RowHeight: " +
-                                     fUsedVBox1RowHeight +
-                                     " exceeds available height: " +
-                                     fAvailableHeight);
-      return null;
+      return PLSplitResult.allOnFirst ();
     }
 
     // Excluding padding/margin
@@ -886,8 +877,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     aVBox2.m_aPreparedRowSize = ArrayHelper.newArray (aVBox2RowSize, SizeSpec.class);
     aVBox2.m_aPreparedElementSize = ArrayHelper.newArray (aVBox2ElementSize, SizeSpec.class);
 
-    return new PLSplitResult (new PLElementWithSize (aVBox1, new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
-                              new PLElementWithSize (aVBox2, new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight)));
+    return PLSplitResult.create (new PLElementWithSize (aVBox1, new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
+                                 new PLElementWithSize (aVBox2, new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight)));
   }
 
   @Override
