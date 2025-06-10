@@ -49,13 +49,13 @@ public final class PLElementWithSize
   }
 
   /**
-   * Constructor. This constructor is only present for the unlikely case that
-   * the full size differs from the raw size with all the outlines added.
+   * Constructor. This constructor is only present for the unlikely case that the full size differs
+   * from the raw size with all the outlines added.
    *
    * @param aElement
    *        Element itself.
    * @param aSize
-   *        Size of the element without padding and margin
+   *        Size of the element without padding, border and margin
    * @param aSizeFull
    *        Size of the element with padding, border and margin
    */
@@ -81,7 +81,7 @@ public final class PLElementWithSize
   }
 
   /**
-   * @return The size without padding or margin
+   * @return The size without padding, border or margin
    */
   @Nonnull
   public SizeSpec getSize ()
@@ -90,7 +90,7 @@ public final class PLElementWithSize
   }
 
   /**
-   * @return The size with padding or margin
+   * @return The size with padding, border or margin
    */
   @Nonnull
   public SizeSpec getSizeFull ()
@@ -99,7 +99,7 @@ public final class PLElementWithSize
   }
 
   /**
-   * @return Width without padding or margin
+   * @return Width without padding, border or margin
    */
   public float getWidth ()
   {
@@ -107,7 +107,7 @@ public final class PLElementWithSize
   }
 
   /**
-   * @return Width with padding and margin
+   * @return Width with padding, border and margin
    */
   public float getWidthFull ()
   {
@@ -115,7 +115,7 @@ public final class PLElementWithSize
   }
 
   /**
-   * @return Height without padding or margin
+   * @return Height without padding, border or margin
    */
   public float getHeight ()
   {
@@ -123,7 +123,7 @@ public final class PLElementWithSize
   }
 
   /**
-   * @return Height with padding and margin
+   * @return Height with padding, border and margin
    */
   public float getHeightFull ()
   {
@@ -133,9 +133,9 @@ public final class PLElementWithSize
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("element", m_aElement)
-                                       .append ("size", m_aSize)
-                                       .append ("sizeFull", m_aSizeFull)
+    return new ToStringGenerator (this).append ("Element", m_aElement)
+                                       .append ("Size", m_aSize)
+                                       .append ("SizeFull", m_aSizeFull)
                                        .getToString ();
   }
 }
