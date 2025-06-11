@@ -584,7 +584,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                                                     true,
                                                     "-2");
 
-    return PLSplitResult.create (aText1, aText2);
+    return PLSplitResult.createSplit (aText1, aText2);
   }
 
   @Override

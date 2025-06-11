@@ -10,7 +10,7 @@ import com.helger.commons.lang.EnumHelper;
  * Possible line cap styles.
  *
  * @author Philip Helger
- * @since 7.3.8
+ * @since 7.4.0
  */
 public enum ELineCapStyle implements IHasIntID
 {

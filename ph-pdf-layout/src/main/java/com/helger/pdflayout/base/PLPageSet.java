@@ -964,7 +964,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
         PLDebugLog.debugRender (this,
                                 "Start rendering page index " +
                                       nPageIndex +
-                                      " (" +
+                                      " (total " +
                                       (nTotalPageStartIndex + nPageIndex) +
                                       ") with page size " +
                                       PLDebugLog.getWH (getPageWidth (), getPageHeight ()) +

@@ -24,39 +24,43 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLSplittableObject;
+import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
+import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * A horizontal spacer
+ * A two-dimensional spacer
  *
  * @author Philip Helger
+ * @since 7.4.0
  */
-public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
-                       IPLSplittableObject <PLSpacerX, PLSpacerX>
+public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implements
+                        IPLSplittableObject <PLSpacerXY, PLSpacerXY>
 {
-  private static final float HEIGHT_ZERO = 0f;
-
-  private float m_fWidth = -1;
+  private float m_fWidth;
+  private float m_fHeight;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
 
-  public PLSpacerX ()
+  private PLSpacerXY ()
   {}
 
-  public PLSpacerX (final float fWidth)
+  public PLSpacerXY (final float fWidth, final float fHeight)
   {
     setWidth (fWidth);
+    setHeight (fHeight);
   }
 
   @Override
   @Nonnull
   @OverridingMethodsMustInvokeSuper
-  public PLSpacerX setBasicDataFrom (@Nonnull final PLSpacerX aSource)
+  public PLSpacerXY setBasicDataFrom (@Nonnull final PLSpacerXY aSource)
   {
     super.setBasicDataFrom (aSource);
     setWidth (aSource.m_fWidth);
+    setHeight (aSource.m_fHeight);
     setVertSplittable (aSource.m_bVertSplittable);
     return this;
   }
@@ -67,9 +71,21 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
   }
 
   @Nonnull
-  public final PLSpacerX setWidth (final float fWidth)
+  public final PLSpacerXY setWidth (final float fWidth)
   {
     m_fWidth = fWidth;
+    return this;
+  }
+
+  public final float getHeight ()
+  {
+    return m_fHeight;
+  }
+
+  @Nonnull
+  public final PLSpacerXY setHeight (final float fHeight)
+  {
+    m_fHeight = fHeight;
     return this;
   }
 
@@ -77,9 +93,10 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
   protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
   {
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
+    final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
     // Use the fixed width
-    return new SizeSpec (m_fWidth > 0 ? m_fWidth : fElementWidth, HEIGHT_ZERO);
+    return new SizeSpec (Math.min (m_fWidth, fElementWidth), Math.min (m_fHeight, fElementHeight));
   }
 
   @Override
@@ -94,7 +111,7 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
   }
 
   @Nonnull
-  public final PLSpacerX setVertSplittable (final boolean bVertSplittable)
+  public final PLSpacerXY setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
     return this;
@@ -102,9 +119,9 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
 
   @Override
   @Nonnull
-  public PLSpacerX internalCreateNewVertSplitObject (@Nonnull final PLSpacerX aBase)
+  public PLSpacerXY internalCreateNewVertSplitObject (@Nonnull final PLSpacerXY aBase)
   {
-    final PLSpacerX ret = new PLSpacerX ();
+    final PLSpacerXY ret = new PLSpacerXY ();
     ret.setBasicDataFrom (aBase);
     return ret;
   }
@@ -112,8 +129,30 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
   @Nonnull
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
-    // Because height is 0, it always fits on the first page
-    return PLSplitResult.allOnFirst ();
+    // Prepared height may be 0 as well
+    final float fPreparedHeight = getPreparedHeight ();
+    if (fPreparedHeight <= fAvailableHeight)
+    {
+      // Splitting makes no sense!
+      if (PLDebugLog.isDebugSplit ())
+        PLDebugLog.debugSplit (this, "Splitting makes no sense, because part 2 would be empty");
+      return PLSplitResult.allOnFirst ();
+    }
+
+    if (fAvailableHeight <= 0)
+      return PLSplitResult.allOnSecond ();
+
+    final float fSpacer1Height = fAvailableHeight;
+    final float fSpacer2Height = fPreparedHeight - fAvailableHeight;
+
+    final PLSpacerXY aSpacer1 = new PLSpacerXY (m_fWidth, fSpacer1Height);
+    aSpacer1.internalMarkAsPrepared (new SizeSpec (m_fWidth, fSpacer1Height));
+
+    final PLSpacerXY aSpacer2 = new PLSpacerXY (m_fWidth, fSpacer2Height);
+    aSpacer2.internalMarkAsPrepared (new SizeSpec (m_fWidth, fSpacer2Height));
+
+    return PLSplitResult.createSplit (new PLElementWithSize (aSpacer1, new SizeSpec (m_fWidth, fSpacer1Height)),
+                                      new PLElementWithSize (aSpacer2, new SizeSpec (m_fWidth, fSpacer2Height)));
   }
 
   @Override
@@ -127,15 +166,16 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
   {
     return ToStringGenerator.getDerived (super.toString ())
                             .append ("Width", m_fWidth)
+                            .append ("Height", m_fHeight)
                             .append ("VertSplittable", m_bVertSplittable)
                             .getToString ();
   }
 
   @Nonnull
-  public static PLSpacerX createPrepared (final float fWidth)
+  public static PLSpacerXY createPrepared (final float fWidth, final float fHeight)
   {
-    final PLSpacerX ret = new PLSpacerX (fWidth);
-    ret.prepare (new PreparationContext (null, fWidth, HEIGHT_ZERO));
+    final PLSpacerXY ret = new PLSpacerXY (fWidth, fHeight);
+    ret.prepare (new PreparationContext (null, fWidth, fHeight));
     return ret;
   }
 }

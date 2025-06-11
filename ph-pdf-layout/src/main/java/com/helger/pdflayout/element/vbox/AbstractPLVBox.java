@@ -724,7 +724,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox1RowHeight = 0;
 
-    // Copy all header rows to both boxes
+    // Copy all header rows to both new VBoxes
     for (int nRow = 0; nRow < m_nHeaderRowCount; ++nRow)
     {
       final IPLRenderableObject <?> aHeaderRowElement = getRowElementAtIndex (nRow);
@@ -877,7 +877,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     aVBox2.m_aPreparedRowSize = ArrayHelper.newArray (aVBox2RowSize, SizeSpec.class);
     aVBox2.m_aPreparedElementSize = ArrayHelper.newArray (aVBox2ElementSize, SizeSpec.class);
 
-    return PLSplitResult.create (new PLElementWithSize (aVBox1, new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
+    return PLSplitResult.createSplit (new PLElementWithSize (aVBox1, new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
                                  new PLElementWithSize (aVBox2, new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight)));
   }
 

@@ -30,7 +30,6 @@ import javax.imageio.ImageIO;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
@@ -44,8 +43,6 @@ import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.AbstractPLElement;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
-import com.helger.pdflayout.debug.PLDebugLog;
-import com.helger.pdflayout.debug.PLDebugLog.PLDebugOutputLogger;
 import com.helger.pdflayout.debug.PLDebugRender;
 import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
@@ -73,7 +70,7 @@ import com.helger.pdflayout.spec.WidthSpec;
 public final class PLTableTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule ();
+  public final PLDebugTestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -526,7 +523,7 @@ public final class PLTableTest
                                                        10);
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (3).setID ("table");
     aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("celllongtext"),
-                            new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),
+                            new PLTableCell (new PLSpacerX ().setID ("empty")).setID ("cellempty"),
                             new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID (
                                                                                                         "cellshorttext"))
           .setID ("row");
@@ -556,7 +553,7 @@ public final class PLTableTest
     {
       aTable.addAndReturnRow (new PLTableCell (new PLText (sLongText, r10).setID ("longtext").setPadding (2)).setID (
                                                                                                                      "celllongtext"),
-                              new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cellempty"),
+                              new PLTableCell (new PLSpacerX ().setWidth (0).setID ("empty")).setID ("cellempty"),
                               new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID (
                                                                                                           "cellshorttext"))
             .setID ("row" + i);
@@ -633,7 +630,7 @@ public final class PLTableTest
     {
       aTable.addAndReturnRow (new PLTableCell (new PLText (Integer.toString (i), r10).setID ("idx")).setID ("cell-idx"),
                               new PLTableCell (new PLText (sLongText, r10).setID ("longtext")).setID ("cell-longtext"),
-                              new PLTableCell (new PLSpacerX (0).setID ("empty")).setID ("cell-empty"),
+                              new PLTableCell (new PLSpacerX ().setWidth (0).setID ("empty")).setID ("cell-empty"),
                               new PLTableCell (new PLText ("Short text", r10).setID ("shorttext")).setID (
                                                                                                           "cell-shorttext"))
             .setID ("row-content-" + i)
@@ -813,13 +810,6 @@ public final class PLTableTest
   @Test
   public void testIssue21 () throws PDFCreationException
   {
-    if (true)
-    {
-      PLDebugLog.setDebugAll (false);
-      PLDebugLog.setDebugSplit (true);
-      PLDebugLog.setDebugOutput (PLDebugOutputLogger.INSTANCE);
-    }
-
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
@@ -866,10 +856,10 @@ public final class PLTableTest
     final PLTable aOuterTable = new PLTable (WidthSpec.perc (25), WidthSpec.star ()).setID ("outer-table");
     for (int i = 0; i < 25; ++i)
     {
-      final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70));
+      final PLTable aInnerTable = new PLTable (WidthSpec.perc (30), WidthSpec.perc (70)).setID ("inner-table-" + i);
       for (int j = 0; j < 4; ++j)
         aInnerTable.addAndReturnRow (new PLTableCell (new PLText (sShortText, r10)),
-                                     new PLTableCell (new PLText (sShortText, r10)));
+                                     new PLTableCell (new PLText (sShortText, r10))).setID ("inner-row" + j);
       EPLTableGridType.FULL.applyGridToTable (aInnerTable, new BorderStyleSpec (PLColor.GREEN));
 
       // Place text in box, and add padding to box instead of the table

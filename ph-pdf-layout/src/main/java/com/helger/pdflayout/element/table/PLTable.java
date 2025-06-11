@@ -135,7 +135,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
 
   @Override
   @OverridingMethodsMustInvokeSuper
-  protected void onAfterSetID ()
+  protected void onAfterSetID (@Nullable final String sOldElementID)
   {
     // Also change the derived ID
     m_aRows.setID (getID () + "-vbox");
@@ -497,8 +497,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     aTable2.internalMarkAsPrepared (aSplitResult.getSecondElement ().getSize ());
     aTable2.m_aRows = (PLVBox) aSplitResult.getSecondElement ().getElement ();
 
-    return PLSplitResult.create (new PLElementWithSize (aTable1, aSplitResult.getFirstElement ().getSize ()),
-                                 new PLElementWithSize (aTable2, aSplitResult.getSecondElement ().getSize ()));
+    return PLSplitResult.createSplit (new PLElementWithSize (aTable1, aSplitResult.getFirstElement ().getSize ()),
+                                      new PLElementWithSize (aTable2, aSplitResult.getSecondElement ().getSize ()));
   }
 
   @Override

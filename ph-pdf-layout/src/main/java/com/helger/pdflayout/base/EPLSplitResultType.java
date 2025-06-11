@@ -4,7 +4,7 @@ package com.helger.pdflayout.base;
  * Define the split result type
  *
  * @author Philip Helger
- * @since 7.3.8
+ * @since 7.4.0
  */
 public enum EPLSplitResultType
 {

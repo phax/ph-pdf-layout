@@ -21,7 +21,6 @@ import java.io.File;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.pdflayout.PDFCreationException;
@@ -30,8 +29,6 @@ import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
-import com.helger.pdflayout.debug.PLDebugLog;
-import com.helger.pdflayout.debug.PLDebugLog.PLDebugOutputLogger;
 import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLPageBreak;
@@ -52,7 +49,7 @@ import com.helger.pdflayout.spec.WidthSpec;
 public final class PLVBoxTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule ();
+  public final PLDebugTestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -323,6 +320,7 @@ public final class PLVBoxTest
   @Test
   public void testSplittableContentSplittable () throws PDFCreationException
   {
+    m_aRule.enableLogging ();
     final String s = "This is a test String\nwith 2 lines";
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);

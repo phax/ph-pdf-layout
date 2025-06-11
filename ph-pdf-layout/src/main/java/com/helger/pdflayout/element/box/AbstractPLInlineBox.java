@@ -278,7 +278,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     aBox2.internalMarkAsPrepared (new SizeSpec (fAvailableWidth, fBox2UsedHeight));
     aBox2.internalSetElementPreparedSize (aBox2ElementPreparedSize);
 
-    return PLSplitResult.create (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
+    return PLSplitResult.createSplit (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
                                  new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
   }
 

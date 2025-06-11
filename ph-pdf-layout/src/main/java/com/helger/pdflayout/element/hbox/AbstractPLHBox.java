@@ -40,7 +40,7 @@ import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.debug.PLDebugLog;
-import com.helger.pdflayout.element.special.PLSpacerX;
+import com.helger.pdflayout.element.special.PLSpacerXY;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -514,7 +514,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
                                                                                 final float fWidth,
                                                                                 final float fHeight)
   {
-    return PLSpacerX.createPrepared (fWidth, 0);
+    return PLSpacerXY.createPrepared (fWidth, fHeight);
   }
 
   @Nonnull
@@ -522,14 +522,6 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   {
     if (fAvailableHeight <= 0)
       return PLSplitResult.allOnSecond ();
-
-    if (!containsAnyVertSplittableElement ())
-    {
-      // Splitting makes no sense
-      if (PLDebugLog.isDebugSplit ())
-        PLDebugLog.debugSplit (this, "Cannot split because no vertical splittable elements are contained");
-      return PLSplitResult.allOnSecond ();
-    }
 
     final int nCols = m_aColumns.size ();
 
@@ -580,11 +572,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       final IPLRenderableObject <?> aSrcElement = aColumn.getElement ();
       aHBox1.addColumn (internalCreateVertSplitEmptyElement (aSrcElement, fColumnWidth, fColumnHeight).setID (
                                                                                                               aSrcElement.getID () +
-                                                                                                              "-1"),
+                                                                                                              "-1-col-" +
+                                                                                                              i),
                         aColumnWidth);
       aHBox2.addColumn (internalCreateVertSplitEmptyElement (aSrcElement, fColumnWidth, fColumnHeight).setID (
                                                                                                               aSrcElement.getID () +
-                                                                                                              "-2"),
+                                                                                                              "-2-col-" +
+                                                                                                              i),
                         aColumnWidth);
     }
 
@@ -609,94 +603,105 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       final float fColumnHeight = m_aPreparedColumnSizes[nCol].getHeight ();
       final float fElementWidthNet = m_aPreparedElementSizes[nCol].getWidth ();
 
-      PLSplitResult aSplitResult = null;
-      if (fColumnHeight > fAvailableHeight && bIsSplittable)
+      final PLSplitResult aSplitResult;
+      if (fColumnHeight > fAvailableHeight)
       {
-        final float fSplitWidth = fElementWidthNet;
-        final float fSplitHeight = fAvailableHeight - aColumnElement.getOutlineYSum ();
-        if (PLDebugLog.isDebugSplit ())
-          PLDebugLog.debugSplit (this,
-                                 "[hbox] Trying to split " +
-                                       aColumnElement.getDebugID () +
-                                       " with height " +
-                                       fColumnHeight +
-                                       " into pieces for remaining size " +
-                                       PLDebugLog.getWH (fSplitWidth, fSplitHeight));
-
-        // Use width and height without padding and margin!
-        aSplitResult = aColumnElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
-        if (aSplitResult.getSplitResultType ().isSplit ())
+        if (bIsSplittable)
         {
-          final IPLRenderableObject <?> aHBox1Element = aSplitResult.getFirstElement ().getElement ();
-          aHBox1.getColumnAtIndex (nCol).internalSetElement (aHBox1Element);
-
-          final IPLRenderableObject <?> aHBox2Element = aSplitResult.getSecondElement ().getElement ();
-          aHBox2.getColumnAtIndex (nCol).internalSetElement (aHBox2Element);
-
-          // Use the full height, because the column itself has no padding or
-          // margin!
-          aHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getFirstElement ().getHeightFull ());
-          aHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getSecondElement ().getHeightFull ());
-          aHBox1ElementSizes[nCol] = new SizeSpec (fElementWidthNet, aSplitResult.getFirstElement ().getHeight ());
-          aHBox2ElementSizes[nCol] = new SizeSpec (fElementWidthNet, aSplitResult.getSecondElement ().getHeight ());
-          nColsSplit++;
-
+          final float fSplitWidth = fElementWidthNet;
+          final float fSplitHeight = fAvailableHeight - aColumnElement.getOutlineYSum ();
           if (PLDebugLog.isDebugSplit ())
             PLDebugLog.debugSplit (this,
-                                   "Split column element " +
+                                   "[hbox] Trying to split " +
                                          aColumnElement.getDebugID () +
-                                         " (Column " +
-                                         nCol +
-                                         ") into pieces: " +
-                                         aHBox1Element.getDebugID () +
-                                         " (" +
-                                         aSplitResult.getFirstElement ().getWidth () +
-                                         " + " +
-                                         aHBox1Element.getOutlineXSum () +
-                                         " & " +
-                                         aSplitResult.getFirstElement ().getHeight () +
-                                         " + " +
-                                         aHBox1Element.getOutlineYSum () +
-                                         ") and " +
-                                         aHBox2Element.getDebugID () +
-                                         " (" +
-                                         aSplitResult.getSecondElement ().getWidth () +
-                                         " + " +
-                                         aHBox2Element.getOutlineXSum () +
-                                         " & " +
-                                         aSplitResult.getSecondElement ().getHeight () +
-                                         " + " +
-                                         aHBox2Element.getOutlineYSum () +
-                                         ") for available height " +
-                                         fAvailableHeight);
+                                         " with height " +
+                                         fColumnHeight +
+                                         " into pieces for remaining size " +
+                                         PLDebugLog.getWH (fSplitWidth, fSplitHeight));
+
+          // Use width and height without padding and margin!
+          aSplitResult = aColumnElement.getAsSplittable ().splitElementVert (fSplitWidth, fSplitHeight);
+          if (aSplitResult.getSplitResultType ().isSplit ())
+          {
+            final IPLRenderableObject <?> aHBox1Element = aSplitResult.getFirstElement ().getElement ();
+            aHBox1.getColumnAtIndex (nCol).internalSetElement (aHBox1Element);
+
+            final IPLRenderableObject <?> aHBox2Element = aSplitResult.getSecondElement ().getElement ();
+            aHBox2.getColumnAtIndex (nCol).internalSetElement (aHBox2Element);
+
+            // Use the full height, because the column itself has no padding or
+            // margin!
+            aHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getFirstElement ().getHeightFull ());
+            aHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth, aSplitResult.getSecondElement ().getHeightFull ());
+            aHBox1ElementSizes[nCol] = new SizeSpec (fElementWidthNet, aSplitResult.getFirstElement ().getHeight ());
+            aHBox2ElementSizes[nCol] = new SizeSpec (fElementWidthNet, aSplitResult.getSecondElement ().getHeight ());
+            nColsSplit++;
+
+            if (PLDebugLog.isDebugSplit ())
+              PLDebugLog.debugSplit (this,
+                                     "Split column element " +
+                                           aColumnElement.getDebugID () +
+                                           " (Column " +
+                                           nCol +
+                                           ") into pieces: " +
+                                           aHBox1Element.getDebugID () +
+                                           " (" +
+                                           aSplitResult.getFirstElement ().getWidth () +
+                                           " + " +
+                                           aHBox1Element.getOutlineXSum () +
+                                           " & " +
+                                           aSplitResult.getFirstElement ().getHeight () +
+                                           " + " +
+                                           aHBox1Element.getOutlineYSum () +
+                                           ") and " +
+                                           aHBox2Element.getDebugID () +
+                                           " (" +
+                                           aSplitResult.getSecondElement ().getWidth () +
+                                           " + " +
+                                           aHBox2Element.getOutlineXSum () +
+                                           " & " +
+                                           aSplitResult.getSecondElement ().getHeight () +
+                                           " + " +
+                                           aHBox2Element.getOutlineYSum () +
+                                           ") for available height " +
+                                           fAvailableHeight);
+          }
+          else
+          {
+            if (PLDebugLog.isDebugSplit ())
+              PLDebugLog.debugSplit (this,
+                                     "Failed to split column element " +
+                                           aColumnElement.getDebugID () +
+                                           " (Column " +
+                                           nCol +
+                                           ") with height " +
+                                           fColumnHeight +
+                                           " into pieces for available height " +
+                                           fAvailableHeight +
+                                           " (" +
+                                           aSplitResult.getSplitResultType () +
+                                           ")");
+          }
         }
         else
         {
-          if (PLDebugLog.isDebugSplit ())
-            PLDebugLog.debugSplit (this,
-                                   "Failed to split column element " +
-                                         aColumnElement.getDebugID () +
-                                         " (Column " +
-                                         nCol +
-                                         ") with height " +
-                                         fColumnHeight +
-                                         " into pieces for available height " +
-                                         fAvailableHeight +
-                                         " (" +
-                                         aSplitResult.getSplitResultType () +
-                                         ")");
+          // Too large, and not splittable
+          aSplitResult = PLSplitResult.allOnSecond ();
         }
       }
+      else
+      {
+        // Fits on the first page
+        aSplitResult = PLSplitResult.allOnFirst ();
+      }
 
-      boolean bTo1 = aSplitResult == null || aSplitResult.getSplitResultType ().isAllOnFirst ();
-      if (true)
-        bTo1 = aSplitResult == null || !aSplitResult.getSplitResultType ().isSplit ();
+      final boolean bTo1 = aSplitResult.getSplitResultType ().isAllOnFirst ();
       final boolean bTo2 = !bTo1 && aSplitResult.getSplitResultType ().isAllOnSecond ();
 
       if (bTo1)
       {
-        // No splitting and cell fits totally in available height
         aHBox1.getColumnAtIndex (nCol).internalSetElement (aColumnElement);
+        // HBox2 already contains an empty element
 
         // Use "as-is sizes" and not render sizes
         aHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth,
@@ -710,10 +715,11 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       else
         if (bTo2)
         {
+          // HBox1 already contains an empty element
           aHBox2.getColumnAtIndex (nCol).internalSetElement (aColumnElement);
 
-          aHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, 0);
           // Use "as-is sizes" and not render sizes
+          aHBox1ColumnSizes[nCol] = new SizeSpec (fColumnWidth, 0);
           aHBox2ColumnSizes[nCol] = new SizeSpec (fColumnWidth,
                                                   aColumnElement.getPreparedHeight () +
                                                                 aColumnElement.getOutlineYSum ());
@@ -731,16 +737,17 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     }
     assert nCols == nColsOnFirst + nColsSplit + nColsOnSecond;
 
-    if (nCols == nColsOnFirst)
+    if (nCols == nColsOnFirst || fHBox2MaxHeightNet <= 0f)
     {
-      // Nothing was splitted
+      // All columns remain on the first page
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this, "No column was split because all its content fits on the first page!");
       return PLSplitResult.allOnFirst ();
     }
-    if (nCols == nColsOnSecond)
+
+    if (nCols == nColsOnSecond || fHBox1MaxHeightNet <= 0f)
     {
-      // Nothing was splitted
+      // All columns will be placed on the second page
       if (PLDebugLog.isDebugSplit ())
         PLDebugLog.debugSplit (this, "No column was split because all its content fits only on the second page!");
       return PLSplitResult.allOnSecond ();
@@ -780,8 +787,10 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     aHBox1.m_aPreparedElementSizes = aHBox1ElementSizes;
     aHBox2.m_aPreparedElementSizes = aHBox2ElementSizes;
 
-    return PLSplitResult.create (new PLElementWithSize (aHBox1, new SizeSpec (fAvailableWidth, fHBox1MaxHeightFull)),
-                                 new PLElementWithSize (aHBox2, new SizeSpec (fAvailableWidth, fHBox2MaxHeightFull)));
+    return PLSplitResult.createSplit (new PLElementWithSize (aHBox1,
+                                                             new SizeSpec (fAvailableWidth, fHBox1MaxHeightFull)),
+                                      new PLElementWithSize (aHBox2,
+                                                             new SizeSpec (fAvailableWidth, fHBox2MaxHeightFull)));
   }
 
   @Override

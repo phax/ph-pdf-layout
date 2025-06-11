@@ -17,10 +17,8 @@
 package com.helger.pdflayout.base;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
@@ -28,6 +26,7 @@ import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.lang.ClassHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.pdflayout.debug.PLDebugLog;
 
 /**
  * Abstract PL object
@@ -38,8 +37,6 @@ import com.helger.commons.string.ToStringGenerator;
  */
 public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLTYPE>> implements IPLObject <IMPLTYPE>
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLObject.class);
-
   private String m_sElementID;
 
   // Status variable
@@ -52,9 +49,8 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   }
 
   /**
-   * @return The unique element ID. Never <code>null</code>. By default this ID
-   *         is automatically generated, by it might be overridden by
-   *         {@link #setID(String)}.
+   * @return The unique element ID. Never <code>null</code>. By default this ID is automatically
+   *         generated, by it might be overridden by {@link #setID(String)}.
    */
   public final String getID ()
   {
@@ -62,16 +58,18 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   }
 
   /**
-   * Callback invoked after an ID change. Overwrite this method to do local
-   * actions (if needed)
+   * Callback invoked after an ID change. Overwrite this method to do local actions (if needed)
+   *
+   * @param sOldElementID
+   *        the previous element ID. May be <code>null</code>.
    */
   @OverrideOnDemand
-  protected void onAfterSetID ()
+  protected void onAfterSetID (@Nullable final String sOldElementID)
   {}
 
   /**
-   * Set the ID of this element. This methods calls <code>onAfterSetID</code>
-   * after any change, even if the values were the same.
+   * Set the ID of this element. This methods calls <code>onAfterSetID</code> after any change, even
+   * if the values were the same.
    *
    * @param sID
    *        The new ID to use. May neither be <code>null</code> nor empty.
@@ -82,20 +80,22 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   {
     ValueEnforcer.notEmpty (sID, "ID");
 
-    // String sOldElementID = m_sElementID;
+    final String sOldElementID = m_sElementID;
 
     // If debug ID is set, it means that the ID was most likely already "used"
     // or "displayed", so we're using this as a usage indicator
     if (m_sDebugID != null)
     {
-      LOGGER.warn ("Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
+      if (PLDebugLog.isDebugConsistency ())
+        PLDebugLog.debugConsistency (this, "Overwriting ID '" + m_sElementID + "' with ID '" + sID + "'");
+
       // Clear cached value
       m_sDebugID = null;
     }
     m_sElementID = sID;
 
     // Call callback afterwards
-    onAfterSetID ();
+    onAfterSetID (sOldElementID);
     return thisAsT ();
   }
 

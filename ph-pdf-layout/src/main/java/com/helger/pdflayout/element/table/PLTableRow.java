@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.mutable.MutableInt;
+import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.element.hbox.AbstractPLHBox;
@@ -47,9 +48,9 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
 
   @Override
   @Nonnull
-  protected PLTableCell internalCreateVertSplitEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
-                                                             final float fWidth,
-                                                             final float fHeight)
+  protected AbstractPLRenderableObject <?> internalCreateVertSplitEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
+                                                                                final float fWidth,
+                                                                                final float fHeight)
   {
     final PLTableCell ret = new PLTableCell (null);
     ret.setBasicDataFrom ((PLTableCell) aSrcObject);

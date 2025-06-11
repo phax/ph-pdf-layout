@@ -19,6 +19,7 @@ package com.helger.pdflayout;
 import org.junit.rules.ExternalResource;
 
 import com.helger.pdflayout.debug.PLDebugLog;
+import com.helger.pdflayout.debug.PLDebugLog.PLDebugOutputLogger;
 
 public class PLDebugTestRule extends ExternalResource
 {
@@ -62,6 +63,11 @@ public class PLDebugTestRule extends ExternalResource
     // Init debug stuff to state specified in ctor
     PLDebugLog.setDebugAll (m_bDebug);
     PLDebugLog.setDebugOutput (NO_OP);
+  }
+
+  public void enableLogging ()
+  {
+    PLDebugLog.setDebugOutput (PLDebugOutputLogger.INSTANCE);
   }
 
   @Override
