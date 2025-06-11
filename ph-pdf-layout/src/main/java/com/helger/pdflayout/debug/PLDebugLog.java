@@ -79,6 +79,7 @@ public final class PLDebugLog
   private static boolean s_bDebugSplit = DEFAULT_DEBUG;
   private static boolean s_bDebugPrepare = DEFAULT_DEBUG;
   private static boolean s_bDebugRender = DEFAULT_DEBUG;
+  private static boolean s_bDebugConsistency = DEFAULT_DEBUG;
 
   private PLDebugLog ()
   {}
@@ -175,6 +176,22 @@ public final class PLDebugLog
       s_aDebugOutput.log ("[Rendering] " + aElement.getDebugID () + " " + sMsg);
   }
 
+  public static boolean isDebugConsistency ()
+  {
+    return s_bDebugConsistency;
+  }
+
+  public static void setDebugConsistency (final boolean bDebugConsistency)
+  {
+    s_bDebugConsistency = bDebugConsistency;
+  }
+
+  public static void debugConsistency (@Nonnull final IPLObject <?> aElement, final String sMsg)
+  {
+    if (s_aDebugOutput.isEnabled ())
+      s_aDebugOutput.log ("[Consistency] " + aElement.getDebugID () + " " + sMsg);
+  }
+
   /**
    * Shortcut to globally en- or disable debugging
    *
@@ -185,6 +202,7 @@ public final class PLDebugLog
    * @see #setDebugRender(boolean)
    * @see #setDebugRender(boolean)
    * @see #setDebugText(boolean)
+   * @see #setDebugConsistency(boolean)
    */
   public static void setDebugAll (final boolean bDebug)
   {
@@ -193,6 +211,7 @@ public final class PLDebugLog
     setDebugRender (bDebug);
     setDebugSplit (bDebug);
     setDebugText (bDebug);
+    setDebugConsistency (bDebug);
   }
 
   @Nonnull
