@@ -133,6 +133,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     setMaxRows (aSource.getMaxRows ());
     setVertSplittable (aSource.isVertSplittable ());
     setReplacePlaceholder (aSource.isReplacePlaceholder ());
+    setCustomAscentFirstLine (aSource.getCustomAscentFirstLine ());
     return thisAsT ();
   }
 
