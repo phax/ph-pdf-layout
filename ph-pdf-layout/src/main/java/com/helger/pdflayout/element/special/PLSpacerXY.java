@@ -142,8 +142,20 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
     if (fAvailableHeight <= 0)
       return PLSplitResult.allOnSecond ();
 
+    // Splitting should take place, but the second part is always 0 height
     final float fSpacer1Height = fAvailableHeight;
-    final float fSpacer2Height = fPreparedHeight - fAvailableHeight;
+    final float fSpacer2Height = 0;
+
+    if (PLDebugLog.isDebugSplit ())
+      PLDebugLog.debugSplit (this,
+                             "Splitting " +
+                                   getDebugID () +
+                                   " into pieces " +
+                                   fSpacer1Height +
+                                   " and " +
+                                   fSpacer2Height +
+                                   " for available height " +
+                                   fAvailableHeight);
 
     final PLSpacerXY aSpacer1 = new PLSpacerXY (m_fWidth, fSpacer1Height);
     aSpacer1.internalMarkAsPrepared (new SizeSpec (m_fWidth, fSpacer1Height));
