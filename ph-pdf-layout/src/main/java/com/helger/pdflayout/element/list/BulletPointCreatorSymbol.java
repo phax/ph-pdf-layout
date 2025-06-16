@@ -20,14 +20,13 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.pdflayout.PLConvert;
-import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * An implementation of {@link IBulletPointCreator} that always uses the Bullet
- * point character from symbol font.
+ * An implementation of {@link IBulletPointCreator} that always uses the Bullet point character from
+ * symbol font.
  *
  * @author Philip Helger
  * @since 5.1.0
@@ -41,9 +40,9 @@ public class BulletPointCreatorSymbol extends BulletPointCreatorConstant
 
   @Override
   @Nonnull
-  public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
+  public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    final PLText ret = (PLText) super.getBulletPointElement (nBulletPointIndex);
+    final PLText ret = super.getBulletPointElement (nBulletPointIndex);
     // Vertical align
     ret.setCustomAscentFirstLine (PLConvert.getForFontSize (450, getFontSpec ().getFontSize ()));
     return ret;

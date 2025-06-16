@@ -22,13 +22,13 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.pdflayout.base.IPLRenderableObject;
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
 
 /**
- * An implementation of {@link IBulletPointCreator} that uses a custom
- * {@link IntFunction} to create a custom formatted text.
+ * An implementation of {@link IBulletPointCreator} that uses a custom {@link IntFunction} to create
+ * a custom formatted text.
  *
  * @author Philip Helger
  * @since 5.1.0
@@ -58,8 +58,15 @@ public class BulletPointCreatorNumeric extends AbstractBulletPointCreatorFontBas
   }
 
   @Nonnull
-  public IPLRenderableObject <?> getBulletPointElement (@Nonnegative final int nBulletPointIndex)
+  public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    return new PLText (getBulletPointText (nBulletPointIndex), getFontSpec ()).setVertSplittable (false).setPadding (getPadding ());
+    return new PLText (getBulletPointText (nBulletPointIndex), getFontSpec ()).setVertSplittable (false)
+                                                                              .setPadding (getPadding ());
+  }
+
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ()).append ("Formatter", m_aFormatter).getToString ();
   }
 }

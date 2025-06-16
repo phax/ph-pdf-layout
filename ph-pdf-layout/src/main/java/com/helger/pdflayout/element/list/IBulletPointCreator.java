@@ -22,8 +22,7 @@ import javax.annotation.Nonnull;
 import com.helger.pdflayout.base.IPLRenderableObject;
 
 /**
- * Abstract bullet point creator to create e.g. constant dots or numbers or
- * characters.
+ * Abstract bullet point creator to create e.g. constant dots or numbers or characters.
  *
  * @author Philip Helger
  * @since 5.1.0
@@ -35,7 +34,7 @@ public interface IBulletPointCreator
    *
    * @param nBulletPointIndex
    *        The 0-based index of the bullet point to be created.
-   * @return A non-<code>null</code> but maybe empty.
+   * @return A non-<code>null</code> bullet point element.
    */
   @Nonnull
   IPLRenderableObject <?> getBulletPointElement (@Nonnegative int nBulletPointIndex);

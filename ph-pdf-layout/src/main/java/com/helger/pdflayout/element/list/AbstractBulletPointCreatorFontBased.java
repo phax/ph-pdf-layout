@@ -19,20 +19,21 @@ package com.helger.pdflayout.element.list;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.IPLHasPadding;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 
 /**
- * An abstract implementation of {@link IBulletPointCreator} that uses a Font
- * based character.
+ * An abstract implementation of {@link IBulletPointCreator} that uses a Font based character.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
  *        Implementation type
  * @since 5.1.0
  */
-public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends AbstractBulletPointCreatorFontBased <IMPLTYPE>> implements
+public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends AbstractBulletPointCreatorFontBased <IMPLTYPE>>
+                                                          implements
                                                           IBulletPointCreator,
                                                           IPLHasPadding <IMPLTYPE>
 {
@@ -62,5 +63,14 @@ public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends Abst
     ValueEnforcer.notNull (aPadding, "Padding");
     m_aPadding = aPadding;
     return thisAsT ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ())
+                            .append ("FontSpec", m_aFontSpec)
+                            .append ("Padding", m_aPadding)
+                            .getToString ();
   }
 }
