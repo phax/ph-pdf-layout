@@ -612,9 +612,11 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           final float fSplitHeight = fAvailableHeight - aColumnElement.getOutlineYSum ();
           if (PLDebugLog.isDebugSplit ())
             PLDebugLog.debugSplit (this,
-                                   "[hbox] Trying to split " +
+                                   "Trying to split " +
                                          aColumnElement.getDebugID () +
-                                         " with height " +
+                                         " (Column " +
+                                         nCol +
+                                         ") with height " +
                                          fColumnHeight +
                                          " into pieces for remaining size " +
                                          PLDebugLog.getWH (fSplitWidth, fSplitHeight));
@@ -765,6 +767,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           aRealElement1.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement1.getOutlineXSum (),
                                     fHBox1MaxHeightNet);
         }
+        else
+          if (aElement1 instanceof PLSpacerXY)
+          {
+            ((PLSpacerXY) aElement1).setHeight (fHBox1MaxHeightNet);
+            aHBox1ElementSizes[nIndex] = aHBox1ElementSizes[nIndex].withHeight (fHBox1MaxHeightNet);
+            aHBox1ColumnSizes[nIndex] = aHBox1ColumnSizes[nIndex].withHeight (fHBox1MaxHeightFull);
+          }
 
         final IPLRenderableObject <?> aElement2 = aHBox2.getColumnElementAtIndex (nIndex);
         if (aElement2 instanceof AbstractPLElement <?>)
@@ -774,6 +783,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
           aRealElement2.setMinSize (m_aPreparedColumnSizes[nIndex].getWidth () - aRealElement2.getOutlineXSum (),
                                     fHBox2MaxHeightNet);
         }
+        else
+          if (aElement2 instanceof PLSpacerXY)
+          {
+            ((PLSpacerXY) aElement2).setHeight (fHBox2MaxHeightNet);
+            aHBox2ElementSizes[nIndex] = aHBox2ElementSizes[nIndex].withHeight (fHBox2MaxHeightNet);
+            aHBox2ColumnSizes[nIndex] = aHBox2ColumnSizes[nIndex].withHeight (fHBox2MaxHeightFull);
+          }
       }
     }
 
