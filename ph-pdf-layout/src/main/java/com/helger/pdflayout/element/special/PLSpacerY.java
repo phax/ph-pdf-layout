@@ -127,8 +127,9 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY> implements
     if (fAvailableHeight <= 0)
       return PLSplitResult.allOnSecond ();
 
+    // Splitting should take place, but the second part is always 0 height
     final float fSpacer1Height = fAvailableHeight;
-    final float fSpacer2Height = fPreparedHeight - fAvailableHeight;
+    final float fSpacer2Height = 0;
 
     final PLSpacerY aSpacer1 = new PLSpacerY (fSpacer1Height);
     aSpacer1.internalMarkAsPrepared (new SizeSpec (WIDTH_ZERO, fSpacer1Height));
