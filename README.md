@@ -62,9 +62,10 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-* v7.4.0 - work in progress
+* v7.4.0 - 2025-06-17
     * Added `ELineJoinStyle` and `ELineCapStyle` enums
     * Fixed a possible improper table split if only the head lines would fit on the first page on splitting. See [#49](https://github.com/phax/ph-pdf-layout/issues/49) - thx @jeremykwiatkowski
+        * This required some heavy reworking of the splitting APIs which required a minor version update
 * v7.3.7 - 2025-05-06
     * Updated to PDFBox 3.0.5
     * Added a new method `PreloadFont.setUseFontLineHeightFromHHEA()` to use the line height from the font instead of the default bounding box. This is especially helpful for the "Noto" and "Kurinto" fonts, which have a very large bounding box. Fixes [#46](https://github.com/phax/ph-pdf-layout/issues/46) - thx @mrrao 
