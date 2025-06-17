@@ -51,7 +51,6 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   {
     super (aElement);
     _setColSpan (nColSpan);
-    setVertSplittable (true);
   }
 
   @Override
