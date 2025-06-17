@@ -26,6 +26,8 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
+import com.helger.pdflayout.debug.PLDebugLog;
+import com.helger.pdflayout.debug.PLDebugLog.PLDebugOutputLogger;
 import com.helger.pdflayout.element.table.EPLTableGridType;
 import com.helger.pdflayout.element.table.PLTable;
 import com.helger.pdflayout.element.table.PLTableCell;
@@ -39,6 +41,9 @@ public class MainIssue43
 {
   public static void main (final String [] args) throws PDFCreationException
   {
+    PLDebugLog.setDebugOutput (PLDebugOutputLogger.INSTANCE);
+    PLDebugLog.setDebugAll (true);
+
     final var landscapeA4 = new PDRectangle (PDRectangle.A4.getHeight (), PDRectangle.A4.getWidth ());
     final var pageSet = new PLPageSet (landscapeA4).setMargin (40f);
 
