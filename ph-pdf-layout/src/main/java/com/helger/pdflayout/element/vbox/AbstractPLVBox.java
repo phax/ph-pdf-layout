@@ -770,7 +770,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
             final float fSplitHeight = fAvailableHeight - fUsedVBox1RowHeight - aRowElement.getOutlineYSum ();
             if (PLDebugLog.isDebugSplit ())
               PLDebugLog.debugSplit (this,
-                                     "[vbox] Trying to split " +
+                                     "Trying to split " +
                                            aRowElement.getDebugID () +
                                            " into pieces for split size " +
                                            PLDebugLog.getWH (fSplitWidth, fSplitHeight));
@@ -877,8 +877,10 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     aVBox2.m_aPreparedRowSize = ArrayHelper.newArray (aVBox2RowSize, SizeSpec.class);
     aVBox2.m_aPreparedElementSize = ArrayHelper.newArray (aVBox2ElementSize, SizeSpec.class);
 
-    return PLSplitResult.createSplit (new PLElementWithSize (aVBox1, new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
-                                 new PLElementWithSize (aVBox2, new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight)));
+    return PLSplitResult.createSplit (new PLElementWithSize (aVBox1,
+                                                             new SizeSpec (fAvailableWidth, fUsedVBox1RowHeight)),
+                                      new PLElementWithSize (aVBox2,
+                                                             new SizeSpec (fAvailableWidth, fUsedVBox2RowHeight)));
   }
 
   @Override
