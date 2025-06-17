@@ -29,7 +29,6 @@ import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
-import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
@@ -77,12 +76,6 @@ public final class PLBulletPointListTest
   @Test
   public void testMultilineBullets () throws PDFCreationException
   {
-    if (true)
-    {
-      m_aRule.enableLogging ();
-      PLDebugLog.setDebugConsistency (false);
-      PLDebugLog.setDebugFont (false);
-    }
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
