@@ -784,10 +784,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                 PLDebugLog.debugSplit (this,
                                        "Trying to split " +
                                              aElement.getDebugID () +
-                                             " into pieces for available width " +
-                                             fElementPreparedWidth +
-                                             " and height " +
-                                             fSplitHeight);
+                                             " into pieces for available size " +
+                                             PLDebugLog.getWH (fElementPreparedWidth, fSplitHeight));
 
               final PLSplitResult aSplitResult = aElement.getAsSplittable ()
                                                          .splitElementVert (fElementPreparedWidth, fSplitHeight);
