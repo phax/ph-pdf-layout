@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
@@ -183,7 +184,7 @@ public final class PageLayoutPDFTest
     aPageLayout.setDocumentAuthor ("Weird author äöü");
     aPageLayout.setDocumentTitle ("Special chars €!\"§$%&/()=\uFFE5");
 
-    aPageLayout.setDocumentCreationDateTime (null);
+    aPageLayout.setDocumentCreationDateTime ((ZonedDateTime) null);
     assertNull (aPageLayout.getDocumentCreationDateTime ());
     aPageLayout.setDocumentCreationDateTime (PDTFactory.getCurrentLocalDateTime ());
     assertNotNull (aPageLayout.getDocumentCreationDateTime ());

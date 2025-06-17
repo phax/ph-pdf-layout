@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -91,7 +92,7 @@ public class PageLayoutPDF implements IPLVisitable
   private static final Logger LOGGER = LoggerFactory.getLogger (PageLayoutPDF.class);
 
   private String m_sDocumentAuthor;
-  private LocalDateTime m_aDocumentCreationDate;
+  private ZonedDateTime m_aDocumentCreationDate;
   private String m_sDocumentCreator;
   private String m_sDocumentTitle;
   private String m_sDocumentKeywords;
@@ -109,7 +110,7 @@ public class PageLayoutPDF implements IPLVisitable
   public PageLayoutPDF ()
   {
     m_sDocumentAuthor = VendorInfo.getVendorName () + " " + VendorInfo.getVendorURLWithoutProtocol ();
-    m_aDocumentCreationDate = PDTFactory.getCurrentLocalDateTime ();
+    m_aDocumentCreationDate = PDTFactory.getCurrentZonedDateTime ();
     m_sDocumentCreator = VendorInfo.getVendorName ();
   }
 
@@ -156,12 +157,22 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return The document author for the metadata. May be <code>null</code>.
+   */
   @Nullable
   public final String getDocumentAuthor ()
   {
     return m_sDocumentAuthor;
   }
 
+  /**
+   * Set the document author for the metadata
+   *
+   * @param sDocumentAuthor
+   *        The author to set. May be <code>null</code>.
+   * @return this for chaining
+   */
   @Nonnull
   public final PageLayoutPDF setDocumentAuthor (@Nullable final String sDocumentAuthor)
   {
@@ -169,25 +180,66 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return The document creation date time for the metadata. May be <code>null</code>.
+   */
   @Nullable
   public final LocalDateTime getDocumentCreationDateTime ()
+  {
+    return m_aDocumentCreationDate == null ? null : m_aDocumentCreationDate.toLocalDateTime ();
+  }
+
+  /**
+   * @return The document creation date time for the metadata. May be <code>null</code>.
+   * @since v7.4.0
+   */
+  @Nullable
+  public final ZonedDateTime getDocumentCreationZonedDateTime ()
   {
     return m_aDocumentCreationDate;
   }
 
+  /**
+   * @param aDocumentCreationDate
+   *        The document creation date to use. May be <code>null</code>.
+   * @return this for chaining
+   */
   @Nonnull
   public final PageLayoutPDF setDocumentCreationDateTime (@Nullable final LocalDateTime aDocumentCreationDate)
+  {
+    return setDocumentCreationDateTime (aDocumentCreationDate == null ? null : aDocumentCreationDate.atZone (PDTConfig
+                                                                                                                      .getDefaultZoneId ()));
+  }
+
+  /**
+   * @param aDocumentCreationDate
+   *        The document creation date to use. May be <code>null</code>.
+   * @return this for chaining
+   * @since v7.4.0
+   */
+  @Nonnull
+  public final PageLayoutPDF setDocumentCreationDateTime (@Nullable final ZonedDateTime aDocumentCreationDate)
   {
     m_aDocumentCreationDate = aDocumentCreationDate;
     return this;
   }
 
+  /**
+   * @return The document creator for the metadata. May be <code>null</code>.
+   */
   @Nullable
   public final String getDocumentCreator ()
   {
     return m_sDocumentCreator;
   }
 
+  /**
+   * Set the document creator metadata
+   *
+   * @param sDocumentCreator
+   *        The document creator. May be <code>null</code>.
+   * @return this for chaining
+   */
   @Nonnull
   public final PageLayoutPDF setDocumentCreator (@Nullable final String sDocumentCreator)
   {
@@ -195,12 +247,22 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return The document title for metadata. May be <code>null</code>.
+   */
   @Nullable
   public final String getDocumentTitle ()
   {
     return m_sDocumentTitle;
   }
 
+  /**
+   * Set the document title for metadata
+   *
+   * @param sDocumentTitle
+   *        The document title to use. May be <code>null</code>.
+   * @return this for chaining
+   */
   @Nonnull
   public final PageLayoutPDF setDocumentTitle (@Nullable final String sDocumentTitle)
   {
@@ -208,12 +270,22 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return The document keywords for metadata. May be <code>null</code>.
+   */
   @Nullable
   public final String getDocumentKeywords ()
   {
     return m_sDocumentKeywords;
   }
 
+  /**
+   * Set the document keywords for metadata
+   *
+   * @param sDocumentKeywords
+   *        The document keywords to use. May be <code>null</code>.
+   * @return this for chaining
+   */
   @Nonnull
   public final PageLayoutPDF setDocumentKeywords (@Nullable final String sDocumentKeywords)
   {
@@ -221,12 +293,22 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return The document subject for metadata. May be <code>null</code>.
+   */
   @Nullable
   public final String getDocumentSubject ()
   {
     return m_sDocumentSubject;
   }
 
+  /**
+   * Set the document subject for metadata
+   *
+   * @param sDocumentSubject
+   *        The document subject to use. May be <code>null</code>.
+   * @return this for chaining
+   */
   @Nonnull
   public final PageLayoutPDF setDocumentSubject (@Nullable final String sDocumentSubject)
   {
@@ -234,12 +316,22 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return The document language for metadata. May be <code>null</code>.
+   */
   @Nullable
   public final String getDocumentLanguage ()
   {
     return m_sDocumentLanguage;
   }
 
+  /**
+   * Set the document language for metadata
+   *
+   * @param sDocumentLanguage
+   *        The document language to use. May be <code>null</code>.
+   * @return this for chaining
+   */
   @Nonnull
   public final PageLayoutPDF setDocumentLanguage (@Nullable final String sDocumentLanguage)
   {
@@ -247,6 +339,9 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return A clone of all contained page sets. Never <code>null</code> but maybe empty.
+   */
   @Nonnull
   @ReturnsMutableCopy
   public ICommonsList <? extends PLPageSet> getAllPageSets ()
@@ -269,18 +364,36 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * Remove a specific page set again.
+   *
+   * @param aPageSet
+   *        The page set to remove. May be <code>null</code>.
+   * @return {@link EChange#CHANGED} if it was removed, {@link EChange#UNCHANGED} otherwise. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public EChange removePageSet (@Nullable final PLPageSet aPageSet)
   {
     return m_aPageSets.removeObject (aPageSet);
   }
 
+  /**
+   * @return The document customizer to use. May be <code>null</code>.
+   */
   @Nullable
   public final IPDDocumentCustomizer getDocumentCustomizer ()
   {
     return m_aDocumentCustomizer;
   }
 
+  /**
+   * Set the overall document customizer to use.
+   *
+   * @param aDocumentCustomizer
+   *        The customizer to use. May be <code>null</code>.
+   * @return this for chaining
+   */
   @Nonnull
   public final PageLayoutPDF setDocumentCustomizer (@Nullable final IPDDocumentCustomizer aDocumentCustomizer)
   {
@@ -288,12 +401,22 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return The metadata customizer to use. May be <code>null</code>.
+   */
   @Nullable
   public final IXMPMetadataCustomizer getMetadataCustomizer ()
   {
     return m_aMetadataCustomizer;
   }
 
+  /**
+   * Set the overall metadata customizer to use.
+   *
+   * @param aMetadataCustomizer
+   *        The customizer to use. May be <code>null</code>.
+   * @return this for chaining
+   */
   @Nonnull
   public final PageLayoutPDF setMetadataCustomizer (@Nullable final IXMPMetadataCustomizer aMetadataCustomizer)
   {
@@ -369,7 +492,7 @@ public class PageLayoutPDF implements IPLVisitable
           if (StringHelper.hasText (m_sDocumentAuthor))
             aProperties.setAuthor (m_sDocumentAuthor);
           if (m_aDocumentCreationDate != null)
-            aProperties.setCreationDate (GregorianCalendar.from (m_aDocumentCreationDate.atZone (PDTConfig.getDefaultZoneId ())));
+            aProperties.setCreationDate (GregorianCalendar.from (m_aDocumentCreationDate));
           if (StringHelper.hasText (m_sDocumentCreator))
             aProperties.setCreator (m_sDocumentCreator);
           if (StringHelper.hasText (m_sDocumentTitle))
@@ -407,7 +530,7 @@ public class PageLayoutPDF implements IPLVisitable
           nPageSetIndex++;
         }
 
-        // Start applying all page sets - real rendering
+        // Render all page sets
         nPageSetIndex = 0;
         final int nPageSetCount = m_aPageSets.size ();
         int nTotalPageIndex = 0;
@@ -421,7 +544,7 @@ public class PageLayoutPDF implements IPLVisitable
                                    nPageSetCount,
                                    nTotalPageIndex,
                                    nTotalPageCount);
-          // Inc afterwards
+          // Increment afterwards
           nTotalPageIndex += aPR.getPageCount ();
           nPageSetIndex++;
         }
@@ -445,6 +568,7 @@ public class PageLayoutPDF implements IPLVisitable
         throw new PDFCreationException ("Internal error rendering PDF", ex);
       }
 
+      // Do specific PDF/A stuff if needed
       if (m_bCreatePDF_A)
       {
         if (LOGGER.isDebugEnabled ())
@@ -456,7 +580,7 @@ public class PageLayoutPDF implements IPLVisitable
         {
 
           final Calendar aCreationDate = m_aDocumentCreationDate == null ? PDTFactory.createCalendar ()
-                                                                         : GregorianCalendar.from (m_aDocumentCreationDate.atZone (PDTConfig.getDefaultZoneId ()));
+                                                                         : GregorianCalendar.from (m_aDocumentCreationDate);
           final String sProducer = PLConfig.PROJECT_NAME + " " + PLConfig.PROJECT_VERSION;
 
           final XMPMetadata aXmpMetadata = XMPMetadata.createXMPMetadata ();
