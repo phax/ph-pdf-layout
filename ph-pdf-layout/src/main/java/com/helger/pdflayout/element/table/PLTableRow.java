@@ -50,9 +50,11 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
   @Nonnull
   protected AbstractPLRenderableObject <?> internalCreateVertSplitEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
                                                                                 final float fWidth,
-                                                                                final float fHeight)
+                                                                                final float fHeight,
+                                                                                @Nullable final String sID)
   {
     final PLTableCell ret = new PLTableCell (null);
+    ret.setID (sID);
     ret.setBasicDataFrom ((PLTableCell) aSrcObject);
     ret.prepare (new PreparationContext (null, fWidth, fHeight));
     return ret;

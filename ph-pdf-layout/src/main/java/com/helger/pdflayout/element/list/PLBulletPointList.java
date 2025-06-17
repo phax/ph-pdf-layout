@@ -34,7 +34,8 @@ import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
 /**
- * A simple bullet point list.
+ * A simple bullet point list. Internally it builds on the PLTable and uses two columns - one for
+ * the bullet point itself and one for the main content.
  *
  * @author Philip Helger
  * @since 5.1.0
@@ -45,6 +46,15 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   private final PLTable m_aTable;
   private final IBulletPointCreator m_aBulletPointCreator;
 
+  /**
+   * Constructor
+   *
+   * @param aWidthSpec
+   *        The width of the left side that contains the "bullet". The rest is used for the content.
+   *        May not be <code>null</code>.
+   * @param aBulletPointCreator
+   *        The callback to create the actual bullet point which might be any PL* object.
+   */
   public PLBulletPointList (@Nonnull final WidthSpec aWidthSpec, @Nonnull final IBulletPointCreator aBulletPointCreator)
   {
     ValueEnforcer.notNull (aWidthSpec, "WidthSpec");
@@ -71,11 +81,13 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   public PLBulletPointList addBulletPoint (@Nonnull final IPLRenderableObject <?> aElement)
   {
     final int nBulletPointIndex = m_aTable.getRowCount ();
+    final String sIDPrefix = "bulletpoint-" + nBulletPointIndex;
 
-    final PLTableCell aCellLeft = new PLTableCell (m_aBulletPointCreator.getBulletPointElement (nBulletPointIndex)).setID ("bulletpoint");
-    final PLTableCell aCellRight = new PLTableCell (aElement).setID ("content");
+    final PLTableCell aCellLeft = new PLTableCell (m_aBulletPointCreator.getBulletPointElement (nBulletPointIndex)).setID (sIDPrefix +
+                                                                                                                           "-itself");
+    final PLTableCell aCellRight = new PLTableCell (aElement).setID (sIDPrefix + "-content");
 
-    m_aTable.addRow (aCellLeft, aCellRight);
+    m_aTable.addAndReturnRow (aCellLeft, aCellRight).setID (sIDPrefix + "-row");
     return this;
   }
 

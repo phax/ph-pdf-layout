@@ -320,7 +320,6 @@ public final class PLVBoxTest
   @Test
   public void testSplittableContentSplittable () throws PDFCreationException
   {
-    m_aRule.enableLogging ();
     final String s = "This is a test String\nwith 2 lines";
 
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);

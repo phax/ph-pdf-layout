@@ -507,14 +507,17 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
    *        Column width
    * @param fHeight
    *        Column height
+   * @param sID
+   *        Internal object ID
    * @return Never <code>null</code>.
    */
   @Nonnull
   protected AbstractPLRenderableObject <?> internalCreateVertSplitEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
                                                                                 final float fWidth,
-                                                                                final float fHeight)
+                                                                                final float fHeight,
+                                                                                @Nonnull final String sID)
   {
-    return PLSpacerXY.createPrepared (fWidth, fHeight);
+    return PLSpacerXY.createPrepared (fWidth, fHeight, sID);
   }
 
   @Nonnull
@@ -570,16 +573,14 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
       // Create empty element with the same width as the original element but a zero height
       final IPLRenderableObject <?> aSrcElement = aColumn.getElement ();
-      aHBox1.addColumn (internalCreateVertSplitEmptyElement (aSrcElement, fColumnWidth, fColumnHeight).setID (
-                                                                                                              aSrcElement.getID () +
-                                                                                                              "-1-col-" +
-                                                                                                              i),
-                        aColumnWidth);
-      aHBox2.addColumn (internalCreateVertSplitEmptyElement (aSrcElement, fColumnWidth, fColumnHeight).setID (
-                                                                                                              aSrcElement.getID () +
-                                                                                                              "-2-col-" +
-                                                                                                              i),
-                        aColumnWidth);
+      aHBox1.addColumn (internalCreateVertSplitEmptyElement (aSrcElement,
+                                                             fColumnWidth,
+                                                             fColumnHeight,
+                                                             aSrcElement.getID () + "-1-col-" + i), aColumnWidth);
+      aHBox2.addColumn (internalCreateVertSplitEmptyElement (aSrcElement,
+                                                             fColumnWidth,
+                                                             fColumnHeight,
+                                                             aSrcElement.getID () + "-2-col-" + i), aColumnWidth);
     }
 
     float fHBox1MaxHeightNet = 0;

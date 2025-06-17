@@ -28,8 +28,8 @@ import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Abstract renderable PL element having a minimum size, a maximum size, margin,
- * border, padding and a fill color.
+ * Abstract renderable PL element having a minimum size, a maximum size, margin, border, padding and
+ * a fill color.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
@@ -55,6 +55,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
+    // Min size and max size is not set on purpose
     setMargin (aSource.getMargin ());
     setBorder (aSource.getBorder ());
     setPadding (aSource.getPadding ());

@@ -19,6 +19,7 @@ package com.helger.pdflayout.element.special;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import com.helger.commons.string.ToStringGenerator;
@@ -184,9 +185,10 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
   }
 
   @Nonnull
-  public static PLSpacerXY createPrepared (final float fWidth, final float fHeight)
+  public static PLSpacerXY createPrepared (final float fWidth, final float fHeight, @Nullable String sID)
   {
     final PLSpacerXY ret = new PLSpacerXY (fWidth, fHeight);
+    ret.setID (sID);
     ret.prepare (new PreparationContext (null, fWidth, fHeight));
     return ret;
   }
