@@ -462,7 +462,9 @@ public class PageLayoutPDF implements IPLVisitable
    * Render this layout to an OutputStream.
    *
    * @param aOS
-   *        The output stream to write to. May not be <code>null</code>. Is closed automatically.
+   *        The output stream to write to. May not be <code>null</code>. Is closed automatically
+   *        internally. To avoid closing the {@link OutputStream} you may consider wrapping it in a
+   *        {@link com.helger.commons.io.stream.NonClosingOutputStream} - just a hint.
    * @return this for chaining
    * @throws PDFCreationException
    *         In case of an error
