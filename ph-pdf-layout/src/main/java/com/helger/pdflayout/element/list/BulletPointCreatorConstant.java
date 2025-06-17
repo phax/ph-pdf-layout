@@ -51,7 +51,7 @@ public class BulletPointCreatorConstant extends AbstractBulletPointCreatorFontBa
   @Nonnull
   public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    return new PLText (m_sText, getFontSpec ()).setVertSplittable (false).setPadding (getPadding ());
+    return new PLText (m_sText, getFontSpec ()).setPadding (getPadding ());
   }
 
   @Override

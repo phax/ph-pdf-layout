@@ -60,8 +60,7 @@ public class BulletPointCreatorNumeric extends AbstractBulletPointCreatorFontBas
   @Nonnull
   public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
-    return new PLText (getBulletPointText (nBulletPointIndex), getFontSpec ()).setVertSplittable (false)
-                                                                              .setPadding (getPadding ());
+    return new PLText (getBulletPointText (nBulletPointIndex), getFontSpec ()).setPadding (getPadding ());
   }
 
   @Override
