@@ -41,6 +41,7 @@ import com.helger.pdflayout.spec.PreloadFont;
  * Test for issue 49
  *
  * @author Jeremy Kwiatkowski
+ * @author Philip Helger
  */
 public final class MainIssue49
 {

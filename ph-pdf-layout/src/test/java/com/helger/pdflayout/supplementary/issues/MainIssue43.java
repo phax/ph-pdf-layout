@@ -75,6 +75,6 @@ public class MainIssue43
     final var pageLayout = new PageLayoutPDF ();
     pageLayout.addPageSet (pageSet);
 
-    pageLayout.renderTo (new File ("output/issue43.pdf"));
+    pageLayout.renderTo (new File ("target/issue43.pdf"));
   }
 }
