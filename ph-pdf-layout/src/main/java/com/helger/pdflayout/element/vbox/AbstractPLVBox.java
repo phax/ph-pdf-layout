@@ -76,6 +76,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                      AbstractPLRenderableObject <IMPLTYPE> implements
                                      IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
+  public static final int DEFAULT_HEADER_ROW_COUNT = 0;
   public static final boolean DEFAULT_FULL_WIDTH = true;
   private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLVBox.class);
 
@@ -84,7 +85,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   // Vertical splittable?
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   // Header rows to be repeated after a split
-  private int m_nHeaderRowCount = 0;
+  private int m_nHeaderRowCount = DEFAULT_HEADER_ROW_COUNT;
   // Always use the full width?
   private boolean m_bFullWidth = DEFAULT_FULL_WIDTH;
 
