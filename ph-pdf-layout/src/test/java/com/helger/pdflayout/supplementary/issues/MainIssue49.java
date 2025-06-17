@@ -44,7 +44,6 @@ import com.helger.pdflayout.spec.PreloadFont;
  */
 public final class MainIssue49
 {
-
   private static final Logger LOGGER = LoggerFactory.getLogger (MainIssue49.class);
 
   @Nonnull
@@ -81,8 +80,11 @@ public final class MainIssue49
 
   public static void main (final String [] args)
   {
-    PLDebugRender.setDebugRender (true);
-    PLDebugLog.setDebugSplit (true);
+    if (false)
+    {
+      PLDebugRender.setDebugRender (true);
+      PLDebugLog.setDebugSplit (true);
+    }
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.LETTER).setMargin (30);
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
