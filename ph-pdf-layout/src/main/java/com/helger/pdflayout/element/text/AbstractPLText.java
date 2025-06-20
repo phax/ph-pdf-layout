@@ -606,6 +606,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return EChange.UNCHANGED;
   }
 
+  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException {
+    // Fill and border
+    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+  }
+
   @Override
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
@@ -615,8 +620,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       return;
     }
 
-    // Fill and border
-    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+    renderShape (aCtx);
 
     final float fRenderLeft = aCtx.getStartLeft () + getOutlineLeft ();
     final float fRenderTop = aCtx.getStartTop () - getOutlineTop ();
