@@ -282,12 +282,16 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
                                  new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
   }
 
+  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException {
+    // Fill and border
+    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+  }
+
   @Override
   @OverridingMethodsMustInvokeSuper
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    // Fill and border
-    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+    renderShape (aCtx);
 
     if (m_aElement != null)
     {

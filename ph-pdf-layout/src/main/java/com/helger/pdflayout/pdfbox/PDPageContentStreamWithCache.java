@@ -41,6 +41,7 @@ import com.helger.pdflayout.spec.LoadedFont;
  */
 public class PDPageContentStreamWithCache
 {
+  private final static float BEZ = 0.551915024494f; // Bezier control point constant
   private final PDDocument m_aDocument;
   private final PDPage m_aPage;
   private final PDPageContentStreamExt m_aStream;
@@ -218,6 +219,48 @@ public class PDPageContentStreamWithCache
   {
     addRect (fX, fY, fWidth, fHeight);
     fill ();
+  }
+
+  public void drawRoundedRect (final float fX, final float fY, final float fWidth, final float fHeight,
+                               final float fRadiusTL, final float fRadiusTR,
+                               final float fRadiusBL, final float fRadiusBR) throws IOException {
+    float bezXTL = fRadiusTL * BEZ;
+    float bezYTL = fRadiusTL * BEZ;
+    float bezXTR = fRadiusTR * BEZ;
+    float bezYTR = fRadiusTR * BEZ;
+    float bezXBL = fRadiusBL * BEZ;
+    float bezYBL = fRadiusBL * BEZ;
+    float bezXBR = fRadiusBR * BEZ;
+    float bezYBR = fRadiusBR * BEZ;
+
+    float fBottom = fY + fHeight;
+    m_aStream.moveTo(fX + fRadiusBL, fY);
+    m_aStream.lineTo(fX + fWidth - fRadiusBR, fY);
+    m_aStream.curveTo(
+            fX + fWidth - fRadiusBR + bezXBR, fY,
+            fX + fWidth, fY + fRadiusBR - bezYBR,
+            fX + fWidth, fY + fRadiusBR
+    );
+
+    m_aStream.lineTo(fX + fWidth, fBottom - fRadiusTR);
+    m_aStream.curveTo(
+            fX + fWidth, fBottom - fRadiusTR + bezYTR,
+            fX + fWidth - fRadiusTR + bezXTR, fBottom,
+            fX + fWidth - fRadiusTR, fBottom
+    );
+
+    m_aStream.lineTo(fX + fRadiusTL, fBottom);
+    m_aStream.curveTo(
+            fX + fRadiusTL - bezXTL, fBottom,
+            fX, fBottom - bezYTL,
+            fX, fBottom - fRadiusTL
+    );
+    m_aStream.lineTo(fX, fY + fRadiusBL);
+    m_aStream.curveTo(
+            fX, fY + fRadiusBL - bezYBL,
+            fX + bezXBL, fY,
+            fX + fRadiusBL, fY
+    );
   }
 
   public void beginText () throws IOException
