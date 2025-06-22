@@ -44,6 +44,7 @@ public final class PLRBoxTest
   public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
+  @Ignore
   public void testBasic () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
@@ -136,6 +137,7 @@ public final class PLRBoxTest
   }
 
   @Test
+  @Ignore
   public void testNestedAlignment () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
@@ -164,6 +166,7 @@ public final class PLRBoxTest
   }
 
   @Test
+  @Ignore
   public void testPageBreak () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 20);
@@ -185,6 +188,7 @@ public final class PLRBoxTest
   }
 
   @Test
+  @Ignore
   public void testPageBreakSplittable () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);

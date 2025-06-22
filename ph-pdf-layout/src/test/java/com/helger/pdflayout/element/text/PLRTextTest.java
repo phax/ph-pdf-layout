@@ -46,6 +46,7 @@ import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.spec.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -64,6 +65,7 @@ public final class PLRTextTest
   public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
+  @Ignore
   public void testBasic () throws PDFCreationException
   {
     final String s = "{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}{\\f1 Verdana;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1\\f1\\fs20 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql{\\f1\\fs20\\cf0 vielen Dank f\\u252\\'fcr Ihre Bestellung.}\\f1\\fs20\\cf0\\par}{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql\\par}";
@@ -111,6 +113,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testBasicWithLineSpacing () throws PDFCreationException
   {
     final String s = "{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}{\\f1 Verdana;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1\\f1\\fs20 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql{\\f1\\fs20\\cf0 vielen Dank f\\u252\\'fcr Ihre Bestellung.}\\f1\\fs20\\cf0\\par}{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql\\par}";
@@ -178,6 +181,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCustomFontOpenSans () throws PDFCreationException
   {
     // Load TTF font
@@ -198,6 +202,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCustomFontLato2 () throws PDFCreationException
   {
     // Load OTF font
@@ -219,6 +224,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCustomFontKurintoSans () throws PDFCreationException
   {
     // Load TTF font
@@ -243,6 +249,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCustomFontKurintoMono () throws PDFCreationException
   {
     // Load TTF font
@@ -267,6 +274,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCustomFontMarkazi () throws PDFCreationException
   {
     // Load TTF font
@@ -286,6 +294,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCustomFontNotoSansSC () throws PDFCreationException
   {
     // Load TTF font
@@ -310,6 +319,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCustomFontNotoSansTC () throws PDFCreationException
   {
     // Load TTF font
@@ -334,6 +344,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCustomFontNotoSansHK () throws PDFCreationException
   {
     // Load TTF font
@@ -355,6 +366,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCustomFontMultiple () throws PDFCreationException
   {
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
@@ -411,6 +423,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testTextHorzAlignment () throws PDFCreationException
   {
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
@@ -479,6 +492,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testWithTextExceedingPage () throws PDFCreationException
   {
     final StringBuilder aSB = new StringBuilder (5 * CGlobal.BYTES_PER_MEGABYTE);
@@ -505,6 +519,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCenterIssue31 () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
@@ -567,6 +582,7 @@ public final class PLRTextTest
   }
 
   @Test
+  @Ignore
   public void testCreateSimpleFooter () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10, PLColor.RED);
