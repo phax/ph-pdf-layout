@@ -222,8 +222,19 @@ public class PDPageContentStreamWithCache
   }
 
   public void drawRoundedRect (final float fX, final float fY, final float fWidth, final float fHeight,
-                               final float fRadiusTL, final float fRadiusTR,
-                               final float fRadiusBL, final float fRadiusBR) throws IOException {
+                               float fRadiusTL, float fRadiusTR,
+                               float fRadiusBL, float fRadiusBR) throws IOException {
+    // Ensure that the radii are not larger than half the width/height
+    fRadiusTL = Math.min (fRadiusTL, fWidth / 2);
+    fRadiusTR = Math.min (fRadiusTR, fWidth / 2);
+    fRadiusBL = Math.min (fRadiusBL, fWidth / 2);
+    fRadiusBR = Math.min (fRadiusBR, fWidth / 2);
+    fRadiusTL = Math.min (fRadiusTL, fHeight / 2);
+    fRadiusTR = Math.min (fRadiusTR, fHeight / 2);
+    fRadiusBL = Math.min (fRadiusBL, fHeight / 2);
+    fRadiusBR = Math.min (fRadiusBR, fHeight / 2);
+
+    // Calculate the Bezier control points
     float bezXTL = fRadiusTL * BEZ;
     float bezYTL = fRadiusTL * BEZ;
     float bezXTR = fRadiusTR * BEZ;
