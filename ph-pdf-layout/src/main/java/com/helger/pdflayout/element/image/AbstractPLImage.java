@@ -158,11 +158,15 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     return EChange.UNCHANGED;
   }
 
+  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException {
+    // Fill and border
+    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+  }
+
   @Override
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    // Fill and border
-    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+    renderShape (aCtx);
 
     final PDPageContentStreamWithCache aContentStream = aCtx.getContentStream ();
     aContentStream.drawXObject (m_aXObject,

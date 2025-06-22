@@ -307,12 +307,26 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
                                  new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
   }
 
+  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException {
+    // Fill and border
+    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+  }
+
+  protected void clipShape (@Nonnull final PageRenderContext aCtx,
+                            final float fLeft, final float fBottom,
+                            final float fWidth, final float fHeight) throws IOException
+  {
+    final PDPageContentStreamWithCache aCSWC = aCtx.getContentStream ();
+    aCSWC.saveGraphicsState ();
+    aCSWC.addRect (fLeft, fBottom, fWidth, fHeight);
+    aCSWC.clip ();
+  }
+
   @Override
   @OverridingMethodsMustInvokeSuper
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    // Fill and border
-    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+    renderShape (aCtx);
 
     if (m_aElement != null)
     {
@@ -325,9 +339,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
       final boolean bClipContent = isClipContent ();
       if (bClipContent)
       {
-        aCSWC.saveGraphicsState ();
-        aCSWC.addRect (fStartLeft, fStartTop - fRenderHeight, fRenderWidth, fRenderHeight);
-        aCSWC.clip ();
+        clipShape(aCtx, fStartLeft, fStartTop - fRenderHeight, fRenderWidth, fRenderHeight);
       }
 
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
