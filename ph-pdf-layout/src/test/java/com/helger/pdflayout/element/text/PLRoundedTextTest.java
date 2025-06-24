@@ -16,6 +16,14 @@
  */
 package com.helger.pdflayout.element.text;
 
+import java.io.File;
+import java.util.Map;
+
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestRule;
+
 import com.helger.commons.CGlobal;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.string.StringHelper;
@@ -44,28 +52,23 @@ import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.vbox.PLVBox;
-import com.helger.pdflayout.spec.*;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-
-import java.io.File;
-import java.util.Map;
+import com.helger.pdflayout.spec.BorderStyleSpec;
+import com.helger.pdflayout.spec.EHorzAlignment;
+import com.helger.pdflayout.spec.FontSpec;
+import com.helger.pdflayout.spec.PreloadFont;
+import com.helger.pdflayout.spec.WidthSpec;
 
 /**
- * Test class for {@link PLText}
+ * Test class for {@link PLRoundedText}
  *
  * @author Philip Helger
  */
-public final class PLRTextTest
+public final class PLRoundedTextTest
 {
   @Rule
   public final TestRule m_aRule = new PLDebugTestRule ();
 
   @Test
-  @Ignore
   public void testBasic () throws PDFCreationException
   {
     final String s = "{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}{\\f1 Verdana;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1\\f1\\fs20 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql{\\f1\\fs20\\cf0 vielen Dank f\\u252\\'fcr Ihre Bestellung.}\\f1\\fs20\\cf0\\par}{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql\\par}";
@@ -73,47 +76,46 @@ public final class PLRTextTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
-    aPS1.addElement (new PLRText (s, r10).setBorder (PLColor.RED));
+    aPS1.addElement (new PLRoundedText (s, r10).setBorder (PLColor.RED));
 
     // All chars from 32-127
     final StringBuilder aSB = new StringBuilder ();
     for (int i = 32; i <= 0x7e; ++i)
       aSB.append ((char) i);
-    aPS1.addElement (new PLRText ("Chars 32-127: " + aSB.toString (), r10).setBorder (PLColor.GREEN));
+    aPS1.addElement (new PLRoundedText ("Chars 32-127: " + aSB.toString (), r10).setBorder (PLColor.GREEN));
 
     // Check horizontal alignment
-    aPS1.addElement (new PLRText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (PLColor.RED));
-    aPS1.addElement (new PLRText ("Left and\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
-                                                                  .setBorder (PLColor.RED)
-                                                                  .setFillColor (PLColor.PINK));
-    aPS1.addElement (new PLRText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (PLColor.RED));
-    aPS1.addElement (new PLRText ("Center and\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                                                      .setBorder (PLColor.RED)
-                                                                      .setFillColor (PLColor.PINK));
-    aPS1.addElement (new PLRText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT).setBorder (PLColor.RED));
-    aPS1.addElement (new PLRText ("Right and\nRight but longer", r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                    .setBorder (PLColor.RED)
-                                                                    .setFillColor (PLColor.PINK));
-    aPS1.addElement (new PLRText ("Right and\nRight with padding", r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                      .setBorder (PLColor.RED)
-                                                                      .setPadding (5)
-                                                                      .setFillColor (PLColor.PINK));
-    aPS1.addElement (new PLRText ("Right and\nRight but margin", r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                    .setBorder (PLColor.RED)
-                                                                    .setMargin (5)
-                                                                    .setFillColor (PLColor.PINK));
-    aPS1.addElement (new PLRText ("Text with margin and padding", r10).setBorder (PLColor.RED)
-                                                                     .setMargin (5)
-                                                                     .setPadding (5)
-                                                                     .setFillColor (PLColor.PINK));
+    aPS1.addElement (new PLRoundedText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT).setBorder (PLColor.RED));
+    aPS1.addElement (new PLRoundedText ("Left and\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
+                                                                         .setBorder (PLColor.RED)
+                                                                         .setFillColor (PLColor.PINK));
+    aPS1.addElement (new PLRoundedText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (PLColor.RED));
+    aPS1.addElement (new PLRoundedText ("Center and\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                                             .setBorder (PLColor.RED)
+                                                                             .setFillColor (PLColor.PINK));
+    aPS1.addElement (new PLRoundedText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT).setBorder (PLColor.RED));
+    aPS1.addElement (new PLRoundedText ("Right and\nRight but longer", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                           .setBorder (PLColor.RED)
+                                                                           .setFillColor (PLColor.PINK));
+    aPS1.addElement (new PLRoundedText ("Right and\nRight with padding", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                             .setBorder (PLColor.RED)
+                                                                             .setPadding (5)
+                                                                             .setFillColor (PLColor.PINK));
+    aPS1.addElement (new PLRoundedText ("Right and\nRight but margin", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                           .setBorder (PLColor.RED)
+                                                                           .setMargin (5)
+                                                                           .setFillColor (PLColor.PINK));
+    aPS1.addElement (new PLRoundedText ("Text with margin and padding", r10).setBorder (PLColor.RED)
+                                                                            .setMargin (5)
+                                                                            .setPadding (5)
+                                                                            .setFillColor (PLColor.PINK));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/basic.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/basic.pdf"));
   }
 
   @Test
-  @Ignore
   public void testBasicWithLineSpacing () throws PDFCreationException
   {
     final String s = "{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}{\\f1 Verdana;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1\\f1\\fs20 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql{\\f1\\fs20\\cf0 vielen Dank f\\u252\\'fcr Ihre Bestellung.}\\f1\\fs20\\cf0\\par}{\\rtf1\\deff0{\\fonttbl{\\f0 Times New Roman;}}{\\colortbl\\red0\\green0\\blue0 ;\\red0\\green0\\blue255 ;}{\\*\\listoverridetable}{\\stylesheet {\\ql Normal;}{\\*\\cs1 Default Paragraph Font;}{\\*\\cs2\\sbasedon1 Line Number;}{\\*\\cs3\\ul\\cf1 Hyperlink;}{\\*\\ts4\\tsrowd\\ql\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Normal Table;}{\\*\\ts5\\tsrowd\\sbasedon4\\ql\\trbrdrt\\brdrs\\brdrw10\\trbrdrl\\brdrs\\brdrw10\\trbrdrb\\brdrs\\brdrw10\\trbrdrr\\brdrs\\brdrw10\\trautofit1\\tscellpaddfl3\\tscellpaddl108\\tscellpaddfr3\\tscellpaddr108\\tsvertalt\\cltxlrtb Table Simple 1;}}\\nouicompat\\splytwnine\\htmautsp\\sectd\\pard\\plain\\ql\\par}";
@@ -122,66 +124,65 @@ public final class PLRTextTest
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
     final float fLineSpacing = 1.5f;
 
-    aPS1.addElement (new PLRText ("All texts are using a line spacing of " + fLineSpacing, r10).setLineSpacing (
-                                                                                                               fLineSpacing));
-    aPS1.addElement (new PLRText (s, r10).setBorder (PLColor.RED).setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("All texts are using a line spacing of " + fLineSpacing, r10).setLineSpacing (
+                                                                                                                      fLineSpacing));
+    aPS1.addElement (new PLRoundedText (s, r10).setBorder (PLColor.RED).setLineSpacing (fLineSpacing));
 
     // All chars from 32-127
     final StringBuilder aSB = new StringBuilder ();
     for (int i = 32; i <= 0x7e; ++i)
       aSB.append ((char) i);
-    aPS1.addElement (new PLRText ("Chars 32-127: " + aSB.toString (), r10).setBorder (PLColor.GREEN)
-                                                                         .setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("Chars 32-127: " + aSB.toString (), r10).setBorder (PLColor.GREEN)
+                                                                                .setLineSpacing (fLineSpacing));
 
     // Check horizontal alignment
-    aPS1.addElement (new PLRText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT)
-                                             .setBorder (PLColor.RED)
-                                             .setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLRText ("Left and\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
-                                                                  .setBorder (PLColor.RED)
-                                                                  .setFillColor (PLColor.PINK)
-                                                                  .setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLRText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                               .setBorder (PLColor.RED)
-                                               .setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLRText ("Center and\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
-                                                                      .setBorder (PLColor.RED)
-                                                                      .setFillColor (PLColor.PINK)
-                                                                      .setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLRText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT).setBorder (PLColor.RED));
-    aPS1.addElement (new PLRText ("Right and\nRight but longer", r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                    .setBorder (PLColor.RED)
-                                                                    .setFillColor (PLColor.PINK)
-                                                                    .setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLRText ("Right and\nRight with padding", r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                      .setBorder (PLColor.RED)
-                                                                      .setPadding (5)
-                                                                      .setFillColor (PLColor.PINK)
-                                                                      .setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLRText ("Right and\nRight but margin", r10).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                    .setBorder (PLColor.RED)
-                                                                    .setMargin (5)
-                                                                    .setFillColor (PLColor.PINK)
-                                                                    .setLineSpacing (fLineSpacing));
-    aPS1.addElement (new PLRText ("Text with margin and padding", r10).setBorder (PLColor.RED)
-                                                                     .setMargin (5)
-                                                                     .setPadding (5)
-                                                                     .setFillColor (PLColor.PINK)
-                                                                     .setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("Left", r10).setHorzAlign (EHorzAlignment.LEFT)
+                                                    .setBorder (PLColor.RED)
+                                                    .setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("Left and\nLeft but longer", r10).setHorzAlign (EHorzAlignment.LEFT)
+                                                                         .setBorder (PLColor.RED)
+                                                                         .setFillColor (PLColor.PINK)
+                                                                         .setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("Center", r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                      .setBorder (PLColor.RED)
+                                                      .setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("Center and\nCenter but longer", r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                                             .setBorder (PLColor.RED)
+                                                                             .setFillColor (PLColor.PINK)
+                                                                             .setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("Right", r10).setHorzAlign (EHorzAlignment.RIGHT).setBorder (PLColor.RED));
+    aPS1.addElement (new PLRoundedText ("Right and\nRight but longer", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                           .setBorder (PLColor.RED)
+                                                                           .setFillColor (PLColor.PINK)
+                                                                           .setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("Right and\nRight with padding", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                             .setBorder (PLColor.RED)
+                                                                             .setPadding (5)
+                                                                             .setFillColor (PLColor.PINK)
+                                                                             .setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("Right and\nRight but margin", r10).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                           .setBorder (PLColor.RED)
+                                                                           .setMargin (5)
+                                                                           .setFillColor (PLColor.PINK)
+                                                                           .setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText ("Text with margin and padding", r10).setBorder (PLColor.RED)
+                                                                            .setMargin (5)
+                                                                            .setPadding (5)
+                                                                            .setFillColor (PLColor.PINK)
+                                                                            .setLineSpacing (fLineSpacing));
     aPS1.addElement (new PLPageBreak (false));
     String sVeryLongText = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
                            "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.\n" +
                            "Tataa: €";
     sVeryLongText = StringHelper.getRepeated (sVeryLongText, 48);
-    aPS1.addElement (new PLRText (sVeryLongText, r10).setLineSpacing (fLineSpacing));
+    aPS1.addElement (new PLRoundedText (sVeryLongText, r10).setLineSpacing (fLineSpacing));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/line-spacing.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/line-spacing.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCustomFontOpenSans () throws PDFCreationException
   {
     // Load TTF font
@@ -194,15 +195,14 @@ public final class PLRTextTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    aPS1.addElement (new PLRText (s, r10));
+    aPS1.addElement (new PLRoundedText (s, r10));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/font-open-sans.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/font-open-sans.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCustomFontLato2 () throws PDFCreationException
   {
     // Load OTF font
@@ -215,16 +215,15 @@ public final class PLRTextTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont2, 10)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/font-lato2.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/font-lato2.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCustomFontKurintoSans () throws PDFCreationException
   {
     // Load TTF font
@@ -239,17 +238,16 @@ public final class PLRTextTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont2, 10)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.setCompressPDF (false);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/font-kurinto-sans.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/font-kurinto-sans.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCustomFontKurintoMono () throws PDFCreationException
   {
     // Load TTF font
@@ -264,17 +262,16 @@ public final class PLRTextTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont2, 10)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     aPageLayout.setCompressPDF (false);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/font-kurinto-mono.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/font-kurinto-mono.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCustomFontMarkazi () throws PDFCreationException
   {
     // Load TTF font
@@ -285,16 +282,15 @@ public final class PLRTextTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont2, 10)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/font-markazi.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/font-markazi.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCustomFontNotoSansSC () throws PDFCreationException
   {
     // Load TTF font
@@ -308,18 +304,17 @@ public final class PLRTextTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLRText (sAsciiOnly, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont2, 10)));
-    aPS1.addElement (new PLRText (sAsciiOnly, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLRoundedText (sAsciiOnly, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLRoundedText (sAsciiOnly, new FontSpec (aFont2, 10)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/font-noto-sans-sc.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/font-noto-sans-sc.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCustomFontNotoSansTC () throws PDFCreationException
   {
     // Load TTF font
@@ -333,18 +328,17 @@ public final class PLRTextTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLRText (sAsciiOnly, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont2, 10)));
-    aPS1.addElement (new PLRText (sAsciiOnly, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLRoundedText (sAsciiOnly, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLRoundedText (sAsciiOnly, new FontSpec (aFont2, 10)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/font-noto-sans-tc.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/font-noto-sans-tc.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCustomFontNotoSansHK () throws PDFCreationException
   {
     // Load TTF font
@@ -357,16 +351,15 @@ public final class PLRTextTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (40);
 
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont, 10)));
-    aPS1.addElement (new PLRText (s, new FontSpec (aFont2, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont, 10)));
+    aPS1.addElement (new PLRoundedText (s, new FontSpec (aFont2, 10)));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ().setCompressPDF (false);
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/font-noto-sans-hk.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/font-noto-sans-hk.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCustomFontMultiple () throws PDFCreationException
   {
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
@@ -378,8 +371,8 @@ public final class PLRTextTest
 
     for (final Map.Entry <String, PreloadFont> aEntry : PreloadFont.getAllStandard14PreloadFonts ().entrySet ())
     {
-      aPS1.addElement (new PLRText ("[Standard] [" + aEntry.getKey () + "]: " + s + "\n",
-                                   new FontSpec (aEntry.getValue (), 10)));
+      aPS1.addElement (new PLRoundedText ("[Standard] [" + aEntry.getKey () + "]: " + s + "\n",
+                                          new FontSpec (aEntry.getValue (), 10)));
     }
     for (final IHasFontResource aHasFont : new CommonsArrayList <> (EFontResourceAlegreyaSans.ALGREYA_SANS_NORMAL,
                                                                     EFontResourceAlegreyaSans.ALGREYA_SANS_BLACK,
@@ -413,17 +406,16 @@ public final class PLRTextTest
           aHasFont.getFontResource ().getFontName ().startsWith ("Noto "))
         aFont.setUseFontLineHeightFromHHEA ();
 
-      aPS1.addElement (new PLRText ("[External] [" + aHasFont.getFontResourceID () + "]: " + s + "\n",
-                                   new FontSpec (aFont, 10)));
+      aPS1.addElement (new PLRoundedText ("[External] [" + aHasFont.getFontResourceID () + "]: " + s + "\n",
+                                          new FontSpec (aFont, 10)));
     }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/font-multiple.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/font-multiple.pdf"));
   }
 
   @Test
-  @Ignore
   public void testTextHorzAlignment () throws PDFCreationException
   {
     final String s = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko.\n" +
@@ -440,36 +432,36 @@ public final class PLRTextTest
     for (int i = 0; i < 2; ++i)
       for (final EHorzAlignment eHorzAlign : EHorzAlignment.values ())
       {
-        aPS1.addElement (new PLRText ("Alignment: " + eHorzAlign + "\n" + s, r10).setHorzAlign (eHorzAlign));
-        aPS1.addElement (new PLRText ("Second text with a single line only.", r10).setHorzAlign (eHorzAlign)
-                                                                                 .setMarginBottom (10));
+        aPS1.addElement (new PLRoundedText ("Alignment: " + eHorzAlign + "\n" + s, r10).setHorzAlign (eHorzAlign));
+        aPS1.addElement (new PLRoundedText ("Second text with a single line only.", r10).setHorzAlign (eHorzAlign)
+                                                                                        .setMarginBottom (10));
       }
 
     {
-      final PLRText aText = new PLRText ("For issue #7 (V1)\nMultiline", r10).setBorder (new BorderStyleSpec (
-                                                                                                            PLColor.RED))
-                                                                           .setHorzAlign (EHorzAlignment.RIGHT);
+      final PLRoundedText aText = new PLRoundedText ("For issue #7 (V1)\nMultiline", r10).setBorder (
+                                                                                                     new BorderStyleSpec (PLColor.RED))
+                                                                                         .setHorzAlign (EHorzAlignment.RIGHT);
       aPS1.addElement (aText);
     }
     {
-      final PLBox aBox = new PLBox (new PLRText ("For issue #7 (V2)\nMultiline", r10).setBorder (new BorderStyleSpec (
-                                                                                                                     PLColor.RED))).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                                                                   .setBorder (new BorderStyleSpec (PLColor.BLUE));
+      final PLBox aBox = new PLBox (new PLRoundedText ("For issue #7 (V2)\nMultiline", r10).setBorder (
+                                                                                                       new BorderStyleSpec (PLColor.RED))).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                                                                          .setBorder (new BorderStyleSpec (PLColor.BLUE));
       aPS1.addElement (aBox);
     }
     {
-      final PLRText aText = new PLRText ("For issue #7 (V3)\nMultiline", r10).setBorder (new BorderStyleSpec (
-                                                                                                            PLColor.RED))
-                                                                           .setHorzAlign (EHorzAlignment.RIGHT);
+      final PLRoundedText aText = new PLRoundedText ("For issue #7 (V3)\nMultiline", r10).setBorder (
+                                                                                                     new BorderStyleSpec (PLColor.RED))
+                                                                                         .setHorzAlign (EHorzAlignment.RIGHT);
 
       final PLHBox aHBox = new PLHBox ();
       aHBox.addColumn (aText, WidthSpec.perc (50));
       aPS1.addElement (aHBox);
     }
     {
-      final PLBox aBox = new PLBox (new PLRText ("For issue #7 (V4)\nMultiline", r10).setBorder (new BorderStyleSpec (
-                                                                                                                     PLColor.RED))).setHorzAlign (EHorzAlignment.RIGHT)
-                                                                                                                                   .setBorder (new BorderStyleSpec (PLColor.BLUE));
+      final PLBox aBox = new PLBox (new PLRoundedText ("For issue #7 (V4)\nMultiline", r10).setBorder (
+                                                                                                       new BorderStyleSpec (PLColor.RED))).setHorzAlign (EHorzAlignment.RIGHT)
+                                                                                                                                          .setBorder (new BorderStyleSpec (PLColor.BLUE));
 
       final PLHBox aHBox = new PLHBox ();
       aHBox.addColumn (aBox, WidthSpec.perc (50));
@@ -482,17 +474,16 @@ public final class PLRTextTest
                         StringHelper.getRepeated ("Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.",
                                                   50);
       final PLHBox aHBox = new PLHBox ();
-      aHBox.addColumn (new PLRText (s2, r10).setHorzAlign (EHorzAlignment.BLOCK), WidthSpec.perc (50));
+      aHBox.addColumn (new PLRoundedText (s2, r10).setHorzAlign (EHorzAlignment.BLOCK), WidthSpec.perc (50));
       aPS1.addElement (aHBox);
     }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/horz-alignment.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/horz-alignment.pdf"));
   }
 
   @Test
-  @Ignore
   public void testWithTextExceedingPage () throws PDFCreationException
   {
     final StringBuilder aSB = new StringBuilder (5 * CGlobal.BYTES_PER_MEGABYTE);
@@ -511,15 +502,14 @@ public final class PLRTextTest
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
-    aPS1.addElement (new PLRText (aSB.toString (), r10).setBorder (PLColor.RED));
+    aPS1.addElement (new PLRoundedText (aSB.toString (), r10).setBorder (PLColor.RED));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/split-vertically.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/split-vertically.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCenterIssue31 () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
@@ -528,49 +518,50 @@ public final class PLRTextTest
 
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
 
-    aPS1.addElement (new PLRText ("The following entries have plText.setHorzAlign(EHorzAlignment.CENTER)", r10)
-                                                                                                              .setMarginY (10));
+    aPS1.addElement (new PLRoundedText ("The following entries have plText.setHorzAlign(EHorzAlignment.CENTER)", r10)
+                                                                                                                     .setMarginY (10));
 
     for (final String sText : new String [] { s1, s2 })
     {
       // Text on Page set
-      aPS1.addElement (new PLRText (sText, r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (PLColor.RED));
+      aPS1.addElement (new PLRoundedText (sText, r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (PLColor.RED));
 
       // Text in PLVBox
       {
         final PLVBox aPLVBox = new PLVBox ();
-        aPLVBox.addRow (new PLRText (sText, r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (PLColor.BLUE));
+        aPLVBox.addRow (new PLRoundedText (sText, r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (PLColor.BLUE));
         aPS1.addElement (aPLVBox);
       }
 
       // Text in PLBox
       {
         final PLBox aPLBox = new PLBox ();
-        aPLBox.setElement (new PLRText (sText, r10).setHorzAlign (EHorzAlignment.CENTER).setBorder (PLColor.GREEN));
+        aPLBox.setElement (new PLRoundedText (sText, r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                         .setBorder (PLColor.GREEN));
         aPLBox.setHorzAlign (EHorzAlignment.CENTER);
         aPS1.addElement (aPLBox);
       }
     }
 
-    aPS1.addElement (new PLRText ("The following entries DO NOT use plText.setHorzAlign(EHorzAlignment.CENTER)", r10)
-                                                                                                                    .setMarginY (10));
+    aPS1.addElement (new PLRoundedText ("The following entries DO NOT use plText.setHorzAlign(EHorzAlignment.CENTER)",
+                                        r10).setMarginY (10));
 
     for (final String sText : new String [] { s1, s2 })
     {
       // Text on Page set
-      aPS1.addElement (new PLRText (sText, r10).setBorder (PLColor.RED));
+      aPS1.addElement (new PLRoundedText (sText, r10).setBorder (PLColor.RED));
 
       // Text in PLVBox
       {
         final PLVBox aPLVBox = new PLVBox ();
-        aPLVBox.addRow (new PLRText (sText, r10).setBorder (PLColor.BLUE));
+        aPLVBox.addRow (new PLRoundedText (sText, r10).setBorder (PLColor.BLUE));
         aPS1.addElement (aPLVBox);
       }
 
       // Text in PLBox
       {
         final PLBox aPLBox = new PLBox ();
-        aPLBox.setElement (new PLRText (sText, r10).setBorder (PLColor.GREEN));
+        aPLBox.setElement (new PLRoundedText (sText, r10).setBorder (PLColor.GREEN));
         aPLBox.setHorzAlign (EHorzAlignment.CENTER);
         aPS1.addElement (aPLBox);
       }
@@ -578,11 +569,10 @@ public final class PLRTextTest
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/center-issue31.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/center-issue31.pdf"));
   }
 
   @Test
-  @Ignore
   public void testCreateSimpleFooter () throws PDFCreationException
   {
     final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10, PLColor.RED);
@@ -592,7 +582,7 @@ public final class PLRTextTest
     aPS1.setPadding (15);
     aPS1.setMarginBottom (40);
 
-    aPS1.addElement (new PLRText ("This is the main text - bla bla", r12));
+    aPS1.addElement (new PLRoundedText ("This is the main text - bla bla", r12));
 
     final StringBuilder aSB = new StringBuilder ();
     for (final String s : new String [] { "Name and whatever else you need",
@@ -609,10 +599,10 @@ public final class PLRTextTest
         aSB.append (" • ");
       aSB.append (s);
     }
-    aPS1.setPageFooter (new PLBox (new PLRText (aSB.toString (), r10)).setPadding (5));
+    aPS1.setPageFooter (new PLBox (new PLRoundedText (aSB.toString (), r10)).setPadding (5));
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
-    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plrtext/simple-footer.pdf"));
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plroundedtext/simple-footer.pdf"));
   }
 }

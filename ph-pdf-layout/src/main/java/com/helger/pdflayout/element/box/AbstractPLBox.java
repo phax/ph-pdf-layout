@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLBlockElement;
@@ -304,17 +305,22 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     aBox2.internalSetElementPreparedSize (aBox2ElementPreparedSize);
 
     return PLSplitResult.createSplit (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
-                                 new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
+                                      new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
   }
 
-  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException {
+  @OverrideOnDemand
+  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
     // Fill and border
     PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
   }
 
+  @OverrideOnDemand
   protected void clipShape (@Nonnull final PageRenderContext aCtx,
-                            final float fLeft, final float fBottom,
-                            final float fWidth, final float fHeight) throws IOException
+                            final float fLeft,
+                            final float fBottom,
+                            final float fWidth,
+                            final float fHeight) throws IOException
   {
     final PDPageContentStreamWithCache aCSWC = aCtx.getContentStream ();
     aCSWC.saveGraphicsState ();
@@ -339,7 +345,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
       final boolean bClipContent = isClipContent ();
       if (bClipContent)
       {
-        clipShape(aCtx, fStartLeft, fStartTop - fRenderHeight, fRenderWidth, fRenderHeight);
+        clipShape (aCtx, fStartLeft, fStartTop - fRenderHeight, fRenderWidth, fRenderHeight);
       }
 
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx,

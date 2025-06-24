@@ -32,6 +32,11 @@ import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 
+/**
+ * Render helper
+ *
+ * @author Philip Helger
+ */
 @Immutable
 public final class PLRenderHelper
 {
@@ -39,7 +44,7 @@ public final class PLRenderHelper
   {}
 
   /**
-   * Render a single border
+   * Render a single, rectangular border
    *
    * @param aElement
    *        The element currently rendered. May not be <code>null</code>.
@@ -71,7 +76,7 @@ public final class PLRenderHelper
 
     if (aBorder.hasAllBorders () && aBorder.areAllBordersEqual ())
     {
-      // draw full rect
+      // draw full rectangle
       final BorderStyleSpec aAll = aBorder.getLeft ();
       // The border position must be in the middle of the line
       final float fLineWidth = aAll.getLineWidth ();
@@ -174,11 +179,12 @@ public final class PLRenderHelper
           aContentStream.stroke ();
         }
       }
+    // else: no border
   }
 
   /**
-   * Create the background fill (debug and real) and draw the border (debug and
-   * real) of an element.
+   * Create the background fill (debug and real) and draw the rectangular border (debug and real) of
+   * an element.
    *
    * @param aElement
    *        The element to be rendered. May not be <code>null</code>.
@@ -208,8 +214,7 @@ public final class PLRenderHelper
   }
 
   /**
-   * Create the background fill (debug and real) and draw the border (debug and
-   * real) of an element.
+   * Create the background fill (debug and real) and draw the border (debug and real) of an element.
    *
    * @param aElement
    *        The element to be rendered. May not be <code>null</code>.
@@ -226,8 +231,7 @@ public final class PLRenderHelper
    * @throws IOException
    *         in case writing fails
    * @param <T>
-   *        Type that implements {@link IPLHasFillColor} and
-   *        {@link IPLHasMarginBorderPadding}
+   *        Type that implements {@link IPLHasFillColor} and {@link IPLHasMarginBorderPadding}
    */
   public static <T extends IPLObject <T> & IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorder (@Nonnull final T aElement,
                                                                                                                           final float fLeft,
@@ -268,18 +272,20 @@ public final class PLRenderHelper
     }
 
     // Border draws over fill, to avoid nasty display problems if the background
-    // is visible between then
+    // is visible between them
     final BorderSpec aBorder = aElement.getBorder ();
     if (aBorder.hasAnyBorder ())
       renderBorder (aElement, aContentStream, fLeft, fTop, fWidth, fHeight, aBorder);
   }
 
-  public static <T extends IPLElement<T>> void fillAndRenderBorder (@Nonnull final T aElement,
-                                                                    @Nonnull final PageRenderContext aCtx,
-                                                                    final float fIndentX,
-                                                                    final float fIndentY,
-                                                                    final float fRadius
-  ) throws IOException
+  public static <T extends IPLElement <T>> void fillAndRenderBorderRounded (@Nonnull final T aElement,
+                                                                            @Nonnull final PageRenderContext aCtx,
+                                                                            final float fIndentX,
+                                                                            final float fIndentY,
+                                                                            final float fRadiusTL,
+                                                                            final float fRadiusTR,
+                                                                            final float fRadiusBL,
+                                                                            final float fRadiusBR) throws IOException
   {
     // Border starts after margin
     final float fLeft = aCtx.getStartLeft () + aElement.getMarginLeft () + fIndentX;
@@ -287,16 +293,28 @@ public final class PLRenderHelper
     final float fWidth = aElement.getRenderWidth () + aElement.getBorderXSumWidth () + aElement.getPaddingXSum ();
     final float fHeight = aElement.getRenderHeight () + aElement.getBorderYSumWidth () + aElement.getPaddingYSum ();
 
-    fillAndRenderBorder (aElement, fLeft, fTop, fWidth, fHeight, fRadius, aCtx.getContentStream ());
+    fillAndRenderBorderRounded (aElement,
+                                fLeft,
+                                fTop,
+                                fWidth,
+                                fHeight,
+                                fRadiusTL,
+                                fRadiusTR,
+                                fRadiusBL,
+                                fRadiusBR,
+                                aCtx.getContentStream ());
   }
 
-  public static <T extends IPLObject<T> & IPLHasFillColor<T> & IPLHasMarginBorderPadding<T>> void fillAndRenderBorder (@Nonnull final T aElement,
-                                                                                                                       final float fLeft,
-                                                                                                                       final float fTop,
-                                                                                                                       final float fWidth,
-                                                                                                                       final float fHeight,
-                                                                                                                       final float fRadius,
-                                                                                                                       @Nonnull final PDPageContentStreamWithCache aContentStream) throws IOException
+  public static <T extends IPLObject <T> & IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorderRounded (@Nonnull final T aElement,
+                                                                                                                                 final float fLeft,
+                                                                                                                                 final float fTop,
+                                                                                                                                 final float fWidth,
+                                                                                                                                 final float fHeight,
+                                                                                                                                 final float fRadiusTL,
+                                                                                                                                 final float fRadiusTR,
+                                                                                                                                 final float fRadiusBL,
+                                                                                                                                 final float fRadiusBR,
+                                                                                                                                 @Nonnull final PDPageContentStreamWithCache aContentStream) throws IOException
   {
     final boolean bDebugRender = PLDebugRender.isDebugRender ();
     if (bDebugRender)
@@ -307,9 +325,9 @@ public final class PLRenderHelper
       {
         aContentStream.setNonStrokingColor (aOutlineColor);
         aContentStream.fillRect (fLeft - aElement.getMarginLeft (),
-                fTop - fHeight - aElement.getMarginBottom (),
-                fWidth + aElement.getMarginXSum (),
-                fHeight + aElement.getMarginYSum ());
+                                 fTop - fHeight - aElement.getMarginBottom (),
+                                 fWidth + aElement.getMarginXSum (),
+                                 fHeight + aElement.getMarginYSum ());
       }
     }
 
@@ -318,8 +336,15 @@ public final class PLRenderHelper
     if (aFillColor != null)
     {
       aContentStream.setNonStrokingColor (aFillColor);
-      aContentStream.drawRoundedRect (fLeft, fTop - fHeight, fWidth, fHeight, fRadius, fRadius, fRadius, fRadius);
-      aContentStream.fill();
+      aContentStream.drawRoundedRect (fLeft,
+                                      fTop - fHeight,
+                                      fWidth,
+                                      fHeight,
+                                      fRadiusTL,
+                                      fRadiusTR,
+                                      fRadiusBL,
+                                      fRadiusBR);
+      aContentStream.fill ();
     }
 
     // Draw debug border first anyway, in case only partial borders are present
@@ -327,24 +352,48 @@ public final class PLRenderHelper
     {
       final BorderSpec aDebugBorder = new BorderSpec (PLDebugRender.getDebugBorder (aElement));
       if (aDebugBorder.hasAnyBorder ())
-        renderBorder (aElement, aContentStream, fLeft, fTop, fWidth, fHeight, fRadius, aDebugBorder);
+        renderBorderRounded (aElement,
+                             aContentStream,
+                             fLeft,
+                             fTop,
+                             fWidth,
+                             fHeight,
+                             fRadiusTL,
+                             fRadiusTR,
+                             fRadiusBL,
+                             fRadiusBR,
+                             aDebugBorder);
     }
 
     // Border draws over fill, to avoid nasty display problems if the background
     // is visible between then
     final BorderSpec aBorder = aElement.getBorder ();
     if (aBorder.hasAnyBorder ())
-      renderBorder (aElement, aContentStream, fLeft, fTop, fWidth, fHeight, fRadius, aBorder);
+      renderBorderRounded (aElement,
+                           aContentStream,
+                           fLeft,
+                           fTop,
+                           fWidth,
+                           fHeight,
+                           fRadiusTL,
+                           fRadiusTR,
+                           fRadiusBL,
+                           fRadiusBR,
+                           aBorder);
   }
 
-  public static void renderBorder (@Nonnull final IPLObject <?> aElement,
-                                   @Nonnull final PDPageContentStreamWithCache aContentStream,
-                                   final float fLeft,
-                                   final float fTop,
-                                   final float fWidth,
-                                   final float fHeight,
-                                   final float fRadius,
-                                   @Nonnull final BorderSpec aBorder) throws IOException {
+  public static void renderBorderRounded (@Nonnull final IPLObject <?> aElement,
+                                          @Nonnull final PDPageContentStreamWithCache aContentStream,
+                                          final float fLeft,
+                                          final float fTop,
+                                          final float fWidth,
+                                          final float fHeight,
+                                          final float fRadiusTL,
+                                          final float fRadiusTR,
+                                          final float fRadiusBL,
+                                          final float fRadiusBR,
+                                          @Nonnull final BorderSpec aBorder) throws IOException
+  {
     if (aBorder.hasAllBorders () && aBorder.areAllBordersEqual ())
     {
       // draw full rect
@@ -355,32 +404,32 @@ public final class PLRenderHelper
 
       if (PLDebugLog.isDebugRender ())
         PLDebugLog.debugRender (aElement,
-                "Border around " +
-                        PLDebugLog.getXYWH (fLeft, fTop, fWidth, fHeight) +
-                        " with line width " +
-                        fLineWidth);
+                                "Border around " +
+                                          PLDebugLog.getXYWH (fLeft, fTop, fWidth, fHeight) +
+                                          " with line width " +
+                                          fLineWidth);
 
       aContentStream.setStrokingColor (aAll.getColor ());
       aContentStream.setLineDashPattern (aAll.getLineDashPattern ());
       aContentStream.setLineWidth (fLineWidth);
 
-      float fBottom = fTop - fHeight;
-      aContentStream.drawRoundedRect(
-              fLeft + fHalfLineWidth,
-              fBottom + fHalfLineWidth,
-              fWidth - fLineWidth,
-              fHeight - fLineWidth,
-              fRadius, fRadius, fRadius, fRadius);
+      final float fBottom = fTop - fHeight;
+      aContentStream.drawRoundedRect (fLeft + fHalfLineWidth,
+                                      fBottom + fHalfLineWidth,
+                                      fWidth - fLineWidth,
+                                      fHeight - fLineWidth,
+                                      fRadiusTL,
+                                      fRadiusTR,
+                                      fRadiusBL,
+                                      fRadiusBR);
 
       aContentStream.stroke ();
     }
-
-    // There is no support for partial borders with rounded corners yet
     else
       if (aBorder.hasAnyBorder ())
-    {
-      throw new UnsupportedOperationException("Partial borders with rounded corners are not supported yet!");
-    }
-
+      {
+        // There is no support for partial borders with rounded corners yet
+        throw new UnsupportedOperationException ("Partial borders with rounded corners are not supported yet!");
+      }
   }
 }
