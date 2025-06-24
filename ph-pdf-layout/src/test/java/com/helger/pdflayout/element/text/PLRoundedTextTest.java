@@ -68,6 +68,15 @@ public final class PLRoundedTextTest
   @Rule
   public final TestRule m_aRule = new PLDebugTestRule ();
 
+  private static final class PLRoundedText extends PLText
+  {
+    public PLRoundedText (final String sText, final FontSpec aFontSpec)
+    {
+      super (sText, aFontSpec);
+      setBorderRadius (8f);
+    }
+  }
+
   @Test
   public void testBasic () throws PDFCreationException
   {
@@ -438,9 +447,9 @@ public final class PLRoundedTextTest
       }
 
     {
-      final PLRoundedText aText = new PLRoundedText ("For issue #7 (V1)\nMultiline", r10).setBorder (
-                                                                                                     new BorderStyleSpec (PLColor.RED))
-                                                                                         .setHorzAlign (EHorzAlignment.RIGHT);
+      final PLText aText = new PLRoundedText ("For issue #7 (V1)\nMultiline", r10).setBorder (new BorderStyleSpec (
+                                                                                                                   PLColor.RED))
+                                                                                  .setHorzAlign (EHorzAlignment.RIGHT);
       aPS1.addElement (aText);
     }
     {
@@ -450,9 +459,9 @@ public final class PLRoundedTextTest
       aPS1.addElement (aBox);
     }
     {
-      final PLRoundedText aText = new PLRoundedText ("For issue #7 (V3)\nMultiline", r10).setBorder (
-                                                                                                     new BorderStyleSpec (PLColor.RED))
-                                                                                         .setHorzAlign (EHorzAlignment.RIGHT);
+      final PLText aText = new PLRoundedText ("For issue #7 (V3)\nMultiline", r10).setBorder (new BorderStyleSpec (
+                                                                                                                   PLColor.RED))
+                                                                                  .setHorzAlign (EHorzAlignment.RIGHT);
 
       final PLHBox aHBox = new PLHBox ();
       aHBox.addColumn (aText, WidthSpec.perc (50));

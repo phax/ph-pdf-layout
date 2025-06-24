@@ -18,6 +18,8 @@ package com.helger.pdflayout.element.box;
 
 import java.io.File;
 
+import javax.annotation.Nullable;
+
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,9 +29,9 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
 import com.helger.pdflayout.PageLayoutPDF;
+import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
-import com.helger.pdflayout.element.text.PLRoundedText;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
@@ -46,6 +48,20 @@ public final class PLRoundedBoxTest
 {
   @Rule
   public final TestRule m_aRule = new PLDebugTestRule ();
+
+  private static final class PLRoundedBox extends PLBox
+  {
+    public PLRoundedBox ()
+    {
+      this (null);
+    }
+
+    public PLRoundedBox (@Nullable final IPLRenderableObject <?> aElement)
+    {
+      super (aElement);
+      setBorderRadius (8f);
+    }
+  }
 
   @Test
   public void testBasic () throws PDFCreationException
@@ -163,17 +179,18 @@ public final class PLRoundedBoxTest
     for (final EHorzAlignment eH : EHorzAlignment.values ())
       for (final EVertAlignment eV : EVertAlignment.values ())
       {
-        aPS1.addElement (new PLRoundedBox (new PLRoundedText ("Text " +
-                                                              eH.getID () +
-                                                              " / " +
-                                                              eV.getID () +
-                                                              "\nText is always centered\nLine 3",
-                                                              r10).setHorzAlign (EHorzAlignment.CENTER)
-                                                                  .setFillColor (PLColor.PINK)).setFillColor (PLColor.YELLOW)
-                                                                                               .setExactSize (150, 50)
-                                                                                               .setHorzAlign (eH)
-                                                                                               .setVertAlign (eV)
-                                                                                               .setBorder (PLColor.BLACK));
+        aPS1.addElement (new PLRoundedBox (new PLText ("Text " +
+                                                       eH.getID () +
+                                                       " / " +
+                                                       eV.getID () +
+                                                       "\nText is always centered\nLine 3",
+                                                       r10).setHorzAlign (EHorzAlignment.CENTER)
+                                                           .setFillColor (PLColor.PINK)
+                                                           .setBorderRadius (8f)).setFillColor (PLColor.YELLOW)
+                                                                                 .setExactSize (150, 50)
+                                                                                 .setHorzAlign (eH)
+                                                                                 .setVertAlign (eV)
+                                                                                 .setBorder (PLColor.BLACK));
       }
 
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
