@@ -26,6 +26,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLInlineElement;
@@ -43,7 +44,8 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYPE>> extends AbstractPLInlineElement <IMPLTYPE>
+public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYPE>> extends
+                                      AbstractPLInlineElement <IMPLTYPE>
 {
   public static final EPLImageType DEFAULT_IMAGE_TYPE = EPLImageType.JPEG;
 
@@ -98,8 +100,8 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
 
   /**
    * Set the image type to be used. <br>
-   * Note: not all image types may be supported by all subclasses of this class.
-   * Please check the respective documentation!
+   * Note: not all image types may be supported by all subclasses of this class. Please check the
+   * respective documentation!
    *
    * @param eImageType
    *        The image type to be used. May not be <code>null</code>.
@@ -126,8 +128,8 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   }
 
   /**
-   * Resolve the {@link PDImageXObject} for rendering. Must consider the image
-   * type according to {@link #getImageType()}.
+   * Resolve the {@link PDImageXObject} for rendering. Must consider the image type according to
+   * {@link #getImageType()}.
    *
    * @param aCtx
    *        Render context
@@ -158,7 +160,9 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
     return EChange.UNCHANGED;
   }
 
-  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException {
+  @OverrideOnDemand
+  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
     // Fill and border
     PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
   }

@@ -30,6 +30,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
@@ -644,6 +645,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return EChange.UNCHANGED;
   }
 
+  @OverrideOnDemand
   protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
   {
     // Fill and border

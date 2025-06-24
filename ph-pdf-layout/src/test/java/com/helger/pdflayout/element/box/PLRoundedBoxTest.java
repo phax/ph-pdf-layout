@@ -39,7 +39,7 @@ import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * Test class for {@link PLRoundedBox}
+ * Test class for {@link PLBox} with a border radius
  *
  * @author Philip Helger
  * @author Marco De Angelis

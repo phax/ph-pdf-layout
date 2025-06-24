@@ -59,9 +59,10 @@ import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.WidthSpec;
 
 /**
- * Test class for {@link PLRoundedText}
+ * Test class for {@link PLText} with a border radius
  *
  * @author Philip Helger
+ * @author Marco De Angelis
  */
 public final class PLRoundedTextTest
 {
