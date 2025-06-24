@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLElement;
@@ -279,15 +280,21 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     aBox2.internalSetElementPreparedSize (aBox2ElementPreparedSize);
 
     return PLSplitResult.createSplit (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
-                                 new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
+                                      new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
+  }
+
+  @OverrideOnDemand
+  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    // Fill and border
+    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
   }
 
   @Override
   @OverridingMethodsMustInvokeSuper
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    // Fill and border
-    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+    renderShape (aCtx);
 
     if (m_aElement != null)
     {

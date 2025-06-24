@@ -34,13 +34,15 @@ import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 
 /**
- * A special version of PDPageContentStream with an integrated "cache" to avoid
- * setting the same information over and over again.
+ * A special version of PDPageContentStream with an integrated "cache" to avoid setting the same
+ * information over and over again.
  *
  * @author Philip Helger
  */
 public class PDPageContentStreamWithCache
 {
+  /** Bezier control point constant */
+  private static final float BEZ = 0.551915024494f;
   private final PDDocument m_aDocument;
   private final PDPage m_aPage;
   private final PDPageContentStreamExt m_aStream;
@@ -74,8 +76,7 @@ public class PDPageContentStreamWithCache
   }
 
   /**
-   * @return The {@link PDDocument} this stream is working on. Never
-   *         <code>null</code>.
+   * @return The {@link PDDocument} this stream is working on. Never <code>null</code>.
    */
   @Nonnull
   public final PDDocument getDocument ()
@@ -84,8 +85,7 @@ public class PDPageContentStreamWithCache
   }
 
   /**
-   * @return The {@link PDPage} this stream is working on. Never
-   *         <code>null</code>.
+   * @return The {@link PDPage} this stream is working on. Never <code>null</code>.
    */
   @Nonnull
   public final PDPage getPage ()
@@ -94,8 +94,7 @@ public class PDPageContentStreamWithCache
   }
 
   /**
-   * @return The internal page content stream. Never <code>null</code>. Handle
-   *         with care.
+   * @return The internal page content stream. Never <code>null</code>. Handle with care.
    * @since 6.0.2
    */
   @Nonnull
@@ -218,6 +217,62 @@ public class PDPageContentStreamWithCache
   {
     addRect (fX, fY, fWidth, fHeight);
     fill ();
+  }
+
+  public void drawRoundedRect (final float fX,
+                               final float fY,
+                               final float fWidth,
+                               final float fHeight,
+                               final float fRadiusTL,
+                               final float fRadiusTR,
+                               final float fRadiusBL,
+                               final float fRadiusBR) throws IOException
+  {
+    // Ensure that the radiuses are not larger than half the width/height
+    final float fMaxRadius = Math.min (fHeight / 2, fWidth / 2);
+    final float fRealRadiusTL = Math.min (fRadiusTL, fMaxRadius);
+    final float fRealRadiusTR = Math.min (fRadiusTR, fMaxRadius);
+    final float fRealRadiusBL = Math.min (fRadiusBL, fMaxRadius);
+    final float fRealRadiusBR = Math.min (fRadiusBR, fMaxRadius);
+
+    // Calculate the Bezier control points
+    final float fBezXTL = fRealRadiusTL * BEZ;
+    final float fBezYTL = fBezXTL;
+    final float fBezXTR = fRealRadiusTR * BEZ;
+    final float fBezYTR = fBezXTR;
+    final float fBezXBL = fRealRadiusBL * BEZ;
+    final float fBezYBL = fBezXBL;
+    final float fBezXBR = fRealRadiusBR * BEZ;
+    final float fBezYBR = fBezXBR;
+
+    final float fBottom = fY + fHeight;
+    m_aStream.moveTo (fX + fRealRadiusBL, fY);
+
+    // to bottom right
+    m_aStream.lineTo (fX + fWidth - fRealRadiusBR, fY);
+    m_aStream.curveTo (fX + fWidth - fRealRadiusBR + fBezXBR,
+                       fY,
+                       fX + fWidth,
+                       fY + fRealRadiusBR - fBezYBR,
+                       fX + fWidth,
+                       fY + fRealRadiusBR);
+
+    // to top right
+    m_aStream.lineTo (fX + fWidth, fBottom - fRealRadiusTR);
+    m_aStream.curveTo (fX + fWidth,
+                       fBottom - fRealRadiusTR + fBezYTR,
+                       fX + fWidth - fRealRadiusTR + fBezXTR,
+                       fBottom,
+                       fX + fWidth - fRealRadiusTR,
+                       fBottom);
+
+    // to top left
+    m_aStream.lineTo (fX + fRealRadiusTL, fBottom);
+    m_aStream.curveTo (fX + fRealRadiusTL - fBezXTL, fBottom, fX, fBottom - fBezYTL, fX, fBottom - fRealRadiusTL);
+
+    // to bottom left
+    m_aStream.lineTo (fX, fY + fRealRadiusBL);
+    m_aStream.curveTo (fX, fY + fRealRadiusBL - fBezYBL, fX + fBezXBL, fY, fX + fRealRadiusBL, fY);
   }
 
   public void beginText () throws IOException

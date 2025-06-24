@@ -16,12 +16,15 @@
  */
 package com.helger.pdflayout.element.box;
 
+import static com.helger.pdflayout.render.PLRenderHelper.fillAndRenderBorderRounded;
+
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.state.EChange;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLBlockElement;
@@ -50,9 +53,11 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
                                     AbstractPLBlockElement <IMPLTYPE> implements
                                     IPLSplittableObject <IMPLTYPE, IMPLTYPE>
 {
+  public static final float DEFAULT_BORDER_RADIUS = 0f;
 
   private IPLRenderableObject <?> m_aElement;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+  private float m_fBorderRadius = DEFAULT_BORDER_RADIUS;
 
   // Status vars
   private SizeSpec m_aElementPreparedSize;
@@ -70,6 +75,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   {
     super.setBasicDataFrom (aSource);
     setVertSplittable (aSource.isVertSplittable ());
+    setBorderRadius (aSource.getBorderRadius ());
     return thisAsT ();
   }
 
@@ -110,6 +116,39 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The border radius to use. Only values &gt; 0 will draw a radius.
+   * @since v7.4.1
+   */
+  public final float getBorderRadius ()
+  {
+    return m_fBorderRadius;
+  }
+
+  /**
+   * @return <code>true</code> if a border radius is defined, <code>false</code> if not.
+   * @since v7.4.1
+   */
+  public final boolean hasBorderRadius ()
+  {
+    return m_fBorderRadius > 0f;
+  }
+
+  /**
+   * Set the border radius to be used.
+   *
+   * @param fBorderRadius
+   *        The actual border radius. Only values &gt; 0 will draw a radius.
+   * @return this for chaining
+   * @since v7.4.1
+   */
+  @Nonnull
+  public final IMPLTYPE setBorderRadius (final float fBorderRadius)
+  {
+    m_fBorderRadius = fBorderRadius;
     return thisAsT ();
   }
 
@@ -304,15 +343,60 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     aBox2.internalSetElementPreparedSize (aBox2ElementPreparedSize);
 
     return PLSplitResult.createSplit (new PLElementWithSize (aBox1, new SizeSpec (fAvailableWidth, fBox1UsedHeight)),
-                                 new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
+                                      new PLElementWithSize (aBox2, new SizeSpec (fAvailableWidth, fBox2UsedHeight)));
+  }
+
+  @OverrideOnDemand
+  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    // Fill and border
+    if (hasBorderRadius ())
+    {
+      fillAndRenderBorderRounded (thisAsT (),
+                                  aCtx,
+                                  0f,
+                                  0f,
+                                  m_fBorderRadius,
+                                  m_fBorderRadius,
+                                  m_fBorderRadius,
+                                  m_fBorderRadius);
+    }
+    else
+      PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+  }
+
+  @OverrideOnDemand
+  protected void clipShape (@Nonnull final PageRenderContext aCtx,
+                            final float fLeft,
+                            final float fBottom,
+                            final float fWidth,
+                            final float fHeight) throws IOException
+  {
+    final PDPageContentStreamWithCache aCSWC = aCtx.getContentStream ();
+    aCSWC.saveGraphicsState ();
+    if (hasBorderRadius ())
+    {
+      aCSWC.drawRoundedRect (fLeft,
+                             fBottom,
+                             fWidth,
+                             fHeight,
+                             m_fBorderRadius,
+                             m_fBorderRadius,
+                             m_fBorderRadius,
+                             m_fBorderRadius);
+    }
+    else
+    {
+      aCSWC.addRect (fLeft, fBottom, fWidth, fHeight);
+    }
+    aCSWC.clip ();
   }
 
   @Override
   @OverridingMethodsMustInvokeSuper
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
-    // Fill and border
-    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+    renderShape (aCtx);
 
     if (m_aElement != null)
     {
@@ -325,9 +409,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
       final boolean bClipContent = isClipContent ();
       if (bClipContent)
       {
-        aCSWC.saveGraphicsState ();
-        aCSWC.addRect (fStartLeft, fStartTop - fRenderHeight, fRenderWidth, fRenderHeight);
-        aCSWC.clip ();
+        clipShape (aCtx, fStartLeft, fStartTop - fRenderHeight, fRenderWidth, fRenderHeight);
       }
 
       final PageRenderContext aElementCtx = new PageRenderContext (aCtx,
@@ -352,6 +434,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     return ToStringGenerator.getDerived (super.toString ())
                             .appendIfNotNull ("Element", m_aElement)
                             .append ("VertSplittable", m_bVertSplittable)
+                            .append ("BorderRadius", m_fBorderRadius)
                             .appendIfNotNull ("ElementPreparedSize", m_aElementPreparedSize)
                             .appendIfNotNull ("RenderOffset", m_aRenderOffset)
                             .getToString ();

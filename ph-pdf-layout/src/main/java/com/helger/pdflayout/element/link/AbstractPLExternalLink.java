@@ -28,6 +28,7 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.debug.PLDebugLog;
@@ -37,8 +38,8 @@ import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 
 /**
- * An external link that references to an external URI. Use
- * {@link #setURI(String)} to define the link target.
+ * An external link that references to an external URI. Use {@link #setURI(String)} to define the
+ * link target.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
@@ -48,13 +49,18 @@ import com.helger.pdflayout.spec.LineDashPatternSpec;
 public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExternalLink <IMPLTYPE>> extends
                                              AbstractPLInlineBox <IMPLTYPE>
 {
+  public static final ELinkBorderStyle DEFAULT_LINK_BORDER_STYLE = ELinkBorderStyle.SOLID;
+  public static final LineDashPatternSpec DEFAULT_LINK_DASH_PATTERN = null;
+  public static final float DEFAULT_LINK_BORDER_WIDTH = 0f;
+  public static final PLColor DEFAULT_LINK_COLOR = null;
+
   private String m_sURI;
   // These are parameterized in preparation for eventual future actions. Until
   // then, always use the existing "border" functionality
-  private final ELinkBorderStyle m_eLinkBorderStyle = ELinkBorderStyle.SOLID;
-  private final LineDashPatternSpec m_aLinkDashPattern = null;
-  private final float m_fLinkBorderWidth = 0;
-  private final PLColor m_aLinkColor = null;
+  private ELinkBorderStyle m_eLinkBorderStyle = DEFAULT_LINK_BORDER_STYLE;
+  private LineDashPatternSpec m_aLinkDashPattern = DEFAULT_LINK_DASH_PATTERN;
+  private float m_fLinkBorderWidth = DEFAULT_LINK_BORDER_WIDTH;
+  private PLColor m_aLinkColor = DEFAULT_LINK_COLOR;
 
   public AbstractPLExternalLink (@Nullable final IPLRenderableObject <?> aElement)
   {
@@ -92,6 +98,109 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
   {
     internalCheckNotPrepared ();
     m_sURI = sURI;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The link border style to use. May be <code>null</code>.
+   * @since v7.4.1
+   */
+  @Nullable
+  public ELinkBorderStyle getLinkBorderStyle ()
+  {
+    return m_eLinkBorderStyle;
+  }
+
+  /**
+   * Set the link border style to use.
+   *
+   * @param eLinkBorderStyle
+   *        The border style to use. May be <code>null</code>.
+   * @return this for chaining.
+   * @since v7.4.1
+   */
+  @Nonnull
+  public final IMPLTYPE setLinkBorderStyle (@Nullable final ELinkBorderStyle eLinkBorderStyle)
+  {
+    internalCheckNotPrepared ();
+    m_eLinkBorderStyle = eLinkBorderStyle;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The link dash pattern to use. May be <code>null</code>.
+   * @since v7.4.1
+   */
+  @Nullable
+  public LineDashPatternSpec getLinkDashPattern ()
+  {
+    return m_aLinkDashPattern;
+  }
+
+  /**
+   * Set the link dash pattern to use.
+   *
+   * @param aLinkDashPattern
+   *        The link dash pattern to use. May be <code>null</code>.
+   * @return this for chaining.
+   * @since v7.4.1
+   */
+  @Nonnull
+  public final IMPLTYPE setLinkDashPattern (@Nullable final LineDashPatternSpec aLinkDashPattern)
+  {
+    internalCheckNotPrepared ();
+    m_aLinkDashPattern = aLinkDashPattern;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The link border width to use. May be <code>null</code>.
+   * @since v7.4.1
+   */
+  public float getLinkBorderWidth ()
+  {
+    return m_fLinkBorderWidth;
+  }
+
+  /**
+   * Set the link border width to use.
+   *
+   * @param fLinkBorderWidth
+   *        The link border width to use. May be <code>null</code>.
+   * @return this for chaining.
+   * @since v7.4.1
+   */
+  @Nonnull
+  public final IMPLTYPE setLinkBorderWidth (final float fLinkBorderWidth)
+  {
+    internalCheckNotPrepared ();
+    m_fLinkBorderWidth = fLinkBorderWidth;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The link color to use. May be <code>null</code>.
+   * @since v7.4.1
+   */
+  @Nullable
+  public PLColor getLinkColor ()
+  {
+    return m_aLinkColor;
+  }
+
+  /**
+   * Set the link color to use.
+   *
+   * @param aLinkColor
+   *        The link color to use. May be <code>null</code>.
+   * @return this for chaining.
+   * @since v7.4.1
+   */
+  @Nonnull
+  public final IMPLTYPE setLinkDashPattern (@Nullable final PLColor aLinkColor)
+  {
+    internalCheckNotPrepared ();
+    m_aLinkColor = aLinkColor;
     return thisAsT ();
   }
 
@@ -142,5 +251,17 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
     }
     else
       PLDebugLog.debugRender (this, "Not rendering an external link, because no element is contained");
+  }
+
+  @Override
+  public String toString ()
+  {
+    return ToStringGenerator.getDerived (super.toString ())
+                            .append ("URI", m_sURI)
+                            .appendIfNotNull ("LinkBorderStyle", m_eLinkBorderStyle)
+                            .appendIfNotNull ("LinkDashPattern", m_aLinkDashPattern)
+                            .append ("LinkBorderWidth", m_fLinkBorderWidth)
+                            .appendIfNotNull ("LinkColor", m_aLinkColor)
+                            .getToString ();
   }
 }

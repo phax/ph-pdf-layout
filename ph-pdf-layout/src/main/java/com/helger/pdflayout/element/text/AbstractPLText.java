@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout.element.text;
 
+import static com.helger.pdflayout.render.PLRenderHelper.fillAndRenderBorderRounded;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.OverrideOnDemand;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
@@ -68,6 +71,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public static final float DEFAULT_LINE_SPACING = 1f;
   public static final int DEFAULT_MAX_ROWS = CGlobal.ILLEGAL_UINT;
   public static final boolean DEFAULT_REPLACE_PLACEHOLDERS = false;
+  public static final float DEFAULT_BORDER_RADIUS = 0f;
 
   private String m_sOriginalText;
   private String m_sTextWithPlaceholdersReplaced;
@@ -78,6 +82,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private int m_nMaxRows = DEFAULT_MAX_ROWS;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   private boolean m_bReplacePlaceholder = DEFAULT_REPLACE_PLACEHOLDERS;
+  private float m_fBorderRadius = DEFAULT_BORDER_RADIUS;
 
   // prepare result
   private transient LoadedFont m_aLoadedFont;
@@ -133,6 +138,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     setMaxRows (aSource.getMaxRows ());
     setVertSplittable (aSource.isVertSplittable ());
     setReplacePlaceholder (aSource.isReplacePlaceholder ());
+    setBorderRadius (aSource.getBorderRadius ());
     setCustomAscentFirstLine (aSource.getCustomAscentFirstLine ());
     return thisAsT ();
   }
@@ -291,6 +297,39 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   public final IMPLTYPE setReplacePlaceholder (final boolean bReplacePlaceholder)
   {
     m_bReplacePlaceholder = bReplacePlaceholder;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The border radius to use. Only values &gt; 0 will draw a radius.
+   * @since v7.4.1
+   */
+  public final float getBorderRadius ()
+  {
+    return m_fBorderRadius;
+  }
+
+  /**
+   * @return <code>true</code> if a border radius is defined, <code>false</code> if not.
+   * @since v7.4.1
+   */
+  public final boolean hasBorderRadius ()
+  {
+    return m_fBorderRadius > 0f;
+  }
+
+  /**
+   * Set the border radius to be used.
+   *
+   * @param fBorderRadius
+   *        The actual border radius. Only values &gt; 0 will draw a radius.
+   * @return this for chaining
+   * @since v7.4.1
+   */
+  @Nonnull
+  public final IMPLTYPE setBorderRadius (final float fBorderRadius)
+  {
+    m_fBorderRadius = fBorderRadius;
     return thisAsT ();
   }
 
@@ -606,6 +645,25 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return EChange.UNCHANGED;
   }
 
+  @OverrideOnDemand
+  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
+  {
+    // Fill and border
+    if (hasBorderRadius ())
+    {
+      fillAndRenderBorderRounded (thisAsT (),
+                                  aCtx,
+                                  0f,
+                                  0f,
+                                  m_fBorderRadius,
+                                  m_fBorderRadius,
+                                  m_fBorderRadius,
+                                  m_fBorderRadius);
+    }
+    else
+      PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+  }
+
   @Override
   protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
   {
@@ -615,8 +673,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
       return;
     }
 
-    // Fill and border
-    PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+    renderShape (aCtx);
 
     final float fRenderLeft = aCtx.getStartLeft () + getOutlineLeft ();
     final float fRenderTop = aCtx.getStartTop () - getOutlineTop ();
@@ -721,6 +778,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
                             .append ("MaxRows", m_nMaxRows)
                             .append ("VertSplittable", m_bVertSplittable)
                             .append ("ReplacePlaceholder", m_bReplacePlaceholder)
+                            .append ("BorderRadius", m_fBorderRadius)
+                            .append ("CustomAscentFirstLine", m_fCustomAscentFirstLine)
                             .getToString ();
   }
 }
