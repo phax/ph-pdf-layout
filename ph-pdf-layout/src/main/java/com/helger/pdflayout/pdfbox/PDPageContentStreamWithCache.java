@@ -41,7 +41,8 @@ import com.helger.pdflayout.spec.LoadedFont;
  */
 public class PDPageContentStreamWithCache
 {
-  private final static float BEZ = 0.551915024494f; // Bezier control point constant
+  /** Bezier control point constant */
+  private static final float BEZ = 0.551915024494f;
   private final PDDocument m_aDocument;
   private final PDPage m_aPage;
   private final PDPageContentStreamExt m_aStream;
