@@ -63,7 +63,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 # News and Noteworthy
 
 * v7.4.1 - 2025-06-24
-    * Added support for rounded edges on box and text 
+    * Added support for rounded edges on `PLBox` and `PLText`. See [#48](https://github.com/phax/ph-pdf-layout/issues/48) - thx @marco-de-angelis
 * v7.4.0 - 2025-06-17
     * Added `ELineJoinStyle` and `ELineCapStyle` enums
     * Fixed a possible improper table split if only the head lines would fit on the first page on splitting. See [#49](https://github.com/phax/ph-pdf-layout/issues/49) - thx @jeremykwiatkowski
