@@ -58,9 +58,9 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
   // These are parameterized in preparation for eventual future actions. Until
   // then, always use the existing "border" functionality
   private ELinkBorderStyle m_eLinkBorderStyle = DEFAULT_LINK_BORDER_STYLE;
-  private final LineDashPatternSpec m_aLinkDashPattern = DEFAULT_LINK_DASH_PATTERN;
-  private final float m_fLinkBorderWidth = DEFAULT_LINK_BORDER_WIDTH;
-  private final PLColor m_aLinkColor = DEFAULT_LINK_COLOR;
+  private LineDashPatternSpec m_aLinkDashPattern = DEFAULT_LINK_DASH_PATTERN;
+  private float m_fLinkBorderWidth = DEFAULT_LINK_BORDER_WIDTH;
+  private PLColor m_aLinkColor = DEFAULT_LINK_COLOR;
 
   public AbstractPLExternalLink (@Nullable final IPLRenderableObject <?> aElement)
   {
@@ -103,6 +103,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
 
   /**
    * @return The link border style to use. May be <code>null</code>.
+   * @since v7.4.1
    */
   @Nullable
   public ELinkBorderStyle getLinkBorderStyle ()
@@ -116,12 +117,90 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
    * @param eLinkBorderStyle
    *        The border style to use. May be <code>null</code>.
    * @return this for chaining.
+   * @since v7.4.1
    */
   @Nonnull
   public final IMPLTYPE setLinkBorderStyle (@Nullable final ELinkBorderStyle eLinkBorderStyle)
   {
     internalCheckNotPrepared ();
     m_eLinkBorderStyle = eLinkBorderStyle;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The link dash pattern to use. May be <code>null</code>.
+   * @since v7.4.1
+   */
+  @Nullable
+  public LineDashPatternSpec getLinkDashPattern ()
+  {
+    return m_aLinkDashPattern;
+  }
+
+  /**
+   * Set the link dash pattern to use.
+   *
+   * @param aLinkDashPattern
+   *        The link dash pattern to use. May be <code>null</code>.
+   * @return this for chaining.
+   * @since v7.4.1
+   */
+  @Nonnull
+  public final IMPLTYPE setLinkDashPattern (@Nullable final LineDashPatternSpec aLinkDashPattern)
+  {
+    internalCheckNotPrepared ();
+    m_aLinkDashPattern = aLinkDashPattern;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The link border width to use. May be <code>null</code>.
+   * @since v7.4.1
+   */
+  public float getLinkBorderWidth ()
+  {
+    return m_fLinkBorderWidth;
+  }
+
+  /**
+   * Set the link border width to use.
+   *
+   * @param fLinkBorderWidth
+   *        The link border width to use. May be <code>null</code>.
+   * @return this for chaining.
+   * @since v7.4.1
+   */
+  @Nonnull
+  public final IMPLTYPE setLinkBorderWidth (final float fLinkBorderWidth)
+  {
+    internalCheckNotPrepared ();
+    m_fLinkBorderWidth = fLinkBorderWidth;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The link color to use. May be <code>null</code>.
+   * @since v7.4.1
+   */
+  @Nullable
+  public PLColor getLinkColor ()
+  {
+    return m_aLinkColor;
+  }
+
+  /**
+   * Set the link color to use.
+   *
+   * @param aLinkColor
+   *        The link color to use. May be <code>null</code>.
+   * @return this for chaining.
+   * @since v7.4.1
+   */
+  @Nonnull
+  public final IMPLTYPE setLinkDashPattern (@Nullable final PLColor aLinkColor)
+  {
+    internalCheckNotPrepared ();
+    m_aLinkColor = aLinkColor;
     return thisAsT ();
   }
 
