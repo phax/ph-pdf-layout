@@ -240,7 +240,7 @@ public final class PageLayoutPDFTest
       h.addColumn (v2, WidthSpec.star ());
       aPS1.addElement (h);
     }
-    if (true)
+
     {
       aPS1.addElement (new PLText (sLID, r10.getCloneWithDifferentColor (PLColor.WHITE)).setHorzAlign (
                                                                                                        EHorzAlignment.RIGHT)
