@@ -62,6 +62,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+* v7.4.2 - 2025-07-08
+    * Added methods `PageLayoutPDFD.setCustom(Leading|Trailing|Total)PageCount` to allow for page count customization. See [#58](https://github.com/phax/ph-pdf-layout/issues/58) - thx @xxs3315
 * v7.4.1 - 2025-06-24
     * Added support for rounded edges on `PLBox` and `PLText`. See [#48](https://github.com/phax/ph-pdf-layout/issues/48) - thx @marco-de-angelis
 * v7.4.0 - 2025-06-17

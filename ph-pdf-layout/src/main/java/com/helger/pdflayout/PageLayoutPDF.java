@@ -26,6 +26,7 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.WillClose;
@@ -101,6 +102,9 @@ public class PageLayoutPDF implements IPLVisitable
   private boolean m_bCompressPDF = DEFAULT_COMPRESS_PDF;
   private boolean m_bCreatePDF_A = DEFAULT_CREATE_PDF_A;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
+  private int m_nCustomLeadingPageCount = -1;
+  private int m_nCustomTrailingPageCount = -1;
+  private int m_nCustomTotalPageCount = -1;
   private IPDDocumentCustomizer m_aDocumentCustomizer;
   private IXMPMetadataCustomizer m_aMetadataCustomizer;
 
@@ -379,6 +383,108 @@ public class PageLayoutPDF implements IPLVisitable
   }
 
   /**
+   * Get the custom leading page count to be used. This can be helpful if it is known, that pages
+   * are prepended to the final PDF. The default is 0.
+   *
+   * @return The custom leading page count. Only values &ge; 0 are considered.
+   * @see #getCustomTrailingPageCount()
+   * @since 7.4.2
+   */
+  @CheckForSigned
+  public final int getCustomLeadingPageCount ()
+  {
+    return m_nCustomLeadingPageCount;
+  }
+
+  /**
+   * Set the custom leading page count to be used. This can be helpful if it is known, that pages
+   * are prepended to the final PDF. The default is 0.
+   *
+   * @param nCustomLeadingPageCount
+   *        The custom leading page count. Only values &ge; 0 are considered.
+   * @return this for chaining
+   * @see #setCustomTrailingPageCount(int)
+   * @since 7.4.2
+   */
+  @Nonnull
+  public final PageLayoutPDF setCustomLeadingPageCount (final int nCustomLeadingPageCount)
+  {
+    if (m_nCustomTotalPageCount > 0)
+      LOGGER.warn ("Don't mix 'Custom total page count' with 'Custom leading page count'");
+
+    m_nCustomLeadingPageCount = nCustomLeadingPageCount;
+    return this;
+  }
+
+  /**
+   * Get the custom trailing page count to be used. This can be helpful if it is known, that pages
+   * are appended to the final PDF. The default is 0.
+   *
+   * @return The custom trailing page count. Only values &ge; 0 are considered.
+   * @see #getCustomLeadingPageCount()
+   * @since 7.4.2
+   */
+  @CheckForSigned
+  public final int getCustomTrailingPageCount ()
+  {
+    return m_nCustomTrailingPageCount;
+  }
+
+  /**
+   * Set the custom trailing page count to be used. This can be helpful if it is known, that pages
+   * are appended to the final PDF. The default is 0.
+   *
+   * @param nCustomTrailingPageCount
+   *        The custom trailing page count. Only values &ge; 0 are considered.
+   * @return this for chaining
+   * @see #setCustomTrailingPageCount(int)
+   * @since 7.4.2
+   */
+  @Nonnull
+  public final PageLayoutPDF setCustomTrailingPageCount (final int nCustomTrailingPageCount)
+  {
+    if (m_nCustomTotalPageCount > 0)
+      LOGGER.warn ("Don't mix 'Custom total page count' with 'Custom trailing page count'");
+
+    m_nCustomTrailingPageCount = nCustomTrailingPageCount;
+    return this;
+  }
+
+  /**
+   * Get the custom total page count to be used. This can be helpful if it is known, that pages are
+   * prepended or appended to the final PDF. By default this value is calculated automatically.
+   *
+   * @return The custom page count offset. Only values &gt; 0 are considered.
+   * @since 7.4.2
+   */
+  @CheckForSigned
+  public final int getCustomTotalPageCount ()
+  {
+    return m_nCustomTotalPageCount;
+  }
+
+  /**
+   * Set the custom total page count to be used. This can be helpful if it is known, that pages are
+   * prepended or appended to the final PDF. By default this value is calculated automatically.
+   * Don't mix this method with {@link #setCustomLeadingPageCount(int)} and
+   * {@link #setCustomTrailingPageCount(int)} as they are contradicting - use either or.
+   *
+   * @param nCustomTotalPageCount
+   *        The custom total page count. Only values &gt; 0 are considered.
+   * @return this for chaining
+   * @since 7.4.2
+   */
+  @Nonnull
+  public final PageLayoutPDF setCustomTotalPageCount (final int nCustomTotalPageCount)
+  {
+    if (m_nCustomLeadingPageCount > 0 || m_nCustomTrailingPageCount > 0)
+      LOGGER.warn ("Don't mix 'Custom total page count' with 'Custom leading|trailing page count'");
+
+    m_nCustomTotalPageCount = nCustomTotalPageCount;
+    return this;
+  }
+
+  /**
    * @return The document customizer to use. May be <code>null</code>.
    */
   @Nullable
@@ -517,7 +623,8 @@ public class PageLayoutPDF implements IPLVisitable
         final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal (aDoc);
         final PLPageSetPrepareResult [] aPRs = new PLPageSetPrepareResult [m_aPageSets.size ()];
         int nPageSetIndex = 0;
-        int nTotalPageCount = 0;
+        // Eventually start at the custom offset
+        int nTotalPageCount = m_nCustomLeadingPageCount > 0 ? m_nCustomLeadingPageCount : 0;
         for (final PLPageSet aPageSet : m_aPageSets)
         {
           final PLPageSetPrepareResult aPR;
@@ -531,11 +638,19 @@ public class PageLayoutPDF implements IPLVisitable
           nTotalPageCount += aPR.getPageCount ();
           nPageSetIndex++;
         }
+        // Add the custom trailing page count to the total pages
+        if (m_nCustomTrailingPageCount > 0)
+          nTotalPageCount += m_nCustomTrailingPageCount;
+
+        // Use the custom overall page count if applicable
+        if (m_nCustomTotalPageCount > 0)
+          nTotalPageCount = m_nCustomTotalPageCount;
 
         // Render all page sets
         nPageSetIndex = 0;
         final int nPageSetCount = m_aPageSets.size ();
-        int nTotalPageIndex = 0;
+        // Eventually start at the custom offset
+        int nTotalPageIndex = m_nCustomLeadingPageCount > 0 ? m_nCustomLeadingPageCount : 0;
         for (final PLPageSet aPageSet : m_aPageSets)
         {
           final PLPageSetPrepareResult aPR = aPRs[nPageSetIndex];

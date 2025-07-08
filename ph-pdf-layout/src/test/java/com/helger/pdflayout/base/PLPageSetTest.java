@@ -224,6 +224,92 @@ public final class PLPageSetTest
   }
 
   @Test
+  public void testWithPlaceholderCustomLeadingTrailing () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (0);
+
+    aPS1.setPageHeader (new PLBox (new PLText (EPLPlaceholder.PAGESET_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_COUNT.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_COUNT.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable () +
+                                               " / ${custom-var}",
+                                               r10).setID ("header")
+                                                   .setReplacePlaceholder (true)
+                                                   .setFillColor (PLColor.PINK)).setID ("headerbox")
+                                                                                .setHorzAlign (EHorzAlignment.CENTER)
+                                                                                .setBorder (PLColor.GREEN));
+
+    final StringBuilder aText = new StringBuilder ();
+    for (int i = 0; i < 80; ++i)
+      aText.append ("Line ").append (i).append ('\n');
+    aPS1.addElement (new PLText (aText.toString (), r10).setVertSplittable (true).setID ("content"));
+
+    aPS1.setPreRenderContextCustomizer (aCtx -> { aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)"); });
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.setCustomLeadingPageCount (5).setCustomTrailingPageCount (10);
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/placeholder-custom-leading-trailing.pdf"));
+  }
+
+  @Test
+  public void testWithPlaceholderCustomTotal () throws PDFCreationException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (0);
+
+    aPS1.setPageHeader (new PLBox (new PLText (EPLPlaceholder.PAGESET_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_COUNT.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.PAGESET_PAGE_COUNT.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_INDEX.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_NUMBER.getVariable () +
+                                               " / " +
+                                               EPLPlaceholder.TOTAL_PAGE_COUNT.getVariable () +
+                                               " / ${custom-var}",
+                                               r10).setID ("header")
+                                                   .setReplacePlaceholder (true)
+                                                   .setFillColor (PLColor.PINK)).setID ("headerbox")
+                                                                                .setHorzAlign (EHorzAlignment.CENTER)
+                                                                                .setBorder (PLColor.GREEN));
+
+    final StringBuilder aText = new StringBuilder ();
+    for (int i = 0; i < 80; ++i)
+      aText.append ("Line ").append (i).append ('\n');
+    aPS1.addElement (new PLText (aText.toString (), r10).setVertSplittable (true).setID ("content"));
+
+    aPS1.setPreRenderContextCustomizer (aCtx -> { aCtx.addPlaceholder ("${custom-var}", "ph-pdf-layout is cool :)"); });
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.setCustomTotalPageCount (20);
+    aPageLayout.addPageSet (aPS1);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/placeholder-custom-total.pdf"));
+  }
+
+  @Test
   public void testMultiplePages () throws PDFCreationException
   {
     final String sHeader = "This is a page header that is repeated on every page.\nIt can have multiple lines etc.\n";
