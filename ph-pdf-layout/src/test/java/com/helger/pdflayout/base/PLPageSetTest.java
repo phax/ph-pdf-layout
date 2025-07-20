@@ -18,12 +18,19 @@ package com.helger.pdflayout.base;
 
 import java.io.File;
 
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.util.Matrix;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import com.helger.commons.string.StringHelper;
+import com.helger.pdflayout.IPDDocumentCustomizer;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
@@ -32,6 +39,7 @@ import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.table.PLTable;
 import com.helger.pdflayout.element.table.PLTableCell;
 import com.helger.pdflayout.element.text.PLText;
+import com.helger.pdflayout.pdfbox.PDPageContentStreamExt;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
@@ -513,5 +521,51 @@ public final class PLPageSetTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/firstpage-smaller.pdf"));
+  }
+
+  @Test
+  public void testCreateWatermark () throws PDFCreationException
+  {
+    final IPDDocumentCustomizer aWatermarkCustomizer = aDoc -> {
+      final PDFont aFont = new PDType1Font (Standard14Fonts.FontName.COURIER);
+      final float fFontSize = 100.0f;
+      final String sMessage = "Draft Document";
+
+      for (final PDPage aPage : aDoc.getPages ())
+      {
+        final PDRectangle aPageSize = aPage.getMediaBox ();
+        // calculate to center of the page
+        // depends on the text and size you want to print
+        final float fCenterX = aPageSize.getWidth () * 0.2f;
+        final float fCenterY = aPageSize.getHeight () * 0.1f;
+        // prepend the content to the existing stream
+        try (final PDPageContentStreamExt aCustomizeCS = new PDPageContentStreamExt (aDoc,
+                                                                                     aPage,
+                                                                                     PDPageContentStream.AppendMode.PREPEND,
+                                                                                     true,
+                                                                                     true))
+        {
+          aCustomizeCS.saveGraphicsState ();
+          aCustomizeCS.beginText ();
+          aCustomizeCS.setFont (aFont, fFontSize);
+          // Gray text
+          aCustomizeCS.setNonStrokingColor (220, 220, 220);
+          // rotate the text
+          aCustomizeCS.setTextMatrix (Matrix.getRotateInstance (1.3 * Math.PI / 4, fCenterX, fCenterY));
+          aCustomizeCS.showText (sMessage);
+          aCustomizeCS.endText ();
+          aCustomizeCS.restoreGraphicsState ();
+        }
+      }
+    };
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+    for (int i = 0; i < 145; ++i)
+      aPS1.addElement (new PLText ("Dummy line " + i, r10).setMargin (3, 0));
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.setDocumentCustomizer (aWatermarkCustomizer);
+    PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/plpageset/watermark.pdf"));
   }
 }
