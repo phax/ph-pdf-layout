@@ -16,17 +16,17 @@
  */
 package com.helger.pdflayout.debug;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.callback.IThrowingRunnable;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.iface.IThrowingRunnable;
 import com.helger.pdflayout.base.IPLBlockElement;
 import com.helger.pdflayout.base.IPLInlineElement;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.spec.BorderStyleSpec;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This class defines stuff for debug rendering.

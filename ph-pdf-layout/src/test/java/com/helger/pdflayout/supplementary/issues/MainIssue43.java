@@ -20,8 +20,8 @@ import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
+import com.helger.collection.commons.CommonsArrayList;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;

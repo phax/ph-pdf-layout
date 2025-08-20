@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 
 /**
  * Test class for class {@link PLConfig}.
@@ -32,8 +32,8 @@ public final class PLConfigTest
   @Test
   public void testBasic ()
   {
-    assertTrue (StringHelper.hasText (PLConfig.PROJECT_NAME));
-    assertTrue (StringHelper.hasText (PLConfig.PROJECT_VERSION));
+    assertTrue (StringHelper.isNotEmpty (PLConfig.PROJECT_NAME));
+    assertTrue (StringHelper.isNotEmpty (PLConfig.PROJECT_VERSION));
     assertTrue (!"undefined".equals (PLConfig.PROJECT_VERSION));
   }
 }

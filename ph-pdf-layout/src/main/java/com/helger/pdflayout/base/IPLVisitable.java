@@ -18,9 +18,9 @@ package com.helger.pdflayout.base;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import com.helger.base.state.EChange;
 
-import com.helger.commons.state.EChange;
+import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for visitable objects.

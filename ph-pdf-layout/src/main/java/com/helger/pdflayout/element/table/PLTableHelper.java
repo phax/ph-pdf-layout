@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout.element.table;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * PLTable helper class containing additional methods to deal with PLTable

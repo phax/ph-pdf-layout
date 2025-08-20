@@ -18,17 +18,14 @@ package com.helger.pdflayout.element.link;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 
-import com.helger.commons.string.StringHelper;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.string.StringHelper;
+import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.debug.PLDebugLog;
@@ -36,6 +33,9 @@ import com.helger.pdflayout.element.box.AbstractPLInlineBox;
 import com.helger.pdflayout.link.ELinkBorderStyle;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An external link that references to an external URI. Use {@link #setURI(String)} to define the
@@ -212,7 +212,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
     final IPLRenderableObject <?> aElement = getElement ();
     if (aElement != null)
     {
-      if (StringHelper.hasText (m_sURI))
+      if (StringHelper.isNotEmpty (m_sURI))
       {
         final PDAnnotationLink aLink = new PDAnnotationLink ();
 

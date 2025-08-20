@@ -21,23 +21,22 @@ import static com.helger.pdflayout.render.PLRenderHelper.fillAndRenderBorderRoun
 import java.io.IOException;
 import java.util.List;
 
-import javax.annotation.CheckForSigned;
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-
-import com.helger.commons.CGlobal;
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.OverrideOnDemand;
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.state.EChange;
-import com.helger.commons.string.StringHelper;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.CheckForSigned;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.annotation.style.OverrideOnDemand;
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.CGlobal;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.state.EChange;
+import com.helger.base.string.StringHelper;
+import com.helger.base.string.StringImplode;
+import com.helger.base.string.StringReplace;
+import com.helger.base.tostring.ToStringGenerator;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
+import com.helger.collection.commons.ICommonsMap;
 import com.helger.pdflayout.base.AbstractPLInlineElement;
 import com.helger.pdflayout.base.EPLPlaceholder;
 import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
@@ -55,6 +54,9 @@ import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.TextAndWidthSpec;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Render text
@@ -96,7 +98,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   @Nonnull
   public static String getCleanedPLText (@Nullable final String sText)
   {
-    if (StringHelper.hasNoText (sText))
+    if (StringHelper.isEmpty (sText))
     {
       return "";
     }
@@ -104,8 +106,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // contained
     // Multiple \n after each other remain
     String sCleaned = sText;
-    sCleaned = StringHelper.replaceAll (sCleaned, "\r\n", "\n");
-    sCleaned = StringHelper.replaceAll (sCleaned, '\r', '\n');
+    sCleaned = StringReplace.replaceAll (sCleaned, "\r\n", "\n");
+    sCleaned = StringReplace.replaceAll (sCleaned, '\r', '\n');
     return sCleaned;
   }
 
@@ -432,7 +434,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     else
     {
       // Use the approximations from the placeholders
-      sTextToFit = StringHelper.replaceMultiple (m_sOriginalText, ESTIMATION_REPLACEMENTS);
+      sTextToFit = StringReplace.replaceMultiple (m_sOriginalText, ESTIMATION_REPLACEMENTS);
     }
     internalSetPreparedLines (m_aLoadedFont.getFitToWidth (sTextToFit, fFontSize, fAvailableWidth));
 
@@ -531,7 +533,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     // Excluding padding/margin
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLineCount (aLineCopy.size (), true));
 
-    final String sTextContent = StringHelper.getImplodedMapped ('\n', aLineCopy, TextAndWidthSpec::getText);
+    final String sTextContent = StringImplode.getImplodedMapped ('\n', aLineCopy, TextAndWidthSpec::getText);
     final AbstractPLText <?> aNewText = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + sIDSuffix);
     aNewText._setText (sTextContent);
     // Set this explicitly after setBasicDataFrom!
@@ -634,7 +636,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     if (m_bReplacePlaceholder)
     {
       final String sOrigText = m_sOriginalText;
-      final String sDisplayText = StringHelper.replaceMultiple (sOrigText, aCtx.getAllPlaceholders ());
+      final String sDisplayText = StringReplace.replaceMultiple (sOrigText, aCtx.getAllPlaceholders ());
       if (!sOrigText.equals (sDisplayText))
       {
         // Something changed

@@ -18,13 +18,13 @@ package com.helger.pdflayout.element.special;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * A page break that ensures a new page is started afterwards. The difference

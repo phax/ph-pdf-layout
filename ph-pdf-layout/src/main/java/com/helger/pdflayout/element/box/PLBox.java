@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.element.box;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.helger.pdflayout.base.IPLRenderableObject;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A box is a simple block element that encapsulates another element and has a

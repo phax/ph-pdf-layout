@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.list;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.Nonnegative;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * An implementation of {@link IBulletPointCreator} that always uses the same character (like in an

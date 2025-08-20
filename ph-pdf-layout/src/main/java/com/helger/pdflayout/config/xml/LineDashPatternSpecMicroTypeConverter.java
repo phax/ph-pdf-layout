@@ -16,15 +16,15 @@
  */
 package com.helger.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.string.StringParser;
+import com.helger.base.string.StringParser;
+import com.helger.collection.commons.ICommonsList;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link LineDashPatternSpec}.
@@ -47,7 +47,7 @@ public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeCo
 
     aElement.setAttribute (ATTR_PHASE, aValue.getPhase ());
     for (final float fPattern : aValue.getPattern ())
-      aElement.appendElement (sNamespaceURI, ELEMENT_PATTERN).setAttribute (ATTR_ITEM, fPattern);
+      aElement.addElementNS (sNamespaceURI, ELEMENT_PATTERN).setAttribute (ATTR_ITEM, fPattern);
 
     return aElement;
   }

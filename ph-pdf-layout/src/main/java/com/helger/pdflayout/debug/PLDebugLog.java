@@ -16,16 +16,16 @@
  */
 package com.helger.pdflayout.debug;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.ValueEnforcer;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pdflayout.base.IPLHasMarginBorderPadding;
 import com.helger.pdflayout.base.IPLObject;
 import com.helger.pdflayout.spec.SizeSpec;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * This class allows for some debug logging on PDF creation.

@@ -18,9 +18,7 @@ package com.helger.pdflayout.render;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
+import com.helger.annotation.concurrent.Immutable;
 import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.IPLHasFillColor;
 import com.helger.pdflayout.base.IPLHasMarginBorderPadding;
@@ -31,6 +29,8 @@ import com.helger.pdflayout.debug.PLDebugRender;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Render helper

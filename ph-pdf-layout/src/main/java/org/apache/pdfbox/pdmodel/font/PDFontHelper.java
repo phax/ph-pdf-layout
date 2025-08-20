@@ -18,7 +18,7 @@ package org.apache.pdfbox.pdmodel.font;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Helper class to access package private classes of {@link PDFont}.

@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.spec;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nullable;
+import com.helger.annotation.Nonnegative;
+import com.helger.base.id.IHasIntID;
+import com.helger.base.lang.EnumHelper;
 
-import com.helger.commons.id.IHasIntID;
-import com.helger.commons.lang.EnumHelper;
+import jakarta.annotation.Nullable;
 
 /**
  * Possible line join styles.

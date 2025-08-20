@@ -22,7 +22,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;

@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.base;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-
+import com.helger.annotation.Nonnegative;
 import com.helger.pdflayout.spec.EHorzAlignment;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for objects with a horizontal alignment

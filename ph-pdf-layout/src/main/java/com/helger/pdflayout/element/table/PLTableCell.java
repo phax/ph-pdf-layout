@@ -18,17 +18,17 @@ package com.helger.pdflayout.element.table;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import com.helger.commons.ValueEnforcer;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.element.box.AbstractPLBox;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.render.PageRenderContext;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This class represents a single table cell within a table row.

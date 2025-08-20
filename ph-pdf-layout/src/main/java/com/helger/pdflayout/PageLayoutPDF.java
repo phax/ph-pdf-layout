@@ -26,12 +26,6 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import javax.annotation.CheckForSigned;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.WillClose;
-import javax.annotation.concurrent.NotThreadSafe;
-
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
@@ -52,24 +46,30 @@ import org.apache.xmpbox.xml.XmpSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.datetime.PDTConfig;
-import com.helger.commons.datetime.PDTFactory;
-import com.helger.commons.io.file.FileHelper;
-import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
-import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
-import com.helger.commons.io.stream.StreamHelper;
-import com.helger.commons.state.EChange;
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.CheckForSigned;
+import com.helger.annotation.WillClose;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.io.nonblocking.NonBlockingByteArrayInputStream;
+import com.helger.base.io.nonblocking.NonBlockingByteArrayOutputStream;
+import com.helger.base.io.stream.StreamHelper;
+import com.helger.base.state.EChange;
+import com.helger.base.string.StringHelper;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
 import com.helger.commons.vendor.VendorInfo;
+import com.helger.datetime.helper.PDTFactory;
+import com.helger.datetime.zone.PDTConfig;
+import com.helger.io.file.FileHelper;
 import com.helger.pdflayout.base.IPLVisitable;
 import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.base.PLPageSetPrepareResult;
 import com.helger.pdflayout.render.PreparationContextGlobal;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Main class for creating layouted PDFs. This class contains the meta data as well as a list of
@@ -113,7 +113,7 @@ public class PageLayoutPDF implements IPLVisitable
    */
   public PageLayoutPDF ()
   {
-    m_sDocumentAuthor = VendorInfo.getVendorName () + " " + VendorInfo.getVendorURLWithoutProtocol ();
+    m_sDocumentAuthor = VendorInfo.getVendorName () + " " + VendorInfo.getVendorURL ();
     m_aDocumentCreationDate = PDTFactory.getCurrentZonedDateTime ();
     m_sDocumentCreator = VendorInfo.getVendorName ();
   }
@@ -570,7 +570,7 @@ public class PageLayoutPDF implements IPLVisitable
    * @param aOS
    *        The output stream to write to. May not be <code>null</code>. Is closed automatically
    *        internally. To avoid closing the {@link OutputStream} you may consider wrapping it in a
-   *        {@link com.helger.commons.io.stream.NonClosingOutputStream} - just a hint.
+   *        {@link com.helger.base.io.stream.NonClosingOutputStream} - just a hint.
    * @return this for chaining
    * @throws PDFCreationException
    *         In case of an error
@@ -597,17 +597,17 @@ public class PageLayoutPDF implements IPLVisitable
         // Set document properties
         {
           final PDDocumentInformation aProperties = new PDDocumentInformation ();
-          if (StringHelper.hasText (m_sDocumentAuthor))
+          if (StringHelper.isNotEmpty (m_sDocumentAuthor))
             aProperties.setAuthor (m_sDocumentAuthor);
           if (m_aDocumentCreationDate != null)
             aProperties.setCreationDate (GregorianCalendar.from (m_aDocumentCreationDate));
-          if (StringHelper.hasText (m_sDocumentCreator))
+          if (StringHelper.isNotEmpty (m_sDocumentCreator))
             aProperties.setCreator (m_sDocumentCreator);
-          if (StringHelper.hasText (m_sDocumentTitle))
+          if (StringHelper.isNotEmpty (m_sDocumentTitle))
             aProperties.setTitle (m_sDocumentTitle);
-          if (StringHelper.hasText (m_sDocumentKeywords))
+          if (StringHelper.isNotEmpty (m_sDocumentKeywords))
             aProperties.setKeywords (m_sDocumentKeywords);
-          if (StringHelper.hasText (m_sDocumentSubject))
+          if (StringHelper.isNotEmpty (m_sDocumentSubject))
             aProperties.setSubject (m_sDocumentSubject);
           aProperties.setProducer (PLConfig.PROJECT_NAME +
                                    " " +
@@ -720,26 +720,26 @@ public class PageLayoutPDF implements IPLVisitable
           final PDDocumentInformation aDocInfo = aDoc.getDocumentInformation ();
           aDocInfo.setCreationDate (aCreationDate);
           aDocInfo.setModificationDate (aCreationDate);
-          if (StringHelper.hasText (m_sDocumentAuthor))
+          if (StringHelper.isNotEmpty (m_sDocumentAuthor))
             aDocInfo.setAuthor (m_sDocumentAuthor);
           aDocInfo.setProducer (sProducer);
-          if (StringHelper.hasText (m_sDocumentCreator))
+          if (StringHelper.isNotEmpty (m_sDocumentCreator))
             aDocInfo.setCreator (m_sDocumentCreator);
-          if (StringHelper.hasText (m_sDocumentTitle))
+          if (StringHelper.isNotEmpty (m_sDocumentTitle))
             aDocInfo.setTitle (m_sDocumentTitle);
-          if (StringHelper.hasText (m_sDocumentSubject))
+          if (StringHelper.isNotEmpty (m_sDocumentSubject))
             aDocInfo.setSubject (m_sDocumentSubject);
 
           try
           {
             final DublinCoreSchema aDCSchema = aXmpMetadata.createAndAddDublinCoreSchema ();
-            if (StringHelper.hasText (m_sDocumentTitle))
+            if (StringHelper.isNotEmpty (m_sDocumentTitle))
               aDCSchema.setTitle (m_sDocumentTitle);
-            if (StringHelper.hasText (m_sDocumentCreator))
+            if (StringHelper.isNotEmpty (m_sDocumentCreator))
               aDCSchema.addCreator (m_sDocumentCreator);
-            if (StringHelper.hasText (m_sDocumentKeywords))
+            if (StringHelper.isNotEmpty (m_sDocumentKeywords))
               aDCSchema.addDescription ("", m_sDocumentKeywords);
-            if (StringHelper.hasText (m_sDocumentSubject))
+            if (StringHelper.isNotEmpty (m_sDocumentSubject))
               aDCSchema.addSubject (m_sDocumentSubject);
             aDCSchema.addDate (aCreationDate);
 
@@ -780,7 +780,7 @@ public class PageLayoutPDF implements IPLVisitable
             aDocCatalogue.addOutputIntent (aIntent);
           }
 
-          if (StringHelper.hasText (m_sDocumentLanguage))
+          if (StringHelper.isNotEmpty (m_sDocumentLanguage))
             aDocCatalogue.setLanguage (m_sDocumentLanguage);
 
           for (final PDPage aPage : aDoc.getPages ())

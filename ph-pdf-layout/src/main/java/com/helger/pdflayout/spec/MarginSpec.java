@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.spec;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
-import com.helger.commons.equals.EqualsHelper;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.style.MustImplementEqualsAndHashcode;
+import com.helger.base.equals.EqualsHelper;
 import com.helger.pdflayout.PLConvert;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines a rectangular margin.

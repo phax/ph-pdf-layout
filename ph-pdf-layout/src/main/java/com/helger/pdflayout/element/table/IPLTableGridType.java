@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.element.table;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.id.IHasID;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.id.IHasID;
 import com.helger.pdflayout.spec.BorderStyleSpec;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Custom {@link PLTable} grid specification.

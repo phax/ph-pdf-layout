@@ -16,9 +16,9 @@
  */
 package org.apache.pdfbox.pdmodel;
 
-import javax.annotation.Nonnull;
-
 import org.apache.pdfbox.pdmodel.font.PDFont;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Helper class to access package private classes of {@link PDDocument}.

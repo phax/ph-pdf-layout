@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.list;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.IPLHasPadding;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * An abstract implementation of {@link IBulletPointCreator} that uses a Font based character.

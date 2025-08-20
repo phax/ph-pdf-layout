@@ -21,8 +21,8 @@ import static org.junit.Assert.assertEquals;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Test;
 
-import com.helger.commons.mock.CommonsAssert;
-import com.helger.commons.mock.CommonsTestHelper;
+import com.helger.base.mock.CommonsAssert;
+import com.helger.unittest.support.TestHelper;
 
 /**
  * Test class for class {@link SizeSpec}.
@@ -58,8 +58,8 @@ public final class SizeSpecTest
     CommonsAssert.assertEquals (H, s.getWidth ());
     CommonsAssert.assertEquals (W, s.getHeight ());
 
-    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (s, SizeSpec.create (s.getAsRectangle ()));
-    CommonsTestHelper.testDefaultSerialization (s);
+    TestHelper.testDefaultImplementationWithEqualContentObject (s, SizeSpec.create (s.getAsRectangle ()));
+    TestHelper.testDefaultSerialization (s);
   }
 
   @Test

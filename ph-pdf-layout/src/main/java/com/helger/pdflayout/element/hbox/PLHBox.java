@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout.element.hbox;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Horizontal box - groups several columns without having layout information

@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-
 import com.helger.pdflayout.spec.AbstractRectSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Micro type converter for classes based on {@link AbstractRectSpec}.

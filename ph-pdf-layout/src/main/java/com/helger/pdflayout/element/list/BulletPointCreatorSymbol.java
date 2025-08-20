@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.list;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-
+import com.helger.annotation.Nonnegative;
 import com.helger.pdflayout.PLConvert;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * An implementation of {@link IBulletPointCreator} that always uses the Bullet point character from

@@ -16,9 +16,9 @@
  */
 package com.helger.pdflayout;
 
-import javax.annotation.Nonnull;
-
 import org.apache.xmpbox.XMPMetadata;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Callback interface to customize XMP Metadata.

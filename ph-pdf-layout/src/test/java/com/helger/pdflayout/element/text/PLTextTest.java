@@ -24,9 +24,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.CGlobal;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.CGlobal;
+import com.helger.base.string.StringHelper;
+import com.helger.collection.commons.CommonsArrayList;
 import com.helger.font.alegreya_sans.EFontResourceAlegreyaSans;
 import com.helger.font.anaheim.EFontResourceAnaheim;
 import com.helger.font.api.IHasFontResource;

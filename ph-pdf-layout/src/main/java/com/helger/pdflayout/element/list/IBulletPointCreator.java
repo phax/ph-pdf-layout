@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.element.list;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-
+import com.helger.annotation.Nonnegative;
 import com.helger.pdflayout.base.IPLRenderableObject;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Abstract bullet point creator to create e.g. constant dots or numbers or characters.

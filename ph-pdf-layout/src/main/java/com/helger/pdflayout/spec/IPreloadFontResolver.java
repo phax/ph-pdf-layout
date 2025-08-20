@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.spec;
 
-import javax.annotation.Nullable;
-
 import com.helger.font.api.IFontResource;
 import com.helger.font.api.IHasFontResource;
+
+import jakarta.annotation.Nullable;
 
 /**
  * Find {@link PreloadFont} objects by ID.

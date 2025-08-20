@@ -16,9 +16,6 @@
  */
 package com.helger.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
@@ -26,6 +23,9 @@ import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.convert.MicroTypeConverter;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link BorderStyleSpec}.
@@ -48,13 +48,11 @@ public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConver
 
     final PLColor aColor = aValue.getColor ();
     if (aColor != BorderStyleSpec.DEFAULT_COLOR)
-      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
+      aElement.addChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
 
     final LineDashPatternSpec aLDPSpec = aValue.getLineDashPattern ();
     if (aLDPSpec != BorderStyleSpec.DEFAULT_LINE_DASH_PATTERN)
-      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aLDPSpec,
-                                                                      sNamespaceURI,
-                                                                      ELEMENT_LINE_DASH_PATTERN));
+      aElement.addChild (MicroTypeConverter.convertToMicroElement (aLDPSpec, sNamespaceURI, ELEMENT_LINE_DASH_PATTERN));
 
     aElement.setAttribute (ATTR_LINE_WIDTH, aValue.getLineWidth ());
 

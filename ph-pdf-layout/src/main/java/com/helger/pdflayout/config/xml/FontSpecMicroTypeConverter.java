@@ -16,10 +16,7 @@
  */
 package com.helger.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.ValueEnforcer;
+import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.IPreloadFontResolver;
@@ -28,6 +25,9 @@ import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.convert.MicroTypeConverter;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link FontSpec}.
@@ -60,7 +60,7 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter <Fo
 
     final PLColor aColor = aValue.getColor ();
     if (aColor != FontSpec.DEFAULT_COLOR)
-      aElement.appendChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
+      aElement.addChild (MicroTypeConverter.convertToMicroElement (aColor, sNamespaceURI, ELEMENT_COLOR));
     return aElement;
   }
 

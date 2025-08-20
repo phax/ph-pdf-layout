@@ -16,15 +16,15 @@
  */
 package com.helger.pdflayout.render;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * This class contains the context for rendering a single element onto the PDF.

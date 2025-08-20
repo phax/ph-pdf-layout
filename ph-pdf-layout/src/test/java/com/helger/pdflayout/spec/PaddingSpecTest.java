@@ -22,8 +22,8 @@ import static org.junit.Assert.assertSame;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Test;
 
-import com.helger.commons.mock.CommonsAssert;
-import com.helger.commons.mock.CommonsTestHelper;
+import com.helger.base.mock.CommonsAssert;
+import com.helger.unittest.support.TestHelper;
 
 /**
  * Test class for class {@link PaddingSpec}.
@@ -70,8 +70,8 @@ public final class PaddingSpecTest
     CommonsAssert.assertEquals (0, p.getBottom ());
     CommonsAssert.assertEquals (F1, p.getLeft ());
 
-    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (p, new PaddingSpec (p));
-    CommonsTestHelper.testDefaultSerialization (p);
+    TestHelper.testDefaultImplementationWithEqualContentObject (p, new PaddingSpec (p));
+    TestHelper.testDefaultSerialization (p);
   }
 
   @Test

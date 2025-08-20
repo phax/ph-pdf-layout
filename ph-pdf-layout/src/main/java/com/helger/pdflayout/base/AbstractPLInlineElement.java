@@ -16,8 +16,9 @@
  */
 package com.helger.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Abstract implementation of {@link IPLInlineElement}

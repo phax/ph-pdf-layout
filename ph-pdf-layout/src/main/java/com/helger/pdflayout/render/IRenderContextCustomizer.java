@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout.render;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Interface for customizing rendering contexts.

@@ -18,11 +18,11 @@ package com.helger.pdflayout.base;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.functional.IThrowingFunction;
+import com.helger.base.state.EChange;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.functional.IThrowingFunction;
-import com.helger.commons.state.EChange;
+import jakarta.annotation.Nonnull;
 
 /**
  * Visitor callback

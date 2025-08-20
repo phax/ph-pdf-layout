@@ -18,8 +18,6 @@ package com.helger.pdflayout.supplementary.issues;
 
 import java.io.File;
 
-import javax.annotation.Nonnull;
-
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +34,8 @@ import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Test for issue 49

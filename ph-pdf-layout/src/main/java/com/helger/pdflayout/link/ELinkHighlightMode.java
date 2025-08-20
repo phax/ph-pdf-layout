@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.link;
 
-import javax.annotation.Nonnull;
-
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 
-import com.helger.commons.annotation.Nonempty;
+import com.helger.annotation.Nonempty;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Contains the highlight mode for links.

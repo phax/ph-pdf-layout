@@ -25,7 +25,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.io.file.FileSystemRecursiveIterator;
+import com.helger.io.file.FileSystemRecursiveIterator;
 
 public final class MainIssue3204
 {

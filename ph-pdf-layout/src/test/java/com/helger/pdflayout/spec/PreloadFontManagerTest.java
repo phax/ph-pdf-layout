@@ -27,9 +27,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.mock.CommonsTestHelper;
 import com.helger.font.api.IFontResource;
 import com.helger.font.lato2.EFontResourceLato2;
+import com.helger.unittest.support.TestHelper;
 
 /**
  * Test class for class {@link PreloadFontManager}.
@@ -53,7 +53,7 @@ public final class PreloadFontManagerTest
                 aMgr.getOrAddEmbeddingPreloadFont (EFontResourceLato2.LATO2_BLACK));
 
     for (final PreloadFont x : aMgr.getAllPreloadFonts ())
-      CommonsTestHelper.testDefaultSerialization (x);
+      TestHelper.testDefaultSerialization (x);
   }
 
   public void _test (final PDType1Font f, final int nCP) throws IOException

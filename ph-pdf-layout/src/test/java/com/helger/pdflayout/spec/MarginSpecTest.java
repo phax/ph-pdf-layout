@@ -22,8 +22,8 @@ import static org.junit.Assert.assertSame;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Test;
 
-import com.helger.commons.mock.CommonsAssert;
-import com.helger.commons.mock.CommonsTestHelper;
+import com.helger.base.mock.CommonsAssert;
+import com.helger.unittest.support.TestHelper;
 
 /**
  * Test class for class {@link MarginSpec}.
@@ -69,8 +69,8 @@ public final class MarginSpecTest
     CommonsAssert.assertEquals (0, m.getBottom ());
     CommonsAssert.assertEquals (F1, m.getLeft ());
 
-    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (m, new MarginSpec (m));
-    CommonsTestHelper.testDefaultSerialization (m);
+    TestHelper.testDefaultImplementationWithEqualContentObject (m, new MarginSpec (m));
+    TestHelper.testDefaultSerialization (m);
   }
 
   @Test

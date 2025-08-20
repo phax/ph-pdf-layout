@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.element.table;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
+import com.helger.annotation.Nonnegative;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.numeric.MathHelper;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.math.MathHelper;
+import jakarta.annotation.Nonnull;
 
 /**
  * Read-only version of the cell range.

@@ -16,14 +16,14 @@
  */
 package com.helger.pdflayout.config.xml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.helger.pdflayout.spec.TextAndWidthSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.util.MicroHelper;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link TextAndWidthSpec}.
@@ -43,7 +43,7 @@ public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConve
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
-    aElement.appendElement (sNamespaceURI, ELEMENT_TEXT).appendText (aValue.getText ());
+    aElement.addElementNS (sNamespaceURI, ELEMENT_TEXT).addText (aValue.getText ());
     aElement.setAttribute (ATTR_WIDTH, aValue.getWidth ());
     aElement.setAttribute (ATTR_DISPLAY_AS_NEWLINE, aValue.isDisplayAsNewline ());
     return aElement;

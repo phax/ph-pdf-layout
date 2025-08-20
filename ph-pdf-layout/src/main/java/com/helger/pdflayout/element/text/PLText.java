@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.element.text;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.helger.pdflayout.spec.FontSpec;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Render text

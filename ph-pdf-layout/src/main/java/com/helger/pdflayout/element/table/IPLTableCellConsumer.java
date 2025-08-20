@@ -16,8 +16,9 @@
  */
 package com.helger.pdflayout.element.table;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
+import com.helger.annotation.Nonnegative;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Special consumer for table cells.

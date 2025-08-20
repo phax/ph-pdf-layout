@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.render;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.base.tostring.ToStringGenerator;
 
-import com.helger.commons.string.ToStringGenerator;
+import jakarta.annotation.Nullable;
 
 /**
  * The current context for preparing an element. The preparation context depends

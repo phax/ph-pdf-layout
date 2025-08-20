@@ -24,18 +24,17 @@ import java.io.IOException;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
-import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.io.resource.FileSystemResource;
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.string.StringHelper;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
+import com.helger.io.resource.FileSystemResource;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;
@@ -61,6 +60,8 @@ import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.WidthSpec;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Test class for class {@link PLTable}.

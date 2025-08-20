@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.element.link;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.helger.pdflayout.base.IPLRenderableObject;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An external link that references to an external URI. Use

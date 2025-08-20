@@ -18,20 +18,20 @@ package com.helger.pdflayout.pdfbox;
 
 import java.io.IOException;
 
-import javax.annotation.Nonnull;
-
 import org.apache.pdfbox.pdfwriter.COSWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.equals.EqualsHelper;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.equals.EqualsHelper;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.pdflayout.spec.LoadedFont;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * A special version of PDPageContentStream with an integrated "cache" to avoid setting the same

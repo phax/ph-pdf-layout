@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.base;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.traits.IGenericImplTrait;
+import com.helger.base.traits.IGenericImplTrait;
 import com.helger.pdflayout.spec.PaddingSpec;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for objects having a padding

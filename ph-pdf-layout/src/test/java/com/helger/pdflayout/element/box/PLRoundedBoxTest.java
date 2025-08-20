@@ -18,8 +18,6 @@ package com.helger.pdflayout.element.box;
 
 import java.io.File;
 
-import javax.annotation.Nullable;
-
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +35,8 @@ import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
+
+import jakarta.annotation.Nullable;
 
 /**
  * Test class for {@link PLBox} with a border radius

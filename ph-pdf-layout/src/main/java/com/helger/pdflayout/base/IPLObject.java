@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.base.id.IHasID;
+import com.helger.base.traits.IGenericImplTrait;
 
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.id.IHasID;
-import com.helger.commons.traits.IGenericImplTrait;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Base interface for a PDF layout object. It contains a user-assigned ID as

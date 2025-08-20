@@ -26,8 +26,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.string.StringHelper;
+import com.helger.base.string.StringHelper;
+import com.helger.io.resource.ClassPathResource;
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PDFTestComparer;
 import com.helger.pdflayout.PLDebugTestRule;

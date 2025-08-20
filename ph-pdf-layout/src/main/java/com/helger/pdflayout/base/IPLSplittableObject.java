@@ -16,8 +16,9 @@
  */
 package com.helger.pdflayout.base;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
+import com.helger.annotation.Nonnegative;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for a splittable element

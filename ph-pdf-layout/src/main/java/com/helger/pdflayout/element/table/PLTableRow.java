@@ -20,10 +20,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.mutable.MutableInt;
+import com.helger.base.numeric.mutable.MutableInt;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.base.PLColor;
@@ -35,6 +32,9 @@ import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.WidthSpec;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A special HBox representing a table row.

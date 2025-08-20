@@ -19,11 +19,6 @@ package com.helger.pdflayout.base;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -31,13 +26,15 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.state.EChange;
-import com.helger.commons.string.StringHelper;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.state.EChange;
+import com.helger.base.string.StringImplode;
+import com.helger.base.tostring.ToStringGenerator;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.ICommonsList;
 import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
@@ -53,6 +50,9 @@ import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.SizeSpec;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents a single page layout as element. It consists of a page size, a page header and footer
@@ -867,7 +867,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                        "Finished page " +
                                              ret.getPageNumber () +
                                              " with: " +
-                                             StringHelper.getImploded (aLastPageContent));
+                                             StringImplode.getImploded (aLastPageContent));
             }
             // Something on the current page -> start a new page
             ret.addPerPageElements (aCurPageElements);
@@ -901,7 +901,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                  "Finished last page " +
                                        ret.getPageNumber () +
                                        " with: " +
-                                       StringHelper.getImploded (", ", aLastPageContent));
+                                       StringImplode.getImploded (", ", aLastPageContent));
         }
         if (LOGGER.isDebugEnabled ())
           LOGGER.debug ("Adding " + aCurPageElements.size () + " elements to page " + ret.getPageNumber ());

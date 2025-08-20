@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.element.vbox;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.spec.HeightSpec;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Vertical box - groups several rows without having layout information itself.

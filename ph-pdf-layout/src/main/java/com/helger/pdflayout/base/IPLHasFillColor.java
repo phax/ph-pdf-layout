@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.base;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.helger.base.traits.IGenericImplTrait;
 
-import com.helger.commons.traits.IGenericImplTrait;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Base interface for objects with a fill color

@@ -16,23 +16,23 @@
  */
 package com.helger.pdflayout.render;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.impl.CommonsLinkedHashMap;
-import com.helger.commons.collection.impl.ICommonsOrderedMap;
-import com.helger.commons.string.StringParser;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.string.StringParser;
+import com.helger.base.tostring.ToStringGenerator;
+import com.helger.collection.commons.CommonsLinkedHashMap;
+import com.helger.collection.commons.ICommonsOrderedMap;
 import com.helger.pdflayout.base.EPLPlaceholder;
 import com.helger.pdflayout.base.PLPageSet;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This class describes the index of the current page.
@@ -151,8 +151,7 @@ public class PagePreRenderContext
   }
 
   /**
-   * @return The index of the page in the current page set. 0-based. Always &ge;
-   *         0.
+   * @return The index of the page in the current page set. 0-based. Always &ge; 0.
    */
   @Nonnegative
   public int getPageSetPageIndex ()
@@ -161,8 +160,7 @@ public class PagePreRenderContext
   }
 
   /**
-   * @return The number of the page in the current page set. 1-based. Always
-   *         &ge; 1.
+   * @return The number of the page in the current page set. 1-based. Always &ge; 1.
    */
   @Nonnegative
   public int getPageSetPageNumber ()

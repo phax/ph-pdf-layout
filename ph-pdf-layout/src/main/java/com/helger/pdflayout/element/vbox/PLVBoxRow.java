@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.vbox;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.string.ToStringGenerator;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.spec.HeightSpec;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * This class represents a single row within a VBox. This is a pseudo element

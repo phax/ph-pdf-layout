@@ -16,14 +16,13 @@
  */
 package com.helger.pdflayout;
 
-import javax.annotation.concurrent.Immutable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.lang.PropertiesHelper;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.base.rt.NonBlockingProperties;
+import com.helger.base.rt.PropertiesHelper;
+import com.helger.io.resource.ClassPathResource;
 
 /**
  * Contains global configuration constants.
@@ -45,7 +44,8 @@ public final class PLConfig
   static
   {
     String sProjectVersion = null;
-    final ICommonsMap <String, String> p = PropertiesHelper.loadProperties (new ClassPathResource ("ph-pdf-layout-version.properties"));
+    final NonBlockingProperties p = PropertiesHelper.loadProperties (ClassPathResource.getInputStream ("ph-pdf-layout-version.properties",
+                                                                                                       PLConfig.class.getClassLoader ()));
     if (p != null)
       sProjectVersion = p.get ("version");
     if (sProjectVersion == null)

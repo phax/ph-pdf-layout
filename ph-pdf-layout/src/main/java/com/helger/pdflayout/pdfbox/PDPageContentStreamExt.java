@@ -24,9 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.cos.COSArray;
@@ -60,11 +57,14 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceStream;
 import org.apache.pdfbox.util.Matrix;
 import org.apache.pdfbox.util.NumberFormatUtil;
 
-import com.helger.commons.annotation.CodingStyleguideUnaware;
-import com.helger.commons.collection.NonBlockingStack;
+import com.helger.annotation.concurrent.NotThreadSafe;
+import com.helger.annotation.style.CodingStyleguideUnaware;
+import com.helger.collection.stack.NonBlockingStack;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.ELineCapStyle;
 import com.helger.pdflayout.spec.ELineJoinStyle;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Provides the ability to write to a page content stream.<br>

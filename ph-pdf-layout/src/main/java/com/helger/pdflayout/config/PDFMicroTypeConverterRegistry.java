@@ -16,8 +16,6 @@
  */
 package com.helger.pdflayout.config;
 
-import javax.annotation.Nonnull;
-
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.config.xml.BorderSpecMicroTypeConverter;
 import com.helger.pdflayout.config.xml.BorderStyleSpecMicroTypeConverter;
@@ -44,6 +42,8 @@ import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.TextAndWidthSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 import com.helger.xml.microdom.convert.IMicroTypeConverterRegistry;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * Micro type converter registration for all micro type converter contained in

@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout.base;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for block elements. Compared to normal elements
