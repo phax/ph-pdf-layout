@@ -242,7 +242,7 @@
             <Private-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
               org.apache.pdfbox.pdmodel;-split-package:=first,
               com.helger.pdflayout.*</Private-Package>
-            <Import-Package>!javax.annotation.*,*</Import-Package>
+            <Import-Package>!jakarta.annotation.*,*</Import-Package>
             <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"</Require-Capability>
             <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.helger.commons.thirdparty.IThirdPartyModuleProviderSPI</Provide-Capability>
           </instructions>
