@@ -52,10 +52,6 @@
   <dependencies>
     <dependency>
       <groupId>com.helger.commons</groupId>
-      <artifactId>ph-commons</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.helger.commons</groupId>
       <artifactId>ph-collection</artifactId>
     </dependency>
     <dependency>
