@@ -62,7 +62,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.0.0 - work in progress
+v8.0.0 - 2025-08-24
 * Requires Java 17 as the minimum version
 * Updated to ph-commons 12.0.0
 
