@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout.base;
 
-import com.helger.base.traits.IGenericImplTrait;
+import com.helger.base.trait.IGenericImplTrait;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 

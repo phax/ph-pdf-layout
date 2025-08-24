@@ -19,7 +19,7 @@ package com.helger.pdflayout.base;
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.base.id.IHasID;
-import com.helger.base.traits.IGenericImplTrait;
+import com.helger.base.trait.IGenericImplTrait;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
