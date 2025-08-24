@@ -9,8 +9,8 @@ Please check the [examples files](https://github.com/phax/ph-pdf-layout/tree/mas
 Please see the [unit tests](https://github.com/phax/ph-pdf-layout/tree/master/ph-pdf-layout/src/test/java/com/helger/pdflayout/element) on how to create and use the different elements.
 
 System requirements:
-* At least Java 11 - newer versions should work as well
-* GitHub actions test with all LTS version (currently 11, 17 and 21)
+* At least Java 17 - newer versions should work as well
+* GitHub actions test with all LTS version (currently 17, 21 and 24)
 
 The basic elements provided are:
 * `PageLayoutPDF` - the entry class, having a list of page sets
