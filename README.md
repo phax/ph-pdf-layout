@@ -38,7 +38,8 @@ The basic elements provided are:
     * "padding" - a transparent inner border (inside of the border)
     * "fill-color" - the background or fill color of an element
 
-A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files). The source code for these examples is https://github.com/phax/ph-pdf-layout/tree/master/src/test/java/com/helger/pdflayout
+A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files).
+  The source code for these examples is https://github.com/phax/ph-pdf-layout/tree/master/ph-pdf-layout/src/test/java/com/helger/pdflayout
 
 Similar libraries in this context:
 * https://github.com/ralfstuckert/pdfbox-layout - seems to focus more on text layouting; PDFBox 1.x and 2.x only; MIT license
