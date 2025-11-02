@@ -16,15 +16,15 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.base.string.StringParser;
 import com.helger.collection.commons.ICommonsList;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link LineDashPatternSpec}.
@@ -38,10 +38,10 @@ public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeCo
   private static final String ELEMENT_PATTERN = "pattern";
   private static final String ATTR_ITEM = "item";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final LineDashPatternSpec aValue,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final LineDashPatternSpec aValue,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
@@ -52,8 +52,8 @@ public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeCo
     return aElement;
   }
 
-  @Nonnull
-  public LineDashPatternSpec convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public LineDashPatternSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     final float fPhase = StringParser.parseFloat (aElement.getAttributeValue (ATTR_PHASE), Float.NaN);
     final ICommonsList <IMicroElement> aChildren = aElement.getAllChildElements (ELEMENT_PATTERN);

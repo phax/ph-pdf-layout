@@ -16,9 +16,9 @@
  */
 package com.helger.pdflayout.base;
 
-import com.helger.annotation.Nonnegative;
+import org.jspecify.annotations.NonNull;
 
-import jakarta.annotation.Nonnull;
+import com.helger.annotation.Nonnegative;
 
 /**
  * Base interface for a splittable element
@@ -42,8 +42,8 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    *        The source object to copy data from.
    * @return Never <code>null</code>.
    */
-  @Nonnull
-  SPLITTYPE internalCreateNewVertSplitObject (@Nonnull SPLITTYPE aBase);
+  @NonNull
+  SPLITTYPE internalCreateNewVertSplitObject (@NonNull SPLITTYPE aBase);
 
   /**
    * @return <code>true</code> if this element is vertically splittable, <code>false</code>
@@ -59,7 +59,7 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    *        <code>true</code> if this element is splittable, <code>false</code> otherwise.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   IMPLTYPE setVertSplittable (boolean bVertSplittable);
 
   /**
@@ -72,6 +72,6 @@ public interface IPLSplittableObject <IMPLTYPE extends IPLSplittableObject <IMPL
    *        The available height without outline of this element. Must be &ge; 0.
    * @return Never <code>null</code>. The splitting result type should explain the status.
    */
-  @Nonnull
+  @NonNull
   PLSplitResult splitElementVert (@Nonnegative float fAvailableWidth, @Nonnegative float fAvailableHeight);
 }

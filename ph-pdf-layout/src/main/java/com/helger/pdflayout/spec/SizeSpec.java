@@ -19,6 +19,7 @@ package com.helger.pdflayout.spec;
 import java.io.Serializable;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.CheckReturnValue;
 import com.helger.annotation.Nonnegative;
@@ -28,8 +29,6 @@ import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.PLConvert;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * This class defines a size.
@@ -82,49 +81,49 @@ public class SizeSpec implements Serializable
     return m_fHeight;
   }
 
-  @Nonnull
+  @NonNull
   public PDRectangle getAsRectangle ()
   {
     // Get as rectangle starting at 0/0
     return new PDRectangle (m_fWidth, m_fHeight);
   }
 
-  @Nonnull
+  @NonNull
   @CheckReturnValue
   public SizeSpec plus (final float fWidth, final float fHeight)
   {
     return new SizeSpec (m_fWidth + fWidth, m_fHeight + fHeight);
   }
 
-  @Nonnull
+  @NonNull
   @CheckReturnValue
-  public SizeSpec plus (@Nonnull final SizeSpec aOther)
+  public SizeSpec plus (@NonNull final SizeSpec aOther)
   {
     return plus (aOther.m_fWidth, aOther.m_fHeight);
   }
 
-  @Nonnull
+  @NonNull
   @CheckReturnValue
   public SizeSpec minus (final float fWidth, final float fHeight)
   {
     return new SizeSpec (m_fWidth - fWidth, m_fHeight - fHeight);
   }
 
-  @Nonnull
+  @NonNull
   @CheckReturnValue
-  public SizeSpec minus (@Nonnull final SizeSpec aOther)
+  public SizeSpec minus (@NonNull final SizeSpec aOther)
   {
     return minus (aOther.m_fWidth, aOther.m_fHeight);
   }
 
-  @Nonnull
+  @NonNull
   @CheckReturnValue
   public SizeSpec withWidth (final float fWidth)
   {
     return new SizeSpec (fWidth, m_fHeight);
   }
 
-  @Nonnull
+  @NonNull
   @CheckReturnValue
   public SizeSpec withHeight (final float fHeight)
   {
@@ -154,25 +153,25 @@ public class SizeSpec implements Serializable
     return new ToStringGenerator (null).append ("Width", m_fWidth).append ("Height", m_fHeight).getToString ();
   }
 
-  @Nonnull
-  public static SizeSpec create (@Nonnull final PDRectangle aRect)
+  @NonNull
+  public static SizeSpec create (@NonNull final PDRectangle aRect)
   {
     return new SizeSpec (aRect.getWidth (), aRect.getHeight ());
   }
 
-  @Nonnull
+  @NonNull
   public static SizeSpec createMM (final float fWidth, final float fHeight)
   {
     return new SizeSpec (PLConvert.mm2units (fWidth), PLConvert.mm2units (fHeight));
   }
 
-  @Nonnull
+  @NonNull
   public static SizeSpec width (final float fWidth)
   {
     return new SizeSpec (fWidth, DEFAULT_FLOAT);
   }
 
-  @Nonnull
+  @NonNull
   public static SizeSpec height (final float fHeight)
   {
     return new SizeSpec (DEFAULT_FLOAT, fHeight);

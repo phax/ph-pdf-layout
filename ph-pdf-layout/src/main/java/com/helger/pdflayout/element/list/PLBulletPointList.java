@@ -18,6 +18,8 @@ package com.helger.pdflayout.element.list;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
@@ -30,8 +32,6 @@ import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * A simple bullet point list. Internally it builds on the PLTable and uses two columns - one for
@@ -55,7 +55,7 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
    * @param aBulletPointCreator
    *        The callback to create the actual bullet point which might be any PL* object.
    */
-  public PLBulletPointList (@Nonnull final WidthSpec aWidthSpec, @Nonnull final IBulletPointCreator aBulletPointCreator)
+  public PLBulletPointList (@NonNull final WidthSpec aWidthSpec, @NonNull final IBulletPointCreator aBulletPointCreator)
   {
     ValueEnforcer.notNull (aWidthSpec, "WidthSpec");
     ValueEnforcer.notNull (aBulletPointCreator, "BulletPointCreator");
@@ -65,20 +65,20 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     m_aBulletPointCreator = aBulletPointCreator;
   }
 
-  @Nonnull
+  @NonNull
   public final PLTable getUnderlyingTable ()
   {
     return m_aTable;
   }
 
-  @Nonnull
+  @NonNull
   public final IBulletPointCreator getBulletPointCreator ()
   {
     return m_aBulletPointCreator;
   }
 
-  @Nonnull
-  public PLBulletPointList addBulletPoint (@Nonnull final IPLRenderableObject <?> aElement)
+  @NonNull
+  public PLBulletPointList addBulletPoint (@NonNull final IPLRenderableObject <?> aElement)
   {
     final int nBulletPointIndex = m_aTable.getRowCount ();
     final String sIDPrefix = "bulletpoint-" + nBulletPointIndex;
@@ -109,8 +109,8 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     m_aTable.render (aCtx);
   }
 
-  @Nonnull
-  public PLTable internalCreateNewVertSplitObject (@Nonnull final PLTable aBase)
+  @NonNull
+  public PLTable internalCreateNewVertSplitObject (@NonNull final PLTable aBase)
   {
     return m_aTable.internalCreateNewVertSplitObject (aBase);
   }
@@ -120,14 +120,14 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     return m_aTable.isVertSplittable ();
   }
 
-  @Nonnull
+  @NonNull
   public final PLBulletPointList setVertSplittable (final boolean bVertSplittable)
   {
     m_aTable.setVertSplittable (bVertSplittable);
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public final PLSplitResult splitElementVert (@Nonnegative final float fAvailableWidth,
                                                @Nonnegative final float fAvailableHeight)
   {

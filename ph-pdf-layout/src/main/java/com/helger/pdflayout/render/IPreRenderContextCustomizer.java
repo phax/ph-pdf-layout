@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout.render;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface for customizing pre-rendering contexts.
@@ -32,5 +32,5 @@ public interface IPreRenderContextCustomizer
    * @param aCtx
    *        The pre-rendering context to be modified.
    */
-  void customizePreRenderContext (@Nonnull PagePreRenderContext aCtx);
+  void customizePreRenderContext (@NonNull PagePreRenderContext aCtx);
 }

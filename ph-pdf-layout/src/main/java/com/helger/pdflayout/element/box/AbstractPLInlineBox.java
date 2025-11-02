@@ -18,6 +18,9 @@ package com.helger.pdflayout.element.box;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.annotation.style.OverrideOnDemand;
 import com.helger.base.state.EChange;
@@ -34,9 +37,6 @@ import com.helger.pdflayout.render.PLRenderHelper;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * A box is a simple element that encapsulates another element and has a padding, border and margin
@@ -63,9 +63,9 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     setVertSplittable (aSource.isVertSplittable ());
@@ -89,7 +89,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     return m_aElement != null;
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setElement (@Nullable final IPLRenderableObject <?> aElement)
   {
     internalCheckNotPrepared ();
@@ -105,7 +105,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     return hasElement () && getElement ().isVertSplittable ();
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
@@ -113,8 +113,8 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
   }
 
   @Override
-  @Nonnull
-  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @NonNull
+  public EChange visit (@NonNull final IPLVisitor aVisitor) throws IOException
   {
     EChange ret = super.visit (aVisitor);
     if (m_aElement != null)
@@ -151,7 +151,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     if (m_aElement == null)
     {
@@ -181,7 +181,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
       ((AbstractPLRenderableObject <?>) m_aElement).internalMarkAsNotPrepared ();
   }
 
-  @Nonnull
+  @NonNull
   public final PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
@@ -284,7 +284,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
   }
 
   @OverrideOnDemand
-  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void renderShape (@NonNull final PageRenderContext aCtx) throws IOException
   {
     // Fill and border
     PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
@@ -292,7 +292,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
 
   @Override
   @OverridingMethodsMustInvokeSuper
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     renderShape (aCtx);
 

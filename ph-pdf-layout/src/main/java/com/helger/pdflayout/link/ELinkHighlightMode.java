@@ -17,10 +17,9 @@
 package com.helger.pdflayout.link;
 
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.Nonempty;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Contains the highlight mode for links.
@@ -51,12 +50,12 @@ public enum ELinkHighlightMode
 
   private final String m_sID;
 
-  ELinkHighlightMode (@Nonnull @Nonempty final String sID)
+  ELinkHighlightMode (@NonNull @Nonempty final String sID)
   {
     m_sID = sID;
   }
 
-  @Nonnull
+  @NonNull
   @Nonempty
   public String getID ()
   {

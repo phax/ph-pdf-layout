@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.pdflayout.spec.EHorzAlignment;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for objects with a horizontal alignment
@@ -38,7 +38,7 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
    *         {@link EHorzAlignment#DEFAULT}. Never <code>null</code>. The
    *         horizontal alignment may only be applied to contained children!
    */
-  @Nonnull
+  @NonNull
   EHorzAlignment getHorzAlign ();
 
   /**
@@ -49,8 +49,8 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
    *        The new horizontal alignment. May not be <code>null</code>.
    * @return this
    */
-  @Nonnull
-  IMPLTYPE setHorzAlign (@Nonnull EHorzAlignment eHorzAlign);
+  @NonNull
+  IMPLTYPE setHorzAlign (@NonNull EHorzAlignment eHorzAlign);
 
   /**
    * Get the indentation for a certain horizontal alignment. This method uses

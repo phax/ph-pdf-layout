@@ -18,6 +18,9 @@ package com.helger.pdflayout.base;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.annotation.style.OverrideOnDemand;
@@ -28,9 +31,6 @@ import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Abstract layout object that supports rendering.
@@ -52,9 +52,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   {}
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     m_aPrepareAvailableSize = aSource.getPrepareAvailableSize ();
@@ -63,8 +63,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
 
   @OverrideOnDemand
   @OverridingMethodsMustInvokeSuper
-  @Nonnull
-  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @NonNull
+  public EChange visit (@NonNull final IPLVisitor aVisitor) throws IOException
   {
     return aVisitor.onElement (this);
   }
@@ -139,8 +139,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @return The size of the rendered element without padding, border and
    *         margin. May not be <code>null</code>.
    */
-  @Nonnull
-  protected abstract SizeSpec onPrepare (@Nonnull final PreparationContext aCtx);
+  @NonNull
+  protected abstract SizeSpec onPrepare (@NonNull final PreparationContext aCtx);
 
   /**
    * Overwrite this method to adopt prepared sizes (e.g. for min or max size) to
@@ -151,9 +151,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @return The modified prepared size or the unchanged prepared size if no
    *         changes are necessary. May not be <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @OverrideOnDemand
-  protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
+  protected SizeSpec getRenderSize (@NonNull final SizeSpec aPreparedSize)
   {
     return aPreparedSize;
   }
@@ -165,7 +165,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    * @param aPreparedSize
    *        Prepared size without padding and margin.
    */
-  private void _setPreparedSize (@Nonnull final SizeSpec aPreparedSize)
+  private void _setPreparedSize (@NonNull final SizeSpec aPreparedSize)
   {
     ValueEnforcer.notNull (aPreparedSize, "PreparedSize");
 
@@ -208,8 +208,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     }
   }
 
-  @Nonnull
-  public final SizeSpec prepare (@Nonnull final PreparationContext aCtx)
+  @NonNull
+  public final SizeSpec prepare (@NonNull final PreparationContext aCtx)
   {
     // Prepare only once!
     internalCheckNotPrepared ();
@@ -276,8 +276,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *        The new prepared size without margin, border and padding.
    * @return this
    */
-  @Nonnull
-  protected final IMPLTYPE internalMarkAsPrepared (@Nonnull final SizeSpec aPreparedSize)
+  @NonNull
+  protected final IMPLTYPE internalMarkAsPrepared (@NonNull final SizeSpec aPreparedSize)
   {
     // Prepare only once!
     internalCheckNotPrepared ();
@@ -295,10 +295,10 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
    *         In case of a PDFBox error
    */
   @OverrideOnDemand
-  protected abstract void onRender (@Nonnull PageRenderContext aCtx) throws IOException;
+  protected abstract void onRender (@NonNull PageRenderContext aCtx) throws IOException;
 
   @Nonnegative
-  public final void render (@Nonnull final PageRenderContext aCtx) throws IOException
+  public final void render (@NonNull final PageRenderContext aCtx) throws IOException
   {
     internalCheckAlreadyPrepared ();
 

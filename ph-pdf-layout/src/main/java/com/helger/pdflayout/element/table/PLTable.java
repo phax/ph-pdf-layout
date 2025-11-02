@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,9 +53,6 @@ import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * A special table with a repeating header
@@ -89,7 +88,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    * @param aWidths
    *        Must all be of the same type! "auto" width is not allowed - only "star" may be used.
    */
-  public PLTable (@Nonnull @Nonempty final WidthSpec... aWidths)
+  public PLTable (@NonNull @Nonempty final WidthSpec... aWidths)
   {
     this (new CommonsArrayList <> (aWidths));
   }
@@ -98,7 +97,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    * @param aWidths
    *        Must all be of the same type! "auto" width is not allowed - only "star" may be used.
    */
-  public PLTable (@Nonnull @Nonempty final Iterable <? extends WidthSpec> aWidths)
+  public PLTable (@NonNull @Nonempty final Iterable <? extends WidthSpec> aWidths)
   {
     ValueEnforcer.notEmptyNoNullValue (aWidths, "Widths");
 
@@ -142,9 +141,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public PLTable setBasicDataFrom (@Nonnull final PLTable aSource)
+  public PLTable setBasicDataFrom (@NonNull final PLTable aSource)
   {
     super.setBasicDataFrom (aSource);
     m_aRows.setBasicDataFrom (aSource.m_aRows);
@@ -152,14 +151,14 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public final MarginSpec getMargin ()
   {
     return m_aMargin;
   }
 
-  @Nonnull
-  public final PLTable setMargin (@Nonnull final MarginSpec aMargin)
+  @NonNull
+  public final PLTable setMargin (@NonNull final MarginSpec aMargin)
   {
     ValueEnforcer.notNull (aMargin, "Mergin");
     m_aMargin = aMargin;
@@ -170,7 +169,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    * @return A copy of the list with all widths as specified in the constructor. Neither
    *         <code>null</code> nor empty.
    */
-  @Nonnull
+  @NonNull
   @Nonempty
   @ReturnsMutableCopy
   public ICommonsList <WidthSpec> getAllWidths ()
@@ -187,7 +186,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     return m_aWidths.size ();
   }
 
-  @Nonnull
+  @NonNull
   public PLTable setHeaderRowCount (@Nonnegative final int nHeaderRowCount)
   {
     m_aRows.setHeaderRowCount (nHeaderRowCount);
@@ -200,8 +199,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     return m_aRows.getHeaderRowCount ();
   }
 
-  @Nonnull
-  public PLTableRow addAndReturnRow (@Nonnull final PLTableCell... aCells)
+  @NonNull
+  public PLTableRow addAndReturnRow (@NonNull final PLTableCell... aCells)
   {
     return addAndReturnRow (new CommonsArrayList <> (aCells), m_aRows.getDefaultHeight ());
   }
@@ -214,8 +213,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    *        The cells to add. May not be <code>null</code>.
    * @return the added table row and never <code>null</code>.
    */
-  @Nonnull
-  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  @NonNull
+  public PLTableRow addAndReturnRow (@NonNull final Iterable <? extends PLTableCell> aCells)
   {
     return addAndReturnRow (aCells, m_aRows.getDefaultHeight ());
   }
@@ -230,9 +229,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    *        Row height to be used. May not be <code>null</code>.
    * @return the added table row and never <code>null</code>.
    */
-  @Nonnull
-  public PLTableRow addAndReturnRow (@Nonnull final Iterable <? extends PLTableCell> aCells,
-                                     @Nonnull final HeightSpec aHeight)
+  @NonNull
+  public PLTableRow addAndReturnRow (@NonNull final Iterable <? extends PLTableCell> aCells,
+                                     @NonNull final HeightSpec aHeight)
   {
     ValueEnforcer.notNull (aCells, "Cells");
 
@@ -294,14 +293,14 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     return aRow;
   }
 
-  @Nonnull
-  public PLTable addRow (@Nonnull final PLTableRow aRow)
+  @NonNull
+  public PLTable addRow (@NonNull final PLTableRow aRow)
   {
     return addRow (aRow, m_aRows.getDefaultHeight ());
   }
 
-  @Nonnull
-  public PLTable addRow (@Nonnull final PLTableRow aRow, @Nonnull final HeightSpec aHeight)
+  @NonNull
+  public PLTable addRow (@NonNull final PLTableRow aRow, @NonNull final HeightSpec aHeight)
   {
     ValueEnforcer.notNull (aRow, "Row");
     m_aRows.addRow (aRow, aHeight);
@@ -313,7 +312,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    *
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   @Deprecated
   public PLTable addRow ()
   {
@@ -329,8 +328,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    *        The cells to add. May not be <code>null</code>.
    * @return this
    */
-  @Nonnull
-  public PLTable addRow (@Nonnull final PLTableCell... aCells)
+  @NonNull
+  public PLTable addRow (@NonNull final PLTableCell... aCells)
   {
     return addRow (new CommonsArrayList <> (aCells), m_aRows.getDefaultHeight ());
   }
@@ -343,8 +342,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    *        The cells to add. May not be <code>null</code>.
    * @return this
    */
-  @Nonnull
-  public PLTable addRow (@Nonnull final Iterable <? extends PLTableCell> aCells)
+  @NonNull
+  public PLTable addRow (@NonNull final Iterable <? extends PLTableCell> aCells)
   {
     return addRow (aCells, m_aRows.getDefaultHeight ());
   }
@@ -359,26 +358,26 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    *        Row height to be used.
    * @return this
    */
-  @Nonnull
-  public PLTable addRow (@Nonnull final Iterable <? extends PLTableCell> aCells, @Nonnull final HeightSpec aHeight)
+  @NonNull
+  public PLTable addRow (@NonNull final Iterable <? extends PLTableCell> aCells, @NonNull final HeightSpec aHeight)
   {
     addAndReturnRow (aCells, aHeight);
     return this;
   }
 
-  public void forEachRow (@Nonnull final Consumer <? super PLTableRow> aConsumer)
+  public void forEachRow (@NonNull final Consumer <? super PLTableRow> aConsumer)
   {
     m_aRows.forEachRow (x -> aConsumer.accept ((PLTableRow) x.getElement ()));
   }
 
-  public void forEachRowByIndex (@Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
+  public void forEachRowByIndex (@NonNull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
     m_aRows.forEachRowByIndex ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
   }
 
   public void forEachRow (final int nStartRowIncl,
                           final int nEndRowIncl,
-                          @Nonnull final Consumer <? super PLTableRow> aConsumer)
+                          @NonNull final Consumer <? super PLTableRow> aConsumer)
   {
     forEachRowByIndex ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
@@ -388,7 +387,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
 
   public void forEachRow (final int nStartRowIncl,
                           final int nEndRowIncl,
-                          @Nonnull final ObjIntConsumer <? super PLTableRow> aConsumer)
+                          @NonNull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
     forEachRowByIndex ( (x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
@@ -402,7 +401,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     return m_aRows.getRowCount ();
   }
 
-  public void forEachCell (@Nonnull final Consumer <? super PLTableCell> aConsumer)
+  public void forEachCell (@NonNull final Consumer <? super PLTableCell> aConsumer)
   {
     forEachRow (x -> x.forEachCell (aConsumer));
   }
@@ -422,8 +421,8 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
   }
 
   @Override
-  @Nonnull
-  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @NonNull
+  public EChange visit (@NonNull final IPLVisitor aVisitor) throws IOException
   {
     final EChange ret = super.visit (aVisitor);
     return ret.or (m_aRows.visit (aVisitor));
@@ -431,7 +430,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
 
   @Override
   @OverridingMethodsMustInvokeSuper
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
@@ -454,7 +453,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
     return m_aRows.isVertSplittable ();
   }
 
-  @Nonnull
+  @NonNull
   public final PLTable setVertSplittable (final boolean bVertSplittable)
   {
     m_aRows.setVertSplittable (bVertSplittable);
@@ -462,13 +461,13 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
   }
 
   @Override
-  @Nonnull
-  public PLTable internalCreateNewVertSplitObject (@Nonnull final PLTable aBase)
+  @NonNull
+  public PLTable internalCreateNewVertSplitObject (@NonNull final PLTable aBase)
   {
     throw new UnsupportedOperationException ();
   }
 
-  @Nonnull
+  @NonNull
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     final float fSplitHeight = fAvailableHeight;
@@ -502,7 +501,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     final PageRenderContext aChildCtx = new PageRenderContext (aCtx,
                                                                aCtx.getStartLeft () + getMarginLeft (),
@@ -531,9 +530,9 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    *        <code>null</code> nor empty.
    * @return The created {@link PLTable} and never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
-  public static PLTable createWithPercentage (@Nonnull @Nonempty final float... aPercentages)
+  public static PLTable createWithPercentage (@NonNull @Nonempty final float... aPercentages)
   {
     ValueEnforcer.notEmpty (aPercentages, "Percentages");
 
@@ -550,7 +549,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    *        The number of columns to use. Must be &gt; 0.
    * @return The created {@link PLTable} and never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public static PLTable createWithEvenlySizedColumns (@Nonnegative final int nColumnCount)
   {

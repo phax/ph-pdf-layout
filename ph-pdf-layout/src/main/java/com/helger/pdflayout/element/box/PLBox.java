@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.element.box;
 
-import com.helger.pdflayout.base.IPLRenderableObject;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import com.helger.pdflayout.base.IPLRenderableObject;
 
 /**
  * A box is a simple block element that encapsulates another element and has a
@@ -40,8 +40,8 @@ public class PLBox extends AbstractPLBox <PLBox>
   }
 
   @Override
-  @Nonnull
-  public PLBox internalCreateNewVertSplitObject (@Nonnull final PLBox aBase)
+  @NonNull
+  public PLBox internalCreateNewVertSplitObject (@NonNull final PLBox aBase)
   {
     final PLBox ret = new PLBox ();
     ret.setBasicDataFrom (aBase);

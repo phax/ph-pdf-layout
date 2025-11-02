@@ -16,6 +16,9 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.style.ReturnsMutableCopy;
@@ -23,9 +26,6 @@ import com.helger.base.array.ArrayHelper;
 import com.helger.base.string.StringHelper;
 import com.helger.collection.commons.CommonsHashMap;
 import com.helger.collection.commons.ICommonsMap;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Contains a list of supported textual placeholders to be replaced when
@@ -58,7 +58,7 @@ public enum EPLPlaceholder
   private final int m_nEstimatedCharCount;
   private final String m_sEstimatedPrepareText;
 
-  EPLPlaceholder (@Nonnull @Nonempty final String sVariable, @Nonnegative final int nEstimatedCharCount)
+  EPLPlaceholder (@NonNull @Nonempty final String sVariable, @Nonnegative final int nEstimatedCharCount)
   {
     m_sVariable = sVariable;
     m_nEstimatedCharCount = nEstimatedCharCount;
@@ -70,7 +70,7 @@ public enum EPLPlaceholder
    * @return The name of the variable, starting with "${" and ending with "}".
    *         Neither <code>null</code> nor empty.
    */
-  @Nonnull
+  @NonNull
   @Nonempty
   public String getVariable ()
   {
@@ -91,7 +91,7 @@ public enum EPLPlaceholder
    * @return The estimated replacement text, using
    *         {@link #getEstimatedCharCount()} as the basis.
    */
-  @Nonnull
+  @NonNull
   @Nonempty
   public String getEstimatedPrepareText ()
   {
@@ -104,7 +104,7 @@ public enum EPLPlaceholder
     return ArrayHelper.findFirst (values (), x -> x.getVariable ().equals (sVariable));
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public static ICommonsMap <String, String> getEstimationReplacements ()
   {

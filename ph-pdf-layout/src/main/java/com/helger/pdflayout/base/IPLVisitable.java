@@ -18,9 +18,9 @@ package com.helger.pdflayout.base;
 
 import java.io.IOException;
 
-import com.helger.base.state.EChange;
+import org.jspecify.annotations.NonNull;
 
-import jakarta.annotation.Nonnull;
+import com.helger.base.state.EChange;
 
 /**
  * Base interface for visitable objects.
@@ -38,6 +38,6 @@ public interface IPLVisitable
    * @throws IOException
    *         on PDFBox error
    */
-  @Nonnull
-  EChange visit (@Nonnull IPLVisitor aVisitor) throws IOException;
+  @NonNull
+  EChange visit (@NonNull IPLVisitor aVisitor) throws IOException;
 }

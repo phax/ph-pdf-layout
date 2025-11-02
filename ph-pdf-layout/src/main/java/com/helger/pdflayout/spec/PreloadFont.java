@@ -34,6 +34,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.CheckForSigned;
 import com.helger.annotation.Nonempty;
@@ -52,8 +53,6 @@ import com.helger.collection.commons.ICommonsOrderedMap;
 import com.helger.font.api.IFontResource;
 import com.helger.pdflayout.debug.PLDebugLog;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * Represents an abstract font that is potentially not yet loaded and can be used in multiple
  * documents.<br>
@@ -70,8 +69,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
   private static final ICommonsOrderedMap <String, PDType1Font> STANDARD_14 = new CommonsLinkedHashMap <> ();
   private static final ICommonsOrderedMap <String, PreloadFont> STANDARD_14_PF = new CommonsLinkedHashMap <> ();
 
-  @Nonnull
-  private static PreloadFont _createPredefined (@Nonnull final Standard14Fonts.FontName eFontName)
+  @NonNull
+  private static PreloadFont _createPredefined (final Standard14Fonts.@NonNull FontName eFontName)
   {
     ValueEnforcer.notNull (eFontName, "Font");
     // Symbol fonts needs a different fallback code point!
@@ -170,7 +169,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
       }
   }
 
-  private void readObject (@Nonnull @WillNotClose final ObjectInputStream aOIS) throws IOException,
+  private void readObject (@NonNull @WillNotClose final ObjectInputStream aOIS) throws IOException,
                                                                                 ClassNotFoundException
   {
     m_sID = StreamHelper.readSafeUTF (aOIS);
@@ -182,7 +181,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
     _parseFontRes ();
   }
 
-  private void writeObject (@Nonnull @WillNotClose final ObjectOutputStream aOOS) throws IOException
+  private void writeObject (@NonNull @WillNotClose final ObjectOutputStream aOOS) throws IOException
   {
     StreamHelper.writeSafeUTF (aOOS, m_sID);
     StreamHelper.writeSafeUTF (aOOS, m_aFont != null ? m_aFont.getName () : null);
@@ -200,7 +199,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
    * @param nFallbackCodePoint
    *        The fallback code point to be used if a character is not contained in the font.
    */
-  private PreloadFont (@Nonnull final PDFont aFont, final int nFallbackCodePoint)
+  private PreloadFont (@NonNull final PDFont aFont, final int nFallbackCodePoint)
   {
     ValueEnforcer.notNull (aFont, "Font");
     m_sID = aFont.getName ();
@@ -224,7 +223,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
    * @throws IOException
    *         in case loading the font fails
    */
-  private PreloadFont (@Nonnull final IFontResource aFontRes, final boolean bEmbed, final int nFallbackCodePoint)
+  private PreloadFont (@NonNull final IFontResource aFontRes, final boolean bEmbed, final int nFallbackCodePoint)
                                                                                                                   throws IOException
   {
     ValueEnforcer.notNull (aFontRes, "FontResource");
@@ -237,7 +236,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
     _parseFontRes ();
   }
 
-  @Nonnull
+  @NonNull
   @Nonempty
   public String getID ()
   {
@@ -254,8 +253,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
    * @throws IOException
    *         In case loading the external file fails
    */
-  @Nonnull
-  public PDFont loadPDFont (@Nonnull final PDDocument aDoc) throws IOException
+  @NonNull
+  public PDFont loadPDFont (@NonNull final PDDocument aDoc) throws IOException
   {
     if (m_aFont != null)
     {
@@ -294,7 +293,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
    * @return ESuccess.SUCCESS if the line height was set, ESuccess.FAILURE if not.
    * @since 7.3.7
    */
-  @Nonnull
+  @NonNull
   public ESuccess setUseFontLineHeightFromHHEA ()
   {
     try
@@ -327,7 +326,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
    * @return ESuccess.SUCCESS if the line height was set, ESuccess.FAILURE if not.
    * @since 7.3.7
    */
-  @Nonnull
+  @NonNull
   public ESuccess setUseFontLineHeightFromOS2 ()
   {
     try
@@ -408,8 +407,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
    * @throws IllegalArgumentException
    *         If the font could not be loaded.
    */
-  @Nonnull
-  public static PreloadFont createNonEmbedding (@Nonnull final IFontResource aFontRes)
+  @NonNull
+  public static PreloadFont createNonEmbedding (@NonNull final IFontResource aFontRes)
   {
     ValueEnforcer.notNull (aFontRes, "FontRes");
     try
@@ -432,8 +431,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
    * @throws IllegalArgumentException
    *         If the font could not be loaded.
    */
-  @Nonnull
-  public static PreloadFont createEmbedding (@Nonnull final IFontResource aFontRes)
+  @NonNull
+  public static PreloadFont createEmbedding (@NonNull final IFontResource aFontRes)
   {
     ValueEnforcer.notNull (aFontRes, "FontRes");
     try
@@ -446,14 +445,14 @@ public final class PreloadFont implements IHasID <String>, Serializable
     }
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public static ICommonsOrderedMap <String, PDType1Font> getAllStandard14Fonts ()
   {
     return STANDARD_14.getClone ();
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public static ICommonsOrderedMap <String, PreloadFont> getAllStandard14PreloadFonts ()
   {

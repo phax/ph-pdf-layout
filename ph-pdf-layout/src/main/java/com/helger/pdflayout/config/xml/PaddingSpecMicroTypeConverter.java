@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link PaddingSpec}.
@@ -32,18 +32,18 @@ import jakarta.annotation.Nullable;
 public final class PaddingSpecMicroTypeConverter extends AbstractRectSpecMicroTypeConverter <PaddingSpec>
 {
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final PaddingSpec aValue,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final PaddingSpec aValue,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
     fillMicroElement (aValue, aElement);
     return aElement;
   }
 
-  @Nonnull
-  public PaddingSpec convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public PaddingSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     return new PaddingSpec (convertToRectSpec (aElement));
   }

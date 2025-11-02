@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.CheckForSigned;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
@@ -42,9 +45,6 @@ import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Horizontal box - groups several columns. Each column was a width with one of the supported types:
@@ -78,9 +78,9 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   {}
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     setVertSplittable (aSource.isVertSplittable ());
@@ -99,7 +99,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   /**
    * @return All columns. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public ICommonsList <PLHBoxColumn> getAllColumns ()
   {
@@ -109,19 +109,19 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   /**
    * @return All columns. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public Iterable <PLHBoxColumn> getColumns ()
   {
     return m_aColumns;
   }
 
-  public void forEachColumn (@Nonnull final Consumer <? super PLHBoxColumn> aConsumer)
+  public void forEachColumn (@NonNull final Consumer <? super PLHBoxColumn> aConsumer)
   {
     m_aColumns.forEach (aConsumer);
   }
 
-  public void forEachColumnByIndex (@Nonnull final ObjIntConsumer <? super PLHBoxColumn> aConsumer)
+  public void forEachColumnByIndex (@NonNull final ObjIntConsumer <? super PLHBoxColumn> aConsumer)
   {
     m_aColumns.forEachByIndex (aConsumer);
   }
@@ -165,7 +165,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     return aColumn == null ? null : aColumn.getElement ();
   }
 
-  private void _addAndReturnColumn (@CheckForSigned final int nIndex, @Nonnull final PLHBoxColumn aColumn)
+  private void _addAndReturnColumn (@CheckForSigned final int nIndex, @NonNull final PLHBoxColumn aColumn)
   {
     internalCheckNotPrepared ();
     if (nIndex < 0 || nIndex >= m_aColumns.size ())
@@ -174,40 +174,40 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       m_aColumns.add (nIndex, aColumn);
   }
 
-  @Nonnull
-  public PLHBoxColumn addAndReturnColumn (@Nonnull final IPLRenderableObject <?> aElement,
-                                          @Nonnull final WidthSpec aWidth)
+  @NonNull
+  public PLHBoxColumn addAndReturnColumn (@NonNull final IPLRenderableObject <?> aElement,
+                                          @NonNull final WidthSpec aWidth)
   {
     return addAndReturnColumn (-1, aElement, aWidth);
   }
 
-  @Nonnull
-  public IMPLTYPE addColumn (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final WidthSpec aWidth)
+  @NonNull
+  public IMPLTYPE addColumn (@NonNull final IPLRenderableObject <?> aElement, @NonNull final WidthSpec aWidth)
   {
     addAndReturnColumn (-1, aElement, aWidth);
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public PLHBoxColumn addAndReturnColumn (@CheckForSigned final int nIndex,
-                                          @Nonnull final IPLRenderableObject <?> aElement,
-                                          @Nonnull final WidthSpec aWidth)
+                                          @NonNull final IPLRenderableObject <?> aElement,
+                                          @NonNull final WidthSpec aWidth)
   {
     final PLHBoxColumn aColumn = new PLHBoxColumn (aElement, aWidth);
     _addAndReturnColumn (nIndex, aColumn);
     return aColumn;
   }
 
-  @Nonnull
+  @NonNull
   public IMPLTYPE addColumn (@CheckForSigned final int nIndex,
-                             @Nonnull final IPLRenderableObject <?> aElement,
-                             @Nonnull final WidthSpec aWidth)
+                             @NonNull final IPLRenderableObject <?> aElement,
+                             @NonNull final WidthSpec aWidth)
   {
     addAndReturnColumn (nIndex, aElement, aWidth);
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public IMPLTYPE removeColumn (@Nonnegative final int nIndex)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
@@ -222,7 +222,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
     return m_bVertSplittable;
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
@@ -235,8 +235,8 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Override
-  @Nonnull
-  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @NonNull
+  public EChange visit (@NonNull final IPLVisitor aVisitor) throws IOException
   {
     EChange ret = EChange.UNCHANGED;
     for (final PLHBoxColumn aColumn : m_aColumns)
@@ -246,7 +246,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
 
   @Override
   @OverridingMethodsMustInvokeSuper
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     m_aPreparedColumnSizes = new SizeSpec [m_aColumns.size ()];
     m_aPreparedElementSizes = new SizeSpec [m_aColumns.size ()];
@@ -511,16 +511,16 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
    *        Internal object ID
    * @return Never <code>null</code>.
    */
-  @Nonnull
-  protected AbstractPLRenderableObject <?> internalCreateVertSplitEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
+  @NonNull
+  protected AbstractPLRenderableObject <?> internalCreateVertSplitEmptyElement (@NonNull final IPLRenderableObject <?> aSrcObject,
                                                                                 final float fWidth,
                                                                                 final float fHeight,
-                                                                                @Nonnull final String sID)
+                                                                                @NonNull final String sID)
   {
     return PLSpacerXY.createPrepared (fWidth, fHeight, sID);
   }
 
-  @Nonnull
+  @NonNull
   public final PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
@@ -811,7 +811,7 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     float fCurX = aCtx.getStartLeft ();
     final float fStartY = aCtx.getStartTop ();

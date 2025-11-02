@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.list;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.pdflayout.PLConvert;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * An implementation of {@link IBulletPointCreator} that always uses the Bullet point character from
@@ -39,7 +39,7 @@ public class BulletPointCreatorSymbol extends BulletPointCreatorConstant
   }
 
   @Override
-  @Nonnull
+  @NonNull
   public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
     final PLText ret = super.getBulletPointElement (nBulletPointIndex);
@@ -48,14 +48,14 @@ public class BulletPointCreatorSymbol extends BulletPointCreatorConstant
     return ret;
   }
 
-  @Nonnull
+  @NonNull
   public static BulletPointCreatorSymbol createFilledDot (@Nonnegative final float fFontSize)
   {
     // 183
     return new BulletPointCreatorSymbol ('\u00b7', fFontSize);
   }
 
-  @Nonnull
+  @NonNull
   public static BulletPointCreatorSymbol createEmptyDot (@Nonnegative final float fFontSize)
   {
     // 176

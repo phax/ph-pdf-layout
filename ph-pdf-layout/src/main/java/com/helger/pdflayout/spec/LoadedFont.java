@@ -26,6 +26,8 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDFontHelper;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +49,6 @@ import com.helger.collection.map.IntObjectMap;
 import com.helger.pdflayout.PLConvert;
 import com.helger.pdflayout.debug.PLDebugLog;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 /**
  * This class represents a wrapper around a {@link PDFont} that is uniquely assigned to a
  * PDDocument.
@@ -67,7 +66,7 @@ public class LoadedFont
     // Lazy inited
     private Integer m_aEncodedValue;
 
-    private EncodedCodePoint (final int nCodePoint, @Nonnull final byte [] aEncoded)
+    private EncodedCodePoint (final int nCodePoint, @NonNull final byte [] aEncoded)
     {
       m_nCodePoint = nCodePoint;
       m_aEncoded = aEncoded;
@@ -81,12 +80,12 @@ public class LoadedFont
       return m_nCodePoint;
     }
 
-    public void writeEncodedBytes (@Nonnull @WillNotClose final OutputStream aOS) throws IOException
+    public void writeEncodedBytes (@NonNull @WillNotClose final OutputStream aOS) throws IOException
     {
       aOS.write (m_aEncoded);
     }
 
-    private static int _toInt (@Nonnull final byte [] aEncoded)
+    private static int _toInt (@NonNull final byte [] aEncoded)
     {
       int ret = 0;
       for (final byte b : aEncoded)
@@ -124,7 +123,7 @@ public class LoadedFont
   private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <> ();
   private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
 
-  public LoadedFont (@Nonnull final PDFont aFont,
+  public LoadedFont (@NonNull final PDFont aFont,
                      final int nFallbackCodePoint,
                      @CheckForSigned final float fCustomLineHeight)
   {
@@ -163,7 +162,7 @@ public class LoadedFont
   /**
    * @return The underlying font. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final PDFont getFont ()
   {
     return m_aFont;
@@ -181,8 +180,8 @@ public class LoadedFont
     return PLConvert.getForFontSize (m_fLineHeight, fFontSize);
   }
 
-  @Nonnull
-  public static EncodedCodePoint encodeCodepointWithFallback (@Nonnull final PDFont aFont,
+  @NonNull
+  public static EncodedCodePoint encodeCodepointWithFallback (@NonNull final PDFont aFont,
                                                               final int nCodepoint,
                                                               final int nFallbackCodepoint) throws IOException
   {
@@ -215,7 +214,7 @@ public class LoadedFont
     }
   }
 
-  @Nonnull
+  @NonNull
   private EncodedCodePoint _getEncodedCodePoint (final int nCodePoint) throws IOException
   {
     EncodedCodePoint aECP = m_aEncodedCodePointCache.get (nCodePoint);
@@ -247,7 +246,7 @@ public class LoadedFont
   }
 
   @Nonnegative
-  public float getStringWidth (@Nonnull final String sText, @Nonnegative final float fFontSize) throws IOException
+  public float getStringWidth (@NonNull final String sText, @Nonnegative final float fFontSize) throws IOException
   {
     if (false)
     {
@@ -281,8 +280,8 @@ public class LoadedFont
    * @throws IOException
    *         In case something goes wrong
    */
-  @Nonnull
-  public byte [] getEncodedForPageContentStream (@Nonnull final String sText) throws IOException
+  @NonNull
+  public byte [] getEncodedForPageContentStream (@NonNull final String sText) throws IOException
   {
     // Minimum is 1*string length
     // Maximum is 4*string length
@@ -303,10 +302,10 @@ public class LoadedFont
     }
   }
 
-  private void _getLineFitToWidthForward (@Nonnull final String sLine,
+  private void _getLineFitToWidthForward (@NonNull final String sLine,
                                           @Nonnegative final float fFontSize,
                                           @Nonnegative final float fMaxWidth,
-                                          @Nonnull final List <TextAndWidthSpec> ret) throws IOException
+                                          @NonNull final List <TextAndWidthSpec> ret) throws IOException
   {
     String sCurLine = sLine;
     float fSumWidth = 0f;
@@ -381,7 +380,7 @@ public class LoadedFont
     ret.add (new TextAndWidthSpec (sCurLine, fSumWidth, true));
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public ICommonsList <TextAndWidthSpec> getFitToWidth (@Nullable final String sText,
                                                         @Nonnegative final float fFontSize,

@@ -18,6 +18,8 @@ package com.helger.pdflayout.render;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.Nonnegative;
@@ -30,9 +32,6 @@ import com.helger.collection.commons.CommonsLinkedHashMap;
 import com.helger.collection.commons.ICommonsOrderedMap;
 import com.helger.pdflayout.base.EPLPlaceholder;
 import com.helger.pdflayout.base.PLPageSet;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * This class describes the index of the current page.
@@ -53,9 +52,9 @@ public class PagePreRenderContext
   private final int m_nTotalPageCount;
   private final ICommonsOrderedMap <String, String> m_aPlaceholders = new CommonsLinkedHashMap <> ();
 
-  public PagePreRenderContext (@Nonnull final PLPageSet aPageSet,
-                               @Nonnull final PDDocument aDoc,
-                               @Nonnull final PDPage aPage,
+  public PagePreRenderContext (@NonNull final PLPageSet aPageSet,
+                               @NonNull final PDDocument aDoc,
+                               @NonNull final PDPage aPage,
                                @Nonnegative final int nPageSetIndex,
                                @Nonnegative final int nPageSetCount,
                                @Nonnegative final int nPageSetPageIndex,
@@ -99,7 +98,7 @@ public class PagePreRenderContext
   /**
    * @return the document
    */
-  @Nonnull
+  @NonNull
   public PLPageSet getPageSet ()
   {
     return m_aPageSet;
@@ -108,7 +107,7 @@ public class PagePreRenderContext
   /**
    * @return the PDFBox document
    */
-  @Nonnull
+  @NonNull
   public PDDocument getDocument ()
   {
     return m_aDoc;
@@ -117,7 +116,7 @@ public class PagePreRenderContext
   /**
    * @return the new PDFBox page
    */
-  @Nonnull
+  @NonNull
   public PDPage getPage ()
   {
     return m_aPage;
@@ -204,7 +203,7 @@ public class PagePreRenderContext
     return m_nTotalPageCount;
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public ICommonsOrderedMap <String, String> getAllPlaceholders ()
   {
@@ -222,12 +221,12 @@ public class PagePreRenderContext
     return StringParser.parseInt (getPlaceholder (sKey), nDefault);
   }
 
-  public void addPlaceholder (@Nonnull @Nonempty final String sKey, final int nValue)
+  public void addPlaceholder (@NonNull @Nonempty final String sKey, final int nValue)
   {
     addPlaceholder (sKey, Integer.toString (nValue));
   }
 
-  public void addPlaceholder (@Nonnull @Nonempty final String sKey, @Nonnull final String sValue)
+  public void addPlaceholder (@NonNull @Nonempty final String sKey, @NonNull final String sValue)
   {
     ValueEnforcer.notEmpty (sKey, "Key");
     ValueEnforcer.notNull (sValue, "Value");

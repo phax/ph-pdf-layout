@@ -18,6 +18,9 @@ package com.helger.pdflayout.element.special;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
@@ -28,9 +31,6 @@ import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * A two-dimensional spacer
@@ -55,9 +55,9 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public PLSpacerXY setBasicDataFrom (@Nonnull final PLSpacerXY aSource)
+  public PLSpacerXY setBasicDataFrom (@NonNull final PLSpacerXY aSource)
   {
     super.setBasicDataFrom (aSource);
     setWidth (aSource.m_fWidth);
@@ -71,7 +71,7 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
     return m_fWidth;
   }
 
-  @Nonnull
+  @NonNull
   public final PLSpacerXY setWidth (final float fWidth)
   {
     m_fWidth = fWidth;
@@ -83,7 +83,7 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
     return m_fHeight;
   }
 
-  @Nonnull
+  @NonNull
   public final PLSpacerXY setHeight (final float fHeight)
   {
     m_fHeight = fHeight;
@@ -91,7 +91,7 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
@@ -111,7 +111,7 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
     return m_bVertSplittable;
   }
 
-  @Nonnull
+  @NonNull
   public final PLSpacerXY setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
@@ -119,15 +119,15 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
   }
 
   @Override
-  @Nonnull
-  public PLSpacerXY internalCreateNewVertSplitObject (@Nonnull final PLSpacerXY aBase)
+  @NonNull
+  public PLSpacerXY internalCreateNewVertSplitObject (@NonNull final PLSpacerXY aBase)
   {
     final PLSpacerXY ret = new PLSpacerXY ();
     ret.setBasicDataFrom (aBase);
     return ret;
   }
 
-  @Nonnull
+  @NonNull
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     // Prepared height may be 0 as well
@@ -169,7 +169,7 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     // Empty
   }
@@ -184,7 +184,7 @@ public class PLSpacerXY extends AbstractPLRenderableObject <PLSpacerXY> implemen
                             .getToString ();
   }
 
-  @Nonnull
+  @NonNull
   public static PLSpacerXY createPrepared (final float fWidth, final float fHeight, @Nullable String sID)
   {
     final PLSpacerXY ret = new PLSpacerXY (fWidth, fHeight);

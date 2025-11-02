@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
@@ -34,8 +35,6 @@ import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Base class for a static image based on {@link BufferedImage}.
@@ -66,9 +65,9 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     return thisAsT ();
@@ -92,7 +91,7 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
    * @see #setImageType(EPLImageType)
    * @since 5.0.1
    */
-  @Nonnull
+  @NonNull
   public final EPLImageType getImageType ()
   {
     return m_eImageType;
@@ -107,8 +106,8 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
    *        The image type to be used. May not be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
-  public final IMPLTYPE setImageType (@Nonnull final EPLImageType eImageType)
+  @NonNull
+  public final IMPLTYPE setImageType (@NonNull final EPLImageType eImageType)
   {
     ValueEnforcer.notNull (eImageType, "ImageType");
     m_eImageType = eImageType;
@@ -116,7 +115,7 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     return new SizeSpec (m_fImageWidth, m_fImageHeight);
   }
@@ -137,12 +136,12 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
    * @throws IOException
    *         In case of error.
    */
-  @Nonnull
-  protected abstract PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException;
+  @NonNull
+  protected abstract PDImageXObject getXObject (@NonNull final PagePreRenderContext aCtx) throws IOException;
 
   @Override
-  @Nonnull
-  public EChange beforeRender (@Nonnull final PagePreRenderContext aCtx)
+  @NonNull
+  public EChange beforeRender (@NonNull final PagePreRenderContext aCtx)
   {
     // It is very important that the PDJpeg is created BEFORE the page content
     // stream is created.
@@ -161,14 +160,14 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   }
 
   @OverrideOnDemand
-  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void renderShape (@NonNull final PageRenderContext aCtx) throws IOException
   {
     // Fill and border
     PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     renderShape (aCtx);
 

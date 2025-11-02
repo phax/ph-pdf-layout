@@ -16,15 +16,15 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.convert.MicroTypeConverter;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link BorderSpec}.
@@ -39,10 +39,10 @@ public final class BorderSpecMicroTypeConverter implements IMicroTypeConverter <
   private static final String ELEMENT_BOTTOM = "bottom";
   private static final String ELEMENT_LEFT = "left";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final BorderSpec aValue,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final BorderSpec aValue,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
@@ -53,8 +53,8 @@ public final class BorderSpecMicroTypeConverter implements IMicroTypeConverter <
     return aElement;
   }
 
-  @Nonnull
-  public BorderSpec convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public BorderSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     final BorderStyleSpec aTop = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_TOP),
                                                                      BorderStyleSpec.class);

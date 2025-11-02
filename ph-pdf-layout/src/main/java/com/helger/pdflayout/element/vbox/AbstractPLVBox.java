@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,9 +63,6 @@ import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Vertical box - groups several rows.
@@ -99,9 +98,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   {}
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     setVertSplittable (aSource.isVertSplittable ());
@@ -122,7 +121,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   /**
    * @return All rows. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public ICommonsList <PLVBoxRow> getAllRows ()
   {
@@ -132,18 +131,18 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   /**
    * @return All rows. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public Iterable <PLVBoxRow> getRows ()
   {
     return m_aRows;
   }
 
-  public void forEachRow (@Nonnull final Consumer <? super PLVBoxRow> aConsumer)
+  public void forEachRow (@NonNull final Consumer <? super PLVBoxRow> aConsumer)
   {
     m_aRows.forEach (aConsumer);
   }
 
-  public void forEachRowByIndex (@Nonnull final ObjIntConsumer <? super PLVBoxRow> aConsumer)
+  public void forEachRowByIndex (@NonNull final ObjIntConsumer <? super PLVBoxRow> aConsumer)
   {
     m_aRows.forEachByIndex (aConsumer);
   }
@@ -217,16 +216,16 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    * @return The default height to be used for rows if none is provided. May not be
    *         <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public HeightSpec getDefaultHeight ()
   {
     return HeightSpec.auto ();
   }
 
-  @Nonnull
+  @NonNull
   private PLVBoxRow _addAndReturnRow (@CheckForSigned final int nIndex,
-                                      @Nonnull final IPLRenderableObject <?> aElement,
-                                      @Nonnull final HeightSpec aHeight)
+                                      @NonNull final IPLRenderableObject <?> aElement,
+                                      @NonNull final HeightSpec aHeight)
   {
     final PLVBoxRow aItem = new PLVBoxRow (aElement, aHeight);
     if (nIndex < 0 || nIndex >= m_aRows.size ())
@@ -243,8 +242,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The row to be added. May not be <code>null</code>.
    * @return the created row
    */
-  @Nonnull
-  public PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement)
+  @NonNull
+  public PLVBoxRow addAndReturnRow (@NonNull final IPLRenderableObject <?> aElement)
   {
     return addAndReturnRow (aElement, getDefaultHeight ());
   }
@@ -258,9 +257,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The height specification to use. May not be <code>null</code>.
    * @return the created row
    */
-  @Nonnull
-  public final PLVBoxRow addAndReturnRow (@Nonnull final IPLRenderableObject <?> aElement,
-                                          @Nonnull final HeightSpec aHeight)
+  @NonNull
+  public final PLVBoxRow addAndReturnRow (@NonNull final IPLRenderableObject <?> aElement,
+                                          @NonNull final HeightSpec aHeight)
   {
     internalCheckNotPrepared ();
     return _addAndReturnRow (-1, aElement, aHeight);
@@ -273,8 +272,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The row to be added. May not be <code>null</code>.
    * @return this
    */
-  @Nonnull
-  public IMPLTYPE addRow (@Nonnull final IPLRenderableObject <?> aElement)
+  @NonNull
+  public IMPLTYPE addRow (@NonNull final IPLRenderableObject <?> aElement)
   {
     return addRow (aElement, getDefaultHeight ());
   }
@@ -288,8 +287,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The height specification to use. May not be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
-  public final IMPLTYPE addRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
+  @NonNull
+  public final IMPLTYPE addRow (@NonNull final IPLRenderableObject <?> aElement, @NonNull final HeightSpec aHeight)
   {
     addAndReturnRow (aElement, aHeight);
     return thisAsT ();
@@ -306,10 +305,10 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The height specification to use. May not be <code>null</code>.
    * @return the created row. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public PLVBoxRow addAndReturnRow (@Nonnegative final int nIndex,
-                                    @Nonnull final IPLRenderableObject <?> aElement,
-                                    @Nonnull final HeightSpec aHeight)
+                                    @NonNull final IPLRenderableObject <?> aElement,
+                                    @NonNull final HeightSpec aHeight)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
     internalCheckNotPrepared ();
@@ -327,10 +326,10 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The height specification to use. May not be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public IMPLTYPE addRow (@Nonnegative final int nIndex,
-                          @Nonnull final IPLRenderableObject <?> aElement,
-                          @Nonnull final HeightSpec aHeight)
+                          @NonNull final IPLRenderableObject <?> aElement,
+                          @NonNull final HeightSpec aHeight)
   {
     addAndReturnRow (nIndex, aElement, aHeight);
     return thisAsT ();
@@ -343,7 +342,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The index to be removed.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public IMPLTYPE removeRow (@Nonnegative final int nIndex)
   {
     ValueEnforcer.isGE0 (nIndex, "Index");
@@ -357,7 +356,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     return m_bVertSplittable;
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
@@ -381,7 +380,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        The number of header rows, to be repeated by page. Must be &ge; 0.
    * @return this
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setHeaderRowCount (@Nonnegative final int nHeaderRowCount)
   {
     ValueEnforcer.isGE0 (nHeaderRowCount, "HeaderRowCount");
@@ -411,7 +410,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
    *        available.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setFullWidth (final boolean bFullWidth)
   {
     m_bFullWidth = bFullWidth;
@@ -419,8 +418,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   @Override
-  @Nonnull
-  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @NonNull
+  public EChange visit (@NonNull final IPLVisitor aVisitor) throws IOException
   {
     EChange ret = EChange.UNCHANGED;
     for (final PLVBoxRow aRow : m_aRows)
@@ -430,7 +429,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
   @Override
   @OverridingMethodsMustInvokeSuper
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     m_aPreparedRowSize = new SizeSpec [m_aRows.size ()];
     m_aPreparedElementSize = new SizeSpec [m_aRows.size ()];
@@ -700,7 +699,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
         ((AbstractPLRenderableObject <?>) aRow.getElement ()).internalMarkAsNotPrepared ();
   }
 
-  @Nonnull
+  @NonNull
   public final PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
@@ -885,7 +884,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     final float fCurX = aCtx.getStartLeft () + getOutlineLeft ();
     float fCurY = aCtx.getStartTop () - getOutlineTop ();

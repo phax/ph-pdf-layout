@@ -27,6 +27,7 @@ import java.util.function.IntFunction;
 import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.jspecify.annotations.NonNull;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -60,8 +61,6 @@ import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.WidthSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Test class for class {@link PLTable}.
@@ -143,7 +142,7 @@ public final class PLTableTest
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/basic.pdf"));
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public static <T> ICommonsList <T> createList (final int nCount, final IntFunction <T> aSupplier)
   {
@@ -428,14 +427,14 @@ public final class PLTableTest
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltable/grid-types-colspan.pdf"));
   }
 
-  @Nonnull
-  private static PLTable _createNestedTable (@Nonnull final FontSpec r10)
+  @NonNull
+  private static PLTable _createNestedTable (@NonNull final FontSpec r10)
   {
     return _createNestedTable (r10, EPLTableGridType.FULL);
   }
 
-  @Nonnull
-  private static PLTable _createNestedTable (@Nonnull final FontSpec r10, @Nonnull final IPLTableGridType aGT)
+  @NonNull
+  private static PLTable _createNestedTable (@NonNull final FontSpec r10, @NonNull final IPLTableGridType aGT)
   {
     final PLTable aTable = PLTable.createWithEvenlySizedColumns (4);
     // Test colspan

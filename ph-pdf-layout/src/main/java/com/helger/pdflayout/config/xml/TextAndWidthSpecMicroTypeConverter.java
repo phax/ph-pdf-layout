@@ -16,14 +16,14 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.pdflayout.spec.TextAndWidthSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.util.MicroHelper;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link TextAndWidthSpec}.
@@ -36,10 +36,10 @@ public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConve
   private static final String ATTR_WIDTH = "width";
   private static final String ATTR_DISPLAY_AS_NEWLINE = "newline";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final TextAndWidthSpec aValue,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final TextAndWidthSpec aValue,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
@@ -49,8 +49,8 @@ public final class TextAndWidthSpecMicroTypeConverter implements IMicroTypeConve
     return aElement;
   }
 
-  @Nonnull
-  public TextAndWidthSpec convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public TextAndWidthSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     final String sText = MicroHelper.getChildTextContent (aElement, ELEMENT_TEXT);
     final float fWidth = aElement.getAttributeValueAsFloat (ATTR_WIDTH, Float.NaN);

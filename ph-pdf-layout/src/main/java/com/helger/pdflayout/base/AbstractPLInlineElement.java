@@ -16,9 +16,9 @@
  */
 package com.helger.pdflayout.base;
 
-import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import org.jspecify.annotations.NonNull;
 
-import jakarta.annotation.Nonnull;
+import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 
 /**
  * Abstract implementation of {@link IPLInlineElement}
@@ -35,9 +35,9 @@ public abstract class AbstractPLInlineElement <IMPLTYPE extends AbstractPLInline
   {}
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     return thisAsT ();

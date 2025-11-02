@@ -16,14 +16,14 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Represents a single page layout as element. It consists of a page size, a
@@ -38,51 +38,51 @@ public class PLMarginBorderPadding implements IPLHasMarginBorderPadding <PLMargi
   private PaddingSpec m_aPadding;
   private BorderSpec m_aBorder;
 
-  public PLMarginBorderPadding (@Nonnull final MarginSpec aMargin,
-                                @Nonnull final PaddingSpec aPadding,
-                                @Nonnull final BorderSpec aBorder)
+  public PLMarginBorderPadding (@NonNull final MarginSpec aMargin,
+                                @NonNull final PaddingSpec aPadding,
+                                @NonNull final BorderSpec aBorder)
   {
     setMargin (aMargin);
     setPadding (aPadding);
     setBorder (aBorder);
   }
 
-  @Nonnull
+  @NonNull
   public final MarginSpec getMargin ()
   {
     return m_aMargin;
   }
 
-  @Nonnull
-  public final PLMarginBorderPadding setMargin (@Nonnull final MarginSpec aMargin)
+  @NonNull
+  public final PLMarginBorderPadding setMargin (@NonNull final MarginSpec aMargin)
   {
     ValueEnforcer.notNull (aMargin, "Mergin");
     m_aMargin = aMargin;
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public final PaddingSpec getPadding ()
   {
     return m_aPadding;
   }
 
-  @Nonnull
-  public final PLMarginBorderPadding setPadding (@Nonnull final PaddingSpec aPadding)
+  @NonNull
+  public final PLMarginBorderPadding setPadding (@NonNull final PaddingSpec aPadding)
   {
     ValueEnforcer.notNull (aPadding, "Padding");
     m_aPadding = aPadding;
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public final BorderSpec getBorder ()
   {
     return m_aBorder;
   }
 
-  @Nonnull
-  public final PLMarginBorderPadding setBorder (@Nonnull final BorderSpec aBorder)
+  @NonNull
+  public final PLMarginBorderPadding setBorder (@NonNull final BorderSpec aBorder)
   {
     ValueEnforcer.notNull (aBorder, "Border");
     m_aBorder = aBorder;

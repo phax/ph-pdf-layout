@@ -21,6 +21,9 @@ import static com.helger.pdflayout.render.PLRenderHelper.fillAndRenderBorderRoun
 import java.io.IOException;
 import java.util.List;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.CheckForSigned;
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.Nonnegative;
@@ -54,9 +57,6 @@ import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.TextAndWidthSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Render text
@@ -95,7 +95,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLinesUnmodified;
   protected ICommonsList <TextAndWidthSpec> m_aPreparedLines;
 
-  @Nonnull
+  @NonNull
   public static String getCleanedPLText (@Nullable final String sText)
   {
     if (StringHelper.isEmpty (sText))
@@ -111,7 +111,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return sCleaned;
   }
 
-  public AbstractPLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
+  public AbstractPLText (@Nullable final String sText, @NonNull final FontSpec aFontSpec)
   {
     _setText (sText);
     m_aFontSpec = ValueEnforcer.notNull (aFontSpec, "FontSpec");
@@ -130,9 +130,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     setLineSpacing (aSource.getLineSpacing ());
@@ -149,7 +149,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    * @return The original text provided in the constructor, with newlines unified. Never
    *         <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final String getText ()
   {
     return m_sOriginalText;
@@ -177,7 +177,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    * @return The font specification to be used as provided in the constructor. Never
    *         <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final FontSpec getFontSpec ()
   {
     return m_aFontSpec;
@@ -191,8 +191,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    * @return this for chaining
    * @since 7.3.5
    */
-  @Nonnull
-  public final IMPLTYPE setFontSpec (@Nonnull final FontSpec aFontSpec)
+  @NonNull
+  public final IMPLTYPE setFontSpec (@NonNull final FontSpec aFontSpec)
   {
     ValueEnforcer.notNull (aFontSpec, "FontSpec");
 
@@ -219,7 +219,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    *        A value of 1 means 100%, 1.05 means 105% etc. Must be &gt; 0.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setLineSpacing (@Nonnegative final float fLineSpacing)
   {
     ValueEnforcer.isGT0 (fLineSpacing, "LineSpacing");
@@ -227,14 +227,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public final EHorzAlignment getHorzAlign ()
   {
     return m_eHorzAlign;
   }
 
-  @Nonnull
-  public final IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
+  @NonNull
+  public final IMPLTYPE setHorzAlign (@NonNull final EHorzAlignment eHorzAlign)
   {
     m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
     return thisAsT ();
@@ -257,7 +257,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    *        Maximum number of rows. If &le; 0 than all lines are rendered.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setMaxRows (final int nMaxRows)
   {
     m_nMaxRows = nMaxRows;
@@ -270,7 +270,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return m_bVertSplittable;
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
@@ -295,7 +295,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    *        <code>true</code> if placeholders should be replaced, <code>false</code> otherwise.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setReplacePlaceholder (final boolean bReplacePlaceholder)
   {
     m_bReplacePlaceholder = bReplacePlaceholder;
@@ -328,7 +328,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    * @return this for chaining
    * @since v7.4.1
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setBorderRadius (final float fBorderRadius)
   {
     m_fBorderRadius = fBorderRadius;
@@ -352,14 +352,14 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    * @return this for chaining
    * @since 5.1.0
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setCustomAscentFirstLine (final float fCustomAscentFirstLine)
   {
     m_fCustomAscentFirstLine = fCustomAscentFirstLine;
     return thisAsT ();
   }
 
-  final void internalSetPreparedLines (@Nonnull final ICommonsList <TextAndWidthSpec> aLines)
+  final void internalSetPreparedLines (@NonNull final ICommonsList <TextAndWidthSpec> aLines)
   {
     final int nLineCount = aLines.size ();
     m_nPreparedLineCountUnmodified = nLineCount;
@@ -387,7 +387,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
   }
 
-  final void internalSetPreparedFontData (@Nonnull final LoadedFont aLoadedFont,
+  final void internalSetPreparedFontData (@NonNull final LoadedFont aLoadedFont,
                                           final float fTextHeight,
                                           final float fDescent)
   {
@@ -411,7 +411,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    * @throws IOException
    *         On PDFBox error
    */
-  @Nonnull
+  @NonNull
   private SizeSpec _prepareText (final float fAvailableWidth, final boolean bAlreadyReplaced) throws IOException
   {
     final float fFontSize = m_aFontSpec.getFontSize ();
@@ -449,7 +449,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
 
@@ -473,7 +473,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     m_aPreparedLines = null;
   }
 
-  private void _setDisplayTextAfterPrepare (@Nonnull final String sNewTextWithPlaceholdersReplaced,
+  private void _setDisplayTextAfterPrepare (@NonNull final String sNewTextWithPlaceholdersReplaced,
                                             final float fAvailableWidth) throws IOException
   {
     internalMarkAsNotPrepared ();
@@ -493,7 +493,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return m_nPreparedLineCountUnmodified;
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public ICommonsList <TextAndWidthSpec> getAllPreparedLinesUnmodified ()
   {
@@ -519,11 +519,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return (nLineCount - 1) * m_fTextHeight * m_fLineSpacing + 1 * m_fTextHeight;
   }
 
-  @Nonnull
+  @NonNull
   private PLElementWithSize _splitGetCopy (final float fElementWidth,
-                                           @Nonnull @Nonempty final List <TextAndWidthSpec> aLines,
+                                           @NonNull @Nonempty final List <TextAndWidthSpec> aLines,
                                            final boolean bSplittableCopy,
-                                           @Nonnull final String sIDSuffix)
+                                           @NonNull final String sIDSuffix)
   {
     ValueEnforcer.notEmpty (aLines, "Lines");
 
@@ -552,7 +552,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     return new PLElementWithSize (aNewText, aSize);
   }
 
-  @Nonnull
+  @NonNull
   public final PLSplitResult splitElementVert (final float fElementWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
@@ -630,8 +630,8 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Override
-  @Nonnull
-  public EChange beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
+  @NonNull
+  public EChange beforeRender (@NonNull final PagePreRenderContext aCtx) throws IOException
   {
     if (m_bReplacePlaceholder)
     {
@@ -648,7 +648,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @OverrideOnDemand
-  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void renderShape (@NonNull final PageRenderContext aCtx) throws IOException
   {
     // Fill and border
     if (hasBorderRadius ())
@@ -667,7 +667,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     if (hasNoText ())
     {

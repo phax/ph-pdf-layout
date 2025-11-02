@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.base.numeric.mutable.MutableInt;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.base.IPLRenderableObject;
@@ -33,9 +36,6 @@ import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 /**
  * A special HBox representing a table row.
  *
@@ -47,8 +47,8 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
   {}
 
   @Override
-  @Nonnull
-  protected AbstractPLRenderableObject <?> internalCreateVertSplitEmptyElement (@Nonnull final IPLRenderableObject <?> aSrcObject,
+  @NonNull
+  protected AbstractPLRenderableObject <?> internalCreateVertSplitEmptyElement (@NonNull final IPLRenderableObject <?> aSrcObject,
                                                                                 final float fWidth,
                                                                                 final float fHeight,
                                                                                 @Nullable final String sID)
@@ -60,8 +60,8 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
     return ret;
   }
 
-  @Nonnull
-  public PLTableRow internalCreateNewVertSplitObject (@Nonnull final PLTableRow aBase)
+  @NonNull
+  public PLTableRow internalCreateNewVertSplitObject (@NonNull final PLTableRow aBase)
   {
     final PLTableRow ret = new PLTableRow ();
     ret.setBasicDataFrom (aBase);
@@ -69,13 +69,13 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     // No further ado
     super.onRender (aCtx);
   }
 
-  public void addCell (@Nonnull final PLTableCell aCell, @Nonnull final WidthSpec aWidth)
+  public void addCell (@NonNull final PLTableCell aCell, @NonNull final WidthSpec aWidth)
   {
     addColumn (aCell, aWidth);
   }
@@ -99,17 +99,17 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
     return getCellAtIndex (getColumnCount () - 1);
   }
 
-  public void forEachCell (@Nonnull final Consumer <? super PLTableCell> aConsumer)
+  public void forEachCell (@NonNull final Consumer <? super PLTableCell> aConsumer)
   {
     forEachColumn (x -> aConsumer.accept ((PLTableCell) x.getElement ()));
   }
 
-  public void forEachCell (@Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
+  public void forEachCell (@NonNull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
     forEachColumnByIndex ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
   }
 
-  public void forEachCell (@Nonnull final IPLTableCellConsumer aConsumer)
+  public void forEachCell (@NonNull final IPLTableCellConsumer aConsumer)
   {
     final MutableInt aEffectiveIndex = new MutableInt (0);
     forEachColumnByIndex ( (x, idx) -> {
@@ -122,7 +122,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
 
   public void forEachCell (final int nStartIncl,
                            final int nEndIncl,
-                           @Nonnull final Consumer <? super PLTableCell> aConsumer)
+                           @NonNull final Consumer <? super PLTableCell> aConsumer)
   {
     forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
@@ -132,7 +132,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
 
   public void forEachCell (final int nStartIncl,
                            final int nEndIncl,
-                           @Nonnull final ObjIntConsumer <? super PLTableCell> aConsumer)
+                           @NonNull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
     forEachCell ( (x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
@@ -140,7 +140,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
     });
   }
 
-  public void forEachCell (@Nonnull final IPLTableCellFilter aFilter, @Nonnull final IPLTableCellConsumer aConsumer)
+  public void forEachCell (@NonNull final IPLTableCellFilter aFilter, @NonNull final IPLTableCellConsumer aConsumer)
   {
     forEachCell ( (x, idx, esidx, eeidx) -> {
       if (aFilter.test (x, idx, esidx, eeidx))
@@ -148,168 +148,168 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
     });
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setFillColor (@Nullable final PLColor aFillColor)
   {
     forEachCell (x -> x.setFillColor (aFillColor));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setBorder (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorder (aBorder));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setBorderTop (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderTop (aBorder));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setBorderRight (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderRight (aBorder));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setBorderBottom (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderBottom (aBorder));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setBorderLeft (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderLeft (aBorder));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setBorderX (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderX (aBorder));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setBorderY (@Nullable final BorderStyleSpec aBorder)
   {
     forEachCell (x -> x.setBorderY (aBorder));
     return this;
   }
 
-  @Nonnull
-  public PLTableRow setMargin (@Nonnull final MarginSpec aMargin)
+  @NonNull
+  public PLTableRow setMargin (@NonNull final MarginSpec aMargin)
   {
     forEachCell (x -> x.setMargin (aMargin));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setMargin (final float fMargin)
   {
     forEachCell (x -> x.setMargin (fMargin));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setMarginTop (final float fMargin)
   {
     forEachCell (x -> x.setMarginTop (fMargin));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setMarginRight (final float fMargin)
   {
     forEachCell (x -> x.setMarginRight (fMargin));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setMarginBottom (final float fMargin)
   {
     forEachCell (x -> x.setMarginBottom (fMargin));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setMarginLeft (final float fMargin)
   {
     forEachCell (x -> x.setMarginLeft (fMargin));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setMarginX (final float fMargin)
   {
     forEachCell (x -> x.setMarginX (fMargin));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setMarginY (final float fMargin)
   {
     forEachCell (x -> x.setMarginY (fMargin));
     return this;
   }
 
-  @Nonnull
-  public PLTableRow setPadding (@Nonnull final PaddingSpec aPadding)
+  @NonNull
+  public PLTableRow setPadding (@NonNull final PaddingSpec aPadding)
   {
     forEachCell (x -> x.setPadding (aPadding));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setPadding (final float fPadding)
   {
     forEachCell (x -> x.setPadding (fPadding));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setPaddingTop (final float fPadding)
   {
     forEachCell (x -> x.setPaddingTop (fPadding));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setPaddingRight (final float fPadding)
   {
     forEachCell (x -> x.setPaddingRight (fPadding));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setPaddingBottom (final float fPadding)
   {
     forEachCell (x -> x.setPaddingBottom (fPadding));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setPaddingLeft (final float fPadding)
   {
     forEachCell (x -> x.setPaddingLeft (fPadding));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setPaddingX (final float fPadding)
   {
     forEachCell (x -> x.setPaddingX (fPadding));
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public PLTableRow setPaddingY (final float fPadding)
   {
     forEachCell (x -> x.setPaddingY (fPadding));

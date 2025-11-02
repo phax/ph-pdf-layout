@@ -18,6 +18,8 @@ package com.helger.pdflayout.spec;
 
 import java.io.Serializable;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.concurrent.Immutable;
@@ -26,8 +28,6 @@ import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * This class defines a dependent height of an elements:
@@ -50,7 +50,7 @@ public class HeightSpec implements Serializable
   private final EValueUOMType m_eType;
   private final float m_fValue;
 
-  public HeightSpec (@Nonnull final EValueUOMType eType, final float fValue)
+  public HeightSpec (@NonNull final EValueUOMType eType, final float fValue)
   {
     ValueEnforcer.notNull (eType, "HeightType");
     m_eType = eType;
@@ -60,7 +60,7 @@ public class HeightSpec implements Serializable
   /**
    * @return The height type. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final EValueUOMType getType ()
   {
     return m_eType;
@@ -69,7 +69,7 @@ public class HeightSpec implements Serializable
   /**
    * @return The ID of the height type. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @Nonempty
   public final String getTypeID ()
   {
@@ -166,7 +166,7 @@ public class HeightSpec implements Serializable
    *        The height to use. Must be &gt; 0.
    * @return Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public static HeightSpec abs (@Nonnegative final float fValue)
   {
     ValueEnforcer.isGT0 (fValue, "Value");
@@ -180,7 +180,7 @@ public class HeightSpec implements Serializable
    *        The height percentage to use. Must be &gt; 0.
    * @return Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public static HeightSpec perc (@Nonnegative final float fPerc)
   {
     ValueEnforcer.isGT0 (fPerc, "Perc");
@@ -192,7 +192,7 @@ public class HeightSpec implements Serializable
    *
    * @return Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public static HeightSpec star ()
   {
     return new HeightSpec (EValueUOMType.STAR, 0);
@@ -203,7 +203,7 @@ public class HeightSpec implements Serializable
    *
    * @return Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public static HeightSpec auto ()
   {
     return new HeightSpec (EValueUOMType.AUTO, 0);

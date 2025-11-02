@@ -16,6 +16,9 @@
  */
 package com.helger.pdflayout.debug;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.iface.IThrowingRunnable;
@@ -24,9 +27,6 @@ import com.helger.pdflayout.base.IPLInlineElement;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.spec.BorderStyleSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * This class defines stuff for debug rendering.
@@ -61,9 +61,9 @@ public final class PLDebugRender
   public interface IDebugColorProvider
   {
     @Nullable
-    PLColor getDebugColor (@Nonnull Object aObject);
+    PLColor getDebugColor (@NonNull Object aObject);
 
-    @Nonnull
+    @NonNull
     static IDebugColorProvider getDefaultOutlineProvider ()
     {
       return aObj -> {
@@ -87,9 +87,9 @@ public final class PLDebugRender
   public interface IDebugBorderProvider
   {
     @Nullable
-    BorderStyleSpec getDebugBorder (@Nonnull Object aObject);
+    BorderStyleSpec getDebugBorder (@NonNull Object aObject);
 
-    @Nonnull
+    @NonNull
     static IDebugBorderProvider getDefaultBorderProvider ()
     {
       return aObj -> {
@@ -147,37 +147,37 @@ public final class PLDebugRender
     s_bDebugRender = bDebugRender;
   }
 
-  public static void setDebugOutlineColorProvider (@Nonnull final IDebugColorProvider aDebugOutlineColorProvider)
+  public static void setDebugOutlineColorProvider (@NonNull final IDebugColorProvider aDebugOutlineColorProvider)
   {
     ValueEnforcer.notNull (aDebugOutlineColorProvider, "DebugOutlineColorProvider");
     s_aDebugOutlineColorProvider = aDebugOutlineColorProvider;
   }
 
   @Nullable
-  public static PLColor getDebugOutlineColor (@Nonnull final Object aObject)
+  public static PLColor getDebugOutlineColor (@NonNull final Object aObject)
   {
     return s_aDebugOutlineColorProvider.getDebugColor (aObject);
   }
 
-  public static void setDebugBorderProvider (@Nonnull final IDebugBorderProvider aDebugBorderProvider)
+  public static void setDebugBorderProvider (@NonNull final IDebugBorderProvider aDebugBorderProvider)
   {
     ValueEnforcer.notNull (aDebugBorderProvider, "DebugBorderProvider");
     s_aDebugBorderProvider = aDebugBorderProvider;
   }
 
   @Nullable
-  public static BorderStyleSpec getDebugBorder (@Nonnull final Object aObject)
+  public static BorderStyleSpec getDebugBorder (@NonNull final Object aObject)
   {
     return s_aDebugBorderProvider.getDebugBorder (aObject);
   }
 
-  public static <EXTYPE extends Throwable> void withDebugRender (@Nonnull final IThrowingRunnable <EXTYPE> aRunnable) throws EXTYPE
+  public static <EXTYPE extends Throwable> void withDebugRender (@NonNull final IThrowingRunnable <EXTYPE> aRunnable) throws EXTYPE
   {
     withDebugRender (true, aRunnable);
   }
 
   public static <EXTYPE extends Throwable> void withDebugRender (final boolean bDebug,
-                                                                 @Nonnull final IThrowingRunnable <EXTYPE> aRunnable) throws EXTYPE
+                                                                 @NonNull final IThrowingRunnable <EXTYPE> aRunnable) throws EXTYPE
   {
     setDebugRender (bDebug);
     try

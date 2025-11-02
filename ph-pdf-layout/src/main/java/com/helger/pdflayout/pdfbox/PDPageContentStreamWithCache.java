@@ -23,6 +23,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.equals.EqualsHelper;
@@ -30,8 +31,6 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.pdflayout.spec.LoadedFont;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * A special version of PDPageContentStream with an integrated "cache" to avoid setting the same
@@ -65,9 +64,9 @@ public class PDPageContentStreamWithCache
     m_fLastUsedLineWidth = 0f;
   }
 
-  public PDPageContentStreamWithCache (@Nonnull final PDDocument aDocument,
-                                       @Nonnull final PDPage aSourcePage,
-                                       @Nonnull final PDPageContentStream.AppendMode aAppendContent,
+  public PDPageContentStreamWithCache (@NonNull final PDDocument aDocument,
+                                       @NonNull final PDPage aSourcePage,
+                                       final PDPageContentStream.@NonNull AppendMode aAppendContent,
                                        final boolean bCompress) throws IOException
   {
     m_aDocument = aDocument;
@@ -78,7 +77,7 @@ public class PDPageContentStreamWithCache
   /**
    * @return The {@link PDDocument} this stream is working on. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final PDDocument getDocument ()
   {
     return m_aDocument;
@@ -87,7 +86,7 @@ public class PDPageContentStreamWithCache
   /**
    * @return The {@link PDPage} this stream is working on. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final PDPage getPage ()
   {
     return m_aPage;
@@ -97,13 +96,13 @@ public class PDPageContentStreamWithCache
    * @return The internal page content stream. Never <code>null</code>. Handle with care.
    * @since 6.0.2
    */
-  @Nonnull
+  @NonNull
   public final PDPageContentStreamExt getContentStream ()
   {
     return m_aStream;
   }
 
-  public void setFont (@Nonnull final LoadedFont aLoadedFont, @Nonnull final FontSpec aFontSpec) throws IOException
+  public void setFont (@NonNull final LoadedFont aLoadedFont, @NonNull final FontSpec aFontSpec) throws IOException
   {
     ValueEnforcer.notNull (aLoadedFont, "Font");
 
@@ -119,7 +118,7 @@ public class PDPageContentStreamWithCache
     setNonStrokingColor (aFontSpec.getColor ());
   }
 
-  public void setStrokingColor (@Nonnull final PLColor aColor) throws IOException
+  public void setStrokingColor (@NonNull final PLColor aColor) throws IOException
   {
     ValueEnforcer.notNull (aColor, "Color");
 
@@ -130,13 +129,13 @@ public class PDPageContentStreamWithCache
     }
   }
 
-  @Nonnull
+  @NonNull
   public PLColor getLastUsedStrokingColor ()
   {
     return m_aLastUsedStrokingColor;
   }
 
-  public void setNonStrokingColor (@Nonnull final PLColor aColor) throws IOException
+  public void setNonStrokingColor (@NonNull final PLColor aColor) throws IOException
   {
     ValueEnforcer.notNull (aColor, "Color");
 
@@ -147,13 +146,13 @@ public class PDPageContentStreamWithCache
     }
   }
 
-  @Nonnull
+  @NonNull
   public PLColor getLastUsedNonStrokingColor ()
   {
     return m_aLastUsedNonStrokingColor;
   }
 
-  public void setLineDashPattern (@Nonnull final LineDashPatternSpec aLineDashPattern) throws IOException
+  public void setLineDashPattern (@NonNull final LineDashPatternSpec aLineDashPattern) throws IOException
   {
     ValueEnforcer.notNull (aLineDashPattern, "LineDashPattern");
 
@@ -164,7 +163,7 @@ public class PDPageContentStreamWithCache
     }
   }
 
-  @Nonnull
+  @NonNull
   public LineDashPatternSpec getLastUsedLineDashPattern ()
   {
     return m_aLastUsedLineDashPattern;

@@ -23,6 +23,8 @@ import java.io.InputStream;
 import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
@@ -31,9 +33,6 @@ import com.helger.base.io.iface.IHasInputStream;
 import com.helger.base.io.stream.StreamHelper;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.render.PagePreRenderContext;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Represent a static image based on {@link BufferedImage} read from an
@@ -47,7 +46,7 @@ public class PLStreamImage extends AbstractPLImage <PLStreamImage>
 {
   private final IHasInputStream m_aIIS;
 
-  public PLStreamImage (@Nonnull final IHasInputStream aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
+  public PLStreamImage (@NonNull final IHasInputStream aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
   {
     super (fImageWidth, fImageHeight);
     ValueEnforcer.notNull (aImage, "Image");
@@ -56,9 +55,9 @@ public class PLStreamImage extends AbstractPLImage <PLStreamImage>
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public PLStreamImage setBasicDataFrom (@Nonnull final PLStreamImage aSource)
+  public PLStreamImage setBasicDataFrom (@NonNull final PLStreamImage aSource)
   {
     super.setBasicDataFrom (aSource);
     return this;
@@ -71,8 +70,8 @@ public class PLStreamImage extends AbstractPLImage <PLStreamImage>
   }
 
   @Override
-  @Nonnull
-  protected PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException
+  @NonNull
+  protected PDImageXObject getXObject (@NonNull final PagePreRenderContext aCtx) throws IOException
   {
     // The input stream is only sometimes closed automatically
     final InputStream aIS = m_aIIS.getInputStream ();

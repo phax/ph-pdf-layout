@@ -18,6 +18,8 @@ package com.helger.pdflayout.element.special;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
@@ -26,8 +28,6 @@ import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * A horizontal spacer
@@ -51,9 +51,9 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public PLSpacerX setBasicDataFrom (@Nonnull final PLSpacerX aSource)
+  public PLSpacerX setBasicDataFrom (@NonNull final PLSpacerX aSource)
   {
     super.setBasicDataFrom (aSource);
     setWidth (aSource.m_fWidth);
@@ -66,7 +66,7 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
     return m_fWidth;
   }
 
-  @Nonnull
+  @NonNull
   public final PLSpacerX setWidth (final float fWidth)
   {
     m_fWidth = fWidth;
@@ -74,7 +74,7 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     final float fElementWidth = aCtx.getAvailableWidth () - getOutlineXSum ();
 
@@ -93,7 +93,7 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
     return m_bVertSplittable;
   }
 
-  @Nonnull
+  @NonNull
   public final PLSpacerX setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
@@ -101,15 +101,15 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
   }
 
   @Override
-  @Nonnull
-  public PLSpacerX internalCreateNewVertSplitObject (@Nonnull final PLSpacerX aBase)
+  @NonNull
+  public PLSpacerX internalCreateNewVertSplitObject (@NonNull final PLSpacerX aBase)
   {
     final PLSpacerX ret = new PLSpacerX ();
     ret.setBasicDataFrom (aBase);
     return ret;
   }
 
-  @Nonnull
+  @NonNull
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     // Because height is 0, it always fits on the first page
@@ -117,7 +117,7 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     // Empty
   }
@@ -131,7 +131,7 @@ public class PLSpacerX extends AbstractPLRenderableObject <PLSpacerX> implements
                             .getToString ();
   }
 
-  @Nonnull
+  @NonNull
   public static PLSpacerX createPrepared (final float fWidth)
   {
     final PLSpacerX ret = new PLSpacerX (fWidth);

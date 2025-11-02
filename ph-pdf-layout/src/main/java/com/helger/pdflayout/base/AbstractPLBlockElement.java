@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.EVertAlignment;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Abstract implementation of {@link IPLBlockElement}.
@@ -45,9 +45,9 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
   {}
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     setHorzAlign (aSource.getHorzAlign ());
@@ -55,27 +55,27 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public final EHorzAlignment getHorzAlign ()
   {
     return m_eHorzAlign;
   }
 
-  @Nonnull
-  public final IMPLTYPE setHorzAlign (@Nonnull final EHorzAlignment eHorzAlign)
+  @NonNull
+  public final IMPLTYPE setHorzAlign (@NonNull final EHorzAlignment eHorzAlign)
   {
     m_eHorzAlign = ValueEnforcer.notNull (eHorzAlign, "HorzAlign");
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public final EVertAlignment getVertAlign ()
   {
     return m_eVertAlign;
   }
 
-  @Nonnull
-  public final IMPLTYPE setVertAlign (@Nonnull final EVertAlignment eVertAlign)
+  @NonNull
+  public final IMPLTYPE setVertAlign (@NonNull final EVertAlignment eVertAlign)
   {
     m_eVertAlign = ValueEnforcer.notNull (eVertAlign, "VertAlign");
     return thisAsT ();
@@ -86,7 +86,7 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
     return m_bFullWidth;
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setFullWidth (final boolean bFullWidth)
   {
     m_bFullWidth = bFullWidth;
@@ -98,7 +98,7 @@ public abstract class AbstractPLBlockElement <IMPLTYPE extends AbstractPLBlockEl
     return m_bClipContent;
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setClipContent (final boolean bClipContent)
   {
     m_bClipContent = bClipContent;

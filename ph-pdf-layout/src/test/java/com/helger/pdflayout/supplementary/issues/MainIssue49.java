@@ -19,6 +19,7 @@ package com.helger.pdflayout.supplementary.issues;
 import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +36,6 @@ import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * Test for issue 49
  *
@@ -47,7 +46,7 @@ public final class MainIssue49
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (MainIssue49.class);
 
-  @Nonnull
+  @NonNull
   private static PLTable _buildTable ()
   {
     final FontSpec font = new FontSpec (PreloadFont.REGULAR, 8);

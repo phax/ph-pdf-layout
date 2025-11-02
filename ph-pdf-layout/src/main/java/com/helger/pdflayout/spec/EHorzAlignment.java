@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.spec;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.misc.Since;
 import com.helger.base.id.IHasID;
 import com.helger.base.lang.EnumHelper;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Represents the possible horizontal alignments.
@@ -59,12 +59,12 @@ public enum EHorzAlignment implements IHasID <String>
 
   private final String m_sID;
 
-  EHorzAlignment (@Nonnull @Nonempty final String sID)
+  EHorzAlignment (@NonNull @Nonempty final String sID)
   {
     m_sID = sID;
   }
 
-  @Nonnull
+  @NonNull
   @Nonempty
   public String getID ()
   {

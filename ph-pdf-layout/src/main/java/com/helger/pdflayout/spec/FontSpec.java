@@ -18,6 +18,8 @@ package com.helger.pdflayout.spec;
 
 import java.io.Serializable;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.concurrent.NotThreadSafe;
@@ -27,8 +29,6 @@ import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.PLColor;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines a text font specification containing the font, the font size and the
@@ -56,7 +56,7 @@ public class FontSpec implements Serializable
    * @param fFontSize
    *        Font size to use. Must be &gt; 0.
    */
-  public FontSpec (@Nonnull final PreloadFont aPreloadFont, @Nonnegative final float fFontSize)
+  public FontSpec (@NonNull final PreloadFont aPreloadFont, @Nonnegative final float fFontSize)
   {
     this (aPreloadFont, fFontSize, DEFAULT_COLOR);
   }
@@ -72,9 +72,9 @@ public class FontSpec implements Serializable
    *        The color to use. May not be <code>null</code>.
    * @since 7.2.0
    */
-  public FontSpec (@Nonnull final PreloadFont aPreloadFont,
+  public FontSpec (@NonNull final PreloadFont aPreloadFont,
                    @Nonnegative final float fFontSize,
-                   @Nonnull final PLColor aColor)
+                   @NonNull final PLColor aColor)
   {
     ValueEnforcer.notNull (aPreloadFont, "Font");
     ValueEnforcer.isFalse (Float.isNaN (fFontSize), "FontSize may not be NaN");
@@ -88,7 +88,7 @@ public class FontSpec implements Serializable
   /**
    * @return The font to use. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final PreloadFont getPreloadFont ()
   {
     return m_aPreloadFont;
@@ -97,7 +97,7 @@ public class FontSpec implements Serializable
   /**
    * @return The ID of the font to use. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @Nonempty
   public final String getPreloadFontID ()
   {
@@ -116,7 +116,7 @@ public class FontSpec implements Serializable
   /**
    * @return The text color to use.
    */
-  @Nonnull
+  @NonNull
   public final PLColor getColor ()
   {
     return m_aColor;
@@ -129,8 +129,8 @@ public class FontSpec implements Serializable
    *        The new font to use. Must not be <code>null</code>.
    * @return this if the fonts are equal - a new object otherwise.
    */
-  @Nonnull
-  public FontSpec getCloneWithDifferentFont (@Nonnull final PreloadFont aNewFont)
+  @NonNull
+  public FontSpec getCloneWithDifferentFont (@NonNull final PreloadFont aNewFont)
   {
     ValueEnforcer.notNull (aNewFont, "NewFont");
     if (aNewFont.equals (m_aPreloadFont))
@@ -146,7 +146,7 @@ public class FontSpec implements Serializable
    *        The new font size to use. Must be &gt; 0.
    * @return this if the font sizes are equal - a new object otherwise.
    */
-  @Nonnull
+  @NonNull
   public FontSpec getCloneWithDifferentFontSize (final float fNewFontSize)
   {
     ValueEnforcer.isGT0 (fNewFontSize, "FontSize");
@@ -163,8 +163,8 @@ public class FontSpec implements Serializable
    * @return this if the colors are equal - a new object otherwise.
    * @since 7.2.0
    */
-  @Nonnull
-  public FontSpec getCloneWithDifferentColor (@Nonnull final PLColor aNewColor)
+  @NonNull
+  public FontSpec getCloneWithDifferentColor (@NonNull final PLColor aNewColor)
   {
     ValueEnforcer.notNull (aNewColor, "NewColor");
     if (aNewColor.equals (m_aColor))

@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.base.trait.IGenericImplTrait;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Base interface for objects having a border
@@ -48,8 +48,8 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    * @return this
    * @since 7.2.0
    */
-  @Nonnull
-  default IMPLTYPE setBorder (@Nonnull final PLColor aColor)
+  @NonNull
+  default IMPLTYPE setBorder (@NonNull final PLColor aColor)
   {
     return setBorder (new BorderStyleSpec (aColor));
   }
@@ -63,7 +63,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        indicate no border.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorder)
   {
     return setBorder (new BorderSpec (aBorder));
@@ -81,7 +81,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        indicate no border.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorderY, @Nullable final BorderStyleSpec aBorderX)
   {
     return setBorder (new BorderSpec (aBorderY, aBorderX));
@@ -101,7 +101,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        Left. May be <code>null</code> to indicate no border.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setBorder (@Nullable final BorderStyleSpec aBorderTop,
                               @Nullable final BorderStyleSpec aBorderRight,
                               @Nullable final BorderStyleSpec aBorderBottom,
@@ -118,8 +118,8 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        Border to use. May not be <code>null</code>.
    * @return this
    */
-  @Nonnull
-  IMPLTYPE setBorder (@Nonnull BorderSpec aBorder);
+  @NonNull
+  IMPLTYPE setBorder (@NonNull BorderSpec aBorder);
 
   /**
    * Set the top border value. This method may not be called after an element
@@ -129,7 +129,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        The value to use. May be <code>null</code>.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setBorderTop (@Nullable final BorderStyleSpec aBorder)
   {
     return setBorder (getBorder ().getCloneWithTop (aBorder));
@@ -143,7 +143,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        The value to use. May be <code>null</code>.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setBorderRight (@Nullable final BorderStyleSpec aBorder)
   {
     return setBorder (getBorder ().getCloneWithRight (aBorder));
@@ -157,7 +157,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        The value to use. May be <code>null</code>.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setBorderBottom (@Nullable final BorderStyleSpec aBorder)
   {
     return setBorder (getBorder ().getCloneWithBottom (aBorder));
@@ -171,7 +171,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        The value to use. May be <code>null</code>.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setBorderLeft (@Nullable final BorderStyleSpec aBorder)
   {
     return setBorder (getBorder ().getCloneWithLeft (aBorder));
@@ -185,7 +185,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        The value to use. May be <code>null</code>.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setBorderX (@Nullable final BorderStyleSpec aBorder)
   {
     return setBorderLeft (aBorder).setBorderRight (aBorder);
@@ -199,7 +199,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
    *        The value to use. May be <code>null</code>.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setBorderY (@Nullable final BorderStyleSpec aBorder)
   {
     return setBorderTop (aBorder).setBorderBottom (aBorder);
@@ -208,7 +208,7 @@ public interface IPLHasBorder <IMPLTYPE extends IPLHasBorder <IMPLTYPE>> extends
   /**
    * @return The current border. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   BorderSpec getBorder ();
 
   /**

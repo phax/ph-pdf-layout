@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.element.vbox;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.spec.HeightSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Vertical box - groups several rows without having layout information itself.
@@ -65,8 +65,8 @@ public class PLVBox extends AbstractPLVBox <PLVBox>
   }
 
   @Override
-  @Nonnull
-  public PLVBox internalCreateNewVertSplitObject (@Nonnull final PLVBox aBase)
+  @NonNull
+  public PLVBox internalCreateNewVertSplitObject (@NonNull final PLVBox aBase)
   {
     final PLVBox ret = new PLVBox ();
     ret.setBasicDataFrom (aBase);

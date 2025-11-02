@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.element.table;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.id.IHasID;
 import com.helger.pdflayout.spec.BorderStyleSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Custom {@link PLTable} grid specification.
@@ -37,7 +37,7 @@ public interface IPLTableGridType extends IHasID <String>
    * @param aBSS
    *        Border style specification to be used. May not be <code>null</code>.
    */
-  default void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final BorderStyleSpec aBSS)
+  default void applyGridToTable (@NonNull final PLTable aTable, @NonNull final BorderStyleSpec aBSS)
   {
     ValueEnforcer.notNull (aTable, "Table");
     applyGridToTable (aTable, 0, aTable.getRowCount () - 1, 0, aTable.getColumnCount () - 1, aBSS);
@@ -54,7 +54,7 @@ public interface IPLTableGridType extends IHasID <String>
    * @param aBSS
    *        Border style specification to be used. May not be <code>null</code>.
    */
-  default void applyGridToTable (@Nonnull final PLTable aTable, @Nonnull final IPLCellRange aCellRange, @Nonnull final BorderStyleSpec aBSS)
+  default void applyGridToTable (@NonNull final PLTable aTable, @NonNull final IPLCellRange aCellRange, @NonNull final BorderStyleSpec aBSS)
   {
     ValueEnforcer.notNull (aTable, "Table");
     ValueEnforcer.notNull (aCellRange, "CellRange");
@@ -83,10 +83,10 @@ public interface IPLTableGridType extends IHasID <String>
    * @param aBSS
    *        Border style specification to be used. May not be <code>null</code>.
    */
-  void applyGridToTable (@Nonnull PLTable aTable,
+  void applyGridToTable (@NonNull PLTable aTable,
                          int nStartRowIncl,
                          int nEndRowIncl,
                          int nStartColumnIncl,
                          int nEndColumnIncl,
-                         @Nonnull BorderStyleSpec aBSS);
+                         @NonNull BorderStyleSpec aBSS);
 }

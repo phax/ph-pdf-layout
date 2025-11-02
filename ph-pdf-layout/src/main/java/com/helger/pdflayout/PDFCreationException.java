@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * For all exceptions occurring during PDF creation.
@@ -25,12 +25,12 @@ import jakarta.annotation.Nonnull;
  */
 public class PDFCreationException extends Exception
 {
-  public PDFCreationException (@Nonnull final String sMsg)
+  public PDFCreationException (@NonNull final String sMsg)
   {
     super (sMsg);
   }
 
-  public PDFCreationException (@Nonnull final String sMsg, @Nonnull final Throwable aCause)
+  public PDFCreationException (@NonNull final String sMsg, @NonNull final Throwable aCause)
   {
     super (sMsg, aCause);
   }

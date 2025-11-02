@@ -18,6 +18,9 @@ package com.helger.pdflayout.spec;
 
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.concurrent.GuardedBy;
 import com.helger.annotation.concurrent.ThreadSafe;
 import com.helger.annotation.style.ReturnsMutableCopy;
@@ -29,9 +32,6 @@ import com.helger.collection.commons.ICommonsList;
 import com.helger.collection.commons.ICommonsMap;
 import com.helger.font.api.IFontResource;
 import com.helger.font.api.IHasFontResource;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * A manager for maintaining {@link PreloadFont}s.
@@ -88,7 +88,7 @@ public class PreloadFontManager implements IPreloadFontResolver
    * @param aPreloadFont
    *        The font to be added. May not be <code>null</code>.
    */
-  public void addPreloadFont (@Nonnull final PreloadFont aPreloadFont)
+  public void addPreloadFont (@NonNull final PreloadFont aPreloadFont)
   {
     ValueEnforcer.notNull (aPreloadFont, "PreloadFont");
     final String sKey = aPreloadFont.getID ();
@@ -109,8 +109,8 @@ public class PreloadFontManager implements IPreloadFontResolver
    *        <code>null</code>.
    * @return The created {@link PreloadFont}. Never <code>null</code>.
    */
-  @Nonnull
-  public PreloadFont getOrAddEmbeddingPreloadFont (@Nonnull final IHasFontResource aFontResProvider)
+  @NonNull
+  public PreloadFont getOrAddEmbeddingPreloadFont (@NonNull final IHasFontResource aFontResProvider)
   {
     ValueEnforcer.notNull (aFontResProvider, "FontResProvider");
     return getOrAddEmbeddingPreloadFont (aFontResProvider.getFontResource ());
@@ -125,8 +125,8 @@ public class PreloadFontManager implements IPreloadFontResolver
    *        <code>null</code>.
    * @return The created {@link PreloadFont}. Never <code>null</code>.
    */
-  @Nonnull
-  public PreloadFont getOrAddEmbeddingPreloadFont (@Nonnull final IFontResource aFontRes)
+  @NonNull
+  public PreloadFont getOrAddEmbeddingPreloadFont (@NonNull final IFontResource aFontRes)
   {
     ValueEnforcer.notNull (aFontRes, "FontRes");
     PreloadFont aPreloadFont = getPreloadFontOfID (aFontRes);
@@ -146,14 +146,14 @@ public class PreloadFontManager implements IPreloadFontResolver
     return m_aRWLock.readLockedGet ( () -> m_aMap.get (sID));
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public ICommonsList <PreloadFont> getAllPreloadFonts ()
   {
     return m_aRWLock.readLockedGet (m_aMap::copyOfValues);
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public ICommonsList <PreloadFont> getAllPreloadFonts (@Nullable final Predicate <? super PreloadFont> aFilter)
   {

@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.element.table;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.clone.ICloneable;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Cell range.
@@ -62,7 +62,7 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
    *        The cell range to copy the values from. May not be
    *        <code>null</code>.
    */
-  public PLCellRange (@Nonnull final IPLCellRange aOther)
+  public PLCellRange (@NonNull final IPLCellRange aOther)
   {
     this (aOther.getFirstRow (), aOther.getLastRow (), aOther.getFirstColumn (), aOther.getLastColumn ());
   }
@@ -104,7 +104,7 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
    *        row number for the upper left hand corner
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PLCellRange setFirstRow (final int nFirstRow)
   {
     m_nFirstRow = nFirstRow;
@@ -116,7 +116,7 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
    *        row number for the lower right hand corner
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PLCellRange setLastRow (final int nLastRow)
   {
     m_nLastRow = nLastRow;
@@ -128,7 +128,7 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
    *        column number for the upper left hand corner
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PLCellRange setFirstColumn (final int nFirstCol)
   {
     m_nFirstCol = nFirstCol;
@@ -146,7 +146,7 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
     return this;
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public PLCellRange getClone ()
   {

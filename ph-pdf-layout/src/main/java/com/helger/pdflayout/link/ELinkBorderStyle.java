@@ -17,10 +17,9 @@
 package com.helger.pdflayout.link;
 
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.Nonempty;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Contains the style for links and other interactive elements.
@@ -56,12 +55,12 @@ public enum ELinkBorderStyle
 
   private final String m_sID;
 
-  ELinkBorderStyle (@Nonnull @Nonempty final String sID)
+  ELinkBorderStyle (@NonNull @Nonempty final String sID)
   {
     m_sID = sID;
   }
 
-  @Nonnull
+  @NonNull
   @Nonempty
   public String getID ()
   {

@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSFloat;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
@@ -29,8 +30,6 @@ import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Different dashed line times
@@ -74,7 +73,7 @@ public class LineDashPatternSpec implements Serializable
    *        The phase of the pattern. Where to start the painting, first
    *        counting on than off.
    */
-  public LineDashPatternSpec (@Nonnull final float [] aPattern, final float fPhase)
+  public LineDashPatternSpec (@NonNull final float [] aPattern, final float fPhase)
   {
     ValueEnforcer.notNull (aPattern, "Pattern");
     ValueEnforcer.isTrue (aPattern.length <= 2,
@@ -89,7 +88,7 @@ public class LineDashPatternSpec implements Serializable
   /**
    * @return A copy with all patterns. 0-2 elements.
    */
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public final float [] getPattern ()
   {
@@ -99,7 +98,7 @@ public class LineDashPatternSpec implements Serializable
   /**
    * @return A COS array with 0-2 elements. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public final COSArray getPatternCOSArray ()
   {

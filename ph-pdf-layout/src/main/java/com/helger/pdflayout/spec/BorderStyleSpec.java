@@ -18,6 +18,8 @@ package com.helger.pdflayout.spec;
 
 import java.io.Serializable;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
@@ -26,8 +28,6 @@ import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.PLColor;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * This class contains the styling of a single border part. Currently only the
@@ -62,12 +62,12 @@ public class BorderStyleSpec implements Serializable
     this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
   }
 
-  public BorderStyleSpec (@Nonnull final PLColor aColor)
+  public BorderStyleSpec (@NonNull final PLColor aColor)
   {
     this (aColor, DEFAULT_LINE_DASH_PATTERN, DEFAULT_LINE_WIDTH);
   }
 
-  public BorderStyleSpec (@Nonnull final LineDashPatternSpec aLineDashPattern)
+  public BorderStyleSpec (@NonNull final LineDashPatternSpec aLineDashPattern)
   {
     this (DEFAULT_COLOR, aLineDashPattern, DEFAULT_LINE_WIDTH);
   }
@@ -77,18 +77,18 @@ public class BorderStyleSpec implements Serializable
     this (DEFAULT_COLOR, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
   }
 
-  public BorderStyleSpec (@Nonnull final PLColor aColor, final float fLineWidth)
+  public BorderStyleSpec (@NonNull final PLColor aColor, final float fLineWidth)
   {
     this (aColor, DEFAULT_LINE_DASH_PATTERN, fLineWidth);
   }
 
-  public BorderStyleSpec (@Nonnull final PLColor aColor, @Nonnull final LineDashPatternSpec aLineDashPattern)
+  public BorderStyleSpec (@NonNull final PLColor aColor, @NonNull final LineDashPatternSpec aLineDashPattern)
   {
     this (aColor, aLineDashPattern, DEFAULT_LINE_WIDTH);
   }
 
-  public BorderStyleSpec (@Nonnull final PLColor aColor,
-                          @Nonnull final LineDashPatternSpec aLineDashPattern,
+  public BorderStyleSpec (@NonNull final PLColor aColor,
+                          @NonNull final LineDashPatternSpec aLineDashPattern,
                           @Nonnegative final float fLineWidth)
   {
     ValueEnforcer.notNull (aColor, "Color");
@@ -104,7 +104,7 @@ public class BorderStyleSpec implements Serializable
   /**
    * @return The border color to use. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final PLColor getColor ()
   {
     return m_aColor;
@@ -113,7 +113,7 @@ public class BorderStyleSpec implements Serializable
   /**
    * @return The border line style to use. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final LineDashPatternSpec getLineDashPattern ()
   {
     return m_aLineDashPattern;
@@ -136,8 +136,8 @@ public class BorderStyleSpec implements Serializable
            EqualsHelper.equals (m_fLineWidth, DEFAULT_LINE_WIDTH);
   }
 
-  @Nonnull
-  public BorderStyleSpec getCloneWithColor (@Nonnull final PLColor aNewColor)
+  @NonNull
+  public BorderStyleSpec getCloneWithColor (@NonNull final PLColor aNewColor)
   {
     ValueEnforcer.notNull (aNewColor, "NewColor");
     if (aNewColor.equals (m_aColor))
@@ -145,8 +145,8 @@ public class BorderStyleSpec implements Serializable
     return new BorderStyleSpec (aNewColor, m_aLineDashPattern, m_fLineWidth);
   }
 
-  @Nonnull
-  public BorderStyleSpec getCloneWithLineDashPattern (@Nonnull final LineDashPatternSpec aNewLineDashPattern)
+  @NonNull
+  public BorderStyleSpec getCloneWithLineDashPattern (@NonNull final LineDashPatternSpec aNewLineDashPattern)
   {
     ValueEnforcer.notNull (aNewLineDashPattern, "NewLineDashPattern");
     if (aNewLineDashPattern.equals (m_aLineDashPattern))
@@ -154,7 +154,7 @@ public class BorderStyleSpec implements Serializable
     return new BorderStyleSpec (m_aColor, aNewLineDashPattern, m_fLineWidth);
   }
 
-  @Nonnull
+  @NonNull
   public BorderStyleSpec getCloneWithLineWidth (final float fNewLineWidth)
   {
     ValueEnforcer.isFalse (Float.isNaN (fNewLineWidth), "LineWidth may not be NaN");

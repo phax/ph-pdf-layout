@@ -19,11 +19,10 @@ package com.helger.pdflayout;
 import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.CheckReturnValue;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Callback interface for PDF customization
@@ -41,7 +40,7 @@ public interface IPDDocumentCustomizer
    * @throws IOException
    *         in case something goes wrong
    */
-  void customizeDocument (@Nonnull PDDocument aDoc) throws IOException;
+  void customizeDocument (@NonNull PDDocument aDoc) throws IOException;
 
   /**
    * Invoke this customizer and afterwards the provided customizer.
@@ -50,7 +49,7 @@ public interface IPDDocumentCustomizer
    *        The customizer to be invoked after this customizer. May be <code>null</code>.
    * @return A new, non-<code>null</code> customizer.
    */
-  @Nonnull
+  @NonNull
   @CheckReturnValue
   default IPDDocumentCustomizer and (@Nullable final IPDDocumentCustomizer aNextCustomizer)
   {

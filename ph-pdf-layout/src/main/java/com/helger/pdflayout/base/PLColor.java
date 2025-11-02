@@ -18,13 +18,12 @@ package com.helger.pdflayout.base;
 
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * A replacement for java.awt.color that is not available on Android.
@@ -131,7 +130,7 @@ public class PLColor
     return m_nBlue;
   }
 
-  @Nonnull
+  @NonNull
   public PDColor getAsPDColor ()
   {
     final float [] aComponents = { m_nRed / 255f, m_nGreen / 255f, m_nBlue / 255f };
@@ -164,7 +163,7 @@ public class PLColor
                                        .getToString ();
   }
 
-  @Nonnull
+  @NonNull
   public static PLColor gray (final int nPart)
   {
     return new PLColor (nPart, nPart, nPart);

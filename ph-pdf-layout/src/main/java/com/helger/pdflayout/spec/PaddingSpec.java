@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.spec;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
 import com.helger.base.equals.EqualsHelper;
 import com.helger.pdflayout.PLConvert;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines a rectangular padding.
@@ -48,7 +48,7 @@ public class PaddingSpec extends AbstractRectSpec
    * @param aOther
    *        Value to copy from. May not be <code>null</code>.
    */
-  public PaddingSpec (@Nonnull final AbstractRectSpec aOther)
+  public PaddingSpec (@NonNull final AbstractRectSpec aOther)
   {
     super (aOther);
   }
@@ -94,7 +94,7 @@ public class PaddingSpec extends AbstractRectSpec
     super (fTop, fRight, fBottom, fLeft);
   }
 
-  @Nonnull
+  @NonNull
   public PaddingSpec getCloneWithTop (final float fTop)
   {
     if (EqualsHelper.equals (fTop, m_fTop))
@@ -102,7 +102,7 @@ public class PaddingSpec extends AbstractRectSpec
     return new PaddingSpec (fTop, m_fRight, m_fBottom, m_fLeft);
   }
 
-  @Nonnull
+  @NonNull
   public PaddingSpec getCloneWithRight (final float fRight)
   {
     if (EqualsHelper.equals (fRight, m_fRight))
@@ -110,7 +110,7 @@ public class PaddingSpec extends AbstractRectSpec
     return new PaddingSpec (m_fTop, fRight, m_fBottom, m_fLeft);
   }
 
-  @Nonnull
+  @NonNull
   public PaddingSpec getCloneWithBottom (final float fBottom)
   {
     if (EqualsHelper.equals (fBottom, m_fBottom))
@@ -118,7 +118,7 @@ public class PaddingSpec extends AbstractRectSpec
     return new PaddingSpec (m_fTop, m_fRight, fBottom, m_fLeft);
   }
 
-  @Nonnull
+  @NonNull
   public PaddingSpec getCloneWithLeft (final float fLeft)
   {
     if (EqualsHelper.equals (fLeft, m_fLeft))
@@ -126,19 +126,19 @@ public class PaddingSpec extends AbstractRectSpec
     return new PaddingSpec (m_fTop, m_fRight, m_fBottom, fLeft);
   }
 
-  @Nonnull
+  @NonNull
   public static PaddingSpec createMM (final float f)
   {
     return new PaddingSpec (PLConvert.mm2units (f));
   }
 
-  @Nonnull
+  @NonNull
   public static PaddingSpec createMM (final float fY, final float fX)
   {
     return new PaddingSpec (PLConvert.mm2units (fY), PLConvert.mm2units (fX));
   }
 
-  @Nonnull
+  @NonNull
   public static PaddingSpec createMM (final float fTop, final float fRight, final float fBottom, final float fLeft)
   {
     return new PaddingSpec (PLConvert.mm2units (fTop),
@@ -147,25 +147,25 @@ public class PaddingSpec extends AbstractRectSpec
                             PLConvert.mm2units (fLeft));
   }
 
-  @Nonnull
+  @NonNull
   public static PaddingSpec top (final float fTop)
   {
     return new PaddingSpec (fTop, DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT);
   }
 
-  @Nonnull
+  @NonNull
   public static PaddingSpec right (final float fRight)
   {
     return new PaddingSpec (DEFAULT_FLOAT, fRight, DEFAULT_FLOAT, DEFAULT_FLOAT);
   }
 
-  @Nonnull
+  @NonNull
   public static PaddingSpec bottom (final float fBottom)
   {
     return new PaddingSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, fBottom, DEFAULT_FLOAT);
   }
 
-  @Nonnull
+  @NonNull
   public static PaddingSpec left (final float fLeft)
   {
     return new PaddingSpec (DEFAULT_FLOAT, DEFAULT_FLOAT, DEFAULT_FLOAT, fLeft);

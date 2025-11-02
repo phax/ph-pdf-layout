@@ -16,14 +16,14 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.pdflayout.spec.EValueUOMType;
 import com.helger.pdflayout.spec.WidthSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link WidthSpec}.
@@ -36,10 +36,10 @@ public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter <W
   private static final String ATTR_TYPE = "type";
   private static final String ATTR_VALUE = "value";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final WidthSpec aValue,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final WidthSpec aValue,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
@@ -49,8 +49,8 @@ public final class WidthSpecMicroTypeConverter implements IMicroTypeConverter <W
     return aElement;
   }
 
-  @Nonnull
-  public WidthSpec convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public WidthSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     final String sTypeID = aElement.getAttributeValue (ATTR_TYPE);
     final EValueUOMType eWidthType = EValueUOMType.getFromIDOrNull (sTypeID);

@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout.element.table;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * PLTable helper class containing additional methods to deal with PLTable
@@ -37,7 +37,7 @@ public class PLTableHelper
    * @param ret
    *        the PLTable, whose doubled borders are to be removed
    */
-  public static void avoidDoubleBorders (@Nonnull final PLTable ret)
+  public static void avoidDoubleBorders (@NonNull final PLTable ret)
   {
     boolean bPreviousRowHasBottomBorder = false;
     for (int i = 0; i < ret.getRowCount (); i++)

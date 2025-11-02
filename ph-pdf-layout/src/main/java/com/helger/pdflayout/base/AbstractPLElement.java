@@ -16,6 +16,9 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
@@ -23,9 +26,6 @@ import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Abstract renderable PL element having a minimum size, a maximum size, margin, border, padding and
@@ -50,9 +50,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   {}
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     // Min size and max size is not set on purpose
@@ -63,70 +63,70 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public final SizeSpec getMinSize ()
   {
     return m_aMinSize;
   }
 
-  @Nonnull
-  public final IMPLTYPE setMinSize (@Nonnull final SizeSpec aMinSize)
+  @NonNull
+  public final IMPLTYPE setMinSize (@NonNull final SizeSpec aMinSize)
   {
     m_aMinSize = ValueEnforcer.notNull (aMinSize, "MinSize");
     onRenderSizeChange ();
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public final SizeSpec getMaxSize ()
   {
     return m_aMaxSize;
   }
 
-  @Nonnull
-  public final IMPLTYPE setMaxSize (@Nonnull final SizeSpec aMaxSize)
+  @NonNull
+  public final IMPLTYPE setMaxSize (@NonNull final SizeSpec aMaxSize)
   {
     m_aMaxSize = ValueEnforcer.notNull (aMaxSize, "MaxSize");
     onRenderSizeChange ();
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public final MarginSpec getMargin ()
   {
     return m_aMargin;
   }
 
-  @Nonnull
-  public final IMPLTYPE setMargin (@Nonnull final MarginSpec aMargin)
+  @NonNull
+  public final IMPLTYPE setMargin (@NonNull final MarginSpec aMargin)
   {
     ValueEnforcer.notNull (aMargin, "Mergin");
     m_aMargin = aMargin;
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public final BorderSpec getBorder ()
   {
     return m_aBorder;
   }
 
-  @Nonnull
-  public final IMPLTYPE setBorder (@Nonnull final BorderSpec aBorder)
+  @NonNull
+  public final IMPLTYPE setBorder (@NonNull final BorderSpec aBorder)
   {
     ValueEnforcer.notNull (aBorder, "Border");
     m_aBorder = aBorder;
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   public final PaddingSpec getPadding ()
   {
     return m_aPadding;
   }
 
-  @Nonnull
-  public final IMPLTYPE setPadding (@Nonnull final PaddingSpec aPadding)
+  @NonNull
+  public final IMPLTYPE setPadding (@NonNull final PaddingSpec aPadding)
   {
     ValueEnforcer.notNull (aPadding, "Padding");
     m_aPadding = aPadding;
@@ -139,7 +139,7 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
     return m_aFillColor;
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setFillColor (@Nullable final PLColor aFillColor)
   {
     m_aFillColor = aFillColor;
@@ -147,9 +147,9 @@ public abstract class AbstractPLElement <IMPLTYPE extends AbstractPLElement <IMP
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
+  protected SizeSpec getRenderSize (@NonNull final SizeSpec aPreparedSize)
   {
     ValueEnforcer.notNull (aPreparedSize, "Size");
 

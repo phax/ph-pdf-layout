@@ -43,6 +43,8 @@ import org.apache.xmpbox.schema.PDFAIdentificationSchema;
 import org.apache.xmpbox.schema.XMPBasicSchema;
 import org.apache.xmpbox.type.BadFieldValueException;
 import org.apache.xmpbox.xml.XmpSerializer;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,9 +69,6 @@ import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.base.PLPageSetPrepareResult;
 import com.helger.pdflayout.render.PreparationContextGlobal;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Main class for creating layouted PDFs. This class contains the meta data as well as a list of
@@ -132,7 +131,7 @@ public class PageLayoutPDF implements IPLVisitable
    *        it.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setCompressPDF (final boolean bCompressPDF)
   {
     m_bCompressPDF = bCompressPDF;
@@ -154,7 +153,7 @@ public class PageLayoutPDF implements IPLVisitable
    * @return this for chaining
    * @since 6.0.3
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setCreatePDF_A (final boolean bCreatePDF_A)
   {
     m_bCreatePDF_A = bCreatePDF_A;
@@ -177,7 +176,7 @@ public class PageLayoutPDF implements IPLVisitable
    *        The author to set. May be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setDocumentAuthor (@Nullable final String sDocumentAuthor)
   {
     m_sDocumentAuthor = sDocumentAuthor;
@@ -208,7 +207,7 @@ public class PageLayoutPDF implements IPLVisitable
    *        The document creation date to use. May be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setDocumentCreationDateTime (@Nullable final LocalDateTime aDocumentCreationDate)
   {
     return setDocumentCreationDateTime (aDocumentCreationDate == null ? null : aDocumentCreationDate.atZone (PDTConfig
@@ -221,7 +220,7 @@ public class PageLayoutPDF implements IPLVisitable
    * @return this for chaining
    * @since v7.4.0
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setDocumentCreationDateTime (@Nullable final ZonedDateTime aDocumentCreationDate)
   {
     m_aDocumentCreationDate = aDocumentCreationDate;
@@ -244,7 +243,7 @@ public class PageLayoutPDF implements IPLVisitable
    *        The document creator. May be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setDocumentCreator (@Nullable final String sDocumentCreator)
   {
     m_sDocumentCreator = sDocumentCreator;
@@ -267,7 +266,7 @@ public class PageLayoutPDF implements IPLVisitable
    *        The document title to use. May be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setDocumentTitle (@Nullable final String sDocumentTitle)
   {
     m_sDocumentTitle = sDocumentTitle;
@@ -290,7 +289,7 @@ public class PageLayoutPDF implements IPLVisitable
    *        The document keywords to use. May be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setDocumentKeywords (@Nullable final String sDocumentKeywords)
   {
     m_sDocumentKeywords = sDocumentKeywords;
@@ -313,7 +312,7 @@ public class PageLayoutPDF implements IPLVisitable
    *        The document subject to use. May be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setDocumentSubject (@Nullable final String sDocumentSubject)
   {
     m_sDocumentSubject = sDocumentSubject;
@@ -336,7 +335,7 @@ public class PageLayoutPDF implements IPLVisitable
    *        The document language to use. May be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setDocumentLanguage (@Nullable final String sDocumentLanguage)
   {
     m_sDocumentLanguage = sDocumentLanguage;
@@ -346,7 +345,7 @@ public class PageLayoutPDF implements IPLVisitable
   /**
    * @return A clone of all contained page sets. Never <code>null</code> but maybe empty.
    */
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   public ICommonsList <? extends PLPageSet> getAllPageSets ()
   {
@@ -360,8 +359,8 @@ public class PageLayoutPDF implements IPLVisitable
    *        The page set to be added. May not be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
-  public PageLayoutPDF addPageSet (@Nonnull final PLPageSet aPageSet)
+  @NonNull
+  public PageLayoutPDF addPageSet (@NonNull final PLPageSet aPageSet)
   {
     ValueEnforcer.notNull (aPageSet, "PageSet");
     m_aPageSets.add (aPageSet);
@@ -376,7 +375,7 @@ public class PageLayoutPDF implements IPLVisitable
    * @return {@link EChange#CHANGED} if it was removed, {@link EChange#UNCHANGED} otherwise. Never
    *         <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public EChange removePageSet (@Nullable final PLPageSet aPageSet)
   {
     return m_aPageSets.removeObject (aPageSet);
@@ -406,7 +405,7 @@ public class PageLayoutPDF implements IPLVisitable
    * @see #setCustomTrailingPageCount(int)
    * @since 7.4.2
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setCustomLeadingPageCount (final int nCustomLeadingPageCount)
   {
     if (m_nCustomTotalPageCount > 0)
@@ -440,7 +439,7 @@ public class PageLayoutPDF implements IPLVisitable
    * @see #setCustomTrailingPageCount(int)
    * @since 7.4.2
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setCustomTrailingPageCount (final int nCustomTrailingPageCount)
   {
     if (m_nCustomTotalPageCount > 0)
@@ -474,7 +473,7 @@ public class PageLayoutPDF implements IPLVisitable
    * @return this for chaining
    * @since 7.4.2
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setCustomTotalPageCount (final int nCustomTotalPageCount)
   {
     if (m_nCustomLeadingPageCount > 0 || m_nCustomTrailingPageCount > 0)
@@ -500,7 +499,7 @@ public class PageLayoutPDF implements IPLVisitable
    *        The customizer to use. May be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setDocumentCustomizer (@Nullable final IPDDocumentCustomizer aDocumentCustomizer)
   {
     m_aDocumentCustomizer = aDocumentCustomizer;
@@ -523,15 +522,15 @@ public class PageLayoutPDF implements IPLVisitable
    *        The customizer to use. May be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   public final PageLayoutPDF setMetadataCustomizer (@Nullable final IXMPMetadataCustomizer aMetadataCustomizer)
   {
     m_aMetadataCustomizer = aMetadataCustomizer;
     return this;
   }
 
-  @Nonnull
-  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @NonNull
+  public EChange visit (@NonNull final IPLVisitor aVisitor) throws IOException
   {
     EChange ret = EChange.UNCHANGED;
     for (final PLPageSet aPageSet : m_aPageSets)
@@ -575,8 +574,8 @@ public class PageLayoutPDF implements IPLVisitable
    * @throws PDFCreationException
    *         In case of an error
    */
-  @Nonnull
-  public PageLayoutPDF renderTo (@Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
+  @NonNull
+  public PageLayoutPDF renderTo (@NonNull @WillClose final OutputStream aOS) throws PDFCreationException
   {
     ValueEnforcer.notNull (aOS, "OutputStream");
 
@@ -824,10 +823,10 @@ public class PageLayoutPDF implements IPLVisitable
    * @deprecated Since 5.1.0; Call {@link #setDocumentCustomizer(IPDDocumentCustomizer)} and than
    *             {@link #renderTo(OutputStream)}
    */
-  @Nonnull
+  @NonNull
   @Deprecated
   public final PageLayoutPDF renderTo (@Nullable final IPDDocumentCustomizer aCustomizer,
-                                       @Nonnull @WillClose final OutputStream aOS) throws PDFCreationException
+                                       @NonNull @WillClose final OutputStream aOS) throws PDFCreationException
   {
     setDocumentCustomizer (aCustomizer);
     return renderTo (aOS);
@@ -845,8 +844,8 @@ public class PageLayoutPDF implements IPLVisitable
    *         In case the file cannot be opened for writing
    * @since 5.1.0
    */
-  @Nonnull
-  public PageLayoutPDF renderTo (@Nonnull final File aFile) throws PDFCreationException
+  @NonNull
+  public PageLayoutPDF renderTo (@NonNull final File aFile) throws PDFCreationException
   {
     final OutputStream aOS = FileHelper.getOutputStream (aFile);
     if (aOS == null)

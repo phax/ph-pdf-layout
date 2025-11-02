@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.base.id.IHasID;
 import com.helger.base.trait.IGenericImplTrait;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Base interface for a PDF layout object. It contains a user-assigned ID as
@@ -55,7 +55,7 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
    *         The debug ID is a combination of the real class and the user
    *         provided ID.
    */
-  @Nonnull
+  @NonNull
   @Nonempty
   String getDebugID ();
 
@@ -72,7 +72,7 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
    * @return this as an {@link IPLSplittableObject} - ensure to call it only if
    *         {@link #isVertSplittable()} returns <code>true</code>.
    */
-  @Nonnull
+  @NonNull
   default IPLSplittableObject <?, ?> getAsSplittable ()
   {
     return (IPLSplittableObject <?, ?>) this;
@@ -85,7 +85,7 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
    *        Source object to copy from. May not be <code>null</code>.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  IMPLTYPE setBasicDataFrom (@Nonnull IMPLTYPE aSource);
+  IMPLTYPE setBasicDataFrom (@NonNull IMPLTYPE aSource);
 }

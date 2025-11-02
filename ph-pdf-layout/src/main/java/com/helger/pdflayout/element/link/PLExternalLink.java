@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.element.link;
 
-import com.helger.pdflayout.base.IPLRenderableObject;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import com.helger.pdflayout.base.IPLRenderableObject;
 
 /**
  * An external link that references to an external URI. Use
@@ -41,8 +41,8 @@ public class PLExternalLink extends AbstractPLExternalLink <PLExternalLink>
   }
 
   @Override
-  @Nonnull
-  public PLExternalLink internalCreateNewVertSplitObject (@Nonnull final PLExternalLink aBase)
+  @NonNull
+  public PLExternalLink internalCreateNewVertSplitObject (@NonNull final PLExternalLink aBase)
   {
     final PLExternalLink ret = new PLExternalLink ();
     ret.setBasicDataFrom (aBase);

@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.element.list;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.pdflayout.base.IPLRenderableObject;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Abstract bullet point creator to create e.g. constant dots or numbers or characters.
@@ -36,6 +36,6 @@ public interface IBulletPointCreator
    *        The 0-based index of the bullet point to be created.
    * @return A non-<code>null</code> bullet point element.
    */
-  @Nonnull
+  @NonNull
   IPLRenderableObject <?> getBulletPointElement (@Nonnegative int nBulletPointIndex);
 }

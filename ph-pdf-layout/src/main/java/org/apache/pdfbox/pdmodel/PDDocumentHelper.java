@@ -17,8 +17,7 @@
 package org.apache.pdfbox.pdmodel;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
-
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Helper class to access package private classes of {@link PDDocument}.
@@ -30,7 +29,7 @@ public final class PDDocumentHelper
   private PDDocumentHelper ()
   {}
 
-  public static void handleFontSubset (@Nonnull final PDDocument aDoc, @Nonnull final PDFont aFont)
+  public static void handleFontSubset (@NonNull final PDDocument aDoc, @NonNull final PDFont aFont)
   {
     if (aFont.willBeSubset ())
     {

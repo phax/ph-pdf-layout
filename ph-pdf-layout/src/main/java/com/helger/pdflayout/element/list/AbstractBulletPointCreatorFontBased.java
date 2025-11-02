@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.list;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.IPLHasPadding;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * An abstract implementation of {@link IBulletPointCreator} that uses a Font based character.
@@ -40,13 +40,13 @@ public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends Abst
   private final FontSpec m_aFontSpec;
   private PaddingSpec m_aPadding = PaddingSpec.PADDING0;
 
-  public AbstractBulletPointCreatorFontBased (@Nonnull final FontSpec aFontSpec)
+  public AbstractBulletPointCreatorFontBased (@NonNull final FontSpec aFontSpec)
   {
     ValueEnforcer.notNull (aFontSpec, "FontSpec");
     m_aFontSpec = aFontSpec;
   }
 
-  @Nonnull
+  @NonNull
   public final FontSpec getFontSpec ()
   {
     return m_aFontSpec;
@@ -57,8 +57,8 @@ public abstract class AbstractBulletPointCreatorFontBased <IMPLTYPE extends Abst
     return m_aPadding;
   }
 
-  @Nonnull
-  public final IMPLTYPE setPadding (@Nonnull final PaddingSpec aPadding)
+  @NonNull
+  public final IMPLTYPE setPadding (@NonNull final PaddingSpec aPadding)
   {
     ValueEnforcer.notNull (aPadding, "Padding");
     m_aPadding = aPadding;

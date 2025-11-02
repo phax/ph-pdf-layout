@@ -22,6 +22,8 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.base.string.StringHelper;
@@ -33,9 +35,6 @@ import com.helger.pdflayout.element.box.AbstractPLInlineBox;
 import com.helger.pdflayout.link.ELinkBorderStyle;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * An external link that references to an external URI. Use {@link #setURI(String)} to define the
@@ -68,9 +67,9 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     setURI (aSource.getURI ());
@@ -93,7 +92,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
    *        The URI to link to. May be <code>null</code>.
    * @return this for chaining.
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setURI (@Nullable final String sURI)
   {
     internalCheckNotPrepared ();
@@ -119,7 +118,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
    * @return this for chaining.
    * @since v7.4.1
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setLinkBorderStyle (@Nullable final ELinkBorderStyle eLinkBorderStyle)
   {
     internalCheckNotPrepared ();
@@ -145,7 +144,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
    * @return this for chaining.
    * @since v7.4.1
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setLinkDashPattern (@Nullable final LineDashPatternSpec aLinkDashPattern)
   {
     internalCheckNotPrepared ();
@@ -170,7 +169,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
    * @return this for chaining.
    * @since v7.4.1
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setLinkBorderWidth (final float fLinkBorderWidth)
   {
     internalCheckNotPrepared ();
@@ -196,7 +195,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
    * @return this for chaining.
    * @since v7.4.1
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setLinkDashPattern (@Nullable final PLColor aLinkColor)
   {
     internalCheckNotPrepared ();
@@ -205,7 +204,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     super.onRender (aCtx);
 

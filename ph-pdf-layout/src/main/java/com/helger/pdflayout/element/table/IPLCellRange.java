@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.element.table;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.numeric.MathHelper;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Read-only version of the cell range.
@@ -101,7 +101,7 @@ public interface IPLCellRange
    *         cell in common
    * @see #isInRange(int, int) for checking if a single cell intersects
    */
-  default boolean intersects (@Nonnull final IPLCellRange aOther)
+  default boolean intersects (@NonNull final IPLCellRange aOther)
   {
     ValueEnforcer.notNull (aOther, "Other");
     return getFirstRow () <= aOther.getLastRow () &&

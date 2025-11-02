@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.vbox;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.spec.HeightSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * This class represents a single row within a VBox. This is a pseudo element
@@ -36,26 +36,26 @@ public final class PLVBoxRow
   private IPLRenderableObject <?> m_aElement;
   private final HeightSpec m_aHeight;
 
-  public PLVBoxRow (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final HeightSpec aHeight)
+  public PLVBoxRow (@NonNull final IPLRenderableObject <?> aElement, @NonNull final HeightSpec aHeight)
   {
     internalSetElement (aElement);
     m_aHeight = ValueEnforcer.notNull (aHeight, "Height");
   }
 
-  @Nonnull
+  @NonNull
   public IPLRenderableObject <?> getElement ()
   {
     return m_aElement;
   }
 
-  @Nonnull
-  PLVBoxRow internalSetElement (@Nonnull final IPLRenderableObject <?> aElement)
+  @NonNull
+  PLVBoxRow internalSetElement (@NonNull final IPLRenderableObject <?> aElement)
   {
     m_aElement = ValueEnforcer.notNull (aElement, "Element");
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public HeightSpec getHeight ()
   {
     return m_aHeight;

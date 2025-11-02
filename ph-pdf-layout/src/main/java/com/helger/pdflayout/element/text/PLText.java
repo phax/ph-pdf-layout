@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.element.text;
 
-import com.helger.pdflayout.spec.FontSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import com.helger.pdflayout.spec.FontSpec;
 
 /**
  * Render text
@@ -28,14 +28,14 @@ import jakarta.annotation.Nullable;
  */
 public class PLText extends AbstractPLText <PLText>
 {
-  public PLText (@Nullable final String sText, @Nonnull final FontSpec aFontSpec)
+  public PLText (@Nullable final String sText, @NonNull final FontSpec aFontSpec)
   {
     super (sText, aFontSpec);
   }
 
   @Override
-  @Nonnull
-  public PLText internalCreateNewVertSplitObject (@Nonnull final PLText aBase)
+  @NonNull
+  public PLText internalCreateNewVertSplitObject (@NonNull final PLText aBase)
   {
     final PLText ret = new PLText (null, aBase.getFontSpec ());
     ret.setBasicDataFrom (aBase);

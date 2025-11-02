@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.list;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * An implementation of {@link IBulletPointCreator} that always uses the same character (like in an
@@ -35,20 +35,20 @@ public class BulletPointCreatorConstant extends AbstractBulletPointCreatorFontBa
 {
   private final String m_sText;
 
-  public BulletPointCreatorConstant (@Nonnull final String sText, @Nonnull final FontSpec aFontSpec)
+  public BulletPointCreatorConstant (@NonNull final String sText, @NonNull final FontSpec aFontSpec)
   {
     super (aFontSpec);
     ValueEnforcer.notNull (sText, "Text");
     m_sText = sText;
   }
 
-  @Nonnull
+  @NonNull
   public final String getText ()
   {
     return m_sText;
   }
 
-  @Nonnull
+  @NonNull
   public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
     return new PLText (m_sText, getFontSpec ()).setPadding (getPadding ());

@@ -18,6 +18,8 @@ package com.helger.pdflayout.element.special;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
@@ -28,8 +30,6 @@ import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * A vertical spacer
@@ -53,9 +53,9 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY> implements
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public PLSpacerY setBasicDataFrom (@Nonnull final PLSpacerY aSource)
+  public PLSpacerY setBasicDataFrom (@NonNull final PLSpacerY aSource)
   {
     super.setBasicDataFrom (aSource);
     setHeight (aSource.m_fHeight);
@@ -68,7 +68,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY> implements
     return m_fHeight;
   }
 
-  @Nonnull
+  @NonNull
   public final PLSpacerY setHeight (final float fHeight)
   {
     m_fHeight = fHeight;
@@ -76,7 +76,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY> implements
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     final float fElementHeight = aCtx.getAvailableHeight () - getOutlineYSum ();
 
@@ -95,7 +95,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY> implements
     return m_bVertSplittable;
   }
 
-  @Nonnull
+  @NonNull
   public final PLSpacerY setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
@@ -103,15 +103,15 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY> implements
   }
 
   @Override
-  @Nonnull
-  public PLSpacerY internalCreateNewVertSplitObject (@Nonnull final PLSpacerY aBase)
+  @NonNull
+  public PLSpacerY internalCreateNewVertSplitObject (@NonNull final PLSpacerY aBase)
   {
     final PLSpacerY ret = new PLSpacerY ();
     ret.setBasicDataFrom (aBase);
     return ret;
   }
 
-  @Nonnull
+  @NonNull
   public PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     // Prepared height may be 0 as well
@@ -142,7 +142,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY> implements
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     // Empty
   }
@@ -156,7 +156,7 @@ public class PLSpacerY extends AbstractPLRenderableObject <PLSpacerY> implements
                             .getToString ();
   }
 
-  @Nonnull
+  @NonNull
   public static PLSpacerY createPrepared (final float fHeight)
   {
     final PLSpacerY ret = new PLSpacerY (fHeight);

@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Wraps an {@link IPLRenderableObject} together with a size.
@@ -43,7 +43,7 @@ public final class PLElementWithSize
    * @param aSize
    *        Size of the element without padding, border and margin
    */
-  public PLElementWithSize (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final SizeSpec aSize)
+  public PLElementWithSize (@NonNull final IPLRenderableObject <?> aElement, @NonNull final SizeSpec aSize)
   {
     this (aElement, aSize, aSize.plus (aElement.getOutlineXSum (), aElement.getOutlineYSum ()));
   }
@@ -59,9 +59,9 @@ public final class PLElementWithSize
    * @param aSizeFull
    *        Size of the element with padding, border and margin
    */
-  public PLElementWithSize (@Nonnull final IPLRenderableObject <?> aElement,
-                            @Nonnull final SizeSpec aSize,
-                            @Nonnull final SizeSpec aSizeFull)
+  public PLElementWithSize (@NonNull final IPLRenderableObject <?> aElement,
+                            @NonNull final SizeSpec aSize,
+                            @NonNull final SizeSpec aSizeFull)
   {
     ValueEnforcer.notNull (aElement, "Element");
     ValueEnforcer.notNull (aSize, "Size");
@@ -74,7 +74,7 @@ public final class PLElementWithSize
   /**
    * @return The contained element.
    */
-  @Nonnull
+  @NonNull
   public IPLRenderableObject <?> getElement ()
   {
     return m_aElement;
@@ -83,7 +83,7 @@ public final class PLElementWithSize
   /**
    * @return The size without padding, border or margin
    */
-  @Nonnull
+  @NonNull
   public SizeSpec getSize ()
   {
     return m_aSize;
@@ -92,7 +92,7 @@ public final class PLElementWithSize
   /**
    * @return The size with padding, border or margin
    */
-  @Nonnull
+  @NonNull
   public SizeSpec getSizeFull ()
   {
     return m_aSizeFull;

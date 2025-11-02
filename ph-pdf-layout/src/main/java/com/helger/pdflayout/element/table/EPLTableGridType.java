@@ -16,14 +16,14 @@
  */
 package com.helger.pdflayout.element.table;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.Nonnegative;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.lang.EnumHelper;
 import com.helger.pdflayout.spec.BorderStyleSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Default table grids.
@@ -36,12 +36,12 @@ public enum EPLTableGridType implements IPLTableGridType
   NONE ("none")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -60,12 +60,12 @@ public enum EPLTableGridType implements IPLTableGridType
   FULL ("full")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -99,12 +99,12 @@ public enum EPLTableGridType implements IPLTableGridType
   FULL_NO_BORDER ("full_no_border")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -128,12 +128,12 @@ public enum EPLTableGridType implements IPLTableGridType
   OUTER ("outer")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -159,12 +159,12 @@ public enum EPLTableGridType implements IPLTableGridType
   HORZ_ALL ("horz_all")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -187,12 +187,12 @@ public enum EPLTableGridType implements IPLTableGridType
   HORZ_OUTER_BORDER ("horz_outer_border")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -218,12 +218,12 @@ public enum EPLTableGridType implements IPLTableGridType
   HORZ_NO_BORDER ("horz_no_border")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -245,12 +245,12 @@ public enum EPLTableGridType implements IPLTableGridType
   VERT_ALL ("vert_all")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -273,12 +273,12 @@ public enum EPLTableGridType implements IPLTableGridType
   VERT_OUTER_BORDER ("vert_outer_border")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -303,12 +303,12 @@ public enum EPLTableGridType implements IPLTableGridType
   VERT_NO_BORDER ("vert_no_border")
   {
     @Override
-    public void applyGridToTable (@Nonnull final PLTable aTable,
+    public void applyGridToTable (@NonNull final PLTable aTable,
                                   @Nonnegative final int nStartRowIncl,
                                   @Nonnegative final int nEndRowIncl,
                                   @Nonnegative final int nStartColumnIncl,
                                   @Nonnegative final int nEndColumnIncl,
-                                  @Nonnull final BorderStyleSpec aBSS)
+                                  @NonNull final BorderStyleSpec aBSS)
     {
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
@@ -326,12 +326,12 @@ public enum EPLTableGridType implements IPLTableGridType
 
   private final String m_sID;
 
-  EPLTableGridType (@Nonnull @Nonempty final String sID)
+  EPLTableGridType (@NonNull @Nonempty final String sID)
   {
     m_sID = sID;
   }
 
-  @Nonnull
+  @NonNull
   @Nonempty
   public String getID ()
   {

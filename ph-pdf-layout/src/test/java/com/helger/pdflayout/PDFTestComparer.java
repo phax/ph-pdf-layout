@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,6 @@ import com.helger.io.file.FileHelper;
 import de.redsix.pdfcompare.CompareResult;
 import de.redsix.pdfcompare.PdfComparator;
 import de.redsix.pdfcompare.RenderingException;
-import jakarta.annotation.Nonnull;
 
 /**
  * Test class helper to easily compare PDFs.
@@ -46,7 +46,7 @@ public final class PDFTestComparer
   private PDFTestComparer ()
   {}
 
-  public static void renderAndCompare (@Nonnull final PageLayoutPDF aPageLayout, final File fTarget)
+  public static void renderAndCompare (@NonNull final PageLayoutPDF aPageLayout, final File fTarget)
                                                                                                      throws PDFCreationException
   {
     // Render

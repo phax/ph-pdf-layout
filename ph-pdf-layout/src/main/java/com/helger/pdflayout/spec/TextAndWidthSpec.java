@@ -18,6 +18,8 @@ package com.helger.pdflayout.spec;
 
 import java.io.Serializable;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
@@ -25,8 +27,6 @@ import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * This class wraps a text with a specified rendering width.
@@ -41,7 +41,7 @@ public class TextAndWidthSpec implements Serializable
   private final float m_fWidth;
   private final boolean m_bDisplayAsNewline;
 
-  public TextAndWidthSpec (@Nonnull final String sText,
+  public TextAndWidthSpec (@NonNull final String sText,
                            @Nonnegative final float fWidth,
                            final boolean bDisplayAsNewline)
   {
@@ -52,7 +52,7 @@ public class TextAndWidthSpec implements Serializable
     m_bDisplayAsNewline = bDisplayAsNewline;
   }
 
-  @Nonnull
+  @NonNull
   public final String getText ()
   {
     return m_sText;

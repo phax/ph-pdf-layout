@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.style.ReturnsMutableCopy;
@@ -23,8 +25,6 @@ import com.helger.annotation.style.ReturnsMutableObject;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.collection.commons.CommonsArrayList;
 import com.helger.collection.commons.ICommonsList;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Page set prepare result. Used only internally.
@@ -44,7 +44,7 @@ public final class PLPageSetPrepareResult
   PLPageSetPrepareResult ()
   {}
 
-  @Nonnull
+  @NonNull
   PLMarginBorderPadding getFirstPageMBP ()
   {
     final PLMarginBorderPadding ret = m_aFirstPageMBP;
@@ -53,7 +53,7 @@ public final class PLPageSetPrepareResult
     return ret;
   }
 
-  void setFirstPageMBP (@Nonnull final PLMarginBorderPadding aFirstPageMBP)
+  void setFirstPageMBP (@NonNull final PLMarginBorderPadding aFirstPageMBP)
   {
     ValueEnforcer.notNull (aFirstPageMBP, "FirstPageMBP");
     m_aFirstPageMBP = aFirstPageMBP;
@@ -105,7 +105,7 @@ public final class PLPageSetPrepareResult
    *        The element to be added. May not be <code>null</code>. The element
    *        height must be without padding or margin.
    */
-  void addElement (@Nonnull final PLElementWithSize aElement)
+  void addElement (@NonNull final PLElementWithSize aElement)
   {
     ValueEnforcer.notNull (aElement, "Element");
     m_aContentHeight.add (aElement);
@@ -115,14 +115,14 @@ public final class PLPageSetPrepareResult
    * @return A list of all elements. Never <code>null</code>. The height of the
    *         contained elements is without padding or margin.
    */
-  @Nonnull
+  @NonNull
   @ReturnsMutableCopy
   ICommonsList <PLElementWithSize> getAllElements ()
   {
     return m_aContentHeight.getClone ();
   }
 
-  @Nonnull
+  @NonNull
   @ReturnsMutableObject ("speed")
   ICommonsList <ICommonsList <PLElementWithSize>> directGetPerPageElements ()
   {
@@ -136,7 +136,7 @@ public final class PLPageSetPrepareResult
    * @param aCurPageElements
    *        The list to use. May neither be <code>null</code> nor empty.
    */
-  void addPerPageElements (@Nonnull @Nonempty final ICommonsList <PLElementWithSize> aCurPageElements)
+  void addPerPageElements (@NonNull @Nonempty final ICommonsList <PLElementWithSize> aCurPageElements)
   {
     ValueEnforcer.notEmptyNoNullValue (aCurPageElements, "CurPageElements");
     m_aPerPageElements.add (aCurPageElements);

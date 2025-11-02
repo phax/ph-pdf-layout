@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * This class represents the result of splitting as defined in {@link IPLSplittableObject}.
@@ -35,7 +35,7 @@ public class PLSplitResult
   private final PLElementWithSize m_aFirstElement;
   private final PLElementWithSize m_aSecondElement;
 
-  private PLSplitResult (@Nonnull final EPLSplitResultType eSplitResultType,
+  private PLSplitResult (@NonNull final EPLSplitResultType eSplitResultType,
                          @Nullable final PLElementWithSize aFirstElement,
                          @Nullable final PLElementWithSize aSecondElement)
   {
@@ -45,7 +45,7 @@ public class PLSplitResult
     m_aSecondElement = aSecondElement;
   }
 
-  @Nonnull
+  @NonNull
   public EPLSplitResultType getSplitResultType ()
   {
     return m_eSplitResultType;
@@ -71,22 +71,22 @@ public class PLSplitResult
                                        .getToString ();
   }
 
-  @Nonnull
-  public static PLSplitResult createSplit (@Nonnull final PLElementWithSize aFirstElement,
-                                      @Nonnull final PLElementWithSize aSecondElement)
+  @NonNull
+  public static PLSplitResult createSplit (@NonNull final PLElementWithSize aFirstElement,
+                                      @NonNull final PLElementWithSize aSecondElement)
   {
     ValueEnforcer.notNull (aFirstElement, "FirstElement");
     ValueEnforcer.notNull (aSecondElement, "SecondElement");
     return new PLSplitResult (EPLSplitResultType.SPLIT_SUCCESS, aFirstElement, aSecondElement);
   }
 
-  @Nonnull
+  @NonNull
   public static PLSplitResult allOnFirst ()
   {
     return new PLSplitResult (EPLSplitResultType.SPLIT_ALL_ON_FIRST, null, null);
   }
 
-  @Nonnull
+  @NonNull
   public static PLSplitResult allOnSecond ()
   {
     return new PLSplitResult (EPLSplitResultType.SPLIT_ALL_ON_SECOND, null, null);

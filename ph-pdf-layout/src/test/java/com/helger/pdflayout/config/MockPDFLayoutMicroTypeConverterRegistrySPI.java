@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.config;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.style.IsSPIImplementation;
 import com.helger.pdflayout.spec.PreloadFontManager;
 import com.helger.xml.microdom.convert.IMicroTypeConverterRegistrarSPI;
 import com.helger.xml.microdom.convert.IMicroTypeConverterRegistry;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Mock SPI implementation
@@ -34,7 +34,7 @@ public final class MockPDFLayoutMicroTypeConverterRegistrySPI implements IMicroT
   public static final PreloadFontManager PRELOAD_FONT_MANAGER = new PreloadFontManager ();
 
   @Override
-  public void registerMicroTypeConverter (@Nonnull final IMicroTypeConverterRegistry aRegistry)
+  public void registerMicroTypeConverter (@NonNull final IMicroTypeConverterRegistry aRegistry)
   {
     PDFMicroTypeConverterRegistry.registerMicroTypeConverter (aRegistry, PRELOAD_FONT_MANAGER);
   }

@@ -18,6 +18,8 @@ package com.helger.pdflayout.render;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.IPLHasFillColor;
@@ -29,8 +31,6 @@ import com.helger.pdflayout.debug.PLDebugRender;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Render helper
@@ -63,13 +63,13 @@ public final class PLRenderHelper
    * @throws IOException
    *         In case of a PDFBox error
    */
-  public static void renderBorder (@Nonnull final IPLObject <?> aElement,
-                                   @Nonnull final PDPageContentStreamWithCache aContentStream,
+  public static void renderBorder (@NonNull final IPLObject <?> aElement,
+                                   @NonNull final PDPageContentStreamWithCache aContentStream,
                                    final float fLeft,
                                    final float fTop,
                                    final float fWidth,
                                    final float fHeight,
-                                   @Nonnull final BorderSpec aBorder) throws IOException
+                                   @NonNull final BorderSpec aBorder) throws IOException
   {
     final float fRight = fLeft + fWidth;
     final float fBottom = fTop - fHeight;
@@ -199,8 +199,8 @@ public final class PLRenderHelper
    * @param <T>
    *        element type to render
    */
-  public static <T extends IPLElement <T>> void fillAndRenderBorder (@Nonnull final T aElement,
-                                                                     @Nonnull final PageRenderContext aCtx,
+  public static <T extends IPLElement <T>> void fillAndRenderBorder (@NonNull final T aElement,
+                                                                     @NonNull final PageRenderContext aCtx,
                                                                      final float fIndentX,
                                                                      final float fIndentY) throws IOException
   {
@@ -233,12 +233,12 @@ public final class PLRenderHelper
    * @param <T>
    *        Type that implements {@link IPLHasFillColor} and {@link IPLHasMarginBorderPadding}
    */
-  public static <T extends IPLObject <T> & IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorder (@Nonnull final T aElement,
+  public static <T extends IPLObject <T> & IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorder (@NonNull final T aElement,
                                                                                                                           final float fLeft,
                                                                                                                           final float fTop,
                                                                                                                           final float fWidth,
                                                                                                                           final float fHeight,
-                                                                                                                          @Nonnull final PDPageContentStreamWithCache aContentStream) throws IOException
+                                                                                                                          @NonNull final PDPageContentStreamWithCache aContentStream) throws IOException
   {
     final boolean bDebugRender = PLDebugRender.isDebugRender ();
     if (bDebugRender)
@@ -278,8 +278,8 @@ public final class PLRenderHelper
       renderBorder (aElement, aContentStream, fLeft, fTop, fWidth, fHeight, aBorder);
   }
 
-  public static <T extends IPLElement <T>> void fillAndRenderBorderRounded (@Nonnull final T aElement,
-                                                                            @Nonnull final PageRenderContext aCtx,
+  public static <T extends IPLElement <T>> void fillAndRenderBorderRounded (@NonNull final T aElement,
+                                                                            @NonNull final PageRenderContext aCtx,
                                                                             final float fIndentX,
                                                                             final float fIndentY,
                                                                             final float fRadiusTL,
@@ -305,7 +305,7 @@ public final class PLRenderHelper
                                 aCtx.getContentStream ());
   }
 
-  public static <T extends IPLObject <T> & IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorderRounded (@Nonnull final T aElement,
+  public static <T extends IPLObject <T> & IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorderRounded (@NonNull final T aElement,
                                                                                                                                  final float fLeft,
                                                                                                                                  final float fTop,
                                                                                                                                  final float fWidth,
@@ -314,7 +314,7 @@ public final class PLRenderHelper
                                                                                                                                  final float fRadiusTR,
                                                                                                                                  final float fRadiusBL,
                                                                                                                                  final float fRadiusBR,
-                                                                                                                                 @Nonnull final PDPageContentStreamWithCache aContentStream) throws IOException
+                                                                                                                                 @NonNull final PDPageContentStreamWithCache aContentStream) throws IOException
   {
     final boolean bDebugRender = PLDebugRender.isDebugRender ();
     if (bDebugRender)
@@ -382,8 +382,8 @@ public final class PLRenderHelper
                            aBorder);
   }
 
-  public static void renderBorderRounded (@Nonnull final IPLObject <?> aElement,
-                                          @Nonnull final PDPageContentStreamWithCache aContentStream,
+  public static void renderBorderRounded (@NonNull final IPLObject <?> aElement,
+                                          @NonNull final PDPageContentStreamWithCache aContentStream,
                                           final float fLeft,
                                           final float fTop,
                                           final float fWidth,
@@ -392,7 +392,7 @@ public final class PLRenderHelper
                                           final float fRadiusTR,
                                           final float fRadiusBL,
                                           final float fRadiusBR,
-                                          @Nonnull final BorderSpec aBorder) throws IOException
+                                          @NonNull final BorderSpec aBorder) throws IOException
   {
     if (aBorder.hasAllBorders () && aBorder.areAllBordersEqual ())
     {

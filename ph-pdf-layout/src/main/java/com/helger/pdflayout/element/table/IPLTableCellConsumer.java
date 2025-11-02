@@ -16,9 +16,9 @@
  */
 package com.helger.pdflayout.element.table;
 
-import com.helger.annotation.Nonnegative;
+import org.jspecify.annotations.NonNull;
 
-import jakarta.annotation.Nonnull;
+import com.helger.annotation.Nonnegative;
 
 /**
  * Special consumer for table cells.
@@ -40,7 +40,7 @@ public interface IPLTableCellConsumer
    * @param nEffectiveCellEndIndex
    *        The effective cell end index including colspan. Always &ge; 0.
    */
-  void accept (@Nonnull PLTableCell aCell,
+  void accept (@NonNull PLTableCell aCell,
                @Nonnegative int nCellIndex,
                @Nonnegative int nEffectiveCellStartIndex,
                @Nonnegative int nEffectiveCellEndIndex);

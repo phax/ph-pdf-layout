@@ -16,14 +16,14 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.base.string.StringParser;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link PLColor}.
@@ -37,10 +37,10 @@ public final class PLColorMicroTypeConverter implements IMicroTypeConverter <PLC
   private static final String ATTR_GREEN = "green";
   private static final String ATTR_BLUE = "blue";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final PLColor aObject,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final PLColor aObject,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
@@ -51,8 +51,8 @@ public final class PLColorMicroTypeConverter implements IMicroTypeConverter <PLC
     return aElement;
   }
 
-  @Nonnull
-  public PLColor convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public PLColor convertToNative (@NonNull final IMicroElement aElement)
   {
     final int nRed = StringParser.parseInt (aElement.getAttributeValue (ATTR_RED), 0);
     final int nGreen = StringParser.parseInt (aElement.getAttributeValue (ATTR_GREEN), 0);

@@ -18,13 +18,13 @@ package com.helger.pdflayout.element.special;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.AbstractPLRenderableObject;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * A page break that ensures a new page is started afterwards. The difference
@@ -62,7 +62,7 @@ public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     // Use the fixed size
     return SizeSpec.SIZE0;
@@ -75,7 +75,7 @@ public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {}
 
   @Override
@@ -84,7 +84,7 @@ public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
     return ToStringGenerator.getDerived (super.toString ()).append ("forcePageBreak", m_bForcePageBreak).getToString ();
   }
 
-  @Nonnull
+  @NonNull
   public static PLPageBreak createPreparedPageBreak ()
   {
     final PLPageBreak ret = new PLPageBreak (false);

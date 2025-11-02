@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for renderable objects having a margin, a border and a
@@ -42,7 +42,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    * @return The minimum size to be used. Excluding outline. Never
    *         <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   SizeSpec getMinSize ();
 
   /**
@@ -70,7 +70,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    *        Minimum height. Must be &ge; 0.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMinSize (@Nonnegative final float fMinWidth, @Nonnegative final float fMinHeight)
   {
     return setMinSize (new SizeSpec (fMinWidth, fMinHeight));
@@ -83,8 +83,8 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    *        Minimum size. May not be <code>null</code>.
    * @return this
    */
-  @Nonnull
-  IMPLTYPE setMinSize (@Nonnull SizeSpec aMinSize);
+  @NonNull
+  IMPLTYPE setMinSize (@NonNull SizeSpec aMinSize);
 
   /**
    * Set the minimum width to be used. Excluding outline.
@@ -93,7 +93,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    *        Minimum width. Must be &ge; 0.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMinWidth (@Nonnegative final float fMinWidth)
   {
     return setMinSize (fMinWidth, getMinHeight ());
@@ -106,7 +106,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    *        Minimum height. Must be &ge; 0.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMinHeight (@Nonnegative final float fMinHeight)
   {
     return setMinSize (getMinWidth (), fMinHeight);
@@ -116,7 +116,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    * @return The maximum size to be used. Excluding outline. Never
    *         <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   SizeSpec getMaxSize ();
 
   /**
@@ -144,7 +144,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    *        Maximum height. Must be &ge; 0.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMaxSize (@Nonnegative final float fMaxWidth, @Nonnegative final float fMaxHeight)
   {
     return setMaxSize (new SizeSpec (fMaxWidth, fMaxHeight));
@@ -157,8 +157,8 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    *        Maximum size. May not be <code>null</code>. Must both be &ge; 0.
    * @return this
    */
-  @Nonnull
-  IMPLTYPE setMaxSize (@Nonnull SizeSpec aMaxSize);
+  @NonNull
+  IMPLTYPE setMaxSize (@NonNull SizeSpec aMaxSize);
 
   /**
    * Set the maximum width to be used. Excluding outline.
@@ -167,7 +167,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    *        Maximum width. Must be &ge; 0.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMaxWidth (@Nonnegative final float fMaxWidth)
   {
     return setMaxSize (fMaxWidth, getMaxHeight ());
@@ -180,7 +180,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    *        Maximum height. Must be &ge; 0.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMaxHeight (@Nonnegative final float fMaxHeight)
   {
     return setMaxSize (getMaxWidth (), fMaxHeight);
@@ -198,7 +198,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    * @see #setMinSize(float, float)
    * @see #setMaxSize(float, float)
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setExactSize (@Nonnegative final float fWidth, @Nonnegative final float fHeight)
   {
     setMinSize (fWidth, fHeight);
@@ -215,7 +215,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    * @see #setMinWidth(float)
    * @see #setMaxWidth(float)
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setExactWidth (@Nonnegative final float fWidth)
   {
     setMinWidth (fWidth);
@@ -232,7 +232,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
    * @see #setMinHeight(float)
    * @see #setMaxHeight(float)
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setExactHeight (@Nonnegative final float fHeight)
   {
     setMinHeight (fHeight);

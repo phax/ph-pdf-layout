@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout.base;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Base interface for block elements. Compared to normal elements
@@ -55,7 +55,7 @@ public interface IPLBlockElement <IMPLTYPE extends IPLBlockElement <IMPLTYPE>> e
    *        only what is available.
    * @return this for chaining
    */
-  @Nonnull
+  @NonNull
   IMPLTYPE setFullWidth (boolean bFullWidth);
 
   /**
@@ -77,6 +77,6 @@ public interface IPLBlockElement <IMPLTYPE extends IPLBlockElement <IMPLTYPE>> e
    * @return this for chaining
    * @since 7.3.1
    */
-  @Nonnull
+  @NonNull
   IMPLTYPE setClipContent (boolean bClipContent);
 }

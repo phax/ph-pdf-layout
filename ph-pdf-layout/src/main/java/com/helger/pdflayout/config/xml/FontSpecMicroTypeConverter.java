@@ -16,6 +16,9 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.FontSpec;
@@ -25,9 +28,6 @@ import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.convert.MicroTypeConverter;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link FontSpec}.
@@ -43,15 +43,15 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter <Fo
 
   private final IPreloadFontResolver m_aPreloadFontResolver;
 
-  public FontSpecMicroTypeConverter (@Nonnull final IPreloadFontResolver aPreloadFontResolver)
+  public FontSpecMicroTypeConverter (@NonNull final IPreloadFontResolver aPreloadFontResolver)
   {
     m_aPreloadFontResolver = ValueEnforcer.notNull (aPreloadFontResolver, "PreloadFontResolver");
   }
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final FontSpec aValue,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final FontSpec aValue,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
@@ -64,8 +64,8 @@ public final class FontSpecMicroTypeConverter implements IMicroTypeConverter <Fo
     return aElement;
   }
 
-  @Nonnull
-  public FontSpec convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public FontSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     final String sPreloadFontID = aElement.getAttributeValue (ATTR_PRELOAD_FONT_ID);
     final PreloadFont aPreloadFont = m_aPreloadFontResolver.getPreloadFontOfID (sPreloadFontID);

@@ -23,15 +23,14 @@ import org.apache.pdfbox.pdmodel.graphics.image.CCITTFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.render.PagePreRenderContext;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Represent a static image based on {@link BufferedImage}. This image type is
@@ -44,12 +43,12 @@ public class PLImage extends AbstractPLImage <PLImage>
 {
   private final BufferedImage m_aImage;
 
-  public PLImage (@Nonnull final BufferedImage aImage)
+  public PLImage (@NonNull final BufferedImage aImage)
   {
     this (aImage, aImage.getWidth (), aImage.getHeight ());
   }
 
-  public PLImage (@Nonnull final BufferedImage aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
+  public PLImage (@NonNull final BufferedImage aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
   {
     super (fImageWidth, fImageHeight);
     ValueEnforcer.notNull (aImage, "Image");
@@ -58,9 +57,9 @@ public class PLImage extends AbstractPLImage <PLImage>
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public PLImage setBasicDataFrom (@Nonnull final PLImage aSource)
+  public PLImage setBasicDataFrom (@NonNull final PLImage aSource)
   {
     super.setBasicDataFrom (aSource);
     return this;
@@ -73,8 +72,8 @@ public class PLImage extends AbstractPLImage <PLImage>
   }
 
   @Override
-  @Nonnull
-  protected PDImageXObject getXObject (@Nonnull final PagePreRenderContext aCtx) throws IOException
+  @NonNull
+  protected PDImageXObject getXObject (@NonNull final PagePreRenderContext aCtx) throws IOException
   {
     switch (getImageType ())
     {

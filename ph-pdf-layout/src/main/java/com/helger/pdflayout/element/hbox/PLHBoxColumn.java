@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.element.hbox;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.spec.WidthSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * This class represents a single column within an {@link PLHBox}. This is a pseudo element and does
@@ -36,33 +36,33 @@ public final class PLHBoxColumn
   private IPLRenderableObject <?> m_aElement;
   private WidthSpec m_aWidth;
 
-  public PLHBoxColumn (@Nonnull final IPLRenderableObject <?> aElement, @Nonnull final WidthSpec aWidth)
+  public PLHBoxColumn (@NonNull final IPLRenderableObject <?> aElement, @NonNull final WidthSpec aWidth)
   {
     internalSetElement (aElement);
     internalSetWidth (aWidth);
   }
 
-  @Nonnull
+  @NonNull
   public IPLRenderableObject <?> getElement ()
   {
     return m_aElement;
   }
 
-  @Nonnull
-  PLHBoxColumn internalSetElement (@Nonnull final IPLRenderableObject <?> aElement)
+  @NonNull
+  PLHBoxColumn internalSetElement (@NonNull final IPLRenderableObject <?> aElement)
   {
     m_aElement = ValueEnforcer.notNull (aElement, "Element");
     return this;
   }
 
-  @Nonnull
+  @NonNull
   public WidthSpec getWidth ()
   {
     return m_aWidth;
   }
 
-  @Nonnull
-  PLHBoxColumn internalSetWidth (@Nonnull final WidthSpec aWidth)
+  @NonNull
+  PLHBoxColumn internalSetWidth (@NonNull final WidthSpec aWidth)
   {
     m_aWidth = ValueEnforcer.notNull (aWidth, "Width");
     return this;

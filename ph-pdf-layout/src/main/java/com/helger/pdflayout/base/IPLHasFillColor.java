@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.base;
 
-import com.helger.base.trait.IGenericImplTrait;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import com.helger.base.trait.IGenericImplTrait;
 
 /**
  * Base interface for objects with a fill color
@@ -43,7 +43,7 @@ public interface IPLHasFillColor <IMPLTYPE extends IPLHasFillColor <IMPLTYPE>> e
    * @return this
    * @since 7.2.0
    */
-  @Nonnull
+  @NonNull
   IMPLTYPE setFillColor (@Nullable PLColor aFillColor);
 
   /**

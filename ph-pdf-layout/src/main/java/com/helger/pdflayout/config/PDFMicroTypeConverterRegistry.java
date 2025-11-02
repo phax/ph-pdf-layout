@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout.config;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.config.xml.BorderSpecMicroTypeConverter;
 import com.helger.pdflayout.config.xml.BorderStyleSpecMicroTypeConverter;
@@ -43,8 +45,6 @@ import com.helger.pdflayout.spec.TextAndWidthSpec;
 import com.helger.pdflayout.spec.WidthSpec;
 import com.helger.xml.microdom.convert.IMicroTypeConverterRegistry;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * Micro type converter registration for all micro type converter contained in
  * this project. Must be called manually, because an
@@ -57,8 +57,8 @@ public final class PDFMicroTypeConverterRegistry
   private PDFMicroTypeConverterRegistry ()
   {}
 
-  public static void registerMicroTypeConverter (@Nonnull final IMicroTypeConverterRegistry aRegistry,
-                                                 @Nonnull final IPreloadFontResolver aPreloadFontResolver)
+  public static void registerMicroTypeConverter (@NonNull final IMicroTypeConverterRegistry aRegistry,
+                                                 @NonNull final IPreloadFontResolver aPreloadFontResolver)
   {
     // Details
     aRegistry.registerMicroElementTypeConverter (BorderSpec.class, new BorderSpecMicroTypeConverter ());

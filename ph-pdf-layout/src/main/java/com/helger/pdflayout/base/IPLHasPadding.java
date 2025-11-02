@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.base.trait.IGenericImplTrait;
 import com.helger.pdflayout.spec.PaddingSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for objects having a padding
@@ -44,7 +44,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setPadding (final float fPadding)
   {
     return setPadding (fPadding, fPadding);
@@ -59,7 +59,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The X-value to use (for left and right).
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setPadding (final float fPaddingY, final float fPaddingX)
   {
     return setPadding (fPaddingY, fPaddingX, fPaddingY, fPaddingX);
@@ -78,7 +78,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        Left
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setPadding (final float fPaddingTop,
                                final float fPaddingRight,
                                final float fPaddingBottom,
@@ -94,8 +94,8 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        Padding to use. May not be <code>null</code>.
    * @return this
    */
-  @Nonnull
-  IMPLTYPE setPadding (@Nonnull PaddingSpec aPadding);
+  @NonNull
+  IMPLTYPE setPadding (@NonNull PaddingSpec aPadding);
 
   /**
    * Set the top padding value.
@@ -104,7 +104,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setPaddingTop (final float fPadding)
   {
     return setPadding (getPadding ().getCloneWithTop (fPadding));
@@ -117,7 +117,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setPaddingRight (final float fPadding)
   {
     return setPadding (getPadding ().getCloneWithRight (fPadding));
@@ -130,7 +130,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setPaddingBottom (final float fPadding)
   {
     return setPadding (getPadding ().getCloneWithBottom (fPadding));
@@ -143,7 +143,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setPaddingLeft (final float fPadding)
   {
     return setPadding (getPadding ().getCloneWithLeft (fPadding));
@@ -157,7 +157,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    * @return this
    * @since 5.2.2
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setPaddingX (final float fPadding)
   {
     return setPaddingLeft (fPadding).setPaddingRight (fPadding);
@@ -171,7 +171,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    * @return this
    * @since 5.2.2
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setPaddingY (final float fPadding)
   {
     return setPaddingTop (fPadding).setPaddingBottom (fPadding);
@@ -184,7 +184,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The value to add.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addPaddingTop (final float fPadding)
   {
     if (fPadding == 0f)
@@ -199,7 +199,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The value to add.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addPaddingRight (final float fPadding)
   {
     if (fPadding == 0f)
@@ -214,7 +214,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The value to add.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addPaddingBottom (final float fPadding)
   {
     if (fPadding == 0f)
@@ -229,7 +229,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    *        The value to add.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addPaddingLeft (final float fPadding)
   {
     if (fPadding == 0f)
@@ -245,7 +245,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    * @return this
    * @since 5.2.2
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addPaddingX (final float fPadding)
   {
     return addPaddingLeft (fPadding).addPaddingRight (fPadding);
@@ -259,7 +259,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
    * @return this
    * @since 5.2.2
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addPaddingY (final float fPadding)
   {
     return addPaddingTop (fPadding).addPaddingBottom (fPadding);
@@ -268,7 +268,7 @@ public interface IPLHasPadding <IMPLTYPE extends IPLHasPadding <IMPLTYPE>> exten
   /**
    * @return The current padding. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   PaddingSpec getPadding ();
 
   /**

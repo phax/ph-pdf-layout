@@ -17,14 +17,13 @@
 package com.helger.pdflayout.render;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * This class contains the context for rendering a single element onto the PDF.
@@ -55,7 +54,7 @@ public final class PageRenderContext
    * @param fHeight
    *        Available height determined from the surrounding element
    */
-  public PageRenderContext (@Nonnull final PageRenderContext aCtx,
+  public PageRenderContext (@NonNull final PageRenderContext aCtx,
                             @Nonnegative final float fStartLeft,
                             @Nonnegative final float fStartTop,
                             @Nonnegative final float fWidth,
@@ -80,8 +79,8 @@ public final class PageRenderContext
    * @param fHeight
    *        Available height determined from the surrounding element
    */
-  public PageRenderContext (@Nonnull final ERenderingElementType eElementType,
-                            @Nonnull final PDPageContentStreamWithCache aCS,
+  public PageRenderContext (@NonNull final ERenderingElementType eElementType,
+                            @NonNull final PDPageContentStreamWithCache aCS,
                             @Nonnegative final float fStartLeft,
                             @Nonnegative final float fStartTop,
                             @Nonnegative final float fWidth,
@@ -104,7 +103,7 @@ public final class PageRenderContext
   /**
    * @return The type of the element currently rendered. Never <code>null</code> .
    */
-  @Nonnull
+  @NonNull
   public ERenderingElementType getElementType ()
   {
     return m_eElementType;
@@ -113,7 +112,7 @@ public final class PageRenderContext
   /**
    * @return The current content stream to write to. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public PDPageContentStreamWithCache getContentStream ()
   {
     return m_aCS;
@@ -122,7 +121,7 @@ public final class PageRenderContext
   /**
    * @return The underlying PDF document. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public PDDocument getDocument ()
   {
     return m_aCS.getDocument ();

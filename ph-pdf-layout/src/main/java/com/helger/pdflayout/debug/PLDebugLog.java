@@ -16,6 +16,7 @@
  */
 package com.helger.pdflayout.debug;
 
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +25,6 @@ import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pdflayout.base.IPLHasMarginBorderPadding;
 import com.helger.pdflayout.base.IPLObject;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * This class allows for some debug logging on PDF creation.
@@ -45,7 +44,7 @@ public final class PLDebugLog
   {
     boolean isEnabled ();
 
-    void log (@Nonnull String sMsg);
+    void log (@NonNull String sMsg);
   }
 
   /**
@@ -84,13 +83,13 @@ public final class PLDebugLog
   private PLDebugLog ()
   {}
 
-  @Nonnull
+  @NonNull
   public static IPLDebugOutput getDebugOutput ()
   {
     return s_aDebugOutput;
   }
 
-  public static void setDebugOutput (@Nonnull final IPLDebugOutput aDebugOutput)
+  public static void setDebugOutput (@NonNull final IPLDebugOutput aDebugOutput)
   {
     ValueEnforcer.notNull (aDebugOutput, "DebugOutput");
     s_aDebugOutput = aDebugOutput;
@@ -106,7 +105,7 @@ public final class PLDebugLog
     s_bDebugText = bDebugText;
   }
 
-  public static void debugText (@Nonnull final IPLObject <?> aElement, final String sMsg)
+  public static void debugText (@NonNull final IPLObject <?> aElement, final String sMsg)
   {
     if (s_aDebugOutput.isEnabled ())
       s_aDebugOutput.log ("[Text] " + aElement.getDebugID () + " " + sMsg);
@@ -122,7 +121,7 @@ public final class PLDebugLog
     s_bDebugFont = bDebugFont;
   }
 
-  public static void debugFont (@Nonnull final String sFontID, final String sMsg)
+  public static void debugFont (@NonNull final String sFontID, final String sMsg)
   {
     if (s_aDebugOutput.isEnabled ())
       s_aDebugOutput.log ("[Font] " + sFontID + " " + sMsg);
@@ -138,7 +137,7 @@ public final class PLDebugLog
     s_bDebugSplit = bDebugSplit;
   }
 
-  public static void debugSplit (@Nonnull final IPLObject <?> aElement, final String sMsg)
+  public static void debugSplit (@NonNull final IPLObject <?> aElement, final String sMsg)
   {
     if (s_aDebugOutput.isEnabled ())
       s_aDebugOutput.log ("[Splitting] " + aElement.getDebugID () + " " + sMsg);
@@ -154,7 +153,7 @@ public final class PLDebugLog
     s_bDebugPrepare = bDebugPrepare;
   }
 
-  public static void debugPrepare (@Nonnull final IPLObject <?> aElement, final String sMsg)
+  public static void debugPrepare (@NonNull final IPLObject <?> aElement, final String sMsg)
   {
     if (s_aDebugOutput.isEnabled ())
       s_aDebugOutput.log ("[Preparing] " + aElement.getDebugID () + " " + sMsg);
@@ -170,7 +169,7 @@ public final class PLDebugLog
     s_bDebugRender = bDebugRender;
   }
 
-  public static void debugRender (@Nonnull final IPLObject <?> aElement, final String sMsg)
+  public static void debugRender (@NonNull final IPLObject <?> aElement, final String sMsg)
   {
     if (s_aDebugOutput.isEnabled ())
       s_aDebugOutput.log ("[Rendering] " + aElement.getDebugID () + " " + sMsg);
@@ -186,7 +185,7 @@ public final class PLDebugLog
     s_bDebugConsistency = bDebugConsistency;
   }
 
-  public static void debugConsistency (@Nonnull final IPLObject <?> aElement, final String sMsg)
+  public static void debugConsistency (@NonNull final IPLObject <?> aElement, final String sMsg)
   {
     if (s_aDebugOutput.isEnabled ())
       s_aDebugOutput.log ("[Consistency] " + aElement.getDebugID () + " " + sMsg);
@@ -214,25 +213,25 @@ public final class PLDebugLog
     setDebugConsistency (bDebug);
   }
 
-  @Nonnull
+  @NonNull
   public static String getXY (final float fX, final float fY)
   {
     return "[" + fX + "/" + fY + "]";
   }
 
-  @Nonnull
-  public static String getWH (@Nonnull final SizeSpec aSize)
+  @NonNull
+  public static String getWH (@NonNull final SizeSpec aSize)
   {
     return getWH (aSize.getWidth (), aSize.getHeight ());
   }
 
-  @Nonnull
+  @NonNull
   public static String getWH (final float fWidth, final float fHeight)
   {
     return fWidth + "/" + fHeight;
   }
 
-  @Nonnull
+  @NonNull
   public static String getXYWH (final float fLeft, final float fTop, final float fWidth, final float fHeight)
   {
     final float fRight = fLeft + fWidth;
@@ -240,8 +239,8 @@ public final class PLDebugLog
     return "LB" + getXY (fLeft, fBottom) + " - RT" + getXY (fRight, fTop) + " (=WH " + getWH (fWidth, fHeight) + ")";
   }
 
-  @Nonnull
-  public static String getXMBP (@Nonnull final IPLHasMarginBorderPadding <?> aElement)
+  @NonNull
+  public static String getXMBP (@NonNull final IPLHasMarginBorderPadding <?> aElement)
   {
     return "[X-MBP: " +
            aElement.getMarginXSum () +
@@ -254,8 +253,8 @@ public final class PLDebugLog
            "]";
   }
 
-  @Nonnull
-  public static String getYMBP (@Nonnull final IPLHasMarginBorderPadding <?> aElement)
+  @NonNull
+  public static String getYMBP (@NonNull final IPLHasMarginBorderPadding <?> aElement)
   {
     return "[Y-MBP: " +
            aElement.getMarginYSum () +

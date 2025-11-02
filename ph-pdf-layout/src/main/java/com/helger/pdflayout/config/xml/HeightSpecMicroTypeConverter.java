@@ -16,14 +16,14 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.pdflayout.spec.EValueUOMType;
 import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link HeightSpec}.
@@ -35,10 +35,10 @@ public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter <
   private static final String ATTR_TYPE = "type";
   private static final String ATTR_VALUE = "value";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final HeightSpec aValue,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final HeightSpec aValue,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
@@ -48,8 +48,8 @@ public final class HeightSpecMicroTypeConverter implements IMicroTypeConverter <
     return aElement;
   }
 
-  @Nonnull
-  public HeightSpec convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public HeightSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     final String sTypeID = aElement.getAttributeValue (ATTR_TYPE);
     final EValueUOMType eHeightType = EValueUOMType.getFromIDOrNull (sTypeID);

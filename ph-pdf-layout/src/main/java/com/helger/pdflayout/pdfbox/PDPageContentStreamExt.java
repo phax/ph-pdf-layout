@@ -56,6 +56,7 @@ import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceStream;
 import org.apache.pdfbox.util.Matrix;
 import org.apache.pdfbox.util.NumberFormatUtil;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.annotation.style.CodingStyleguideUnaware;
@@ -63,8 +64,6 @@ import com.helger.collection.stack.NonBlockingStack;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.ELineCapStyle;
 import com.helger.pdflayout.spec.ELineJoinStyle;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Provides the ability to write to a page content stream.<br>
@@ -275,7 +274,7 @@ public class PDPageContentStreamExt implements Closeable
     m_aFormatDecimal.setGroupingUsed (false);
   }
 
-  @Nonnull
+  @NonNull
   OutputStream getOutput ()
   {
     return m_aOS;
@@ -692,7 +691,7 @@ public class PDPageContentStreamExt implements Closeable
    * @throws IOException
    *         If an IO error occurs while writing to the stream.
    */
-  public void setStrokingColor (@Nonnull final PDColor color) throws IOException
+  public void setStrokingColor (@NonNull final PDColor color) throws IOException
   {
     if (m_aStrokingColorSpaceStack.isEmpty () || m_aStrokingColorSpaceStack.peek () != color.getColorSpace ())
     {
@@ -733,7 +732,7 @@ public class PDPageContentStreamExt implements Closeable
    *         If an IO error occurs while writing to the stream.
    * @since 7.2.0
    */
-  public void setStrokingColor (@Nonnull final PLColor aColor) throws IOException
+  public void setStrokingColor (@NonNull final PLColor aColor) throws IOException
   {
     setStrokingColor (aColor.getAsPDColor ());
   }
@@ -830,7 +829,7 @@ public class PDPageContentStreamExt implements Closeable
    * @throws IOException
    *         If an IO error occurs while writing to the stream.
    */
-  public void setNonStrokingColor (@Nonnull final PDColor color) throws IOException
+  public void setNonStrokingColor (@NonNull final PDColor color) throws IOException
   {
     if (m_aNonStrokingColorSpaceStack.isEmpty () || m_aNonStrokingColorSpaceStack.peek () != color.getColorSpace ())
     {
@@ -871,7 +870,7 @@ public class PDPageContentStreamExt implements Closeable
    *         If an IO error occurs while writing to the stream.
    * @since 7.2.0
    */
-  public void setNonStrokingColor (@Nonnull final PLColor aColor) throws IOException
+  public void setNonStrokingColor (@NonNull final PLColor aColor) throws IOException
   {
     setNonStrokingColor (aColor.getAsPDColor ());
   }
@@ -1355,7 +1354,7 @@ public class PDPageContentStreamExt implements Closeable
    * @throws IllegalArgumentException
    *         If the parameter is not a valid line join style.
    */
-  public void setLineJoinStyle (@Nonnull final ELineJoinStyle eLineJoinStyle) throws IOException
+  public void setLineJoinStyle (@NonNull final ELineJoinStyle eLineJoinStyle) throws IOException
   {
     setLineJoinStyle (eLineJoinStyle.getID ());
   }
@@ -1401,7 +1400,7 @@ public class PDPageContentStreamExt implements Closeable
    * @throws IllegalArgumentException
    *         If the parameter is not a valid line cap style.
    */
-  public void setLineCapStyle (@Nonnull final ELineCapStyle eLineCapStyle) throws IOException
+  public void setLineCapStyle (@NonNull final ELineCapStyle eLineCapStyle) throws IOException
   {
     setLineCapStyle (eLineCapStyle.getID ());
   }

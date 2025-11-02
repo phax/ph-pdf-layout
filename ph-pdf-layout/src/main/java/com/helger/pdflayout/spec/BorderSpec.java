@@ -18,14 +18,14 @@ package com.helger.pdflayout.spec;
 
 import java.io.Serializable;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
 import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * This class represents a border around a single element. Each side can be
@@ -213,7 +213,7 @@ public class BorderSpec implements Serializable
     return getTopWidth () + getBottomWidth ();
   }
 
-  @Nonnull
+  @NonNull
   public BorderSpec getCloneWithTop (@Nullable final BorderStyleSpec aTop)
   {
     if (EqualsHelper.equals (aTop, m_aTop))
@@ -221,7 +221,7 @@ public class BorderSpec implements Serializable
     return new BorderSpec (aTop, m_aRight, m_aBottom, m_aLeft);
   }
 
-  @Nonnull
+  @NonNull
   public BorderSpec getCloneWithRight (@Nullable final BorderStyleSpec aRight)
   {
     if (EqualsHelper.equals (aRight, m_aRight))
@@ -229,7 +229,7 @@ public class BorderSpec implements Serializable
     return new BorderSpec (m_aTop, aRight, m_aBottom, m_aLeft);
   }
 
-  @Nonnull
+  @NonNull
   public BorderSpec getCloneWithBottom (@Nullable final BorderStyleSpec aBottom)
   {
     if (EqualsHelper.equals (aBottom, m_aBottom))
@@ -237,7 +237,7 @@ public class BorderSpec implements Serializable
     return new BorderSpec (m_aTop, m_aRight, aBottom, m_aLeft);
   }
 
-  @Nonnull
+  @NonNull
   public BorderSpec getCloneWithLeft (@Nullable final BorderStyleSpec aLeft)
   {
     if (EqualsHelper.equals (aLeft, m_aLeft))
@@ -279,25 +279,25 @@ public class BorderSpec implements Serializable
                                        .getToString ();
   }
 
-  @Nonnull
+  @NonNull
   public static BorderSpec top (@Nullable final BorderStyleSpec aTop)
   {
     return new BorderSpec (aTop, null, null, null);
   }
 
-  @Nonnull
+  @NonNull
   public static BorderSpec right (@Nullable final BorderStyleSpec aRight)
   {
     return new BorderSpec (null, aRight, null, null);
   }
 
-  @Nonnull
+  @NonNull
   public static BorderSpec bottom (@Nullable final BorderStyleSpec aBottom)
   {
     return new BorderSpec (null, null, aBottom, null);
   }
 
-  @Nonnull
+  @NonNull
   public static BorderSpec left (@Nullable final BorderStyleSpec aLeft)
   {
     return new BorderSpec (null, null, null, aLeft);

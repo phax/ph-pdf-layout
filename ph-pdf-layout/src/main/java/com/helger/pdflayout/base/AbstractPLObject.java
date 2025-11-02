@@ -16,6 +16,9 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.annotation.style.OverrideOnDemand;
@@ -24,9 +27,6 @@ import com.helger.base.id.factory.GlobalIDFactory;
 import com.helger.base.lang.clazz.ClassHelper;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.debug.PLDebugLog;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Abstract PL object
@@ -75,8 +75,8 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
    *        The new ID to use. May neither be <code>null</code> nor empty.
    * @return this for chaining
    */
-  @Nonnull
-  public final IMPLTYPE setID (@Nonnull @Nonempty final String sID)
+  @NonNull
+  public final IMPLTYPE setID (@NonNull @Nonempty final String sID)
   {
     ValueEnforcer.notEmpty (sID, "ID");
 
@@ -99,7 +99,7 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     return thisAsT ();
   }
 
-  @Nonnull
+  @NonNull
   @Nonempty
   public final String getDebugID ()
   {
@@ -109,9 +109,9 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     return ret;
   }
 
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     // Nothing to do here
     return thisAsT ();

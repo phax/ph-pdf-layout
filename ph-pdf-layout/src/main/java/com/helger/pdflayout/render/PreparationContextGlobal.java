@@ -19,6 +19,7 @@ package com.helger.pdflayout.render;
 import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.base.enforce.ValueEnforcer;
@@ -28,8 +29,6 @@ import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.PreloadFont;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * The current global context for preparing an element. This object must be the same for all
@@ -49,7 +48,7 @@ public final class PreparationContextGlobal
    * @param aDoc
    *        The {@link PDDocument} worked upon
    */
-  public PreparationContextGlobal (@Nonnull final PDDocument aDoc)
+  public PreparationContextGlobal (@NonNull final PDDocument aDoc)
   {
     ValueEnforcer.notNull (aDoc, "PDDocument");
     m_aDoc = aDoc;
@@ -58,14 +57,14 @@ public final class PreparationContextGlobal
   /**
    * @return The {@link PDDocument} as provided in the constructor. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public PDDocument getDocument ()
   {
     return m_aDoc;
   }
 
-  @Nonnull
-  public LoadedFont getLoadedFont (@Nonnull final FontSpec aFontSpec) throws IOException
+  @NonNull
+  public LoadedFont getLoadedFont (@NonNull final FontSpec aFontSpec) throws IOException
   {
     final PreloadFont aPreloadFont = aFontSpec.getPreloadFont ();
     LoadedFont aLoadedFont = m_aFontCache.get (aPreloadFont);

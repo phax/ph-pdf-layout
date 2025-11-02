@@ -16,6 +16,9 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
@@ -23,9 +26,6 @@ import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.convert.MicroTypeConverter;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link BorderStyleSpec}.
@@ -39,10 +39,10 @@ public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConver
   private static final String ELEMENT_LINE_DASH_PATTERN = "linedashpattern";
   private static final String ATTR_LINE_WIDTH = "linewidth";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final BorderStyleSpec aValue,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final BorderStyleSpec aValue,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
@@ -59,8 +59,8 @@ public final class BorderStyleSpecMicroTypeConverter implements IMicroTypeConver
     return aElement;
   }
 
-  @Nonnull
-  public BorderStyleSpec convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public BorderStyleSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     final PLColor aColor = MicroTypeConverter.convertToNative (aElement.getFirstChildElement (ELEMENT_COLOR),
                                                                PLColor.class,

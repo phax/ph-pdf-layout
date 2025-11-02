@@ -16,13 +16,13 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Micro type converter for class {@link SizeSpec}.
@@ -34,10 +34,10 @@ public final class SizeSpecMicroTypeConverter implements IMicroTypeConverter <Si
   private static final String ATTR_WIDTH = "width";
   private static final String ATTR_HEIGHT = "height";
 
-  @Nonnull
-  public IMicroElement convertToMicroElement (@Nonnull final SizeSpec aValue,
+  @NonNull
+  public IMicroElement convertToMicroElement (@NonNull final SizeSpec aValue,
                                               @Nullable final String sNamespaceURI,
-                                              @Nonnull final String sTagName)
+                                              @NonNull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
 
@@ -46,8 +46,8 @@ public final class SizeSpecMicroTypeConverter implements IMicroTypeConverter <Si
     return aElement;
   }
 
-  @Nonnull
-  public SizeSpec convertToNative (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public SizeSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     final float fWidth = aElement.getAttributeValueAsFloat (ATTR_WIDTH, Float.NaN);
     final float fHeight = aElement.getAttributeValueAsFloat (ATTR_HEIGHT, Float.NaN);

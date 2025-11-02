@@ -16,9 +16,9 @@
  */
 package com.helger.pdflayout.element.table;
 
-import com.helger.annotation.Nonnegative;
+import org.jspecify.annotations.NonNull;
 
-import jakarta.annotation.Nonnull;
+import com.helger.annotation.Nonnegative;
 
 /**
  * Special consumer for table cells.
@@ -43,7 +43,7 @@ public interface IPLTableCellFilter
    * @return <code>true</code> if the cell should be handled, <code>false</code>
    *         if not.
    */
-  boolean test (@Nonnull PLTableCell aCell,
+  boolean test (@NonNull PLTableCell aCell,
                 @Nonnegative int nCellIndex,
                 @Nonnegative int nEffectiveCellStartIndex,
                 @Nonnegative int nEffectiveCellEndIndex);

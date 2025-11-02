@@ -18,15 +18,15 @@ package com.helger.pdflayout.base;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.base.state.EChange;
 import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * Base interface for a renderable PDF layout object.
@@ -100,8 +100,8 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    *         margin. May not be <code>null</code>.
    * @see #render(PageRenderContext)
    */
-  @Nonnull
-  SizeSpec prepare (@Nonnull final PreparationContext aCtx);
+  @NonNull
+  SizeSpec prepare (@NonNull final PreparationContext aCtx);
 
   /**
    * Called after the page was created but before the content stream is created.
@@ -114,8 +114,8 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    * @throws IOException
    *         In case of a PDFBox error
    */
-  @Nonnull
-  default EChange beforeRender (@Nonnull final PagePreRenderContext aCtx) throws IOException
+  @NonNull
+  default EChange beforeRender (@NonNull final PagePreRenderContext aCtx) throws IOException
   {
     return EChange.UNCHANGED;
   }
@@ -131,5 +131,5 @@ public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPL
    * @see #prepare(PreparationContext)
    */
   @Nonnegative
-  void render (@Nonnull final PageRenderContext aCtx) throws IOException;
+  void render (@NonNull final PageRenderContext aCtx) throws IOException;
 }

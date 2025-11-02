@@ -18,6 +18,9 @@ package com.helger.pdflayout.element.table;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.annotation.concurrent.NotThreadSafe;
@@ -26,9 +29,6 @@ import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.element.box.AbstractPLBox;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.render.PageRenderContext;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * This class represents a single table cell within a table row.
@@ -54,9 +54,9 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public PLTableCell setBasicDataFrom (@Nonnull final PLTableCell aSource)
+  public PLTableCell setBasicDataFrom (@NonNull final PLTableCell aSource)
   {
     super.setBasicDataFrom (aSource);
     _setColSpan (aSource.getColSpan ());
@@ -76,8 +76,8 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   }
 
   @Override
-  @Nonnull
-  public PLTableCell internalCreateNewVertSplitObject (@Nonnull final PLTableCell aBase)
+  @NonNull
+  public PLTableCell internalCreateNewVertSplitObject (@NonNull final PLTableCell aBase)
   {
     final PLTableCell ret = new PLTableCell (null, aBase.getColSpan ());
     ret.setBasicDataFrom (aBase);
@@ -85,7 +85,7 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
   }
 
   @Override
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     // No further ado
     super.onRender (aCtx);
@@ -97,7 +97,7 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
    * @return The new empty table cell.
    * @since 5.1.3
    */
-  @Nonnull
+  @NonNull
   public static PLTableCell createEmptyCell ()
   {
     return new PLTableCell (new PLSpacerX ());
@@ -111,7 +111,7 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
    * @return The new empty table cell.
    * @since 7.0.1
    */
-  @Nonnull
+  @NonNull
   public static PLTableCell createEmptyCell (@Nonnegative final int nColSpan)
   {
     return new PLTableCell (new PLSpacerX (), nColSpan);
@@ -125,7 +125,7 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
    * @return The new empty table cell.
    * @since 7.0.1
    */
-  @Nonnull
+  @NonNull
   public static PLTableCell [] createEmptyCells (@Nonnegative final int nCellCount)
   {
     ValueEnforcer.isGE0 (nCellCount, "CellCount");

@@ -18,13 +18,13 @@ package com.helger.pdflayout.element.list;
 
 import java.util.function.IntFunction;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.element.text.PLText;
 import com.helger.pdflayout.spec.FontSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * An implementation of {@link IBulletPointCreator} that uses a custom {@link IntFunction} to create
@@ -37,27 +37,27 @@ public class BulletPointCreatorNumeric extends AbstractBulletPointCreatorFontBas
 {
   private final IntFunction <String> m_aFormatter;
 
-  public BulletPointCreatorNumeric (@Nonnull final IntFunction <String> aFormatter, @Nonnull final FontSpec aFontSpec)
+  public BulletPointCreatorNumeric (@NonNull final IntFunction <String> aFormatter, @NonNull final FontSpec aFontSpec)
   {
     super (aFontSpec);
     ValueEnforcer.notNull (aFormatter, "Formatter");
     m_aFormatter = aFormatter;
   }
 
-  @Nonnull
+  @NonNull
   public final IntFunction <String> getFormatter ()
   {
     return m_aFormatter;
   }
 
-  @Nonnull
+  @NonNull
   public String getBulletPointText (@Nonnegative final int nBulletPointIndex)
   {
     // Use 0-based index
     return m_aFormatter.apply (nBulletPointIndex);
   }
 
-  @Nonnull
+  @NonNull
   public PLText getBulletPointElement (@Nonnegative final int nBulletPointIndex)
   {
     return new PLText (getBulletPointText (nBulletPointIndex), getFontSpec ()).setPadding (getPadding ());

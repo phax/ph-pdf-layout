@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.base.trait.IGenericImplTrait;
 import com.helger.pdflayout.spec.MarginSpec;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for objects having a margin
@@ -44,7 +44,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMargin (final float fMargin)
   {
     return setMargin (fMargin, fMargin);
@@ -59,7 +59,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The X-value to use (for left and right).
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMargin (final float fMarginY, final float fMarginX)
   {
     return setMargin (fMarginY, fMarginX, fMarginY, fMarginX);
@@ -78,7 +78,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        Left
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMargin (final float fMarginTop,
                               final float fMarginRight,
                               final float fMarginBottom,
@@ -94,8 +94,8 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        Margin to use. May not be <code>null</code>.
    * @return this
    */
-  @Nonnull
-  IMPLTYPE setMargin (@Nonnull MarginSpec aMargin);
+  @NonNull
+  IMPLTYPE setMargin (@NonNull MarginSpec aMargin);
 
   /**
    * Set the top margin value.
@@ -104,7 +104,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMarginTop (final float fMargin)
   {
     return setMargin (getMargin ().getCloneWithTop (fMargin));
@@ -117,7 +117,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMarginRight (final float fMargin)
   {
     return setMargin (getMargin ().getCloneWithRight (fMargin));
@@ -130,7 +130,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMarginBottom (final float fMargin)
   {
     return setMargin (getMargin ().getCloneWithBottom (fMargin));
@@ -143,7 +143,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The value to use.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMarginLeft (final float fMargin)
   {
     return setMargin (getMargin ().getCloneWithLeft (fMargin));
@@ -157,7 +157,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    * @return this
    * @since 5.2.2
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMarginX (final float fMargin)
   {
     return setMarginLeft (fMargin).setMarginRight (fMargin);
@@ -171,7 +171,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    * @return this
    * @since 5.2.2
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE setMarginY (final float fMargin)
   {
     return setMarginTop (fMargin).setMarginBottom (fMargin);
@@ -184,7 +184,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The value to add.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addMarginTop (final float fMargin)
   {
     if (fMargin == 0f)
@@ -199,7 +199,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The value to add.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addMarginRight (final float fMargin)
   {
     if (fMargin == 0f)
@@ -214,7 +214,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The value to add.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addMarginBottom (final float fMargin)
   {
     if (fMargin == 0f)
@@ -229,7 +229,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    *        The value to add.
    * @return this
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addMarginLeft (final float fMargin)
   {
     if (fMargin == 0f)
@@ -245,7 +245,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    * @return this
    * @since 5.2.2
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addMarginX (final float fMargin)
   {
     return addMarginLeft (fMargin).addMarginRight (fMargin);
@@ -259,7 +259,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
    * @return this
    * @since 5.2.2
    */
-  @Nonnull
+  @NonNull
   default IMPLTYPE addMarginY (final float fMargin)
   {
     return addMarginTop (fMargin).addMarginBottom (fMargin);
@@ -268,7 +268,7 @@ public interface IPLHasMargin <IMPLTYPE extends IPLHasMargin <IMPLTYPE>> extends
   /**
    * @return The current margin. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   MarginSpec getMargin ();
 
   /**

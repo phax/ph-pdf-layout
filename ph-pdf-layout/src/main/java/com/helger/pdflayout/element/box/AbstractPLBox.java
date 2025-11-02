@@ -20,6 +20,9 @@ import static com.helger.pdflayout.render.PLRenderHelper.fillAndRenderBorderRoun
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.annotation.style.OverrideOnDemand;
 import com.helger.base.state.EChange;
@@ -37,9 +40,6 @@ import com.helger.pdflayout.render.PLRenderHelper;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * A box is a simple element that encapsulates another element and has a padding, border and margin
@@ -69,9 +69,9 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   }
 
   @Override
-  @Nonnull
+  @NonNull
   @OverridingMethodsMustInvokeSuper
-  public IMPLTYPE setBasicDataFrom (@Nonnull final IMPLTYPE aSource)
+  public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
     super.setBasicDataFrom (aSource);
     setVertSplittable (aSource.isVertSplittable ());
@@ -96,7 +96,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     return m_aElement != null;
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setElement (@Nullable final IPLRenderableObject <?> aElement)
   {
     internalCheckNotPrepared ();
@@ -112,7 +112,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
     return hasElement () && getElement ().isVertSplittable ();
   }
 
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setVertSplittable (final boolean bVertSplittable)
   {
     m_bVertSplittable = bVertSplittable;
@@ -145,7 +145,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
    * @return this for chaining
    * @since v7.4.1
    */
-  @Nonnull
+  @NonNull
   public final IMPLTYPE setBorderRadius (final float fBorderRadius)
   {
     m_fBorderRadius = fBorderRadius;
@@ -153,8 +153,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   }
 
   @Override
-  @Nonnull
-  public EChange visit (@Nonnull final IPLVisitor aVisitor) throws IOException
+  @NonNull
+  public EChange visit (@NonNull final IPLVisitor aVisitor) throws IOException
   {
     EChange ret = super.visit (aVisitor);
     if (m_aElement != null)
@@ -191,8 +191,8 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   }
 
   @Override
-  @Nonnull
-  protected SizeSpec getRenderSize (@Nonnull final SizeSpec aPreparedSize)
+  @NonNull
+  protected SizeSpec getRenderSize (@NonNull final SizeSpec aPreparedSize)
   {
     SizeSpec aRenderSize = super.getRenderSize (aPreparedSize);
 
@@ -211,7 +211,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   }
 
   @Override
-  protected SizeSpec onPrepare (@Nonnull final PreparationContext aCtx)
+  protected SizeSpec onPrepare (@NonNull final PreparationContext aCtx)
   {
     if (m_aElement == null)
     {
@@ -241,7 +241,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
       ((AbstractPLRenderableObject <?>) m_aElement).internalMarkAsNotPrepared ();
   }
 
-  @Nonnull
+  @NonNull
   public final PLSplitResult splitElementVert (final float fAvailableWidth, final float fAvailableHeight)
   {
     if (fAvailableHeight <= 0)
@@ -347,7 +347,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   }
 
   @OverrideOnDemand
-  protected void renderShape (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void renderShape (@NonNull final PageRenderContext aCtx) throws IOException
   {
     // Fill and border
     if (hasBorderRadius ())
@@ -366,7 +366,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
   }
 
   @OverrideOnDemand
-  protected void clipShape (@Nonnull final PageRenderContext aCtx,
+  protected void clipShape (@NonNull final PageRenderContext aCtx,
                             final float fLeft,
                             final float fBottom,
                             final float fWidth,
@@ -394,7 +394,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
 
   @Override
   @OverridingMethodsMustInvokeSuper
-  protected void onRender (@Nonnull final PageRenderContext aCtx) throws IOException
+  protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
     renderShape (aCtx);
 

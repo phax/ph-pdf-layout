@@ -16,7 +16,7 @@
  */
 package com.helger.pdflayout.element.hbox;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Horizontal box - groups several columns without having layout information
@@ -33,8 +33,8 @@ public class PLHBox extends AbstractPLHBox <PLHBox>
   {}
 
   @Override
-  @Nonnull
-  public PLHBox internalCreateNewVertSplitObject (@Nonnull final PLHBox aBase)
+  @NonNull
+  public PLHBox internalCreateNewVertSplitObject (@NonNull final PLHBox aBase)
   {
     final PLHBox ret = new PLHBox ();
     ret.setBasicDataFrom (aBase);

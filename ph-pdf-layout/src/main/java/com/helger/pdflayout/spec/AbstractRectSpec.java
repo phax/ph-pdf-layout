@@ -18,14 +18,14 @@ package com.helger.pdflayout.spec;
 
 import java.io.Serializable;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines a rectangular object.
@@ -44,7 +44,7 @@ public abstract class AbstractRectSpec implements Serializable
   private final float m_fXSum;
   private final float m_fYSum;
 
-  public AbstractRectSpec (@Nonnull final AbstractRectSpec aOther)
+  public AbstractRectSpec (@NonNull final AbstractRectSpec aOther)
   {
     this (aOther.m_fTop, aOther.m_fRight, aOther.m_fBottom, aOther.m_fLeft);
   }

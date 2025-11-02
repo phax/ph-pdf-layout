@@ -16,12 +16,12 @@
  */
 package com.helger.pdflayout.config.xml;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.pdflayout.spec.AbstractRectSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Micro type converter for classes based on {@link AbstractRectSpec}.
@@ -38,7 +38,7 @@ public abstract class AbstractRectSpecMicroTypeConverter <T> implements IMicroTy
   private static final String ATTR_BOTTOM = "bottom";
   private static final String ATTR_LEFT = "left";
 
-  public final void fillMicroElement (@Nonnull final AbstractRectSpec aValue, @Nonnull final IMicroElement aElement)
+  public final void fillMicroElement (@NonNull final AbstractRectSpec aValue, @NonNull final IMicroElement aElement)
   {
     aElement.setAttribute (ATTR_TOP, aValue.getTop ());
     aElement.setAttribute (ATTR_RIGHT, aValue.getRight ());
@@ -46,8 +46,8 @@ public abstract class AbstractRectSpecMicroTypeConverter <T> implements IMicroTy
     aElement.setAttribute (ATTR_LEFT, aValue.getLeft ());
   }
 
-  @Nonnull
-  public AbstractRectSpec convertToRectSpec (@Nonnull final IMicroElement aElement)
+  @NonNull
+  public AbstractRectSpec convertToRectSpec (@NonNull final IMicroElement aElement)
   {
     final float fTop = aElement.getAttributeValueAsFloat (ATTR_TOP, Float.NaN);
     final float fRight = aElement.getAttributeValueAsFloat (ATTR_RIGHT, Float.NaN);

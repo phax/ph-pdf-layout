@@ -17,8 +17,7 @@
 package com.helger.pdflayout;
 
 import org.apache.xmpbox.XMPMetadata;
-
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Callback interface to customize XMP Metadata.
@@ -37,5 +36,5 @@ public interface IXMPMetadataCustomizer
    * @param aXmpMetadata
    *        The object to be customized. Never <code>null</code>.
    */
-  void customizeMetadata (@Nonnull XMPMetadata aXmpMetadata);
+  void customizeMetadata (@NonNull XMPMetadata aXmpMetadata);
 }

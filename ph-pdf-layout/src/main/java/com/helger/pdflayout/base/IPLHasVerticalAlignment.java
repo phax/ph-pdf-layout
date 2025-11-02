@@ -16,10 +16,10 @@
  */
 package com.helger.pdflayout.base;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.pdflayout.spec.EVertAlignment;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for objects with a vertical alignment
@@ -37,7 +37,7 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
    *         {@link EVertAlignment#DEFAULT}. Never <code>null</code>. The
    *         vertical alignment may only be applied to contained children!
    */
-  @Nonnull
+  @NonNull
   EVertAlignment getVertAlign ();
 
   /**
@@ -48,8 +48,8 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
    *        The new vertical alignment. May not be <code>null</code>.
    * @return this
    */
-  @Nonnull
-  IMPLTYPE setVertAlign (@Nonnull EVertAlignment eVertAlign);
+  @NonNull
+  IMPLTYPE setVertAlign (@NonNull EVertAlignment eVertAlign);
 
   /**
    * Get the indentation for a certain vertical alignment. This method uses the

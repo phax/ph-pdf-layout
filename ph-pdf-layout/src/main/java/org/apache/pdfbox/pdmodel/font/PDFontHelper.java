@@ -18,7 +18,7 @@ package org.apache.pdfbox.pdmodel.font;
 
 import java.io.IOException;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Helper class to access package private classes of {@link PDFont}.
@@ -30,7 +30,7 @@ public final class PDFontHelper
   private PDFontHelper ()
   {}
 
-  public static byte [] encode (@Nonnull final PDFont aFont, final int nCodePoint) throws IOException
+  public static byte [] encode (@NonNull final PDFont aFont, final int nCodePoint) throws IOException
   {
     // encode method is protected
     return aFont.encode (nCodePoint);

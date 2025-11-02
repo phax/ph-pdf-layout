@@ -18,11 +18,11 @@ package com.helger.pdflayout.base;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.functional.IThrowingFunction;
 import com.helger.base.state.EChange;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * Visitor callback
@@ -39,7 +39,7 @@ public interface IPLVisitor
    * @throws IOException
    *         on PDFBox error
    */
-  default void onPageSetStart (@Nonnull final PLPageSet aPageSet) throws IOException
+  default void onPageSetStart (@NonNull final PLPageSet aPageSet) throws IOException
   {}
 
   /**
@@ -52,8 +52,8 @@ public interface IPLVisitor
    * @throws IOException
    *         on PDFBox error
    */
-  @Nonnull
-  default EChange onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
+  @NonNull
+  default EChange onElement (@NonNull final IPLRenderableObject <?> aElement) throws IOException
   {
     return EChange.UNCHANGED;
   }
@@ -66,7 +66,7 @@ public interface IPLVisitor
    * @throws IOException
    *         on PDFBox error
    */
-  default void onPageSetEnd (@Nonnull final PLPageSet aPageSet) throws IOException
+  default void onPageSetEnd (@NonNull final PLPageSet aPageSet) throws IOException
   {}
 
   /**
@@ -77,15 +77,15 @@ public interface IPLVisitor
    *        The consumer to use. May not be <code>null</code>.
    * @return The new element visitor to use
    */
-  @Nonnull
-  static IPLVisitor createElementVisitor (@Nonnull final IThrowingFunction <? super IPLRenderableObject <?>, EChange, IOException> aElementConsumer)
+  @NonNull
+  static IPLVisitor createElementVisitor (@NonNull final IThrowingFunction <? super IPLRenderableObject <?>, EChange, IOException> aElementConsumer)
   {
     ValueEnforcer.notNull (aElementConsumer, "ElementConsumer");
     return new IPLVisitor ()
     {
       @Override
-      @Nonnull
-      public EChange onElement (@Nonnull final IPLRenderableObject <?> aElement) throws IOException
+      @NonNull
+      public EChange onElement (@NonNull final IPLRenderableObject <?> aElement) throws IOException
       {
         return aElementConsumer.apply (aElement);
       }

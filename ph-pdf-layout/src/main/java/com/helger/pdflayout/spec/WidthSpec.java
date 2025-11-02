@@ -18,6 +18,8 @@ package com.helger.pdflayout.spec;
 
 import java.io.Serializable;
 
+import org.jspecify.annotations.NonNull;
+
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.concurrent.Immutable;
@@ -26,8 +28,6 @@ import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * This class defines a dependent width of an elements:
@@ -49,7 +49,7 @@ public class WidthSpec implements Serializable
   private final EValueUOMType m_eType;
   private final float m_fValue;
 
-  public WidthSpec (@Nonnull final EValueUOMType eType, final float fValue)
+  public WidthSpec (@NonNull final EValueUOMType eType, final float fValue)
   {
     ValueEnforcer.notNull (eType, "WidthType");
     m_eType = eType;
@@ -59,7 +59,7 @@ public class WidthSpec implements Serializable
   /**
    * @return The width type. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public final EValueUOMType getType ()
   {
     return m_eType;
@@ -68,7 +68,7 @@ public class WidthSpec implements Serializable
   /**
    * @return The ID of the width type. Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   @Nonempty
   public final String getTypeID ()
   {
@@ -166,7 +166,7 @@ public class WidthSpec implements Serializable
    *        The width to use. Must be &gt; 0.
    * @return Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public static WidthSpec abs (@Nonnegative final float fValue)
   {
     ValueEnforcer.isGT0 (fValue, "Value");
@@ -180,7 +180,7 @@ public class WidthSpec implements Serializable
    *        The width percentage to use. Must be &gt; 0.
    * @return Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public static WidthSpec perc (@Nonnegative final float fPerc)
   {
     ValueEnforcer.isGT0 (fPerc, "Perc");
@@ -192,7 +192,7 @@ public class WidthSpec implements Serializable
    *
    * @return Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public static WidthSpec star ()
   {
     return new WidthSpec (EValueUOMType.STAR, 0);
@@ -203,7 +203,7 @@ public class WidthSpec implements Serializable
    *
    * @return Never <code>null</code>.
    */
-  @Nonnull
+  @NonNull
   public static WidthSpec auto ()
   {
     return new WidthSpec (EValueUOMType.AUTO, 0);

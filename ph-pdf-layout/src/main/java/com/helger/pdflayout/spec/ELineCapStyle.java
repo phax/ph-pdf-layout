@@ -16,11 +16,11 @@
  */
 package com.helger.pdflayout.spec;
 
+import org.jspecify.annotations.Nullable;
+
 import com.helger.annotation.Nonnegative;
 import com.helger.base.id.IHasIntID;
 import com.helger.base.lang.EnumHelper;
-
-import jakarta.annotation.Nullable;
 
 /**
  * Possible line cap styles.
