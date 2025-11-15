@@ -74,7 +74,7 @@
 
   <properties>
     <pdfbox.version>3.0.6</pdfbox.version>
-    <pdfcompare.version>1.2.5</pdfcompare.version>
+    <pdfcompare.version>1.2.7</pdfcompare.version>
   </properties>
 
   <dependencyManagement>
@@ -89,7 +89,7 @@
       <dependency>
         <groupId>com.helger.font</groupId>
         <artifactId>ph-fonts-parent-pom</artifactId>
-        <version>6.0.0</version>
+        <version>6.1.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
