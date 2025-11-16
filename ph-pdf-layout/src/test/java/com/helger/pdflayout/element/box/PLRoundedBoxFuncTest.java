@@ -43,7 +43,7 @@ import com.helger.pdflayout.spec.PreloadFont;
  * @author Philip Helger
  * @author Marco De Angelis
  */
-public final class PLRoundedBoxTest
+public final class PLRoundedBoxFuncTest
 {
   @Rule
   public final TestRule m_aRule = new PLDebugTestRule ();

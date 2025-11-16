@@ -64,7 +64,7 @@ import com.helger.pdflayout.spec.WidthSpec;
  * @author Philip Helger
  * @author Marco De Angelis
  */
-public final class PLRoundedTextTest
+public final class PLRoundedTextFuncTest
 {
   @Rule
   public final TestRule m_aRule = new PLDebugTestRule ();
