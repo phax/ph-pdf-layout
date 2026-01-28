@@ -73,7 +73,7 @@ public class LineDashPatternSpec implements Serializable
    *        The phase of the pattern. Where to start the painting, first
    *        counting on than off.
    */
-  public LineDashPatternSpec (@NonNull final float [] aPattern, final float fPhase)
+  public LineDashPatternSpec (final float @NonNull [] aPattern, final float fPhase)
   {
     ValueEnforcer.notNull (aPattern, "Pattern");
     ValueEnforcer.isTrue (aPattern.length <= 2,
@@ -88,9 +88,8 @@ public class LineDashPatternSpec implements Serializable
   /**
    * @return A copy with all patterns. 0-2 elements.
    */
-  @NonNull
   @ReturnsMutableCopy
-  public final float [] getPattern ()
+  public final float @NonNull[] getPattern ()
   {
     return ArrayHelper.getCopy (m_aPattern);
   }

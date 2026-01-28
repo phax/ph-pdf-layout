@@ -532,7 +532,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
    */
   @NonNull
   @ReturnsMutableCopy
-  public static PLTable createWithPercentage (@NonNull @Nonempty final float... aPercentages)
+  public static PLTable createWithPercentage (@Nonempty final float @NonNull... aPercentages)
   {
     ValueEnforcer.notEmpty (aPercentages, "Percentages");
 

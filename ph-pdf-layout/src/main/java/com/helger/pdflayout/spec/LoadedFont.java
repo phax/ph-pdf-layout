@@ -66,7 +66,7 @@ public class LoadedFont
     // Lazy inited
     private Integer m_aEncodedValue;
 
-    private EncodedCodePoint (final int nCodePoint, @NonNull final byte [] aEncoded)
+    private EncodedCodePoint (final int nCodePoint, final byte @NonNull [] aEncoded)
     {
       m_nCodePoint = nCodePoint;
       m_aEncoded = aEncoded;
@@ -85,7 +85,7 @@ public class LoadedFont
       aOS.write (m_aEncoded);
     }
 
-    private static int _toInt (@NonNull final byte [] aEncoded)
+    private static int _toInt (final byte @NonNull [] aEncoded)
     {
       int ret = 0;
       for (final byte b : aEncoded)
@@ -280,8 +280,7 @@ public class LoadedFont
    * @throws IOException
    *         In case something goes wrong
    */
-  @NonNull
-  public byte [] getEncodedForPageContentStream (@NonNull final String sText) throws IOException
+  public byte @NonNull[] getEncodedForPageContentStream (@NonNull final String sText) throws IOException
   {
     // Minimum is 1*string length
     // Maximum is 4*string length
