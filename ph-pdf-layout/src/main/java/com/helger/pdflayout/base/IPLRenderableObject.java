@@ -28,6 +28,8 @@ import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
+import com.helger.pdflayout.spec.EPLRotate;
+
 /**
  * Base interface for a renderable PDF layout object.
  *
@@ -37,6 +39,23 @@ import com.helger.pdflayout.spec.SizeSpec;
  */
 public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
 {
+  /**
+   * @return The rotation to be applied to this object. Never <code>null</code>.
+   *         The default is {@link EPLRotate#DEFAULT}.
+   */
+  @NonNull
+  EPLRotate getRotate ();
+
+  /**
+   * Set the rotation of this object.
+   *
+   * @param eRotate
+   *        The rotation to set. May not be <code>null</code>.
+   * @return this for chaining
+   */
+  @NonNull
+  IMPLTYPE setRotate (@NonNull EPLRotate eRotate);
+
   /**
    * @return <code>true</code> if this object was already prepared,
    *         <code>false</code> otherwise.
