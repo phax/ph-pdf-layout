@@ -74,7 +74,7 @@
 
   <properties>
     <pdfbox.version>3.0.6</pdfbox.version>
-    <pdfcompare.version>1.2.7</pdfcompare.version>
+    <pdfcompare.version>1.2.8</pdfcompare.version>
   </properties>
 
   <dependencyManagement>
