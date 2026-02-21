@@ -17,7 +17,9 @@
 package com.helger.pdflayout.render;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.Matrix;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.concurrent.NotThreadSafe;
@@ -39,6 +41,8 @@ public final class PageRenderContext
   private final float m_fStartTop;
   private final float m_fWidth;
   private final float m_fHeight;
+  private final Matrix m_aRotateMatrix;
+  private final Matrix m_aTransformMatrix;
 
   /**
    * @param aCtx
@@ -60,7 +64,14 @@ public final class PageRenderContext
                             @Nonnegative final float fWidth,
                             @Nonnegative final float fHeight)
   {
-    this (aCtx.getElementType (), aCtx.getContentStream (), fStartLeft, fStartTop, fWidth, fHeight);
+    this (aCtx.getElementType (),
+          aCtx.getContentStream (),
+          fStartLeft,
+          fStartTop,
+          fWidth,
+          fHeight,
+          (Matrix) null,
+          (Matrix) null);
   }
 
   /**
@@ -78,13 +89,19 @@ public final class PageRenderContext
    *        Available width determined from the surrounding element
    * @param fHeight
    *        Available height determined from the surrounding element
+   * @param aRotateMatrix
+   *        Optional rotation matrix to be applied. May be <code>null</code>.
+   * @param aTransformMatrix
+   *        Optional transform matrix to be applied. May be <code>null</code>.
    */
   public PageRenderContext (@NonNull final ERenderingElementType eElementType,
                             @NonNull final PDPageContentStreamWithCache aCS,
                             @Nonnegative final float fStartLeft,
                             @Nonnegative final float fStartTop,
                             @Nonnegative final float fWidth,
-                            @Nonnegative final float fHeight)
+                            @Nonnegative final float fHeight,
+                            @Nullable final Matrix aRotateMatrix,
+                            @Nullable final Matrix aTransformMatrix)
   {
     ValueEnforcer.notNull (eElementType, "ElementType");
     ValueEnforcer.notNull (aCS, "ContentStream");
@@ -98,6 +115,8 @@ public final class PageRenderContext
     m_fStartTop = fStartTop;
     m_fWidth = fWidth;
     m_fHeight = fHeight;
+    m_aRotateMatrix = aRotateMatrix;
+    m_aTransformMatrix = aTransformMatrix;
   }
 
   /**
@@ -165,6 +184,28 @@ public final class PageRenderContext
     return m_fHeight;
   }
 
+  public boolean hasRotateMatrix ()
+  {
+    return m_aRotateMatrix != null;
+  }
+
+  @Nullable
+  public Matrix getRotateMatrix ()
+  {
+    return m_aRotateMatrix;
+  }
+
+  public boolean hasTransformMatrix ()
+  {
+    return m_aTransformMatrix != null;
+  }
+
+  @Nullable
+  public Matrix getTransformMatrix ()
+  {
+    return m_aTransformMatrix;
+  }
+
   @Override
   public String toString ()
   {
@@ -174,6 +215,8 @@ public final class PageRenderContext
                                        .append ("StartTop", m_fStartTop)
                                        .append ("Width", m_fWidth)
                                        .append ("Height", m_fHeight)
+                                       .appendIfNotNull ("RotateMatrix", m_aRotateMatrix)
+                                       .appendIfNotNull ("TransformMatrix", m_aTransformMatrix)
                                        .getToString ();
   }
 }

@@ -16,9 +16,12 @@
  */
 package com.helger.pdflayout.element;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.util.Matrix;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -88,5 +91,15 @@ public final class PLRotateTest
     final PageLayoutPDF aPL = new PageLayoutPDF ().setCompressPDF (false);
     aPL.addPageSet (aPS1);
     aPL.renderTo (new File ("pdf/plrotate.pdf"));
+  }
+
+  @Test
+  public void testMatrixStuff ()
+  {
+    final Matrix r = Matrix.getRotateInstance (Math.toRadians (90), 0, 0);
+    final Matrix t = Matrix.getTranslateInstance (10, 20);
+    final Matrix mult = t.multiply (r);
+    r.translate (10, 20);
+    assertEquals (mult, r);
   }
 }

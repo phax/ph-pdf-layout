@@ -29,6 +29,7 @@ import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.state.EChange;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.debug.PLDebugLog;
+import com.helger.pdflayout.element.text.AbstractPLText;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
@@ -190,9 +191,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
 
     m_bPrepared = true;
     m_aPreparedSize = aPreparedSize;
+
     // Apply min/max size etc.
     SizeSpec aRenderSize = getRenderSize (aPreparedSize);
-
     if (m_eRotate.isVertical ())
     {
       // Swap width and height for rendering
@@ -225,7 +226,13 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     {
       // Recalculate, e.g. for min-max size change
       final SizeSpec aOldRenderSize = m_aRenderSize;
-      m_aRenderSize = getRenderSize (m_aPreparedSize);
+      SizeSpec aNewRenderSize = getRenderSize (m_aPreparedSize);
+      if (m_eRotate.isVertical ())
+      {
+        // Swap width and height for rendering
+        aNewRenderSize = new SizeSpec (aNewRenderSize.getHeight (), aNewRenderSize.getWidth ());
+      }
+      m_aRenderSize = aNewRenderSize;
       if (PLDebugLog.isDebugPrepare () && !aOldRenderSize.equals (m_aRenderSize))
         PLDebugLog.debugPrepare (this,
                                  "RenderSize changed from " +
@@ -359,87 +366,109 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     else
     {
       // Prepare rotation
-      final float fX = aCtx.getStartLeft ();
-      final float fY = aCtx.getStartTop ();
-      final float fW = aCtx.getWidth ();
-      final float fH = aCtx.getHeight ();
+      final float fCtxX = aCtx.getStartLeft ();
+      final float fCtxY = aCtx.getStartTop ();
+      final float fCtxW = aCtx.getWidth ();
+      final float fCtxH = aCtx.getHeight ();
 
-      final float fWc = m_aPreparedSize.getWidth ();
-      final float fHc = m_aPreparedSize.getHeight ();
+      final float fPreparedW = m_aPreparedSize.getWidth ();
+      final float fPreparedH = m_aPreparedSize.getHeight ();
 
-      final PDPageContentStreamWithCache aCS = aCtx.getContentStream ();
-      aCS.saveGraphicsState ();
-      try
+      final boolean bIsTextObject = this instanceof AbstractPLText <?>;
+
       {
         final float fExpectedWidth;
         final float fExpectedHeight;
         if (m_eRotate.isHorizontal ())
         {
-          fExpectedWidth = fW;
-          fExpectedHeight = fH;
+          fExpectedWidth = fCtxW;
+          fExpectedHeight = fCtxH;
         }
         else
         {
           // Swap width and height expectation
-          fExpectedWidth = fH;
-          fExpectedHeight = fW;
+          fExpectedWidth = fCtxH;
+          fExpectedHeight = fCtxW;
         }
 
         // Just a warning
-        if (Math.abs (fExpectedWidth - fWc) > 0.1 || Math.abs (fExpectedHeight - fHc) > 0.1)
+        if (Math.abs (fExpectedWidth - fPreparedW) > 0.1 || Math.abs (fExpectedHeight - fPreparedH) > 0.1)
         {
           PLDebugLog.debugRender (this,
                                   "Rotation artifact: " +
                                         m_eRotate +
                                         " box " +
-                                        PLDebugLog.getWH (fW, fH) +
+                                        PLDebugLog.getWH (fCtxW, fCtxH) +
                                         " vs content " +
-                                        PLDebugLog.getWH (fWc, fHc));
+                                        PLDebugLog.getWH (fPreparedW, fPreparedH));
         }
+      }
 
-        final float fTranslateX;
-        final float fTranslateY;
-        final float fRotate;
+      final float fTranslateX;
+      final float fTranslateY;
+      final float fRotate;
 
-        if (m_eRotate.isRotate90 ())
+      if (m_eRotate.isRotate90 ())
+      {
+        // 90° CW: content BL(0,0) → allocated TL(fX,fY)
+        // Effective transform: T(fX,fY) × R(-90°)
+        fTranslateX = fCtxX;
+        fTranslateY = fCtxY;
+        fRotate = -90;
+      }
+      else
+        if (m_eRotate.isRotate180 ())
         {
-          fTranslateX = fX;
-          fTranslateY = fY;
-          fRotate = -90;
+          // 180°: content BL(0,0) → allocated TR(fX+fW,fY)
+          // Effective transform: T(fX+fW,fY) × R(180°)
+          fTranslateX = fCtxX + fPreparedW;
+          fTranslateY = fCtxY;
+          fRotate = 180;
         }
         else
-          if (m_eRotate.isRotate180 ())
-          {
-            fTranslateX = fX + fW;
-            fTranslateY = fY - fH;
-            fRotate = 180;
-          }
-          else
-          {
-            // 270
-            fTranslateX = fX + fW;
-            fTranslateY = fY - fH;
-            fRotate = 90;
-          }
+        {
+          // 270° CW (= 90° CCW): content TR(fWc,fHc) → allocated TL(fX,fY)
+          // Effective transform: T(fX+fHc,fY-fWc) × R(+90°)
+          fTranslateX = fCtxX + fPreparedH;
+          fTranslateY = fCtxY - fPreparedW;
+          fRotate = 90;
+        }
 
-        aCS.saveGraphicsState ();
+      // Rotate first, then translate — two transforms achieve T(tx,ty) × R(angle)
+      // because PDFBox pre-multiplies: CTM = M × CTM_old, so call order is R then T
+      final Matrix aRotateMatrix = Matrix.getRotateInstance (Math.toRadians (fRotate), 0, 0);
+      final Matrix aTransformMatrix = Matrix.getTranslateInstance (fTranslateX, fTranslateY);
 
-        // Move to pivot
-        aCS.getContentStream ().transform (Matrix.getTranslateInstance (-fTranslateX, -fTranslateY));
-        // Rotate
-        aCS.getContentStream ().transform (Matrix.getRotateInstance (Math.toRadians (fRotate), 0, 0));
-        // Move back
-        aCS.getContentStream ().transform (Matrix.getTranslateInstance (fTranslateX, fTranslateY));
+      final PDPageContentStreamWithCache aCS = aCtx.getContentStream ();
+      final PageRenderContext aNewCtx = new PageRenderContext (aCtx.getElementType (),
+                                                               aCS,
+                                                               0,
+                                                               fPreparedH,
+                                                               fPreparedW,
+                                                               fPreparedH,
+                                                               aRotateMatrix,
+                                                               aTransformMatrix);
 
-        // Render with new context
-        final PageRenderContext aNewCtx = new PageRenderContext (aCtx.getElementType (), aCS, 0, fHc, fWc, fHc);
-        onRender (aNewCtx);
-
-        aCS.restoreGraphicsState ();
-      }
-      finally
+      if (bIsTextObject)
       {
-        aCS.restoreGraphicsState ();
+        // Render with new context
+        onRender (aNewCtx);
+      }
+      else
+      {
+        aCS.saveGraphicsState ();
+        try
+        {
+          aCS.getContentStream ().transform (aRotateMatrix);
+          aCS.getContentStream ().transform (aTransformMatrix);
+
+          // Render with new context
+          onRender (aNewCtx);
+        }
+        finally
+        {
+          aCS.restoreGraphicsState ();
+        }
       }
     }
   }

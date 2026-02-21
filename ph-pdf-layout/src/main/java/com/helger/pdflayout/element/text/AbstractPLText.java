@@ -695,6 +695,11 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
     aContentStream.beginText ();
 
+    if (aCtx.hasRotateMatrix ())
+      aContentStream.getContentStream ().setTextMatrix (aCtx.getRotateMatrix ());
+    if (aCtx.hasTransformMatrix ())
+      aContentStream.getContentStream ().setTextMatrix (aCtx.getTransformMatrix ());
+
     // Set font if changed
     aContentStream.setFont (m_aLoadedFont, m_aFontSpec);
 

@@ -18,7 +18,9 @@ package com.helger.pdflayout.render;
 
 import java.io.IOException;
 
+import org.apache.pdfbox.util.Matrix;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.pdflayout.base.IPLElement;
@@ -302,7 +304,9 @@ public final class PLRenderHelper
                                 fRadiusTR,
                                 fRadiusBL,
                                 fRadiusBR,
-                                aCtx.getContentStream ());
+                                aCtx.getContentStream (),
+                                aCtx.getRotateMatrix (),
+                                aCtx.getTransformMatrix ());
   }
 
   public static <T extends IPLObject <T> & IPLHasFillColor <T> & IPLHasMarginBorderPadding <T>> void fillAndRenderBorderRounded (@NonNull final T aElement,
@@ -314,44 +318,75 @@ public final class PLRenderHelper
                                                                                                                                  final float fRadiusTR,
                                                                                                                                  final float fRadiusBL,
                                                                                                                                  final float fRadiusBR,
-                                                                                                                                 @NonNull final PDPageContentStreamWithCache aContentStream) throws IOException
+                                                                                                                                 @NonNull final PDPageContentStreamWithCache aContentStream,
+                                                                                                                                 @Nullable final Matrix aRotateMatrix,
+                                                                                                                                 @Nullable final Matrix aTransformMatrix) throws IOException
   {
-    final boolean bDebugRender = PLDebugRender.isDebugRender ();
-    if (bDebugRender)
+    final boolean bAnyMatrix = aRotateMatrix != null || aTransformMatrix != null;
+    try
     {
-      // Debug margin with a filled rectangle
-      final PLColor aOutlineColor = PLDebugRender.getDebugOutlineColor (aElement);
-      if (aOutlineColor != null)
+      if (bAnyMatrix)
       {
-        aContentStream.setNonStrokingColor (aOutlineColor);
-        aContentStream.fillRect (fLeft - aElement.getMarginLeft (),
-                                 fTop - fHeight - aElement.getMarginBottom (),
-                                 fWidth + aElement.getMarginXSum (),
-                                 fHeight + aElement.getMarginYSum ());
+        aContentStream.saveGraphicsState ();
+        if (aRotateMatrix != null)
+          aContentStream.getContentStream ().transform (aRotateMatrix);
+        if (aTransformMatrix != null)
+          aContentStream.getContentStream ().transform (aTransformMatrix);
       }
-    }
 
-    // Fill before border
-    final PLColor aFillColor = aElement.getFillColor ();
-    if (aFillColor != null)
-    {
-      aContentStream.setNonStrokingColor (aFillColor);
-      aContentStream.drawRoundedRect (fLeft,
-                                      fTop - fHeight,
-                                      fWidth,
-                                      fHeight,
-                                      fRadiusTL,
-                                      fRadiusTR,
-                                      fRadiusBL,
-                                      fRadiusBR);
-      aContentStream.fill ();
-    }
+      final boolean bDebugRender = PLDebugRender.isDebugRender ();
+      if (bDebugRender)
+      {
+        // Debug margin with a filled rectangle
+        final PLColor aOutlineColor = PLDebugRender.getDebugOutlineColor (aElement);
+        if (aOutlineColor != null)
+        {
+          aContentStream.setNonStrokingColor (aOutlineColor);
+          aContentStream.fillRect (fLeft - aElement.getMarginLeft (),
+                                   fTop - fHeight - aElement.getMarginBottom (),
+                                   fWidth + aElement.getMarginXSum (),
+                                   fHeight + aElement.getMarginYSum ());
+        }
+      }
 
-    // Draw debug border first anyway, in case only partial borders are present
-    if (bDebugRender)
-    {
-      final BorderSpec aDebugBorder = new BorderSpec (PLDebugRender.getDebugBorder (aElement));
-      if (aDebugBorder.hasAnyBorder ())
+      // Fill before border
+      final PLColor aFillColor = aElement.getFillColor ();
+      if (aFillColor != null)
+      {
+        aContentStream.setNonStrokingColor (aFillColor);
+        aContentStream.drawRoundedRect (fLeft,
+                                        fTop - fHeight,
+                                        fWidth,
+                                        fHeight,
+                                        fRadiusTL,
+                                        fRadiusTR,
+                                        fRadiusBL,
+                                        fRadiusBR);
+        aContentStream.fill ();
+      }
+
+      // Draw debug border first anyway, in case only partial borders are present
+      if (bDebugRender)
+      {
+        final BorderSpec aDebugBorder = new BorderSpec (PLDebugRender.getDebugBorder (aElement));
+        if (aDebugBorder.hasAnyBorder ())
+          renderBorderRounded (aElement,
+                               aContentStream,
+                               fLeft,
+                               fTop,
+                               fWidth,
+                               fHeight,
+                               fRadiusTL,
+                               fRadiusTR,
+                               fRadiusBL,
+                               fRadiusBR,
+                               aDebugBorder);
+      }
+
+      // Border draws over fill, to avoid nasty display problems if the background
+      // is visible between then
+      final BorderSpec aBorder = aElement.getBorder ();
+      if (aBorder.hasAnyBorder ())
         renderBorderRounded (aElement,
                              aContentStream,
                              fLeft,
@@ -362,24 +397,13 @@ public final class PLRenderHelper
                              fRadiusTR,
                              fRadiusBL,
                              fRadiusBR,
-                             aDebugBorder);
+                             aBorder);
     }
-
-    // Border draws over fill, to avoid nasty display problems if the background
-    // is visible between then
-    final BorderSpec aBorder = aElement.getBorder ();
-    if (aBorder.hasAnyBorder ())
-      renderBorderRounded (aElement,
-                           aContentStream,
-                           fLeft,
-                           fTop,
-                           fWidth,
-                           fHeight,
-                           fRadiusTL,
-                           fRadiusTR,
-                           fRadiusBL,
-                           fRadiusBR,
-                           aBorder);
+    finally
+    {
+      if (bAnyMatrix)
+        aContentStream.restoreGraphicsState ();
+    }
   }
 
   public static void renderBorderRounded (@NonNull final IPLObject <?> aElement,

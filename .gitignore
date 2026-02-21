@@ -5,8 +5,12 @@ pdf/
 
 .pmd
 *.iml
+
 .settings/ 
 .project 
-.classpath 
+.classpath
+ 
 release.properties
 zz
+
+.claude/
