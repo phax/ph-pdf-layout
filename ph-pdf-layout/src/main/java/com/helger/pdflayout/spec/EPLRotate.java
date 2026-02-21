@@ -16,6 +16,8 @@
  */
 package com.helger.pdflayout.spec;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Defines the rotation of an object.
  *
@@ -35,16 +37,16 @@ public enum EPLRotate
   /** By default objects are not rotated. */
   public static final EPLRotate DEFAULT = ROTATE_0;
 
-  private final int m_nAngle;
+  private final int m_nAngleDegrees;
 
-  EPLRotate (final int nAngle)
+  EPLRotate (final int nAngleDegrees)
   {
-    m_nAngle = nAngle;
+    m_nAngleDegrees = nAngleDegrees % 360;
   }
 
-  public int getAngle ()
+  public int getAngleDegrees ()
   {
-    return m_nAngle;
+    return m_nAngleDegrees;
   }
 
   public boolean isRotate0 ()
@@ -75,5 +77,16 @@ public enum EPLRotate
   public boolean isVertical ()
   {
     return this == ROTATE_90 || this == ROTATE_270;
+  }
+
+  @NonNull
+  public SizeSpec apply (@NonNull final SizeSpec aSize)
+  {
+    if (isVertical ())
+    {
+      // Swap width and height for rendering
+      return new SizeSpec (aSize.getHeight (), aSize.getWidth ());
+    }
+    return aSize;
   }
 }

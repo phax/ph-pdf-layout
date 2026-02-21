@@ -23,7 +23,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.util.Matrix;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -1028,9 +1027,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                                                  fStartLeft,
                                                                  fStartTop,
                                                                  fWidth,
-                                                                 fHeight,
-                                                                 (Matrix) null,
-                                                                 (Matrix) null);
+                                                                 fHeight);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
           aPageHeader.render (aRCtx);
@@ -1050,9 +1047,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                                                  fStartLeft,
                                                                  fStartTop,
                                                                  fWidth,
-                                                                 fHeight,
-                                                                 (Matrix) null,
-                                                                 (Matrix) null);
+                                                                 fHeight);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
           aElement.render (aRCtx);
@@ -1073,9 +1068,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                                                  fStartLeft,
                                                                  fStartTop,
                                                                  fWidth,
-                                                                 fHeight,
-                                                                 (Matrix) null,
-                                                                 (Matrix) null);
+                                                                 fHeight);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
           aPageFooter.render (aRCtx);

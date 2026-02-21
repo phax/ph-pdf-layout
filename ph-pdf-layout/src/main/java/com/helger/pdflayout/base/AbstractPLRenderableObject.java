@@ -29,7 +29,6 @@ import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.state.EChange;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.debug.PLDebugLog;
-import com.helger.pdflayout.element.text.AbstractPLText;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
@@ -47,11 +46,12 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                                                  AbstractPLObject <IMPLTYPE> implements
                                                  IPLRenderableObject <IMPLTYPE>
 {
+  private EPLRotate m_eRotate = EPLRotate.DEFAULT;
   private boolean m_bPrepared = false;
   private SizeSpec m_aPrepareAvailableSize;
   private SizeSpec m_aPreparedSize;
   private SizeSpec m_aRenderSize;
-  private EPLRotate m_eRotate = EPLRotate.DEFAULT;
+  private SizeSpec m_aRenderSizeRotated;
 
   public AbstractPLRenderableObject ()
   {}
@@ -148,7 +148,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   @Nullable
   public final SizeSpec getRenderSize ()
   {
-    return m_aRenderSize;
+    return m_aRenderSizeRotated;
   }
 
   /**
@@ -193,30 +193,23 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     m_aPreparedSize = aPreparedSize;
 
     // Apply min/max size etc.
-    SizeSpec aRenderSize = getRenderSize (aPreparedSize);
-    if (m_eRotate.isVertical ())
-    {
-      // Swap width and height for rendering
-      aRenderSize = new SizeSpec (aRenderSize.getHeight (), aRenderSize.getWidth ());
-    }
-    m_aRenderSize = aRenderSize;
+    m_aRenderSize = getRenderSize (aPreparedSize);
+    m_aRenderSizeRotated = m_eRotate.apply (m_aRenderSize);
 
     if (PLDebugLog.isDebugPrepare ())
     {
       String sSuffix = "";
-      if (this instanceof IPLHasMarginBorderPadding <?>)
+      if (this instanceof final IPLHasMarginBorderPadding <?> aMBP)
       {
-        sSuffix = " with " +
-                  PLDebugLog.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
-                  " and " +
-                  PLDebugLog.getYMBP ((IPLHasMarginBorderPadding <?>) this);
+        sSuffix = " with " + PLDebugLog.getXMBP (aMBP) + " and " + PLDebugLog.getYMBP (aMBP);
       }
       PLDebugLog.debugPrepare (this,
                                "Prepared object: " +
                                      PLDebugLog.getWH (aPreparedSize) +
                                      sSuffix +
                                      "; Render size: " +
-                                     PLDebugLog.getWH (m_aRenderSize));
+                                     PLDebugLog.getWH (m_aRenderSize) +
+                                     PLDebugLog.getRotationIfPresent (m_eRotate));
     }
   }
 
@@ -226,19 +219,16 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     {
       // Recalculate, e.g. for min-max size change
       final SizeSpec aOldRenderSize = m_aRenderSize;
-      SizeSpec aNewRenderSize = getRenderSize (m_aPreparedSize);
-      if (m_eRotate.isVertical ())
-      {
-        // Swap width and height for rendering
-        aNewRenderSize = new SizeSpec (aNewRenderSize.getHeight (), aNewRenderSize.getWidth ());
-      }
-      m_aRenderSize = aNewRenderSize;
+      m_aRenderSize = getRenderSize (m_aPreparedSize);
+      m_aRenderSizeRotated = m_eRotate.apply (m_aRenderSize);
+
       if (PLDebugLog.isDebugPrepare () && !aOldRenderSize.equals (m_aRenderSize))
         PLDebugLog.debugPrepare (this,
                                  "RenderSize changed from " +
                                        PLDebugLog.getWH (aOldRenderSize) +
                                        " to " +
-                                       PLDebugLog.getWH (m_aRenderSize));
+                                       PLDebugLog.getWH (m_aRenderSize) +
+                                       PLDebugLog.getRotationIfPresent (m_eRotate));
     }
   }
 
@@ -249,26 +239,14 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     internalCheckNotPrepared ();
 
     // Handle rotation on preparation
-    final PreparationContext aPrepareCtx;
-    if (m_eRotate.isVertical ())
-    {
-      // Swap available width and height for preparation
-      aPrepareCtx = new PreparationContext (aCtx.getGlobalContext (),
-                                            aCtx.getAvailableHeight (),
-                                            aCtx.getAvailableWidth ());
-    }
-    else
-      aPrepareCtx = aCtx;
+    final PreparationContext aPrepareCtx = aCtx;
 
     if (PLDebugLog.isDebugPrepare ())
     {
       String sSuffix = "";
-      if (this instanceof IPLHasMarginBorderPadding <?>)
+      if (this instanceof final IPLHasMarginBorderPadding <?> aMBP)
       {
-        sSuffix = " with " +
-                  PLDebugLog.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
-                  " and " +
-                  PLDebugLog.getYMBP ((IPLHasMarginBorderPadding <?>) this);
+        sSuffix = " with " + PLDebugLog.getXMBP (aMBP) + " and " + PLDebugLog.getYMBP (aMBP);
       }
       PLDebugLog.debugPrepare (this,
                                "Preparing object for available " +
@@ -285,7 +263,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     _setPreparedSize (aPrepResultSize);
 
     // Return the render size
-    return m_aRenderSize;
+    return m_aRenderSizeRotated;
   }
 
   /**
@@ -303,6 +281,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     m_bPrepared = false;
     m_aPreparedSize = null;
     m_aRenderSize = null;
+    m_aRenderSizeRotated = null;
   }
 
   /**
@@ -354,8 +333,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                                                         aCtx.getStartTop (),
                                                         aCtx.getWidth (),
                                                         aCtx.getHeight ()) +
-                                    " with " +
-                                    m_eRotate);
+                                    PLDebugLog.getRotationIfPresent (m_eRotate));
 
     // Main perform after border
     if (m_eRotate.isRotate0 ())
@@ -374,36 +352,6 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       final float fPreparedW = m_aPreparedSize.getWidth ();
       final float fPreparedH = m_aPreparedSize.getHeight ();
 
-      final boolean bIsTextObject = this instanceof AbstractPLText <?>;
-
-      {
-        final float fExpectedWidth;
-        final float fExpectedHeight;
-        if (m_eRotate.isHorizontal ())
-        {
-          fExpectedWidth = fCtxW;
-          fExpectedHeight = fCtxH;
-        }
-        else
-        {
-          // Swap width and height expectation
-          fExpectedWidth = fCtxH;
-          fExpectedHeight = fCtxW;
-        }
-
-        // Just a warning
-        if (Math.abs (fExpectedWidth - fPreparedW) > 0.1 || Math.abs (fExpectedHeight - fPreparedH) > 0.1)
-        {
-          PLDebugLog.debugRender (this,
-                                  "Rotation artifact: " +
-                                        m_eRotate +
-                                        " box " +
-                                        PLDebugLog.getWH (fCtxW, fCtxH) +
-                                        " vs content " +
-                                        PLDebugLog.getWH (fPreparedW, fPreparedH));
-        }
-      }
-
       final float fTranslateX;
       final float fTranslateY;
       final float fRotate;
@@ -412,9 +360,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       {
         // 90° CW: content BL(0,0) → allocated TL(fX,fY)
         // Effective transform: T(fX,fY) × R(-90°)
-        fTranslateX = fCtxX;
+        fTranslateX = fCtxX + fPreparedH;
         fTranslateY = fCtxY;
-        fRotate = -90;
+        fRotate = 90;
       }
       else
         if (m_eRotate.isRotate180 ())
@@ -422,7 +370,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
           // 180°: content BL(0,0) → allocated TR(fX+fW,fY)
           // Effective transform: T(fX+fW,fY) × R(180°)
           fTranslateX = fCtxX + fPreparedW;
-          fTranslateY = fCtxY;
+          fTranslateY = fCtxY + fPreparedH;
           fRotate = 180;
         }
         else
@@ -431,8 +379,18 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
           // Effective transform: T(fX+fHc,fY-fWc) × R(+90°)
           fTranslateX = fCtxX + fPreparedH;
           fTranslateY = fCtxY - fPreparedW;
-          fRotate = 90;
+          fRotate = 270;
         }
+
+      if (PLDebugLog.isDebugRender ())
+        PLDebugLog.debugRender (this,
+                                "  ApplyRotation: Rotate(" +
+                                      fRotate +
+                                      "); Translate(" +
+                                      fTranslateX +
+                                      ", " +
+                                      fTranslateY +
+                                      ")");
 
       // Rotate first, then translate — two transforms achieve T(tx,ty) × R(angle)
       // because PDFBox pre-multiplies: CTM = M × CTM_old, so call order is R then T
@@ -445,30 +403,20 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                                                                0,
                                                                fPreparedH,
                                                                fPreparedW,
-                                                               fPreparedH,
-                                                               aRotateMatrix,
-                                                               aTransformMatrix);
+                                                               fPreparedH);
 
-      if (bIsTextObject)
+      aCS.saveGraphicsState ();
+      try
       {
+        aCS.getContentStream ().transform (aRotateMatrix);
+        aCS.getContentStream ().transform (aTransformMatrix);
+
         // Render with new context
         onRender (aNewCtx);
       }
-      else
+      finally
       {
-        aCS.saveGraphicsState ();
-        try
-        {
-          aCS.getContentStream ().transform (aRotateMatrix);
-          aCS.getContentStream ().transform (aTransformMatrix);
-
-          // Render with new context
-          onRender (aNewCtx);
-        }
-        finally
-        {
-          aCS.restoreGraphicsState ();
-        }
+        aCS.restoreGraphicsState ();
       }
     }
   }
@@ -482,6 +430,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                             .appendIfNotNull ("PrepareAvailableSize", m_aPrepareAvailableSize)
                             .appendIfNotNull ("PreparedSize", m_aPreparedSize)
                             .appendIfNotNull ("RenderSize", m_aRenderSize)
+                            .appendIfNotNull ("RenderSizeRotated", m_aRenderSizeRotated)
                             .getToString ();
   }
 }

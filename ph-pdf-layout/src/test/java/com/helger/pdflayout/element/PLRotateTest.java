@@ -24,7 +24,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.util.Matrix;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 
 import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PLDebugTestRule;
@@ -45,42 +44,55 @@ import com.helger.pdflayout.spec.PreloadFont;
 public final class PLRotateTest
 {
   @Rule
-  public final TestRule m_aRule = new PLDebugTestRule ();
+  public final PLDebugTestRule m_aRule = new PLDebugTestRule ();
 
   @Test
   public void testRotate () throws PDFCreationException
   {
+    m_aRule.enableLogging ();
     final FontSpec aFS10 = new FontSpec (PreloadFont.REGULAR, 10);
     final FontSpec aFS20 = new FontSpec (PreloadFont.REGULAR, 20);
     final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    aPS1.setMargin (10);
+    aPS1.setBorder (PLColor.CYAN);
 
     // 1. Text rotated
-    aPS1.addElement (new PLText ("Ident 0 deg", aFS20).setBorder (PLColor.BLUE));
-    aPS1.addElement (new PLText ("Ident 90 deg", aFS20).setRotate (EPLRotate.ROTATE_90).setBorder (PLColor.BLUE));
-    aPS1.addElement (new PLText ("Ident 180 deg", aFS20).setRotate (EPLRotate.ROTATE_180).setBorder (PLColor.BLUE));
-    aPS1.addElement (new PLText ("Ident 270 deg", aFS20).setRotate (EPLRotate.ROTATE_270).setBorder (PLColor.BLUE));
+    aPS1.addElement (new PLText ("Ident 0 deg", aFS20).setID ("rotate0").setBorder (PLColor.BLUE));
+    aPS1.addElement (new PLText ("Ident 90 deg", aFS20).setID ("rotate90")
+                                                       .setRotate (EPLRotate.ROTATE_90)
+                                                       .setBorder (PLColor.BLUE));
+    aPS1.addElement (new PLText ("Ident 180 deg", aFS20).setID ("rotate180")
+                                                        .setRotate (EPLRotate.ROTATE_180)
+                                                        .setBorder (PLColor.BLUE));
+    aPS1.addElement (new PLText ("Ident 270 deg", aFS20).setID ("rotate270")
+                                                        .setRotate (EPLRotate.ROTATE_270)
+                                                        .setBorder (PLColor.BLUE));
 
     // 2. Box rotated 90 containing Text 0
-    aPS1.addElement (new PLBox ().setBorder (PLColor.RED)
+    aPS1.addElement (new PLBox ().setID ("box90-0")
+                                 .setBorder (PLColor.RED)
                                  .setVertSplittable (false)
                                  .setRotate (EPLRotate.ROTATE_90)
                                  .setElement (new PLText ("Box 90 / Text 0", aFS10).setBorder (PLColor.GREEN)));
 
     // 3. Box rotated 0 containing Text 90
-    aPS1.addElement (new PLBox ().setBorder (PLColor.RED)
+    aPS1.addElement (new PLBox ().setID ("box0-90")
+                                 .setBorder (PLColor.RED)
                                  .setVertSplittable (false)
                                  .setElement (new PLText ("Box 0 / Text 90", aFS10).setRotate (EPLRotate.ROTATE_90)
                                                                                    .setBorder (PLColor.GREEN)));
 
     // 4. Box rotated 90 containing Text 90 -> 180
-    aPS1.addElement (new PLBox ().setBorder (PLColor.RED)
+    aPS1.addElement (new PLBox ().setID ("box90-90")
+                                 .setBorder (PLColor.RED)
                                  .setVertSplittable (false)
                                  .setRotate (EPLRotate.ROTATE_90)
                                  .setElement (new PLText ("Box 90 / Text 90", aFS10).setRotate (EPLRotate.ROTATE_90)
                                                                                     .setBorder (PLColor.GREEN)));
 
     // 5. Fixed size Box rotated 90
-    aPS1.addElement (new PLBox ().setBorder (PLColor.MAGENTA)
+    aPS1.addElement (new PLBox ().setID ("box90-min-0")
+                                 .setBorder (PLColor.MAGENTA)
                                  .setVertSplittable (false)
                                  .setMinWidth (100)
                                  .setMinHeight (50)

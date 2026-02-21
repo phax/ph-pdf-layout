@@ -24,6 +24,7 @@ import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.pdflayout.base.IPLHasMarginBorderPadding;
 import com.helger.pdflayout.base.IPLObject;
+import com.helger.pdflayout.spec.EPLRotate;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
@@ -265,5 +266,11 @@ public final class PLDebugLog
            "=" +
            aElement.getOutlineYSum () +
            "]";
+  }
+
+  @NonNull
+  public static String getRotationIfPresent (@NonNull final EPLRotate eRotate)
+  {
+    return eRotate.isRotate0 () ? "" : "; Rotation: [" + eRotate.getAngleDegrees () + "°]";
   }
 }

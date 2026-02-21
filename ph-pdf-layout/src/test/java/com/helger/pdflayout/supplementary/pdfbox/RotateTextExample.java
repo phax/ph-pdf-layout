@@ -1,4 +1,4 @@
-package com.helger.pdflayout.spec;
+package com.helger.pdflayout.supplementary.pdfbox;
 
 import java.awt.Color;
 import java.io.IOException;
