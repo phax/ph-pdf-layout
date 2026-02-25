@@ -346,8 +346,6 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       // Prepare rotation
       final float fCtxX = aCtx.getStartLeft ();
       final float fCtxY = aCtx.getStartTop ();
-      final float fCtxW = aCtx.getWidth ();
-      final float fCtxH = aCtx.getHeight ();
 
       final float fPreparedW = m_aPreparedSize.getWidth ();
       final float fPreparedH = m_aPreparedSize.getHeight ();
@@ -360,9 +358,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       {
         // 90° CW: content BL(0,0) → allocated TL(fX,fY)
         // Effective transform: T(fX,fY) × R(-90°)
-        fTranslateX = fCtxX + fPreparedH;
+        fTranslateX = fCtxX;
         fTranslateY = fCtxY;
-        fRotate = 90;
+        fRotate = -90;
       }
       else
         if (m_eRotate.isRotate180 ())
@@ -370,7 +368,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
           // 180°: content BL(0,0) → allocated TR(fX+fW,fY)
           // Effective transform: T(fX+fW,fY) × R(180°)
           fTranslateX = fCtxX + fPreparedW;
-          fTranslateY = fCtxY + fPreparedH;
+          fTranslateY = fCtxY;
           fRotate = 180;
         }
         else
@@ -379,7 +377,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
           // Effective transform: T(fX+fHc,fY-fWc) × R(+90°)
           fTranslateX = fCtxX + fPreparedH;
           fTranslateY = fCtxY - fPreparedW;
-          fRotate = 270;
+          fRotate = 90;
         }
 
       if (PLDebugLog.isDebugRender ())
@@ -392,10 +390,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                                       fTranslateY +
                                       ")");
 
-      // Rotate first, then translate — two transforms achieve T(tx,ty) × R(angle)
-      // because PDFBox pre-multiplies: CTM = M × CTM_old, so call order is R then T
-      final Matrix aRotateMatrix = Matrix.getRotateInstance (Math.toRadians (fRotate), 0, 0);
+      // Call order: T first, then R (each pre-multiplies)
       final Matrix aTransformMatrix = Matrix.getTranslateInstance (fTranslateX, fTranslateY);
+      final Matrix aRotateMatrix = Matrix.getRotateInstance (Math.toRadians (fRotate), 0, 0);
 
       final PDPageContentStreamWithCache aCS = aCtx.getContentStream ();
       final PageRenderContext aNewCtx = new PageRenderContext (aCtx.getElementType (),
@@ -408,8 +405,8 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
       aCS.saveGraphicsState ();
       try
       {
-        aCS.getContentStream ().transform (aRotateMatrix);
         aCS.getContentStream ().transform (aTransformMatrix);
+        aCS.getContentStream ().transform (aRotateMatrix);
 
         // Render with new context
         onRender (aNewCtx);
