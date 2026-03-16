@@ -1,12 +1,13 @@
-target/
-
+.claude/
+.settings/ 
 # Unit test created PDFs
 pdf/
+target/
 
-.pmd
-*.iml
-.settings/ 
-.project 
 .classpath 
+.pmd
+.project 
 release.properties
 zz
+
+*.iml
