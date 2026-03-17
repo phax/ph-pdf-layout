@@ -73,7 +73,8 @@
   </developers>
 
   <properties>
-    <pdfbox.version>3.0.7</pdfbox.version>
+    <!-- 3.0.7 has a regression with e.g. text over image -->
+    <pdfbox.version>3.0.6</pdfbox.version>
     <pdfcompare.version>1.2.8</pdfcompare.version>
   </properties>
 
