@@ -805,6 +805,11 @@ public class PageLayoutPDF implements IPLVisitable
         }
       }
     } // close aTmpOS
+    finally
+    {
+      // Make sure the source is closed as well
+      StreamHelper.close (aOS);
+    }
 
     return this;
   }

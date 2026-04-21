@@ -56,6 +56,8 @@ public class SizeSpec implements Serializable
    */
   public SizeSpec (@Nonnegative final float fWidth, @Nonnegative final float fHeight)
   {
+    // Note: negative values can occur in intermediate layout calculations
+    // (e.g. elements with padding/border exceeding available space)
     // ValueEnforcer.isGE0 (fWidth, "Width");
     // ValueEnforcer.isGE0 (fHeight, "Height");
 

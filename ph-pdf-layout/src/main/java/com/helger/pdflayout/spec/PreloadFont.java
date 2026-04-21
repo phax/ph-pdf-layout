@@ -175,7 +175,11 @@ public final class PreloadFont implements IHasID <String>, Serializable
     m_sID = StreamHelper.readSafeUTF (aOIS);
     final String sBaseFontName = StreamHelper.readSafeUTF (aOIS);
     m_aFont = STANDARD_14.get (sBaseFontName);
-    m_aFontRes = (IFontResource) aOIS.readObject ();
+    final Object aDeserialized = aOIS.readObject ();
+    // Validate the deserialized type to mitigate CWE-502
+    if (aDeserialized != null && !(aDeserialized instanceof IFontResource))
+      throw new IOException ("Unexpected deserialized type: " + aDeserialized.getClass ().getName ());
+    m_aFontRes = (IFontResource) aDeserialized;
     m_bEmbed = aOIS.readBoolean ();
     m_nFallbackCodePoint = aOIS.readInt ();
     _parseFontRes ();

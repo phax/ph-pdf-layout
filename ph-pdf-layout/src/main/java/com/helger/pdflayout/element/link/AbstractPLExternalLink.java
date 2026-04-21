@@ -196,7 +196,7 @@ public abstract class AbstractPLExternalLink <IMPLTYPE extends AbstractPLExterna
    * @since v7.4.1
    */
   @NonNull
-  public final IMPLTYPE setLinkDashPattern (@Nullable final PLColor aLinkColor)
+  public final IMPLTYPE setLinkColor (@Nullable final PLColor aLinkColor)
   {
     internalCheckNotPrepared ();
     m_aLinkColor = aLinkColor;

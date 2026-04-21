@@ -23,8 +23,8 @@ import com.helger.annotation.concurrent.Immutable;
 import com.helger.base.tostring.ToStringGenerator;
 
 /**
- * The current context for preparing an element. The preparation context depends
- * on the location of an element.
+ * The current context for preparing an element. The preparation context depends on the location of
+ * an element.
  *
  * @author Philip Helger
  */
@@ -39,19 +39,20 @@ public final class PreparationContext
    * Constructor
    *
    * @param aGlobalCtx
-   *        The global preparation context worked upon. May be
-   *        <code>null</code>.
+   *        The global preparation context worked upon. May be <code>null</code>.
    * @param fAvailableWidth
-   *        The available width of the surrounding element. Includes margin,
-   *        border and padding of the contained element. Should be &gt; 0.
+   *        The available width of the surrounding element. Includes margin, border and padding of
+   *        the contained element. Should be &gt; 0.
    * @param fAvailableHeight
-   *        The available height of the surrounding element. Includes margin,
-   *        border and padding of the contained element. Should be &gt; 0.
+   *        The available height of the surrounding element. Includes margin, border and padding of
+   *        the contained element. Should be &gt; 0.
    */
   public PreparationContext (@Nullable final PreparationContextGlobal aGlobalCtx,
                              @Nonnegative final float fAvailableWidth,
                              @Nonnegative final float fAvailableHeight)
   {
+    // Note: negative values can occur legitimately when elements with
+    // padding/border exceed the available space, so no validation here
     // ValueEnforcer.isGE0 (fAvailableWidth, "AvailableWidth");
     // ValueEnforcer.isGE0 (fAvailableHeight, "AvailableHeight");
 

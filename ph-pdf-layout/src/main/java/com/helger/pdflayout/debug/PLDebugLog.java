@@ -72,13 +72,13 @@ public final class PLDebugLog
 
   public static final boolean DEFAULT_DEBUG = false;
 
-  private static IPLDebugOutput s_aDebugOutput = PLDebugOutputLogger.INSTANCE;
-  private static boolean s_bDebugText = DEFAULT_DEBUG;
-  private static boolean s_bDebugFont = DEFAULT_DEBUG;
-  private static boolean s_bDebugSplit = DEFAULT_DEBUG;
-  private static boolean s_bDebugPrepare = DEFAULT_DEBUG;
-  private static boolean s_bDebugRender = DEFAULT_DEBUG;
-  private static boolean s_bDebugConsistency = DEFAULT_DEBUG;
+  private static volatile IPLDebugOutput s_aDebugOutput = PLDebugOutputLogger.INSTANCE;
+  private static volatile boolean s_bDebugText = DEFAULT_DEBUG;
+  private static volatile boolean s_bDebugFont = DEFAULT_DEBUG;
+  private static volatile boolean s_bDebugSplit = DEFAULT_DEBUG;
+  private static volatile boolean s_bDebugPrepare = DEFAULT_DEBUG;
+  private static volatile boolean s_bDebugRender = DEFAULT_DEBUG;
+  private static volatile boolean s_bDebugConsistency = DEFAULT_DEBUG;
 
   private PLDebugLog ()
   {}

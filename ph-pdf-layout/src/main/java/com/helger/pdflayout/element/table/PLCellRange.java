@@ -18,8 +18,10 @@ package com.helger.pdflayout.element.table;
 
 import org.jspecify.annotations.NonNull;
 
+import com.helger.annotation.Nonnegative;
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.clone.ICloneable;
+import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
 
@@ -105,8 +107,9 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
    * @return this for chaining
    */
   @NonNull
-  public final PLCellRange setFirstRow (final int nFirstRow)
+  public final PLCellRange setFirstRow (@Nonnegative final int nFirstRow)
   {
+    ValueEnforcer.isGE0 (nFirstRow, "FirstRow");
     m_nFirstRow = nFirstRow;
     return this;
   }
@@ -117,8 +120,9 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
    * @return this for chaining
    */
   @NonNull
-  public final PLCellRange setLastRow (final int nLastRow)
+  public final PLCellRange setLastRow (@Nonnegative final int nLastRow)
   {
+    ValueEnforcer.isGE0 (nLastRow, "LastRow");
     m_nLastRow = nLastRow;
     return this;
   }
@@ -129,8 +133,9 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
    * @return this for chaining
    */
   @NonNull
-  public final PLCellRange setFirstColumn (final int nFirstCol)
+  public final PLCellRange setFirstColumn (@Nonnegative final int nFirstCol)
   {
+    ValueEnforcer.isGE0 (nFirstCol, "FirstColumn");
     m_nFirstCol = nFirstCol;
     return this;
   }
@@ -140,8 +145,9 @@ public class PLCellRange implements IPLCellRange, ICloneable <PLCellRange>
    *        column number for the lower right hand corner
    * @return this for chaining
    */
-  public final PLCellRange setLastColumn (final int nLastCol)
+  public final PLCellRange setLastColumn (@Nonnegative final int nLastCol)
   {
+    ValueEnforcer.isGE0 (nLastCol, "LastColumn");
     m_nLastCol = nLastCol;
     return this;
   }

@@ -56,6 +56,8 @@ public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeCo
   public LineDashPatternSpec convertToNative (@NonNull final IMicroElement aElement)
   {
     final float fPhase = StringParser.parseFloat (aElement.getAttributeValue (ATTR_PHASE), Float.NaN);
+    if (Float.isNaN (fPhase))
+      throw new IllegalArgumentException ("Failed to parse LineDashPatternSpec phase value");
     final ICommonsList <IMicroElement> aChildren = aElement.getAllChildElements (ELEMENT_PATTERN);
     final float [] aPattern = new float [aChildren.size ()];
     int nIndex = 0;
@@ -64,6 +66,8 @@ public final class LineDashPatternSpecMicroTypeConverter implements IMicroTypeCo
       aPattern[nIndex] = ePattern.getAttributeValueAsFloat (ATTR_ITEM, Float.NaN);
       if (Float.isNaN (aPattern[nIndex]))
         aPattern[nIndex] = ePattern.getAttributeValueAsFloat ("patternitem", Float.NaN);
+      if (Float.isNaN (aPattern[nIndex]))
+        throw new IllegalArgumentException ("Failed to parse LineDashPatternSpec pattern value at index " + nIndex);
       nIndex++;
     }
 

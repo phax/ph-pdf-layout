@@ -104,9 +104,9 @@ public final class PLDebugRender
     }
   }
 
-  private static boolean s_bDebugRender;
-  private static IDebugColorProvider s_aDebugOutlineColorProvider;
-  private static IDebugBorderProvider s_aDebugBorderProvider;
+  private static volatile boolean s_bDebugRender;
+  private static volatile IDebugColorProvider s_aDebugOutlineColorProvider;
+  private static volatile IDebugBorderProvider s_aDebugBorderProvider;
 
   static
   {
