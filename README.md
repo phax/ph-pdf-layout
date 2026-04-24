@@ -65,6 +65,9 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.1.1 - work in progress
+* Removed OSGI bundling
+
 v8.1.0 - 2025.11.16
 * Updated to PDFBox 3.0.6
 * Updated to ph-commons 12.1.0

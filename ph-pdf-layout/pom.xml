@@ -25,7 +25,7 @@
     <version>8.1.1-SNAPSHOT</version>
   </parent>
   <artifactId>ph-pdf-layout</artifactId>
-  <packaging>bundle</packaging>
+  <packaging>jar</packaging>
   <name>ph-pdf-layout</name>
   <description>Library for creating nicely layouted PDF documents based on PDFBox</description>
   <url>https://github.com/phax/ph-pdf-layout/ph-pdf-layout</url>
@@ -75,12 +75,14 @@
       <artifactId>ph-xml</artifactId>
       <optional>true</optional>
     </dependency>
-    <!-- For reading PDFs with contained JPEGs -->    <dependency>
+    <!-- For reading PDFs with contained JPEGs -->
+    <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>jbig2-imageio</artifactId>
       <optional>true</optional>
     </dependency>
-    <!-- For reading encrypted PDFs -->    <!--  
+    <!-- For reading encrypted PDFs -->
+    <!--  
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcmail-jdk18on</artifactId>
@@ -216,25 +218,6 @@
       </resource>
     </resources>
     <plugins>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <instructions>
-            <Automatic-Module-Name>com.helger.pdflayout</Automatic-Module-Name>
-            <Export-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
-              org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*</Export-Package>
-            <Private-Package>org.apache.pdfbox.pdmodel.font;-split-package:=first,
-              org.apache.pdfbox.pdmodel;-split-package:=first,
-              com.helger.pdflayout.*</Private-Package>
-            <Import-Package>!org.jspecify.annotations.*,*</Import-Package>
-            <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"</Require-Capability>
-            <Provide-Capability>osgi.serviceloader; osgi.serviceloader=com.helger.base.thirdparty.IThirdPartyModuleProviderSPI</Provide-Capability>
-          </instructions>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>de.thetaphi</groupId>
         <artifactId>forbiddenapis</artifactId>
