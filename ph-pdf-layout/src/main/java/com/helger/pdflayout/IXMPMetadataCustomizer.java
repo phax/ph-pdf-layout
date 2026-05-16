@@ -21,6 +21,10 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Callback interface to customize XMP Metadata.
+ * <p>
+ * <b>Trust boundary:</b> an {@link IXMPMetadataCustomizer} can add, replace or remove any XMP
+ * schema before the metadata is serialized into the PDF. Only register customizers from trusted
+ * code - in particular, do not let untrusted input choose the implementation.
  *
  * @author stmuecke
  * @author Philip Helger

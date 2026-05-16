@@ -17,9 +17,6 @@
 package com.helger.pdflayout.spec;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import org.apache.fontbox.ttf.HeaderTable;
 import org.apache.fontbox.ttf.HorizontalHeaderTable;
@@ -38,14 +35,12 @@ import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.CheckForSigned;
 import com.helger.annotation.Nonempty;
-import com.helger.annotation.WillNotClose;
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.equals.EqualsHelper;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.id.IHasID;
-import com.helger.base.io.stream.StreamHelper;
 import com.helger.base.state.ESuccess;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.collection.commons.CommonsLinkedHashMap;
@@ -55,13 +50,12 @@ import com.helger.pdflayout.debug.PLDebugLog;
 
 /**
  * Represents an abstract font that is potentially not yet loaded and can be used in multiple
- * documents.<br>
- * Note: {@link PDFont} is not Serializable.
+ * documents.
  *
  * @author Philip Helger
  */
 @NotThreadSafe
-public final class PreloadFont implements IHasID <String>, Serializable
+public final class PreloadFont implements IHasID <String>
 {
   private static final int DEFAULT_FALLBACK_CODE_POINT = '?';
 
@@ -118,15 +112,15 @@ public final class PreloadFont implements IHasID <String>, Serializable
   /** PDF built-in font Zapf Dingbats */
   public static final PreloadFont ZAPF_DINGBATS = _createPredefined (Standard14Fonts.FontName.ZAPF_DINGBATS);
 
-  private String m_sID;
-  private Standard14Fonts.FontName m_eFontName;
-  private IFontResource m_aFontRes;
-  private boolean m_bEmbed;
-  private int m_nFallbackCodePoint;
+  private final String m_sID;
+  private final Standard14Fonts.FontName m_eFontName;
+  private final IFontResource m_aFontRes;
+  private final boolean m_bEmbed;
+  private final int m_nFallbackCodePoint;
   private float m_fFontLineHeight;
   // Status vars
-  private transient TrueTypeFont m_aTTF;
-  private transient OpenTypeFont m_aOTF;
+  private TrueTypeFont m_aTTF;
+  private OpenTypeFont m_aOTF;
 
   private void _parseFontRes () throws IOException
   {
@@ -166,32 +160,6 @@ public final class PreloadFont implements IHasID <String>, Serializable
         default:
           throw new IllegalArgumentException ("Cannot parse font resources of type " + m_aFontRes.getFontType ());
       }
-  }
-
-  private void readObject (@NonNull @WillNotClose final ObjectInputStream aOIS) throws IOException,
-                                                                                ClassNotFoundException
-  {
-    m_sID = StreamHelper.readSafeUTF (aOIS);
-    final String sBaseFontName = StreamHelper.readSafeUTF (aOIS);
-    m_eFontName = STANDARD_14.get (sBaseFontName);
-    final Object aDeserialized = aOIS.readObject ();
-    // Validate the deserialized type to mitigate CWE-502
-    if (aDeserialized != null && !(aDeserialized instanceof IFontResource))
-      throw new IOException ("Unexpected deserialized type: " + aDeserialized.getClass ().getName ());
-    m_aFontRes = (IFontResource) aDeserialized;
-    m_bEmbed = aOIS.readBoolean ();
-    m_nFallbackCodePoint = aOIS.readInt ();
-    _parseFontRes ();
-  }
-
-  private void writeObject (@NonNull @WillNotClose final ObjectOutputStream aOOS) throws IOException
-  {
-    StreamHelper.writeSafeUTF (aOOS, m_sID);
-    StreamHelper.writeSafeUTF (aOOS, m_eFontName != null ? m_eFontName.getName () : null);
-    aOOS.writeObject (m_aFontRes);
-    aOOS.writeBoolean (m_bEmbed);
-    aOOS.writeInt (m_nFallbackCodePoint);
-    // TTF and OTF are not written
   }
 
   /**

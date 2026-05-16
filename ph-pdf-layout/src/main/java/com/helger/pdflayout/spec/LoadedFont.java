@@ -18,7 +18,6 @@ package com.helger.pdflayout.spec;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.List;
 
 import org.apache.pdfbox.pdmodel.font.PDCIDFont;
@@ -34,9 +33,11 @@ import org.slf4j.LoggerFactory;
 import com.helger.annotation.CheckForSigned;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.WillNotClose;
-import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.concurrent.GuardedBy;
+import com.helger.annotation.concurrent.ThreadSafe;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
 import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.concurrent.SimpleReadWriteLock;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.io.nonblocking.NonBlockingByteArrayOutputStream;
@@ -51,20 +52,23 @@ import com.helger.pdflayout.debug.PLDebugLog;
 
 /**
  * This class represents a wrapper around a {@link PDFont} that is uniquely assigned to a
- * PDDocument.
+ * PDDocument. Instances hold lazily populated per-codepoint caches guarded by a
+ * {@link SimpleReadWriteLock}, so concurrent lookups are safe. Note that the underlying
+ * {@link PDFont} is not thread-safe in PDFBox, so concurrent use is only safe for the read-only
+ * code paths exercised by this wrapper.
  *
  * @author Philip Helger
  */
-@Immutable
+@ThreadSafe
 @MustImplementEqualsAndHashcode
 public class LoadedFont
 {
-  private static final class EncodedCodePoint implements Serializable
+  private static final class EncodedCodePoint
   {
     private final int m_nCodePoint;
     private final byte [] m_aEncoded;
     // Lazy inited
-    private Integer m_aEncodedValue;
+    private volatile Integer m_aEncodedValue;
 
     private EncodedCodePoint (final int nCodePoint, final byte @NonNull [] aEncoded)
     {
@@ -120,7 +124,10 @@ public class LoadedFont
   private final float m_fLineHeight;
   private final float m_fDescent;
   private final boolean m_bFontWillBeSubset;
+  private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock ();
+  @GuardedBy ("m_aRWLock")
   private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <> ();
+  @GuardedBy ("m_aRWLock")
   private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
 
   public LoadedFont (@NonNull final PDFont aFont,
@@ -217,32 +224,48 @@ public class LoadedFont
   @NonNull
   private EncodedCodePoint _getEncodedCodePoint (final int nCodePoint) throws IOException
   {
-    EncodedCodePoint aECP = m_aEncodedCodePointCache.get (nCodePoint);
-    if (aECP == null)
-    {
-      // Encode code point according to the font rules
-      aECP = encodeCodepointWithFallback (m_aFont, nCodePoint, m_nFallbackCodePoint);
-      // put in cache
-      m_aEncodedCodePointCache.put (nCodePoint, aECP);
-    }
-    return aECP;
+    // Fast path: shared read lock
+    final EncodedCodePoint aCached = m_aRWLock.readLockedGet ( () -> m_aEncodedCodePointCache.get (nCodePoint));
+    if (aCached != null)
+      return aCached;
+
+    // Slow path: exclusive write lock with double-check
+    return m_aRWLock.writeLockedGetThrowing ( () -> {
+      EncodedCodePoint aECP = m_aEncodedCodePointCache.get (nCodePoint);
+      if (aECP == null)
+      {
+        aECP = encodeCodepointWithFallback (m_aFont, nCodePoint, m_nFallbackCodePoint);
+        m_aEncodedCodePointCache.put (nCodePoint, aECP);
+      }
+      return aECP;
+    });
   }
 
   private float _getCodePointWidth (final int nCodePoint) throws IOException
   {
-    float fWidth = m_aCodePointWidthCache.get (nCodePoint, -1f);
-    if (fWidth < 0)
+    // Fast path: shared read lock
+    final double dCached = m_aRWLock.readLockedDouble ( () -> m_aCodePointWidthCache.get (nCodePoint, -1f));
+    if (dCached >= 0)
+      return (float) dCached;
+
+    // Slow path: exclusive write lock with double-check. _getEncodedCodePoint is invoked here
+    // and may itself re-acquire the lock - that is safe since SimpleReadWriteLock is reentrant.
+    m_aRWLock.writeLock ().lock ();
+    try
     {
-      // Get encoded code point (from its own cache)
-      final EncodedCodePoint aECP = _getEncodedCodePoint (nCodePoint);
-
-      // Get width of encoded value
-      fWidth = m_aFont.getWidth (aECP.getEncodedIntValue ());
-
-      // Map code point to width to save encoding
-      m_aCodePointWidthCache.put (nCodePoint, fWidth);
+      float fWidth = m_aCodePointWidthCache.get (nCodePoint, -1f);
+      if (fWidth < 0)
+      {
+        final EncodedCodePoint aECP = _getEncodedCodePoint (nCodePoint);
+        fWidth = m_aFont.getWidth (aECP.getEncodedIntValue ());
+        m_aCodePointWidthCache.put (nCodePoint, fWidth);
+      }
+      return fWidth;
     }
-    return fWidth;
+    finally
+    {
+      m_aRWLock.writeLock ().unlock ();
+    }
   }
 
   @Nonnegative
@@ -253,6 +276,7 @@ public class LoadedFont
       // Toooo slow
       return PLConvert.getForFontSize (m_aFont.getStringWidth (sText), fFontSize);
     }
+
     float fWidth = 0;
 
     // Iterate on code point basis
@@ -280,7 +304,7 @@ public class LoadedFont
    * @throws IOException
    *         In case something goes wrong
    */
-  public byte @NonNull[] getEncodedForPageContentStream (@NonNull final String sText) throws IOException
+  public byte @NonNull [] getEncodedForPageContentStream (@NonNull final String sText) throws IOException
   {
     // Minimum is 1*string length
     // Maximum is 4*string length
