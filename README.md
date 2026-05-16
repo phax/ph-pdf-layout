@@ -66,7 +66,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 # News and Noteworthy
 
 v8.1.1 - 2026-05-16
-* Updated to PDFBox 3.0.6
+* Updated to PDFBox 3.0.7
 * Removed OSGI bundling
 * Fixed thread-safety issue with preload Standard 14 fonts. See [#65](https://github.com/phax/ph-pdf-layout/issues/65) - thx @andreasa-winenet
 
