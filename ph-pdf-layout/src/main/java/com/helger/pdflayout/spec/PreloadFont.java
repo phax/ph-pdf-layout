@@ -262,7 +262,8 @@ public final class PreloadFont implements IHasID <String>, Serializable
     if (m_eFontName != null)
     {
       // Pre-defined font
-      return new PDType1Font(m_eFontName);
+      // Create a new instance every time
+      return new PDType1Font (m_eFontName);
     }
 
     final PDFont ret;
