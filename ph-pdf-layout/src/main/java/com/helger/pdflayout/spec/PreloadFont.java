@@ -66,7 +66,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   private static final int DEFAULT_FALLBACK_CODE_POINT = '?';
 
   // Must be defined before the standard fonts are registered
-  private static final ICommonsOrderedMap <String, PDType1Font> STANDARD_14 = new CommonsLinkedHashMap <> ();
+  private static final ICommonsOrderedMap <String, Standard14Fonts.FontName> STANDARD_14 = new CommonsLinkedHashMap <> ();
   private static final ICommonsOrderedMap <String, PreloadFont> STANDARD_14_PF = new CommonsLinkedHashMap <> ();
 
   @NonNull
@@ -83,10 +83,9 @@ public final class PreloadFont implements IHasID <String>, Serializable
       else
         nFallbackCodePoint = DEFAULT_FALLBACK_CODE_POINT;
 
-    final PDType1Font aFont = new PDType1Font (eFontName);
-    final PreloadFont ret = new PreloadFont (aFont, nFallbackCodePoint);
-    STANDARD_14.put (aFont.getBaseFont (), aFont);
-    STANDARD_14_PF.put (aFont.getBaseFont (), ret);
+    final PreloadFont ret = new PreloadFont (eFontName, nFallbackCodePoint);
+    STANDARD_14.put (eFontName.getName (), eFontName);
+    STANDARD_14_PF.put (eFontName.getName (), ret);
     return ret;
   }
 
@@ -120,7 +119,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   public static final PreloadFont ZAPF_DINGBATS = _createPredefined (Standard14Fonts.FontName.ZAPF_DINGBATS);
 
   private String m_sID;
-  private PDFont m_aFont;
+  private Standard14Fonts.FontName m_eFontName;
   private IFontResource m_aFontRes;
   private boolean m_bEmbed;
   private int m_nFallbackCodePoint;
@@ -174,7 +173,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   {
     m_sID = StreamHelper.readSafeUTF (aOIS);
     final String sBaseFontName = StreamHelper.readSafeUTF (aOIS);
-    m_aFont = STANDARD_14.get (sBaseFontName);
+    m_eFontName = STANDARD_14.get (sBaseFontName);
     final Object aDeserialized = aOIS.readObject ();
     // Validate the deserialized type to mitigate CWE-502
     if (aDeserialized != null && !(aDeserialized instanceof IFontResource))
@@ -188,7 +187,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   private void writeObject (@NonNull @WillNotClose final ObjectOutputStream aOOS) throws IOException
   {
     StreamHelper.writeSafeUTF (aOOS, m_sID);
-    StreamHelper.writeSafeUTF (aOOS, m_aFont != null ? m_aFont.getName () : null);
+    StreamHelper.writeSafeUTF (aOOS, m_eFontName != null ? m_eFontName.getName () : null);
     aOOS.writeObject (m_aFontRes);
     aOOS.writeBoolean (m_bEmbed);
     aOOS.writeInt (m_nFallbackCodePoint);
@@ -198,16 +197,16 @@ public final class PreloadFont implements IHasID <String>, Serializable
   /**
    * Constructor for a predefined font
    *
-   * @param aFont
-   *        The font to use. May not be <code>null</code>.
+   * @param eFontName
+   *        The font name to use. May not be <code>null</code>.
    * @param nFallbackCodePoint
    *        The fallback code point to be used if a character is not contained in the font.
    */
-  private PreloadFont (@NonNull final PDFont aFont, final int nFallbackCodePoint)
+  private PreloadFont (final Standard14Fonts.@NonNull FontName eFontName, final int nFallbackCodePoint)
   {
-    ValueEnforcer.notNull (aFont, "Font");
-    m_sID = aFont.getName ();
-    m_aFont = aFont;
+    ValueEnforcer.notNull (eFontName, "FontName");
+    m_sID = eFontName.getName ();
+    m_eFontName = eFontName;
     m_aFontRes = null;
     m_bEmbed = false;
     m_nFallbackCodePoint = nFallbackCodePoint;
@@ -232,7 +231,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   {
     ValueEnforcer.notNull (aFontRes, "FontResource");
     m_sID = aFontRes.getID ();
-    m_aFont = null;
+    m_eFontName = null;
     m_aFontRes = aFontRes;
     m_bEmbed = bEmbed;
     m_nFallbackCodePoint = nFallbackCodePoint;
@@ -260,10 +259,10 @@ public final class PreloadFont implements IHasID <String>, Serializable
   @NonNull
   public PDFont loadPDFont (@NonNull final PDDocument aDoc) throws IOException
   {
-    if (m_aFont != null)
+    if (m_eFontName != null)
     {
       // Pre-defined font
-      return m_aFont;
+      return new PDType1Font(m_eFontName);
     }
 
     final PDFont ret;
@@ -374,7 +373,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final PreloadFont rhs = (PreloadFont) o;
-    return EqualsHelper.equals (m_aFont, rhs.m_aFont) &&
+    return EqualsHelper.equals (m_eFontName, rhs.m_eFontName) &&
            EqualsHelper.equals (m_aFontRes, rhs.m_aFontRes) &&
            m_bEmbed == rhs.m_bEmbed &&
            m_nFallbackCodePoint == rhs.m_nFallbackCodePoint;
@@ -383,7 +382,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aFont)
+    return new HashCodeGenerator (this).append (m_eFontName)
                                        .append (m_aFontRes)
                                        .append (m_bEmbed)
                                        .append (m_nFallbackCodePoint)
@@ -394,7 +393,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
   public String toString ()
   {
     return new ToStringGenerator (null).append ("ID", m_sID)
-                                       .appendIfNotNull ("Font", m_aFont)
+                                       .appendIfNotNull ("FontName", m_eFontName)
                                        .appendIfNotNull ("FontResource", m_aFontRes)
                                        .append ("Embed", m_bEmbed)
                                        .append ("FallbackCodePoint", m_nFallbackCodePoint)
@@ -451,7 +450,7 @@ public final class PreloadFont implements IHasID <String>, Serializable
 
   @NonNull
   @ReturnsMutableCopy
-  public static ICommonsOrderedMap <String, PDType1Font> getAllStandard14Fonts ()
+  public static ICommonsOrderedMap <String, Standard14Fonts.FontName> getAllStandard14Fonts ()
   {
     return STANDARD_14.getClone ();
   }
