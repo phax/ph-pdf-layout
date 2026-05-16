@@ -65,6 +65,21 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.1.2 - 2026-05-16
+* Security: dropped `Serializable` from `PreloadFont` (and its inner `EncodedCodePoint`) to remove a CWE-502 deserialization gadget surface. 
+  Note: the `instanceof IFontResource` guard previously present in `readObject` ran only after the foreign class had already been instantiated.
+* Security: `AbstractPLExternalLink.setURI(String)` now validates the URI scheme against an allowlist
+  (`http`, `https`, `mailto`, `tel`, `ftp`, `ftps` by default).
+  Dangerous schemes such as `javascript:`, `file:`, `data:`, `vbscript:` are rejected with `IllegalArgumentException`.
+  The active set can be replaced via `setAllowedURISchemes(ICommonsSet)`; supplying an empty set restores the previous unfiltered behavior
+* `LoadedFont` is now `@ThreadSafe`: the previously misleading `@Immutable` label has been replaced and the per-codepoint caches are 
+  guarded by a `SimpleReadWriteLock` with a fast/slow path pattern.
+* `PLStreamImage` now caps the number of bytes read from the input stream (defaults to 64 MiB).
+  Override globally via `PLStreamImage.setDefaultMaxImageSize(int)` or per instance via `setMaxImageSize(int)`.
+  Reading aborts with `IOException` once the cap is exceeded.
+* Documentation: clarified the trust boundary of `IPDDocumentCustomizer` and `IXMPMetadataCustomizer` - both grant full mutation access to
+  the document/metadata and must only be supplied from trusted code.
+
 v8.1.1 - 2026-05-16
 * Updated to PDFBox 3.0.7
 * Removed OSGI bundling
@@ -80,14 +95,16 @@ v8.0.0 - 2025-08-24
 * Updated to ph-commons 12.0.0
 
 v7.4.2 - 2025-07-08
-* Added methods `PageLayoutPDFD.setCustom(Leading|Trailing|Total)PageCount` to allow for page count customization. See [#58](https://github.com/phax/ph-pdf-layout/issues/58) - thx @xxs3315
+* Added methods `PageLayoutPDFD.setCustom(Leading|Trailing|Total)PageCount` to allow for page count customization.
+  See [#58](https://github.com/phax/ph-pdf-layout/issues/58) - thx @xxs3315
 
 v7.4.1 - 2025-06-24
 * Added support for rounded edges on `PLBox` and `PLText`. See [#48](https://github.com/phax/ph-pdf-layout/issues/48) - thx @marco-de-angelis
 
 v7.4.0 - 2025-06-17
 * Added `ELineJoinStyle` and `ELineCapStyle` enums
-* Fixed a possible improper table split if only the head lines would fit on the first page on splitting. See [#49](https://github.com/phax/ph-pdf-layout/issues/49) - thx @jeremykwiatkowski
+* Fixed a possible improper table split if only the head lines would fit on the first page on splitting.
+  See [#49](https://github.com/phax/ph-pdf-layout/issues/49) - thx @jeremykwiatkowski
     * This required some heavy reworking of the splitting APIs which required a minor version update
 * The data type of the PDF creation date and time metadata was changed to `ZonedDateTime`
 
