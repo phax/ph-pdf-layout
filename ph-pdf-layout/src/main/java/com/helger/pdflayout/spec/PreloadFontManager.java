@@ -21,10 +21,8 @@ import java.util.function.Predicate;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import com.helger.annotation.concurrent.GuardedBy;
-import com.helger.annotation.concurrent.ThreadSafe;
+import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.annotation.style.ReturnsMutableCopy;
-import com.helger.base.concurrent.SimpleReadWriteLock;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.collection.commons.CommonsHashMap;
@@ -38,11 +36,9 @@ import com.helger.font.api.IHasFontResource;
  *
  * @author Philip Helger
  */
-@ThreadSafe
+@NotThreadSafe
 public class PreloadFontManager implements IPreloadFontResolver
 {
-  private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock ();
-  @GuardedBy ("m_aRWLock")
   private final ICommonsMap <String, PreloadFont> m_aMap = new CommonsHashMap <> ();
 
   /**
@@ -57,8 +53,7 @@ public class PreloadFontManager implements IPreloadFontResolver
    * Constructor.
    *
    * @param bRegisterStandardFonts
-   *        <code>true</code> to register the standard 14 fonts,
-   *        <code>false</code> to not do it.
+   *        <code>true</code> to register the standard 14 fonts, <code>false</code> to not do it.
    */
   public PreloadFontManager (final boolean bRegisterStandardFonts)
   {
@@ -93,20 +88,16 @@ public class PreloadFontManager implements IPreloadFontResolver
     ValueEnforcer.notNull (aPreloadFont, "PreloadFont");
     final String sKey = aPreloadFont.getID ();
 
-    m_aRWLock.writeLocked ( () -> {
-      if (m_aMap.containsKey (sKey))
-        throw new IllegalArgumentException ("The PreloadFont  " + aPreloadFont + " is already contained!");
-      m_aMap.put (sKey, aPreloadFont);
-    });
+    if (m_aMap.containsKey (sKey))
+      throw new IllegalArgumentException ("The PreloadFont  " + aPreloadFont + " is already contained!");
+    m_aMap.put (sKey, aPreloadFont);
   }
 
   /**
-   * Create and add a new embedding {@link PreloadFont} if it is not yet
-   * contained.
+   * Create and add a new embedding {@link PreloadFont} if it is not yet contained.
    *
    * @param aFontResProvider
-   *        The font resource provider to be added for embedding. May not be
-   *        <code>null</code>.
+   *        The font resource provider to be added for embedding. May not be <code>null</code>.
    * @return The created {@link PreloadFont}. Never <code>null</code>.
    */
   @NonNull
@@ -117,12 +108,10 @@ public class PreloadFontManager implements IPreloadFontResolver
   }
 
   /**
-   * Create and add a new embedding {@link PreloadFont} if it is not yet
-   * contained.
+   * Create and add a new embedding {@link PreloadFont} if it is not yet contained.
    *
    * @param aFontRes
-   *        The font resource to be added for embedding. May not be
-   *        <code>null</code>.
+   *        The font resource to be added for embedding. May not be <code>null</code>.
    * @return The created {@link PreloadFont}. Never <code>null</code>.
    */
   @NonNull
@@ -143,21 +132,21 @@ public class PreloadFontManager implements IPreloadFontResolver
   {
     if (sID == null)
       return null;
-    return m_aRWLock.readLockedGet ( () -> m_aMap.get (sID));
+    return m_aMap.get (sID);
   }
 
   @NonNull
   @ReturnsMutableCopy
   public ICommonsList <PreloadFont> getAllPreloadFonts ()
   {
-    return m_aRWLock.readLockedGet (m_aMap::copyOfValues);
+    return m_aMap.copyOfValues ();
   }
 
   @NonNull
   @ReturnsMutableCopy
   public ICommonsList <PreloadFont> getAllPreloadFonts (@Nullable final Predicate <? super PreloadFont> aFilter)
   {
-    return m_aRWLock.readLockedGet ( () -> m_aMap.copyOfValues (aFilter));
+    return m_aMap.copyOfValues (aFilter);
   }
 
   @Override

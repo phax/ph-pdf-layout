@@ -33,11 +33,9 @@ import org.slf4j.LoggerFactory;
 import com.helger.annotation.CheckForSigned;
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.WillNotClose;
-import com.helger.annotation.concurrent.GuardedBy;
-import com.helger.annotation.concurrent.ThreadSafe;
+import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
 import com.helger.annotation.style.ReturnsMutableCopy;
-import com.helger.base.concurrent.SimpleReadWriteLock;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.io.nonblocking.NonBlockingByteArrayOutputStream;
@@ -52,14 +50,12 @@ import com.helger.pdflayout.debug.PLDebugLog;
 
 /**
  * This class represents a wrapper around a {@link PDFont} that is uniquely assigned to a
- * PDDocument. Instances hold lazily populated per-codepoint caches guarded by a
- * {@link SimpleReadWriteLock}, so concurrent lookups are safe. Note that the underlying
- * {@link PDFont} is not thread-safe in PDFBox, so concurrent use is only safe for the read-only
- * code paths exercised by this wrapper.
+ * PDDocument. Instances hold lazily populated per-codepoint caches. Note that the underlying
+ * {@link PDFont} is also not thread-safe in PDFBox.
  *
  * @author Philip Helger
  */
-@ThreadSafe
+@NotThreadSafe
 @MustImplementEqualsAndHashcode
 public class LoadedFont
 {
@@ -124,10 +120,7 @@ public class LoadedFont
   private final float m_fLineHeight;
   private final float m_fDescent;
   private final boolean m_bFontWillBeSubset;
-  private final SimpleReadWriteLock m_aRWLock = new SimpleReadWriteLock ();
-  @GuardedBy ("m_aRWLock")
   private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <> ();
-  @GuardedBy ("m_aRWLock")
   private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
 
   public LoadedFont (@NonNull final PDFont aFont,
@@ -225,47 +218,26 @@ public class LoadedFont
   private EncodedCodePoint _getEncodedCodePoint (final int nCodePoint) throws IOException
   {
     // Fast path: shared read lock
-    final EncodedCodePoint aCached = m_aRWLock.readLockedGet ( () -> m_aEncodedCodePointCache.get (nCodePoint));
-    if (aCached != null)
-      return aCached;
-
-    // Slow path: exclusive write lock with double-check
-    return m_aRWLock.writeLockedGetThrowing ( () -> {
-      EncodedCodePoint aECP = m_aEncodedCodePointCache.get (nCodePoint);
-      if (aECP == null)
-      {
-        aECP = encodeCodepointWithFallback (m_aFont, nCodePoint, m_nFallbackCodePoint);
-        m_aEncodedCodePointCache.put (nCodePoint, aECP);
-      }
-      return aECP;
-    });
+    EncodedCodePoint aECP = m_aEncodedCodePointCache.get (nCodePoint);
+    if (aECP == null)
+    {
+      aECP = encodeCodepointWithFallback (m_aFont, nCodePoint, m_nFallbackCodePoint);
+      m_aEncodedCodePointCache.put (nCodePoint, aECP);
+    }
+    return aECP;
   }
 
   private float _getCodePointWidth (final int nCodePoint) throws IOException
   {
     // Fast path: shared read lock
-    final double dCached = m_aRWLock.readLockedDouble ( () -> m_aCodePointWidthCache.get (nCodePoint, -1f));
-    if (dCached >= 0)
-      return (float) dCached;
-
-    // Slow path: exclusive write lock with double-check. _getEncodedCodePoint is invoked here
-    // and may itself re-acquire the lock - that is safe since SimpleReadWriteLock is reentrant.
-    m_aRWLock.writeLock ().lock ();
-    try
+    float fWidth = m_aCodePointWidthCache.get (nCodePoint, -1f);
+    if (fWidth < 0)
     {
-      float fWidth = m_aCodePointWidthCache.get (nCodePoint, -1f);
-      if (fWidth < 0)
-      {
-        final EncodedCodePoint aECP = _getEncodedCodePoint (nCodePoint);
-        fWidth = m_aFont.getWidth (aECP.getEncodedIntValue ());
-        m_aCodePointWidthCache.put (nCodePoint, fWidth);
-      }
-      return fWidth;
+      final EncodedCodePoint aECP = _getEncodedCodePoint (nCodePoint);
+      fWidth = m_aFont.getWidth (aECP.getEncodedIntValue ());
+      m_aCodePointWidthCache.put (nCodePoint, fWidth);
     }
-    finally
-    {
-      m_aRWLock.writeLock ().unlock ();
-    }
+    return fWidth;
   }
 
   @Nonnegative
