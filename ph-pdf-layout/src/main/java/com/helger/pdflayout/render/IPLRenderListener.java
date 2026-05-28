@@ -33,6 +33,16 @@ import com.helger.pdflayout.base.IPLRenderableObject;
  * {@link com.helger.pdflayout.base.IPLObject#getOriginalID()} to correlate fragments to their
  * unsplit ancestor and {@link com.helger.pdflayout.base.IPLObject#isFirstFragment()} to identify
  * the top-most slice (the natural target for a TOC entry).
+ * <p>
+ * <b>Trust boundary:</b> a listener runs mid-render and through
+ * {@link PageRenderContext#getDocument()} / {@link PageRenderContext#getContentStream()} has full
+ * mutation access to the {@link org.apache.pdfbox.pdmodel.PDDocument} - including the page tree,
+ * annotations, fonts and security handlers. It can also throw to abort rendering. Only register
+ * listeners from code you trust; never wire an implementation built from untrusted input (for
+ * example a deserialized lambda or a class loaded from a tenant-supplied jar). Inside the
+ * callback, treat the supplied element as read-only - mutating it can violate render invariants
+ * (for example, clearing the anchor name on the first fragment so the subsequent
+ * destination-registration step misbehaves).
  *
  * @author Philip Helger
  * @since 8.2.0
@@ -44,7 +54,8 @@ public interface IPLRenderListener
    * Called after the element finishes rendering on a page.
    *
    * @param aElement
-   *        The element that was just rendered. Never <code>null</code>.
+   *        The element that was just rendered. Treat as read-only inside this callback. Never
+   *        <code>null</code>.
    * @param aCtx
    *        The render context used for this render call. Carries page indices and the placement
    *        coordinates ({@link PageRenderContext#getStartLeft()},
