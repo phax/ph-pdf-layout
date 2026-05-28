@@ -129,6 +129,7 @@
 
   <modules>
     <module>ph-pdf-layout</module>
+    <module>ph-pdf-layout-richtext</module>
   </modules>
 
   <build>
