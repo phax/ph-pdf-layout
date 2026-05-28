@@ -65,6 +65,11 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.1.3 - 2026-05-28
+* Added split-fragment tracking on `IPLObject`: `getOriginalID()`, `isSplitFragment()` and `isFirstFragment()`.
+  When an element is split across pages (e.g. a long `PLVBox`, `PLText` or `PLTable`), the resulting fragments still carry the unsplit ancestor's ID via `getOriginalID()`, and `isFirstFragment()` identifies the top-most slice.
+  This is the foundation for upcoming table-of-contents and bookmark support, where callers need to know on which page a user-facing element first appeared.
+
 v8.1.2 - 2026-05-16
 * Security: dropped `Serializable` from `PreloadFont` (and its inner `EncodedCodePoint`) to remove a CWE-502 deserialization gadget surface. 
   Note: the `instanceof IFontResource` guard previously present in `readObject` ran only after the foreign class had already been instantiated.

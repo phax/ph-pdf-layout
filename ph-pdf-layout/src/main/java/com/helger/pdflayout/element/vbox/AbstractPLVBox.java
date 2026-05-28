@@ -714,9 +714,13 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLVBox <?> aVBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+    final AbstractPLVBox <?> aVBox1 = internalCreateNewVertSplitObject (thisAsT ()).internalMarkAsSplitFragment (this,
+                                                                                                                 true,
+                                                                                                                 "-1")
                                                                                    .setVertSplittable (false);
-    final AbstractPLVBox <?> aVBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+    final AbstractPLVBox <?> aVBox2 = internalCreateNewVertSplitObject (thisAsT ()).internalMarkAsSplitFragment (this,
+                                                                                                                 false,
+                                                                                                                 "-2")
                                                                                    .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();

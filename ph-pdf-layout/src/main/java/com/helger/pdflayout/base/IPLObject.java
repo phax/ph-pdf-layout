@@ -60,6 +60,43 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
   String getDebugID ();
 
   /**
+   * @return The ID of the original (unsplit) ancestor of this object. For
+   *         objects that were never produced by a vertical split, this equals
+   *         {@link #getID()}. Stable across recursive splits so it can be used
+   *         to correlate fragments to the user-facing element they came from
+   *         (e.g. for table-of-contents generation).
+   * @since 8.1.3
+   */
+  @NonNull
+  @Nonempty
+  default String getOriginalID ()
+  {
+    return getID ();
+  }
+
+  /**
+   * @return <code>true</code> if this object was produced as a fragment by a
+   *         vertical split, <code>false</code> if it is an unsplit original.
+   * @since 8.1.3
+   */
+  default boolean isSplitFragment ()
+  {
+    return false;
+  }
+
+  /**
+   * @return <code>true</code> if this object is reachable from its original
+   *         ancestor by always choosing the first (top) fragment at every
+   *         split. For unsplit originals this is always <code>true</code>.
+   *         Useful to identify the page on which an element first appears.
+   * @since 8.1.3
+   */
+  default boolean isFirstFragment ()
+  {
+    return true;
+  }
+
+  /**
    * @return <code>true</code> if this element is splittable, <code>false</code>
    *         otherwise.
    */

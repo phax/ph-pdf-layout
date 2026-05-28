@@ -199,9 +199,13 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
     final IPLRenderableObject <?> aElement = getElement ();
 
     // Create resulting VBoxes - the first one is not splittable again!
-    final AbstractPLInlineBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+    final AbstractPLInlineBox <?> aBox1 = internalCreateNewVertSplitObject (thisAsT ()).internalMarkAsSplitFragment (this,
+                                                                                                                     true,
+                                                                                                                     "-1")
                                                                                        .setVertSplittable (false);
-    final AbstractPLInlineBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+    final AbstractPLInlineBox <?> aBox2 = internalCreateNewVertSplitObject (thisAsT ()).internalMarkAsSplitFragment (this,
+                                                                                                                     false,
+                                                                                                                     "-2")
                                                                                        .setVertSplittable (true);
 
     // Set min width/max width from source

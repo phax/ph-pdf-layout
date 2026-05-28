@@ -485,14 +485,14 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
       return aSplitResult;
 
     final PLTable aTable1 = new PLTable (m_aWidths);
-    aTable1.setID (getID () + "-1");
     aTable1.setBasicDataFrom (this);
+    aTable1.internalMarkAsSplitFragment (this, true, "-1");
     aTable1.internalMarkAsPrepared (aSplitResult.getFirstElement ().getSize ());
     aTable1.m_aRows = (PLVBox) aSplitResult.getFirstElement ().getElement ();
 
     final PLTable aTable2 = new PLTable (m_aWidths);
-    aTable2.setID (getID () + "-2");
     aTable2.setBasicDataFrom (this);
+    aTable2.internalMarkAsSplitFragment (this, false, "-2");
     aTable2.internalMarkAsPrepared (aSplitResult.getSecondElement ().getSize ());
     aTable2.m_aRows = (PLVBox) aSplitResult.getSecondElement ().getElement ();
 

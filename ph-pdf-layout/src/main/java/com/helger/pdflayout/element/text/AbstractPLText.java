@@ -523,6 +523,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   private PLElementWithSize _splitGetCopy (final float fElementWidth,
                                            @NonNull @Nonempty final List <TextAndWidthSpec> aLines,
                                            final boolean bSplittableCopy,
+                                           final boolean bIsFirstHalf,
                                            @NonNull final String sIDSuffix)
   {
     ValueEnforcer.notEmpty (aLines, "Lines");
@@ -534,7 +535,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final SizeSpec aSize = new SizeSpec (fElementWidth, getDisplayHeightOfLineCount (aLineCopy.size (), true));
 
     final String sTextContent = StringImplode.getImplodedMapped ('\n', aLineCopy, TextAndWidthSpec::getText);
-    final AbstractPLText <?> aNewText = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + sIDSuffix);
+    final AbstractPLText <?> aNewText = internalCreateNewVertSplitObject (thisAsT ()).internalMarkAsSplitFragment (this,
+                                                                                                                   bIsFirstHalf,
+                                                                                                                   sIDSuffix);
     aNewText._setText (sTextContent);
     // Set this explicitly after setBasicDataFrom!
     aNewText.setVertSplittable (bSplittableCopy);
@@ -619,11 +622,16 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
 
     // First elements does not need to be splittable anymore
-    final PLElementWithSize aText1 = _splitGetCopy (fElementWidth, aLines.subList (0, nSplitLineCount), false, "-1");
+    final PLElementWithSize aText1 = _splitGetCopy (fElementWidth,
+                                                    aLines.subList (0, nSplitLineCount),
+                                                    false,
+                                                    true,
+                                                    "-1");
     // Second element may need additional splitting
     final PLElementWithSize aText2 = _splitGetCopy (fElementWidth,
                                                     aLines.subList (nSplitLineCount, aLines.size ()),
                                                     true,
+                                                    false,
                                                     "-2");
 
     return PLSplitResult.createSplit (aText1, aText2);

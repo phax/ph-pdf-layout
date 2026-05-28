@@ -38,6 +38,13 @@ import com.helger.pdflayout.debug.PLDebugLog;
 public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLTYPE>> implements IPLObject <IMPLTYPE>
 {
   private String m_sElementID;
+  // The ID of the original, unsplit ancestor. <code>null</code> means this
+  // object was never produced by a vertical split.
+  private String m_sOriginalID;
+  // <code>true</code> if this object is reachable from the original ancestor
+  // by always picking the first (top) fragment. Unsplit objects are first
+  // fragments of themselves.
+  private boolean m_bFirstFragment = true;
 
   // Status variable
   private transient String m_sDebugID;
@@ -110,6 +117,55 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   }
 
   @NonNull
+  @Nonempty
+  public final String getOriginalID ()
+  {
+    return m_sOriginalID != null ? m_sOriginalID : m_sElementID;
+  }
+
+  public final boolean isSplitFragment ()
+  {
+    return m_sOriginalID != null;
+  }
+
+  public final boolean isFirstFragment ()
+  {
+    return m_bFirstFragment;
+  }
+
+  /**
+   * Mark this object as a fragment produced by vertically splitting another
+   * object. Carries the original (unsplit) ancestor's ID forward and tracks
+   * whether this fragment is the top-most slice of the original. Must be called
+   * once per fragment, immediately after creation, at every split site.
+   *
+   * @param aSplitSource
+   *        The object that was just split to produce this fragment. May not be
+   *        <code>null</code>.
+   * @param bThisIsFirstHalf
+   *        <code>true</code> if this is the first (top) half of the split,
+   *        <code>false</code> if it is the second (bottom) half.
+   * @param sIDSuffix
+   *        Suffix appended to the split source's ID to form this fragment's
+   *        ID. Must not be empty.
+   * @return this for chaining
+   * @since 8.1.3
+   */
+  @NonNull
+  protected final IMPLTYPE internalMarkAsSplitFragment (@NonNull final IPLObject <?> aSplitSource,
+                                                        final boolean bThisIsFirstHalf,
+                                                        @NonNull @Nonempty final String sIDSuffix)
+  {
+    ValueEnforcer.notNull (aSplitSource, "SplitSource");
+    ValueEnforcer.notEmpty (sIDSuffix, "IDSuffix");
+
+    setID (aSplitSource.getID () + sIDSuffix);
+    m_sOriginalID = aSplitSource.getOriginalID ();
+    m_bFirstFragment = aSplitSource.isFirstFragment () && bThisIsFirstHalf;
+    return thisAsT ();
+  }
+
+  @NonNull
   @OverridingMethodsMustInvokeSuper
   public IMPLTYPE setBasicDataFrom (@NonNull final IMPLTYPE aSource)
   {
@@ -120,6 +176,9 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("ElementID", m_sElementID).getToString ();
+    return new ToStringGenerator (this).append ("ElementID", m_sElementID)
+                                       .appendIfNotNull ("OriginalID", m_sOriginalID)
+                                       .append ("FirstFragment", m_bFirstFragment)
+                                       .getToString ();
   }
 }

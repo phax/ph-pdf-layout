@@ -558,9 +558,13 @@ public abstract class AbstractPLHBox <IMPLTYPE extends AbstractPLHBox <IMPLTYPE>
       }
     }
 
-    final AbstractPLHBox <?> aHBox1 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-1")
+    final AbstractPLHBox <?> aHBox1 = internalCreateNewVertSplitObject (thisAsT ()).internalMarkAsSplitFragment (this,
+                                                                                                                 true,
+                                                                                                                 "-1")
                                                                                    .setVertSplittable (false);
-    final AbstractPLHBox <?> aHBox2 = internalCreateNewVertSplitObject (thisAsT ()).setID (getID () + "-2")
+    final AbstractPLHBox <?> aHBox2 = internalCreateNewVertSplitObject (thisAsT ()).internalMarkAsSplitFragment (this,
+                                                                                                                 false,
+                                                                                                                 "-2")
                                                                                    .setVertSplittable (true);
 
     // Fill all columns with empty content
