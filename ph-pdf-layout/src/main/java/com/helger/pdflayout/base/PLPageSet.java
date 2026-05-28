@@ -41,6 +41,7 @@ import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.ERenderingElementType;
+import com.helger.pdflayout.render.IPLRenderListener;
 import com.helger.pdflayout.render.IPreRenderContextCustomizer;
 import com.helger.pdflayout.render.IRenderContextCustomizer;
 import com.helger.pdflayout.render.PLRenderHelper;
@@ -89,6 +90,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
 
   private IPreRenderContextCustomizer m_aPRCCustomizer;
   private IRenderContextCustomizer m_aRCCustomizer;
+  private IPLRenderListener m_aRenderListener;
 
   public PLPageSet (@NonNull final PDRectangle aPageRect)
   {
@@ -231,6 +233,33 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   public final PLPageSet setRenderContextCustomizer (@Nullable final IRenderContextCustomizer aRCCustomizer)
   {
     m_aRCCustomizer = aRCCustomizer;
+    return this;
+  }
+
+  /**
+   * @return The listener invoked after every element render, or <code>null</code> if no listener
+   *         is installed. Use this to learn which page each element ended up on, for example to
+   *         build a table of contents or PDF bookmarks.
+   * @since 8.1.3
+   */
+  @Nullable
+  public final IPLRenderListener getRenderListener ()
+  {
+    return m_aRenderListener;
+  }
+
+  /**
+   * Set the listener invoked after every element render.
+   *
+   * @param aRenderListener
+   *        The listener. May be <code>null</code> to disable.
+   * @return this for chaining
+   * @since 8.1.3
+   */
+  @NonNull
+  public final PLPageSet setRenderListener (@Nullable final IPLRenderListener aRenderListener)
+  {
+    m_aRenderListener = aRenderListener;
     return this;
   }
 
@@ -1030,7 +1059,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                                                  fStartLeft,
                                                                  fStartTop,
                                                                  fWidth,
-                                                                 fHeight);
+                                                                 fHeight,
+                                                                 nPageSetIndex,
+                                                                 nPageSetCount,
+                                                                 nPageIndex,
+                                                                 nPageCount,
+                                                                 nTotalPageStartIndex + nPageIndex,
+                                                                 nTotalPageCount,
+                                                                 m_aRenderListener);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
           aPageHeader.render (aRCtx);
@@ -1050,7 +1086,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                                                  fStartLeft,
                                                                  fStartTop,
                                                                  fWidth,
-                                                                 fHeight);
+                                                                 fHeight,
+                                                                 nPageSetIndex,
+                                                                 nPageSetCount,
+                                                                 nPageIndex,
+                                                                 nPageCount,
+                                                                 nTotalPageStartIndex + nPageIndex,
+                                                                 nTotalPageCount,
+                                                                 m_aRenderListener);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
           aElement.render (aRCtx);
@@ -1071,7 +1114,14 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                                                  fStartLeft,
                                                                  fStartTop,
                                                                  fWidth,
-                                                                 fHeight);
+                                                                 fHeight,
+                                                                 nPageSetIndex,
+                                                                 nPageSetCount,
+                                                                 nPageIndex,
+                                                                 nPageCount,
+                                                                 nTotalPageStartIndex + nPageIndex,
+                                                                 nTotalPageCount,
+                                                                 m_aRenderListener);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
           aPageFooter.render (aRCtx);

@@ -28,6 +28,7 @@ import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.state.EChange;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.debug.PLDebugLog;
+import com.helger.pdflayout.render.IPLRenderListener;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -309,6 +310,13 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
 
     // Main perform after border
     onRender (aCtx);
+
+    // Notify a registered listener (if any) that this element just rendered.
+    // Fires after onRender so an exception suppresses the event. Reaches every
+    // nested child too, because they all flow through this same render method.
+    final IPLRenderListener aListener = aCtx.getRenderListener ();
+    if (aListener != null)
+      aListener.onElementRendered (this, aCtx);
   }
 
   @Override

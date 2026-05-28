@@ -69,6 +69,9 @@ v8.1.3 - 2026-05-28
 * Added split-fragment tracking on `IPLObject`: `getOriginalID()`, `isSplitFragment()` and `isFirstFragment()`.
   When an element is split across pages (e.g. a long `PLVBox`, `PLText` or `PLTable`), the resulting fragments still carry the unsplit ancestor's ID via `getOriginalID()`, and `isFirstFragment()` identifies the top-most slice.
   This is the foundation for upcoming table-of-contents and bookmark support, where callers need to know on which page a user-facing element first appeared.
+* Added per-element render callback: new `IPLRenderListener`, settable via `PLPageSet.setRenderListener(...)`, fires after every element renders (including nested children) with the full `PageRenderContext`.
+* `PageRenderContext` now exposes page indices (`getPageSetIndex`, `getPageSetPageIndex`, `getTotalPageIndex` and their counts), matching the names already used by `PagePreRenderContext`.
+* New `PLRenderedElementCollector` helper consumes the listener and produces an ordered map from each element's original ID to its first-appearance page and coordinates - the natural input for building a TOC or PDF outline.
 
 v8.1.2 - 2026-05-16
 * Security: dropped `Serializable` from `PreloadFont` (and its inner `EncodedCodePoint`) to remove a CWE-502 deserialization gadget surface. 
