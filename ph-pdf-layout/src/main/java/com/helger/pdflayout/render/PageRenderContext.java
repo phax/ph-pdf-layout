@@ -113,7 +113,7 @@ public final class PageRenderContext
    *        Total number of pages across all page sets. Always &ge; 0.
    * @param aRenderListener
    *        Optional listener that is invoked after every element render. May be <code>null</code>.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   public PageRenderContext (@NonNull final ERenderingElementType eElementType,
                             @NonNull final PDPageContentStreamWithCache aCS,
@@ -223,7 +223,7 @@ public final class PageRenderContext
 
   /**
    * @return 0-based index of the current page set. Always &ge; 0.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @Nonnegative
   public int getPageSetIndex ()
@@ -233,7 +233,7 @@ public final class PageRenderContext
 
   /**
    * @return Total number of page sets. Always &ge; 0.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @Nonnegative
   public int getPageSetCount ()
@@ -243,7 +243,7 @@ public final class PageRenderContext
 
   /**
    * @return 0-based index of the page within the current page set. Always &ge; 0.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @Nonnegative
   public int getPageSetPageIndex ()
@@ -253,7 +253,7 @@ public final class PageRenderContext
 
   /**
    * @return Total number of pages in the current page set. Always &ge; 0.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @Nonnegative
   public int getPageSetPageCount ()
@@ -264,7 +264,7 @@ public final class PageRenderContext
   /**
    * @return 0-based index of the page across all page sets. Always &ge; 0. Use this as the page
    *         number when populating a table of contents or PDF bookmarks.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @Nonnegative
   public int getTotalPageIndex ()
@@ -274,7 +274,7 @@ public final class PageRenderContext
 
   /**
    * @return Total number of pages across all page sets. Always &ge; 0.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @Nonnegative
   public int getTotalPageCount ()
@@ -285,7 +285,7 @@ public final class PageRenderContext
   /**
    * @return The listener invoked after every element render, or <code>null</code> if no listener
    *         is installed for this rendering pass.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @Nullable
   public IPLRenderListener getRenderListener ()

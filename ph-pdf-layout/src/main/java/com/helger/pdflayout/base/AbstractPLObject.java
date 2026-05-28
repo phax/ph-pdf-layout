@@ -116,6 +116,15 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     return ret;
   }
 
+  /**
+   * {@inheritDoc} For unsplit instances this returns the same value as {@link #getID()}; for
+   * fragments produced via {@link #internalMarkAsSplitFragment(IPLObject, boolean, String)} it
+   * returns the ID of the original ancestor.
+   *
+   * @return The original (unsplit) ID. Never <code>null</code> and never empty.
+   * @since 8.2.0
+   */
+  @Override
   @NonNull
   @Nonempty
   public final String getOriginalID ()
@@ -123,11 +132,29 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
     return m_sOriginalID != null ? m_sOriginalID : m_sElementID;
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * @return <code>true</code> if this object was produced by a call to
+   *         {@link #internalMarkAsSplitFragment(IPLObject, boolean, String)}, <code>false</code>
+   *         otherwise.
+   * @since 8.2.0
+   */
+  @Override
   public final boolean isSplitFragment ()
   {
     return m_sOriginalID != null;
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * @return <code>true</code> if this object is the top-most slice of its original ancestor (or an
+   *         unsplit original, which is always the first fragment of itself), <code>false</code>
+   *         otherwise.
+   * @since 8.2.0
+   */
+  @Override
   public final boolean isFirstFragment ()
   {
     return m_bFirstFragment;
@@ -149,7 +176,7 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
    *        Suffix appended to the split source's ID to form this fragment's
    *        ID. Must not be empty.
    * @return this for chaining
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @NonNull
   protected final IMPLTYPE internalMarkAsSplitFragment (@NonNull final IPLObject <?> aSplitSource,

@@ -47,7 +47,7 @@ import com.helger.pdflayout.base.IPLRenderableObject;
  * </pre>
  *
  * @author Philip Helger
- * @since 8.1.3
+ * @since 8.2.0
  */
 public class PLRenderedElementCollector implements IPLRenderListener
 {
@@ -75,39 +75,65 @@ public class PLRenderedElementCollector implements IPLRenderListener
       m_fHeight = aCtx.getHeight ();
     }
 
+    /**
+     * @return 0-based index of the page set in which the element was rendered. Always &ge; 0.
+     */
     @Nonnegative
     public int getPageSetIndex ()
     {
       return m_nPageSetIndex;
     }
 
+    /**
+     * @return 0-based index of the page within its page set on which the element was rendered.
+     *         Always &ge; 0.
+     */
     @Nonnegative
     public int getPageSetPageIndex ()
     {
       return m_nPageSetPageIndex;
     }
 
+    /**
+     * @return 0-based index of the page across all page sets on which the element was rendered.
+     *         Always &ge; 0. This is typically what a table of contents wants to print.
+     */
     @Nonnegative
     public int getTotalPageIndex ()
     {
       return m_nTotalPageIndex;
     }
 
+    /**
+     * @return Absolute page x-start position of the element in PDF user-space coordinates (origin
+     *         is the page's lower-left corner).
+     */
     public float getStartLeft ()
     {
       return m_fStartLeft;
     }
 
+    /**
+     * @return Absolute page y-start position (top edge) of the element in PDF user-space
+     *         coordinates (origin is the page's lower-left corner). Suitable as the
+     *         <code>top</code> value of a PDF page destination.
+     */
     public float getStartTop ()
     {
       return m_fStartTop;
     }
 
+    /**
+     * @return Available width the element was rendered into.
+     */
     public float getWidth ()
     {
       return m_fWidth;
     }
 
+    /**
+     * @return Available height the element was rendered into.
+     */
     public float getHeight ()
     {
       return m_fHeight;
@@ -130,6 +156,10 @@ public class PLRenderedElementCollector implements IPLRenderListener
   private final ICommonsOrderedMap <String, Location> m_aLocations = new CommonsLinkedHashMap <> ();
   private boolean m_bIncludeHeaderFooter = false;
 
+  /**
+   * Default constructor. Header/footer events are excluded by default; call
+   * {@link #setIncludeHeaderFooter(boolean)} to opt in.
+   */
   public PLRenderedElementCollector ()
   {}
 
@@ -158,6 +188,16 @@ public class PLRenderedElementCollector implements IPLRenderListener
     return this;
   }
 
+  /**
+   * Record the placement of the given element. Skipped events are: headers/footers (unless
+   * {@link #setIncludeHeaderFooter(boolean)} is on), split fragments other than the first, and
+   * duplicate appearances of the same original ID (the first wins).
+   *
+   * @param aElement
+   *        The element that was just rendered. Never <code>null</code>.
+   * @param aCtx
+   *        The render context used for this render call. Never <code>null</code>.
+   */
   public void onElementRendered (@NonNull final IPLRenderableObject <?> aElement, @NonNull final PageRenderContext aCtx)
   {
     if (!m_bIncludeHeaderFooter)

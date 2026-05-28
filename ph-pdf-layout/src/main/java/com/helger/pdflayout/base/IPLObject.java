@@ -65,7 +65,7 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
    *         {@link #getID()}. Stable across recursive splits so it can be used
    *         to correlate fragments to the user-facing element they came from
    *         (e.g. for table-of-contents generation).
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @NonNull
   @Nonempty
@@ -77,7 +77,7 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
   /**
    * @return <code>true</code> if this object was produced as a fragment by a
    *         vertical split, <code>false</code> if it is an unsplit original.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   default boolean isSplitFragment ()
   {
@@ -89,7 +89,7 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
    *         ancestor by always choosing the first (top) fragment at every
    *         split. For unsplit originals this is always <code>true</code>.
    *         Useful to identify the page on which an element first appears.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   default boolean isFirstFragment ()
   {

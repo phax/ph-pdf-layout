@@ -240,7 +240,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
    * @return The listener invoked after every element render, or <code>null</code> if no listener
    *         is installed. Use this to learn which page each element ended up on, for example to
    *         build a table of contents or PDF bookmarks.
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @Nullable
   public final IPLRenderListener getRenderListener ()
@@ -254,7 +254,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
    * @param aRenderListener
    *        The listener. May be <code>null</code> to disable.
    * @return this for chaining
-   * @since 8.1.3
+   * @since 8.2.0
    */
   @NonNull
   public final PLPageSet setRenderListener (@Nullable final IPLRenderListener aRenderListener)

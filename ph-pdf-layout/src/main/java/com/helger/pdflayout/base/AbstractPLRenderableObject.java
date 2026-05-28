@@ -29,6 +29,7 @@ import com.helger.base.state.EChange;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.render.IPLRenderListener;
+import com.helger.pdflayout.render.PLAnchorRegistry;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
@@ -48,6 +49,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   private SizeSpec m_aPrepareAvailableSize;
   private SizeSpec m_aPreparedSize;
   private SizeSpec m_aRenderSize;
+  private String m_sAnchorName = DEFAULT_ANCHOR_NAME;
 
   public AbstractPLRenderableObject ()
   {}
@@ -59,6 +61,37 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   {
     super.setBasicDataFrom (aSource);
     m_aPrepareAvailableSize = aSource.getPrepareAvailableSize ();
+    // Carry the anchor name forward to split fragments so the anchor is still
+    // available on the fragment that actually renders. Duplicate registration
+    // is suppressed via isFirstFragment() in the render hook.
+    m_sAnchorName = aSource.getAnchorName ();
+    return thisAsT ();
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 8.2.0
+   */
+  @Override
+  @Nullable
+  public final String getAnchorName ()
+  {
+    return m_sAnchorName;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @since 8.2.0
+   */
+  @Override
+  @NonNull
+  public final IMPLTYPE setAnchorName (@Nullable final String sAnchorName)
+  {
+    if (sAnchorName != null)
+      ValueEnforcer.notEmpty (sAnchorName, "AnchorName");
+    m_sAnchorName = sAnchorName;
     return thisAsT ();
   }
 
@@ -317,6 +350,17 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     final IPLRenderListener aListener = aCtx.getRenderListener ();
     if (aListener != null)
       aListener.onElementRendered (this, aCtx);
+
+    // Register a PDF named destination when this element carries an anchor
+    // name. Only the first fragment of a split element registers, so each
+    // anchor maps to exactly one location even when the labeled element ends
+    // up on multiple pages.
+    if (m_sAnchorName != null && isFirstFragment ())
+      PLAnchorRegistry.registerNamedDestination (aCtx.getDocument (),
+                                                 m_sAnchorName,
+                                                 aCtx.getContentStream ().getPage (),
+                                                 aCtx.getStartLeft (),
+                                                 aCtx.getStartTop ());
   }
 
   @Override
@@ -327,6 +371,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                             .appendIfNotNull ("PrepareAvailableSize", m_aPrepareAvailableSize)
                             .appendIfNotNull ("PreparedSize", m_aPreparedSize)
                             .appendIfNotNull ("RenderSize", m_aRenderSize)
+                            .appendIfNotNull ("AnchorName", m_sAnchorName)
                             .getToString ();
   }
 }

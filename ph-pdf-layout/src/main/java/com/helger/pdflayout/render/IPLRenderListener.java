@@ -35,7 +35,7 @@ import com.helger.pdflayout.base.IPLRenderableObject;
  * the top-most slice (the natural target for a TOC entry).
  *
  * @author Philip Helger
- * @since 8.1.3
+ * @since 8.2.0
  */
 @FunctionalInterface
 public interface IPLRenderListener
