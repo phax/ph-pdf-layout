@@ -124,12 +124,13 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   protected final void internalCheckNotPrepared ()
   {
     if (isPrepared ())
-      throw new IllegalStateException (getDebugID () + " was already prepared and can therefore not be modified: " + toString ());
+      throw new IllegalStateException (getDebugID () +
+                                       " was already prepared and can therefore not be modified: " +
+                                       toString ());
   }
 
   /**
-   * @return <code>true</code> if this object was already prepared,
-   *         <code>false</code> otherwise.
+   * @return <code>true</code> if this object was already prepared, <code>false</code> otherwise.
    */
   public final boolean isPrepared ()
   {
@@ -137,9 +138,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
-   * @return The size used to perform the preparation. Is <code>null</code> if
-   *         this object was not yet prepared. This is required, if a text needs
-   *         to be prepared more than once (e.g. text with placeholders).
+   * @return The size used to perform the preparation. Is <code>null</code> if this object was not
+   *         yet prepared. This is required, if a text needs to be prepared more than once (e.g.
+   *         text with placeholders).
    */
   @Nullable
   protected final SizeSpec getPrepareAvailableSize ()
@@ -148,8 +149,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
-   * @return The prepared size or <code>null</code> if this object was not yet
-   *         prepared.
+   * @return The prepared size or <code>null</code> if this object was not yet prepared.
    * @see #isPrepared()
    */
   @Nullable
@@ -165,25 +165,25 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
-   * The abstract method that must be implemented by all subclasses. It is
-   * ensured that this method is called only once per instance!
+   * The abstract method that must be implemented by all subclasses. It is ensured that this method
+   * is called only once per instance!
    *
    * @param aCtx
    *        Preparation context. Never <code>null</code>.
-   * @return The size of the rendered element without padding, border and
-   *         margin. May not be <code>null</code>.
+   * @return The size of the rendered element without padding, border and margin. May not be
+   *         <code>null</code>.
    */
   @NonNull
   protected abstract SizeSpec onPrepare (@NonNull final PreparationContext aCtx);
 
   /**
-   * Overwrite this method to adopt prepared sizes (e.g. for min or max size) to
-   * get the render size.
+   * Overwrite this method to adopt prepared sizes (e.g. for min or max size) to get the render
+   * size.
    *
    * @param aPreparedSize
    *        The originally prepared size.
-   * @return The modified prepared size or the unchanged prepared size if no
-   *         changes are necessary. May not be <code>null</code>.
+   * @return The modified prepared size or the unchanged prepared size if no changes are necessary.
+   *         May not be <code>null</code>.
    */
   @NonNull
   @OverrideOnDemand
@@ -193,8 +193,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
-   * Set the prepared size of this object. This method also handles min and max
-   * size
+   * Set the prepared size of this object. This method also handles min and max size
    *
    * @param aPreparedSize
    *        Prepared size without padding and margin.
@@ -276,14 +275,13 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
-   * PL objects need to overwrite this method to reset their preparation state.
-   * They also need to propagate this to their children!
+   * PL objects need to overwrite this method to reset their preparation state. They also need to
+   * propagate this to their children!
    */
   protected abstract void onMarkAsNotPrepared ();
 
   /**
-   * INTERNAL method. Do not call from outside! This resets the preparation
-   * state.
+   * INTERNAL method. Do not call from outside! This resets the preparation state.
    */
   protected final void internalMarkAsNotPreparedDontPropagate ()
   {
@@ -294,8 +292,7 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   }
 
   /**
-   * INTERNAL method. Do not call from outside! This resets the preparation
-   * state.
+   * INTERNAL method. Do not call from outside! This resets the preparation state.
    */
   public final void internalMarkAsNotPrepared ()
   {
@@ -337,9 +334,14 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     internalCheckAlreadyPrepared ();
 
     if (PLDebugLog.isDebugRender ())
+    {
       PLDebugLog.debugRender (this,
                               "Rendering at " +
-                                    PLDebugLog.getXYWH (aCtx.getStartLeft (), aCtx.getStartTop (), aCtx.getWidth (), aCtx.getHeight ()));
+                                    PLDebugLog.getXYWH (aCtx.getStartLeft (),
+                                                        aCtx.getStartTop (),
+                                                        aCtx.getWidth (),
+                                                        aCtx.getHeight ()));
+    }
 
     // Main perform after border
     onRender (aCtx);
@@ -356,11 +358,13 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     // anchor maps to exactly one location even when the labeled element ends
     // up on multiple pages.
     if (m_sAnchorName != null && isFirstFragment ())
+    {
       PLAnchorRegistry.registerNamedDestination (aCtx.getDocument (),
                                                  m_sAnchorName,
                                                  aCtx.getContentStream ().getPage (),
                                                  aCtx.getStartLeft (),
                                                  aCtx.getStartTop ());
+    }
   }
 
   @Override

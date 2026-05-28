@@ -35,7 +35,10 @@ import com.helger.pdflayout.spec.SizeSpec;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPLTYPE>> extends IPLObject <IMPLTYPE>, IPLHasOutline
+public interface IPLRenderableObject <IMPLTYPE extends IPLRenderableObject <IMPLTYPE>> extends
+                                     IPLObject <IMPLTYPE>,
+                                     IPLHasOutline,
+                                     IPLHasAnchorName <IMPLTYPE>
 {
   /**
    * @return <code>true</code> if this object was already prepared,

@@ -65,13 +65,17 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.1.3 - 2026-05-28
+v8.2.0 - 2026-05-28
 * Added split-fragment tracking on `IPLObject`: `getOriginalID()`, `isSplitFragment()` and `isFirstFragment()`.
   When an element is split across pages (e.g. a long `PLVBox`, `PLText` or `PLTable`), the resulting fragments still carry the unsplit ancestor's ID via `getOriginalID()`, and `isFirstFragment()` identifies the top-most slice.
   This is the foundation for upcoming table-of-contents and bookmark support, where callers need to know on which page a user-facing element first appeared.
 * Added per-element render callback: new `IPLRenderListener`, settable via `PLPageSet.setRenderListener(...)`, fires after every element renders (including nested children) with the full `PageRenderContext`.
 * `PageRenderContext` now exposes page indices (`getPageSetIndex`, `getPageSetPageIndex`, `getTotalPageIndex` and their counts), matching the names already used by `PagePreRenderContext`.
 * New `PLRenderedElementCollector` helper consumes the listener and produces an ordered map from each element's original ID to its first-appearance page and coordinates - the natural input for building a TOC or PDF outline.
+* Added `PLOutlineBuilder` for generating PDF outlines (bookmarks). Declare a nested entry tree of `(title, elementID)` pairs, register the builder as both render listener and document customizer, and the resulting PDF opens with a clickable bookmark tree pointing at the rendered positions. Supports grouping nodes without destinations and tolerates missing element references.
+* Added named-anchor support: new `IPLHasAnchorName` interface on every renderable element exposes `setAnchorName(String)`. When set, the rendering pipeline registers a PDF named destination at the element's top-left, addressable via URL fragments (`mypdf.pdf#section1`), bookmarks, or internal links. Duplicate anchor names are logged as a warning and the first registration wins.
+* New `PLAnchor` element - a zero-size marker for inserting an anchor at an arbitrary position in the document flow.
+* Added internal-link support: new `PLInternalLink` wraps another element and creates a clickable PDF link annotation that jumps to a named anchor via `PDActionGoTo` + `PDNamedDestination`. Forward references work because resolution happens at PDF read time. Extracted common link-annotation logic (rectangle, border, color) from `AbstractPLExternalLink` into a shared `AbstractPLLinkBase`; external-link behaviour is preserved byte-for-byte.
 
 v8.1.2 - 2026-05-16
 * Security: dropped `Serializable` from `PreloadFont` (and its inner `EncodedCodePoint`) to remove a CWE-502 deserialization gadget surface. 
