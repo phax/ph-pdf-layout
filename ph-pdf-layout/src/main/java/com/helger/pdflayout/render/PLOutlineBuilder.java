@@ -177,6 +177,14 @@ public class PLOutlineBuilder implements IPLRenderListener, IPDDocumentCustomize
     }
   }
 
+  /**
+   * Hard cap on entry nesting depth, applied when the outline is materialized into PDF
+   * {@link PDOutlineItem}s. PDF readers tolerate arbitrary depth in principle, but unbounded
+   * recursion would risk a {@link StackOverflowError} on a pathological caller-supplied tree. Real
+   * outlines rarely exceed 5-10 levels.
+   */
+  public static final int MAX_OUTLINE_DEPTH = 50;
+
   private final ICommonsList <Entry> m_aRootEntries = new CommonsArrayList <> ();
   private final PLRenderedElementCollector m_aCollector = new PLRenderedElementCollector ();
   private boolean m_bInitiallyExpanded = true;
@@ -294,8 +302,17 @@ public class PLOutlineBuilder implements IPLRenderListener, IPDDocumentCustomize
   }
 
   @NonNull
-  private PDOutlineItem _buildOutlineItemRecursive (@NonNull final PDDocument aDoc, @NonNull final Entry aEntry)
+  private PDOutlineItem _buildOutlineItemRecursive (@NonNull final PDDocument aDoc,
+                                                    @NonNull final Entry aEntry,
+                                                    final int nDepth)
   {
+    if (nDepth > MAX_OUTLINE_DEPTH)
+      throw new IllegalStateException ("Outline entry nesting exceeds the maximum depth of " +
+                                       MAX_OUTLINE_DEPTH +
+                                       "; refusing to build outline. Offending entry title: '" +
+                                       aEntry.getTitle () +
+                                       "'");
+
     final PDOutlineItem aItem = new PDOutlineItem ();
     aItem.setTitle (aEntry.getTitle ());
 
@@ -338,7 +355,7 @@ public class PLOutlineBuilder implements IPLRenderListener, IPDDocumentCustomize
     }
 
     for (final Entry aChild : aEntry.getAllChildren ())
-      aItem.addLast (_buildOutlineItemRecursive (aDoc, aChild));
+      aItem.addLast (_buildOutlineItemRecursive (aDoc, aChild, nDepth + 1));
 
     if (m_bInitiallyExpanded && aEntry.hasChildren ())
       aItem.openNode ();
@@ -365,7 +382,7 @@ public class PLOutlineBuilder implements IPLRenderListener, IPDDocumentCustomize
       aDoc.getDocumentCatalog ().setDocumentOutline (aOutline);
 
       for (final Entry aRootEntry : m_aRootEntries)
-        aOutline.addLast (_buildOutlineItemRecursive (aDoc, aRootEntry));
+        aOutline.addLast (_buildOutlineItemRecursive (aDoc, aRootEntry, 1));
 
       if (m_bInitiallyExpanded)
         aOutline.openNode ();

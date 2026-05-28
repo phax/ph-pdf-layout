@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -238,6 +239,48 @@ public final class PLOutlineBuilderTest
       final PDOutlineItem aItem = aReadDoc.getDocumentCatalog ().getDocumentOutline ().getFirstChild ();
       assertEquals ("Chapter 1", aItem.getTitle ());
       assertEquals (0, ((PDPageDestination) aItem.getDestination ()).retrievePageNumber ());
+    }
+  }
+
+  @Test
+  public void testExcessiveNestingRefusedWithClearException () throws IOException
+  {
+    // Build an entry chain one level deeper than the configured cap.
+    final PLOutlineBuilder aOutline = new PLOutlineBuilder ();
+    PLOutlineBuilder.Entry aTip = aOutline.addEntry ("level-1");
+    for (int i = 2; i <= PLOutlineBuilder.MAX_OUTLINE_DEPTH + 1; i++)
+      aTip = aTip.addChild ("level-" + i);
+
+    try (final PDDocument aDoc = new PDDocument ())
+    {
+      aDoc.addPage (new org.apache.pdfbox.pdmodel.PDPage ());
+      try
+      {
+        aOutline.customizeDocument (aDoc);
+        fail ("Expected IllegalStateException due to depth cap");
+      }
+      catch (final IllegalStateException ex)
+      {
+        assertTrue ("Exception message must reference the depth cap, got: " + ex.getMessage (),
+                    ex.getMessage ().contains ("maximum depth of " + PLOutlineBuilder.MAX_OUTLINE_DEPTH));
+      }
+    }
+  }
+
+  @Test
+  public void testAtMaxDepthIsAccepted () throws IOException
+  {
+    // Exactly MAX_OUTLINE_DEPTH levels must succeed.
+    final PLOutlineBuilder aOutline = new PLOutlineBuilder ();
+    PLOutlineBuilder.Entry aTip = aOutline.addEntry ("level-1");
+    for (int i = 2; i <= PLOutlineBuilder.MAX_OUTLINE_DEPTH; i++)
+      aTip = aTip.addChild ("level-" + i);
+
+    try (final PDDocument aDoc = new PDDocument ())
+    {
+      aDoc.addPage (new org.apache.pdfbox.pdmodel.PDPage ());
+      aOutline.customizeDocument (aDoc); // must not throw
+      assertNotNull (aDoc.getDocumentCatalog ().getDocumentOutline ());
     }
   }
 }
