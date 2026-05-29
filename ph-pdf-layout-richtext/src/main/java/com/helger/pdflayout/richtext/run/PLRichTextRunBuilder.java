@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
+ * Copyright (C) 2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +16,19 @@
  */
 package com.helger.pdflayout.richtext.run;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.annotation.Nonnegative;
+import com.helger.annotation.concurrent.Immutable;
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.CommonsHashMap;
 import com.helger.collection.commons.ICommonsList;
+import com.helger.collection.commons.ICommonsMap;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.richtext.annotation.IPLRichTextAnnotation;
 import com.helger.pdflayout.richtext.markup.IPLMarkupToken;
@@ -45,6 +46,7 @@ import com.helger.pdflayout.spec.FontSpec;
  *
  * @author Philip Helger
  */
+@Immutable
 public final class PLRichTextRunBuilder
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (PLRichTextRunBuilder.class);
@@ -53,13 +55,13 @@ public final class PLRichTextRunBuilder
   private final float m_fFontSize;
   private final PLColor m_aDefaultColor;
 
-  public PLRichTextRunBuilder (@NonNull final PLFontFamily aFontFamily, final float fFontSize)
+  public PLRichTextRunBuilder (@NonNull final PLFontFamily aFontFamily, @Nonnegative final float fFontSize)
   {
     this (aFontFamily, fFontSize, FontSpec.DEFAULT_COLOR);
   }
 
   public PLRichTextRunBuilder (@NonNull final PLFontFamily aFontFamily,
-                               final float fFontSize,
+                               @Nonnegative final float fFontSize,
                                @NonNull final PLColor aDefaultColor)
   {
     ValueEnforcer.notNull (aFontFamily, "FontFamily");
@@ -75,7 +77,7 @@ public final class PLRichTextRunBuilder
                                   final boolean bBold,
                                   final boolean bItalic,
                                   @NonNull final PLColor aColor,
-                                  @NonNull final Map <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations,
+                                  @NonNull final ICommonsMap <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations,
                                   @Nullable final MetricsToggle aActiveMetrics)
   {
     final float fFontScale = aActiveMetrics == null ? 1f : aActiveMetrics.getFontScale ();
@@ -102,7 +104,7 @@ public final class PLRichTextRunBuilder
     boolean bItalic = false;
     PLColor aColor = m_aDefaultColor;
     // Active annotations keyed by type so a closing toggle of the same type pops.
-    final Map <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations = new HashMap <> ();
+    final ICommonsMap <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations = new CommonsHashMap <> ();
     // Active sub/superscript scope; null when not active.
     MetricsToggle aActiveMetrics = null;
 

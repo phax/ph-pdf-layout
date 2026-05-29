@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
+ * Copyright (C) 2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -124,7 +124,7 @@ public final class PLMarkupCharacters
    *
    * @author Philip Helger
    */
-  private static class ToggleFactory implements IPLMarkupCharacterFactory
+  private static final class ToggleFactory implements IPLMarkupCharacterFactory
   {
     private final Pattern m_aPattern;
     private final String m_sMarker;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
+ * Copyright (C) 2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +21,10 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK;
 import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.style.MustImplementEqualsAndHashcode;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.equals.EqualsHelper;
+import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.PLColor;
 
@@ -44,6 +46,7 @@ import com.helger.pdflayout.base.PLColor;
  * @author Philip Helger
  */
 @Immutable
+@MustImplementEqualsAndHashcode
 public final class PLCMYKColor extends PLColor
 {
   private final float m_fC;
@@ -135,11 +138,7 @@ public final class PLCMYKColor extends PLColor
   @Override
   public int hashCode ()
   {
-    int h = Float.floatToIntBits (m_fC);
-    h = 31 * h + Float.floatToIntBits (m_fM);
-    h = 31 * h + Float.floatToIntBits (m_fY);
-    h = 31 * h + Float.floatToIntBits (m_fK);
-    return h;
+    return new HashCodeGenerator (this).append (m_fC).append (m_fM).append (m_fY).append (m_fK).getHashCode ();
   }
 
   @Override

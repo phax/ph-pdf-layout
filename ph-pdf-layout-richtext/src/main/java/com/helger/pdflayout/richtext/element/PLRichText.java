@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
+ * Copyright (C) 2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,7 @@
 package com.helger.pdflayout.richtext.element;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.action.PDAction;
@@ -30,12 +28,16 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDNamedDestination;
 import org.jspecify.annotations.NonNull;
 
+import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
+import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.CommonsHashMap;
 import com.helger.collection.commons.ICommonsList;
+import com.helger.collection.commons.ICommonsMap;
 import com.helger.pdflayout.base.AbstractPLInlineElement;
 import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
 import com.helger.pdflayout.base.IPLSplittableObject;
@@ -70,6 +72,7 @@ import com.helger.pdflayout.spec.SizeSpec;
  *
  * @author Philip Helger
  */
+@NotThreadSafe
 public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
                         IPLHasHorizontalAlignment <PLRichText>,
                         IPLSplittableObject <PLRichText, PLRichText>
@@ -110,7 +113,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
   @NonNull
   public static PLRichText createFromMarkup (@NonNull final String sMarkup,
                                              @NonNull final PLFontFamily aFontFamily,
-                                             final float fFontSize,
+                                             @Nonnegative final float fFontSize,
                                              @NonNull final PLColor aDefaultColor)
   {
     final PLRichTextRunBuilder aBuilder = new PLRichTextRunBuilder (aFontFamily, fFontSize, aDefaultColor);
@@ -142,7 +145,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
   }
 
   @NonNull
-  public PLRichText setLineSpacing (final float fLineSpacing)
+  public PLRichText setLineSpacing (@Nonnegative final float fLineSpacing)
   {
     ValueEnforcer.isGT0 (fLineSpacing, "LineSpacing");
     m_fLineSpacing = fLineSpacing;
@@ -186,7 +189,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
    */
   @NonNull
   private ICommonsList <PLRichTextLine> _layout (final float fAvailableWidth,
-                                                 @NonNull final Map <FontSpec, LoadedFont> aLoadedFonts) throws IOException
+                                                 @NonNull final ICommonsMap <FontSpec, LoadedFont> aLoadedFonts) throws IOException
   {
     final ICommonsList <PLRichTextLine> aLines = new CommonsArrayList <> ();
     ICommonsList <PLRichTextSegment> aCurrent = new CommonsArrayList <> ();
@@ -334,7 +337,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     try
     {
       final PreparationContextGlobal aGlobal = aCtx.getGlobalContext ();
-      final Map <FontSpec, LoadedFont> aLoadedFonts = new HashMap <> ();
+      final ICommonsMap <FontSpec, LoadedFont> aLoadedFonts = new CommonsHashMap <> ();
       float fMaxTextHeight = 0f;
       float fMaxDescent = 0f;
       for (final PLRichTextRun aRun : m_aRuns)
@@ -360,7 +363,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
         fMaxLineWidth = Math.max (fMaxLineWidth, aLine.getWidth ());
 
       final int nLineCount = m_aPreparedLines.size ();
-      final float fTotalHeight = _heightOfLines (nLineCount);
+      final float fTotalHeight = _getHeightOfLines (nLineCount);
       return new SizeSpec (fMaxLineWidth, fTotalHeight);
     }
     catch (final IOException ex)
@@ -369,7 +372,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     }
   }
 
-  private float _heightOfLines (final int nLineCount)
+  private float _getHeightOfLines (final int nLineCount)
   {
     if (nLineCount <= 0)
       return 0f;
@@ -568,7 +571,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     if (nFit <= 0)
       return PLSplitResult.allOnSecond ();
     // Honour the cap.
-    if (_heightOfLines (nFit) > fAvailableHeight)
+    if (_getHeightOfLines (nFit) > fAvailableHeight)
       --nFit;
     if (nFit <= 0)
       return PLSplitResult.allOnSecond ();
@@ -605,7 +608,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     aNew.m_fDescent = m_fDescent;
     aNew.m_aPreparedLines = aLineCopy;
 
-    final SizeSpec aSize = new SizeSpec (fMaxLineWidth, aNew._heightOfLines (aLineCopy.size ()));
+    final SizeSpec aSize = new SizeSpec (fMaxLineWidth, aNew._getHeightOfLines (aLineCopy.size ()));
     aNew.internalMarkAsPrepared (aSize);
 
     return new PLElementWithSize (aNew, aSize);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
+ * Copyright (C) 2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ package com.helger.pdflayout.richtext.element;
 import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.style.ReturnsMutableObject;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.collection.commons.ICommonsList;
 import com.helger.pdflayout.richtext.annotation.IPLRichTextAnnotation;
@@ -91,6 +92,7 @@ final class PLRichTextSegment
   }
 
   @NonNull
+  @ReturnsMutableObject
   ICommonsList <IPLRichTextAnnotation> getAllAnnotations ()
   {
     return m_aAnnotations;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2026 Philip Helger (www.helger.com)
+ * Copyright (C) 2026 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package com.helger.pdflayout.richtext.element;
 
 import org.jspecify.annotations.NonNull;
 
+import com.helger.annotation.style.ReturnsMutableObject;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.collection.commons.ICommonsList;
 
@@ -44,6 +45,7 @@ final class PLRichTextLine
   }
 
   @NonNull
+  @ReturnsMutableObject
   ICommonsList <PLRichTextSegment> getAllSegments ()
   {
     return m_aSegments;
