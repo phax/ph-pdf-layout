@@ -578,14 +578,13 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     final List <PLRichTextLine> aFirstLines = m_aPreparedLines.subList (0, nFit);
     final List <PLRichTextLine> aSecondLines = m_aPreparedLines.subList (nFit, nLineCount);
 
-    final PLElementWithSize aPart1 = _splitGetCopy (fElementWidth, aFirstLines, false, true, "-1");
-    final PLElementWithSize aPart2 = _splitGetCopy (fElementWidth, aSecondLines, true, false, "-2");
+    final PLElementWithSize aPart1 = _splitGetCopy (aFirstLines, false, true, "-1");
+    final PLElementWithSize aPart2 = _splitGetCopy (aSecondLines, true, false, "-2");
     return PLSplitResult.createSplit (aPart1, aPart2);
   }
 
   @NonNull
-  private PLElementWithSize _splitGetCopy (final float fElementWidth,
-                                           @NonNull final List <PLRichTextLine> aLines,
+  private PLElementWithSize _splitGetCopy (@NonNull final List <PLRichTextLine> aLines,
                                            final boolean bSplittableCopy,
                                            final boolean bIsFirstHalf,
                                            @NonNull final String sIDSuffix)
