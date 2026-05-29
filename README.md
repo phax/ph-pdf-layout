@@ -43,8 +43,109 @@ The basic elements provided are:
 A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files).
   The source code for these examples is https://github.com/phax/ph-pdf-layout/tree/master/ph-pdf-layout/src/test/java/com/helger/pdflayout
 
+# Rich text (markup) — module `ph-pdf-layout-richtext`
+
+The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, and sub/superscript.
+The base `PLText` is single-style by design; rich text fills that gap.
+
+## Huge credit where it's due
+
+The markup grammar (`*bold*`, `_italic_`, `__underline__`, `{color:#rrggbb}`, `{_}sub{_}`, `{^}sup{^}`, `{link:style[uri]}`, `{anchor:name}`, the `--`/`-+`/`-#`/`-!` indentation prefixes, the backslash-escape rules, and the parameterised forms like `__{0.25:1.5}__` and `{_:0.5|0.2}sub{_}`), **the regex catalog**, **the multi-pass split-by-marker parsing strategy**, and **the open/close annotation toggle model** are a port of **Ralf Stuckert's [pdfbox-layout](https://github.com/ralfstuckert/pdfbox-layout)** (MIT license).
+Every test fixture in the rich-text module is a port of the equivalent example in that project.
+
+If you find this module useful, please go give Ralf's project a star — none of this would exist without his original work.
+The migration to ph-pdf-layout exists only because Ralf's library is pinned to PDFBox 1.x/2.x and ph-pdf-layout has already done the PDFBox 3.x work plus the broader element/layout/render lifecycle.
+
+## What's supported
+
+Markup syntax (mirrors Ralf Stuckert's grammar):
+
+| Markup | Effect |
+|---|---|
+| `*bold*` | toggles bold |
+| `_italic_` | toggles italic |
+| `__text__` | underlines `text` |
+| `__{0.25:1.5}text__` | underline with custom baseline offset and line weight |
+| `{_}sub{_}` | subscript (default 0.61× font, +0.15 baseline shift) |
+| `{^}sup{^}` | superscript (default 0.61× font, −0.4 baseline shift) |
+| `{_:0.5|0.2}foo{_}` | subscript with explicit fontScale and baselineOffset |
+| `{color:#rrggbb}` | switches the current colour to RGB (set, not toggle — reset with `{color:#000000}`) |
+| `{color_cmyk:C,M,Y,K}` | switches the current colour to CMYK (percent values 0..100, floats OK — e.g. `{color_cmyk:75,15,0,20}`). The RGB marker is unchanged. Originally requested at [ralfstuckert/pdfbox-layout#94](https://github.com/ralfstuckert/pdfbox-layout/issues/94). |
+| `{link[uri]}…{link}` | wraps the inner text in an external hyperlink (default underline-decorated) |
+| `{link:none[uri]}…{link}` | hyperlink with no visual decoration |
+| `{link[#name]}…{link}` | internal link jumping to a named anchor declared elsewhere |
+| `{anchor:name}…{anchor}` | declares a named destination targetable by `#name` link URIs |
+| `\*`, `\_`, `\{`, `\\` | backslash-escape any marker |
+| `\n` / `\r\n` | hard line break |
+| `-+ item`, `-#  item`, `-- item`, `-!` (line-start) | bullet item, numbered item, plain indent, end-indent block |
+
+## How to use it
+
+Add the Maven dependency:
+
+```xml
+<dependency>
+  <groupId>com.helger</groupId>
+  <artifactId>ph-pdf-layout-richtext</artifactId>
+  <version>x.y.z</version>
+</dependency>
+```
+
+Then build a rich-text element from a markup string:
+
+```java
+final PLFontFamily aFontFamily = new PLFontFamily (PreloadFont.TIMES,
+                                                   PreloadFont.TIMES_BOLD,
+                                                   PreloadFont.TIMES_ITALIC,
+                                                   PreloadFont.TIMES_BOLD_ITALIC);
+
+final PLRichText aRichText = PLRichText.createFromMarkup (
+    "Hello *world*, this is _important_ and __underlined__. " +
+        "Visit {link[https://example.com]}example.com{link} or " +
+        "jump to {link[#summary]}the summary{link}.",
+    aFontFamily, 11f, PLColor.BLACK);
+
+aRichText.setHorzAlign (EHorzAlignment.JUSTIFY);
+
+final PLPageSet aPS = new PLPageSet (PDRectangle.A4).setMargin (40, 60, 40, 60);
+aPS.addElement (aRichText);
+
+new PageLayoutPDF ().addPageSet (aPS).renderTo (new File ("rich.pdf"));
+```
+
+For block-level documents that mix prose paragraphs with bullet/numbered lists, use the higher-level helper:
+
+```java
+final ICommonsList <IPLElement> aBlocks = PLRichTextBlocks.parseMarkup (
+    "Some intro text.\n" +
+    "-+ first bullet\n" +
+    "-+ second bullet\n" +
+    " -+ nested bullet\n" +
+    "-!\n" +
+    "Closing paragraph.",
+    aFontFamily, 11f, PLColor.BLACK);
+
+for (final IPLElement aBlock : aBlocks)
+  aPS.addElement (aBlock);
+```
+
+If you prefer a programmatic API over markup, construct runs directly:
+
+```java
+final FontSpec aRegular = new FontSpec (PreloadFont.TIMES,      11, PLColor.BLACK);
+final FontSpec aBold    = new FontSpec (PreloadFont.TIMES_BOLD, 11, PLColor.BLACK);
+
+final ICommonsList <PLRichTextRun> aRuns = new CommonsArrayList <> ();
+aRuns.add (new PLRichTextRun ("Hello ", aRegular));
+aRuns.add (new PLRichTextRun ("world",  aBold));
+aRuns.add (new PLRichTextRun ("!",      aRegular));
+aPS.addElement (new PLRichText (aRuns));
+```
+
+The rendered example PDFs are in [example-files/richtext](https://github.com/phax/ph-pdf-layout/tree/master/example-files/richtext); the source-side test code that produced them is at [ph-pdf-layout-richtext/src/test](https://github.com/phax/ph-pdf-layout/tree/master/ph-pdf-layout-richtext/src/test/java/com/helger/pdflayout/richtext).
+
 Similar libraries in this context (totally unrelated to this project):
-* https://github.com/ralfstuckert/pdfbox-layout - seems to focus more on text layouting; PDFBox 1.x and 2.x only; MIT license
+* https://github.com/ralfstuckert/pdfbox-layout - text-heavy layout library for PDFBox 1.x/2.x; MIT license. **The optional `ph-pdf-layout-richtext` module is a port of Ralf's markup engine to ph-pdf-layout and PDFBox 3.x — see the rich-text section above for the full credit.**
 * https://github.com/TIBCOSoftware/jasperreports - the "big one" - large scale, complex, heavy-weight, declarative approach; LGPL license
 * https://github.com/LibrePDF/OpenPDF/ - an iText 4.x clone; no PDFBox; LGPL / MPL license
 * https://github.com/dhorions/boxable - a library to create tables based on PDFBox; Apache 2.0 license
@@ -64,6 +165,9 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
+
+In progress (richtext branch)
+* New optional module `ph-pdf-layout-richtext` providing multi-style runs in a single paragraph, plus inline links, anchors, underline, sub/superscript and a Markdown-style markup parser. **Markup grammar, regex catalog and split algorithm are a port of [Ralf Stuckert's pdfbox-layout](https://github.com/ralfstuckert/pdfbox-layout) (MIT) — see the "Rich text" section above for full credit.** Includes a new `PLRichText` block-level element and a `PLRichTextBlocks` helper for paragraph/bullet/numbered-list block sequences.
 
 v8.2.0 - 2026-05-28
 * Added split-fragment tracking on `IPLObject`: `getOriginalID()`, `isSplitFragment()` and `isFirstFragment()`.
