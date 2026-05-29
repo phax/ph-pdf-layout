@@ -27,21 +27,17 @@ import com.helger.pdflayout.base.IPLElement;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
 import com.helger.pdflayout.richtext.run.PLRichTextRun;
-import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * Unit tests for {@link PLRichTextBlocks}. These don't render PDFs — they only
- * verify that the markup-to-blocks pipeline produces the expected sequence of
- * elements with the expected prefixes / margins.
+ * Unit tests for {@link PLRichTextBlocks}. These don't render PDFs — they only verify that the
+ * markup-to-blocks pipeline produces the expected sequence of elements with the expected prefixes /
+ * margins.
  *
  * @author Philip Helger
  */
 public final class PLRichTextBlocksTest
 {
-  private static final PLFontFamily FONT_FAMILY = new PLFontFamily (PreloadFont.REGULAR,
-                                                                     PreloadFont.REGULAR_BOLD,
-                                                                     PreloadFont.REGULAR_ITALIC,
-                                                                     PreloadFont.REGULAR_BOLD_ITALIC);
+  private static final PLFontFamily FONT_FAMILY = PLFontFamily.regular ();
 
   private static String _firstRunText (final IPLElement <?> aElement)
   {
@@ -56,9 +52,9 @@ public final class PLRichTextBlocksTest
   public void testPlainMarkupYieldsSinglePLRichText ()
   {
     final ICommonsList <IPLElement <?>> aBlocks = PLRichTextBlocks.parseMarkup ("Hello world",
-                                                                                 FONT_FAMILY,
-                                                                                 11f,
-                                                                                 PLColor.BLACK);
+                                                                                FONT_FAMILY,
+                                                                                11f,
+                                                                                PLColor.BLACK);
     assertEquals (1, aBlocks.size ());
     assertTrue (aBlocks.get (0) instanceof PLRichText);
     assertEquals ("Hello world", _firstRunText (aBlocks.get (0)));
@@ -69,9 +65,9 @@ public final class PLRichTextBlocksTest
   {
     // intro paragraph + 2 bullets + after paragraph = 4 blocks
     final ICommonsList <IPLElement <?>> aBlocks = PLRichTextBlocks.parseMarkup ("intro\n-+one\n-+two\n-!\nafter",
-                                                                                 FONT_FAMILY,
-                                                                                 11f,
-                                                                                 PLColor.BLACK);
+                                                                                FONT_FAMILY,
+                                                                                11f,
+                                                                                PLColor.BLACK);
     assertEquals (4, aBlocks.size ());
     assertEquals ("intro", _firstRunText (aBlocks.get (0)));
     // bullets prepend "• "
@@ -90,9 +86,9 @@ public final class PLRichTextBlocksTest
   public void testNumberedRestartAfterReset ()
   {
     final ICommonsList <IPLElement <?>> aBlocks = PLRichTextBlocks.parseMarkup ("-#a\n-#b\n-!\n-#c",
-                                                                                 FONT_FAMILY,
-                                                                                 11f,
-                                                                                 PLColor.BLACK);
+                                                                                FONT_FAMILY,
+                                                                                11f,
+                                                                                PLColor.BLACK);
     assertEquals (3, aBlocks.size ());
     assertEquals ("1. a", _firstRunText (aBlocks.get (0)));
     assertEquals ("2. b", _firstRunText (aBlocks.get (1)));

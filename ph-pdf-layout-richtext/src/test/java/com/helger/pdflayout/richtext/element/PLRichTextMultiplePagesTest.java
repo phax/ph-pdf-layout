@@ -27,22 +27,17 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.richtext.PLRichTextTestComparer;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
-import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * Port of the {@code MultiplePagesTest} from the pdfbox-layout source repo.
- * Renders enough markup paragraphs that the {@link PLRichText} block has to
- * split vertically across multiple pages, exercising the splittable path of
- * {@code PLRichText}.
+ * Port of the {@code MultiplePagesTest} from the pdfbox-layout source repo. Renders enough markup
+ * paragraphs that the {@link PLRichText} block has to split vertically across multiple pages,
+ * exercising the splittable path of {@code PLRichText}.
  *
  * @author Philip Helger
  */
 public final class PLRichTextMultiplePagesTest
 {
-  private static final PLFontFamily FONT_FAMILY = new PLFontFamily (PreloadFont.TIMES,
-                                                                    PreloadFont.TIMES_BOLD,
-                                                                    PreloadFont.TIMES_ITALIC,
-                                                                    PreloadFont.TIMES_BOLD_ITALIC);
+  private static final PLFontFamily FONT_FAMILY = PLFontFamily.timesNewRoman ();
 
   @Test
   public void testMultiplePages () throws PDFCreationException

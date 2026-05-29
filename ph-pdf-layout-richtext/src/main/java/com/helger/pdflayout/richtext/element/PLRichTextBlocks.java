@@ -106,6 +106,7 @@ public final class PLRichTextBlocks
     final Matcher aMatcher = INDENT_PATTERN.matcher (sLine);
     if (!aMatcher.find ())
       return null;
+
     final int nLeadingSpaces = aMatcher.group (1).length ();
     final String sMarker = aMatcher.group (2);
     final int nLevel = nLeadingSpaces + 1;
@@ -117,6 +118,7 @@ public final class PLRichTextBlocks
       case "-!" -> EIndentKind.RESET;
       default -> EIndentKind.RESET;
     };
+
     final String sContent = sLine.substring (aMatcher.end ());
     return new IndentMarker (eKind, nLevel, sContent);
   }

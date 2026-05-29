@@ -422,7 +422,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
       }
 
       float fCursorX = fRenderLeft + fIndentX;
-      for (final PLRichTextSegment aSeg : aLine.getAllSegments ())
+      for (final PLRichTextSegment aSeg : aLine.segments ())
       {
         final float fSegStartX = fCursorX;
         final float fSegBaseWidth = aSeg.getWidth ();
@@ -452,7 +452,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
         }
 
         // Inline annotations: underline, hyperlink, anchor.
-        for (final IPLRichTextAnnotation aAnn : aSeg.getAllAnnotations ())
+        for (final IPLRichTextAnnotation aAnn : aSeg.annotations ())
         {
           if (aAnn instanceof final PLUnderlineAnnotation aUnderline)
           {
@@ -482,7 +482,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
   private static int _countCharsInLine (@NonNull final PLRichTextLine aLine)
   {
     int n = 0;
-    for (final PLRichTextSegment aSeg : aLine.getAllSegments ())
+    for (final PLRichTextSegment aSeg : aLine.segments ())
       n += aSeg.getText ().length ();
     return n;
   }
@@ -626,18 +626,18 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     for (int nL = 0; nL < nLineCount; ++nL)
     {
       final PLRichTextLine aLine = aLines.get (nL);
-      for (final PLRichTextSegment aSeg : aLine.getAllSegments ())
+      for (final PLRichTextSegment aSeg : aLine.segments ())
       {
-        aRuns.add (new PLRichTextRun (aSeg.getText (), aSeg.getFontSpec (), aSeg.getAllAnnotations ()));
+        aRuns.add (new PLRichTextRun (aSeg.getText (), aSeg.getFontSpec (), aSeg.annotations ()));
       }
       if (nL < nLineCount - 1)
       {
         // Encode hard newline between lines so that re-preparation reproduces them.
         aRuns.add (new PLRichTextRun ("\n",
-                                      aLines.get (nL).getAllSegments ().isEmpty () ? new FontSpec (PreloadFont.REGULAR,
+                                      aLines.get (nL).segments ().isEmpty () ? new FontSpec (PreloadFont.REGULAR,
                                                                                                    10f) : aLines.get (
                                                                                                                       nL)
-                                                                                                                .getAllSegments ()
+                                                                                                                .segments ()
                                                                                                                 .getFirstOrNull ()
                                                                                                                 .getFontSpec ()));
       }

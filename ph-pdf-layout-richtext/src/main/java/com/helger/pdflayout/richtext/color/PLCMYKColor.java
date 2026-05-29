@@ -20,6 +20,7 @@ import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceCMYK;
 import org.jspecify.annotations.NonNull;
 
+import com.helger.annotation.Nonnegative;
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.annotation.style.MustImplementEqualsAndHashcode;
 import com.helger.base.enforce.ValueEnforcer;
@@ -81,7 +82,10 @@ public final class PLCMYKColor extends PLColor
    * @param fK
    *        black (key), 0..1
    */
-  public PLCMYKColor (final float fC, final float fM, final float fY, final float fK)
+  public PLCMYKColor (final @Nonnegative float fC,
+                      final @Nonnegative float fM,
+                      final @Nonnegative float fY,
+                      final @Nonnegative float fK)
   {
     super (_rgbR (fC, fK), _rgbG (fM, fK), _rgbB (fY, fK));
     ValueEnforcer.isBetweenInclusive (fC, "C", 0f, 1f);
@@ -94,22 +98,22 @@ public final class PLCMYKColor extends PLColor
     m_fK = fK;
   }
 
-  public float getC ()
+  public @Nonnegative float getC ()
   {
     return m_fC;
   }
 
-  public float getM ()
+  public @Nonnegative float getM ()
   {
     return m_fM;
   }
 
-  public float getY ()
+  public @Nonnegative float getY ()
   {
     return m_fY;
   }
 
-  public float getK ()
+  public @Nonnegative float getK ()
   {
     return m_fK;
   }
@@ -166,7 +170,10 @@ public final class PLCMYKColor extends PLColor
    * @return the CMYK colour.
    */
   @NonNull
-  public static PLCMYKColor fromPercent (final float fCPct, final float fMPct, final float fYPct, final float fKPct)
+  public static PLCMYKColor fromPercent (final @Nonnegative float fCPct,
+                                         final @Nonnegative float fMPct,
+                                         final @Nonnegative float fYPct,
+                                         final @Nonnegative float fKPct)
   {
     return new PLCMYKColor (fCPct / 100f, fMPct / 100f, fYPct / 100f, fKPct / 100f);
   }

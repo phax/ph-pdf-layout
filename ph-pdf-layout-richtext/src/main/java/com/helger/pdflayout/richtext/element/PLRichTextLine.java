@@ -46,7 +46,7 @@ final class PLRichTextLine
 
   @NonNull
   @ReturnsMutableObject
-  ICommonsList <PLRichTextSegment> getAllSegments ()
+  ICommonsList <PLRichTextSegment> segments ()
   {
     return m_aSegments;
   }

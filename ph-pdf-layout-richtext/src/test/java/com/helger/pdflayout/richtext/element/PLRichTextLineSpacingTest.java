@@ -27,22 +27,17 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.richtext.PLRichTextTestComparer;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
-import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * Port of the {@code LineSpacingTest} from the pdfbox-layout source repo.
- * Renders the same markup string at three different
- * {@link PLRichText#setLineSpacing line-spacing} values so the spacing
+ * Port of the {@code LineSpacingTest} from the pdfbox-layout source repo. Renders the same markup
+ * string at three different {@link PLRichText#setLineSpacing line-spacing} values so the spacing
  * plumbing can be pixel-diffed against a checked-in reference.
  *
  * @author Philip Helger
  */
 public final class PLRichTextLineSpacingTest
 {
-  private static final PLFontFamily FONT_FAMILY = new PLFontFamily (PreloadFont.TIMES,
-                                                                    PreloadFont.TIMES_BOLD,
-                                                                    PreloadFont.TIMES_ITALIC,
-                                                                    PreloadFont.TIMES_BOLD_ITALIC);
+  private static final PLFontFamily FONT_FAMILY = PLFontFamily.timesNewRoman ();
 
   @Test
   public void testLineSpacing () throws PDFCreationException

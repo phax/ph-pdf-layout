@@ -20,10 +20,9 @@ import com.helger.annotation.concurrent.Immutable;
 import com.helger.base.tostring.ToStringGenerator;
 
 /**
- * Underline annotation for rich text. Draws a horizontal line below the
- * annotated run at render time. The baseline offset is given as a multiplier of
- * the font size (negative values move the line below the baseline) and the line
- * weight scales relative to the font size.
+ * Underline annotation for rich text. Draws a horizontal line below the annotated run at render
+ * time. The baseline offset is given as a multiplier of the font size (negative values move the
+ * line below the baseline) and the line weight scales relative to the font size.
  *
  * @author Philip Helger
  */

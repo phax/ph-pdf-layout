@@ -27,26 +27,22 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.richtext.PLRichTextTestComparer;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
-import com.helger.pdflayout.spec.PreloadFont;
 
 /**
  * Port of the {@code MarkupTest} from the pdfbox-layout source repo to the ph-pdf-layout rich-text
  * element. Renders the same bold/italic/colour/underline/sub-superscript markup combinations and
  * pixel-diffs against a checked-in reference.
  * <p>
- * The Markdown-style indentation prefixes ({@code --}, {@code -!}, {@code -+}, {@code -#}) from
- * the original test live in {@code PLRichTextIndentationTest} because they operate at the
- * block / paragraph level rather than the inline run level.
+ * The Markdown-style indentation prefixes ({@code --}, {@code -!}, {@code -+}, {@code -#}) from the
+ * original test live in {@code PLRichTextIndentationTest} because they operate at the block /
+ * paragraph level rather than the inline run level.
  * </p>
  *
  * @author Philip Helger
  */
 public final class PLRichTextMarkupTest
 {
-  private static final PLFontFamily FONT_FAMILY = new PLFontFamily (PreloadFont.TIMES,
-                                                                    PreloadFont.TIMES_BOLD,
-                                                                    PreloadFont.TIMES_ITALIC,
-                                                                    PreloadFont.TIMES_BOLD_ITALIC);
+  private static final PLFontFamily FONT_FAMILY = PLFontFamily.timesNewRoman ();
 
   @Test
   public void testMarkup () throws PDFCreationException

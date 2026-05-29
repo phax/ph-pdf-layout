@@ -27,21 +27,17 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.richtext.PLRichTextTestComparer;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
-import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * Port of the {@code LandscapeTest} from the pdfbox-layout source repo. Renders
- * markup on an A4 page rotated to landscape orientation so the page-size
- * plumbing for non-portrait sheets is covered by a pixel-diff regression.
+ * Port of the {@code LandscapeTest} from the pdfbox-layout source repo. Renders markup on an A4
+ * page rotated to landscape orientation so the page-size plumbing for non-portrait sheets is
+ * covered by a pixel-diff regression.
  *
  * @author Philip Helger
  */
 public final class PLRichTextLandscapeTest
 {
-  private static final PLFontFamily FONT_FAMILY = new PLFontFamily (PreloadFont.TIMES,
-                                                                    PreloadFont.TIMES_BOLD,
-                                                                    PreloadFont.TIMES_ITALIC,
-                                                                    PreloadFont.TIMES_BOLD_ITALIC);
+  private static final PLFontFamily FONT_FAMILY = PLFontFamily.timesNewRoman ();
 
   @Test
   public void testLandscape () throws PDFCreationException

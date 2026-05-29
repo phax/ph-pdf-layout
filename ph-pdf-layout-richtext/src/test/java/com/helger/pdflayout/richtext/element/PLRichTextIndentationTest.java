@@ -29,23 +29,17 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.richtext.PLRichTextTestComparer;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
-import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * Render-and-pixel-diff regression for {@link PLRichTextBlocks}. Builds a
- * markup string mirroring the indentation portion of the original
- * {@code IndentationTest} (plain paragraph + bullet list + numbered list +
- * closing paragraph) and compares the resulting PDF against a checked-in
- * reference.
+ * Render-and-pixel-diff regression for {@link PLRichTextBlocks}. Builds a markup string mirroring
+ * the indentation portion of the original {@code IndentationTest} (plain paragraph + bullet list +
+ * numbered list + closing paragraph) and compares the resulting PDF against a checked-in reference.
  *
  * @author Philip Helger
  */
 public final class PLRichTextIndentationTest
 {
-  private static final PLFontFamily FONT_FAMILY = new PLFontFamily (PreloadFont.TIMES,
-                                                                    PreloadFont.TIMES_BOLD,
-                                                                    PreloadFont.TIMES_ITALIC,
-                                                                    PreloadFont.TIMES_BOLD_ITALIC);
+  private static final PLFontFamily FONT_FAMILY = PLFontFamily.timesNewRoman ();
 
   @Test
   public void testIndent () throws PDFCreationException
@@ -66,9 +60,9 @@ public final class PLRichTextIndentationTest
     final PLPageSet aPS = new PLPageSet (PDRectangle.A4).setMargin (40, 60, 40, 60);
 
     final ICommonsList <IPLElement <?>> aBlocks = PLRichTextBlocks.parseMarkup (sMarkup,
-                                                                                 FONT_FAMILY,
-                                                                                 11f,
-                                                                                 PLColor.BLACK);
+                                                                                FONT_FAMILY,
+                                                                                11f,
+                                                                                PLColor.BLACK);
     for (final IPLElement <?> aBlock : aBlocks)
       aPS.addElement (aBlock);
 

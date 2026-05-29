@@ -21,16 +21,17 @@ import org.jspecify.annotations.NonNull;
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.name.IHasName;
 import com.helger.base.tostring.ToStringGenerator;
 
 /**
- * Anchor annotation for rich text. Declares a named target that can be linked
- * to from a {@link PLHyperlinkAnnotation} whose URI is {@code #<name>}.
+ * Anchor annotation for rich text. Declares a named target that can be linked to from a
+ * {@link PLHyperlinkAnnotation} whose URI is {@code #<name>}.
  *
  * @author Philip Helger
  */
 @Immutable
-public final class PLAnchorAnnotation implements IPLRichTextAnnotation
+public final class PLAnchorAnnotation implements IPLRichTextAnnotation, IHasName
 {
   private final String m_sName;
 

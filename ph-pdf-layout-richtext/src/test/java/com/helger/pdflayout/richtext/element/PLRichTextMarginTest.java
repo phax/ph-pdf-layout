@@ -27,24 +27,19 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.richtext.PLRichTextTestComparer;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
-import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * Port of the {@code MarginTest} from the pdfbox-layout source repo. The
- * original test exercised per-element margins via
- * {@code VerticalLayoutHint(margin...)}; in ph-pdf-layout the closest analogue
- * is {@link PLPageSet#setMargin}. This test renders three blocks of markup on
- * a {@link PLPageSet} with an asymmetric margin so the page-level margin
- * plumbing is covered by a pixel-diff regression.
+ * Port of the {@code MarginTest} from the pdfbox-layout source repo. The original test exercised
+ * per-element margins via {@code VerticalLayoutHint(margin...)}; in ph-pdf-layout the closest
+ * analogue is {@link PLPageSet#setMargin}. This test renders three blocks of markup on a
+ * {@link PLPageSet} with an asymmetric margin so the page-level margin plumbing is covered by a
+ * pixel-diff regression.
  *
  * @author Philip Helger
  */
 public final class PLRichTextMarginTest
 {
-  private static final PLFontFamily FONT_FAMILY = new PLFontFamily (PreloadFont.TIMES,
-                                                                    PreloadFont.TIMES_BOLD,
-                                                                    PreloadFont.TIMES_ITALIC,
-                                                                    PreloadFont.TIMES_BOLD_ITALIC);
+  private static final PLFontFamily FONT_FAMILY = PLFontFamily.timesNewRoman ();
 
   @Test
   public void testMargin () throws PDFCreationException

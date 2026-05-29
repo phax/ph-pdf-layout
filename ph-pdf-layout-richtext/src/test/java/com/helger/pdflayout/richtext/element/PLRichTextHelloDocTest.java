@@ -27,21 +27,17 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.richtext.PLRichTextTestComparer;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
-import com.helger.pdflayout.spec.PreloadFont;
 
 /**
- * Port of the {@code HelloDocTest} smoke test from the pdfbox-layout source
- * repo. Renders a single {@link PLRichText} containing a tiny "Hello *world*"
- * markup string and pixel-diffs against a checked-in reference.
+ * Port of the {@code HelloDocTest} smoke test from the pdfbox-layout source repo. Renders a single
+ * {@link PLRichText} containing a tiny "Hello *world*" markup string and pixel-diffs against a
+ * checked-in reference.
  *
  * @author Philip Helger
  */
 public final class PLRichTextHelloDocTest
 {
-  private static final PLFontFamily FONT_FAMILY = new PLFontFamily (PreloadFont.TIMES,
-                                                                    PreloadFont.TIMES_BOLD,
-                                                                    PreloadFont.TIMES_ITALIC,
-                                                                    PreloadFont.TIMES_BOLD_ITALIC);
+  private static final PLFontFamily FONT_FAMILY = PLFontFamily.timesNewRoman ();
 
   @Test
   public void testHelloDoc () throws PDFCreationException

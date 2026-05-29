@@ -93,7 +93,7 @@ final class PLRichTextSegment
 
   @NonNull
   @ReturnsMutableObject
-  ICommonsList <IPLRichTextAnnotation> getAllAnnotations ()
+  ICommonsList <IPLRichTextAnnotation> annotations ()
   {
     return m_aAnnotations;
   }

@@ -32,10 +32,9 @@ import com.helger.pdflayout.spec.FontSpec;
 
 /**
  * Immutable container for a single styled run of text inside a
- * {@link com.helger.pdflayout.richtext.element.PLRichText}. A run carries the
- * text itself (without any markup), the font/size/color via a {@link FontSpec}
- * and an arbitrary list of {@link IPLRichTextAnnotation inline annotations}
- * (hyperlink, anchor, underline, ...).
+ * {@link com.helger.pdflayout.richtext.element.PLRichText}. A run carries the text itself (without
+ * any markup), the font/size/color via a {@link FontSpec} and an arbitrary list of
+ * {@link IPLRichTextAnnotation inline annotations} (hyperlink, anchor, underline, ...).
  *
  * @author Philip Helger
  */
@@ -97,9 +96,9 @@ public final class PLRichTextRun
   }
 
   /**
-   * @return the baseline offset scale (used for subscript / superscript). A
-   *         positive value shifts the text downward (subscript), a negative one
-   *         upward (superscript). Zero means no offset.
+   * @return the baseline offset scale (used for subscript / superscript). A positive value shifts
+   *         the text downward (subscript), a negative one upward (superscript). Zero means no
+   *         offset.
    */
   public float getBaselineOffsetScale ()
   {
@@ -107,23 +106,21 @@ public final class PLRichTextRun
   }
 
   /**
-   * @return the first underline annotation attached to this run, or
-   *         <code>null</code> if none.
+   * @return the first underline annotation attached to this run, or <code>null</code> if none.
    */
   @Nullable
   public PLUnderlineAnnotation getUnderline ()
   {
-    return m_aAnnotations.findFirstMapped (a -> a instanceof PLUnderlineAnnotation, a -> (PLUnderlineAnnotation) a);
+    return m_aAnnotations.findFirstMapped (PLUnderlineAnnotation.class::isInstance, PLUnderlineAnnotation.class::cast);
   }
 
   /**
-   * @return the first hyperlink annotation attached to this run, or
-   *         <code>null</code> if none.
+   * @return the first hyperlink annotation attached to this run, or <code>null</code> if none.
    */
   @Nullable
   public PLHyperlinkAnnotation getHyperlink ()
   {
-    return m_aAnnotations.findFirstMapped (a -> a instanceof PLHyperlinkAnnotation, a -> (PLHyperlinkAnnotation) a);
+    return m_aAnnotations.findFirstMapped (PLHyperlinkAnnotation.class::isInstance, PLHyperlinkAnnotation.class::cast);
   }
 
   /**
