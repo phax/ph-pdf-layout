@@ -211,7 +211,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
           if (fSegWidth <= fAvail)
           {
             // Fits as a whole.
-            aCurrent.add (new PLRichTextSegment (sRemaining, aFontSpec, aLoadedFont, fSegWidth, aAnnotations));
+            aCurrent.add (new PLRichTextSegment (sRemaining, aFontSpec, aLoadedFont, fSegWidth, aAnnotations, aRun.getBaselineOffsetScale ()));
             fCurrentWidth += fSegWidth;
             sRemaining = "";
           }
@@ -228,7 +228,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
                 final int nForce = Math.max (1, _findBreakPoint (sRemaining, aLoadedFont, fFontSize, fAvail, true));
                 final String sPart = sRemaining.substring (0, nForce);
                 final float fPartWidth = aLoadedFont.getStringWidth (sPart, fFontSize);
-                aCurrent.add (new PLRichTextSegment (sPart, aFontSpec, aLoadedFont, fPartWidth, aAnnotations));
+                aCurrent.add (new PLRichTextSegment (sPart, aFontSpec, aLoadedFont, fPartWidth, aAnnotations, aRun.getBaselineOffsetScale ()));
                 fCurrentWidth += fPartWidth;
                 sRemaining = sRemaining.substring (nForce);
               }
@@ -253,7 +253,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
                   nConsume = nBreakAt + 1;
                 }
               final float fPartWidth = aLoadedFont.getStringWidth (sPart, fFontSize);
-              aCurrent.add (new PLRichTextSegment (sPart, aFontSpec, aLoadedFont, fPartWidth, aAnnotations));
+              aCurrent.add (new PLRichTextSegment (sPart, aFontSpec, aLoadedFont, fPartWidth, aAnnotations, aRun.getBaselineOffsetScale ()));
               fCurrentWidth += fPartWidth;
               aLines.add (new PLRichTextLine (aCurrent, fCurrentWidth, false));
               aCurrent = new CommonsArrayList <> ();
@@ -431,28 +431,34 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
         final float fSegExtra = nSegChars * fCharSpacing;
         final float fSegFullWidth = fSegBaseWidth + fSegExtra;
 
+        // Sub/superscript: shift the rendered baseline by fontSize *
+        // baselineOffsetScale. Positive offset = downward (subscript), negative
+        // offset = upward (superscript). The underline draws under the *shifted*
+        // glyphs so it tracks the visible text.
+        final float fFontSize = aSeg.getFontSpec ().getFontSize ();
+        final float fSegBaselineY = fBaselineY - fFontSize * aSeg.getBaselineOffsetScale ();
+
         if (nSegChars > 0)
         {
           aCS.beginText ();
           aCS.setFont (aSeg.getLoadedFont (), aSeg.getFontSpec ());
           aCS.setCharacterSpacing (fCharSpacing);
-          aCS.moveTextPositionByAmount (fSegStartX, fBaselineY);
+          aCS.moveTextPositionByAmount (fSegStartX, fSegBaselineY);
           aCS.drawString (aSeg.getText ());
           aCS.endText ();
         }
 
         // Inline annotations: underline, hyperlink, anchor.
-        final float fFontSize = aSeg.getFontSpec ().getFontSize ();
         for (final IPLRichTextAnnotation aAnn : aSeg.getAllAnnotations ())
         {
           if (aAnn instanceof final PLUnderlineAnnotation aUnderline)
           {
-            _drawUnderline (aCS, aSeg, aUnderline, fSegStartX, fBaselineY, fSegFullWidth, fFontSize);
+            _drawUnderline (aCS, aSeg, aUnderline, fSegStartX, fSegBaselineY, fSegFullWidth, fFontSize);
           }
           else
             if (aAnn instanceof final PLHyperlinkAnnotation aHyperlink)
             {
-              _addHyperlinkAnnotation (aCtx, aHyperlink, fSegStartX, fBaselineY, fSegFullWidth, fFontSize);
+              _addHyperlinkAnnotation (aCtx, aHyperlink, fSegStartX, fSegBaselineY, fSegFullWidth, fFontSize);
             }
             else
               if (aAnn instanceof final PLAnchorAnnotation aAnchor)
@@ -461,7 +467,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
                                                            aAnchor.getName (),
                                                            aCS.getPage (),
                                                            fSegStartX,
-                                                           fBaselineY + fFontSize);
+                                                           fSegBaselineY + fFontSize);
               }
         }
 

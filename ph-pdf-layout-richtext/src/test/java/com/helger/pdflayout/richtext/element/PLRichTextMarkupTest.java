@@ -31,13 +31,12 @@ import com.helger.pdflayout.spec.PreloadFont;
 
 /**
  * Port of the {@code MarkupTest} from the pdfbox-layout source repo to the ph-pdf-layout rich-text
- * element. Renders the same bold/italic/colour/underline markup combinations and pixel-diffs
- * against a checked-in reference.
+ * element. Renders the same bold/italic/colour/underline/sub-superscript markup combinations and
+ * pixel-diffs against a checked-in reference.
  * <p>
- * Subscript ({@code {_}…{_}}), superscript ({@code {^}…{^}}) and the Markdown-style indentation
- * prefixes ({@code --}, {@code -!}, {@code -+}, {@code -#}) from the original test are
- * intentionally NOT included — those features are out of scope for the rich-text submodule (see
- * project plan).
+ * The Markdown-style indentation prefixes ({@code --}, {@code -!}, {@code -+}, {@code -#}) from
+ * the original test live in {@code PLRichTextIndentationTest} because they operate at the
+ * block / paragraph level rather than the inline run level.
  * </p>
  *
  * @author Philip Helger
@@ -80,6 +79,11 @@ public final class PLRichTextMarkupTest
                                                  PLColor.BLACK));
     aPS.addElement (PLRichText.createFromMarkup ("You can alternate the position and thickness of an __underline__, " +
                                                  "so you may also use this to __{0.25:}strike through__ or blacken __{0.25:20}things__ out.",
+                                                 FONT_FAMILY,
+                                                 11f,
+                                                 PLColor.BLACK));
+    aPS.addElement (PLRichText.createFromMarkup ("Inline metrics: water H{_}2{_}O, areas in m{^}2{^} and m{^}3{^}, " +
+                                                 "{_}subscript{_} and {^}superscript{^}.",
                                                  FONT_FAMILY,
                                                  11f,
                                                  PLColor.BLACK));

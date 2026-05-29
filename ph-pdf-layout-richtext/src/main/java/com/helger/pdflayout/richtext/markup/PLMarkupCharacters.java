@@ -38,6 +38,9 @@ import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
  * <li>{@code *bold*} — toggles bold</li>
  * <li>{@code _italic_} — toggles italic</li>
  * <li>{@code __text__} — toggles underline</li>
+ * <li>{@code {_}sub{_}} — toggles subscript (font scaled, baseline shifted down)</li>
+ * <li>{@code {^}sup{^}} — toggles superscript (font scaled, baseline shifted up)</li>
+ * <li>{@code {_:0.5|0.2}sub{_}} — subscript with custom font / baseline scale</li>
  * <li>{@code {color:#rrggbb}} — switches the current color</li>
  * <li>{@code {link:ul[http://example.com]}} — wraps text in a hyperlink. The
  * style (<code>ul</code> = underline, <code>none</code> = no decoration) is
@@ -68,6 +71,9 @@ public final class PLMarkupCharacters
 
   /** Factory for the underline marker {@code __}. */
   public static final IPLMarkupCharacterFactory UNDERLINE = new UnderlineFactory ();
+
+  /** Factory for the subscript / superscript metrics marker ({@code {_}} / {@code {^}}). */
+  public static final IPLMarkupCharacterFactory METRICS = new MetricsFactory ();
 
   /** Factory for the hyperlink marker {@code {link:style[uri]}}. */
   public static final IPLMarkupCharacterFactory HYPERLINK = new HyperlinkFactory ();
@@ -198,6 +204,78 @@ public final class PLMarkupCharacters
                                                       PLUnderlineAnnotation.DEFAULT_BASELINE_OFFSET_SCALE);
       final float fLineWeight = _parseFloat (aMatcher.group (6), PLUnderlineAnnotation.DEFAULT_LINE_WEIGHT);
       return new IPLMarkupToken.AnnotationToggle (new PLUnderlineAnnotation (fBaselineOffsetScale, fLineWeight));
+    }
+
+    @Override
+    @NonNull
+    public String unescape (@NonNull final String sText)
+    {
+      return sText.replaceAll ("\\\\" + Pattern.quote (MARKER), MARKER);
+    }
+
+    private static float _parseFloat (final String sValue, final float fDefault)
+    {
+      if (sValue == null)
+        return fDefault;
+      try
+      {
+        return Float.parseFloat (sValue);
+      }
+      catch (final NumberFormatException ignore)
+      {
+        return fDefault;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+
+  private static final class MetricsFactory implements IPLMarkupCharacterFactory
+  {
+    private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{(_|\\^)(:(-?\\d+(\\.\\d*)?)\\|(-?\\d+(\\.\\d*)?))?\\}");
+    private static final String MARKER = "{";
+
+    /** Default font scale for both subscript and superscript. */
+    public static final float DEFAULT_FONT_SCALE = 0.61f;
+    /** Default baseline offset scale for superscript (shifts text up). */
+    public static final float DEFAULT_SUPERSCRIPT_BASELINE_OFFSET_SCALE = -0.4f;
+    /** Default baseline offset scale for subscript (shifts text down). */
+    public static final float DEFAULT_SUBSCRIPT_BASELINE_OFFSET_SCALE = 0.15f;
+
+    @Override
+    @NonNull
+    public Pattern getPattern ()
+    {
+      return PATTERN;
+    }
+
+    @Override
+    @NonNull
+    public IPLMarkupToken createToken (@NonNull final String sText, @NonNull final Matcher aMatcher)
+    {
+      final String sMarker = aMatcher.group (2);
+      final boolean bIsSuperscript = "^".equals (sMarker);
+      final String sFontScale = aMatcher.group (4);
+      final String sBaselineOffsetScale = aMatcher.group (6);
+      final float fFontScale = _parseFloat (sFontScale, DEFAULT_FONT_SCALE);
+      final float fBaselineOffsetScale = _parseFloat (sBaselineOffsetScale,
+                                                       bIsSuperscript ? DEFAULT_SUPERSCRIPT_BASELINE_OFFSET_SCALE
+                                                                      : DEFAULT_SUBSCRIPT_BASELINE_OFFSET_SCALE);
+      // Build a canonical key. Two toggles with the same marker AND the same
+      // params are considered an open/close pair. A bare "{_}foo{_}" therefore
+      // matches itself; "{_:0.5|0.2}foo{_}" intentionally does NOT match (the
+      // open differs from the close) — mirror the original library where the
+      // close marker is also a bare "{_}".
+      final StringBuilder aKey = new StringBuilder ();
+      aKey.append (sMarker);
+      if (sFontScale != null || sBaselineOffsetScale != null)
+      {
+        aKey.append (':');
+        aKey.append (sFontScale == null ? "" : sFontScale);
+        aKey.append ('|');
+        aKey.append (sBaselineOffsetScale == null ? "" : sBaselineOffsetScale);
+      }
+      return new IPLMarkupToken.MetricsToggle (aKey.toString (), fFontScale, fBaselineOffsetScale);
     }
 
     @Override

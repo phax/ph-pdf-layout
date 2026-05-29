@@ -45,6 +45,9 @@ public final class PLMarkupParser
    * line breaks.</li>
    * <li>UNDERLINE (<code>__</code>) — before ITALIC (<code>_</code>) so the
    * pair isn't consumed as two italics.</li>
+   * <li>METRICS (<code>{_}</code> / <code>{^}</code>) — must run before ITALIC
+   * so the bare <code>_</code> inside <code>{_}</code> isn't swallowed as an
+   * italic marker.</li>
    * <li>BOLD (<code>*</code>)</li>
    * <li>ITALIC (<code>_</code>)</li>
    * <li>COLOR (<code>{color:#xxxxxx}</code>)</li>
@@ -54,6 +57,7 @@ public final class PLMarkupParser
    */
   public static final ICommonsList <IPLMarkupCharacterFactory> DEFAULT_FACTORIES = new CommonsArrayList <> (PLMarkupCharacters.NEWLINE,
                                                                                                             PLMarkupCharacters.UNDERLINE,
+                                                                                                            PLMarkupCharacters.METRICS,
                                                                                                             PLMarkupCharacters.BOLD,
                                                                                                             PLMarkupCharacters.ITALIC,
                                                                                                             PLMarkupCharacters.COLOR,

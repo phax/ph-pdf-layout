@@ -41,6 +41,7 @@ final class PLRichTextSegment
     private final LoadedFont m_aLoadedFont;
     private final float m_fWidth;
     private final ICommonsList <IPLRichTextAnnotation> m_aAnnotations;
+    private final float m_fBaselineOffsetScale;
 
     PLRichTextSegment (@NonNull final String sText,
                        @NonNull final FontSpec aFontSpec,
@@ -48,11 +49,22 @@ final class PLRichTextSegment
                        final float fWidth,
                        @NonNull final ICommonsList <IPLRichTextAnnotation> aAnnotations)
     {
+        this (sText, aFontSpec, aLoadedFont, fWidth, aAnnotations, 0f);
+    }
+
+    PLRichTextSegment (@NonNull final String sText,
+                       @NonNull final FontSpec aFontSpec,
+                       @NonNull final LoadedFont aLoadedFont,
+                       final float fWidth,
+                       @NonNull final ICommonsList <IPLRichTextAnnotation> aAnnotations,
+                       final float fBaselineOffsetScale)
+    {
         m_sText = sText;
         m_aFontSpec = aFontSpec;
         m_aLoadedFont = aLoadedFont;
         m_fWidth = fWidth;
         m_aAnnotations = aAnnotations;
+        m_fBaselineOffsetScale = fBaselineOffsetScale;
     }
 
     @NonNull
@@ -82,6 +94,11 @@ final class PLRichTextSegment
     ICommonsList <IPLRichTextAnnotation> getAllAnnotations ()
     {
         return m_aAnnotations;
+    }
+
+    float getBaselineOffsetScale ()
+    {
+        return m_fBaselineOffsetScale;
     }
 
     @Override

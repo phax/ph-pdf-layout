@@ -134,4 +134,37 @@ public final class PLMarkupParserTest
     assertNotNull (aTokens.findFirst (t -> t instanceof IPLMarkupToken.ItalicToggle));
     assertNotNull (aTokens.findFirst (t -> t instanceof IPLMarkupToken.Color));
   }
+
+  @Test
+  public void testSubscriptDefault ()
+  {
+    // x{_}foo{_}y -> Text("x"), MetricsToggle(open), Text("foo"), MetricsToggle(close), Text("y")
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("x{_}foo{_}y");
+    assertEquals (5, aTokens.size ());
+    assertEquals ("x", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.MetricsToggle);
+    final IPLMarkupToken.MetricsToggle aOpen = (IPLMarkupToken.MetricsToggle) aTokens.get (1);
+    assertEquals (0.61f, aOpen.getFontScale (), 0.0001f);
+    assertEquals (0.15f, aOpen.getBaselineOffsetScale (), 0.0001f);
+    assertEquals ("foo", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+    assertTrue (aTokens.get (3) instanceof IPLMarkupToken.MetricsToggle);
+    final IPLMarkupToken.MetricsToggle aClose = (IPLMarkupToken.MetricsToggle) aTokens.get (3);
+    // Open and close share the same key so the run-builder can match them.
+    assertEquals (aOpen.getKey (), aClose.getKey ());
+    assertEquals ("y", ((IPLMarkupToken.Text) aTokens.get (4)).getText ());
+  }
+
+  @Test
+  public void testSuperscriptCustomParams ()
+  {
+    // {^:0.5|-0.3}up{^} -> MetricsToggle(fontScale=0.5, baselineOffsetScale=-0.3), Text("up"), MetricsToggle(close)
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("{^:0.5|-0.3}up{^}");
+    assertEquals (3, aTokens.size ());
+    assertTrue (aTokens.get (0) instanceof IPLMarkupToken.MetricsToggle);
+    final IPLMarkupToken.MetricsToggle aOpen = (IPLMarkupToken.MetricsToggle) aTokens.get (0);
+    assertEquals (0.5f, aOpen.getFontScale (), 0.0001f);
+    assertEquals (-0.3f, aOpen.getBaselineOffsetScale (), 0.0001f);
+    assertEquals ("up", ((IPLMarkupToken.Text) aTokens.get (1)).getText ());
+    assertTrue (aTokens.get (2) instanceof IPLMarkupToken.MetricsToggle);
+  }
 }

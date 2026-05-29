@@ -36,7 +36,8 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
                                                IPLMarkupToken.ItalicToggle,
                                                IPLMarkupToken.Color,
                                                IPLMarkupToken.NewLine,
-                                               IPLMarkupToken.AnnotationToggle
+                                               IPLMarkupToken.AnnotationToggle,
+                                               IPLMarkupToken.MetricsToggle
 {
   /** Plain text — the actual content. */
   @Immutable
@@ -168,6 +169,58 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     public String toString ()
     {
       return "AnnotationToggle[" + m_aAnnotation + "]";
+    }
+  }
+
+  /**
+   * Toggle a subscript/superscript metrics scope (the <code>{_}</code> and
+   * <code>{^}</code> markers). The same marker both opens and closes the scope —
+   * the run-builder compares tokens via {@link #getKey()} to identify the
+   * matching close.
+   */
+  @Immutable
+  final class MetricsToggle implements IPLMarkupToken
+  {
+    private final String m_sKey;
+    private final float m_fFontScale;
+    private final float m_fBaselineOffsetScale;
+
+    public MetricsToggle (@NonNull final String sKey,
+                          final float fFontScale,
+                          final float fBaselineOffsetScale)
+    {
+      ValueEnforcer.notNull (sKey, "Key");
+      m_sKey = sKey;
+      m_fFontScale = fFontScale;
+      m_fBaselineOffsetScale = fBaselineOffsetScale;
+    }
+
+    /**
+     * @return a canonical key identifying this metrics toggle. Two tokens with
+     *         the same key (i.e. the same marker and the same parameter values)
+     *         are considered a matching open/close pair.
+     */
+    @NonNull
+    public String getKey ()
+    {
+      return m_sKey;
+    }
+
+    public float getFontScale ()
+    {
+      return m_fFontScale;
+    }
+
+    public float getBaselineOffsetScale ()
+    {
+      return m_fBaselineOffsetScale;
+    }
+
+    @Override
+    public String toString ()
+    {
+      return "MetricsToggle[" + m_sKey + ", fontScale=" + m_fFontScale +
+             ", baselineOffsetScale=" + m_fBaselineOffsetScale + "]";
     }
   }
 }

@@ -44,21 +44,31 @@ public final class PLRichTextRun
   private final String m_sText;
   private final FontSpec m_aFontSpec;
   private final ICommonsList <IPLRichTextAnnotation> m_aAnnotations;
+  private final float m_fBaselineOffsetScale;
 
   public PLRichTextRun (@NonNull final String sText, @NonNull final FontSpec aFontSpec)
   {
-    this (sText, aFontSpec, null);
+    this (sText, aFontSpec, null, 0f);
   }
 
   public PLRichTextRun (@NonNull final String sText,
                         @NonNull final FontSpec aFontSpec,
                         @Nullable final ICommonsList <IPLRichTextAnnotation> aAnnotations)
   {
+    this (sText, aFontSpec, aAnnotations, 0f);
+  }
+
+  public PLRichTextRun (@NonNull final String sText,
+                        @NonNull final FontSpec aFontSpec,
+                        @Nullable final ICommonsList <IPLRichTextAnnotation> aAnnotations,
+                        final float fBaselineOffsetScale)
+  {
     ValueEnforcer.notNull (sText, "Text");
     ValueEnforcer.notNull (aFontSpec, "FontSpec");
     m_sText = sText;
     m_aFontSpec = aFontSpec;
     m_aAnnotations = aAnnotations == null ? new CommonsArrayList <> () : new CommonsArrayList <> (aAnnotations);
+    m_fBaselineOffsetScale = fBaselineOffsetScale;
   }
 
   @NonNull
@@ -83,6 +93,16 @@ public final class PLRichTextRun
   public boolean hasAnyAnnotation ()
   {
     return m_aAnnotations.isNotEmpty ();
+  }
+
+  /**
+   * @return the baseline offset scale (used for subscript / superscript). A
+   *         positive value shifts the text downward (subscript), a negative one
+   *         upward (superscript). Zero means no offset.
+   */
+  public float getBaselineOffsetScale ()
+  {
+    return m_fBaselineOffsetScale;
   }
 
   /**
@@ -115,12 +135,13 @@ public final class PLRichTextRun
   @NonNull
   public PLRichTextRun withText (@NonNull final String sText)
   {
-    return new PLRichTextRun (sText, m_aFontSpec, m_aAnnotations);
+    return new PLRichTextRun (sText, m_aFontSpec, m_aAnnotations, m_fBaselineOffsetScale);
   }
 
   @Override
   public String toString ()
   {
-    return "PLRichTextRun[text='" + m_sText + "', fontSpec=" + m_aFontSpec + ", annotations=" + m_aAnnotations + "]";
+    return "PLRichTextRun[text='" + m_sText + "', fontSpec=" + m_aFontSpec +
+           ", annotations=" + m_aAnnotations + ", baselineOffsetScale=" + m_fBaselineOffsetScale + "]";
   }
 }

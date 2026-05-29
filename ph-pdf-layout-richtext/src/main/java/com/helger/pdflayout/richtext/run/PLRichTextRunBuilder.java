@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.enforce.ValueEnforcer;
@@ -28,6 +29,7 @@ import com.helger.collection.commons.ICommonsList;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.richtext.annotation.IPLRichTextAnnotation;
 import com.helger.pdflayout.richtext.markup.IPLMarkupToken;
+import com.helger.pdflayout.richtext.markup.IPLMarkupToken.MetricsToggle;
 import com.helger.pdflayout.richtext.markup.PLMarkupParser;
 import com.helger.pdflayout.spec.FontSpec;
 
@@ -83,17 +85,19 @@ public final class PLRichTextRunBuilder
     PLColor aColor = m_aDefaultColor;
     // Active annotations keyed by type so a closing toggle of the same type pops.
     final Map <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations = new HashMap <> ();
+    // Active sub/superscript scope; null when not active.
+    MetricsToggle aActiveMetrics = null;
 
     for (final IPLMarkupToken aToken : aTokens)
     {
       if (aToken instanceof final IPLMarkupToken.Text aText)
       {
-        aResult.add (_makeRun (aText.getText (), bBold, bItalic, aColor, aActiveAnnotations));
+        aResult.add (_makeRun (aText.getText (), bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
       }
       else
         if (aToken instanceof IPLMarkupToken.NewLine)
         {
-          aResult.add (_makeRun ("\n", bBold, bItalic, aColor, aActiveAnnotations));
+          aResult.add (_makeRun ("\n", bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
         }
         else
           if (aToken instanceof IPLMarkupToken.BoldToggle)
@@ -119,6 +123,15 @@ public final class PLRichTextRunBuilder
                   else
                     aActiveAnnotations.put (aType, aToggle.getAnnotation ());
                 }
+                else
+                  if (aToken instanceof final MetricsToggle aMetrics)
+                  {
+                    // Same key means we're closing the active scope.
+                    if (aActiveMetrics != null && aActiveMetrics.getKey ().equals (aMetrics.getKey ()))
+                      aActiveMetrics = null;
+                    else
+                      aActiveMetrics = aMetrics;
+                  }
     }
     return aResult;
   }
@@ -142,11 +155,14 @@ public final class PLRichTextRunBuilder
                                   final boolean bBold,
                                   final boolean bItalic,
                                   @NonNull final PLColor aColor,
-                                  @NonNull final Map <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations)
+                                  @NonNull final Map <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations,
+                                  @Nullable final MetricsToggle aActiveMetrics)
   {
-    final FontSpec aFontSpec = new FontSpec (m_aFontFamily.resolve (bBold, bItalic), m_fFontSize, aColor);
+    final float fFontScale = aActiveMetrics == null ? 1f : aActiveMetrics.getFontScale ();
+    final float fBaselineOffsetScale = aActiveMetrics == null ? 0f : aActiveMetrics.getBaselineOffsetScale ();
+    final FontSpec aFontSpec = new FontSpec (m_aFontFamily.resolve (bBold, bItalic), m_fFontSize * fFontScale, aColor);
     final ICommonsList <IPLRichTextAnnotation> aAnnotations = aActiveAnnotations.isEmpty () ? null
                                                                                             : new CommonsArrayList <> (aActiveAnnotations.values ());
-    return new PLRichTextRun (sText, aFontSpec, aAnnotations);
+    return new PLRichTextRun (sText, aFontSpec, aAnnotations, fBaselineOffsetScale);
   }
 }
