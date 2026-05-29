@@ -17,6 +17,7 @@
 package com.helger.pdflayout.richtext.markup;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -27,6 +28,10 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.richtext.annotation.PLAnchorAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLHyperlinkAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
+import com.helger.pdflayout.richtext.color.PLCMYKColor;
+import com.helger.pdflayout.richtext.markup.IPLMarkupToken.BoldToggle;
+import com.helger.pdflayout.richtext.markup.IPLMarkupToken.Color;
+import com.helger.pdflayout.richtext.markup.IPLMarkupToken.ItalicToggle;
 
 /**
  * Tests {@link PLMarkupParser}.
@@ -130,9 +135,9 @@ public final class PLMarkupParserTest
     final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("*B* _I_ {color:#00ff00}G");
     // *, B, *, " ", _, I, _, " ", {color}, G
     assertEquals (10, aTokens.size ());
-    assertNotNull (aTokens.findFirst (t -> t instanceof IPLMarkupToken.BoldToggle));
-    assertNotNull (aTokens.findFirst (t -> t instanceof IPLMarkupToken.ItalicToggle));
-    assertNotNull (aTokens.findFirst (t -> t instanceof IPLMarkupToken.Color));
+    assertNotNull (aTokens.findFirst (BoldToggle.class::isInstance));
+    assertNotNull (aTokens.findFirst (ItalicToggle.class::isInstance));
+    assertNotNull (aTokens.findFirst (Color.class::isInstance));
   }
 
   @Test
@@ -157,7 +162,8 @@ public final class PLMarkupParserTest
   @Test
   public void testSuperscriptCustomParams ()
   {
-    // {^:0.5|-0.3}up{^} -> MetricsToggle(fontScale=0.5, baselineOffsetScale=-0.3), Text("up"), MetricsToggle(close)
+    // {^:0.5|-0.3}up{^} -> MetricsToggle(fontScale=0.5, baselineOffsetScale=-0.3), Text("up"),
+    // MetricsToggle(close)
     final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("{^:0.5|-0.3}up{^}");
     assertEquals (3, aTokens.size ());
     assertTrue (aTokens.get (0) instanceof IPLMarkupToken.MetricsToggle);
@@ -166,5 +172,52 @@ public final class PLMarkupParserTest
     assertEquals (-0.3f, aOpen.getBaselineOffsetScale (), 0.0001f);
     assertEquals ("up", ((IPLMarkupToken.Text) aTokens.get (1)).getText ());
     assertTrue (aTokens.get (2) instanceof IPLMarkupToken.MetricsToggle);
+  }
+
+  @Test
+  public void testColorCmyk ()
+  {
+    // The CMYK marker {color_cmyk:75,15,0,20} sets a CMYK colour without touching
+    // the existing RGB-style {color:#rrggbb}. See ralfstuckert/pdfbox-layout#94.
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("hi {color_cmyk:75,15,0,20}cyan-ish");
+    assertEquals (3, aTokens.size ());
+    assertTrue (aTokens.get (0) instanceof IPLMarkupToken.Text);
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.Color);
+    final IPLMarkupToken.Color aColorToken = (IPLMarkupToken.Color) aTokens.get (1);
+    assertTrue ("Expected a PLCMYKColor", aColorToken.getColor () instanceof PLCMYKColor);
+    final PLCMYKColor aCmyk = (PLCMYKColor) aColorToken.getColor ();
+    assertEquals (0.75f, aCmyk.getC (), 0.0001f);
+    assertEquals (0.15f, aCmyk.getM (), 0.0001f);
+    assertEquals (0f, aCmyk.getY (), 0.0001f);
+    assertEquals (0.20f, aCmyk.getK (), 0.0001f);
+    assertEquals ("cyan-ish", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+  }
+
+  @Test
+  public void testRgbColorMarkerUnchanged ()
+  {
+    // The original RGB marker MUST still work, identically — adding COLOR_CMYK
+    // must not regress {color:#rrggbb}. See ralfstuckert/pdfbox-layout#94.
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("{color:#ff0000}red");
+    assertEquals (2, aTokens.size ());
+    assertTrue (aTokens.get (0) instanceof IPLMarkupToken.Color);
+    final IPLMarkupToken.Color aColorToken = (IPLMarkupToken.Color) aTokens.get (0);
+    // Must NOT be a CMYK colour
+    assertFalse (aColorToken.getColor () instanceof PLCMYKColor);
+    assertEquals (255, aColorToken.getColor ().getRed ());
+    assertEquals (0, aColorToken.getColor ().getGreen ());
+    assertEquals (0, aColorToken.getColor ().getBlue ());
+  }
+
+  @Test
+  public void testColorCmykFloatValues ()
+  {
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("{color_cmyk:12.5,0.0,50,99.9}x");
+    assertEquals (2, aTokens.size ());
+    final PLCMYKColor aCmyk = (PLCMYKColor) ((IPLMarkupToken.Color) aTokens.get (0)).getColor ();
+    assertEquals (0.125f, aCmyk.getC (), 0.0001f);
+    assertEquals (0f, aCmyk.getM (), 0.0001f);
+    assertEquals (0.5f, aCmyk.getY (), 0.0001f);
+    assertEquals (0.999f, aCmyk.getK (), 0.0001f);
   }
 }

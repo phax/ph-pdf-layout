@@ -50,6 +50,11 @@ public final class PLMarkupParser
    * italic marker.</li>
    * <li>BOLD (<code>*</code>)</li>
    * <li>ITALIC (<code>_</code>)</li>
+   * <li>COLOR_CMYK (<code>{color_cmyk:C,M,Y,K}</code>) — must run before
+   * ITALIC because the marker contains an underscore in {@code color_cmyk}
+   * which ITALIC would otherwise grab.</li>
+   * <li>BOLD (<code>*</code>)</li>
+   * <li>ITALIC (<code>_</code>)</li>
    * <li>COLOR (<code>{color:#xxxxxx}</code>)</li>
    * <li>HYPERLINK (<code>{link...}</code>)</li>
    * <li>ANCHOR (<code>{anchor:...}</code>)</li>
@@ -58,6 +63,7 @@ public final class PLMarkupParser
   public static final ICommonsList <IPLMarkupCharacterFactory> DEFAULT_FACTORIES = new CommonsArrayList <> (PLMarkupCharacters.NEWLINE,
                                                                                                             PLMarkupCharacters.UNDERLINE,
                                                                                                             PLMarkupCharacters.METRICS,
+                                                                                                            PLMarkupCharacters.COLOR_CMYK,
                                                                                                             PLMarkupCharacters.BOLD,
                                                                                                             PLMarkupCharacters.ITALIC,
                                                                                                             PLMarkupCharacters.COLOR,

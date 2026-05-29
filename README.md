@@ -45,13 +45,16 @@ A set of example files as created from the unit test can be found in folder [exa
 
 # Rich text (markup) — module `ph-pdf-layout-richtext`
 
-The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, and sub/superscript. The base `PLText` is single-style by design; rich text fills that gap.
+The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, and sub/superscript.
+The base `PLText` is single-style by design; rich text fills that gap.
 
 ## Huge credit where it's due
 
-The markup grammar (`*bold*`, `_italic_`, `__underline__`, `{color:#rrggbb}`, `{_}sub{_}`, `{^}sup{^}`, `{link:style[uri]}`, `{anchor:name}`, the `--`/`-+`/`-#`/`-!` indentation prefixes, the backslash-escape rules, and the parameterised forms like `__{0.25:1.5}__` and `{_:0.5|0.2}sub{_}`), **the regex catalog**, **the multi-pass split-by-marker parsing strategy**, and **the open/close annotation toggle model** are a port of **Ralf Stuckert's [pdfbox-layout](https://github.com/ralfstuckert/pdfbox-layout)** (MIT license). Every test fixture in the rich-text module is a port of the equivalent example in that project.
+The markup grammar (`*bold*`, `_italic_`, `__underline__`, `{color:#rrggbb}`, `{_}sub{_}`, `{^}sup{^}`, `{link:style[uri]}`, `{anchor:name}`, the `--`/`-+`/`-#`/`-!` indentation prefixes, the backslash-escape rules, and the parameterised forms like `__{0.25:1.5}__` and `{_:0.5|0.2}sub{_}`), **the regex catalog**, **the multi-pass split-by-marker parsing strategy**, and **the open/close annotation toggle model** are a port of **Ralf Stuckert's [pdfbox-layout](https://github.com/ralfstuckert/pdfbox-layout)** (MIT license).
+Every test fixture in the rich-text module is a port of the equivalent example in that project.
 
-If you find this module useful, please go give Ralf's project a star — none of this would exist without his original work. The migration to ph-pdf-layout exists only because Ralf's library is pinned to PDFBox 1.x/2.x and ph-pdf-layout has already done the PDFBox 3.x work plus the broader element/layout/render lifecycle.
+If you find this module useful, please go give Ralf's project a star — none of this would exist without his original work.
+The migration to ph-pdf-layout exists only because Ralf's library is pinned to PDFBox 1.x/2.x and ph-pdf-layout has already done the PDFBox 3.x work plus the broader element/layout/render lifecycle.
 
 ## What's supported
 
@@ -66,7 +69,8 @@ Markup syntax (mirrors Ralf Stuckert's grammar):
 | `{_}sub{_}` | subscript (default 0.61× font, +0.15 baseline shift) |
 | `{^}sup{^}` | superscript (default 0.61× font, −0.4 baseline shift) |
 | `{_:0.5|0.2}foo{_}` | subscript with explicit fontScale and baselineOffset |
-| `{color:#rrggbb}` | switches the current colour (set, not toggle — reset with `{color:#000000}`) |
+| `{color:#rrggbb}` | switches the current colour to RGB (set, not toggle — reset with `{color:#000000}`) |
+| `{color_cmyk:C,M,Y,K}` | switches the current colour to CMYK (percent values 0..100, floats OK — e.g. `{color_cmyk:75,15,0,20}`). The RGB marker is unchanged. Originally requested at [ralfstuckert/pdfbox-layout#94](https://github.com/ralfstuckert/pdfbox-layout/issues/94). |
 | `{link[uri]}…{link}` | wraps the inner text in an external hyperlink (default underline-decorated) |
 | `{link:none[uri]}…{link}` | hyperlink with no visual decoration |
 | `{link[#name]}…{link}` | internal link jumping to a named anchor declared elsewhere |

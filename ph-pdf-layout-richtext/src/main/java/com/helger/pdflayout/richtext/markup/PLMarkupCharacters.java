@@ -23,6 +23,7 @@ import org.jspecify.annotations.NonNull;
 
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.richtext.annotation.EPLLinkStyle;
+import com.helger.pdflayout.richtext.color.PLCMYKColor;
 import com.helger.pdflayout.richtext.annotation.PLAnchorAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLHyperlinkAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
@@ -90,6 +91,14 @@ public final class PLMarkupCharacters
 
   /** Factory for the color marker {@code {color:#rrggbb}}. */
   public static final IPLMarkupCharacterFactory COLOR = new ColorFactory ();
+
+  /**
+   * Factory for the CMYK colour marker {@code {color_cmyk:C,M,Y,K}}. The four
+   * components are percent values in {@code 0..100} (floats accepted). See
+   * <a href="https://github.com/ralfstuckert/pdfbox-layout/issues/94">ralfstuckert/pdfbox-layout#94</a>
+   * for the original proposal by Christopher Dargel (vanDarg).
+   */
+  public static final IPLMarkupCharacterFactory COLOR_CMYK = new ColorCMYKFactory ();
 
   /** Factory for the underline marker {@code __}. */
   public static final IPLMarkupCharacterFactory UNDERLINE = new UnderlineFactory ();
@@ -548,6 +557,67 @@ public final class PLMarkupCharacters
         return new IPLMarkupToken.AnnotationToggle (new PLAnchorAnnotation ("__close__"));
       }
       return new IPLMarkupToken.AnnotationToggle (new PLAnchorAnnotation (sName));
+    }
+
+    @Override
+    @NonNull
+    public String unescape (@NonNull final String sText)
+    {
+      return sText.replaceAll ("\\\\" + Pattern.quote (MARKER), MARKER);
+    }
+  }
+
+  /**
+   * Recognises {@code {color_cmyk:C,M,Y,K}}. The four components are percent
+   * values in {@code 0..100} (floats accepted). Like {@link ColorFactory} this
+   * is a SET, not a toggle — every occurrence replaces the current colour;
+   * reset by writing another colour marker (RGB or CMYK).
+   * <p>
+   * The original request for CMYK markup support comes from
+   * <a href="https://github.com/ralfstuckert/pdfbox-layout/issues/94">ralfstuckert/pdfbox-layout#94</a>.
+   * We keep the existing {@code {color:#rrggbb}} marker untouched (the issue
+   * proposed renaming it to {@code {color_rgb:}} but we intentionally do not).
+   *
+   * @author Philip Helger
+   */
+  private static final class ColorCMYKFactory implements IPLMarkupCharacterFactory
+  {
+    /**
+     * Regex: <code>(?&lt;!\\)(\\\\)*\{color_cmyk:N,N,N,N\}</code> where each
+     * {@code N} is {@code \d+(\.\d*)?} (a non-negative decimal in
+     * {@code 0..100}).
+     * <ul>
+     * <li><code>(?&lt;!\\)(\\\\)*</code> — standard escape guard.</li>
+     * <li><code>\{color_cmyk:</code> — literal opening
+     * <code>{color_cmyk:</code>.</li>
+     * <li><code>(\d+(\.\d*)?)</code> ×4 — groups 2/4/6/8: the cyan, magenta,
+     * yellow and black (key) percentages. The optional fractional groups
+     * 3/5/7/9 are not used by the createToken logic.</li>
+     * <li><code>,</code> — literal comma separators.</li>
+     * <li><code>\}</code> — literal closing <code>}</code>.</li>
+     * </ul>
+     * Whitespace around the commas is NOT permitted — match the rest of the
+     * library where parameter syntax is whitespace-free.
+     */
+    private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{color_cmyk:(\\d+(\\.\\d*)?),(\\d+(\\.\\d*)?),(\\d+(\\.\\d*)?),(\\d+(\\.\\d*)?)\\}");
+    private static final String MARKER = "{";
+
+    @Override
+    @NonNull
+    public Pattern getPattern ()
+    {
+      return PATTERN;
+    }
+
+    @Override
+    @NonNull
+    public IPLMarkupToken createToken (@NonNull final String sText, @NonNull final Matcher aMatcher)
+    {
+      final float fC = Float.parseFloat (aMatcher.group (2));
+      final float fM = Float.parseFloat (aMatcher.group (4));
+      final float fY = Float.parseFloat (aMatcher.group (6));
+      final float fK = Float.parseFloat (aMatcher.group (8));
+      return new IPLMarkupToken.Color (PLCMYKColor.fromPercent (fC, fM, fY, fK));
     }
 
     @Override
