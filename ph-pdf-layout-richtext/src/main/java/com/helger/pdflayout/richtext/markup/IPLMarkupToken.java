@@ -20,6 +20,7 @@ import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.richtext.annotation.IPLRichTextAnnotation;
 
@@ -60,7 +61,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     @Override
     public String toString ()
     {
-      return "Text[" + m_sText + "]";
+      return new ToStringGenerator (this).append ("Text", m_sText).getToString ();
     }
   }
 
@@ -76,7 +77,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     @Override
     public String toString ()
     {
-      return "BoldToggle";
+      return new ToStringGenerator (this).getToString ();
     }
   }
 
@@ -92,7 +93,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     @Override
     public String toString ()
     {
-      return "ItalicToggle";
+      return new ToStringGenerator (this).getToString ();
     }
   }
 
@@ -117,7 +118,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     @Override
     public String toString ()
     {
-      return "Color[" + m_aColor + "]";
+      return new ToStringGenerator (this).append ("Color", m_aColor).getToString ();
     }
   }
 
@@ -133,7 +134,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     @Override
     public String toString ()
     {
-      return "NewLine";
+      return new ToStringGenerator (this).getToString ();
     }
   }
 
@@ -168,7 +169,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     @Override
     public String toString ()
     {
-      return "AnnotationToggle[" + m_aAnnotation + "]";
+      return new ToStringGenerator (this).append ("Annotation", m_aAnnotation).getToString ();
     }
   }
 
@@ -219,8 +220,10 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     @Override
     public String toString ()
     {
-      return "MetricsToggle[" + m_sKey + ", fontScale=" + m_fFontScale +
-             ", baselineOffsetScale=" + m_fBaselineOffsetScale + "]";
+      return new ToStringGenerator (this).append ("Key", m_sKey)
+                                         .append ("FontScale", m_fFontScale)
+                                         .append ("BaselineOffsetScale", m_fBaselineOffsetScale)
+                                         .getToString ();
     }
   }
 }

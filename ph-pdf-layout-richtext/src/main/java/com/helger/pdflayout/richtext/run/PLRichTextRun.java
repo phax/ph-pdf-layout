@@ -22,6 +22,7 @@ import org.jspecify.annotations.Nullable;
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 import com.helger.collection.commons.CommonsArrayList;
 import com.helger.collection.commons.ICommonsList;
 import com.helger.pdflayout.richtext.annotation.IPLRichTextAnnotation;
@@ -141,7 +142,10 @@ public final class PLRichTextRun
   @Override
   public String toString ()
   {
-    return "PLRichTextRun[text='" + m_sText + "', fontSpec=" + m_aFontSpec +
-           ", annotations=" + m_aAnnotations + ", baselineOffsetScale=" + m_fBaselineOffsetScale + "]";
+    return new ToStringGenerator (this).append ("Text", m_sText)
+                                       .append ("FontSpec", m_aFontSpec)
+                                       .append ("Annotations", m_aAnnotations)
+                                       .append ("BaselineOffsetScale", m_fBaselineOffsetScale)
+                                       .getToString ();
   }
 }

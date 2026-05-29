@@ -53,12 +53,34 @@ import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
  */
 public final class PLMarkupCharacters
 {
-  /** Factory for the bold marker {@code *}. */
+  /**
+   * Factory for the bold marker {@code *}.
+   * <p>
+   * Regex (Java source has every backslash doubled): {@code (?<!\\)(\\\\)*\*}
+   * <ul>
+   * <li>{@code (?<!\\)} — negative lookbehind: not preceded by a single backslash;
+   * this is how a literal {@code \*} escapes itself.</li>
+   * <li>{@code (\\\\)*} — but ANY number of double-backslashes is fine, so
+   * {@code \\*} (a literal backslash followed by an unescaped marker) still
+   * matches the marker.</li>
+   * <li>{@code \*} — the actual asterisk marker.</li>
+   * </ul>
+   */
   public static final IPLMarkupCharacterFactory BOLD = new ToggleFactory ("(?<!\\\\)(\\\\\\\\)*\\*",
                                                                           "*",
                                                                           IPLMarkupToken.BoldToggle.INSTANCE);
 
-  /** Factory for the italic marker {@code _} (but not the double-underscore underline). */
+  /**
+   * Factory for the italic marker {@code _} (but not the double-underscore underline).
+   * <p>
+   * Regex: {@code (?<!\\)(\\\\)*(?<!_)_(?!_)}
+   * <ul>
+   * <li>{@code (?<!\\)(\\\\)*} — same backslash-escape guard as BOLD.</li>
+   * <li>{@code (?<!_)_(?!_)} — a single underscore NOT flanked by another
+   * underscore on either side; this is how the italic marker dodges the
+   * double-underscore underline marker.</li>
+   * </ul>
+   */
   public static final IPLMarkupCharacterFactory ITALIC = new ToggleFactory ("(?<!\\\\)(\\\\\\\\)*(?<!_)_(?!_)",
                                                                             "_",
                                                                             IPLMarkupToken.ItalicToggle.INSTANCE);
@@ -84,8 +106,15 @@ public final class PLMarkupCharacters
   private PLMarkupCharacters ()
   {}
 
-  // ---------------------------------------------------------------------------
-
+  /**
+   * A simple "the same single character toggles a style on/off" factory. The
+   * same matcher is reused for {@link #BOLD} ({@code *}) and {@link #ITALIC}
+   * ({@code _}); only the pattern and the token differ. The token is a
+   * singleton — open and close produce the same instance, and the run-builder
+   * tracks state by flipping a boolean when it sees the toggle.
+   *
+   * @author Philip Helger
+   */
   private static class ToggleFactory implements IPLMarkupCharacterFactory
   {
     private final Pattern m_aPattern;
@@ -117,14 +146,32 @@ public final class PLMarkupCharacters
     @NonNull
     public String unescape (@NonNull final String sText)
     {
+      // Replace `\X` with a literal `X` so users can embed the marker as-is in
+      // their text. The leading `\\\\` becomes a literal backslash in the
+      // regex; combined with Pattern.quote(marker) we match `\*` and emit `*`.
       return sText.replaceAll ("\\\\" + Pattern.quote (m_sMarker), m_sMarker);
     }
   }
 
-  // ---------------------------------------------------------------------------
-
+  /**
+   * Recognises LF and CRLF as a line-break token. The parser splits on it
+   * first so that no other marker can accidentally straddle a line boundary.
+   * There is no escape mechanism — a literal {@code \n} in the source is
+   * always a line break.
+   *
+   * @author Philip Helger
+   */
   private static final class NewLineFactory implements IPLMarkupCharacterFactory
   {
+    /**
+     * Regex: <code>(\r\n|\n)</code>
+     * <ul>
+     * <li><code>\r\n</code> — Windows-style CRLF</li>
+     * <li><code>\n</code> — Unix LF</li>
+     * </ul>
+     * The alternation order matters: CRLF first so we don't first match the LF
+     * alone and then leave a stray CR in the text segment.
+     */
     private static final Pattern PATTERN = Pattern.compile ("(\r\n|\n)");
 
     @Override
@@ -149,10 +196,31 @@ public final class PLMarkupCharacters
     }
   }
 
-  // ---------------------------------------------------------------------------
-
+  /**
+   * Recognises {@code {color:#rrggbb}}. Unlike the style toggles this does NOT
+   * flip — every occurrence sets the current colour to whatever was matched.
+   * To "reset" to black users must write {@code {color:#000000}} explicitly.
+   * The regex requires exactly 6 hex digits via {@code \p{XDigit}{6}}; shorter
+   * forms are NOT recognised. The negative lookbehind on {@code \\\\} makes
+   * {@code \{color:#...}} a literal escaped marker that is unescaped by
+   * {@code unescape(...)} below.
+   *
+   * @author Philip Helger
+   */
   private static final class ColorFactory implements IPLMarkupCharacterFactory
   {
+    /**
+     * Regex: <code>(?&lt;!\\)(\\\\)*\{color:#(\p{XDigit}{6})\}</code>
+     * <ul>
+     * <li><code>(?&lt;!\\)(\\\\)*</code> — standard escape guard (see
+     * {@link #BOLD}).</li>
+     * <li><code>\{color:#</code> — literal opening <code>{color:#</code>.</li>
+     * <li><code>(\p{XDigit}{6})</code> — group 2: exactly six hex digits,
+     * captured for parsing. Shorter forms (e.g. <code>{color:#f00}</code>)
+     * intentionally don't match — we require <code>RRGGBB</code>.</li>
+     * <li><code>\}</code> — literal closing <code>}</code>.</li>
+     * </ul>
+     */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{color:#(\\p{XDigit}{6})\\}");
     private static final String MARKER = "{";
 
@@ -182,10 +250,39 @@ public final class PLMarkupCharacters
     }
   }
 
-  // ---------------------------------------------------------------------------
-
+  /**
+   * Recognises {@code __} and the parameterised variant
+   * {@code __{offsetScale:lineWeight}}. This factory MUST run before the
+   * {@link #ITALIC} factory (which matches single {@code _}); otherwise
+   * {@code __} would be consumed as two italic toggles. The optional
+   * parameters allow strike-through-like effects: {@code __{0.25:}foo__} puts
+   * the line above mid-height, etc. The produced token wraps a
+   * {@link PLUnderlineAnnotation} and toggles by class — see
+   * {@code PLRichTextRunBuilder} for the open/close logic.
+   *
+   * @author Philip Helger
+   */
   private static final class UnderlineFactory implements IPLMarkupCharacterFactory
   {
+    /**
+     * Regex: <code>(?&lt;!\\)(\\\\)*(__(\{(-?\d+(\.\d*)?)?:(-?\d+(\.\d*)?)?\})?)</code>
+     * <ul>
+     * <li><code>(?&lt;!\\)(\\\\)*</code> — escape guard (see {@link #BOLD}).</li>
+     * <li><code>__</code> — the underline marker proper.</li>
+     * <li><code>(\{...\})?</code> — OPTIONAL parameter block, e.g.
+     * <code>{0.25:1.5}</code>:
+     * <ul>
+     * <li><code>(-?\d+(\.\d*)?)?</code> — group 4: optional
+     * {@code baselineOffsetScale} (float, may be negative)</li>
+     * <li><code>:</code> — literal colon separator</li>
+     * <li><code>(-?\d+(\.\d*)?)?</code> — group 6: optional
+     * {@code lineWeight} (float, may be negative)</li>
+     * </ul>
+     * </li>
+     * </ul>
+     * Either or both numbers may be omitted: <code>{0.25:}</code>,
+     * <code>{:1.5}</code>, or just <code>{}</code> are all valid.
+     */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*(__(\\{(-?\\d+(\\.\\d*)?)?\\:(-?\\d+(\\.\\d*)?)?\\})?)");
     private static final String MARKER = "__";
 
@@ -228,10 +325,49 @@ public final class PLMarkupCharacters
     }
   }
 
-  // ---------------------------------------------------------------------------
-
+  /**
+   * Recognises subscript {@code {_}} and superscript {@code {^}} and their
+   * parameterised forms {@code {_:fontScale|baselineOffsetScale}}. Each toggle
+   * emits a {@link IPLMarkupToken.MetricsToggle} token; the builder opens a
+   * metrics scope on the first token and closes it when it sees one with the
+   * SAME key. The key is built from the marker plus parameters so a bare
+   * {@code {_}} matches another bare {@code {_}} (open/close pair) but
+   * {@code {_:0.5|0.2}foo{_}} opens with a parameterised key and the bare
+   * {@code {_}} close has a different key — this mirrors the original library
+   * where the close marker is also always written as bare {@code {_}} /
+   * {@code {^}}. The factory MUST run before {@link #HYPERLINK} /
+   * {@link #ANCHOR} because all three start with {@code {}; the parser order
+   * in {@link PLMarkupParser#DEFAULT_FACTORIES} handles this.
+   *
+   * @author Philip Helger
+   */
   private static final class MetricsFactory implements IPLMarkupCharacterFactory
   {
+    /**
+     * Regex: <code>(?&lt;!\\)(\\\\)*\{(_|\^)(:(-?\d+(\.\d*)?)\|(-?\d+(\.\d*)?))?\}</code>
+     * <ul>
+     * <li><code>(?&lt;!\\)(\\\\)*</code> — escape guard.</li>
+     * <li><code>\{</code> — literal <code>{</code>.</li>
+     * <li><code>(_|\^)</code> — group 2: marker character; <code>_</code> =
+     * subscript, <code>^</code> = superscript.</li>
+     * <li><code>(:...)?</code> — OPTIONAL parameter block:
+     * <ul>
+     * <li><code>:</code> — literal colon</li>
+     * <li><code>(-?\d+(\.\d*)?)</code> — group 4: {@code fontScale} (REQUIRED
+     * inside the block)</li>
+     * <li><code>\|</code> — literal {@code |} separator</li>
+     * <li><code>(-?\d+(\.\d*)?)</code> — group 6:
+     * {@code baselineOffsetScale} (REQUIRED inside the block)</li>
+     * </ul>
+     * </li>
+     * <li><code>\}</code> — literal <code>}</code>.</li>
+     * </ul>
+     * Note that unlike {@link UnderlineFactory}'s parameter block, here both
+     * numbers are required once the colon is present — <code>{_:|}</code> or
+     * <code>{_:0.5|}</code> do NOT match. The bare close <code>{_}</code> /
+     * <code>{^}</code> therefore CAN'T accidentally consume the parameterised
+     * form.
+     */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{(_|\\^)(:(-?\\d+(\\.\\d*)?)\\|(-?\\d+(\\.\\d*)?))?\\}");
     private static final String MARKER = "{";
 
@@ -300,10 +436,37 @@ public final class PLMarkupCharacters
     }
   }
 
-  // ---------------------------------------------------------------------------
-
+  /**
+   * Recognises the opening {@code {link[uri]}} and {@code {link:style[uri]}}
+   * (style is {@code ul} for underline-decorated, {@code none} for plain) plus
+   * the closing bare {@code {link}}. Both shapes emit an
+   * {@link IPLMarkupToken.AnnotationToggle} carrying a
+   * {@link PLHyperlinkAnnotation}. Open/close pairing is by ANNOTATION CLASS,
+   * not key — so two {@code {link[...]}} with different URIs do NOT nest; the
+   * second one simply closes the first. The closing bare {@code {link}}
+   * carries a sentinel URI {@code #close}; the builder pops the annotation by
+   * type so the sentinel is never actually emitted as a visible link.
+   *
+   * @author Philip Helger
+   */
   private static final class HyperlinkFactory implements IPLMarkupCharacterFactory
   {
+    /**
+     * Regex: <code>(?&lt;!\\)(\\\\)*\{link(:(ul|none))?(\[([^}]+)\])?\}</code>
+     * <ul>
+     * <li><code>(?&lt;!\\)(\\\\)*</code> — escape guard.</li>
+     * <li><code>\{link</code> — literal <code>{link</code>.</li>
+     * <li><code>(:(ul|none))?</code> — OPTIONAL style suffix: <code>:ul</code>
+     * (default underline, kept for explicitness) or <code>:none</code> (no
+     * decoration). group 3 captures the style literal.</li>
+     * <li><code>(\[([^}]+)\])?</code> — OPTIONAL URI in square brackets. group
+     * 5 captures the URI content; we use <code>[^}]</code> (not <code>[^]]</code>)
+     * so that a stray closing brace in the URI ends the marker cleanly. The
+     * whole bracket block is optional, which is how the CLOSING marker
+     * <code>{link}</code> is recognised — no brackets means "close".</li>
+     * <li><code>\}</code> — literal <code>}</code>.</li>
+     * </ul>
+     */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{link(:(ul|none))?(\\[(([^}]+))\\])?\\}");
     private static final String MARKER = "{";
 
@@ -337,10 +500,33 @@ public final class PLMarkupCharacters
     }
   }
 
-  // ---------------------------------------------------------------------------
-
+  /**
+   * Recognises {@code {anchor:name}} (opens) and bare {@code {anchor}}
+   * (closes). The opening token registers a named destination at the current
+   * x/y at render time; the closing token bounds the clickable region for
+   * tools that want to highlight the anchor itself. Pairing follows the same
+   * by-class rule as {@link HyperlinkFactory hyperlinks}; the bare close uses
+   * a sentinel name {@code __close__} which is replaced via the builder's
+   * type-pop logic.
+   *
+   * @author Philip Helger
+   */
   private static final class AnchorFactory implements IPLMarkupCharacterFactory
   {
+    /**
+     * Regex: <code>(?&lt;!\\)(\\\\)*\{anchor(:(\w+))?\}</code>
+     * <ul>
+     * <li><code>(?&lt;!\\)(\\\\)*</code> — escape guard.</li>
+     * <li><code>\{anchor</code> — literal <code>{anchor</code>.</li>
+     * <li><code>(:(\w+))?</code> — OPTIONAL name. <code>:name</code> where
+     * name is one or more word characters. group 3 captures the name. Absent
+     * bracket → closing marker <code>{anchor}</code>.</li>
+     * <li><code>\}</code> — literal <code>}</code>.</li>
+     * </ul>
+     * Naming is intentionally restrictive ({@code \w+} only) — spaces,
+     * hyphens, or colons in the name would make the destination unusable as
+     * an anchor-reference URI {@code #name} in hyperlink markup.
+     */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{anchor(:((\\w+)))?\\}");
     private static final String MARKER = "{";
 

@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.enforce.ValueEnforcer;
@@ -34,19 +36,19 @@ import com.helger.pdflayout.richtext.markup.PLMarkupParser;
 import com.helger.pdflayout.spec.FontSpec;
 
 /**
- * Walks a token stream produced by {@link PLMarkupParser} and emits the
- * corresponding list of {@link PLRichTextRun}s. State is kept locally (bold
- * flag, italic flag, current color, active annotations) and folded into the
- * font spec / annotations of each emitted run.
+ * Walks a token stream produced by {@link PLMarkupParser} and emits the corresponding list of
+ * {@link PLRichTextRun}s. State is kept locally (bold flag, italic flag, current color, active
+ * annotations) and folded into the font spec / annotations of each emitted run.
  * <p>
- * The builder intentionally emits {@link PLRichTextRun}s that may contain
- * embedded {@code '\n'} characters — line wrapping is the layout engine's job,
- * not the parser's.
+ * The builder intentionally emits {@link PLRichTextRun}s that may contain embedded {@code '\n'}
+ * characters — line wrapping is the layout engine's job, not the parser's.
  *
  * @author Philip Helger
  */
 public final class PLRichTextRunBuilder
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (PLRichTextRunBuilder.class);
+
   private final PLFontFamily m_aFontFamily;
   private final float m_fFontSize;
   private final PLColor m_aDefaultColor;
@@ -66,6 +68,22 @@ public final class PLRichTextRunBuilder
     m_aFontFamily = aFontFamily;
     m_fFontSize = fFontSize;
     m_aDefaultColor = aDefaultColor;
+  }
+
+  @NonNull
+  private PLRichTextRun _makeRun (@NonNull final String sText,
+                                  final boolean bBold,
+                                  final boolean bItalic,
+                                  @NonNull final PLColor aColor,
+                                  @NonNull final Map <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations,
+                                  @Nullable final MetricsToggle aActiveMetrics)
+  {
+    final float fFontScale = aActiveMetrics == null ? 1f : aActiveMetrics.getFontScale ();
+    final float fBaselineOffsetScale = aActiveMetrics == null ? 0f : aActiveMetrics.getBaselineOffsetScale ();
+    final FontSpec aFontSpec = new FontSpec (m_aFontFamily.resolve (bBold, bItalic), m_fFontSize * fFontScale, aColor);
+    final ICommonsList <IPLRichTextAnnotation> aAnnotations = aActiveAnnotations.isEmpty () ? null
+                                                                                            : new CommonsArrayList <> (aActiveAnnotations.values ());
+    return new PLRichTextRun (sText, aFontSpec, aAnnotations, fBaselineOffsetScale);
   }
 
   /**
@@ -132,6 +150,8 @@ public final class PLRichTextRunBuilder
                     else
                       aActiveMetrics = aMetrics;
                   }
+                  else
+                    LOGGER.warn ("Unsupported token: " + aToken);
     }
     return aResult;
   }
@@ -148,21 +168,5 @@ public final class PLRichTextRunBuilder
   public ICommonsList <PLRichTextRun> buildFromMarkup (@NonNull final String sMarkup)
   {
     return build (new PLMarkupParser ().parse (sMarkup));
-  }
-
-  @NonNull
-  private PLRichTextRun _makeRun (@NonNull final String sText,
-                                  final boolean bBold,
-                                  final boolean bItalic,
-                                  @NonNull final PLColor aColor,
-                                  @NonNull final Map <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations,
-                                  @Nullable final MetricsToggle aActiveMetrics)
-  {
-    final float fFontScale = aActiveMetrics == null ? 1f : aActiveMetrics.getFontScale ();
-    final float fBaselineOffsetScale = aActiveMetrics == null ? 0f : aActiveMetrics.getBaselineOffsetScale ();
-    final FontSpec aFontSpec = new FontSpec (m_aFontFamily.resolve (bBold, bItalic), m_fFontSize * fFontScale, aColor);
-    final ICommonsList <IPLRichTextAnnotation> aAnnotations = aActiveAnnotations.isEmpty () ? null
-                                                                                            : new CommonsArrayList <> (aActiveAnnotations.values ());
-    return new PLRichTextRun (sText, aFontSpec, aAnnotations, fBaselineOffsetScale);
   }
 }

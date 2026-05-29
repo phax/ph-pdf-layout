@@ -18,55 +18,57 @@ package com.helger.pdflayout.richtext.element;
 
 import org.jspecify.annotations.NonNull;
 
+import com.helger.base.tostring.ToStringGenerator;
 import com.helger.collection.commons.ICommonsList;
 
 /**
- * A single line of prepared text in a {@link PLRichText}. Holds the visible
- * segments (each from a single {@link com.helger.pdflayout.richtext.run.PLRichTextRun})
- * plus the total laid out width. Lines are produced during the prepare phase
- * once the available width is known.
+ * A single line of prepared text in a {@link PLRichText}. Holds the visible segments (each from a
+ * single {@link com.helger.pdflayout.richtext.run.PLRichTextRun}) plus the total laid out width.
+ * Lines are produced during the prepare phase once the available width is known.
  *
  * @author Philip Helger
  */
 final class PLRichTextLine
 {
-    private final ICommonsList <PLRichTextSegment> m_aSegments;
-    private final float m_fWidth;
-    private final boolean m_bEndsWithHardBreak;
+  private final ICommonsList <PLRichTextSegment> m_aSegments;
+  private final float m_fWidth;
+  private final boolean m_bEndsWithHardBreak;
 
-    PLRichTextLine (@NonNull final ICommonsList <PLRichTextSegment> aSegments,
-                    final float fWidth,
-                    final boolean bEndsWithHardBreak)
-    {
-        m_aSegments = aSegments;
-        m_fWidth = fWidth;
-        m_bEndsWithHardBreak = bEndsWithHardBreak;
-    }
+  PLRichTextLine (@NonNull final ICommonsList <PLRichTextSegment> aSegments,
+                  final float fWidth,
+                  final boolean bEndsWithHardBreak)
+  {
+    m_aSegments = aSegments;
+    m_fWidth = fWidth;
+    m_bEndsWithHardBreak = bEndsWithHardBreak;
+  }
 
-    @NonNull
-    ICommonsList <PLRichTextSegment> getAllSegments ()
-    {
-        return m_aSegments;
-    }
+  @NonNull
+  ICommonsList <PLRichTextSegment> getAllSegments ()
+  {
+    return m_aSegments;
+  }
 
-    float getWidth ()
-    {
-        return m_fWidth;
-    }
+  float getWidth ()
+  {
+    return m_fWidth;
+  }
 
-    /**
-     * @return <code>true</code> if this line was terminated by an explicit
-     *         <code>\n</code> in the source (not just word wrap). Last line of the
-     *         block also returns <code>true</code>.
-     */
-    boolean isEndsWithHardBreak ()
-    {
-        return m_bEndsWithHardBreak;
-    }
+  /**
+   * @return <code>true</code> if this line was terminated by an explicit <code>\n</code> in the
+   *         source (not just word wrap). Last line of the block also returns <code>true</code>.
+   */
+  boolean isEndsWithHardBreak ()
+  {
+    return m_bEndsWithHardBreak;
+  }
 
-    @Override
-    public String toString ()
-    {
-        return "PLRichTextLine[segments=" + m_aSegments + ", width=" + m_fWidth + "]";
-    }
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("Segments", m_aSegments)
+                                       .append ("Width", m_fWidth)
+                                       .append ("EndsWithHardBreak", m_bEndsWithHardBreak)
+                                       .getToString ();
+  }
 }

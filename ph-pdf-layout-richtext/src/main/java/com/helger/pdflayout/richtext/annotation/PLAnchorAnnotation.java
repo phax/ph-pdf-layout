@@ -21,6 +21,7 @@ import org.jspecify.annotations.NonNull;
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 
 /**
  * Anchor annotation for rich text. Declares a named target that can be linked
@@ -49,6 +50,6 @@ public final class PLAnchorAnnotation implements IPLRichTextAnnotation
   @Override
   public String toString ()
   {
-    return "PLAnchorAnnotation[name=" + m_sName + "]";
+    return new ToStringGenerator (this).append ("Name", m_sName).getToString ();
   }
 }

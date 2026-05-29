@@ -21,6 +21,7 @@ import org.jspecify.annotations.NonNull;
 import com.helger.annotation.Nonempty;
 import com.helger.annotation.concurrent.Immutable;
 import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.tostring.ToStringGenerator;
 
 /**
  * Hyperlink annotation for rich text. The URI may either be an absolute
@@ -68,6 +69,6 @@ public final class PLHyperlinkAnnotation implements IPLRichTextAnnotation
   @Override
   public String toString ()
   {
-    return "PLHyperlinkAnnotation[uri=" + m_sUri + ", linkStyle=" + m_eLinkStyle + "]";
+    return new ToStringGenerator (this).append ("URI", m_sUri).append ("LinkStyle", m_eLinkStyle).getToString ();
   }
 }

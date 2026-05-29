@@ -17,6 +17,7 @@
 package com.helger.pdflayout.richtext.annotation;
 
 import com.helger.annotation.concurrent.Immutable;
+import com.helger.base.tostring.ToStringGenerator;
 
 /**
  * Underline annotation for rich text. Draws a horizontal line below the
@@ -61,6 +62,8 @@ public final class PLUnderlineAnnotation implements IPLRichTextAnnotation
   @Override
   public String toString ()
   {
-    return "PLUnderlineAnnotation[baselineOffsetScale=" + m_fBaselineOffsetScale + ", lineWeight=" + m_fLineWeight + "]";
+    return new ToStringGenerator (this).append ("BaselineOffsetScale", m_fBaselineOffsetScale)
+                                       .append ("LineWeight", m_fLineWeight)
+                                       .getToString ();
   }
 }
