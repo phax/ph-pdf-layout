@@ -166,8 +166,10 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-In progress (richtext branch)
-* New optional module `ph-pdf-layout-richtext` providing multi-style runs in a single paragraph, plus inline links, anchors, underline, sub/superscript and a Markdown-style markup parser. **Markup grammar, regex catalog and split algorithm are a port of [Ralf Stuckert's pdfbox-layout](https://github.com/ralfstuckert/pdfbox-layout) (MIT) — see the "Rich text" section above for full credit.** Includes a new `PLRichText` block-level element and a `PLRichTextBlocks` helper for paragraph/bullet/numbered-list block sequences.
+v8.3.0 - 2026-05-29
+* New optional module `ph-pdf-layout-richtext` providing multi-style runs in a single paragraph, plus inline links, anchors, underline, sub/superscript and a Markdown-style markup parser.
+  **Markup grammar, regex catalog and split algorithm are a port of [Ralf Stuckert's pdfbox-layout](https://github.com/ralfstuckert/pdfbox-layout) (MIT) — see the "Rich text" section above for full credit.
+  ** Includes a new `PLRichText` block-level element and a `PLRichTextBlocks` helper for paragraph/bullet/numbered-list block sequences.
 
 v8.2.0 - 2026-05-28
 * Added split-fragment tracking on `IPLObject`: `getOriginalID()`, `isSplitFragment()` and `isFirstFragment()`.

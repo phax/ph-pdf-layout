@@ -44,7 +44,10 @@ public final class PLRichTextLineSpacingTest
   {
     final String sText = "*Lorem ipsum* dolor sit amet, consetetur sadipscing elitr, " +
                          "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna " +
-                         "aliquyam erat, _sed diam_ voluptua.";
+                         "aliquyam erat, _sed diam_ voluptua." +
+                         "At vero eos et *accusam et justo* " +
+                         "duo dolores et ea rebum.\n\nStet clita kasd gubergren, no sea takimata " +
+                         "sanctus est *Lorem ipsum dolor sit* amet.";
 
     final PLPageSet aPS = new PLPageSet (PDRectangle.A4).setMargin (40, 60, 40, 60);
 

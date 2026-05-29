@@ -25,6 +25,7 @@ import com.helger.pdflayout.PDFCreationException;
 import com.helger.pdflayout.PageLayoutPDF;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.base.PLPageSet;
+import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.richtext.PLRichTextTestComparer;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
 import com.helger.pdflayout.spec.EHorzAlignment;
@@ -46,14 +47,20 @@ public final class PLRichTextAlignedTest
   {
     final PLPageSet aPS = new PLPageSet (PDRectangle.A4).setMargin (40, 60, 40, 60);
 
-    aPS.addElement (PLRichText.createFromMarkup ("This is some left aligned text", FONT_FAMILY, 11f, PLColor.BLACK)
-                              .setHorzAlign (EHorzAlignment.LEFT));
+    aPS.addElement (new PLBox (PLRichText.createFromMarkup ("This is some left aligned text",
+                                                            FONT_FAMILY,
+                                                            11f,
+                                                            PLColor.BLACK)).setHorzAlign (EHorzAlignment.LEFT));
 
-    aPS.addElement (PLRichText.createFromMarkup ("This is some centered text", FONT_FAMILY, 11f, PLColor.BLACK)
-                              .setHorzAlign (EHorzAlignment.CENTER));
+    aPS.addElement (new PLBox (PLRichText.createFromMarkup ("This is some centered text",
+                                                            FONT_FAMILY,
+                                                            11f,
+                                                            PLColor.BLACK)).setHorzAlign (EHorzAlignment.CENTER));
 
-    aPS.addElement (PLRichText.createFromMarkup ("This is some right aligned text", FONT_FAMILY, 11f, PLColor.BLACK)
-                              .setHorzAlign (EHorzAlignment.RIGHT));
+    aPS.addElement (new PLBox (PLRichText.createFromMarkup ("This is some right aligned text",
+                                                            FONT_FAMILY,
+                                                            11f,
+                                                            PLColor.BLACK)).setHorzAlign (EHorzAlignment.RIGHT));
 
     final PageLayoutPDF aLayout = new PageLayoutPDF ().addPageSet (aPS);
     PLRichTextTestComparer.renderAndCompare (aLayout, new File ("target/test-pdfs/richtext-aligned.pdf"));

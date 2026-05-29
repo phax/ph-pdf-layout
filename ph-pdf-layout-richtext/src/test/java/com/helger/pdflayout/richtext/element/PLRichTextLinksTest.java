@@ -43,11 +43,11 @@ public final class PLRichTextLinksTest
   {
     final PLPageSet aPS = new PLPageSet (PDRectangle.A4).setMargin (40, 60, 40, 60);
 
-    aPS.addElement (PLRichText.createFromMarkup ("This is a link to {link[https://github.com/ralfstuckert/pdfbox-layout]}PDFBox-Layout{link}.",
+    aPS.addElement (PLRichText.createFromMarkup ("This is a link to {link[https://github.com/phax/ph-pdf-layout]}ph-pdf-layout{link}.",
                                                  FONT_FAMILY,
                                                  11f,
                                                  PLColor.BLACK));
-    aPS.addElement (PLRichText.createFromMarkup ("Now the same link with color instead of underline {color:#ff5000}{link:none[https://github.com/ralfstuckert/pdfbox-layout]}PDFBox-Layout{link}{color:#000000}.",
+    aPS.addElement (PLRichText.createFromMarkup ("Now the same link with color instead of underline {color:#ff5000}{link:none[https://github.com/phax/ph-pdf-layout]}ph-pdf-layout{link}{color:#000000}.",
                                                  FONT_FAMILY,
                                                  11f,
                                                  PLColor.BLACK));
