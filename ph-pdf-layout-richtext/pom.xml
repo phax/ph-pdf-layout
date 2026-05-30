@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.helger</groupId>
     <artifactId>ph-pdf-layout-parent-pom</artifactId>
-    <version>8.3.1</version>
+    <version>8.3.2-SNAPSHOT</version>
   </parent>
   <artifactId>ph-pdf-layout-richtext</artifactId>
   <packaging>jar</packaging>
