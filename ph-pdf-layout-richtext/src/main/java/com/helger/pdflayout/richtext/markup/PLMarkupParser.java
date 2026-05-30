@@ -31,8 +31,9 @@ import com.helger.collection.commons.ICommonsList;
  * library: the input is split successively by each registered marker factory.
  * Each split step replaces the matched marker with the corresponding token and
  * unescapes the marker inside the surrounding plain text segments. The order
- * of factories matters — markers that contain other markers (e.g. the
- * double-underscore underline) must come before the simpler ones.
+ * of factories matters — markers whose lexical form prefixes another marker
+ * (e.g. bold {@code **} before italic {@code *}, or double-underscore
+ * underline before any single-underscore marker) must come first.
  *
  * @author Philip Helger
  */
@@ -41,31 +42,37 @@ public final class PLMarkupParser
   /**
    * Default factory order:
    * <ol>
-   * <li>NEWLINE — splits lines first so other markers don't accidentally cross
-   * line breaks.</li>
-   * <li>UNDERLINE (<code>__</code>) — before ITALIC (<code>_</code>) so the
-   * pair isn't consumed as two italics.</li>
-   * <li>METRICS (<code>{_}</code> / <code>{^}</code>) — must run before ITALIC
-   * so the bare <code>_</code> inside <code>{_}</code> isn't swallowed as an
-   * italic marker.</li>
-   * <li>BOLD (<code>*</code>)</li>
-   * <li>ITALIC (<code>_</code>)</li>
-   * <li>COLOR_CMYK (<code>{color_cmyk:C,M,Y,K}</code>) — must run before
-   * ITALIC because the marker contains an underscore in {@code color_cmyk}
-   * which ITALIC would otherwise grab.</li>
-   * <li>BOLD (<code>*</code>)</li>
-   * <li>ITALIC (<code>_</code>)</li>
+   * <li>HARD_BREAK (<code>  \n</code> or <code>\\\n</code>) — must run before
+   * NEWLINE so the trigger characters are consumed together with the line
+   * ending.</li>
+   * <li>NEWLINE (bare <code>\n</code>) — emits a soft break; splits lines so
+   * other markers don't accidentally cross line breaks.</li>
+   * <li>UNDERLINE (<code>__</code>) — kept early so a {@code __underline__}
+   * span is consumed in one piece, before ITALIC_UNDERSCORE could split it
+   * into two italic toggles.</li>
+   * <li>METRICS (<code>{_}</code> / <code>{^}</code>) — runs before the
+   * curly-brace markers HYPERLINK / ANCHOR / COLOR because all four start
+   * with <code>{</code>.</li>
+   * <li>COLOR_CMYK (<code>{color_cmyk:C,M,Y,K}</code>)</li>
+   * <li>BOLD (<code>**</code>) — Markdown-style; MUST run before ITALIC so
+   * the pair isn't consumed as two italic toggles.</li>
+   * <li>ITALIC (<code>*</code>) — Markdown-style; single asterisk not flanked
+   * by another asterisk.</li>
+   * <li>ITALIC_UNDERSCORE (<code>_</code>) — CommonMark alias for italic;
+   * single underscore not flanked by another underscore.</li>
    * <li>COLOR (<code>{color:#xxxxxx}</code>)</li>
    * <li>HYPERLINK (<code>{link...}</code>)</li>
    * <li>ANCHOR (<code>{anchor:...}</code>)</li>
    * </ol>
    */
-  public static final ICommonsList <IPLMarkupCharacterFactory> DEFAULT_FACTORIES = new CommonsArrayList <> (PLMarkupCharacters.NEWLINE,
+  public static final ICommonsList <IPLMarkupCharacterFactory> DEFAULT_FACTORIES = new CommonsArrayList <> (PLMarkupCharacters.HARD_BREAK,
+                                                                                                            PLMarkupCharacters.NEWLINE,
                                                                                                             PLMarkupCharacters.UNDERLINE,
                                                                                                             PLMarkupCharacters.METRICS,
                                                                                                             PLMarkupCharacters.COLOR_CMYK,
                                                                                                             PLMarkupCharacters.BOLD,
                                                                                                             PLMarkupCharacters.ITALIC,
+                                                                                                            PLMarkupCharacters.ITALIC_UNDERSCORE,
                                                                                                             PLMarkupCharacters.COLOR,
                                                                                                             PLMarkupCharacters.HYPERLINK,
                                                                                                             PLMarkupCharacters.ANCHOR);
@@ -168,8 +175,9 @@ public final class PLMarkupParser
       {
         aOut.add (aCurrent);
       }
-      // begin-of-line tracking: any non-NEWLINE token resets to false
-      if (aCurrent instanceof IPLMarkupToken.NewLine)
+      // begin-of-line tracking: a line ending (hard or soft) resets to true,
+      // any other token resets to false
+      if (aCurrent instanceof IPLMarkupToken.NewLine || aCurrent instanceof IPLMarkupToken.SoftBreak)
         bBeginOfLine = true;
       else
         bBeginOfLine = false;

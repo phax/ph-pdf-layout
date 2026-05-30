@@ -120,6 +120,11 @@ public final class PLRichTextRunBuilder
           aResult.add (_makeRun ("\n", bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
         }
         else
+        if (aToken instanceof IPLMarkupToken.SoftBreak)
+        {
+          aResult.add (_makeRun (" ", bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
+        }
+        else
           if (aToken instanceof IPLMarkupToken.BoldToggle)
           {
             bBold = !bBold;

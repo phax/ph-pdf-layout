@@ -34,11 +34,15 @@ import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
  * needing additional markers can pass extra factories to the parser
  * constructor.
  *
- * <p>Recognised markup:</p>
+ * <p>Recognised markup (Markdown-style for bold and italic):</p>
  * <ul>
- * <li>{@code *bold*} — toggles bold</li>
- * <li>{@code _italic_} — toggles italic</li>
- * <li>{@code __text__} — toggles underline</li>
+ * <li>{@code **bold**} — toggles bold (CommonMark style; double asterisk)</li>
+ * <li>{@code *italic*} or {@code _italic_} — toggles italic (CommonMark style;
+ * single asterisk OR single underscore not flanked by another underscore)</li>
+ * <li>{@code __text__} — toggles underline. NOTE: this differs from CommonMark
+ * where {@code __} is an alternative bold marker — here it is reserved for
+ * underline as there is no standard Markdown for underline.</li>
+ * <li>{@code ***bold-italic***} — combines bold and italic.</li>
  * <li>{@code {_}sub{_}} — toggles subscript (font scaled, baseline shifted down)</li>
  * <li>{@code {^}sup{^}} — toggles superscript (font scaled, baseline shifted up)</li>
  * <li>{@code {_:0.5|0.2}sub{_}} — subscript with custom font / baseline scale</li>
@@ -47,7 +51,8 @@ import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
  * style (<code>ul</code> = underline, <code>none</code> = no decoration) is
  * optional and defaults to underline.</li>
  * <li>{@code {anchor:name}} — declares a named anchor as a link target</li>
- * <li>Backslash before any marker escapes it ({@code \*} renders a literal {@code *}).</li>
+ * <li>Backslash before any marker escapes it ({@code \*} renders a literal {@code *},
+ * {@code \**} renders a literal {@code **}).</li>
  * </ul>
  *
  * @author Philip Helger
@@ -55,39 +60,80 @@ import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
 public final class PLMarkupCharacters
 {
   /**
-   * Factory for the bold marker {@code *}.
+   * Factory for the bold marker {@code **} (Markdown / CommonMark style).
    * <p>
-   * Regex (Java source has every backslash doubled): {@code (?<!\\)(\\\\)*\*}
+   * Regex (Java source has every backslash doubled): {@code (?<!\\)(\\\\)*\*\*(?!\*)}
    * <ul>
    * <li>{@code (?<!\\)} — negative lookbehind: not preceded by a single backslash;
-   * this is how a literal {@code \*} escapes itself.</li>
+   * this is how a literal {@code \**} escapes itself.</li>
    * <li>{@code (\\\\)*} — but ANY number of double-backslashes is fine, so
-   * {@code \\*} (a literal backslash followed by an unescaped marker) still
+   * {@code \\**} (a literal backslash followed by an unescaped marker) still
    * matches the marker.</li>
-   * <li>{@code \*} — the actual asterisk marker.</li>
+   * <li>{@code \*\*} — the actual double-asterisk marker.</li>
+   * <li>{@code (?!\*)} — negative lookahead: NOT followed by a third {@code *}.
+   * This makes {@code ***foo***} parse as italic+bold around "foo" because the
+   * regex skips the first two {@code *} of the leading run and matches the
+   * remaining {@code **}; the leftover {@code *} on each side is later
+   * recognised by {@link #ITALIC}.</li>
    * </ul>
+   * MUST run before {@link #ITALIC} (a single {@code *}) so {@code **} isn't
+   * consumed as two italic toggles.
    */
-  public static final IPLMarkupCharacterFactory BOLD = new ToggleFactory ("(?<!\\\\)(\\\\\\\\)*\\*",
-                                                                          "*",
+  public static final IPLMarkupCharacterFactory BOLD = new ToggleFactory ("(?<!\\\\)(\\\\\\\\)*\\*\\*(?!\\*)",
+                                                                          "**",
                                                                           IPLMarkupToken.BoldToggle.INSTANCE);
 
   /**
-   * Factory for the italic marker {@code _} (but not the double-underscore underline).
+   * Factory for the italic marker {@code *} (but not the double-asterisk bold).
+   * <p>
+   * Regex: {@code (?<!\\)(\\\\)*(?<!\*)\*(?!\*)}
+   * <ul>
+   * <li>{@code (?<!\\)(\\\\)*} — same backslash-escape guard as BOLD.</li>
+   * <li>{@code (?<!\*)\*(?!\*)} — a single asterisk NOT flanked by another
+   * asterisk on either side; this is how the italic marker dodges the
+   * double-asterisk bold marker.</li>
+   * </ul>
+   */
+  public static final IPLMarkupCharacterFactory ITALIC = new ToggleFactory ("(?<!\\\\)(\\\\\\\\)*(?<!\\*)\\*(?!\\*)",
+                                                                            "*",
+                                                                            IPLMarkupToken.ItalicToggle.INSTANCE);
+
+  /**
+   * Factory for the italic alias marker {@code _} (single underscore not
+   * flanked by another underscore). Provided so users can use the CommonMark
+   * underscore form interchangeably with {@link #ITALIC} ({@code *italic*}).
    * <p>
    * Regex: {@code (?<!\\)(\\\\)*(?<!_)_(?!_)}
    * <ul>
-   * <li>{@code (?<!\\)(\\\\)*} — same backslash-escape guard as BOLD.</li>
-   * <li>{@code (?<!_)_(?!_)} — a single underscore NOT flanked by another
-   * underscore on either side; this is how the italic marker dodges the
-   * double-underscore underline marker.</li>
+   * <li>{@code (?<!\\)(\\\\)*} — standard backslash-escape guard.</li>
+   * <li>{@code (?<!_)_(?!_)} — single underscore NOT flanked by another
+   * underscore, so the double-underscore {@link #UNDERLINE} marker (which is
+   * NOT bold here, see class-level docs) is left alone.</li>
    * </ul>
+   * MUST run after {@link #UNDERLINE} so {@code __} isn't consumed as two
+   * italic toggles.
    */
-  public static final IPLMarkupCharacterFactory ITALIC = new ToggleFactory ("(?<!\\\\)(\\\\\\\\)*(?<!_)_(?!_)",
-                                                                            "_",
-                                                                            IPLMarkupToken.ItalicToggle.INSTANCE);
+  public static final IPLMarkupCharacterFactory ITALIC_UNDERSCORE = new ToggleFactory ("(?<!\\\\)(\\\\\\\\)*(?<!_)_(?!_)",
+                                                                                       "_",
+                                                                                       IPLMarkupToken.ItalicToggle.INSTANCE);
 
-  /** Factory for the newline marker {@code \n} or {@code \r\n}. */
+  /**
+   * Factory for the soft-break marker — a bare {@code \n} or {@code \r\n} that
+   * is NOT preceded by a hard-break trigger (see {@link #HARD_BREAK}). The
+   * emitted token is {@link IPLMarkupToken.SoftBreak} which the run-builder
+   * renders as a single space.
+   */
   public static final IPLMarkupCharacterFactory NEWLINE = new NewLineFactory ();
+
+  /**
+   * Factory for the hard line break: either two-or-more trailing spaces before
+   * the line ending, OR a single backslash before the line ending (CommonMark
+   * style). Emits {@link IPLMarkupToken.NewLine}. MUST run before
+   * {@link #NEWLINE} so the trailing spaces / backslash are consumed together
+   * with the line ending; otherwise NEWLINE would grab the line ending first
+   * and the trigger characters would be left as literal text.
+   */
+  public static final IPLMarkupCharacterFactory HARD_BREAK = new HardBreakFactory ();
 
   /** Factory for the color marker {@code {color:#rrggbb}}. */
   public static final IPLMarkupCharacterFactory COLOR = new ColorFactory ();
@@ -163,10 +209,15 @@ public final class PLMarkupCharacters
   }
 
   /**
-   * Recognises LF and CRLF as a line-break token. The parser splits on it
-   * first so that no other marker can accidentally straddle a line boundary.
-   * There is no escape mechanism — a literal {@code \n} in the source is
-   * always a line break.
+   * Recognises LF and CRLF as a SOFT line-break token. A soft break is
+   * rendered as a single space; this mirrors the CommonMark inline-context
+   * semantics where bare line endings collapse to a space and word-wrap
+   * decides actual layout breaks. For an explicit hard line break the markup
+   * must use the {@link HardBreakFactory} trigger (two-or-more trailing
+   * spaces or a backslash before the line ending). There is no backslash
+   * escape mechanism for the line ending itself — but writing
+   * {@code \<newline>} produces a HARD break (handled by
+   * {@link HardBreakFactory}).
    *
    * @author Philip Helger
    */
@@ -182,6 +233,59 @@ public final class PLMarkupCharacters
      * alone and then leave a stray CR in the text segment.
      */
     private static final Pattern PATTERN = Pattern.compile ("(\r\n|\n)");
+
+    @Override
+    @NonNull
+    public Pattern getPattern ()
+    {
+      return PATTERN;
+    }
+
+    @Override
+    @NonNull
+    public IPLMarkupToken createToken (@NonNull final String sText, @NonNull final Matcher aMatcher)
+    {
+      return IPLMarkupToken.SoftBreak.INSTANCE;
+    }
+
+    @Override
+    @NonNull
+    public String unescape (@NonNull final String sText)
+    {
+      return sText;
+    }
+  }
+
+  /**
+   * Recognises a CommonMark hard line break: either two-or-more trailing
+   * spaces, or a single backslash, immediately before the line ending.
+   * <p>
+   * Examples:
+   * </p>
+   * <ul>
+   * <li><code>foo  \n</code> — two trailing spaces — hard break</li>
+   * <li><code>foo\\\n</code> — single backslash — hard break</li>
+   * <li><code>foo\n</code> — bare newline — SOFT break (handled by
+   * {@link NewLineFactory})</li>
+   * </ul>
+   * The trailing spaces (or backslash) are consumed as part of the match so
+   * they do not show up in the rendered output.
+   *
+   * @author Philip Helger
+   */
+  private static final class HardBreakFactory implements IPLMarkupCharacterFactory
+  {
+    /**
+     * Regex: <code>( {2,}|(?&lt;!\\)\\)(\r\n|\n)</code>
+     * <ul>
+     * <li><code>{2,}</code> — two-or-more space characters; OR</li>
+     * <li><code>(?&lt;!\\)\\</code> — a single backslash whose immediately
+     * preceding character is NOT a backslash, so an escaped backslash
+     * (<code>\\</code>) doesn't produce a hard break.</li>
+     * <li><code>(\r\n|\n)</code> — the line ending.</li>
+     * </ul>
+     */
+    private static final Pattern PATTERN = Pattern.compile ("( {2,}|(?<!\\\\)\\\\)(\r\n|\n)");
 
     @Override
     @NonNull
@@ -261,13 +365,12 @@ public final class PLMarkupCharacters
 
   /**
    * Recognises {@code __} and the parameterised variant
-   * {@code __{offsetScale:lineWeight}}. This factory MUST run before the
-   * {@link #ITALIC} factory (which matches single {@code _}); otherwise
-   * {@code __} would be consumed as two italic toggles. The optional
-   * parameters allow strike-through-like effects: {@code __{0.25:}foo__} puts
-   * the line above mid-height, etc. The produced token wraps a
-   * {@link PLUnderlineAnnotation} and toggles by class — see
-   * {@code PLRichTextRunBuilder} for the open/close logic.
+   * {@code __{offsetScale:lineWeight}}. Underline uses double underscore as
+   * there is no standard Markdown for underline; the choice mirrors what
+   * Discord and Slack use. The optional parameters allow strike-through-like
+   * effects: {@code __{0.25:}foo__} puts the line above mid-height, etc. The
+   * produced token wraps a {@link PLUnderlineAnnotation} and toggles by class
+   * — see {@code PLRichTextRunBuilder} for the open/close logic.
    *
    * @author Philip Helger
    */

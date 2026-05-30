@@ -44,15 +44,15 @@ public final class PLRichTextLandscapeTest
   {
     final String sText = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " +
                          "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna " +
-                         "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* " +
-                         "duo dolores et ea rebum.\n\nStet clita kasd gubergren, no sea takimata " +
-                         "sanctus est *Lorem ipsum dolor sit* amet.";
+                         "aliquyam erat, *sed diam* voluptua. At vero eos et **accusam et justo** " +
+                         "duo dolores et ea rebum.  \n  \nStet clita kasd gubergren, no sea takimata " +
+                         "sanctus est **Lorem ipsum dolor sit** amet.";
 
     // A4 rotated to landscape: swap width and height of the standard A4 rectangle.
     final PDRectangle aLandscape = new PDRectangle (PDRectangle.A4.getHeight (), PDRectangle.A4.getWidth ());
     final PLPageSet aPS = new PLPageSet (aLandscape).setMargin (40, 60, 40, 60);
 
-    aPS.addElement (PLRichText.createFromMarkup ("*Format A4 in Landscape*", FONT_FAMILY, 20f, PLColor.BLACK));
+    aPS.addElement (PLRichText.createFromMarkup ("**Format A4 in Landscape**", FONT_FAMILY, 20f, PLColor.BLACK));
     aPS.addElement (PLRichText.createFromMarkup (sText, FONT_FAMILY, 11f, PLColor.BLACK));
     aPS.addElement (PLRichText.createFromMarkup (sText, FONT_FAMILY, 11f, PLColor.BLACK));
 

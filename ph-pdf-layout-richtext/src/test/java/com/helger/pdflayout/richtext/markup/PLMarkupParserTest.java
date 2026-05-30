@@ -52,7 +52,7 @@ public final class PLMarkupParserTest
   @Test
   public void testBold ()
   {
-    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("hi *bold* world");
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("hi **bold** world");
     // Text, BoldToggle, Text(bold), BoldToggle, Text
     assertEquals (5, aTokens.size ());
     assertTrue (aTokens.get (0) instanceof IPLMarkupToken.Text);
@@ -61,6 +61,47 @@ public final class PLMarkupParserTest
     assertEquals ("bold", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
     assertTrue (aTokens.get (3) instanceof IPLMarkupToken.BoldToggle);
     assertEquals (" world", ((IPLMarkupToken.Text) aTokens.get (4)).getText ());
+  }
+
+  @Test
+  public void testItalic ()
+  {
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("hi *italic* world");
+    // Text, ItalicToggle, Text(italic), ItalicToggle, Text
+    assertEquals (5, aTokens.size ());
+    assertEquals ("hi ", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.ItalicToggle);
+    assertEquals ("italic", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+    assertTrue (aTokens.get (3) instanceof IPLMarkupToken.ItalicToggle);
+    assertEquals (" world", ((IPLMarkupToken.Text) aTokens.get (4)).getText ());
+  }
+
+  @Test
+  public void testItalicNotMatchedInsideBold ()
+  {
+    // The text "**bold**" must produce 1 bold-open + Text + 1 bold-close,
+    // NOT four italic markers.
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("**bold**");
+    assertEquals (3, aTokens.size ());
+    assertTrue (aTokens.get (0) instanceof IPLMarkupToken.BoldToggle);
+    assertEquals ("bold", ((IPLMarkupToken.Text) aTokens.get (1)).getText ());
+    assertTrue (aTokens.get (2) instanceof IPLMarkupToken.BoldToggle);
+  }
+
+  @Test
+  public void testBoldContainingItalic ()
+  {
+    // "**bold *and italic* bold**" — italic nested inside bold.
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("**bold *and italic* bold**");
+    // BoldToggle, Text("bold "), ItalicToggle, Text("and italic"), ItalicToggle, Text(" bold"), BoldToggle
+    assertEquals (7, aTokens.size ());
+    assertTrue (aTokens.get (0) instanceof IPLMarkupToken.BoldToggle);
+    assertEquals ("bold ", ((IPLMarkupToken.Text) aTokens.get (1)).getText ());
+    assertTrue (aTokens.get (2) instanceof IPLMarkupToken.ItalicToggle);
+    assertEquals ("and italic", ((IPLMarkupToken.Text) aTokens.get (3)).getText ());
+    assertTrue (aTokens.get (4) instanceof IPLMarkupToken.ItalicToggle);
+    assertEquals (" bold", ((IPLMarkupToken.Text) aTokens.get (5)).getText ());
+    assertTrue (aTokens.get (6) instanceof IPLMarkupToken.BoldToggle);
   }
 
   @Test
@@ -90,9 +131,21 @@ public final class PLMarkupParserTest
   }
 
   @Test
-  public void testNewLine ()
+  public void testSoftBreak ()
   {
+    // Bare \n is a CommonMark soft break — rendered later as a single space.
     final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("line 1\nline 2");
+    assertEquals (3, aTokens.size ());
+    assertEquals ("line 1", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.SoftBreak);
+    assertEquals ("line 2", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+  }
+
+  @Test
+  public void testHardBreakSpaces ()
+  {
+    // Two-or-more trailing spaces before the line ending = CommonMark hard break.
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("line 1  \nline 2");
     assertEquals (3, aTokens.size ());
     assertEquals ("line 1", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
     assertTrue (aTokens.get (1) instanceof IPLMarkupToken.NewLine);
@@ -100,12 +153,70 @@ public final class PLMarkupParserTest
   }
 
   @Test
+  public void testHardBreakBackslash ()
+  {
+    // Backslash before the line ending = CommonMark hard break.
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("line 1\\\nline 2");
+    assertEquals (3, aTokens.size ());
+    assertEquals ("line 1", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.NewLine);
+    assertEquals ("line 2", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+  }
+
+  @Test
+  public void testEscapedBackslashThenSoftBreak ()
+  {
+    // \\\n in the source = literal backslash + bare newline = soft break (NOT hard).
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("line 1\\\\\nline 2");
+    assertEquals (3, aTokens.size ());
+    assertEquals ("line 1\\", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.SoftBreak);
+    assertEquals ("line 2", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+  }
+
+  @Test
+  public void testItalicUnderscoreAlias ()
+  {
+    // CommonMark allows _italic_ as an alias for *italic*.
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("hi _italic_ world");
+    assertEquals (5, aTokens.size ());
+    assertEquals ("hi ", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.ItalicToggle);
+    assertEquals ("italic", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+    assertTrue (aTokens.get (3) instanceof IPLMarkupToken.ItalicToggle);
+    assertEquals (" world", ((IPLMarkupToken.Text) aTokens.get (4)).getText ());
+  }
+
+  @Test
+  public void testBoldItalicCombined ()
+  {
+    // ***foo*** is bold + italic around "foo" (CommonMark style).
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("***foo***");
+    // ItalicToggle, BoldToggle, Text("foo"), ItalicToggle, BoldToggle
+    assertEquals (5, aTokens.size ());
+    assertTrue (aTokens.get (0) instanceof IPLMarkupToken.ItalicToggle);
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.BoldToggle);
+    assertEquals ("foo", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+    assertTrue (aTokens.get (3) instanceof IPLMarkupToken.ItalicToggle);
+    assertTrue (aTokens.get (4) instanceof IPLMarkupToken.BoldToggle);
+  }
+
+  @Test
   public void testEscapedBold ()
   {
-    // \* is a literal '*', the surrounding text must NOT be treated as bold.
-    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("not \\*bold\\* here");
+    // \** is a literal '**', the surrounding text must NOT be treated as bold.
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("not \\**bold\\** here");
     assertEquals (1, aTokens.size ());
-    assertEquals ("not *bold* here", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertEquals ("not **bold** here", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+  }
+
+  @Test
+  public void testEscapedItalic ()
+  {
+    // \* is a literal '*', the surrounding text must NOT be treated as italic.
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("not \\*italic\\* here");
+    assertEquals (1, aTokens.size ());
+    assertEquals ("not *italic* here", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
   }
 
   @Test
@@ -132,8 +243,8 @@ public final class PLMarkupParserTest
   @Test
   public void testCombined ()
   {
-    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("*B* _I_ {color:#00ff00}G");
-    // *, B, *, " ", _, I, _, " ", {color}, G
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("**B** *I* {color:#00ff00}G");
+    // **, B, **, " ", *, I, *, " ", {color}, G
     assertEquals (10, aTokens.size ());
     assertNotNull (aTokens.findFirst (BoldToggle.class::isInstance));
     assertNotNull (aTokens.findFirst (ItalicToggle.class::isInstance));

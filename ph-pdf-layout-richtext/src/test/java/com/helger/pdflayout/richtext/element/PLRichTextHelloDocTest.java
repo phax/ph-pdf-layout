@@ -30,7 +30,7 @@ import com.helger.pdflayout.richtext.run.PLFontFamily;
 
 /**
  * Port of the {@code HelloDocTest} smoke test from the pdfbox-layout source repo. Renders a single
- * {@link PLRichText} containing a tiny "Hello *world*" markup string and pixel-diffs against a
+ * {@link PLRichText} containing a tiny "Hello **world**" markup string and pixel-diffs against a
  * checked-in reference.
  *
  * @author Philip Helger
@@ -44,7 +44,7 @@ public final class PLRichTextHelloDocTest
   {
     final PLPageSet aPS = new PLPageSet (PDRectangle.A4).setMargin (40, 60, 40, 60);
 
-    aPS.addElement (PLRichText.createFromMarkup ("Hello *world*", FONT_FAMILY, 20f, PLColor.BLACK));
+    aPS.addElement (PLRichText.createFromMarkup ("Hello **world**", FONT_FAMILY, 20f, PLColor.BLACK));
 
     final PageLayoutPDF aLayout = new PageLayoutPDF ().addPageSet (aPS);
     PLRichTextTestComparer.renderAndCompare (aLayout, new File ("target/test-pdfs/richtext-hellodoc.pdf"));

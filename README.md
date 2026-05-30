@@ -50,21 +50,22 @@ The base `PLText` is single-style by design; rich text fills that gap.
 
 ## Huge credit where it's due
 
-The markup grammar (`*bold*`, `_italic_`, `__underline__`, `{color:#rrggbb}`, `{_}sub{_}`, `{^}sup{^}`, `{link:style[uri]}`, `{anchor:name}`, the `--`/`-+`/`-#`/`-!` indentation prefixes, the backslash-escape rules, and the parameterised forms like `__{0.25:1.5}__` and `{_:0.5|0.2}sub{_}`), **the regex catalog**, **the multi-pass split-by-marker parsing strategy**, and **the open/close annotation toggle model** are a port of **Ralf Stuckert's [pdfbox-layout](https://github.com/ralfstuckert/pdfbox-layout)** (MIT license).
-Every test fixture in the rich-text module is a port of the equivalent example in that project.
+The grammar shape (`__underline__`, `{color:#rrggbb}`, `{_}sub{_}`, `{^}sup{^}`, `{link:style[uri]}`, `{anchor:name}`, the `--`/`-+`/`-#`/`-!` indentation prefixes, the backslash-escape rules, and the parameterised forms like `__{0.25:1.5}__` and `{_:0.5|0.2}sub{_}`), **the regex catalog**, **the multi-pass split-by-marker parsing strategy**, and **the open/close annotation toggle model** are a port of **Ralf Stuckert's [pdfbox-layout](https://github.com/ralfstuckert/pdfbox-layout)** (MIT license).
+Bold and italic were re-spelled to the Markdown / CommonMark form (`**bold**`, `*italic*` / `_italic_`) in v8.3.1, and CommonMark line-break semantics were adopted at the same time — see the changelog.
 
 If you find this module useful, please go give Ralf's project a star — none of this would exist without his original work.
 The migration to ph-pdf-layout exists only because Ralf's library is pinned to PDFBox 1.x/2.x and ph-pdf-layout has already done the PDFBox 3.x work plus the broader element/layout/render lifecycle.
 
 ## What's supported
 
-Markup syntax (mirrors Ralf Stuckert's grammar):
+Markup syntax (Markdown / CommonMark style for bold, italic and line breaks; the rest follows Ralf Stuckert's grammar):
 
 | Markup | Effect |
 |---|---|
-| `*bold*` | toggles bold |
-| `_italic_` | toggles italic |
-| `__text__` | underlines `text` |
+| `**bold**` | toggles bold (CommonMark) |
+| `*italic*` or `_italic_` | toggles italic (CommonMark; either form works) |
+| `***bold-italic***` | combined bold + italic |
+| `__text__` | underlines `text`. **Differs from CommonMark**, which uses `__` as an alternate bold marker — here `__` is reserved for underline because there is no standard Markdown for it. |
 | `__{0.25:1.5}text__` | underline with custom baseline offset and line weight |
 | `{_}sub{_}` | subscript (default 0.61× font, +0.15 baseline shift) |
 | `{^}sup{^}` | superscript (default 0.61× font, −0.4 baseline shift) |
@@ -75,8 +76,10 @@ Markup syntax (mirrors Ralf Stuckert's grammar):
 | `{link:none[uri]}…{link}` | hyperlink with no visual decoration |
 | `{link[#name]}…{link}` | internal link jumping to a named anchor declared elsewhere |
 | `{anchor:name}…{anchor}` | declares a named destination targetable by `#name` link URIs |
-| `\*`, `\_`, `\{`, `\\` | backslash-escape any marker |
-| `\n` / `\r\n` | hard line break |
+| `\*`, `\**`, `\_`, `\__`, `\{`, `\\` | backslash-escape any marker |
+| bare `\n` / `\r\n` | CommonMark **soft break** — rendered as a single space; word-wrap decides line breaks |
+| `  \n` (two-or-more trailing spaces) | CommonMark **hard line break** |
+| `\<newline>` (backslash immediately before the line ending) | CommonMark **hard line break** |
 | `-+ item`, `-#  item`, `-- item`, `-!` (line-start) | bullet item, numbered item, plain indent, end-indent block |
 
 ## How to use it
@@ -100,7 +103,7 @@ final PLFontFamily aFontFamily = new PLFontFamily (PreloadFont.TIMES,
                                                    PreloadFont.TIMES_BOLD_ITALIC);
 
 final PLRichText aRichText = PLRichText.createFromMarkup (
-    "Hello *world*, this is _important_ and __underlined__. " +
+    "Hello **world**, this is *important* and __underlined__. " +
         "Visit {link[https://example.com]}example.com{link} or " +
         "jump to {link[#summary]}the summary{link}.",
     aFontFamily, 11f, PLColor.BLACK);
@@ -144,7 +147,10 @@ aPS.addElement (new PLRichText (aRuns));
 
 The rendered example PDFs are in [example-files/richtext](https://github.com/phax/ph-pdf-layout/tree/master/example-files/richtext); the source-side test code that produced them is at [ph-pdf-layout-richtext/src/test](https://github.com/phax/ph-pdf-layout/tree/master/ph-pdf-layout-richtext/src/test/java/com/helger/pdflayout/richtext).
 
-Similar libraries in this context (totally unrelated to this project):
+# Similar libraries
+
+Similar libraries for PDF rendering, but totally unrelated to this project:
+
 * https://github.com/ralfstuckert/pdfbox-layout - text-heavy layout library for PDFBox 1.x/2.x; MIT license. **The optional `ph-pdf-layout-richtext` module is a port of Ralf's markup engine to ph-pdf-layout and PDFBox 3.x — see the rich-text section above for the full credit.**
 * https://github.com/TIBCOSoftware/jasperreports - the "big one" - large scale, complex, heavy-weight, declarative approach; LGPL license
 * https://github.com/LibrePDF/OpenPDF/ - an iText 4.x clone; no PDFBox; LGPL / MPL license
@@ -165,6 +171,16 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
+
+v8.3.1 - 2026-05-30
+* **`ph-pdf-layout-richtext` markup syntax is now Markdown / CommonMark style** — breaking change vs v8.3.0:
+  * Bold is `**bold**` (was `*bold*`).
+  * Italic is `*italic*` or `_italic_` — both Markdown forms are accepted (was `_italic_` only).
+  * `***foo***` toggles bold and italic together.
+  * `__underline__` is unchanged, but **differs from CommonMark**: CommonMark uses `__` as alternate bold; here `__` stays reserved for underline because there is no standard Markdown for underline.
+  * Line breaks now follow CommonMark inline semantics: a bare `\n` / `\r\n` is a **soft break** (rendered as a single space and word-wrapped). A **hard line break** requires either two-or-more trailing spaces before the line ending, or a backslash immediately before the line ending.
+  * Backslash escape now applies to the new markers too: `\*`, `\**`, `\_`, `\__`.
+  * Internally: new `IPLMarkupToken.SoftBreak`; new `HARD_BREAK` factory; new `ITALIC_UNDERSCORE` factory in `PLMarkupCharacters`; `BOLD` regex gained a `(?!\*)` lookahead so it cooperates with italic in `***…***`. All affected unit tests and pixel-diff baselines have been updated; the rendered output of the existing markup tests is byte-identical to v8.3.0 once the new escape-demo line is taken into account.
 
 v8.3.0 - 2026-05-29
 * New optional module `ph-pdf-layout-richtext` providing multi-style runs in a single paragraph, plus inline links, anchors, underline, sub/superscript and a Markdown-style markup parser.

@@ -42,13 +42,15 @@ public final class PLRichTextMultiplePagesTest
   @Test
   public void testMultiplePages () throws PDFCreationException
   {
+    // Two trailing spaces produce a CommonMark hard break — paired hard breaks
+    // give the same blank-line gap the old test used \n\n for.
     final String sText = ("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " +
                           "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna " +
-                          "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* " +
-                          "duo dolores et ea rebum.\n\nStet clita kasd gubergren, no sea takimata " +
-                          "sanctus est *Lorem ipsum dolor sit* amet. Lorem ipsum dolor sit amet, " +
+                          "aliquyam erat, *sed diam* voluptua. At vero eos et **accusam et justo** " +
+                          "duo dolores et ea rebum.  \n  \nStet clita kasd gubergren, no sea takimata " +
+                          "sanctus est **Lorem ipsum dolor sit** amet. Lorem ipsum dolor sit amet, " +
                           "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt " +
-                          "ut labore et dolore magna aliquyam erat, *sed diam voluptua*.\n\n" +
+                          "ut labore et dolore magna aliquyam erat, **sed diam voluptua**.  \n  \n" +
                           "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd " +
                           "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.").repeat (3);
 

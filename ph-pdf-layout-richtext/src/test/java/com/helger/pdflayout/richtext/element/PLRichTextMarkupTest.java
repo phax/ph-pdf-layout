@@ -47,25 +47,27 @@ public final class PLRichTextMarkupTest
   @Test
   public void testMarkup () throws PDFCreationException
   {
+    // Hard breaks need a CommonMark trigger (two trailing spaces or backslash);
+    // bare \n is a soft break (rendered as a space).
     final String sText1 = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " +
                           "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna " +
-                          "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* " +
-                          "duo dolores et ea rebum.\nStet clita kasd gubergren, no sea takimata " +
-                          "sanctus est *Lorem ipsum _dolor* sit_ amet. Lorem ipsum dolor sit amet, " +
+                          "aliquyam erat, *sed diam* voluptua. At vero eos et **accusam et justo** " +
+                          "duo dolores et ea rebum.  \nStet clita kasd gubergren, no sea takimata " +
+                          "sanctus est **Lorem ipsum *dolor** sit* amet. Lorem ipsum dolor sit amet, " +
                           "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt " +
-                          "ut labore et dolore magna aliquyam erat, *sed diam voluptua.\n" +
-                          "At vero eos et accusam* et justo duo dolores et ea rebum. Stet clita kasd " +
+                          "ut labore et dolore magna aliquyam erat, **sed diam voluptua.  \n" +
+                          "At vero eos et accusam** et justo duo dolores et ea rebum. Stet clita kasd " +
                           "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 
     final PLPageSet aPS = new PLPageSet (PDRectangle.A4).setMargin (40, 60, 40, 60);
 
     aPS.addElement (PLRichText.createFromMarkup (sText1, FONT_FAMILY, 11f, PLColor.BLACK));
 
-    aPS.addElement (PLRichText.createFromMarkup ("Markup supports *bold*, _italic_, and *even _mixed* markup_.",
+    aPS.addElement (PLRichText.createFromMarkup ("Markup supports **bold**, *italic*, and **even *mixed** markup*.",
                                                  FONT_FAMILY,
                                                  11f,
                                                  PLColor.BLACK));
-    aPS.addElement (PLRichText.createFromMarkup ("Escape \\* with \\\\\\* and \\_ with \\\\\\_ in markup.",
+    aPS.addElement (PLRichText.createFromMarkup ("Escape \\* with \\\\\\* and \\** with \\\\\\** in markup.",
                                                  FONT_FAMILY,
                                                  11f,
                                                  PLColor.BLACK));

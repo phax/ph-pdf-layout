@@ -44,7 +44,7 @@ public final class PLRichTextIndentationTest
   @Test
   public void testIndent () throws PDFCreationException
   {
-    final String sMarkup = "For your convenience, you can do all that much easier with markup, e.g. *simple indentation*\n" +
+    final String sMarkup = "For your convenience, you can do all that much easier with markup, e.g. **simple indentation**\n" +
                            "--At vero eos et accusam\n" +
                            "-!And end the indentation. Now a list:\n" +
                            "-+This is a list item\n" +

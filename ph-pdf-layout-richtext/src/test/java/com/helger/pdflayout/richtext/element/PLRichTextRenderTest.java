@@ -74,7 +74,7 @@ public final class PLRichTextRenderTest
   @Test
   public void testMultiStyleMarkup () throws IOException, PDFCreationException
   {
-    final PLRichText aRT = PLRichText.createFromMarkup ("*bold* and _italic_ and __underline__",
+    final PLRichText aRT = PLRichText.createFromMarkup ("**bold** and *italic* and __underline__",
                                                         FONT_FAMILY,
                                                         12f,
                                                         PLColor.BLACK);

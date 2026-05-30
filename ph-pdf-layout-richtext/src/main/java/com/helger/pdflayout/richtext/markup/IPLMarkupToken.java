@@ -37,6 +37,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
                                                IPLMarkupToken.ItalicToggle,
                                                IPLMarkupToken.Color,
                                                IPLMarkupToken.NewLine,
+                                               IPLMarkupToken.SoftBreak,
                                                IPLMarkupToken.AnnotationToggle,
                                                IPLMarkupToken.MetricsToggle
 {
@@ -65,7 +66,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     }
   }
 
-  /** Toggle bold style on or off (the {@code *} marker). */
+  /** Toggle bold style on or off (the {@code **} marker). */
   @Immutable
   final class BoldToggle implements IPLMarkupToken
   {
@@ -81,7 +82,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     }
   }
 
-  /** Toggle italic style on or off (the {@code _} marker). */
+  /** Toggle italic style on or off (the {@code *} marker). */
   @Immutable
   final class ItalicToggle implements IPLMarkupToken
   {
@@ -122,13 +123,39 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     }
   }
 
-  /** A new line in the markup ({@code \n} or {@code \r\n}). */
+  /**
+   * A hard line break in the markup. Emitted by the markup parser when the
+   * line ending is preceded by either two-or-more spaces (CommonMark "trailing
+   * space" hard break) or a single backslash (CommonMark "backslash" hard
+   * break).
+   */
   @Immutable
   final class NewLine implements IPLMarkupToken
   {
     public static final NewLine INSTANCE = new NewLine ();
 
     private NewLine ()
+    {}
+
+    @Override
+    public String toString ()
+    {
+      return new ToStringGenerator (this).getToString ();
+    }
+  }
+
+  /**
+   * A soft line break in the markup. Emitted by the markup parser for a bare
+   * {@code \n} or {@code \r\n} that is NOT preceded by the hard-break trigger
+   * (two-or-more spaces or a backslash). Rendered as a single space — see
+   * {@link com.helger.pdflayout.richtext.run.PLRichTextRunBuilder}.
+   */
+  @Immutable
+  final class SoftBreak implements IPLMarkupToken
+  {
+    public static final SoftBreak INSTANCE = new SoftBreak ();
+
+    private SoftBreak ()
     {}
 
     @Override

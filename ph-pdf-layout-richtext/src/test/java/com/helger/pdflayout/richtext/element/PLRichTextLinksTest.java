@@ -56,7 +56,7 @@ public final class PLRichTextLinksTest
                                                  11f,
                                                  PLColor.BLACK));
 
-    aPS.addElement (PLRichText.createFromMarkup ("{anchor:hello}Here{anchor} comes the internal anchor named *hello*.",
+    aPS.addElement (PLRichText.createFromMarkup ("{anchor:hello}Here{anchor} comes the internal anchor named **hello**.",
                                                  FONT_FAMILY,
                                                  15f,
                                                  PLColor.BLACK));
