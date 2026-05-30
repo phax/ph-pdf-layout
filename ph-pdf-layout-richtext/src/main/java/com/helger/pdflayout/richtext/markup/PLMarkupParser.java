@@ -63,6 +63,7 @@ public final class PLMarkupParser
    * <li>COLOR (<code>{color:#xxxxxx}</code>)</li>
    * <li>HYPERLINK (<code>{link...}</code>)</li>
    * <li>ANCHOR (<code>{anchor:...}</code>)</li>
+   * <li>BACKGROUND (<code>{bg:#xxxxxx}...{bg}</code>)</li>
    * </ol>
    */
   public static final ICommonsList <IPLMarkupCharacterFactory> DEFAULT_FACTORIES = new CommonsArrayList <> (PLMarkupCharacters.HARD_BREAK,
@@ -75,7 +76,8 @@ public final class PLMarkupParser
                                                                                                             PLMarkupCharacters.ITALIC_UNDERSCORE,
                                                                                                             PLMarkupCharacters.COLOR,
                                                                                                             PLMarkupCharacters.HYPERLINK,
-                                                                                                            PLMarkupCharacters.ANCHOR);
+                                                                                                            PLMarkupCharacters.ANCHOR,
+                                                                                                            PLMarkupCharacters.BACKGROUND);
 
   private final ICommonsList <IPLMarkupCharacterFactory> m_aFactories;
 

@@ -45,7 +45,7 @@ A set of example files as created from the unit test can be found in folder [exa
 
 # Rich text (markup) — module `ph-pdf-layout-richtext`
 
-The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, and sub/superscript.
+The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, sub/superscript and background highlights.
 The base `PLText` is single-style by design; rich text fills that gap.
 
 ## Huge credit where it's due
@@ -72,6 +72,9 @@ Markup syntax (Markdown / CommonMark style for bold, italic and line breaks; the
 | `{_:0.5|0.2}foo{_}` | subscript with explicit fontScale and baselineOffset |
 | `{color:#rrggbb}` | switches the current colour to RGB (set, not toggle — reset with `{color:#000000}`) |
 | `{color_cmyk:C,M,Y,K}` | switches the current colour to CMYK (percent values 0..100, floats OK — e.g. `{color_cmyk:75,15,0,20}`). The RGB marker is unchanged. Originally requested at [ralfstuckert/pdfbox-layout#94](https://github.com/ralfstuckert/pdfbox-layout/issues/94). |
+| `{bg:#rrggbb}…{bg}` | fills a background rectangle behind the wrapped run (default `tight` extent — per-segment box that follows sub/superscript shifts) |
+| `{bg:tight:#rrggbb}…{bg}` | background with explicit `tight` extent — same as the default |
+| `{bg:line:#rrggbb}…{bg}` | background with `line` extent — uses the line's full slot so the highlight stays a single uniform rectangle across mixed sizes / sub-superscript, and is contiguous across wrapped lines |
 | `{link[uri]}…{link}` | wraps the inner text in an external hyperlink (default underline-decorated) |
 | `{link:none[uri]}…{link}` | hyperlink with no visual decoration |
 | `{link[#name]}…{link}` | internal link jumping to a named anchor declared elsewhere |
@@ -171,6 +174,13 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
+
+v8.3.2 - in development
+* `ph-pdf-layout-richtext`: added inline **background-color markup** — `{bg:#rrggbb}…{bg}` fills a rectangle behind the wrapped run. Two vertical-extent modes selected by an optional qualifier:
+  * `{bg:#rrggbb}` / `{bg:tight:#rrggbb}` — **tight** (default): per-segment box sized to the segment's own font, anchored on its (possibly sub/superscript-shifted) baseline; the highlight follows the visible glyphs.
+  * `{bg:line:#rrggbb}` — **line-height**: box sized to the line's full slot using the unshifted baseline, so the highlight stays a single uniform rectangle across sub/superscript and is contiguous across wrapped lines.
+  * Backgrounds are painted *before* the glyphs and the existing post-text decorations (underline, hyperlink, anchor); they compose with bold / italic / colour / underline / sub-superscript inside the span.
+  * Internally: new `PLBackgroundAnnotation` (an `IPLRichTextAnnotation`) plus `EPLBackgroundExtent` enum (`TIGHT`, `LINE_HEIGHT`); new `BackgroundFactory` in `PLMarkupCharacters`; pre-text fill pass added in `PLRichText`'s render loop.
 
 v8.3.1 - 2026-05-30
 * **`ph-pdf-layout-richtext` markup syntax is now Markdown / CommonMark style** — breaking change vs v8.3.0:

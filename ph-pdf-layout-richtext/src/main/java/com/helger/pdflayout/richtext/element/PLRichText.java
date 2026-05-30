@@ -49,8 +49,10 @@ import com.helger.pdflayout.render.PLAnchorRegistry;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PreparationContextGlobal;
+import com.helger.pdflayout.richtext.annotation.EPLBackgroundExtent;
 import com.helger.pdflayout.richtext.annotation.IPLRichTextAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLAnchorAnnotation;
+import com.helger.pdflayout.richtext.annotation.PLBackgroundAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLHyperlinkAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
@@ -408,6 +410,19 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
       final float fIndentX = getIndentX (fPreparedWidth, fLineWidth);
       // PDF user-space baseline of this line (Y grows upward).
       final float fBaselineY = fRenderTop - m_fTextHeight - m_fDescent - nLine * m_fTextHeight * m_fLineSpacing;
+      final boolean bIsLastLine = nLine == nLineCount - 1;
+      // Deepest descent (most-negative value) across the segments of THIS line.
+      // We can't reuse the element-wide m_fDescent because onPrepare folds it
+      // with Math.max starting at 0, which clamps negative descents to 0 — the
+      // layout tolerates that for baseline positioning but a LINE_HEIGHT
+      // highlight needs the actual depth so descenders are covered.
+      float fLineDescent = 0f;
+      for (final PLRichTextSegment aSeg : aLine.segments ())
+      {
+        final float fSegDescent = aSeg.getLoadedFont ().getDescent (aSeg.getFontSpec ().getFontSize ());
+        if (fSegDescent < fLineDescent)
+          fLineDescent = fSegDescent;
+      }
 
       // Compute character spacing for JUSTIFY/BLOCK. This matches how
       // AbstractPLText justifies — extra width is distributed across all
@@ -441,6 +456,27 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
         final float fFontSize = aSeg.getFontSpec ().getFontSize ();
         final float fSegBaselineY = fBaselineY - fFontSize * aSeg.getBaselineOffsetScale ();
 
+        // Pre-text pass: backgrounds must paint BEFORE the glyphs so the text
+        // stays on top. Width-zero or empty segments contribute nothing visible.
+        if (nSegChars > 0 && fSegFullWidth > 0f)
+        {
+          for (final IPLRichTextAnnotation aAnn : aSeg.annotations ())
+          {
+            if (aAnn instanceof final PLBackgroundAnnotation aBg)
+            {
+              _drawBackground (aCS,
+                               aSeg,
+                               aBg,
+                               fSegStartX,
+                               fSegFullWidth,
+                               fSegBaselineY,
+                               fBaselineY,
+                               fLineDescent,
+                               bIsLastLine);
+            }
+          }
+        }
+
         if (nSegChars > 0)
         {
           aCS.beginText ();
@@ -451,7 +487,8 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
           aCS.endText ();
         }
 
-        // Inline annotations: underline, hyperlink, anchor.
+        // Post-text pass: underline, hyperlink, anchor (drawn over the glyphs
+        // where applicable, or registered with the page).
         for (final IPLRichTextAnnotation aAnn : aSeg.annotations ())
         {
           if (aAnn instanceof final PLUnderlineAnnotation aUnderline)
@@ -485,6 +522,46 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     for (final PLRichTextSegment aSeg : aLine.segments ())
       n += aSeg.getText ().length ();
     return n;
+  }
+
+  private void _drawBackground (@NonNull final PDPageContentStreamWithCache aCS,
+                                @NonNull final PLRichTextSegment aSeg,
+                                @NonNull final PLBackgroundAnnotation aBg,
+                                final float fStartX,
+                                final float fSegWidth,
+                                final float fSegBaselineY,
+                                final float fLineBaselineY,
+                                final float fLineDescent,
+                                final boolean bIsLastLine) throws IOException
+  {
+    // Note on the descent sign: PDFontDescriptor stores Descent as a NEGATIVE
+    // value (the PDF spec convention — distance below the baseline). We follow
+    // the same convention here: `baseline + descent` lands BELOW the baseline.
+    final float fBottomY;
+    final float fHeight;
+    if (aBg.getExtent () == EPLBackgroundExtent.LINE_HEIGHT)
+    {
+      // Full line slot of the enclosing element. Anchor at the line's UNshifted
+      // baseline (so sub/superscript segments don't perturb the box) and pull
+      // the bottom down by the line's deepest descent so descenders are
+      // covered. Height is the baseline-to-baseline distance for non-last
+      // lines (which makes consecutive lines' boxes contiguous through the
+      // leading gap) and the bare textHeight for the last line.
+      fBottomY = fLineBaselineY + fLineDescent;
+      fHeight = bIsLastLine ? m_fTextHeight : m_fTextHeight * m_fLineSpacing;
+    }
+    else
+    {
+      // Tight box around this segment's own font, anchored on the SHIFTED
+      // baseline so sub/superscript highlights follow the visible glyphs.
+      final float fFontSize = aSeg.getFontSpec ().getFontSize ();
+      final float fSegDescent = aSeg.getLoadedFont ().getDescent (fFontSize);
+      final float fSegTextHeight = aSeg.getLoadedFont ().getTextHeight (fFontSize);
+      fBottomY = fSegBaselineY + fSegDescent;
+      fHeight = fSegTextHeight;
+    }
+    aCS.setNonStrokingColor (aBg.getColor ());
+    aCS.fillRect (fStartX, fBottomY, fSegWidth, fHeight);
   }
 
   private static void _drawUnderline (@NonNull final PDPageContentStreamWithCache aCS,

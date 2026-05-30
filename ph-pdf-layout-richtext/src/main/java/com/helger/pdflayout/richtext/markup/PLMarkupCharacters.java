@@ -22,9 +22,11 @@ import java.util.regex.Pattern;
 import org.jspecify.annotations.NonNull;
 
 import com.helger.pdflayout.base.PLColor;
+import com.helger.pdflayout.richtext.annotation.EPLBackgroundExtent;
 import com.helger.pdflayout.richtext.annotation.EPLLinkStyle;
 import com.helger.pdflayout.richtext.color.PLCMYKColor;
 import com.helger.pdflayout.richtext.annotation.PLAnchorAnnotation;
+import com.helger.pdflayout.richtext.annotation.PLBackgroundAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLHyperlinkAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
 
@@ -47,6 +49,11 @@ import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
  * <li>{@code {^}sup{^}} — toggles superscript (font scaled, baseline shifted up)</li>
  * <li>{@code {_:0.5|0.2}sub{_}} — subscript with custom font / baseline scale</li>
  * <li>{@code {color:#rrggbb}} — switches the current color</li>
+ * <li>{@code {bg:#rrggbb}text{bg}} — fills a background rectangle behind the text.
+ * The extent defaults to {@link EPLBackgroundExtent#TIGHT tight} (the segment's
+ * own font box); writing {@code {bg:line:#rrggbb}} selects
+ * {@link EPLBackgroundExtent#LINE_HEIGHT line-height} (full line slot, contiguous
+ * across adjacent segments and across wrapped lines).</li>
  * <li>{@code {link:ul[http://example.com]}} — wraps text in a hyperlink. The
  * style (<code>ul</code> = underline, <code>none</code> = no decoration) is
  * optional and defaults to underline.</li>
@@ -157,6 +164,9 @@ public final class PLMarkupCharacters
 
   /** Factory for the anchor marker {@code {anchor:name}}. */
   public static final IPLMarkupCharacterFactory ANCHOR = new AnchorFactory ();
+
+  /** Factory for the background marker {@code {bg:#rrggbb}}…{@code {bg}}. */
+  public static final IPLMarkupCharacterFactory BACKGROUND = new BackgroundFactory ();
 
   private PLMarkupCharacters ()
   {}
@@ -660,6 +670,71 @@ public final class PLMarkupCharacters
         return new IPLMarkupToken.AnnotationToggle (new PLAnchorAnnotation ("__close__"));
       }
       return new IPLMarkupToken.AnnotationToggle (new PLAnchorAnnotation (sName));
+    }
+
+    @Override
+    @NonNull
+    public String unescape (@NonNull final String sText)
+    {
+      return sText.replaceAll ("\\\\" + Pattern.quote (MARKER), MARKER);
+    }
+  }
+
+  /**
+   * Recognises the opening {@code {bg:#rrggbb}} and {@code {bg:line:#rrggbb}}
+   * (the literal {@code line} selects {@link EPLBackgroundExtent#LINE_HEIGHT};
+   * absent defaults to {@link EPLBackgroundExtent#TIGHT}) plus the closing bare
+   * {@code {bg}}. Both shapes emit an {@link IPLMarkupToken.AnnotationToggle}
+   * carrying a {@link PLBackgroundAnnotation}. Open/close pairing is by
+   * ANNOTATION CLASS, not parameter — so two {@code {bg:#...}} with different
+   * colours do NOT nest; the second one simply closes the first. The closing
+   * bare {@code {bg}} carries a sentinel transparent color; the builder pops
+   * the annotation by type so the sentinel is never actually painted.
+   *
+   * @author Philip Helger
+   */
+  private static final class BackgroundFactory implements IPLMarkupCharacterFactory
+  {
+    /**
+     * Regex: <code>(?&lt;!\\)(\\\\)*\{bg(:(tight|line))?(:#(\p{XDigit}{6}))?\}</code>
+     * <ul>
+     * <li><code>(?&lt;!\\)(\\\\)*</code> — escape guard.</li>
+     * <li><code>\{bg</code> — literal <code>{bg</code>.</li>
+     * <li><code>(:(tight|line))?</code> — OPTIONAL extent suffix. group 3
+     * captures the extent literal. Absent defaults to
+     * {@link EPLBackgroundExtent#TIGHT}.</li>
+     * <li><code>(:#(\p{XDigit}{6}))?</code> — OPTIONAL colour. group 5 captures
+     * the six hex digits. Absent → CLOSING marker {@code {bg}}.</li>
+     * <li><code>\}</code> — literal <code>}</code>.</li>
+     * </ul>
+     */
+    private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{bg(:(tight|line))?(:#(\\p{XDigit}{6}))?\\}");
+    private static final String MARKER = "{";
+
+    @Override
+    @NonNull
+    public Pattern getPattern ()
+    {
+      return PATTERN;
+    }
+
+    @Override
+    @NonNull
+    public IPLMarkupToken createToken (@NonNull final String sText, @NonNull final Matcher aMatcher)
+    {
+      final String sExtent = aMatcher.group (3);
+      final EPLBackgroundExtent eExtent = "line".equals (sExtent) ? EPLBackgroundExtent.LINE_HEIGHT
+                                                                  : EPLBackgroundExtent.TIGHT;
+      final String sHex = aMatcher.group (5);
+      if (sHex == null)
+      {
+        // closing marker — emit a "neutral" toggle (matched by type)
+        return new IPLMarkupToken.AnnotationToggle (new PLBackgroundAnnotation (PLColor.BLACK, eExtent));
+      }
+      final int nR = Integer.parseUnsignedInt (sHex.substring (0, 2), 16);
+      final int nG = Integer.parseUnsignedInt (sHex.substring (2, 4), 16);
+      final int nB = Integer.parseUnsignedInt (sHex.substring (4, 6), 16);
+      return new IPLMarkupToken.AnnotationToggle (new PLBackgroundAnnotation (new PLColor (nR, nG, nB), eExtent));
     }
 
     @Override
