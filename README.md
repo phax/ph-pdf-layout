@@ -177,12 +177,13 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.3.2 - in development
+v8.3.2 - 2026-06-07
 * `ph-pdf-layout-richtext`: added inline **background-color markup** — `{bg:#rrggbb}…{bg}` fills a rectangle behind the wrapped run. Two vertical-extent modes selected by an optional qualifier:
   * `{bg:#rrggbb}` / `{bg:tight:#rrggbb}` — **tight** (default): per-segment box sized to the segment's own font, anchored on its (possibly sub/superscript-shifted) baseline; the highlight follows the visible glyphs.
   * `{bg:line:#rrggbb}` — **line-height**: box sized to the line's full slot using the unshifted baseline, so the highlight stays a single uniform rectangle across sub/superscript and is contiguous across wrapped lines.
   * Backgrounds are painted *before* the glyphs and the existing post-text decorations (underline, hyperlink, anchor); they compose with bold / italic / colour / underline / sub-superscript inside the span.
   * Internally: new `PLBackgroundAnnotation` (an `IPLRichTextAnnotation`) plus `EPLBackgroundExtent` enum (`TIGHT`, `LINE_HEIGHT`); new `BackgroundFactory` in `PLMarkupCharacters`; pre-text fill pass added in `PLRichText`'s render loop.
+* Added the missing MIT license from the original pdfbox-layout in the richtext module
 
 v8.3.1 - 2026-05-30
 * **`ph-pdf-layout-richtext` markup syntax is now Markdown / CommonMark style** — breaking change vs v8.3.0:
