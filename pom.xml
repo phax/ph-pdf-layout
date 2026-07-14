@@ -73,7 +73,7 @@
   </developers>
 
   <properties>
-    <pdfbox.version>3.0.7</pdfbox.version>
+    <pdfbox.version>3.0.8</pdfbox.version>
     <pdfcompare.version>1.2.9</pdfcompare.version>
   </properties>
 
@@ -101,11 +101,6 @@
       <dependency>
         <groupId>org.apache.pdfbox</groupId>
         <artifactId>xmpbox</artifactId>
-        <version>${pdfbox.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.pdfbox</groupId>
-        <artifactId>pdfbox-examples</artifactId>
         <version>${pdfbox.version}</version>
       </dependency>
       <dependency>
