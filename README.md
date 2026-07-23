@@ -177,6 +177,9 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.3.3 - 2026-07-23
+* Fixed `PLText` with `EHorzAlignment.BLOCK` (and `JUSTIFY`) not stretching the wrapped lines to the full available width — several BLOCK aligned texts (e.g. paragraphs created in a loop) ended up with different widths because each one was only justified to the width of its own widest line. See [#69](https://github.com/phax/ph-pdf-layout/issues/69) - thx @istvangaal
+
 v8.3.2 - 2026-06-07
 * `ph-pdf-layout-richtext`: added inline **background-color markup** — `{bg:#rrggbb}…{bg}` fills a rectangle behind the wrapped run. Two vertical-extent modes selected by an optional qualifier:
   * `{bg:#rrggbb}` / `{bg:tight:#rrggbb}` — **tight** (default): per-segment box sized to the segment's own font, anchored on its (possibly sub/superscript-shifted) baseline; the highlight follows the visible glyphs.
