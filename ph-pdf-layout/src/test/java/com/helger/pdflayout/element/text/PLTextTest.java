@@ -56,6 +56,8 @@ import com.helger.pdflayout.element.box.PLBox;
 import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
+import com.helger.pdflayout.element.table.PLTable;
+import com.helger.pdflayout.element.table.PLTableCell;
 import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PreparationContextGlobal;
@@ -679,10 +681,8 @@ public final class PLTextTest
 
       // Precondition: both paragraphs really wrap into more than one line,
       // otherwise the BLOCK justification would not kick in at all
-      assertTrue ("Text 1 is expected to wrap into multiple lines",
-                  aText1.getPreparedLineCountUnmodified () > 1);
-      assertTrue ("Text 2 is expected to wrap into multiple lines",
-                  aText2.getPreparedLineCountUnmodified () > 1);
+      assertTrue ("Text 1 is expected to wrap into multiple lines", aText1.getPreparedLineCountUnmodified () > 1);
+      assertTrue ("Text 2 is expected to wrap into multiple lines", aText2.getPreparedLineCountUnmodified () > 1);
 
       // A BLOCK aligned text must be laid out to the full available width so that
       // its lines are stretched to the right margin. This is what the JUSTIFY/BLOCK
@@ -705,5 +705,62 @@ public final class PLTextTest
                     aText2.getPreparedWidth (),
                     1f);
     }
+  }
+
+  /**
+   * Test for https://github.com/phax/ph-pdf-layout/issues/69 - rebuilds the exact scenario from the
+   * issue (and its screenshot): a {@link PLTable} with a single absolute width column, filled in a
+   * loop with a {@link PLVBox} per "subject". Each VBox holds a bold name row and a BLOCK aligned
+   * text row. Before the fix the BLOCK aligned paragraphs were justified to the width of their own
+   * widest line, so paragraphs of different content ended up with different widths. Now all of them
+   * stretch to the same right margin.
+   *
+   * @throws PDFCreationException
+   *         on rendering error
+   */
+  @Test
+  public void testBlockAlignmentIssue69Rendered () throws PDFCreationException
+  {
+    final FontSpec aBold10Grey = new FontSpec (PreloadFont.REGULAR_BOLD, 10, PLColor.DARK_GRAY);
+    final FontSpec aLight10Grey = new FontSpec (PreloadFont.REGULAR, 10, PLColor.GRAY);
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4).setMargin (30);
+
+    // Content width = page width minus left and right margin
+    final float fPageWidthPt = PDRectangle.A4.getWidth () - 2 * 30;
+    final float fRowSpacingPt = 10;
+
+    // Several subjects with paragraphs of clearly different content and length so
+    // that the widest line differs from paragraph to paragraph - which is what
+    // exposed the bug in the issue
+    final String [] [] aSubjects = { { "Introduction",
+                                       "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko. " +
+                                                       "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste." },
+                                     { "Short subject", "The quick brown fox jumps over the lazy dog." },
+                                     { "A longer paragraph",
+                                       ("The quick brown fox jumps over the lazy dog while the sun slowly sets behind " +
+                                        "the distant mountains and the wide river keeps flowing quietly to the sea, " +
+                                        "carrying the last light of the day towards the far horizon.").repeat (3) },
+                                     { "Conclusion",
+                                       "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod " +
+                                                     "tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua." } };
+
+    // Mimics the snippet from the issue:
+    // PLTable table = new PLTable (WidthSpec.abs (pageWidthPt));
+    // subjects.forEach (subject -> { PLVBox vBox = new PLVBox (); ... });
+    final PLTable aTable = new PLTable (WidthSpec.abs (fPageWidthPt));
+    for (final String [] aSubject : aSubjects)
+    {
+      final PLVBox aVBox = new PLVBox ();
+      aVBox.addRow (new PLText (aSubject[0], aBold10Grey));
+      aVBox.addRow (new PLText (aSubject[1], aLight10Grey).setHorzAlign (EHorzAlignment.BLOCK));
+      aVBox.setVertSplittable (false);
+      aTable.addRow (new PLTableCell (aVBox).setMarginTop (fRowSpacingPt));
+    }
+    aPS1.addElement (aTable);
+
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+    aPageLayout.renderTo (new File ("pdf/pltext/block-alignment-issue69.pdf"));
   }
 }
