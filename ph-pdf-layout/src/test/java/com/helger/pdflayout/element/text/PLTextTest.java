@@ -16,9 +16,14 @@
  */
 package com.helger.pdflayout.element.text;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,6 +57,8 @@ import com.helger.pdflayout.element.hbox.PLHBox;
 import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.vbox.PLVBox;
+import com.helger.pdflayout.render.PreparationContext;
+import com.helger.pdflayout.render.PreparationContextGlobal;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
 import com.helger.pdflayout.spec.FontSpec;
@@ -630,5 +637,73 @@ public final class PLTextTest
     final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
     aPageLayout.addPageSet (aPS1);
     PDFTestComparer.renderAndCompare (aPageLayout, new File ("pdf/pltext/simple-footer.pdf"));
+  }
+
+  /**
+   * Test for https://github.com/phax/ph-pdf-layout/issues/69 - PLText rendering when horizontal
+   * alignment is set to BLOCK does not stretch the lines to the right margin. Several BLOCK aligned
+   * texts (like the paragraphs from the loop in the issue) end up with different widths, because
+   * each one is only justified to the width of its own widest line instead of the full available
+   * width.
+   *
+   * @throws IOException
+   *         on PDFBox error
+   */
+  @Test
+  public void testBlockAlignmentIssue69 () throws IOException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+
+    // Two different multi-line paragraphs - just as they would be created inside
+    // the loop shown in the issue. They differ in content, so their widest line
+    // differs.
+    final String sText1 = "Xaver schreibt für Wikipedia zum Spaß quälend lang über Yoga, Soja und Öko. " +
+                          "Die heiße Zypernsonne quälte Max und Victoria ja böse auf dem Weg bis zur Küste.";
+    final String sText2 = "The quick brown fox jumps over the lazy dog while the sun slowly sets behind " +
+                          "the distant mountains and the wide river keeps flowing quietly to the sea.";
+
+    // The very same available width is offered to both paragraphs (as if both
+    // were placed in equally sized table cells)
+    final float fAvailableWidth = 200f;
+    final float fAvailableHeight = 800f;
+
+    try (final PDDocument aDoc = new PDDocument ())
+    {
+      final PreparationContextGlobal aGlobalCtx = new PreparationContextGlobal (aDoc);
+
+      final PLText aText1 = new PLText (sText1, r10).setHorzAlign (EHorzAlignment.BLOCK);
+      aText1.prepare (new PreparationContext (aGlobalCtx, fAvailableWidth, fAvailableHeight));
+
+      final PLText aText2 = new PLText (sText2, r10).setHorzAlign (EHorzAlignment.BLOCK);
+      aText2.prepare (new PreparationContext (aGlobalCtx, fAvailableWidth, fAvailableHeight));
+
+      // Precondition: both paragraphs really wrap into more than one line,
+      // otherwise the BLOCK justification would not kick in at all
+      assertTrue ("Text 1 is expected to wrap into multiple lines",
+                  aText1.getPreparedLineCountUnmodified () > 1);
+      assertTrue ("Text 2 is expected to wrap into multiple lines",
+                  aText2.getPreparedLineCountUnmodified () > 1);
+
+      // A BLOCK aligned text must be laid out to the full available width so that
+      // its lines are stretched to the right margin. This is what the JUSTIFY/BLOCK
+      // rendering in AbstractPLText.onRender uses as the justification target
+      // (getPreparedWidth).
+      assertEquals ("Issue #69: BLOCK aligned text 1 must be prepared to the full available width",
+                    fAvailableWidth,
+                    aText1.getPreparedWidth (),
+                    1f);
+      assertEquals ("Issue #69: BLOCK aligned text 2 must be prepared to the full available width",
+                    fAvailableWidth,
+                    aText2.getPreparedWidth (),
+                    1f);
+
+      // As a direct consequence both BLOCK aligned paragraphs must render with the
+      // exact same width - which is the actual symptom reported in the issue
+      assertEquals ("Issue #69: two BLOCK aligned texts within the same available width must " +
+                    "render with the same width",
+                    aText1.getPreparedWidth (),
+                    aText2.getPreparedWidth (),
+                    1f);
+    }
   }
 }

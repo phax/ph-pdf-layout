@@ -440,12 +440,39 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
 
     // Determine max width of all prepared lines
     float fMaxWidth = Float.MIN_VALUE;
+    boolean bHasBlockJustifiedLine = false;
     for (final TextAndWidthSpec aTWS : m_aPreparedLines)
+    {
       fMaxWidth = Math.max (fMaxWidth, aTWS.getWidth ());
+      // BLOCK stretches all lines that are not the end of a paragraph
+      if (!aTWS.isDisplayAsNewline ())
+        bHasBlockJustifiedLine = true;
+    }
+
+    // For JUSTIFY and BLOCK alignment the lines are stretched to the full
+    // available width. Therefore the element must claim that full width -
+    // otherwise each text is only justified to its own widest line and different
+    // texts end up with different widths (issue #69). This is only done if at
+    // least one line is actually justified, so that single line texts and texts
+    // measured with a very large available width (e.g. auto-sized columns) keep
+    // their natural width.
+    final boolean bStretchToAvailableWidth;
+    if (m_eHorzAlign == EHorzAlignment.BLOCK)
+      bStretchToAvailableWidth = bHasBlockJustifiedLine;
+    else
+      if (m_eHorzAlign == EHorzAlignment.JUSTIFY)
+      {
+        // JUSTIFY stretches all lines except the very last one
+        bStretchToAvailableWidth = m_aPreparedLines.size () > 1;
+      }
+      else
+        bStretchToAvailableWidth = false;
+
+    final float fUsedWidth = bStretchToAvailableWidth ? fAvailableWidth : fMaxWidth;
 
     // Determine height by number of lines
     // No line spacing for the last line
-    return new SizeSpec (fMaxWidth, getDisplayHeightOfLineCount (m_aPreparedLines.size (), false));
+    return new SizeSpec (fUsedWidth, getDisplayHeightOfLineCount (m_aPreparedLines.size (), false));
   }
 
   @Override
