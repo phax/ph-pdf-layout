@@ -22,8 +22,8 @@ import org.jspecify.annotations.Nullable;
 import com.helger.pdflayout.base.IPLRenderableObject;
 
 /**
- * A box is a simple block element that encapsulates another element and has a
- * padding, border and margin etc. itself
+ * A box is a simple block element that encapsulates another element and has a padding, border and
+ * margin etc. itself
  *
  * @author Philip Helger
  */

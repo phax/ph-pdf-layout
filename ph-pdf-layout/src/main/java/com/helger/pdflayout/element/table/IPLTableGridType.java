@@ -49,12 +49,13 @@ public interface IPLTableGridType extends IHasID <String>
    * @param aTable
    *        Table to modify. May not be <code>null</code>.
    * @param aCellRange
-   *        The cell range to which it should be applied. May not be
-   *        <code>null</code>.
+   *        The cell range to which it should be applied. May not be <code>null</code>.
    * @param aBSS
    *        Border style specification to be used. May not be <code>null</code>.
    */
-  default void applyGridToTable (@NonNull final PLTable aTable, @NonNull final IPLCellRange aCellRange, @NonNull final BorderStyleSpec aBSS)
+  default void applyGridToTable (@NonNull final PLTable aTable,
+                                 @NonNull final IPLCellRange aCellRange,
+                                 @NonNull final BorderStyleSpec aBSS)
   {
     ValueEnforcer.notNull (aTable, "Table");
     ValueEnforcer.notNull (aCellRange, "CellRange");

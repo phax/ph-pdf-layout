@@ -31,8 +31,7 @@ import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.PLColor;
 
 /**
- * Defines a text font specification containing the font, the font size and the
- * text color.
+ * Defines a text font specification containing the font, the font size and the text color.
  *
  * @author Philip Helger
  */
@@ -48,8 +47,8 @@ public class FontSpec implements Serializable
   private final PLColor m_aColor;
 
   /**
-   * Constructor with a {@link PreloadFont} and a font size, using the default
-   * color {@link #DEFAULT_COLOR}.
+   * Constructor with a {@link PreloadFont} and a font size, using the default color
+   * {@link #DEFAULT_COLOR}.
    *
    * @param aPreloadFont
    *        Preload font to use. May not be <code>null</code>.

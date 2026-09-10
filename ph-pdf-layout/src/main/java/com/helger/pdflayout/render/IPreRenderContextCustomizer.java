@@ -26,8 +26,7 @@ import org.jspecify.annotations.NonNull;
 public interface IPreRenderContextCustomizer
 {
   /**
-   * Customize the passed pre-rendering context. This can e.g. be used to add
-   * placeholders.
+   * Customize the passed pre-rendering context. This can e.g. be used to add placeholders.
    *
    * @param aCtx
    *        The pre-rendering context to be modified.

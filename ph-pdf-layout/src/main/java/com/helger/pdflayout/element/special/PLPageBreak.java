@@ -27,12 +27,11 @@ import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * A page break that ensures a new page is started afterwards. The difference
- * between force pages breaks and normal page breaks is as follows: forced page
- * breaks are always executed, whereas normal page breaks are not executed if a
- * new page just started.<br>
- * Important note: page breaks are only handled if they are directly contained
- * in a page set. Page breaks are not handled when nested in VBoxes or HBoxes.
+ * A page break that ensures a new page is started afterwards. The difference between force pages
+ * breaks and normal page breaks is as follows: forced page breaks are always executed, whereas
+ * normal page breaks are not executed if a new page just started.<br>
+ * Important note: page breaks are only handled if they are directly contained in a page set. Page
+ * breaks are not handled when nested in VBoxes or HBoxes.
  *
  * @author Philip Helger
  */
@@ -44,8 +43,8 @@ public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
    * Constructor
    *
    * @param bForcePageBreak
-   *        <code>true</code> if this is a forced page break, <code>false</code>
-   *        if it is a normal page break.
+   *        <code>true</code> if this is a forced page break, <code>false</code> if it is a normal
+   *        page break.
    */
   public PLPageBreak (final boolean bForcePageBreak)
   {
@@ -53,8 +52,8 @@ public class PLPageBreak extends AbstractPLRenderableObject <PLPageBreak>
   }
 
   /**
-   * @return <code>true</code> if this is a forced page break,
-   *         <code>false</code> if it is a normal page break.
+   * @return <code>true</code> if this is a forced page break, <code>false</code> if it is a normal
+   *         page break.
    */
   public final boolean isForcePageBreak ()
   {

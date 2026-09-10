@@ -87,8 +87,7 @@ public final class PLPageSetPrepareResult
   }
 
   /**
-   * Set the page header height of the first page. This method may only be
-   * called once.
+   * Set the page header height of the first page. This method may only be called once.
    *
    * @param fFooterHeight
    *        Height without padding or margin.
@@ -102,8 +101,8 @@ public final class PLPageSetPrepareResult
 
   /**
    * @param aElement
-   *        The element to be added. May not be <code>null</code>. The element
-   *        height must be without padding or margin.
+   *        The element to be added. May not be <code>null</code>. The element height must be
+   *        without padding or margin.
    */
   void addElement (@NonNull final PLElementWithSize aElement)
   {
@@ -112,8 +111,8 @@ public final class PLPageSetPrepareResult
   }
 
   /**
-   * @return A list of all elements. Never <code>null</code>. The height of the
-   *         contained elements is without padding or margin.
+   * @return A list of all elements. Never <code>null</code>. The height of the contained elements
+   *         is without padding or margin.
    */
   @NonNull
   @ReturnsMutableCopy
@@ -130,8 +129,7 @@ public final class PLPageSetPrepareResult
   }
 
   /**
-   * Add a list of elements for a single page. This implicitly creates a new
-   * page.
+   * Add a list of elements for a single page. This implicitly creates a new page.
    *
    * @param aCurPageElements
    *        The list to use. May neither be <code>null</code> nor empty.
@@ -167,8 +165,7 @@ public final class PLPageSetPrepareResult
   }
 
   /**
-   * Set the page footer height of the first page. This method may only be
-   * called once.
+   * Set the page footer height of the first page. This method may only be called once.
    *
    * @param fFooterHeight
    *        Height without padding or margin.

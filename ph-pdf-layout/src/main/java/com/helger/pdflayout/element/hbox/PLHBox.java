@@ -19,8 +19,7 @@ package com.helger.pdflayout.element.hbox;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Horizontal box - groups several columns without having layout information
- * itself.
+ * Horizontal box - groups several columns without having layout information itself.
  *
  * @author Philip Helger
  */

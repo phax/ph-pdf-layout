@@ -372,14 +372,14 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
 
   public void forEachRowByIndex (@NonNull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
-    m_aRows.forEachRowByIndex ( (x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
+    m_aRows.forEachRowByIndex ((x, idx) -> aConsumer.accept ((PLTableRow) x.getElement (), idx));
   }
 
   public void forEachRow (final int nStartRowIncl,
                           final int nEndRowIncl,
                           @NonNull final Consumer <? super PLTableRow> aConsumer)
   {
-    forEachRowByIndex ( (x, idx) -> {
+    forEachRowByIndex ((x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
         aConsumer.accept (x);
     });
@@ -389,7 +389,7 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
                           final int nEndRowIncl,
                           @NonNull final ObjIntConsumer <? super PLTableRow> aConsumer)
   {
-    forEachRowByIndex ( (x, idx) -> {
+    forEachRowByIndex ((x, idx) -> {
       if (idx >= nStartRowIncl && idx <= nEndRowIncl)
         aConsumer.accept (x, idx);
     });

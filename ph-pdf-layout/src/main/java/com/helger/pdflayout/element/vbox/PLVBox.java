@@ -36,8 +36,7 @@ public class PLVBox extends AbstractPLVBox <PLVBox>
   {}
 
   /**
-   * Constructor with elements so that each element constitutes a new row with
-   * auto-height.
+   * Constructor with elements so that each element constitutes a new row with auto-height.
    *
    * @param aElements
    *        The elements for which rows should be created.
@@ -50,8 +49,7 @@ public class PLVBox extends AbstractPLVBox <PLVBox>
   }
 
   /**
-   * Constructor with elements so that each element constitutes a new row with
-   * auto-height.
+   * Constructor with elements so that each element constitutes a new row with auto-height.
    *
    * @param aElements
    *        The elements for which rows should be created.

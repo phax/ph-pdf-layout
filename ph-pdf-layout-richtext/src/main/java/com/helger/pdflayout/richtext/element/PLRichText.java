@@ -216,7 +216,12 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
           if (fSegWidth <= fAvail)
           {
             // Fits as a whole.
-            aCurrent.add (new PLRichTextSegment (sRemaining, aFontSpec, aLoadedFont, fSegWidth, aAnnotations, aRun.getBaselineOffsetScale ()));
+            aCurrent.add (new PLRichTextSegment (sRemaining,
+                                                 aFontSpec,
+                                                 aLoadedFont,
+                                                 fSegWidth,
+                                                 aAnnotations,
+                                                 aRun.getBaselineOffsetScale ()));
             fCurrentWidth += fSegWidth;
             sRemaining = "";
           }
@@ -233,7 +238,12 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
                 final int nForce = Math.max (1, _findBreakPoint (sRemaining, aLoadedFont, fFontSize, fAvail, true));
                 final String sPart = sRemaining.substring (0, nForce);
                 final float fPartWidth = aLoadedFont.getStringWidth (sPart, fFontSize);
-                aCurrent.add (new PLRichTextSegment (sPart, aFontSpec, aLoadedFont, fPartWidth, aAnnotations, aRun.getBaselineOffsetScale ()));
+                aCurrent.add (new PLRichTextSegment (sPart,
+                                                     aFontSpec,
+                                                     aLoadedFont,
+                                                     fPartWidth,
+                                                     aAnnotations,
+                                                     aRun.getBaselineOffsetScale ()));
                 fCurrentWidth += fPartWidth;
                 sRemaining = sRemaining.substring (nForce);
               }
@@ -258,7 +268,12 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
                   nConsume = nBreakAt + 1;
                 }
               final float fPartWidth = aLoadedFont.getStringWidth (sPart, fFontSize);
-              aCurrent.add (new PLRichTextSegment (sPart, aFontSpec, aLoadedFont, fPartWidth, aAnnotations, aRun.getBaselineOffsetScale ()));
+              aCurrent.add (new PLRichTextSegment (sPart,
+                                                   aFontSpec,
+                                                   aLoadedFont,
+                                                   fPartWidth,
+                                                   aAnnotations,
+                                                   aRun.getBaselineOffsetScale ()));
               fCurrentWidth += fPartWidth;
               aLines.add (new PLRichTextLine (aCurrent, fCurrentWidth, false));
               aCurrent = new CommonsArrayList <> ();
@@ -711,12 +726,11 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
       {
         // Encode hard newline between lines so that re-preparation reproduces them.
         aRuns.add (new PLRichTextRun ("\n",
-                                      aLines.get (nL).segments ().isEmpty () ? new FontSpec (PreloadFont.REGULAR,
-                                                                                                   10f) : aLines.get (
-                                                                                                                      nL)
-                                                                                                                .segments ()
-                                                                                                                .getFirstOrNull ()
-                                                                                                                .getFontSpec ()));
+                                      aLines.get (nL).segments ().isEmpty () ? new FontSpec (PreloadFont.REGULAR, 10f)
+                                                                             : aLines.get (nL)
+                                                                                     .segments ()
+                                                                                     .getFirstOrNull ()
+                                                                                     .getFontSpec ()));
       }
     }
     return aRuns;

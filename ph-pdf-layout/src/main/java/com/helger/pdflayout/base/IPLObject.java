@@ -25,8 +25,8 @@ import com.helger.base.id.IHasID;
 import com.helger.base.trait.IGenericImplTrait;
 
 /**
- * Base interface for a PDF layout object. It contains a user-assigned ID as
- * well as a unique "Debug ID".
+ * Base interface for a PDF layout object. It contains a user-assigned ID as well as a unique "Debug
+ * ID".
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
@@ -42,8 +42,8 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
    *
    * @param sID
    *        The ID to check. May be <code>null</code>.
-   * @return <code>true</code> if the provided ID matches this objects ID,
-   *         <code>false</code> otherwise.
+   * @return <code>true</code> if the provided ID matches this objects ID, <code>false</code>
+   *         otherwise.
    */
   default boolean hasID (@Nullable final String sID)
   {
@@ -51,20 +51,18 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
   }
 
   /**
-   * @return The debug ID of this element. Neither <code>null</code> nor empty.
-   *         The debug ID is a combination of the real class and the user
-   *         provided ID.
+   * @return The debug ID of this element. Neither <code>null</code> nor empty. The debug ID is a
+   *         combination of the real class and the user provided ID.
    */
   @NonNull
   @Nonempty
   String getDebugID ();
 
   /**
-   * @return The ID of the original (unsplit) ancestor of this object. For
-   *         objects that were never produced by a vertical split, this equals
-   *         {@link #getID()}. Stable across recursive splits so it can be used
-   *         to correlate fragments to the user-facing element they came from
-   *         (e.g. for table-of-contents generation).
+   * @return The ID of the original (unsplit) ancestor of this object. For objects that were never
+   *         produced by a vertical split, this equals {@link #getID()}. Stable across recursive
+   *         splits so it can be used to correlate fragments to the user-facing element they came
+   *         from (e.g. for table-of-contents generation).
    * @since 8.2.0
    */
   @NonNull
@@ -75,8 +73,8 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
   }
 
   /**
-   * @return <code>true</code> if this object was produced as a fragment by a
-   *         vertical split, <code>false</code> if it is an unsplit original.
+   * @return <code>true</code> if this object was produced as a fragment by a vertical split,
+   *         <code>false</code> if it is an unsplit original.
    * @since 8.2.0
    */
   default boolean isSplitFragment ()
@@ -85,10 +83,9 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
   }
 
   /**
-   * @return <code>true</code> if this object is reachable from its original
-   *         ancestor by always choosing the first (top) fragment at every
-   *         split. For unsplit originals this is always <code>true</code>.
-   *         Useful to identify the page on which an element first appears.
+   * @return <code>true</code> if this object is reachable from its original ancestor by always
+   *         choosing the first (top) fragment at every split. For unsplit originals this is always
+   *         <code>true</code>. Useful to identify the page on which an element first appears.
    * @since 8.2.0
    */
   default boolean isFirstFragment ()
@@ -97,8 +94,7 @@ public interface IPLObject <IMPLTYPE extends IPLObject <IMPLTYPE>> extends
   }
 
   /**
-   * @return <code>true</code> if this element is splittable, <code>false</code>
-   *         otherwise.
+   * @return <code>true</code> if this element is splittable, <code>false</code> otherwise.
    */
   default boolean isVertSplittable ()
   {

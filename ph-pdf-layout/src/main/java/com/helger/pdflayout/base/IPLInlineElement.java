@@ -17,8 +17,7 @@
 package com.helger.pdflayout.base;
 
 /**
- * Base interface for inline elements. They currently have no further
- * properties.
+ * Base interface for inline elements. They currently have no further properties.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>

@@ -283,8 +283,8 @@ public final class PageRenderContext
   }
 
   /**
-   * @return The listener invoked after every element render, or <code>null</code> if no listener
-   *         is installed for this rendering pass.
+   * @return The listener invoked after every element render, or <code>null</code> if no listener is
+   *         installed for this rendering pass.
    * @since 8.2.0
    */
   @Nullable

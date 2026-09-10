@@ -22,8 +22,7 @@ import com.helger.annotation.Nonnegative;
 import com.helger.pdflayout.spec.SizeSpec;
 
 /**
- * Base interface for renderable objects having a margin, a border and a
- * padding<br>
+ * Base interface for renderable objects having a margin, a border and a padding<br>
  * Each object is self-responsible for handling its margin, border and padding!
  *
  * @author Philip Helger
@@ -39,8 +38,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   SizeSpec DEFAULT_MAX_SIZE = SizeSpec.SIZE_MAX;
 
   /**
-   * @return The minimum size to be used. Excluding outline. Never
-   *         <code>null</code>.
+   * @return The minimum size to be used. Excluding outline. Never <code>null</code>.
    */
   @NonNull
   SizeSpec getMinSize ();
@@ -113,8 +111,7 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * @return The maximum size to be used. Excluding outline. Never
-   *         <code>null</code>.
+   * @return The maximum size to be used. Excluding outline. Never <code>null</code>.
    */
   @NonNull
   SizeSpec getMaxSize ();
@@ -187,8 +184,8 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the exact size to be used. Excluding outline. This is a shortcut for
-   * setting minimum and maximum size to the same values.
+   * Set the exact size to be used. Excluding outline. This is a shortcut for setting minimum and
+   * maximum size to the same values.
    *
    * @param fWidth
    *        Width to use. Must be &ge; 0.
@@ -206,8 +203,8 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the exact width to be used. Excluding outline. This is a shortcut for
-   * setting minimum and maximum width to the same values.
+   * Set the exact width to be used. Excluding outline. This is a shortcut for setting minimum and
+   * maximum width to the same values.
    *
    * @param fWidth
    *        Width to use. Must be &ge; 0.
@@ -223,8 +220,8 @@ public interface IPLElement <IMPLTYPE extends IPLElement <IMPLTYPE>> extends
   }
 
   /**
-   * Set the exact height to be used. Excluding outline. This is a shortcut for
-   * setting minimum and maximum height to the same values.
+   * Set the exact height to be used. Excluding outline. This is a shortcut for setting minimum and
+   * maximum height to the same values.
    *
    * @param fHeight
    *        Height to use. Must be &ge; 0.

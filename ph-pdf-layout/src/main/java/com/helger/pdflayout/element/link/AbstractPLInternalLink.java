@@ -32,8 +32,8 @@ import com.helger.pdflayout.base.IPLRenderableObject;
  * A clickable link that jumps to a named destination within the same PDF document. The target is
  * identified by an anchor name; a corresponding {@link PLAnchor} (or any block element with
  * {@link IPLHasAnchorName#setAnchorName} set) must exist somewhere in the document so the named
- * destination resolves at PDF read time. Forward references work too - the target may render
- * later than the link itself.
+ * destination resolves at PDF read time. Forward references work too - the target may render later
+ * than the link itself.
  *
  * @author Philip Helger
  * @param <IMPLTYPE>

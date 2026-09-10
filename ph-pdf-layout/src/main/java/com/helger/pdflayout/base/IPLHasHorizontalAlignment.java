@@ -35,15 +35,15 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
 
   /**
    * @return The horizontal alignment of this element. By default it is
-   *         {@link EHorzAlignment#DEFAULT}. Never <code>null</code>. The
-   *         horizontal alignment may only be applied to contained children!
+   *         {@link EHorzAlignment#DEFAULT}. Never <code>null</code>. The horizontal alignment may
+   *         only be applied to contained children!
    */
   @NonNull
   EHorzAlignment getHorzAlign ();
 
   /**
-   * Set the horizontal alignment of this element. The horizontal alignment may
-   * only be applied to contained children!
+   * Set the horizontal alignment of this element. The horizontal alignment may only be applied to
+   * contained children!
    *
    * @param eHorzAlign
    *        The new horizontal alignment. May not be <code>null</code>.
@@ -53,12 +53,12 @@ public interface IPLHasHorizontalAlignment <IMPLTYPE extends IPLHasHorizontalAli
   IMPLTYPE setHorzAlign (@NonNull EHorzAlignment eHorzAlign);
 
   /**
-   * Get the indentation for a certain horizontal alignment. This method uses
-   * the provided element width as the basis for alignment.
+   * Get the indentation for a certain horizontal alignment. This method uses the provided element
+   * width as the basis for alignment.
    *
    * @param fAvailableWidth
-   *        The available width of the surrounding element. This is usually
-   *        larger than fElementWidth.
+   *        The available width of the surrounding element. This is usually larger than
+   *        fElementWidth.
    * @param fElementWidth
    *        The width of the element to align.
    * @return The indentation offset. Always &ge; 0.

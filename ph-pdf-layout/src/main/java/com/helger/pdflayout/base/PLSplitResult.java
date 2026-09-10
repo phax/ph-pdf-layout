@@ -73,7 +73,7 @@ public class PLSplitResult
 
   @NonNull
   public static PLSplitResult createSplit (@NonNull final PLElementWithSize aFirstElement,
-                                      @NonNull final PLElementWithSize aSecondElement)
+                                           @NonNull final PLElementWithSize aSecondElement)
   {
     ValueEnforcer.notNull (aFirstElement, "FirstElement");
     ValueEnforcer.notNull (aSecondElement, "SecondElement");

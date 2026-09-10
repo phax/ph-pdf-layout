@@ -28,21 +28,22 @@ import com.helger.pdflayout.spec.EVertAlignment;
  * @param <IMPLTYPE>
  *        Implementation type
  */
-public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignment <IMPLTYPE>> extends IPLRenderableObject <IMPLTYPE>
+public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignment <IMPLTYPE>> extends
+                                         IPLRenderableObject <IMPLTYPE>
 {
   EVertAlignment DEFAULT_VERT_ALIGNMENT = EVertAlignment.DEFAULT;
 
   /**
    * @return The vertical alignment of this element. By default it is
-   *         {@link EVertAlignment#DEFAULT}. Never <code>null</code>. The
-   *         vertical alignment may only be applied to contained children!
+   *         {@link EVertAlignment#DEFAULT}. Never <code>null</code>. The vertical alignment may
+   *         only be applied to contained children!
    */
   @NonNull
   EVertAlignment getVertAlign ();
 
   /**
-   * Set the vertical alignment of this element. The vertical alignment may only
-   * be applied to contained children!
+   * Set the vertical alignment of this element. The vertical alignment may only be applied to
+   * contained children!
    *
    * @param eVertAlign
    *        The new vertical alignment. May not be <code>null</code>.
@@ -52,8 +53,8 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
   IMPLTYPE setVertAlign (@NonNull EVertAlignment eVertAlign);
 
   /**
-   * Get the indentation for a certain vertical alignment. This method uses the
-   * prepared height as the basis for alignment.
+   * Get the indentation for a certain vertical alignment. This method uses the prepared height as
+   * the basis for alignment.
    *
    * @param fAvailableHeight
    *        The available height of the surrounding element.
@@ -66,12 +67,12 @@ public interface IPLHasVerticalAlignment <IMPLTYPE extends IPLHasVerticalAlignme
   }
 
   /**
-   * Get the indentation for a certain vertical alignment. This method uses the
-   * provided element height as the basis for alignment.
+   * Get the indentation for a certain vertical alignment. This method uses the provided element
+   * height as the basis for alignment.
    *
    * @param fAvailableHeight
-   *        The available height of the surrounding element. This is usually
-   *        larger than fElementHeight.
+   *        The available height of the surrounding element. This is usually larger than
+   *        fElementHeight.
    * @param fElementHeight
    *        The height of the element to align.
    * @return The indentation offset. Always &ge; 0.

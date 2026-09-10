@@ -38,10 +38,9 @@ public interface IPLTableCellFilter
    * @param nEffectiveCellStartIndex
    *        The effective start cell index including colspan. Always &ge; 0.
    * @param nEffectiveCellEndIndex
-   *        The effective cell end index including colspan (= effective cell
-   *        start index + colspan). Always &ge; 0.
-   * @return <code>true</code> if the cell should be handled, <code>false</code>
-   *         if not.
+   *        The effective cell end index including colspan (= effective cell start index + colspan).
+   *        Always &ge; 0.
+   * @return <code>true</code> if the cell should be handled, <code>false</code> if not.
    */
   boolean test (@NonNull PLTableCell aCell,
                 @Nonnegative int nCellIndex,

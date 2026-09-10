@@ -22,12 +22,11 @@ import java.util.regex.Pattern;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Factory for one markup character class. Each factory owns a regex pattern
- * and knows how to:
+ * Factory for one markup character class. Each factory owns a regex pattern and knows how to:
  * <ul>
  * <li>create a {@link IPLMarkupToken} from a matched region,</li>
- * <li>unescape the marker character inside the surrounding plain text (e.g.
- * {@code \*} → {@code *}).</li>
+ * <li>unescape the marker character inside the surrounding plain text (e.g. {@code \*} →
+ * {@code *}).</li>
  * </ul>
  *
  * @author Philip Helger
@@ -41,8 +40,8 @@ public interface IPLMarkupCharacterFactory
   Pattern getPattern ();
 
   /**
-   * @return <code>true</code> if the pattern is only meaningful at the begin of
-   *         a line. Default is <code>false</code>.
+   * @return <code>true</code> if the pattern is only meaningful at the begin of a line. Default is
+   *         <code>false</code>.
    */
   default boolean patternMatchesBeginOfLine ()
   {
@@ -62,8 +61,8 @@ public interface IPLMarkupCharacterFactory
   IPLMarkupToken createToken (@NonNull String sText, @NonNull Matcher aMatcher);
 
   /**
-   * Unescapes the marker character in the given plain text. By default a
-   * backslash-escaped marker is removed.
+   * Unescapes the marker character in the given plain text. By default a backslash-escaped marker
+   * is removed.
    *
    * @param sText
    *        the plain text segment to unescape.

@@ -58,8 +58,7 @@ public interface IPreloadFontResolver
    * Get the {@link PreloadFont} from the provided font resource provider.
    *
    * @param aFontResProvider
-   *        The font resource provided from which to be resolved. May be
-   *        <code>null</code>.
+   *        The font resource provided from which to be resolved. May be <code>null</code>.
    * @return <code>null</code> if no such {@link PreloadFont} exists.
    */
   @Nullable

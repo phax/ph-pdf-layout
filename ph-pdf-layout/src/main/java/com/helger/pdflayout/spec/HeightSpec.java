@@ -33,11 +33,9 @@ import com.helger.base.tostring.ToStringGenerator;
  * This class defines a dependent height of an elements:
  * <ul>
  * <li>absolute - element has a fixed height</li>
- * <li>percentage - element height is a certain percentage of the surrounding
- * element</li>
- * <li>star - element height is a relative part of the unused height of the
- * surrounding element. All star elements evenly share the available
- * height.</li>
+ * <li>percentage - element height is a certain percentage of the surrounding element</li>
+ * <li>star - element height is a relative part of the unused height of the surrounding element. All
+ * star elements evenly share the available height.</li>
  * <li>auto - elements takes the height it needs</li>
  * </ul>
  *
@@ -77,8 +75,8 @@ public class HeightSpec implements Serializable
   }
 
   /**
-   * @return <code>true</code> if type is 'absolute' or 'percentage'- Only
-   *         absolute entries need to provide a value!
+   * @return <code>true</code> if type is 'absolute' or 'percentage'- Only absolute entries need to
+   *         provide a value!
    */
   public final boolean isAbsolute ()
   {
@@ -102,9 +100,8 @@ public class HeightSpec implements Serializable
   }
 
   /**
-   * @return The height value - is either an absolute value or a percentage
-   *         value - depending on {@link #getType()}. For star height elements
-   *         this is 0.
+   * @return The height value - is either an absolute value or a percentage value - depending on
+   *         {@link #getType()}. For star height elements this is 0.
    */
   @Nonnegative
   public final float getValue ()
@@ -113,8 +110,8 @@ public class HeightSpec implements Serializable
   }
 
   /**
-   * Get the effective height based on the passed available height. This may not
-   * be called for star or auto height elements.
+   * Get the effective height based on the passed available height. This may not be called for star
+   * or auto height elements.
    *
    * @param fAvailableHeight
    *        The available height.

@@ -27,8 +27,8 @@ import com.helger.annotation.OverridingMethodsMustInvokeSuper;
  * @param <IMPLTYPE>
  *        The implementation type of this class.
  */
-public abstract class AbstractPLInlineElement <IMPLTYPE extends AbstractPLInlineElement <IMPLTYPE>> extends AbstractPLElement <IMPLTYPE>
-                                              implements
+public abstract class AbstractPLInlineElement <IMPLTYPE extends AbstractPLInlineElement <IMPLTYPE>> extends
+                                              AbstractPLElement <IMPLTYPE> implements
                                               IPLInlineElement <IMPLTYPE>
 {
   public AbstractPLInlineElement ()

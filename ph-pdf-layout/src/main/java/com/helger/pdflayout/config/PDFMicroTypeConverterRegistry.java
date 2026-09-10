@@ -46,9 +46,8 @@ import com.helger.pdflayout.spec.WidthSpec;
 import com.helger.xml.microdom.convert.IMicroTypeConverterRegistry;
 
 /**
- * Micro type converter registration for all micro type converter contained in
- * this project. Must be called manually, because an
- * {@link IPreloadFontResolver} is required!
+ * Micro type converter registration for all micro type converter contained in this project. Must be
+ * called manually, because an {@link IPreloadFontResolver} is required!
  *
  * @author Philip Helger
  */

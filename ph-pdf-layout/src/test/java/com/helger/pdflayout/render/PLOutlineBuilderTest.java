@@ -94,9 +94,7 @@ public final class PLOutlineBuilderTest
       final PDOutlineItem aItem1 = aChildren.next ();
       final PDOutlineItem aItem2 = aChildren.next ();
       final PDOutlineItem aItem3 = aChildren.next ();
-      assertNull ("Only three top-level entries expected",
-                  aChildren.hasNext () ? aChildren.next ()
-                                       : null);
+      assertNull ("Only three top-level entries expected", aChildren.hasNext () ? aChildren.next () : null);
 
       assertEquals ("Chapter 1", aItem1.getTitle ());
       assertEquals ("Chapter 2", aItem2.getTitle ());

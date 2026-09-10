@@ -194,8 +194,9 @@ public final class PreloadFont implements IHasID <String>
    * @throws IOException
    *         in case loading the font fails
    */
-  private PreloadFont (@NonNull final IFontResource aFontRes, final boolean bEmbed, final int nFallbackCodePoint)
-                                                                                                                  throws IOException
+  private PreloadFont (@NonNull final IFontResource aFontRes,
+                       final boolean bEmbed,
+                       final int nFallbackCodePoint) throws IOException
   {
     ValueEnforcer.notNull (aFontRes, "FontResource");
     m_sID = aFontRes.getID ();
@@ -270,11 +271,11 @@ public final class PreloadFont implements IHasID <String>
   {
     try
     {
-      final HeaderTable aHeaderTable = m_aTTF != null ? m_aTTF.getHeader () : m_aOTF != null ? m_aOTF.getHeader ()
-                                                                                             : null;
-      final HorizontalHeaderTable aHorzHeaderTable = m_aTTF != null ? m_aTTF.getHorizontalHeader () : m_aOTF != null
-                                                                                                                     ? m_aOTF.getHorizontalHeader ()
-                                                                                                                     : null;
+      final HeaderTable aHeaderTable = m_aTTF != null ? m_aTTF.getHeader ()
+                                                      : m_aOTF != null ? m_aOTF.getHeader () : null;
+      final HorizontalHeaderTable aHorzHeaderTable = m_aTTF != null ? m_aTTF.getHorizontalHeader ()
+                                                                    : m_aOTF != null ? m_aOTF.getHorizontalHeader ()
+                                                                                     : null;
       if (aHeaderTable == null || aHorzHeaderTable == null)
         return ESuccess.FAILURE;
 
@@ -303,11 +304,10 @@ public final class PreloadFont implements IHasID <String>
   {
     try
     {
-      final HeaderTable aHeaderTable = m_aTTF != null ? m_aTTF.getHeader () : m_aOTF != null ? m_aOTF.getHeader ()
-                                                                                             : null;
-      final OS2WindowsMetricsTable aOS2Table = m_aTTF != null ? m_aTTF.getOS2Windows () : m_aOTF != null ? m_aOTF
-                                                                                                                 .getOS2Windows ()
-                                                                                                         : null;
+      final HeaderTable aHeaderTable = m_aTTF != null ? m_aTTF.getHeader ()
+                                                      : m_aOTF != null ? m_aOTF.getHeader () : null;
+      final OS2WindowsMetricsTable aOS2Table = m_aTTF != null ? m_aTTF.getOS2Windows ()
+                                                              : m_aOTF != null ? m_aOTF.getOS2Windows () : null;
       if (aHeaderTable == null || aOS2Table == null)
         return ESuccess.FAILURE;
 

@@ -118,8 +118,8 @@ public class PLStreamImage extends AbstractPLImage <PLStreamImage>
     return this;
   }
 
-  private static byte @NonNull [] _readBounded (@NonNull final InputStream aIS, @Nonnegative final int nMaxBytes)
-                                                                                                                  throws IOException
+  private static byte @NonNull [] _readBounded (@NonNull final InputStream aIS,
+                                                @Nonnegative final int nMaxBytes) throws IOException
   {
     try (final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ())
     {

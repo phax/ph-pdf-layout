@@ -93,7 +93,8 @@ public final class PLMarkupParserTest
   {
     // "**bold *and italic* bold**" — italic nested inside bold.
     final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("**bold *and italic* bold**");
-    // BoldToggle, Text("bold "), ItalicToggle, Text("and italic"), ItalicToggle, Text(" bold"), BoldToggle
+    // BoldToggle, Text("bold "), ItalicToggle, Text("and italic"), ItalicToggle, Text(" bold"),
+    // BoldToggle
     assertEquals (7, aTokens.size ());
     assertTrue (aTokens.get (0) instanceof IPLMarkupToken.BoldToggle);
     assertEquals ("bold ", ((IPLMarkupToken.Text) aTokens.get (1)).getText ());

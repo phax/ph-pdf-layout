@@ -24,9 +24,9 @@ import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.tostring.ToStringGenerator;
 
 /**
- * Hyperlink annotation for rich text. The URI may either be an absolute
- * external URI (e.g. {@code https://example.com}) or an internal anchor
- * reference starting with {@code #} (e.g. {@code #title1}).
+ * Hyperlink annotation for rich text. The URI may either be an absolute external URI (e.g.
+ * {@code https://example.com}) or an internal anchor reference starting with {@code #} (e.g.
+ * {@code #title1}).
  *
  * @author Philip Helger
  */
@@ -58,8 +58,8 @@ public final class PLHyperlinkAnnotation implements IPLRichTextAnnotation
   }
 
   /**
-   * @return <code>true</code> if the URI is an internal anchor reference (starts
-   *         with <code>#</code>), <code>false</code> for external URIs.
+   * @return <code>true</code> if the URI is an internal anchor reference (starts with
+   *         <code>#</code>), <code>false</code> for external URIs.
    */
   public boolean isInternalAnchorReference ()
   {

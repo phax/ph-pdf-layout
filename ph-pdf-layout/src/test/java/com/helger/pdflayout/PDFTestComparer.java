@@ -46,8 +46,8 @@ public final class PDFTestComparer
   private PDFTestComparer ()
   {}
 
-  public static void renderAndCompare (@NonNull final PageLayoutPDF aPageLayout, final File fTarget)
-                                                                                                     throws PDFCreationException
+  public static void renderAndCompare (@NonNull final PageLayoutPDF aPageLayout,
+                                       final File fTarget) throws PDFCreationException
   {
     // Render
     aPageLayout.renderTo (fTarget);

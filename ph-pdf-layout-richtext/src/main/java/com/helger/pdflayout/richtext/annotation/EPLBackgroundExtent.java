@@ -32,9 +32,9 @@ public enum EPLBackgroundExtent
   TIGHT,
   /**
    * Box sized to the full line slot of the enclosing rich-text element. All segments on a line
-   * share identical Y bounds — adjacent segments meet without seams and the background extends
-   * into the line-spacing gap so consecutive lines of a multi-line highlight stay visually
-   * contiguous (Word "highlight" look).
+   * share identical Y bounds — adjacent segments meet without seams and the background extends into
+   * the line-spacing gap so consecutive lines of a multi-line highlight stay visually contiguous
+   * (Word "highlight" look).
    */
   LINE_HEIGHT
 }

@@ -19,10 +19,9 @@ package com.helger.pdflayout.base;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Base interface for block elements. Compared to normal elements
- * ({@link IPLElement}) they additionally have a horizontal alignment
- * ({@link IPLHasHorizontalAlignment}) and vertical alignment
- * ({@link IPLHasVerticalAlignment}).
+ * Base interface for block elements. Compared to normal elements ({@link IPLElement}) they
+ * additionally have a horizontal alignment ({@link IPLHasHorizontalAlignment}) and vertical
+ * alignment ({@link IPLHasVerticalAlignment}).
  *
  * @author Philip Helger
  * @param <IMPLTYPE>
@@ -42,8 +41,7 @@ public interface IPLBlockElement <IMPLTYPE extends IPLBlockElement <IMPLTYPE>> e
   boolean DEFAULT_CLIP_CONTENT = false;
 
   /**
-   * @return Should the element occupy the full width? The default is
-   *         {@link #DEFAULT_FULL_WIDTH}.
+   * @return Should the element occupy the full width? The default is {@link #DEFAULT_FULL_WIDTH}.
    */
   boolean isFullWidth ();
 
@@ -51,26 +49,24 @@ public interface IPLBlockElement <IMPLTYPE extends IPLBlockElement <IMPLTYPE>> e
    * Set usage of full width.
    *
    * @param bFullWidth
-   *        <code>true</code> to enable full width, <code>false</code> to use
-   *        only what is available.
+   *        <code>true</code> to enable full width, <code>false</code> to use only what is
+   *        available.
    * @return this for chaining
    */
   @NonNull
   IMPLTYPE setFullWidth (boolean bFullWidth);
 
   /**
-   * @return <code>true</code> if any overflowing content should be clipped,
-   *         <code>false</code> if not. Default is
-   *         {@link #DEFAULT_CLIP_CONTENT}.
+   * @return <code>true</code> if any overflowing content should be clipped, <code>false</code> if
+   *         not. Default is {@link #DEFAULT_CLIP_CONTENT}.
    * @since 7.3.1
    */
   boolean isClipContent ();
 
   /**
-   * Enable the clipping of content, so that only the content inside the
-   * rendering area is shown. Similar to CSS style <code>overflow:hidden</code>.
-   * This usually only makes sense if a maximum width or height is defined
-   * additionally.
+   * Enable the clipping of content, so that only the content inside the rendering area is shown.
+   * Similar to CSS style <code>overflow:hidden</code>. This usually only makes sense if a maximum
+   * width or height is defined additionally.
    *
    * @param bClipContent
    *        <code>true</code> to enable it, <code>false</code> to disable it.

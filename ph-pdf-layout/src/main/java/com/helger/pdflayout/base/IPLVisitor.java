@@ -43,8 +43,8 @@ public interface IPLVisitor
   {}
 
   /**
-   * Call for each element in the current page set. This method is also called
-   * for page set header and footer elements.
+   * Call for each element in the current page set. This method is also called for page set header
+   * and footer elements.
    *
    * @param aElement
    *        The current element. Never <code>null</code>.
@@ -70,8 +70,8 @@ public interface IPLVisitor
   {}
 
   /**
-   * Special visitor method that visits only elements of this objects and
-   * ignores the others objects.
+   * Special visitor method that visits only elements of this objects and ignores the others
+   * objects.
    *
    * @param aElementConsumer
    *        The consumer to use. May not be <code>null</code>.

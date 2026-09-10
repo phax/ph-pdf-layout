@@ -46,16 +46,15 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, aRow -> {
-        aRow.forEachCell ( (aCell, nIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           aCell.setBorder (null, null, null, null);
         });
       });
     }
   },
   /**
-   * Create all grid lines. The first row has the border also on top, the other
-   * rows don't. The first column also has a border on the left, the others
-   * don't.
+   * Create all grid lines. The first row has the border also on top, the other rows don't. The
+   * first column also has a border on the left, the others don't.
    */
   FULL ("full")
   {
@@ -70,7 +69,7 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
             if (nRowIndex == nStartRowIncl)
             {
@@ -93,8 +92,8 @@ public enum EPLTableGridType implements IPLTableGridType
     }
   },
   /**
-   * Create all grid lines except for the border lines. The first row has the
-   * border also on top, the other rows don't. The
+   * Create all grid lines except for the border lines. The first row has the border also on top,
+   * the other rows don't. The
    */
   FULL_NO_BORDER ("full_no_border")
   {
@@ -109,7 +108,7 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
           {
             final boolean bFirstRow = nRowIndex == nStartRowIncl;
@@ -121,9 +120,8 @@ public enum EPLTableGridType implements IPLTableGridType
     }
   },
   /**
-   * Create all grid lines. The first row has the border also on top, the other
-   * rows don't. The first column also has a border on the left, the others
-   * don't.
+   * Create all grid lines. The first row has the border also on top, the other rows don't. The
+   * first column also has a border on the left, the others don't.
    */
   OUTER ("outer")
   {
@@ -138,14 +136,17 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
           {
             final boolean bFirstRow = nRowIndex == nStartRowIncl;
             final boolean bLastRow = nRowIndex == nEndRowIncl;
             final boolean bFirstCol = nEffectiveCellStartIndex == nStartColumnIncl;
             final boolean bLastCol = nEffectiveCellEndIndex - 1 == nEndColumnIncl;
-            aCell.setBorder (bFirstRow ? aBSS : null, bLastCol ? aBSS : null, bLastRow ? aBSS : null, bFirstCol ? aBSS : null);
+            aCell.setBorder (bFirstRow ? aBSS : null,
+                             bLastCol ? aBSS : null,
+                             bLastRow ? aBSS : null,
+                             bFirstCol ? aBSS : null);
           }
         });
       });
@@ -153,8 +154,8 @@ public enum EPLTableGridType implements IPLTableGridType
   },
 
   /**
-   * Create all horizontal lines. The first row has a border on top and bottom,
-   * all other rows only at the bottom
+   * Create all horizontal lines. The first row has a border on top and bottom, all other rows only
+   * at the bottom
    */
   HORZ_ALL ("horz_all")
   {
@@ -169,7 +170,7 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
           {
             final boolean bFirstRow = nRowIndex == nStartRowIncl;
@@ -181,8 +182,8 @@ public enum EPLTableGridType implements IPLTableGridType
   },
 
   /**
-   * Create all horizontal lines. The first row has a border on all sides all
-   * other rows at outer left, outer right and every bottom
+   * Create all horizontal lines. The first row has a border on all sides all other rows at outer
+   * left, outer right and every bottom
    */
   HORZ_OUTER_BORDER ("horz_outer_border")
   {
@@ -197,7 +198,7 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
           {
             final boolean bFirstRow = nRowIndex == nStartRowIncl;
@@ -211,9 +212,8 @@ public enum EPLTableGridType implements IPLTableGridType
   },
 
   /**
-   * Create only horizontal lines but without the border lines on top and on
-   * bottom. All rows have a border on bottom except for the last line which has
-   * no border.
+   * Create only horizontal lines but without the border lines on top and on bottom. All rows have a
+   * border on bottom except for the last line which has no border.
    */
   HORZ_NO_BORDER ("horz_no_border")
   {
@@ -228,7 +228,7 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
           {
             final boolean bLastRow = nRowIndex == nEndRowIncl;
@@ -239,8 +239,8 @@ public enum EPLTableGridType implements IPLTableGridType
     }
   },
   /**
-   * Create all vertical lines. The first column has a border on left and right,
-   * all other columns only at the right
+   * Create all vertical lines. The first column has a border on left and right, all other columns
+   * only at the right
    */
   VERT_ALL ("vert_all")
   {
@@ -255,7 +255,7 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
           {
             final boolean bFirstCol = nEffectiveCellStartIndex == nStartColumnIncl;
@@ -267,8 +267,8 @@ public enum EPLTableGridType implements IPLTableGridType
   },
 
   /**
-   * Create all vertical lines. The first column has a border on left, right and
-   * top, all other columns at the outer top, outer bottom and every right
+   * Create all vertical lines. The first column has a border on left, right and top, all other
+   * columns at the outer top, outer bottom and every right
    */
   VERT_OUTER_BORDER ("vert_outer_border")
   {
@@ -283,7 +283,7 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
           {
             final boolean bFirstRow = nRowIndex == nStartRowIncl;
@@ -296,9 +296,8 @@ public enum EPLTableGridType implements IPLTableGridType
     }
   },
   /**
-   * Create only vertical lines but without the border lines left and right. The
-   * first column has a border on left and right, all other columns only at the
-   * right
+   * Create only vertical lines but without the border lines left and right. The first column has a
+   * border on left and right, all other columns only at the right
    */
   VERT_NO_BORDER ("vert_no_border")
   {
@@ -313,7 +312,7 @@ public enum EPLTableGridType implements IPLTableGridType
       ValueEnforcer.notNull (aTable, "Table");
       ValueEnforcer.notNull (aBSS, "BorderStyleSpec");
       aTable.forEachRow (nStartRowIncl, nEndRowIncl, (aRow, nRowIndex) -> {
-        aRow.forEachCell ( (aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
+        aRow.forEachCell ((aCell, nCellIndex, nEffectiveCellStartIndex, nEffectiveCellEndIndex) -> {
           if (nEffectiveCellStartIndex >= nStartColumnIncl && nEffectiveCellStartIndex <= nEndColumnIncl)
           {
             final boolean bLastCol = nEffectiveCellEndIndex - 1 == nEndColumnIncl;

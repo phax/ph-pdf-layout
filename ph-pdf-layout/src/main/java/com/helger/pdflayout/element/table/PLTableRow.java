@@ -106,13 +106,13 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
 
   public void forEachCell (@NonNull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
-    forEachColumnByIndex ( (x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
+    forEachColumnByIndex ((x, idx) -> aConsumer.accept ((PLTableCell) x.getElement (), idx));
   }
 
   public void forEachCell (@NonNull final IPLTableCellConsumer aConsumer)
   {
     final MutableInt aEffectiveIndex = new MutableInt (0);
-    forEachColumnByIndex ( (x, idx) -> {
+    forEachColumnByIndex ((x, idx) -> {
       final PLTableCell aCell = (PLTableCell) x.getElement ();
       final int nColSpan = aCell.getColSpan ();
       aConsumer.accept (aCell, idx, aEffectiveIndex.intValue (), aEffectiveIndex.intValue () + nColSpan);
@@ -124,7 +124,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
                            final int nEndIncl,
                            @NonNull final Consumer <? super PLTableCell> aConsumer)
   {
-    forEachCell ( (x, idx) -> {
+    forEachCell ((x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
         aConsumer.accept (x);
     });
@@ -134,7 +134,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
                            final int nEndIncl,
                            @NonNull final ObjIntConsumer <? super PLTableCell> aConsumer)
   {
-    forEachCell ( (x, idx) -> {
+    forEachCell ((x, idx) -> {
       if (idx >= nStartIncl && idx <= nEndIncl)
         aConsumer.accept (x, idx);
     });
@@ -142,7 +142,7 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
 
   public void forEachCell (@NonNull final IPLTableCellFilter aFilter, @NonNull final IPLTableCellConsumer aConsumer)
   {
-    forEachCell ( (x, idx, esidx, eeidx) -> {
+    forEachCell ((x, idx, esidx, eeidx) -> {
       if (aFilter.test (x, idx, esidx, eeidx))
         aConsumer.accept (x, idx, esidx, eeidx);
     });

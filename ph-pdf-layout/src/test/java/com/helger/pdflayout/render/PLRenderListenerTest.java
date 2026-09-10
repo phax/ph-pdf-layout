@@ -128,7 +128,7 @@ public final class PLRenderListenerTest
     final ICommonsList <String> aRawIDs = new CommonsArrayList <> ();
     final ICommonsList <String> aRawOriginalIDs = new CommonsArrayList <> ();
     final ICommonsList <Boolean> aRawFirstFragmentFlags = new CommonsArrayList <> ();
-    aPS.setRenderListener ( (aElement, aCtx) -> {
+    aPS.setRenderListener ((aElement, aCtx) -> {
       if (aCtx.getElementType () != ERenderingElementType.CONTENT_ELEMENT)
         return;
       // Only the top-level text is interesting; PLText has no nested children.
@@ -156,9 +156,7 @@ public final class PLRenderListenerTest
     for (final Boolean b : aRawFirstFragmentFlags)
       if (b.booleanValue ())
         nFirstCount++;
-    assertEquals ("Exactly one fragment of a single root element should be first",
-                  1,
-                  nFirstCount);
+    assertEquals ("Exactly one fragment of a single root element should be first", 1, nFirstCount);
 
     // The actual IDs include "longtext-1" and "longtext-2..." patterns.
     boolean bFoundSuffixed = false;
@@ -168,8 +166,7 @@ public final class PLRenderListenerTest
         bFoundSuffixed = true;
         break;
       }
-    assertTrue ("Expected at least one fragment with the 'longtext-N' suffix pattern, got: " + aRawIDs,
-                bFoundSuffixed);
+    assertTrue ("Expected at least one fragment with the 'longtext-N' suffix pattern, got: " + aRawIDs, bFoundSuffixed);
   }
 
   @Test
@@ -239,14 +236,13 @@ public final class PLRenderListenerTest
     // A PLText inside a PLBox: the listener should observe BOTH because every
     // render call flows through AbstractPLRenderableObject.render.
     final com.helger.pdflayout.element.box.PLBox aBox = new com.helger.pdflayout.element.box.PLBox (new PLText ("inner",
-                                                                                                                FONT)
-                                                                                                                     .setID ("inner")).setID ("outer");
+                                                                                                                FONT).setID ("inner")).setID ("outer");
 
     final PLPageSet aPS = new PLPageSet (PDRectangle.A4).setMargin (40);
     aPS.addElement (aBox);
 
     final ICommonsList <String> aObservedIDs = new CommonsArrayList <> ();
-    aPS.setRenderListener ( (final IPLRenderableObject <?> aElement, final PageRenderContext aCtx) -> {
+    aPS.setRenderListener ((final IPLRenderableObject <?> aElement, final PageRenderContext aCtx) -> {
       if (aCtx.getElementType () == ERenderingElementType.CONTENT_ELEMENT)
         aObservedIDs.add (aElement.getID ());
     });

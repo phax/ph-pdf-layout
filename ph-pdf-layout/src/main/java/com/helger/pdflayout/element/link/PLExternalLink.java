@@ -22,8 +22,8 @@ import org.jspecify.annotations.Nullable;
 import com.helger.pdflayout.base.IPLRenderableObject;
 
 /**
- * An external link that references to an external URI. Use
- * {@link #setURI(String)} to define the link target.
+ * An external link that references to an external URI. Use {@link #setURI(String)} to define the
+ * link target.
  *
  * @author Philip Helger
  * @since 6.0.1

@@ -28,8 +28,7 @@ import com.helger.base.hashcode.HashCodeGenerator;
 import com.helger.base.tostring.ToStringGenerator;
 
 /**
- * This class represents a border around a single element. Each side can be
- * styled separately.
+ * This class represents a border around a single element. Each side can be styled separately.
  *
  * @author Philip Helger
  */
@@ -51,8 +50,7 @@ public class BorderSpec implements Serializable
    * Constructor.
    *
    * @param aBorder
-   *        The border to set for all sides (left, top, right, bottom). Maybe
-   *        <code>null</code>.
+   *        The border to set for all sides (left, top, right, bottom). Maybe <code>null</code>.
    */
   public BorderSpec (@Nullable final BorderStyleSpec aBorder)
   {
@@ -96,8 +94,7 @@ public class BorderSpec implements Serializable
   }
 
   /**
-   * @return <code>true</code> if all borders are defined, <code>false</code>
-   *         otherwise.
+   * @return <code>true</code> if all borders are defined, <code>false</code> otherwise.
    */
   public final boolean hasAllBorders ()
   {
@@ -105,8 +102,8 @@ public class BorderSpec implements Serializable
   }
 
   /**
-   * @return <code>true</code> if at least one border is defined,
-   *         <code>false</code> if no border is defined at all.
+   * @return <code>true</code> if at least one border is defined, <code>false</code> if no border is
+   *         defined at all.
    */
   public final boolean hasAnyBorder ()
   {
@@ -114,9 +111,8 @@ public class BorderSpec implements Serializable
   }
 
   /**
-   * @return <code>true</code> if all border sides are equal. This is
-   *         <code>true</code> for <code>null</code> borders as well as for
-   *         defined borders.
+   * @return <code>true</code> if all border sides are equal. This is <code>true</code> for
+   *         <code>null</code> borders as well as for defined borders.
    */
   public boolean areAllBordersEqual ()
   {

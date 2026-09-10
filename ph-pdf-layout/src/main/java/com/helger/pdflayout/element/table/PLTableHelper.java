@@ -19,8 +19,7 @@ package com.helger.pdflayout.element.table;
 import org.jspecify.annotations.NonNull;
 
 /**
- * PLTable helper class containing additional methods to deal with PLTable
- * special cases
+ * PLTable helper class containing additional methods to deal with PLTable special cases
  *
  * @author Saskia Reimerth
  */
@@ -31,8 +30,8 @@ public class PLTableHelper
   {}
 
   /**
-   * If two joined rows both have borders at their connecting side, the doubles
-   * width has to be removed
+   * If two joined rows both have borders at their connecting side, the doubles width has to be
+   * removed
    *
    * @param ret
    *        the PLTable, whose doubled borders are to be removed

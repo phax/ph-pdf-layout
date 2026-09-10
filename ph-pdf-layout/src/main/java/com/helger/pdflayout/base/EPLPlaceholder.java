@@ -28,8 +28,7 @@ import com.helger.collection.commons.CommonsHashMap;
 import com.helger.collection.commons.ICommonsMap;
 
 /**
- * Contains a list of supported textual placeholders to be replaced when
- * creating a PDF.
+ * Contains a list of supported textual placeholders to be replaced when creating a PDF.
  *
  * @author Philip Helger
  */
@@ -67,8 +66,8 @@ public enum EPLPlaceholder
   }
 
   /**
-   * @return The name of the variable, starting with "${" and ending with "}".
-   *         Neither <code>null</code> nor empty.
+   * @return The name of the variable, starting with "${" and ending with "}". Neither
+   *         <code>null</code> nor empty.
    */
   @NonNull
   @Nonempty
@@ -78,8 +77,7 @@ public enum EPLPlaceholder
   }
 
   /**
-   * @return The number of estimated characters in the final document. Always
-   *         &gt; 0.
+   * @return The number of estimated characters in the final document. Always &gt; 0.
    */
   @Nonnegative
   public int getEstimatedCharCount ()
@@ -88,8 +86,7 @@ public enum EPLPlaceholder
   }
 
   /**
-   * @return The estimated replacement text, using
-   *         {@link #getEstimatedCharCount()} as the basis.
+   * @return The estimated replacement text, using {@link #getEstimatedCharCount()} as the basis.
    */
   @NonNull
   @Nonempty

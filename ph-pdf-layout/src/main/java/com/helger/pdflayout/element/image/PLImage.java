@@ -33,8 +33,8 @@ import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.render.PagePreRenderContext;
 
 /**
- * Represent a static image based on {@link BufferedImage}. This image type is
- * supported for all {@link EPLImageType}s!
+ * Represent a static image based on {@link BufferedImage}. This image type is supported for all
+ * {@link EPLImageType}s!
  *
  * @see PLStreamImage
  * @author Philip Helger
@@ -48,7 +48,9 @@ public class PLImage extends AbstractPLImage <PLImage>
     this (aImage, aImage.getWidth (), aImage.getHeight ());
   }
 
-  public PLImage (@NonNull final BufferedImage aImage, @Nonnegative final float fImageWidth, @Nonnegative final float fImageHeight)
+  public PLImage (@NonNull final BufferedImage aImage,
+                  @Nonnegative final float fImageWidth,
+                  @Nonnegative final float fImageHeight)
   {
     super (fImageWidth, fImageHeight);
     ValueEnforcer.notNull (aImage, "Image");

@@ -37,17 +37,16 @@ import de.redsix.pdfcompare.PdfComparator;
 import de.redsix.pdfcompare.RenderingException;
 
 /**
- * Helper for the rich-text test classes. Renders a {@link PageLayoutPDF} to a
- * target file and compares it to a checked-in reference under
- * {@code ../example-files/richtext/&lt;name&gt;.pdf} (relative to the module
- * directory) using the same pdf-compare library that
+ * Helper for the rich-text test classes. Renders a {@link PageLayoutPDF} to a target file and
+ * compares it to a checked-in reference under {@code ../example-files/richtext/&lt;name&gt;.pdf}
+ * (relative to the module directory) using the same pdf-compare library that
  * {@code com.helger.pdflayout.PDFTestComparer} uses in the main module.
- *
- * <p>If the reference file is missing and the system property
- * {@code richtext.recordReferences} is set to {@code true}, the just-generated
- * PDF is copied to the reference location and the test passes (recording
- * mode). Otherwise a missing reference causes a test failure with a clear
- * message — the standard mode for CI.</p>
+ * <p>
+ * If the reference file is missing and the system property {@code richtext.recordReferences} is set
+ * to {@code true}, the just-generated PDF is copied to the reference location and the test passes
+ * (recording mode). Otherwise a missing reference causes a test failure with a clear message — the
+ * standard mode for CI.
+ * </p>
  *
  * @author Philip Helger
  */
@@ -62,14 +61,16 @@ public final class PLRichTextTestComparer
   private PLRichTextTestComparer ()
   {}
 
-  public static void renderAndCompare (@NonNull final PageLayoutPDF aPageLayout, @NonNull final File aTarget) throws PDFCreationException
+  public static void renderAndCompare (@NonNull final PageLayoutPDF aPageLayout,
+                                       @NonNull final File aTarget) throws PDFCreationException
   {
     // 1. ensure the target's parent dir exists, then render
     final File aTargetDir = aTarget.getParentFile ();
     if (aTargetDir != null && !aTargetDir.exists ())
       aTargetDir.mkdirs ();
     aPageLayout.renderTo (aTarget);
-    assertTrue ("Target PDF was not written: " + aTarget.getAbsolutePath (), aTarget.isFile () && aTarget.length () > 0);
+    assertTrue ("Target PDF was not written: " + aTarget.getAbsolutePath (),
+                aTarget.isFile () && aTarget.length () > 0);
 
     // 2. resolve reference
     final File aReference = new File (REFERENCE_DIR + "/" + aTarget.getName ());
@@ -92,8 +93,11 @@ public final class PLRichTextTestComparer
           fail ("Failed to record reference PDF: " + ex.getMessage ());
         }
       }
-      fail ("Reference PDF not found at " + aReference.getAbsolutePath () +
-            " — re-run with -D" + SYS_PROP_RECORD + "=true to record.");
+      fail ("Reference PDF not found at " +
+            aReference.getAbsolutePath () +
+            " — re-run with -D" +
+            SYS_PROP_RECORD +
+            "=true to record.");
     }
 
     // 3. pixel-diff comparison

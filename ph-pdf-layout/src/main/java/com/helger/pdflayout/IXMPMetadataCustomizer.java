@@ -34,8 +34,8 @@ import org.jspecify.annotations.NonNull;
 public interface IXMPMetadataCustomizer
 {
   /**
-   * Customize the provided {@link XMPMetadata} object. It is called as the last
-   * action before it gets serialized.
+   * Customize the provided {@link XMPMetadata} object. It is called as the last action before it
+   * gets serialized.
    *
    * @param aXmpMetadata
    *        The object to be customized. Never <code>null</code>.

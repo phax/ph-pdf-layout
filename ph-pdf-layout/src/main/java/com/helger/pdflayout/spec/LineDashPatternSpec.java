@@ -65,13 +65,11 @@ public class LineDashPatternSpec implements Serializable
 
   /**
    * @param aPattern
-   *        The pattern array. May not be <code>null</code>. Must have 0-2
-   *        items. 0 items means solid line, 1 item means identical on and off
-   *        length and 2 items means potentially different on and off length.
-   *        All contains values must be &gt; 0.
+   *        The pattern array. May not be <code>null</code>. Must have 0-2 items. 0 items means
+   *        solid line, 1 item means identical on and off length and 2 items means potentially
+   *        different on and off length. All contains values must be &gt; 0.
    * @param fPhase
-   *        The phase of the pattern. Where to start the painting, first
-   *        counting on than off.
+   *        The phase of the pattern. Where to start the painting, first counting on than off.
    */
   public LineDashPatternSpec (final float @NonNull [] aPattern, final float fPhase)
   {
@@ -89,7 +87,7 @@ public class LineDashPatternSpec implements Serializable
    * @return A copy with all patterns. 0-2 elements.
    */
   @ReturnsMutableCopy
-  public final float @NonNull[] getPattern ()
+  public final float @NonNull [] getPattern ()
   {
     return ArrayHelper.getCopy (m_aPattern);
   }

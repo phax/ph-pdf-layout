@@ -30,8 +30,8 @@ import com.helger.base.tostring.ToStringGenerator;
 import com.helger.pdflayout.base.PLColor;
 
 /**
- * This class contains the styling of a single border part. Currently only the
- * color, the dash pattern and the line width can be set.
+ * This class contains the styling of a single border part. Currently only the color, the dash
+ * pattern and the line width can be set.
  *
  * @author Philip Helger
  */
@@ -46,8 +46,8 @@ public class BorderStyleSpec implements Serializable
   public static final LineDashPatternSpec DEFAULT_LINE_DASH_PATTERN = LineDashPatternSpec.SOLID;
 
   /**
-   * Use the default line width if unspecified. A width of 0 is also valid and
-   * would create a hair line
+   * Use the default line width if unspecified. A width of 0 is also valid and would create a hair
+   * line
    */
   public static final float DEFAULT_LINE_WIDTH = 1f;
 
@@ -126,8 +126,7 @@ public class BorderStyleSpec implements Serializable
   }
 
   /**
-   * @return <code>true</code> if all values are set to default,
-   *         <code>false</code> otherwise.
+   * @return <code>true</code> if all values are set to default, <code>false</code> otherwise.
    */
   public final boolean isDefault ()
   {

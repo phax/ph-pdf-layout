@@ -18,10 +18,9 @@ package com.helger.pdflayout.richtext.annotation;
 
 /**
  * Marker interface for inline annotations attached to a
- * {@link com.helger.pdflayout.richtext.run.PLRichTextRun rich text run}.
- * Annotations are interpreted at render time and may contribute to the visual
- * appearance (e.g. underline) or to the PDF interactive layer (e.g. hyperlink,
- * anchor).
+ * {@link com.helger.pdflayout.richtext.run.PLRichTextRun rich text run}. Annotations are
+ * interpreted at render time and may contribute to the visual appearance (e.g. underline) or to the
+ * PDF interactive layer (e.g. hyperlink, anchor).
  *
  * @author Philip Helger
  */

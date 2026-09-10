@@ -84,10 +84,8 @@ public final class PLTableTest
     aPS1.addElement (new PLText ("First dummy line", r10));
 
     // Start table
-    final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4) : PLTable.createWithPercentage (10,
-                                                                                                           40,
-                                                                                                           25,
-                                                                                                           25);
+    final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
+                                : PLTable.createWithPercentage (10, 40, 25, 25);
     aTable.setHeaderRowCount (1);
     aTable.setMargin (40);
 
@@ -256,10 +254,8 @@ public final class PLTableTest
       aPS1.addElement (new PLText ("Following is a table with grid type " + eGridType, r10));
 
       // Start table
-      final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4) : PLTable.createWithPercentage (10,
-                                                                                                             40,
-                                                                                                             25,
-                                                                                                             25);
+      final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
+                                  : PLTable.createWithPercentage (10, 40, 25, 25);
       aTable.setHeaderRowCount (1);
 
       // Add row
@@ -286,13 +282,11 @@ public final class PLTableTest
         final PLTableRow aRow = aTable.addAndReturnRow (new PLTableCell (new PLText (Integer.toString (i), r10)),
                                                         new PLTableCell (new PLText ("Name " +
                                                                                      i +
-                                                                                     (i == 2
-                                                                                             ? " this is extra text for row 2 that makes this line longer"
+                                                                                     (i == 2 ? " this is extra text for row 2 that makes this line longer"
                                                                                              : ""),
                                                                                      r10.getCloneWithDifferentColor (i %
-                                                                                                                     3 ==
-                                                                                                                     0 ? PLColor.RED
-                                                                                                                       : PLColor.BLACK))),
+                                                                                                                     3 == 0 ? PLColor.RED
+                                                                                                                            : PLColor.BLACK))),
                                                         new PLTableCell (new PLText (Integer.toString (i * i), r10)),
                                                         new PLTableCell (new PLText (Integer.toString (i + i), r10)));
         aRow.getCellAtIndex (2).setHorzAlign (EHorzAlignment.CENTER);
@@ -357,13 +351,11 @@ public final class PLTableTest
         final PLTableRow aRow = aTable.addAndReturnRow (new PLTableCell (new PLText (Integer.toString (i), r10)),
                                                         new PLTableCell (new PLText ("Name " +
                                                                                      i +
-                                                                                     (i == 2
-                                                                                             ? " this is extra text for row 2 that makes this line longer"
+                                                                                     (i == 2 ? " this is extra text for row 2 that makes this line longer"
                                                                                              : ""),
                                                                                      r10.getCloneWithDifferentColor (i %
-                                                                                                                     3 ==
-                                                                                                                     0 ? PLColor.RED
-                                                                                                                       : PLColor.BLACK))),
+                                                                                                                     3 == 0 ? PLColor.RED
+                                                                                                                            : PLColor.BLACK))),
                                                         new PLTableCell (new PLText (Integer.toString (i * i), r10)),
                                                         new PLTableCell (new PLText (Integer.toString (i + i), r10)),
                                                         new PLTableCell (new PLText (Integer.toString (i * i), r10)),
@@ -397,10 +389,8 @@ public final class PLTableTest
       aPS1.addElement (new PLText ("Following is a table with grid type " + eGridType, r10));
 
       // Start table
-      final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4) : PLTable.createWithPercentage (10,
-                                                                                                             40,
-                                                                                                             25,
-                                                                                                             25);
+      final PLTable aTable = true ? PLTable.createWithEvenlySizedColumns (4)
+                                  : PLTable.createWithPercentage (10, 40, 25, 25);
       aTable.setHeaderRowCount (1);
 
       // Add content lines

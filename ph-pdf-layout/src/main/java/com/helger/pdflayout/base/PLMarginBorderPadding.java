@@ -26,8 +26,8 @@ import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 
 /**
- * Represents a single page layout as element. It consists of a page size, a
- * page header and footer as well as a set of page body elements.
+ * Represents a single page layout as element. It consists of a page size, a page header and footer
+ * as well as a set of page body elements.
  *
  * @author Philip Helger
  */

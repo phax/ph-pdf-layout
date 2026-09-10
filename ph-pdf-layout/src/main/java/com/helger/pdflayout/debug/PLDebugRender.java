@@ -117,8 +117,7 @@ public final class PLDebugRender
   {}
 
   /**
-   * Reset all debug rendering stuff to defaults. This includes disabling of
-   * debug rendering.
+   * Reset all debug rendering stuff to defaults. This includes disabling of debug rendering.
    */
   public static void resetToDefault ()
   {
@@ -128,8 +127,7 @@ public final class PLDebugRender
   }
 
   /**
-   * @return <code>true</code> if debug rendering is enabled, <code>false</code>
-   *         if not.
+   * @return <code>true</code> if debug rendering is enabled, <code>false</code> if not.
    */
   public static boolean isDebugRender ()
   {

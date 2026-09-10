@@ -41,16 +41,14 @@ public enum EHorzAlignment implements IHasID <String>
   RIGHT ("right"),
 
   /**
-   * Justify all text. This alignment has no effect for boxes, it only works on
-   * PLText!
+   * Justify all text. This alignment has no effect for boxes, it only works on PLText!
    */
   @Since ("5.0.3")
   JUSTIFY("justify"),
 
   /**
-   * This is a special case for justifying text, but without justifying explicit
-   * newlines and not the last line. This alignment has no effect for boxes, it
-   * only works on PLText!
+   * This is a special case for justifying text, but without justifying explicit newlines and not
+   * the last line. This alignment has no effect for boxes, it only works on PLText!
    */
   @Since ("7.3.3")
   BLOCK("block");

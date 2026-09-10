@@ -56,8 +56,8 @@ public interface IPLCellRange
    *        The row, 0-based.
    * @param nColumnIndex
    *        The column, 0-based.
-   * @return <code>true</code> if the coordinates lie within the bounds,
-   *         <code>false</code> otherwise.
+   * @return <code>true</code> if the coordinates lie within the bounds, <code>false</code>
+   *         otherwise.
    * @see #intersects(IPLCellRange) for checking if two ranges overlap
    */
   default boolean isInRange (final int nRowIndex, final int nColumnIndex)
@@ -82,8 +82,7 @@ public interface IPLCellRange
    *
    * @param nColumnIndex
    *        the column to check
-   * @return <code>true</code> if the range contains the column at the passed
-   *         index
+   * @return <code>true</code> if the range contains the column at the passed index
    */
   default boolean containsColumn (final int nColumnIndex)
   {
@@ -91,14 +90,13 @@ public interface IPLCellRange
   }
 
   /**
-   * Determines whether or not this {@link IPLCellRange} and the specified
-   * {@link IPLCellRange} intersect.
+   * Determines whether or not this {@link IPLCellRange} and the specified {@link IPLCellRange}
+   * intersect.
    *
    * @param aOther
-   *        a candidate cell range address to check for intersection with this
-   *        range. May not be <code>null</code>.
-   * @return <code>true</code> if this range and other range have at least 1
-   *         cell in common
+   *        a candidate cell range address to check for intersection with this range. May not be
+   *        <code>null</code>.
+   * @return <code>true</code> if this range and other range have at least 1 cell in common
    * @see #isInRange(int, int) for checking if a single cell intersects
    */
   default boolean intersects (@NonNull final IPLCellRange aOther)

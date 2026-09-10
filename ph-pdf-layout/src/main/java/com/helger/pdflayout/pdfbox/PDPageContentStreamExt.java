@@ -1062,8 +1062,12 @@ public class PDPageContentStreamExt implements Closeable
    * @throws IllegalStateException
    *         If the method was called within a text block.
    */
-  public void curveTo (final float x1, final float y1, final float x2, final float y2, final float x3, final float y3)
-                                                                                                                       throws IOException
+  public void curveTo (final float x1,
+                       final float y1,
+                       final float x2,
+                       final float y2,
+                       final float x3,
+                       final float y3) throws IOException
   {
     if (m_bInTextMode)
       throw new IllegalStateException ("Error: curveTo is not allowed within a text block.");

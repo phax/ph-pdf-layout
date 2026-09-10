@@ -29,10 +29,10 @@ import com.helger.pdflayout.base.IPLObject;
 import com.helger.pdflayout.base.IPLRenderableObject;
 
 /**
- * Convenience {@link IPLRenderListener} that records where each element first appeared. Filters
- * out duplicate events from split fragments and from headers/footers, keeping only the first
- * render of each element identified by {@link IPLObject#getOriginalID()}. The resulting map is the
- * natural input for building a table of contents or PDF outline.
+ * Convenience {@link IPLRenderListener} that records where each element first appeared. Filters out
+ * duplicate events from split fragments and from headers/footers, keeping only the first render of
+ * each element identified by {@link IPLObject#getOriginalID()}. The resulting map is the natural
+ * input for building a table of contents or PDF outline.
  * <p>
  * Usage:
  *
@@ -40,7 +40,8 @@ import com.helger.pdflayout.base.IPLRenderableObject;
  * final PLRenderedElementCollector aCollector = new PLRenderedElementCollector ();
  * aPageSet.setRenderListener (aCollector);
  * aPageLayout.renderTo (aOS);
- * for (Map.Entry &lt;String, Location&gt; e : aCollector.getAll ().entrySet ()) {
+ * for (Map.Entry &lt;String, Location&gt; e : aCollector.getAll ().entrySet ())
+ * {
  *   // e.getKey () is the element's original ID
  *   // e.getValue ().getTotalPageIndex () is the page it landed on
  * }

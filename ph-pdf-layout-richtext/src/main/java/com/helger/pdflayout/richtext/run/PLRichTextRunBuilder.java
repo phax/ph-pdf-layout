@@ -120,45 +120,45 @@ public final class PLRichTextRunBuilder
           aResult.add (_makeRun ("\n", bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
         }
         else
-        if (aToken instanceof IPLMarkupToken.SoftBreak)
-        {
-          aResult.add (_makeRun (" ", bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
-        }
-        else
-          if (aToken instanceof IPLMarkupToken.BoldToggle)
+          if (aToken instanceof IPLMarkupToken.SoftBreak)
           {
-            bBold = !bBold;
+            aResult.add (_makeRun (" ", bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
           }
           else
-            if (aToken instanceof IPLMarkupToken.ItalicToggle)
+            if (aToken instanceof IPLMarkupToken.BoldToggle)
             {
-              bItalic = !bItalic;
+              bBold = !bBold;
             }
             else
-              if (aToken instanceof final IPLMarkupToken.Color aColorToken)
+              if (aToken instanceof IPLMarkupToken.ItalicToggle)
               {
-                aColor = aColorToken.getColor ();
+                bItalic = !bItalic;
               }
               else
-                if (aToken instanceof final IPLMarkupToken.AnnotationToggle aToggle)
+                if (aToken instanceof final IPLMarkupToken.Color aColorToken)
                 {
-                  final Class <? extends IPLRichTextAnnotation> aType = aToggle.getAnnotationType ();
-                  if (aActiveAnnotations.containsKey (aType))
-                    aActiveAnnotations.remove (aType);
-                  else
-                    aActiveAnnotations.put (aType, aToggle.getAnnotation ());
+                  aColor = aColorToken.getColor ();
                 }
                 else
-                  if (aToken instanceof final MetricsToggle aMetrics)
+                  if (aToken instanceof final IPLMarkupToken.AnnotationToggle aToggle)
                   {
-                    // Same key means we're closing the active scope.
-                    if (aActiveMetrics != null && aActiveMetrics.getKey ().equals (aMetrics.getKey ()))
-                      aActiveMetrics = null;
+                    final Class <? extends IPLRichTextAnnotation> aType = aToggle.getAnnotationType ();
+                    if (aActiveAnnotations.containsKey (aType))
+                      aActiveAnnotations.remove (aType);
                     else
-                      aActiveMetrics = aMetrics;
+                      aActiveAnnotations.put (aType, aToggle.getAnnotation ());
                   }
                   else
-                    LOGGER.warn ("Unsupported token: " + aToken);
+                    if (aToken instanceof final MetricsToggle aMetrics)
+                    {
+                      // Same key means we're closing the active scope.
+                      if (aActiveMetrics != null && aActiveMetrics.getKey ().equals (aMetrics.getKey ()))
+                        aActiveMetrics = null;
+                      else
+                        aActiveMetrics = aMetrics;
+                    }
+                    else
+                      LOGGER.warn ("Unsupported token: " + aToken);
     }
     return aResult;
   }

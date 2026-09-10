@@ -33,10 +33,9 @@ import com.helger.base.tostring.ToStringGenerator;
  * This class defines a dependent width of an elements:
  * <ul>
  * <li>absolute - element has a fixed width</li>
- * <li>percentage - element width is a certain percentage of the surrounding
- * element</li>
- * <li>star - element width is a relative part of the unused width of the
- * surrounding element. All star elements evenly share the available width.</li>
+ * <li>percentage - element width is a certain percentage of the surrounding element</li>
+ * <li>star - element width is a relative part of the unused width of the surrounding element. All
+ * star elements evenly share the available width.</li>
  * <li>auto - elements takes the width it needs</li>
  * </ul>
  *
@@ -76,8 +75,8 @@ public class WidthSpec implements Serializable
   }
 
   /**
-   * @return <code>true</code> if type is 'absolute' or 'percentage'. Only
-   *         absolute entries need to provide a value!
+   * @return <code>true</code> if type is 'absolute' or 'percentage'. Only absolute entries need to
+   *         provide a value!
    */
   public final boolean isAbsolute ()
   {
@@ -101,9 +100,8 @@ public class WidthSpec implements Serializable
   }
 
   /**
-   * @return The width value - is either an absolute value or a percentage value
-   *         - depending on {@link #getType()}. For star width elements this is
-   *         0.
+   * @return The width value - is either an absolute value or a percentage value - depending on
+   *         {@link #getType()}. For star width elements this is 0.
    */
   @Nonnegative
   public final float getValue ()
@@ -112,8 +110,8 @@ public class WidthSpec implements Serializable
   }
 
   /**
-   * Get the effective width based on the passed available width. This may not
-   * be called for star or auto width elements.
+   * Get the effective width based on the passed available width. This may not be called for star or
+   * auto width elements.
    *
    * @param fAvailableWidth
    *        The available width.

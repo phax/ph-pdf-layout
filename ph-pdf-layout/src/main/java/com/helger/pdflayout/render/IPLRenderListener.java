@@ -21,13 +21,13 @@ import org.jspecify.annotations.NonNull;
 import com.helger.pdflayout.base.IPLRenderableObject;
 
 /**
- * Listener invoked after every PL element render. Use this to learn which page a particular
- * element ended up on - for example to build a table of contents or PDF bookmarks.
+ * Listener invoked after every PL element render. Use this to learn which page a particular element
+ * ended up on - for example to build a table of contents or PDF bookmarks.
  * <p>
  * The listener fires once per render call, which includes the top-level page elements as well as
- * every nested child reached through their parent's render method. The listener also fires for
- * page headers and footers; filter on {@link PageRenderContext#getElementType()} if you only care
- * about content elements. The listener does NOT fire if {@code onRender} throws.
+ * every nested child reached through their parent's render method. The listener also fires for page
+ * headers and footers; filter on {@link PageRenderContext#getElementType()} if you only care about
+ * content elements. The listener does NOT fire if {@code onRender} throws.
  * <p>
  * Elements that are split across pages produce one event per fragment. Use
  * {@link com.helger.pdflayout.base.IPLObject#getOriginalID()} to correlate fragments to their
@@ -39,10 +39,10 @@ import com.helger.pdflayout.base.IPLRenderableObject;
  * mutation access to the {@link org.apache.pdfbox.pdmodel.PDDocument} - including the page tree,
  * annotations, fonts and security handlers. It can also throw to abort rendering. Only register
  * listeners from code you trust; never wire an implementation built from untrusted input (for
- * example a deserialized lambda or a class loaded from a tenant-supplied jar). Inside the
- * callback, treat the supplied element as read-only - mutating it can violate render invariants
- * (for example, clearing the anchor name on the first fragment so the subsequent
- * destination-registration step misbehaves).
+ * example a deserialized lambda or a class loaded from a tenant-supplied jar). Inside the callback,
+ * treat the supplied element as read-only - mutating it can violate render invariants (for example,
+ * clearing the anchor name on the first fragment so the subsequent destination-registration step
+ * misbehaves).
  *
  * @author Philip Helger
  * @since 8.2.0

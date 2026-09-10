@@ -24,8 +24,7 @@ import com.helger.base.id.IHasID;
 import com.helger.base.lang.EnumHelper;
 
 /**
- * Image type to use for rendering in {@link PLImage}, {@link PLStreamImage}
- * etc.
+ * Image type to use for rendering in {@link PLImage}, {@link PLStreamImage} etc.
  *
  * @author Philip Helger
  * @since 5.0.1

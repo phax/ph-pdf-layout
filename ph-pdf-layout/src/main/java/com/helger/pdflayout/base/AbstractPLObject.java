@@ -161,20 +161,18 @@ public abstract class AbstractPLObject <IMPLTYPE extends AbstractPLObject <IMPLT
   }
 
   /**
-   * Mark this object as a fragment produced by vertically splitting another
-   * object. Carries the original (unsplit) ancestor's ID forward and tracks
-   * whether this fragment is the top-most slice of the original. Must be called
-   * once per fragment, immediately after creation, at every split site.
+   * Mark this object as a fragment produced by vertically splitting another object. Carries the
+   * original (unsplit) ancestor's ID forward and tracks whether this fragment is the top-most slice
+   * of the original. Must be called once per fragment, immediately after creation, at every split
+   * site.
    *
    * @param aSplitSource
-   *        The object that was just split to produce this fragment. May not be
-   *        <code>null</code>.
+   *        The object that was just split to produce this fragment. May not be <code>null</code>.
    * @param bThisIsFirstHalf
-   *        <code>true</code> if this is the first (top) half of the split,
-   *        <code>false</code> if it is the second (bottom) half.
+   *        <code>true</code> if this is the first (top) half of the split, <code>false</code> if it
+   *        is the second (bottom) half.
    * @param sIDSuffix
-   *        Suffix appended to the split source's ID to form this fragment's
-   *        ID. Must not be empty.
+   *        Suffix appended to the split source's ID to form this fragment's ID. Must not be empty.
    * @return this for chaining
    * @since 8.2.0
    */

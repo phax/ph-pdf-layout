@@ -27,13 +27,12 @@ import com.helger.collection.commons.ICommonsList;
 /**
  * Parses a markup string into a list of {@link IPLMarkupToken tokens}.
  * <p>
- * The algorithm mirrors the one used in the predecessor {@code rst.pdfbox.layout}
- * library: the input is split successively by each registered marker factory.
- * Each split step replaces the matched marker with the corresponding token and
- * unescapes the marker inside the surrounding plain text segments. The order
- * of factories matters — markers whose lexical form prefixes another marker
- * (e.g. bold {@code **} before italic {@code *}, or double-underscore
- * underline before any single-underscore marker) must come first.
+ * The algorithm mirrors the one used in the predecessor {@code rst.pdfbox.layout} library: the
+ * input is split successively by each registered marker factory. Each split step replaces the
+ * matched marker with the corresponding token and unescapes the marker inside the surrounding plain
+ * text segments. The order of factories matters — markers whose lexical form prefixes another
+ * marker (e.g. bold {@code **} before italic {@code *}, or double-underscore underline before any
+ * single-underscore marker) must come first.
  *
  * @author Philip Helger
  */
@@ -42,24 +41,21 @@ public final class PLMarkupParser
   /**
    * Default factory order:
    * <ol>
-   * <li>HARD_BREAK (<code>  \n</code> or <code>\\\n</code>) — must run before
-   * NEWLINE so the trigger characters are consumed together with the line
-   * ending.</li>
-   * <li>NEWLINE (bare <code>\n</code>) — emits a soft break; splits lines so
-   * other markers don't accidentally cross line breaks.</li>
-   * <li>UNDERLINE (<code>__</code>) — kept early so a {@code __underline__}
-   * span is consumed in one piece, before ITALIC_UNDERSCORE could split it
-   * into two italic toggles.</li>
-   * <li>METRICS (<code>{_}</code> / <code>{^}</code>) — runs before the
-   * curly-brace markers HYPERLINK / ANCHOR / COLOR because all four start
-   * with <code>{</code>.</li>
+   * <li>HARD_BREAK (<code>  \n</code> or <code>\\\n</code>) — must run before NEWLINE so the
+   * trigger characters are consumed together with the line ending.</li>
+   * <li>NEWLINE (bare <code>\n</code>) — emits a soft break; splits lines so other markers don't
+   * accidentally cross line breaks.</li>
+   * <li>UNDERLINE (<code>__</code>) — kept early so a {@code __underline__} span is consumed in one
+   * piece, before ITALIC_UNDERSCORE could split it into two italic toggles.</li>
+   * <li>METRICS (<code>{_}</code> / <code>{^}</code>) — runs before the curly-brace markers
+   * HYPERLINK / ANCHOR / COLOR because all four start with <code>{</code>.</li>
    * <li>COLOR_CMYK (<code>{color_cmyk:C,M,Y,K}</code>)</li>
-   * <li>BOLD (<code>**</code>) — Markdown-style; MUST run before ITALIC so
-   * the pair isn't consumed as two italic toggles.</li>
-   * <li>ITALIC (<code>*</code>) — Markdown-style; single asterisk not flanked
-   * by another asterisk.</li>
-   * <li>ITALIC_UNDERSCORE (<code>_</code>) — CommonMark alias for italic;
-   * single underscore not flanked by another underscore.</li>
+   * <li>BOLD (<code>**</code>) — Markdown-style; MUST run before ITALIC so the pair isn't consumed
+   * as two italic toggles.</li>
+   * <li>ITALIC (<code>*</code>) — Markdown-style; single asterisk not flanked by another
+   * asterisk.</li>
+   * <li>ITALIC_UNDERSCORE (<code>_</code>) — CommonMark alias for italic; single underscore not
+   * flanked by another underscore.</li>
    * <li>COLOR (<code>{color:#xxxxxx}</code>)</li>
    * <li>HYPERLINK (<code>{link...}</code>)</li>
    * <li>ANCHOR (<code>{anchor:...}</code>)</li>
@@ -93,9 +89,9 @@ public final class PLMarkupParser
   }
 
   /**
-   * Tokenises the given markup string. The result interleaves
-   * {@link IPLMarkupToken.Text Text} tokens (plain text segments) with marker
-   * tokens (style toggles, color changes, annotations, newlines).
+   * Tokenises the given markup string. The result interleaves {@link IPLMarkupToken.Text Text}
+   * tokens (plain text segments) with marker tokens (style toggles, color changes, annotations,
+   * newlines).
    *
    * @param sMarkup
    *        the markup string to parse.
@@ -136,9 +132,9 @@ public final class PLMarkupParser
   }
 
   /**
-   * Splits every {@link String} segment in {@code aIn} by the factory's pattern,
-   * keeping non-String segments unchanged. Matched regions are replaced by
-   * tokens; surrounding plain text is unescaped.
+   * Splits every {@link String} segment in {@code aIn} by the factory's pattern, keeping non-String
+   * segments unchanged. Matched regions are replaced by tokens; surrounding plain text is
+   * unescaped.
    */
   @NonNull
   private static ICommonsList <Object> _splitOnce (@NonNull final IPLMarkupCharacterFactory aFactory,

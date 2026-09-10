@@ -31,9 +31,9 @@ import com.helger.pdflayout.spec.SizeSpec;
 
 /**
  * A zero-size anchor marker. Place this element in the flow at the position you want a PDF named
- * destination registered. When the document is rendered, a {@code PDPageXYZDestination} is added
- * to the document's name dictionary under the anchor name; bookmarks, internal links, or external
- * URL fragments (<code>mypdf.pdf#section1</code>) can then jump straight to that point.
+ * destination registered. When the document is rendered, a {@code PDPageXYZDestination} is added to
+ * the document's name dictionary under the anchor name; bookmarks, internal links, or external URL
+ * fragments (<code>mypdf.pdf#section1</code>) can then jump straight to that point.
  * <p>
  * The element occupies no space (zero width, zero height), takes no part in layout calculations
  * beyond consuming a row slot in containers that iterate row-by-row, and renders nothing visible.

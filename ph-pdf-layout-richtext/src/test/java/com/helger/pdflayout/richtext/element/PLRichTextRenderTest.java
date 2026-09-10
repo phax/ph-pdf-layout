@@ -47,8 +47,8 @@ public final class PLRichTextRenderTest
 {
   private static final PLFontFamily FONT_FAMILY = PLFontFamily.regular ();
 
-  private static void _renderToTemp (final PageLayoutPDF aLayout, final String sName) throws IOException,
-                                                                                      PDFCreationException
+  private static void _renderToTemp (final PageLayoutPDF aLayout,
+                                     final String sName) throws IOException, PDFCreationException
   {
     final File aFile = Files.createTempFile ("plrichtext-" + sName + "-", ".pdf").toFile ();
     aFile.deleteOnExit ();

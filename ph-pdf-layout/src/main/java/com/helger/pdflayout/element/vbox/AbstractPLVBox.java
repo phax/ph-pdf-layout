@@ -546,8 +546,9 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
 
           // Percentage of used height compared to total used height of all too
           // high rows (0-1)
-          final float fAvailableRowHeightPerc = fUsedHeightAutoTooHigh == 0 ? 0 : fTooHighRowHeight /
-                                                                                  fUsedHeightAutoTooHigh;
+          final float fAvailableRowHeightPerc = fUsedHeightAutoTooHigh == 0 ? 0
+                                                                            : fTooHighRowHeight /
+                                                                              fUsedHeightAutoTooHigh;
 
           // Use x% of remaining height
           // Ensure the height is not smaller than the minimum height - may be

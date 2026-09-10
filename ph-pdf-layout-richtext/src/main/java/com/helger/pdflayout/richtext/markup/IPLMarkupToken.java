@@ -25,21 +25,21 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.richtext.annotation.IPLRichTextAnnotation;
 
 /**
- * Sealed token type emitted by {@link PLMarkupParser}. The parser turns a
- * markup string like {@code "Hello *world*"} into a list of these tokens,
- * which is then walked by the run-builder to produce
- * {@link com.helger.pdflayout.richtext.run.PLRichTextRun}s.
+ * Sealed token type emitted by {@link PLMarkupParser}. The parser turns a markup string like
+ * {@code "Hello *world*"} into a list of these tokens, which is then walked by the run-builder to
+ * produce {@link com.helger.pdflayout.richtext.run.PLRichTextRun}s.
  *
  * @author Philip Helger
  */
-public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
-                                               IPLMarkupToken.BoldToggle,
-                                               IPLMarkupToken.ItalicToggle,
-                                               IPLMarkupToken.Color,
-                                               IPLMarkupToken.NewLine,
-                                               IPLMarkupToken.SoftBreak,
-                                               IPLMarkupToken.AnnotationToggle,
-                                               IPLMarkupToken.MetricsToggle
+public sealed interface IPLMarkupToken permits
+                                       IPLMarkupToken.Text,
+                                       IPLMarkupToken.BoldToggle,
+                                       IPLMarkupToken.ItalicToggle,
+                                       IPLMarkupToken.Color,
+                                       IPLMarkupToken.NewLine,
+                                       IPLMarkupToken.SoftBreak,
+                                       IPLMarkupToken.AnnotationToggle,
+                                       IPLMarkupToken.MetricsToggle
 {
   /** Plain text — the actual content. */
   @Immutable
@@ -124,10 +124,9 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
   }
 
   /**
-   * A hard line break in the markup. Emitted by the markup parser when the
-   * line ending is preceded by either two-or-more spaces (CommonMark "trailing
-   * space" hard break) or a single backslash (CommonMark "backslash" hard
-   * break).
+   * A hard line break in the markup. Emitted by the markup parser when the line ending is preceded
+   * by either two-or-more spaces (CommonMark "trailing space" hard break) or a single backslash
+   * (CommonMark "backslash" hard break).
    */
   @Immutable
   final class NewLine implements IPLMarkupToken
@@ -145,9 +144,9 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
   }
 
   /**
-   * A soft line break in the markup. Emitted by the markup parser for a bare
-   * {@code \n} or {@code \r\n} that is NOT preceded by the hard-break trigger
-   * (two-or-more spaces or a backslash). Rendered as a single space — see
+   * A soft line break in the markup. Emitted by the markup parser for a bare {@code \n} or
+   * {@code \r\n} that is NOT preceded by the hard-break trigger (two-or-more spaces or a
+   * backslash). Rendered as a single space — see
    * {@link com.helger.pdflayout.richtext.run.PLRichTextRunBuilder}.
    */
   @Immutable
@@ -166,9 +165,8 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
   }
 
   /**
-   * Toggle an annotation by class (underline, hyperlink, anchor). The first
-   * occurrence of a given annotation type pushes the annotation onto the active
-   * set; the next occurrence pops it off.
+   * Toggle an annotation by class (underline, hyperlink, anchor). The first occurrence of a given
+   * annotation type pushes the annotation onto the active set; the next occurrence pops it off.
    */
   @Immutable
   final class AnnotationToggle implements IPLMarkupToken
@@ -201,10 +199,9 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
   }
 
   /**
-   * Toggle a subscript/superscript metrics scope (the <code>{_}</code> and
-   * <code>{^}</code> markers). The same marker both opens and closes the scope —
-   * the run-builder compares tokens via {@link #getKey()} to identify the
-   * matching close.
+   * Toggle a subscript/superscript metrics scope (the <code>{_}</code> and <code>{^}</code>
+   * markers). The same marker both opens and closes the scope — the run-builder compares tokens via
+   * {@link #getKey()} to identify the matching close.
    */
   @Immutable
   final class MetricsToggle implements IPLMarkupToken
@@ -213,9 +210,7 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     private final float m_fFontScale;
     private final float m_fBaselineOffsetScale;
 
-    public MetricsToggle (@NonNull final String sKey,
-                          final float fFontScale,
-                          final float fBaselineOffsetScale)
+    public MetricsToggle (@NonNull final String sKey, final float fFontScale, final float fBaselineOffsetScale)
     {
       ValueEnforcer.notNull (sKey, "Key");
       m_sKey = sKey;
@@ -224,9 +219,9 @@ public sealed interface IPLMarkupToken permits IPLMarkupToken.Text,
     }
 
     /**
-     * @return a canonical key identifying this metrics toggle. Two tokens with
-     *         the same key (i.e. the same marker and the same parameter values)
-     *         are considered a matching open/close pair.
+     * @return a canonical key identifying this metrics toggle. Two tokens with the same key (i.e.
+     *         the same marker and the same parameter values) are considered a matching open/close
+     *         pair.
      */
     @NonNull
     public String getKey ()

@@ -237,9 +237,9 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
-   * @return The listener invoked after every element render, or <code>null</code> if no listener
-   *         is installed. Use this to learn which page each element ended up on, for example to
-   *         build a table of contents or PDF bookmarks.
+   * @return The listener invoked after every element render, or <code>null</code> if no listener is
+   *         installed. Use this to learn which page each element ended up on, for example to build
+   *         a table of contents or PDF bookmarks.
    * @since 8.2.0
    */
   @Nullable

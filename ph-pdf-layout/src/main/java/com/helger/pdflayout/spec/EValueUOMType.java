@@ -54,8 +54,7 @@ public enum EValueUOMType implements IHasID <String>
   }
 
   /**
-   * @return <code>true</code> if this unit of measure requires a value,
-   *         <code>false</code> if not.
+   * @return <code>true</code> if this unit of measure requires a value, <code>false</code> if not.
    */
   public boolean isValueRequired ()
   {
@@ -63,9 +62,9 @@ public enum EValueUOMType implements IHasID <String>
   }
 
   /**
-   * @return <code>true</code> if this unit of measure depends on the width of
-   *         the surrounding element, <code>false</code> if this unit of measure
-   *         defines the width based on the content of this element.
+   * @return <code>true</code> if this unit of measure depends on the width of the surrounding
+   *         element, <code>false</code> if this unit of measure defines the width based on the
+   *         content of this element.
    */
   public boolean isOuterElementDependent ()
   {
