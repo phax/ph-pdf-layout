@@ -701,7 +701,7 @@ public class PDPageContentStreamExt implements Closeable
       if (m_aStrokingColorSpaceStack.isEmpty ())
         m_aStrokingColorSpaceStack.add (color.getColorSpace ());
       else
-        m_aStrokingColorSpaceStack.set (m_aNonStrokingColorSpaceStack.size () - 1, color.getColorSpace ());
+        m_aStrokingColorSpaceStack.set (m_aStrokingColorSpaceStack.size () - 1, color.getColorSpace ());
     }
 
     for (final float value : color.getComponents ())

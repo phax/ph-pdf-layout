@@ -177,6 +177,9 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.3.4 - work in progress
+* Fixed `PDPageContentStreamExt.setStrokingColor (PDColor)` using the size of the non-stroking colour space stack to update the stroking colour space stack
+
 v8.3.3 - 2026-07-23
 * Fixed `PLText` with `EHorzAlignment.BLOCK` (and `JUSTIFY`) not stretching the wrapped lines to the full available width — several BLOCK aligned texts (e.g. paragraphs created in a loop) ended up with different widths because each one was only justified to the width of its own widest line. See [#69](https://github.com/phax/ph-pdf-layout/issues/69) - thx @istvangaal
 
