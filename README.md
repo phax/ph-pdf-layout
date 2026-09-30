@@ -177,7 +177,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.3.4 - work in progress
+v8.3.4 - 2026-09-30
 * Fixed `PDPageContentStreamExt.setStrokingColor (PDColor)` using the size of the non-stroking colour space stack to update the stroking colour space stack
 
 v8.3.3 - 2026-07-23
