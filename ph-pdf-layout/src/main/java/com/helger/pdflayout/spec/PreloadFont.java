@@ -57,7 +57,7 @@ import com.helger.pdflayout.debug.PLDebugLog;
 @NotThreadSafe
 public final class PreloadFont implements IHasID <String>
 {
-  private static final int DEFAULT_FALLBACK_CODE_POINT = '?';
+  public static final int DEFAULT_FALLBACK_CODE_POINT = '?';
 
   // Must be defined before the standard fonts are registered
   private static final ICommonsOrderedMap <String, Standard14Fonts.FontName> STANDARD_14 = new CommonsLinkedHashMap <> ();
