@@ -1,0 +1,26 @@
+Class: PDFontEncodeBenchmark
+Java: Eclipse Adoptium 25.0.4.1
+OS: Mac OS X 26.6.2 (aarch64), 10 cores
+PDFBox: 3.0.8
+Rounds: 10 warmup + 15 measured, >= 200 ms each; median reported
+
+| Font                   | Texts           | Operation       | PDFBox ns/str | cached ns/str | speedup | PDFBox ns/char | cached ns/char |
+|------------------------|-----------------|-----------------|--------------:|--------------:|--------:|---------------:|---------------:|
+| Helvetica (Std14)      | short (3-15)    | encode(String)  |          73.4 |          65.8 |   1.12x |           5.81 |           5.20 |
+| Helvetica (Std14)      | short (3-15)    | getStringWidth  |         100.3 |          22.7 |   4.42x |           7.94 |           1.80 |
+| Helvetica (Std14)      | lines (60-100)  | encode(String)  |         442.9 |         345.9 |   1.28x |           5.29 |           4.13 |
+| Helvetica (Std14)      | lines (60-100)  | getStringWidth  |         599.8 |         179.1 |   3.35x |           7.16 |           2.14 |
+| Helvetica (Std14)      | para (500-1000) | encode(String)  |        3767.4 |        3007.7 |   1.25x |           5.09 |           4.06 |
+| Helvetica (Std14)      | para (500-1000) | getStringWidth  |        5047.7 |        1734.0 |   2.91x |           6.81 |           2.34 |
+| Times-Roman (Std14)    | short (3-15)    | encode(String)  |          72.6 |          63.2 |   1.15x |           5.74 |           5.00 |
+| Times-Roman (Std14)    | short (3-15)    | getStringWidth  |          99.4 |          22.8 |   4.36x |           7.86 |           1.80 |
+| Times-Roman (Std14)    | lines (60-100)  | encode(String)  |         443.1 |         344.4 |   1.29x |           5.29 |           4.11 |
+| Times-Roman (Std14)    | lines (60-100)  | getStringWidth  |         607.9 |         181.8 |   3.34x |           7.26 |           2.17 |
+| Times-Roman (Std14)    | para (500-1000) | encode(String)  |        3744.0 |        2964.3 |   1.26x |           5.05 |           4.00 |
+| Times-Roman (Std14)    | para (500-1000) | getStringWidth  |        5140.1 |        1729.5 |   2.97x |           6.94 |           2.33 |
+| LiberationSans (Type0) | short (3-15)    | encode(String)  |         155.1 |          65.8 |   2.36x |          12.27 |           5.20 |
+| LiberationSans (Type0) | short (3-15)    | getStringWidth  |         348.1 |          22.9 |  15.22x |          27.53 |           1.81 |
+| LiberationSans (Type0) | lines (60-100)  | encode(String)  |         852.4 |         367.6 |   2.32x |          10.18 |           4.39 |
+| LiberationSans (Type0) | lines (60-100)  | getStringWidth  |        2286.8 |         171.4 |  13.34x |          27.31 |           2.05 |
+| LiberationSans (Type0) | para (500-1000) | encode(String)  |        6608.2 |        2995.7 |   2.21x |           8.92 |           4.04 |
+| LiberationSans (Type0) | para (500-1000) | getStringWidth  |       19555.7 |        1733.6 |  11.28x |          26.40 |           2.34 |
