@@ -134,9 +134,9 @@ public class LoadedFont
     PDFontDescriptor aFD = aFont.getFontDescriptor ();
     if (aFD == null)
     {
-      if (aFont instanceof PDType0Font)
+      if (aFont instanceof final PDType0Font aType0Font)
       {
-        final PDCIDFont aDescendantFont = ((PDType0Font) aFont).getDescendantFont ();
+        final PDCIDFont aDescendantFont = aType0Font.getDescendantFont ();
         if (aDescendantFont != null)
           aFD = aDescendantFont.getFontDescriptor ();
       }
