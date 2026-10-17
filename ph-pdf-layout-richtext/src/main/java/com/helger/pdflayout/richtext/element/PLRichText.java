@@ -54,6 +54,7 @@ import com.helger.pdflayout.richtext.annotation.IPLRichTextAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLAnchorAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLBackgroundAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLHyperlinkAnnotation;
+import com.helger.pdflayout.richtext.annotation.PLStrikethroughAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
 import com.helger.pdflayout.richtext.run.PLFontFamily;
 import com.helger.pdflayout.richtext.run.PLRichTextRun;
@@ -66,9 +67,9 @@ import com.helger.pdflayout.spec.SizeSpec;
 
 /**
  * A multi-style rich-text inline element. Each {@link PLRichTextRun} carries its own
- * {@link FontSpec} and an arbitrary list of inline annotations (underline, hyperlink, anchor). The
+ * {@link FontSpec} and an arbitrary list of inline annotations (underline, strikethrough, hyperlink, anchor). The
  * text is word-wrapped to the available width during preparation and rendered segment by segment
- * during the render phase. Inline underlines are stroked after the baseline glyphs are emitted;
+ * during the render phase. Inline underlines and strikethroughs are stroked after the baseline glyphs are emitted;
  * hyperlinks produce one PDF link annotation per visible segment; anchors register a named
  * destination at the segment's origin via {@link PLAnchorRegistry}.
  *
@@ -508,22 +509,41 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
         {
           if (aAnn instanceof final PLUnderlineAnnotation aUnderline)
           {
-            _drawUnderline (aCS, aSeg, aUnderline, fSegStartX, fSegBaselineY, fSegFullWidth, fFontSize);
+            _drawDecorationLine (aCS,
+                                 aSeg,
+                                 aUnderline.getBaselineOffsetScale (),
+                                 aUnderline.getLineWeight (),
+                                 fSegStartX,
+                                 fSegBaselineY,
+                                 fSegFullWidth,
+                                 fFontSize);
           }
           else
-            if (aAnn instanceof final PLHyperlinkAnnotation aHyperlink)
+            if (aAnn instanceof final PLStrikethroughAnnotation aStrikethrough)
             {
-              _addHyperlinkAnnotation (aCtx, aHyperlink, fSegStartX, fSegBaselineY, fSegFullWidth, fFontSize);
+              _drawDecorationLine (aCS,
+                                   aSeg,
+                                   aStrikethrough.getBaselineOffsetScale (),
+                                   aStrikethrough.getLineWeight (),
+                                   fSegStartX,
+                                   fSegBaselineY,
+                                   fSegFullWidth,
+                                   fFontSize);
             }
             else
-              if (aAnn instanceof final PLAnchorAnnotation aAnchor)
+              if (aAnn instanceof final PLHyperlinkAnnotation aHyperlink)
               {
-                PLAnchorRegistry.registerNamedDestination (aCtx.getDocument (),
-                                                           aAnchor.getName (),
-                                                           aCS.getPage (),
-                                                           fSegStartX,
-                                                           fSegBaselineY + fFontSize);
+                _addHyperlinkAnnotation (aCtx, aHyperlink, fSegStartX, fSegBaselineY, fSegFullWidth, fFontSize);
               }
+              else
+                if (aAnn instanceof final PLAnchorAnnotation aAnchor)
+                {
+                  PLAnchorRegistry.registerNamedDestination (aCtx.getDocument (),
+                                                             aAnchor.getName (),
+                                                             aCS.getPage (),
+                                                             fSegStartX,
+                                                             fSegBaselineY + fFontSize);
+                }
         }
 
         fCursorX += fSegFullWidth;
@@ -579,16 +599,18 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     aCS.fillRect (fStartX, fBottomY, fSegWidth, fHeight);
   }
 
-  private static void _drawUnderline (@NonNull final PDPageContentStreamWithCache aCS,
-                                      @NonNull final PLRichTextSegment aSeg,
-                                      @NonNull final PLUnderlineAnnotation aUnderline,
-                                      final float fStartX,
-                                      final float fBaselineY,
-                                      final float fSegWidth,
-                                      final float fFontSize) throws IOException
+  /** Stroke a horizontal line in the colour of the text: underline or strikethrough. */
+  private static void _drawDecorationLine (@NonNull final PDPageContentStreamWithCache aCS,
+                                           @NonNull final PLRichTextSegment aSeg,
+                                           final float fBaselineOffsetScale,
+                                           final float fRelativeLineWeight,
+                                           final float fStartX,
+                                           final float fBaselineY,
+                                           final float fSegWidth,
+                                           final float fFontSize) throws IOException
   {
-    final float fLineY = fBaselineY + fFontSize * aUnderline.getBaselineOffsetScale ();
-    final float fLineWeight = fFontSize * aUnderline.getLineWeight () / 10f;
+    final float fLineY = fBaselineY + fFontSize * fBaselineOffsetScale;
+    final float fLineWeight = fFontSize * fRelativeLineWeight / 10f;
     aCS.setStrokingColor (aSeg.getFontSpec ().getColor ());
     aCS.setLineWidth (fLineWeight);
     aCS.drawLine (fStartX, fLineY, fStartX + fSegWidth, fLineY);

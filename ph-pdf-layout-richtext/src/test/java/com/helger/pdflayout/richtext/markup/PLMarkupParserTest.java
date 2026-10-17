@@ -27,6 +27,7 @@ import com.helger.collection.commons.ICommonsList;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.richtext.annotation.PLAnchorAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLHyperlinkAnnotation;
+import com.helger.pdflayout.richtext.annotation.PLStrikethroughAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
 import com.helger.pdflayout.richtext.color.PLCMYKColor;
 import com.helger.pdflayout.richtext.markup.IPLMarkupToken.BoldToggle;
@@ -119,6 +120,67 @@ public final class PLMarkupParserTest
 
     final IPLMarkupToken.AnnotationToggle aOpen = (IPLMarkupToken.AnnotationToggle) aTokens.get (0);
     assertTrue (aOpen.getAnnotation () instanceof PLUnderlineAnnotation);
+  }
+
+  @Test
+  public void testStrikethrough ()
+  {
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("a ~~gone~~ b");
+    // Text, toggle, Text(gone), toggle, Text
+    assertEquals (5, aTokens.size ());
+    assertEquals ("a ", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.AnnotationToggle);
+    assertTrue (((IPLMarkupToken.AnnotationToggle) aTokens.get (1)).getAnnotation () instanceof PLStrikethroughAnnotation);
+    assertEquals ("gone", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+    assertTrue (aTokens.get (3) instanceof IPLMarkupToken.AnnotationToggle);
+    assertEquals (" b", ((IPLMarkupToken.Text) aTokens.get (4)).getText ());
+  }
+
+  @Test
+  public void testSingleTildeIsPlainText ()
+  {
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("about ~5 minutes, ~6 at most");
+    assertEquals (1, aTokens.size ());
+    assertEquals ("about ~5 minutes, ~6 at most", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+  }
+
+  @Test
+  public void testEscapedStrikethrough ()
+  {
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("\\~~literal\\~~");
+    assertEquals (1, aTokens.size ());
+    assertEquals ("~~literal~~", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+  }
+
+  @Test
+  public void testStrikethroughDoesNotDisturbOtherMarkers ()
+  {
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("**b** ~~s~~ *i* __u__");
+    int nBold = 0;
+    int nItalic = 0;
+    int nStrike = 0;
+    int nUnderline = 0;
+    for (final IPLMarkupToken aToken : aTokens)
+    {
+      if (aToken instanceof IPLMarkupToken.BoldToggle)
+        nBold++;
+      else
+        if (aToken instanceof IPLMarkupToken.ItalicToggle)
+          nItalic++;
+        else
+          if (aToken instanceof final IPLMarkupToken.AnnotationToggle aToggle)
+          {
+            if (aToggle.getAnnotation () instanceof PLStrikethroughAnnotation)
+              nStrike++;
+            else
+              if (aToggle.getAnnotation () instanceof PLUnderlineAnnotation)
+                nUnderline++;
+          }
+    }
+    assertEquals (2, nBold);
+    assertEquals (2, nItalic);
+    assertEquals (2, nStrike);
+    assertEquals (2, nUnderline);
   }
 
   @Test

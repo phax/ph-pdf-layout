@@ -47,7 +47,7 @@ A set of example files as created from the unit test can be found in folder [exa
 
 # Rich text (markup) — module `ph-pdf-layout-richtext`
 
-The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, sub/superscript and background highlights.
+The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, strikethrough, sub/superscript and background highlights.
 The base `PLText` is single-style by design; rich text fills that gap.
 
 ## Huge credit where it's due
@@ -69,6 +69,7 @@ Markup syntax (Markdown / CommonMark style for bold, italic and line breaks; the
 | `***bold-italic***` | combined bold + italic |
 | `__text__` | underlines `text`. **Differs from CommonMark**, which uses `__` as an alternate bold marker — here `__` is reserved for underline because there is no standard Markdown for it. |
 | `__{0.25:1.5}text__` | underline with custom baseline offset and line weight |
+| `~~text~~` | strikethrough (GitHub Flavored Markdown). A single `~` stays plain text |
 | `{_}sub{_}` | subscript (default 0.61× font, +0.15 baseline shift) |
 | `{^}sup{^}` | superscript (default 0.61× font, −0.4 baseline shift) |
 | `{_:0.5|0.2}foo{_}` | subscript with explicit fontScale and baselineOffset |
@@ -176,6 +177,10 @@ Add the following to your pom.xml to use this artifact, replacing `x.y.z` with t
 Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
+
+v8.3.5 - work in progress
+* `ph-pdf-layout-richtext`: added **strikethrough markup** `~~text~~` (GitHub Flavored Markdown style). A single `~` is plain text, `\~~` escapes the marker, and the marker combines with bold / italic / colour / underline / sub-superscript / background.
+  * Internally: new `PLStrikethroughAnnotation` (an `IPLRichTextAnnotation`, default position 0.3 of the font size above the baseline), new `PLMarkupCharacters.STRIKETHROUGH` factory (part of `PLMarkupParser.DEFAULT_FACTORIES`) and `PLRichTextRun.getStrikethrough ()`. `PLRichText` strokes underline and strikethrough through one shared helper.
 
 v8.3.4 - 2026-09-30
 * Fixed `PDPageContentStreamExt.setStrokingColor (PDColor)` using the size of the non-stroking colour space stack to update the stroking colour space stack

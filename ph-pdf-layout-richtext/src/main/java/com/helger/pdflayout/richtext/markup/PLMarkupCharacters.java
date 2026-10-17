@@ -28,6 +28,7 @@ import com.helger.pdflayout.richtext.color.PLCMYKColor;
 import com.helger.pdflayout.richtext.annotation.PLAnchorAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLBackgroundAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLHyperlinkAnnotation;
+import com.helger.pdflayout.richtext.annotation.PLStrikethroughAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
 
 /**
@@ -44,6 +45,8 @@ import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
  * <li>{@code __text__} — toggles underline. NOTE: this differs from CommonMark where {@code __} is
  * an alternative bold marker — here it is reserved for underline as there is no standard Markdown
  * for underline.</li>
+ * <li>{@code ~~text~~} — toggles strikethrough (GitHub Flavored Markdown style; a single tilde is
+ * plain text).</li>
  * <li>{@code ***bold-italic***} — combines bold and italic.</li>
  * <li>{@code {_}sub{_}} — toggles subscript (font scaled, baseline shifted down)</li>
  * <li>{@code {^}sup{^}} — toggles superscript (font scaled, baseline shifted up)</li>
@@ -147,6 +150,22 @@ public final class PLMarkupCharacters
 
   /** Factory for the underline marker {@code __}. */
   public static final IPLMarkupCharacterFactory UNDERLINE = new UnderlineFactory ();
+
+  /**
+   * Factory for the strikethrough marker {@code ~~} (GitHub Flavored Markdown style).
+   * <p>
+   * Regex (Java source has every backslash doubled): {@code (?<!\\)(\\\\)*(?<!~)~~(?!~)}
+   * <ul>
+   * <li>{@code (?<!\\)(\\\\)*} — the same backslash-escape guard as {@link #BOLD}.</li>
+   * <li>{@code (?<!~)~~(?!~)} — exactly two tildes, not part of a longer run of tildes. A single
+   * {@code ~} (as in "about ~5 minutes") is never a marker.</li>
+   * </ul>
+   * The token wraps a {@link PLStrikethroughAnnotation} and toggles by class, like
+   * {@link #UNDERLINE}.
+   */
+  public static final IPLMarkupCharacterFactory STRIKETHROUGH = new ToggleFactory ("(?<!\\\\)(\\\\\\\\)*(?<!~)~~(?!~)",
+                                                                                   "~~",
+                                                                                   new IPLMarkupToken.AnnotationToggle (new PLStrikethroughAnnotation ()));
 
   /** Factory for the subscript / superscript metrics marker ({@code {_}} / {@code {^}}). */
   public static final IPLMarkupCharacterFactory METRICS = new MetricsFactory ();

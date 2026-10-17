@@ -47,6 +47,8 @@ public final class PLMarkupParser
    * accidentally cross line breaks.</li>
    * <li>UNDERLINE (<code>__</code>) — kept early so a {@code __underline__} span is consumed in one
    * piece, before ITALIC_UNDERSCORE could split it into two italic toggles.</li>
+   * <li>STRIKETHROUGH (<code>~~</code>) — independent of the other markers, kept next to
+   * UNDERLINE.</li>
    * <li>METRICS (<code>{_}</code> / <code>{^}</code>) — runs before the curly-brace markers
    * HYPERLINK / ANCHOR / COLOR because all four start with <code>{</code>.</li>
    * <li>COLOR_CMYK (<code>{color_cmyk:C,M,Y,K}</code>)</li>
@@ -65,6 +67,7 @@ public final class PLMarkupParser
   public static final ICommonsList <IPLMarkupCharacterFactory> DEFAULT_FACTORIES = new CommonsArrayList <> (PLMarkupCharacters.HARD_BREAK,
                                                                                                             PLMarkupCharacters.NEWLINE,
                                                                                                             PLMarkupCharacters.UNDERLINE,
+                                                                                                            PLMarkupCharacters.STRIKETHROUGH,
                                                                                                             PLMarkupCharacters.METRICS,
                                                                                                             PLMarkupCharacters.COLOR_CMYK,
                                                                                                             PLMarkupCharacters.BOLD,

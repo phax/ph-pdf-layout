@@ -86,6 +86,21 @@ public final class PLRichTextRenderTest
   }
 
   @Test
+  public void testStrikethroughMarkup () throws IOException, PDFCreationException
+  {
+    final PLRichText aRT = PLRichText.createFromMarkup ("Price ~~19.90~~ **now 14.90**, ~~*struck italic*~~ and a very long struck " +
+                                                        "~~run that has to be wrapped over several lines of the narrow page~~ at the end",
+                                                        FONT_FAMILY,
+                                                        12f,
+                                                        PLColor.BLACK);
+    final PLPageSet aPS = new PLPageSet (200, 400).setMargin (10);
+    aPS.addElement (aRT);
+
+    final PageLayoutPDF aLayout = new PageLayoutPDF ().addPageSet (aPS);
+    _renderToTemp (aLayout, "strikethrough");
+  }
+
+  @Test
   public void testWrapping () throws IOException, PDFCreationException
   {
     final StringBuilder aSB = new StringBuilder ();

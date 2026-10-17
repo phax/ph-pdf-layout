@@ -27,6 +27,7 @@ import com.helger.collection.commons.CommonsArrayList;
 import com.helger.collection.commons.ICommonsList;
 import com.helger.pdflayout.richtext.annotation.IPLRichTextAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLHyperlinkAnnotation;
+import com.helger.pdflayout.richtext.annotation.PLStrikethroughAnnotation;
 import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
 import com.helger.pdflayout.spec.FontSpec;
 
@@ -34,7 +35,7 @@ import com.helger.pdflayout.spec.FontSpec;
  * Immutable container for a single styled run of text inside a
  * {@link com.helger.pdflayout.richtext.element.PLRichText}. A run carries the text itself (without
  * any markup), the font/size/color via a {@link FontSpec} and an arbitrary list of
- * {@link IPLRichTextAnnotation inline annotations} (hyperlink, anchor, underline, ...).
+ * {@link IPLRichTextAnnotation inline annotations} (hyperlink, anchor, underline, strikethrough, ...).
  *
  * @author Philip Helger
  */
@@ -112,6 +113,16 @@ public final class PLRichTextRun
   public PLUnderlineAnnotation getUnderline ()
   {
     return m_aAnnotations.findFirstMapped (PLUnderlineAnnotation.class::isInstance, PLUnderlineAnnotation.class::cast);
+  }
+
+  /**
+   * @return the first strikethrough annotation attached to this run, or <code>null</code> if none.
+   */
+  @Nullable
+  public PLStrikethroughAnnotation getStrikethrough ()
+  {
+    return m_aAnnotations.findFirstMapped (PLStrikethroughAnnotation.class::isInstance,
+                                           PLStrikethroughAnnotation.class::cast);
   }
 
   /**
