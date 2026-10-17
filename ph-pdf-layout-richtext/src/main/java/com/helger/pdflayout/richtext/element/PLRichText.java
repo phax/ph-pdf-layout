@@ -677,10 +677,11 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
       return PLSplitResult.allOnSecond ();
 
     final int nLineCount = m_aPreparedLines.size ();
-    if (nLineCount <= 1)
+    if (nLineCount == 0)
       return PLSplitResult.allOnFirst ();
 
-    // How many lines fit?
+    // How many lines fit? This must also be checked for a single line: a table row asks all of its
+    // cells and expects the ones that do not fit to move to the next page
     int nFit = (int) ((fAvailableHeight + (m_fLineSpacing - 1f) * m_fTextHeight) / (m_fTextHeight * m_fLineSpacing));
     if (nFit <= 0)
       return PLSplitResult.allOnSecond ();

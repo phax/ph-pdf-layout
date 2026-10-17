@@ -180,19 +180,28 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 # News and Noteworthy
 
 v8.3.5 - work in progress
-* `ph-pdf-layout-richtext`: added **inline code markup** `` `code` `` (CommonMark style, single backtick). The text between two backticks uses the monospace font; bold and italic select the bold / italic monospace variant. `` \` `` escapes the marker and a run of several backticks is plain text.
+* `ph-pdf-layout-richtext`: fixed `PLRichText` in a splittable table row — a single line text always reported "fits completely" when asked to split, even if less than one line of height was left.
+  Rows containing rich text then could not be split at the page end and the whole table was moved to the next page, leaving the previous page partly empty.
+  A single line is now treated like any other line count (`PLText` already behaved that way).
+* `ph-pdf-layout-richtext`: added **inline code markup** `` `code` `` (CommonMark style, single backtick).
+  The text between two backticks uses the monospace font; bold and italic select the bold / italic monospace variant.
+  `` \` `` escapes the marker and a run of several backticks is plain text.
   * Internally: new `IPLMarkupToken.CodeToggle`, new `PLMarkupCharacters.CODE` factory (part of `PLMarkupParser.DEFAULT_FACTORIES`), and a second font family in `PLRichTextRunBuilder` (`PLFontFamily.monospace ()` by default, settable through the new four-argument constructor).
-* `ph-pdf-layout-richtext`: added **strikethrough markup** `~~text~~` (GitHub Flavored Markdown style). A single `~` is plain text, `\~~` escapes the marker, and the marker combines with bold / italic / colour / underline / sub-superscript / background.
-  * Internally: new `PLStrikethroughAnnotation` (an `IPLRichTextAnnotation`, default position 0.3 of the font size above the baseline), new `PLMarkupCharacters.STRIKETHROUGH` factory (part of `PLMarkupParser.DEFAULT_FACTORIES`) and `PLRichTextRun.getStrikethrough ()`. `PLRichText` strokes underline and strikethrough through one shared helper.
+* `ph-pdf-layout-richtext`: added **strikethrough markup** `~~text~~` (GitHub Flavored Markdown style).
+  A single `~` is plain text, `\~~` escapes the marker, and the marker combines with bold / italic / colour / underline / sub-superscript / background.
+  * Internally: new `PLStrikethroughAnnotation` (an `IPLRichTextAnnotation`, default position 0.3 of the font size above the baseline), new `PLMarkupCharacters.STRIKETHROUGH` factory (part of `PLMarkupParser.DEFAULT_FACTORIES`) and `PLRichTextRun.getStrikethrough ()`.
+    `PLRichText` strokes underline and strikethrough through one shared helper.
 
 v8.3.4 - 2026-09-30
 * Fixed `PDPageContentStreamExt.setStrokingColor (PDColor)` using the size of the non-stroking colour space stack to update the stroking colour space stack
 
 v8.3.3 - 2026-07-23
-* Fixed `PLText` with `EHorzAlignment.BLOCK` (and `JUSTIFY`) not stretching the wrapped lines to the full available width — several BLOCK aligned texts (e.g. paragraphs created in a loop) ended up with different widths because each one was only justified to the width of its own widest line. See [#69](https://github.com/phax/ph-pdf-layout/issues/69) - thx @istvangaal
+* Fixed `PLText` with `EHorzAlignment.BLOCK` (and `JUSTIFY`) not stretching the wrapped lines to the full available width — several BLOCK aligned texts (e.g. paragraphs created in a loop) ended up with different widths because each one was only justified to the width of its own widest line.
+  See [#69](https://github.com/phax/ph-pdf-layout/issues/69) - thx @istvangaal
 
 v8.3.2 - 2026-06-07
-* `ph-pdf-layout-richtext`: added inline **background-color markup** — `{bg:#rrggbb}…{bg}` fills a rectangle behind the wrapped run. Two vertical-extent modes selected by an optional qualifier:
+* `ph-pdf-layout-richtext`: added inline **background-color markup** — `{bg:#rrggbb}…{bg}` fills a rectangle behind the wrapped run.
+  Two vertical-extent modes selected by an optional qualifier:
   * `{bg:#rrggbb}` / `{bg:tight:#rrggbb}` — **tight** (default): per-segment box sized to the segment's own font, anchored on its (possibly sub/superscript-shifted) baseline; the highlight follows the visible glyphs.
   * `{bg:line:#rrggbb}` — **line-height**: box sized to the line's full slot using the unshifted baseline, so the highlight stays a single uniform rectangle across sub/superscript and is contiguous across wrapped lines.
   * Backgrounds are painted *before* the glyphs and the existing post-text decorations (underline, hyperlink, anchor); they compose with bold / italic / colour / underline / sub-superscript inside the span.
