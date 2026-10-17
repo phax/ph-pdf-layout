@@ -116,6 +116,8 @@ public final class PLRichTextRun
   }
 
   /**
+   * Get the strikethrough of this run.
+   *
    * @return the first strikethrough annotation attached to this run, or <code>null</code> if none.
    */
   @Nullable

@@ -101,6 +101,20 @@ public final class PLRichTextRenderTest
   }
 
   @Test
+  public void testCodeMarkup () throws IOException, PDFCreationException
+  {
+    final PLRichText aRT = PLRichText.createFromMarkup ("Call `getFoo()` or **`getBar()`** and `some long code that has to be wrapped over several lines` here",
+                                                        FONT_FAMILY,
+                                                        12f,
+                                                        PLColor.BLACK);
+    final PLPageSet aPS = new PLPageSet (200, 400).setMargin (10);
+    aPS.addElement (aRT);
+
+    final PageLayoutPDF aLayout = new PageLayoutPDF ().addPageSet (aPS);
+    _renderToTemp (aLayout, "code");
+  }
+
+  @Test
   public void testWrapping () throws IOException, PDFCreationException
   {
     final StringBuilder aSB = new StringBuilder ();

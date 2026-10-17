@@ -47,6 +47,7 @@ public final class PLMarkupParser
    * accidentally cross line breaks.</li>
    * <li>UNDERLINE (<code>__</code>) — kept early so a {@code __underline__} span is consumed in one
    * piece, before ITALIC_UNDERSCORE could split it into two italic toggles.</li>
+   * <li>CODE (<code>`</code>) — independent of the other markers.</li>
    * <li>STRIKETHROUGH (<code>~~</code>) — independent of the other markers, kept next to
    * UNDERLINE.</li>
    * <li>METRICS (<code>{_}</code> / <code>{^}</code>) — runs before the curly-brace markers
@@ -68,6 +69,7 @@ public final class PLMarkupParser
                                                                                                             PLMarkupCharacters.NEWLINE,
                                                                                                             PLMarkupCharacters.UNDERLINE,
                                                                                                             PLMarkupCharacters.STRIKETHROUGH,
+                                                                                                            PLMarkupCharacters.CODE,
                                                                                                             PLMarkupCharacters.METRICS,
                                                                                                             PLMarkupCharacters.COLOR_CMYK,
                                                                                                             PLMarkupCharacters.BOLD,

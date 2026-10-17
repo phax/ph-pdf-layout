@@ -184,6 +184,31 @@ public final class PLMarkupParserTest
   }
 
   @Test
+  public void testCode ()
+  {
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("call `foo()` now");
+    // Text, toggle, Text, toggle, Text
+    assertEquals (5, aTokens.size ());
+    assertEquals ("call ", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.CodeToggle);
+    assertEquals ("foo()", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+    assertTrue (aTokens.get (3) instanceof IPLMarkupToken.CodeToggle);
+    assertEquals (" now", ((IPLMarkupToken.Text) aTokens.get (4)).getText ());
+  }
+
+  @Test
+  public void testEscapedBacktickAndBacktickRun ()
+  {
+    final ICommonsList <IPLMarkupToken> aEscaped = new PLMarkupParser ().parse ("a \\`b\\` c");
+    assertEquals (1, aEscaped.size ());
+    assertEquals ("a `b` c", ((IPLMarkupToken.Text) aEscaped.get (0)).getText ());
+
+    // A run of more than one backtick is not a marker
+    final ICommonsList <IPLMarkupToken> aRun = new PLMarkupParser ().parse ("a ``b`` c");
+    assertEquals (1, aRun.size ());
+  }
+
+  @Test
   public void testColor ()
   {
     final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("hi {color:#ff0000}red{color:#000000} done");

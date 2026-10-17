@@ -38,7 +38,7 @@ import com.helger.pdflayout.spec.FontSpec;
 
 /**
  * Walks a token stream produced by {@link PLMarkupParser} and emits the corresponding list of
- * {@link PLRichTextRun}s. State is kept locally (bold flag, italic flag, current color, active
+ * {@link PLRichTextRun}s. State is kept locally (bold flag, italic flag, code flag, current color, active
  * annotations) and folded into the font spec / annotations of each emitted run.
  * <p>
  * The builder intentionally emits {@link PLRichTextRun}s that may contain embedded {@code '\n'}
@@ -52,6 +52,7 @@ public final class PLRichTextRunBuilder
   private static final Logger LOGGER = LoggerFactory.getLogger (PLRichTextRunBuilder.class);
 
   private final PLFontFamily m_aFontFamily;
+  private final PLFontFamily m_aCodeFontFamily;
   private final float m_fFontSize;
   private final PLColor m_aDefaultColor;
 
@@ -64,10 +65,33 @@ public final class PLRichTextRunBuilder
                                @Nonnegative final float fFontSize,
                                @NonNull final PLColor aDefaultColor)
   {
+    this (aFontFamily, PLFontFamily.monospace (), fFontSize, aDefaultColor);
+  }
+
+  /**
+   * Constructor with an explicit font family for the code marker {@code `}.
+   *
+   * @param aFontFamily
+   *        the font family of the normal text.
+   * @param aCodeFontFamily
+   *        the font family that is used between two backticks. The default is
+   *        {@link PLFontFamily#monospace()}.
+   * @param fFontSize
+   *        the font size in points.
+   * @param aDefaultColor
+   *        the colour of the text without a colour marker.
+   */
+  public PLRichTextRunBuilder (@NonNull final PLFontFamily aFontFamily,
+                               @NonNull final PLFontFamily aCodeFontFamily,
+                               @Nonnegative final float fFontSize,
+                               @NonNull final PLColor aDefaultColor)
+  {
     ValueEnforcer.notNull (aFontFamily, "FontFamily");
+    ValueEnforcer.notNull (aCodeFontFamily, "CodeFontFamily");
     ValueEnforcer.isGT0 (fFontSize, "FontSize");
     ValueEnforcer.notNull (aDefaultColor, "DefaultColor");
     m_aFontFamily = aFontFamily;
+    m_aCodeFontFamily = aCodeFontFamily;
     m_fFontSize = fFontSize;
     m_aDefaultColor = aDefaultColor;
   }
@@ -76,13 +100,16 @@ public final class PLRichTextRunBuilder
   private PLRichTextRun _makeRun (@NonNull final String sText,
                                   final boolean bBold,
                                   final boolean bItalic,
+                                  final boolean bCode,
                                   @NonNull final PLColor aColor,
                                   @NonNull final ICommonsMap <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations,
                                   @Nullable final MetricsToggle aActiveMetrics)
   {
     final float fFontScale = aActiveMetrics == null ? 1f : aActiveMetrics.getFontScale ();
     final float fBaselineOffsetScale = aActiveMetrics == null ? 0f : aActiveMetrics.getBaselineOffsetScale ();
-    final FontSpec aFontSpec = new FontSpec (m_aFontFamily.resolve (bBold, bItalic), m_fFontSize * fFontScale, aColor);
+    final FontSpec aFontSpec = new FontSpec ((bCode ? m_aCodeFontFamily : m_aFontFamily).resolve (bBold, bItalic),
+                                       m_fFontSize * fFontScale,
+                                       aColor);
     final ICommonsList <IPLRichTextAnnotation> aAnnotations = aActiveAnnotations.isEmpty () ? null
                                                                                             : new CommonsArrayList <> (aActiveAnnotations.values ());
     return new PLRichTextRun (sText, aFontSpec, aAnnotations, fBaselineOffsetScale);
@@ -102,6 +129,7 @@ public final class PLRichTextRunBuilder
     final ICommonsList <PLRichTextRun> aResult = new CommonsArrayList <> ();
     boolean bBold = false;
     boolean bItalic = false;
+    boolean bCode = false;
     PLColor aColor = m_aDefaultColor;
     // Active annotations keyed by type so a closing toggle of the same type pops.
     final ICommonsMap <Class <? extends IPLRichTextAnnotation>, IPLRichTextAnnotation> aActiveAnnotations = new CommonsHashMap <> ();
@@ -112,17 +140,17 @@ public final class PLRichTextRunBuilder
     {
       if (aToken instanceof final IPLMarkupToken.Text aText)
       {
-        aResult.add (_makeRun (aText.getText (), bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
+        aResult.add (_makeRun (aText.getText (), bBold, bItalic, bCode, aColor, aActiveAnnotations, aActiveMetrics));
       }
       else
         if (aToken instanceof IPLMarkupToken.NewLine)
         {
-          aResult.add (_makeRun ("\n", bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
+          aResult.add (_makeRun ("\n", bBold, bItalic, bCode, aColor, aActiveAnnotations, aActiveMetrics));
         }
         else
           if (aToken instanceof IPLMarkupToken.SoftBreak)
           {
-            aResult.add (_makeRun (" ", bBold, bItalic, aColor, aActiveAnnotations, aActiveMetrics));
+            aResult.add (_makeRun (" ", bBold, bItalic, bCode, aColor, aActiveAnnotations, aActiveMetrics));
           }
           else
             if (aToken instanceof IPLMarkupToken.BoldToggle)
@@ -135,30 +163,35 @@ public final class PLRichTextRunBuilder
                 bItalic = !bItalic;
               }
               else
-                if (aToken instanceof final IPLMarkupToken.Color aColorToken)
+                if (aToken instanceof IPLMarkupToken.CodeToggle)
                 {
-                  aColor = aColorToken.getColor ();
+                  bCode = !bCode;
                 }
                 else
-                  if (aToken instanceof final IPLMarkupToken.AnnotationToggle aToggle)
+                  if (aToken instanceof final IPLMarkupToken.Color aColorToken)
                   {
-                    final Class <? extends IPLRichTextAnnotation> aType = aToggle.getAnnotationType ();
-                    if (aActiveAnnotations.containsKey (aType))
-                      aActiveAnnotations.remove (aType);
-                    else
-                      aActiveAnnotations.put (aType, aToggle.getAnnotation ());
+                    aColor = aColorToken.getColor ();
                   }
                   else
-                    if (aToken instanceof final MetricsToggle aMetrics)
+                    if (aToken instanceof final IPLMarkupToken.AnnotationToggle aToggle)
                     {
-                      // Same key means we're closing the active scope.
-                      if (aActiveMetrics != null && aActiveMetrics.getKey ().equals (aMetrics.getKey ()))
-                        aActiveMetrics = null;
+                      final Class <? extends IPLRichTextAnnotation> aType = aToggle.getAnnotationType ();
+                      if (aActiveAnnotations.containsKey (aType))
+                        aActiveAnnotations.remove (aType);
                       else
-                        aActiveMetrics = aMetrics;
+                        aActiveAnnotations.put (aType, aToggle.getAnnotation ());
                     }
                     else
-                      LOGGER.warn ("Unsupported token: " + aToken);
+                      if (aToken instanceof final MetricsToggle aMetrics)
+                      {
+                        // Same key means we're closing the active scope.
+                        if (aActiveMetrics != null && aActiveMetrics.getKey ().equals (aMetrics.getKey ()))
+                          aActiveMetrics = null;
+                        else
+                          aActiveMetrics = aMetrics;
+                      }
+                      else
+                        LOGGER.warn ("Unsupported token: " + aToken);
     }
     return aResult;
   }

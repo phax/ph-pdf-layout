@@ -23,7 +23,9 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 import com.helger.collection.commons.ICommonsList;
+import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.richtext.annotation.PLStrikethroughAnnotation;
+import com.helger.pdflayout.spec.PreloadFont;
 
 /**
  * Tests {@link PLRichTextRunBuilder}.
@@ -43,6 +45,31 @@ public final class PLRichTextRunBuilderTest
                   aRuns.get (1).getStrikethrough ().getBaselineOffsetScale (),
                   0.0001f);
     assertNull (aRuns.get (2).getStrikethrough ());
+  }
+
+  @Test
+  public void testCodeUsesTheMonospaceFont ()
+  {
+    final ICommonsList <PLRichTextRun> aRuns = new PLRichTextRunBuilder (PLFontFamily.regular (), 12f).buildFromMarkup ("text `code` **bold `bold code`**");
+    assertEquals (5, aRuns.size ());
+    assertEquals (PreloadFont.REGULAR, aRuns.get (0).getFontSpec ().getPreloadFont ());
+    assertEquals (PreloadFont.MONOSPACE, aRuns.get (1).getFontSpec ().getPreloadFont ());
+    assertEquals (PreloadFont.REGULAR, aRuns.get (2).getFontSpec ().getPreloadFont ());
+    assertEquals (PreloadFont.REGULAR_BOLD, aRuns.get (3).getFontSpec ().getPreloadFont ());
+    assertEquals (PreloadFont.MONOSPACE_BOLD, aRuns.get (4).getFontSpec ().getPreloadFont ());
+    // The size does not change
+    assertEquals (12f, aRuns.get (1).getFontSpec ().getFontSize (), 0.0001f);
+  }
+
+  @Test
+  public void testCodeFontFamilyCanBeReplaced ()
+  {
+    final ICommonsList <PLRichTextRun> aRuns = new PLRichTextRunBuilder (PLFontFamily.regular (),
+                                                                         PLFontFamily.ofSingle (PreloadFont.TIMES),
+                                                                         12f,
+                                                                         PLColor.BLACK).buildFromMarkup ("`code`");
+    assertEquals (1, aRuns.size ());
+    assertEquals (PreloadFont.TIMES, aRuns.get (0).getFontSpec ().getPreloadFont ());
   }
 
   @Test

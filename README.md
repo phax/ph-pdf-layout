@@ -47,7 +47,7 @@ A set of example files as created from the unit test can be found in folder [exa
 
 # Rich text (markup) — module `ph-pdf-layout-richtext`
 
-The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, strikethrough, sub/superscript and background highlights.
+The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, strikethrough, inline code, sub/superscript and background highlights.
 The base `PLText` is single-style by design; rich text fills that gap.
 
 ## Huge credit where it's due
@@ -70,6 +70,7 @@ Markup syntax (Markdown / CommonMark style for bold, italic and line breaks; the
 | `__text__` | underlines `text`. **Differs from CommonMark**, which uses `__` as an alternate bold marker — here `__` is reserved for underline because there is no standard Markdown for it. |
 | `__{0.25:1.5}text__` | underline with custom baseline offset and line weight |
 | `~~text~~` | strikethrough (GitHub Flavored Markdown). A single `~` stays plain text |
+| `` `code` `` | switches to the monospace font (Courier by default; bold and italic pick the matching monospace variant). Markers inside the span are still interpreted, so escape them with a backslash |
 | `{_}sub{_}` | subscript (default 0.61× font, +0.15 baseline shift) |
 | `{^}sup{^}` | superscript (default 0.61× font, −0.4 baseline shift) |
 | `{_:0.5|0.2}foo{_}` | subscript with explicit fontScale and baselineOffset |
@@ -179,6 +180,8 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 # News and Noteworthy
 
 v8.3.5 - work in progress
+* `ph-pdf-layout-richtext`: added **inline code markup** `` `code` `` (CommonMark style, single backtick). The text between two backticks uses the monospace font; bold and italic select the bold / italic monospace variant. `` \` `` escapes the marker and a run of several backticks is plain text.
+  * Internally: new `IPLMarkupToken.CodeToggle`, new `PLMarkupCharacters.CODE` factory (part of `PLMarkupParser.DEFAULT_FACTORIES`), and a second font family in `PLRichTextRunBuilder` (`PLFontFamily.monospace ()` by default, settable through the new four-argument constructor).
 * `ph-pdf-layout-richtext`: added **strikethrough markup** `~~text~~` (GitHub Flavored Markdown style). A single `~` is plain text, `\~~` escapes the marker, and the marker combines with bold / italic / colour / underline / sub-superscript / background.
   * Internally: new `PLStrikethroughAnnotation` (an `IPLRichTextAnnotation`, default position 0.3 of the font size above the baseline), new `PLMarkupCharacters.STRIKETHROUGH` factory (part of `PLMarkupParser.DEFAULT_FACTORIES`) and `PLRichTextRun.getStrikethrough ()`. `PLRichText` strokes underline and strikethrough through one shared helper.
 

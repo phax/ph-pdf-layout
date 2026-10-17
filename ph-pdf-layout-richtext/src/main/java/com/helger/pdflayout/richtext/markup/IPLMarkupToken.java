@@ -35,6 +35,7 @@ public sealed interface IPLMarkupToken permits
                                        IPLMarkupToken.Text,
                                        IPLMarkupToken.BoldToggle,
                                        IPLMarkupToken.ItalicToggle,
+                                       IPLMarkupToken.CodeToggle,
                                        IPLMarkupToken.Color,
                                        IPLMarkupToken.NewLine,
                                        IPLMarkupToken.SoftBreak,
@@ -73,6 +74,23 @@ public sealed interface IPLMarkupToken permits
     public static final BoldToggle INSTANCE = new BoldToggle ();
 
     private BoldToggle ()
+    {}
+
+    @Override
+    public String toString ()
+    {
+      return new ToStringGenerator (this).getToString ();
+    }
+  }
+
+  /** Toggle the monospace code font on or off (the {@code `} marker). */
+  @Immutable
+  final class CodeToggle implements IPLMarkupToken
+  {
+    /** The singleton instance: opening and closing a code span produce the same token. */
+    public static final CodeToggle INSTANCE = new CodeToggle ();
+
+    private CodeToggle ()
     {}
 
     @Override

@@ -60,6 +60,8 @@ public final class PLStrikethroughAnnotation implements IPLRichTextAnnotation
   }
 
   /**
+   * Get the position of the line.
+   *
    * @return The distance of the line from the baseline as a multiplier of the font size.
    */
   public float getBaselineOffsetScale ()
@@ -68,6 +70,8 @@ public final class PLStrikethroughAnnotation implements IPLRichTextAnnotation
   }
 
   /**
+   * Get the weight of the line.
+   *
    * @return The weight of the line as a multiplier of the font size.
    */
   public float getLineWeight ()

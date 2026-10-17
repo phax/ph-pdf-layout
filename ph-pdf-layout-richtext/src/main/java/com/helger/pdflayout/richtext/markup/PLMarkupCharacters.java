@@ -45,6 +45,9 @@ import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
  * <li>{@code __text__} — toggles underline. NOTE: this differs from CommonMark where {@code __} is
  * an alternative bold marker — here it is reserved for underline as there is no standard Markdown
  * for underline.</li>
+ * <li>{@code `code`} — toggles the monospace font of the code font family (CommonMark inline code
+ * style, but a single backtick only; markers inside the span are still interpreted, so escape them
+ * with a backslash).</li>
  * <li>{@code ~~text~~} — toggles strikethrough (GitHub Flavored Markdown style; a single tilde is
  * plain text).</li>
  * <li>{@code ***bold-italic***} — combines bold and italic.</li>
@@ -150,6 +153,21 @@ public final class PLMarkupCharacters
 
   /** Factory for the underline marker {@code __}. */
   public static final IPLMarkupCharacterFactory UNDERLINE = new UnderlineFactory ();
+
+  /**
+   * Factory for the inline code marker {@code `}. It switches to the monospace font of the code font
+   * family (see {@code PLRichTextRunBuilder}); bold and italic still select the matching monospace
+   * variant.
+   * <p>
+   * Regex (Java source has every backslash doubled): {@code (?<!\\)(\\\\)*(?<!`)`(?!`)}
+   * <ul>
+   * <li>{@code (?<!\\)(\\\\)*} — the same backslash-escape guard as {@link #BOLD}.</li>
+   * <li>{@code (?<!`)`(?!`)} — a single backtick that is not part of a longer run of backticks.</li>
+   * </ul>
+   */
+  public static final IPLMarkupCharacterFactory CODE = new ToggleFactory ("(?<!\\\\)(\\\\\\\\)*(?<!`)`(?!`)",
+                                                                          "`",
+                                                                          IPLMarkupToken.CodeToggle.INSTANCE);
 
   /**
    * Factory for the strikethrough marker {@code ~~} (GitHub Flavored Markdown style).
