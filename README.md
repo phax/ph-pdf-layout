@@ -179,7 +179,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.3.5 - work in progress
+v8.3.5 - 2026-10-18
 * `ph-pdf-layout-richtext`: fixed `PLRichText` in a splittable table row — a single line text always reported "fits completely" when asked to split, even if less than one line of height was left.
   Rows containing rich text then could not be split at the page end and the whole table was moved to the next page, leaving the previous page partly empty.
   A single line is now treated like any other line count (`PLText` already behaved that way).
