@@ -209,12 +209,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     if (PLDebugLog.isDebugPrepare ())
     {
       String sSuffix = "";
-      if (this instanceof IPLHasMarginBorderPadding <?>)
+      if (this instanceof final IPLHasMarginBorderPadding <?> aMBP)
       {
-        sSuffix = " with " +
-                  PLDebugLog.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
-                  " and " +
-                  PLDebugLog.getYMBP ((IPLHasMarginBorderPadding <?>) this);
+        sSuffix = " with " + PLDebugLog.getXMBP (aMBP) + " and " + PLDebugLog.getYMBP (aMBP);
       }
       PLDebugLog.debugPrepare (this,
                                "Prepared object: " +
@@ -250,12 +247,9 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     if (PLDebugLog.isDebugPrepare ())
     {
       String sSuffix = "";
-      if (this instanceof IPLHasMarginBorderPadding <?>)
+      if (this instanceof final IPLHasMarginBorderPadding <?> aMBP)
       {
-        sSuffix = " with " +
-                  PLDebugLog.getXMBP ((IPLHasMarginBorderPadding <?>) this) +
-                  " and " +
-                  PLDebugLog.getYMBP ((IPLHasMarginBorderPadding <?>) this);
+        sSuffix = " with " + PLDebugLog.getXMBP (aMBP) + " and " + PLDebugLog.getYMBP (aMBP);
       }
       PLDebugLog.debugPrepare (this,
                                "Preparing object for available " +
