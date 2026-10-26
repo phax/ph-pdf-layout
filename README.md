@@ -179,6 +179,12 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.3.6 - 2026-10-26
+* Fixed splitting of a `PLVBox` (and so of a `PLTable`) whose rows are all not vertically splittable, for example a table in which every row was set to `setVertSplittable (false)`.
+  The VBox was treated as a whole that cannot be split, so a table that is higher than a page ran over the end of the page and rendering failed with `The value of 'StartTop' must be >= 0!`.
+  The rows are now distributed between the pages without cutting a row in two, and the header rows are repeated as usual.
+  A VBox with a single content row and no splittable element is still not split.
+
 v8.3.5 - 2026-10-18
 * `ph-pdf-layout-richtext`: fixed `PLRichText` in a splittable table row — a single line text always reported "fits completely" when asked to split, even if less than one line of height was left.
   Rows containing rich text then could not be split at the page end and the whole table was moved to the next page, leaving the previous page partly empty.
