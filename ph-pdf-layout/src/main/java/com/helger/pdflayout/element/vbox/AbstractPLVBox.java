@@ -690,11 +690,14 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     if (fAvailableHeight <= 0)
       return PLSplitResult.allOnSecond ();
 
-    if (!containsAnyVertSplittableElement ())
+    // Rows that cannot be split themselves can still be distributed between the two VBoxes, as long
+    // as there is more than one content row
+    if (!containsAnyVertSplittableElement () && getRowCount () - m_nHeaderRowCount <= 1)
     {
       // Splitting makes no sense
       if (PLDebugLog.isDebugSplit ())
-        PLDebugLog.debugSplit (this, "Cannot split because no vertical splittable elements are contained");
+        PLDebugLog.debugSplit (this,
+                               "Cannot split because no vertical splittable elements and less than 2 content rows are contained");
       return PLSplitResult.allOnSecond ();
     }
 

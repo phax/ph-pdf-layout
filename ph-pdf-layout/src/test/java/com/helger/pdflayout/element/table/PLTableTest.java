@@ -16,7 +16,9 @@
  */
 package com.helger.pdflayout.element.table;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -26,12 +28,16 @@ import java.util.function.IntFunction;
 
 import javax.imageio.ImageIO;
 
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.jspecify.annotations.NonNull;
 import org.junit.Rule;
 import org.junit.Test;
 
 import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.io.nonblocking.NonBlockingByteArrayOutputStream;
 import com.helger.base.string.StringHelper;
 import com.helger.collection.commons.CommonsArrayList;
 import com.helger.collection.commons.ICommonsList;
@@ -51,6 +57,7 @@ import com.helger.pdflayout.element.special.PLPageBreak;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.element.special.PLSpacerY;
 import com.helger.pdflayout.element.text.PLText;
+import com.helger.pdflayout.element.vbox.PLVBox;
 import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.EHorzAlignment;
@@ -71,6 +78,49 @@ public final class PLTableTest
 {
   @Rule
   public final PLDebugTestRule m_aRule = new PLDebugTestRule ();
+
+  @Test
+  public void testTableWithOnlyNonSplittableRowsIsSplitBetweenRows () throws PDFCreationException, IOException
+  {
+    final FontSpec r10 = new FontSpec (PreloadFont.REGULAR, 10);
+    final PLTable aTable = PLTable.createWithEvenlySizedColumns (2);
+    aTable.setHeaderRowCount (1);
+    aTable.addAndReturnRow (new PLTableCell (new PLText ("Header 1", r10)),
+                            new PLTableCell (new PLText ("Header 2", r10))).setVertSplittable (false);
+    for (int i = 0; i < 150; ++i)
+      aTable.addAndReturnRow (new PLTableCell (new PLText ("Row " + i, r10)),
+                              new PLTableCell (new PLText ("Value " + i, r10))).setVertSplittable (false);
+
+    assertFalse (aTable.getRowAtIndex (1).isVertSplittable ());
+    assertTrue (aTable.isVertSplittable ());
+
+    final PLPageSet aPS1 = new PLPageSet (PDRectangle.A4);
+    // The table is one row of a VBox, as in a document that consists of a few blocks
+    final PLVBox aPage = new PLVBox ();
+    aPage.addRow (new PLText ("First dummy line", r10));
+    aPage.addRow (aTable);
+    aPS1.addElement (aPage);
+    final PageLayoutPDF aPageLayout = new PageLayoutPDF ();
+    aPageLayout.addPageSet (aPS1);
+
+    final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
+    aPageLayout.renderTo (aBAOS);
+    try (final PDDocument aDoc = Loader.loadPDF (aBAOS.toByteArray ()))
+    {
+      // 150 rows do not fit on one page, and every page repeats the header
+      assertTrue (aDoc.getNumberOfPages () >= 3);
+      for (int nPage = 1; nPage <= aDoc.getNumberOfPages (); ++nPage)
+      {
+        final PDFTextStripper aStripper = new PDFTextStripper ();
+        aStripper.setStartPage (nPage);
+        aStripper.setEndPage (nPage);
+        assertTrue (aStripper.getText (aDoc).contains ("Header 1"));
+      }
+      final String sAll = new PDFTextStripper ().getText (aDoc);
+      assertTrue (sAll.contains ("Row 0"));
+      assertTrue (sAll.contains ("Value 149"));
+    }
+  }
 
   @Test
   public void testBasic () throws PDFCreationException
