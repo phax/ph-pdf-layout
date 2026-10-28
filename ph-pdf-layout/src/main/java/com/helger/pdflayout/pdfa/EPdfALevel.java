@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout;
+package com.helger.pdflayout.pdfa;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -24,7 +24,7 @@ import com.helger.base.id.IHasID;
 import com.helger.base.lang.EnumHelper;
 
 /**
- * The PDF/A part and conformance level that {@link PageLayoutPDF} can declare. The ID is the
+ * The PDF/A part and conformance level that {@link com.helger.pdflayout.PageLayoutPDF} can declare. The ID is the
  * lower case combination of part and conformance level, e.g. <code>3b</code>.
  *
  * @author Philip Helger
@@ -42,7 +42,7 @@ public enum EPdfALevel implements IHasID <String>
   PDF_A_3U ("3u", 3, "U"),
   /**
    * PDF/A-3a (ISO 19005-3, accessible). This level requires a tagged PDF. It is what
-   * {@link PageLayoutPDF#setCreatePDF_A(boolean)} declares.
+   * {@link com.helger.pdflayout.PageLayoutPDF#setCreatePDF_A(boolean)} declares.
    */
   PDF_A_3A ("3a", 3, "A");
 

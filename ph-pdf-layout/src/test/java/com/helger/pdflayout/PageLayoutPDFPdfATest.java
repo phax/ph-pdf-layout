@@ -42,6 +42,10 @@ import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.element.image.PLImage;
 import com.helger.pdflayout.element.link.PLExternalLink;
 import com.helger.pdflayout.element.text.PLText;
+import com.helger.pdflayout.pdfa.EPdfAFRelationship;
+import com.helger.pdflayout.pdfa.EPdfALevel;
+import com.helger.pdflayout.pdfa.PdfAXmpExtensionSchema;
+import com.helger.pdflayout.pdfa.PdfAssociatedFile;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
 

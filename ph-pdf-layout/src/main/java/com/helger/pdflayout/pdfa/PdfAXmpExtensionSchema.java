@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.helger.pdflayout;
+package com.helger.pdflayout.pdfa;
 
 import org.apache.xmpbox.XMPMetadata;
 import org.apache.xmpbox.schema.PDFAExtensionSchema;
@@ -36,7 +36,7 @@ import com.helger.collection.commons.ICommonsList;
 /**
  * A custom XMP schema with text properties, together with the PDF/A extension schema description
  * (<code>pdfaExtension:schemas</code>) that PDF/A requires for every schema that is not predefined.
- * Add it with {@link PageLayoutPDF#addXmpExtensionSchema(PdfAXmpExtensionSchema)}.
+ * Add it with {@link com.helger.pdflayout.PageLayoutPDF#addXmpExtensionSchema(PdfAXmpExtensionSchema)}.
  *
  * @author Philip Helger
  * @since 8.4.0

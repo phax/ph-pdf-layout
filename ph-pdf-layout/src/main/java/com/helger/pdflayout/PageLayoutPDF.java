@@ -88,6 +88,9 @@ import com.helger.pdflayout.base.IPLVisitable;
 import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.base.PLPageSetPrepareResult;
+import com.helger.pdflayout.pdfa.EPdfALevel;
+import com.helger.pdflayout.pdfa.PdfAXmpExtensionSchema;
+import com.helger.pdflayout.pdfa.PdfAssociatedFile;
 import com.helger.pdflayout.render.PreparationContextGlobal;
 
 /**

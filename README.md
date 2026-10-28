@@ -180,9 +180,9 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 # News and Noteworthy
 
 v8.4.0 - work in progress
-* PDF/A: the PDF/A level can now be chosen with `PageLayoutPDF.setPdfALevel (EPdfALevel)`: PDF/A-2b, -2u, -3b, -3u and -3a.
+* PDF/A: the PDF/A level can now be chosen with `PageLayoutPDF.setPdfALevel (EPdfALevel)`: PDF/A-2b, -2u, -3b, -3u and -3a. The new PDF/A types are in the package `com.helger.pdflayout.pdfa`.
   `setCreatePDF_A (true)` still declares PDF/A-3a as before.
-  * With `setPdfALevel` rendering fails with a clear `PDFCreationException` if a font is not embedded (e.g. the standard 14 fonts like `PreloadFont.REGULAR`), because PDF/A requires all fonts to be embedded. `setCreatePDF_A` does not check this, for compatibility.
+  * With `setPdfALevel` rendering fails with a clear `PDFCreationException` if a font that is used for drawing text is not embedded (e.g. the standard 14 fonts like `PreloadFont.REGULAR`), because PDF/A requires all fonts to be embedded. `setCreatePDF_A` does not check this, for compatibility.
   * The levels B and U no longer get the empty structure tree and the "marked" flag that only make sense for a tagged PDF (level A).
 * PDF/A: link annotations now carry the "print" flag, which PDF/A requires (veraPDF rule 6.3.2-1). Before, every PDF/A with a link was not conformant.
 * PDF/A: fixed the viewer preferences - the document catalogue referenced a page dictionary as its viewer preferences.
