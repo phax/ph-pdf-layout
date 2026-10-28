@@ -42,8 +42,14 @@ public final class EPdfALevelTest
       // The ID is the part followed by the lower case conformance
       assertEquals (e.getPart () + e.getConformance ().toLowerCase (Locale.ROOT), e.getID ());
       assertTrue (e.getPart () == 2 || e.getPart () == 3);
-      assertEquals (e.getPart () >= 3, e.isArbitraryEmbeddedFilesAllowed ());
-      assertEquals ("A".equals (e.getConformance ()), e.isTagged ());
+      if (e.getPart () >= 3)
+        assertTrue (e.isArbitraryEmbeddedFilesAllowed ());
+      else
+        assertFalse (e.isArbitraryEmbeddedFilesAllowed ());
+      if ("A".equals (e.getConformance ()))
+        assertTrue (e.isTagged ());
+      else
+        assertFalse (e.isTagged ());
     }
     assertNull (EPdfALevel.getFromIDOrNull (null));
     assertNull (EPdfALevel.getFromIDOrNull ("1b"));
