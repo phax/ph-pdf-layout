@@ -92,6 +92,7 @@ import com.helger.pdflayout.pdfa.EPdfALevel;
 import com.helger.pdflayout.pdfa.PdfAXmpExtensionSchema;
 import com.helger.pdflayout.pdfa.PdfAssociatedFile;
 import com.helger.pdflayout.render.PreparationContextGlobal;
+import com.helger.pdflayout.watermark.PLTextWatermark;
 
 /**
  * Main class for creating layouted PDFs. This class contains the meta data as well as a list of
@@ -132,6 +133,7 @@ public class PageLayoutPDF implements IPLVisitable
   private IXMPMetadataCustomizer m_aMetadataCustomizer;
   private final ICommonsList <PdfAssociatedFile> m_aAssociatedFiles = new CommonsArrayList <> ();
   private final ICommonsList <PdfAXmpExtensionSchema> m_aXmpExtensionSchemas = new CommonsArrayList <> ();
+  private final ICommonsList <PLTextWatermark> m_aWatermarks = new CommonsArrayList <> ();
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class {@link VendorInfo}.
@@ -654,6 +656,35 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return A copy of all watermarks. Never <code>null</code> but maybe empty.
+   * @since 8.4.0
+   */
+  @NonNull
+  @ReturnsMutableCopy
+  public final ICommonsList <PLTextWatermark> getAllWatermarks ()
+  {
+    return m_aWatermarks.getClone ();
+  }
+
+  /**
+   * Add a watermark that is drawn behind the content of every page, after the layout is complete.
+   * Watermarks are drawn in the order they were added, before the {@link IPDDocumentCustomizer} is
+   * invoked.
+   *
+   * @param aWatermark
+   *        The watermark to add. May not be <code>null</code>.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final PageLayoutPDF addWatermark (@NonNull final PLTextWatermark aWatermark)
+  {
+    ValueEnforcer.notNull (aWatermark, "Watermark");
+    m_aWatermarks.add (aWatermark);
+    return this;
+  }
+
   @NonNull
   public EChange visit (@NonNull final IPLVisitor aVisitor) throws IOException
   {
@@ -888,6 +919,10 @@ public class PageLayoutPDF implements IPLVisitable
           nTotalPageIndex += aPR.getPageCount ();
           nPageSetIndex++;
         }
+
+        // Draw the watermarks (optional)
+        for (final PLTextWatermark aWatermark : m_aWatermarks)
+          aWatermark.drawOnAllPages (aDoc, m_bCompressPDF);
 
         // Embed the associated files (optional)
         if (m_aAssociatedFiles.isNotEmpty ())

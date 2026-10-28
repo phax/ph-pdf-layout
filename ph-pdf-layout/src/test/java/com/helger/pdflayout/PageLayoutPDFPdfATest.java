@@ -31,6 +31,7 @@ import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.jspecify.annotations.NonNull;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,6 +49,8 @@ import com.helger.pdflayout.pdfa.PdfAXmpExtensionSchema;
 import com.helger.pdflayout.pdfa.PdfAssociatedFile;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.PreloadFont;
+import com.helger.pdflayout.watermark.EPLWatermarkPosition;
+import com.helger.pdflayout.watermark.PLTextWatermark;
 
 /**
  * Test class for the PDF/A support of class {@link PageLayoutPDF}.
@@ -205,6 +208,30 @@ public final class PageLayoutPDFPdfATest
     final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
     aPageLayout.renderTo (aBAOS);
     assertTrue (PdfAValidatorHelper.validate (aBAOS.toByteArray (), "3b").isNotEmpty ());
+  }
+
+  @Test
+  public void testWatermark () throws Exception
+  {
+    for (final EPdfALevel eLevel : new EPdfALevel [] { EPdfALevel.PDF_A_2B, EPdfALevel.PDF_A_3B })
+    {
+      final PageLayoutPDF aPageLayout = _createLayout (_getEmbeddedFont ()).setPdfALevel (eLevel)
+                                                                           .addWatermark (new PLTextWatermark ("DRAFT",
+                                                                                                               _getEmbeddedFont ()).setOpacity (0.3f)
+                                                                                                                                   // Rotated text is split by the text extraction
+                                                                                                                                   .setRotation (0))
+                                                                           .addWatermark (new PLTextWatermark ("Page footer",
+                                                                                                               _getEmbeddedFont ()).setFontSize (8)
+                                                                                                                                   .setPosition (EPLWatermarkPosition.BOTTOM_RIGHT));
+      final byte [] aPdf = PdfAValidatorHelper.renderAndAssertValid (aPageLayout, eLevel.getID ());
+
+      try (final PDDocument aDoc = Loader.loadPDF (aPdf))
+      {
+        final String sText = new PDFTextStripper ().getText (aDoc);
+        assertTrue (sText, sText.contains ("DRAFT"));
+        assertTrue (sText, sText.contains ("Page footer"));
+      }
+    }
   }
 
   @Test
