@@ -56,7 +56,7 @@ public final class PLRichTextTaggingTest
                                                  11f,
                                                  PLColor.BLACK));
     final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
-    new PageLayoutPDF ().addPageSet (aPS).setCreateTaggedPDF (true).renderTo (aBAOS);
+    new PageLayoutPDF ().addPageSet (aPS).setCreateTaggedPdf (true).renderTo (aBAOS);
 
     try (final PDDocument aDoc = Loader.loadPDF (aBAOS.toByteArray ()))
     {

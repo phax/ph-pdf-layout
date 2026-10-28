@@ -56,6 +56,7 @@ import org.apache.xmpbox.XMPMetadata;
 import org.apache.xmpbox.schema.AdobePDFSchema;
 import org.apache.xmpbox.schema.DublinCoreSchema;
 import org.apache.xmpbox.schema.PDFAIdentificationSchema;
+import org.apache.xmpbox.schema.XMPSchema;
 import org.apache.xmpbox.schema.XMPBasicSchema;
 import org.apache.xmpbox.type.BadFieldValueException;
 import org.apache.xmpbox.xml.XmpSerializer;
@@ -119,6 +120,24 @@ public class PageLayoutPDF implements IPLVisitable
    * @since 8.4.0
    */
   public static final boolean DEFAULT_CREATE_TAGGED_PDF = false;
+  /**
+   * By default no PDF/UA is created.
+   *
+   * @since 8.4.0
+   */
+  public static final boolean DEFAULT_CREATE_PDF_UA = false;
+  /**
+   * The namespace URI of the PDF/UA identification XMP schema.
+   *
+   * @since 8.4.0
+   */
+  public static final String PDF_UA_ID_NAMESPACE_URI = "http://www.aiim.org/pdfua/ns/id/";
+  /**
+   * The namespace prefix of the PDF/UA identification XMP schema.
+   *
+   * @since 8.4.0
+   */
+  public static final String PDF_UA_ID_PREFIX = "pdfuaid";
 
   private static final Logger LOGGER = LoggerFactory.getLogger (PageLayoutPDF.class);
 
@@ -132,7 +151,8 @@ public class PageLayoutPDF implements IPLVisitable
   private boolean m_bCompressPDF = DEFAULT_COMPRESS_PDF;
   private EPdfALevel m_ePdfALevel;
   private boolean m_bPdfAStrict = false;
-  private boolean m_bCreateTaggedPDF = DEFAULT_CREATE_TAGGED_PDF;
+  private boolean m_bCreateTaggedPdf = DEFAULT_CREATE_TAGGED_PDF;
+  private boolean m_bCreatePdfUA = DEFAULT_CREATE_PDF_UA;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
   private int m_nCustomLeadingPageCount = -1;
   private int m_nCustomTrailingPageCount = -1;
@@ -606,9 +626,9 @@ public class PageLayoutPDF implements IPLVisitable
    *         for a PDF/A level that requires it, see {@link #setPdfALevel(EPdfALevel)}.
    * @since 8.4.0
    */
-  public final boolean isCreateTaggedPDF ()
+  public final boolean isCreateTaggedPdf ()
   {
-    return m_bCreateTaggedPDF;
+    return m_bCreateTaggedPdf;
   }
 
   /**
@@ -617,22 +637,63 @@ public class PageLayoutPDF implements IPLVisitable
    * artifact. A tagged PDF is created automatically for a PDF/A level that requires it (level A)
    * when set with {@link #setPdfALevel(EPdfALevel)}.
    *
-   * @param bCreateTaggedPDF
+   * @param bCreateTaggedPdf
    *        <code>true</code> to create a tagged PDF.
    * @return this for chaining
    * @see com.helger.pdflayout.base.AbstractPLRenderableObject#setStructureRole(EPLStructureRole)
    * @since 8.4.0
    */
   @NonNull
-  public final PageLayoutPDF setCreateTaggedPDF (final boolean bCreateTaggedPDF)
+  public final PageLayoutPDF setCreateTaggedPdf (final boolean bCreateTaggedPdf)
   {
-    m_bCreateTaggedPDF = bCreateTaggedPDF;
+    m_bCreateTaggedPdf = bCreateTaggedPdf;
+    return this;
+  }
+
+  /**
+   * @return <code>true</code> if a PDF/UA-1 (ISO 14289-1) document is created.
+   * @since 8.4.0
+   */
+  public final boolean isCreatePdfUA ()
+  {
+    return m_bCreatePdfUA;
+  }
+
+  /**
+   * Create a PDF/UA-1 (ISO 14289-1) document: a tagged PDF (see {@link #setCreateTaggedPdf(boolean)})
+   * with XMP metadata that contains the PDF/UA identification, the document title and the language.
+   * It can be combined with PDF/A (see {@link #setPdfALevel(EPdfALevel)}). PDF/UA requires a
+   * document title (see {@link #setDocumentTitle(String)}) and embedded fonts - rendering fails
+   * otherwise.
+   * <p>
+   * Only the technical requirements can be fulfilled automatically. Whether the structure roles,
+   * the alternate texts and the reading order make sense has to be checked by a human.
+   * </p>
+   *
+   * @param bCreatePdfUA
+   *        <code>true</code> to create PDF/UA.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final PageLayoutPDF setCreatePdfUA (final boolean bCreatePdfUA)
+  {
+    m_bCreatePdfUA = bCreatePdfUA;
     return this;
   }
 
   private boolean _isTagged ()
   {
-    return m_bCreateTaggedPDF || (m_bPdfAStrict && m_ePdfALevel != null && m_ePdfALevel.isTagged ());
+    return m_bCreateTaggedPdf || m_bCreatePdfUA || (m_bPdfAStrict && m_ePdfALevel != null && m_ePdfALevel.isTagged ());
+  }
+
+  /**
+   * @return <code>true</code> if a second pass is needed that writes the XMP metadata (PDF/A or
+   *         PDF/UA).
+   */
+  private boolean _isMetadataPass ()
+  {
+    return m_ePdfALevel != null || m_bCreatePdfUA;
   }
 
   /**
@@ -873,6 +934,12 @@ public class PageLayoutPDF implements IPLVisitable
                                       "' does not allow arbitrary embedded files - use PDF/A-3 instead");
     }
 
+    if (m_bCreatePdfUA && StringHelper.isEmpty (m_sDocumentTitle))
+    {
+      StreamHelper.close (aOS);
+      throw new PDFCreationException ("PDF/UA requires a document title");
+    }
+
     final Calendar aCreationDate = m_aDocumentCreationDate == null ? PDTFactory.createCalendar ()
                                                                    : GregorianCalendar.from (m_aDocumentCreationDate);
 
@@ -881,7 +948,7 @@ public class PageLayoutPDF implements IPLVisitable
       // create a new document
       // Use a buffered OS - approx 30% faster!
       try (final PDDocument aDoc = new PDDocument ();
-           final OutputStream aBufferedOS = StreamHelper.getBuffered (m_ePdfALevel != null ? aTmpOS : aOS))
+           final OutputStream aBufferedOS = StreamHelper.getBuffered (_isMetadataPass () ? aTmpOS : aOS))
       {
         // Small consistency check to avoid creating empty, invalid PDFs
         int nTotalElements = 0;
@@ -1004,8 +1071,8 @@ public class PageLayoutPDF implements IPLVisitable
         throw new PDFCreationException ("Internal error rendering PDF", ex);
       }
 
-      // Do specific PDF/A stuff if needed
-      if (m_ePdfALevel != null)
+      // Do specific PDF/A and PDF/UA stuff if needed
+      if (_isMetadataPass ())
       {
         if (LOGGER.isDebugEnabled ())
           LOGGER.debug ("Start adding PDF/A information");
@@ -1027,11 +1094,12 @@ public class PageLayoutPDF implements IPLVisitable
 
           final PDDocumentCatalog aDocCatalogue = aDoc.getDocumentCatalog ();
 
-          if (m_bPdfAStrict)
+          // PDF/A and PDF/UA require embedded fonts
+          if (m_bPdfAStrict || m_bCreatePdfUA)
             _checkFontsEmbedded (aDoc);
 
           // Only a stub, if no real structure tree was created
-          if (m_ePdfALevel.isTagged () && aDocCatalogue.getStructureTreeRoot () == null)
+          if (m_ePdfALevel != null && m_ePdfALevel.isTagged () && aDocCatalogue.getStructureTreeRoot () == null)
           {
             final PDMarkInfo aMarkInfo = new PDMarkInfo ();
             final PDStructureTreeRoot aTreeRoot = new PDStructureTreeRoot ();
@@ -1069,9 +1137,34 @@ public class PageLayoutPDF implements IPLVisitable
               aDCSchema.addSubject (m_sDocumentSubject);
             aDCSchema.addDate (aCreationDate);
 
-            final PDFAIdentificationSchema aIdentificationSchema = aXmpMetadata.createAndAddPDFAIdentificationSchema ();
-            aIdentificationSchema.setPart (Integer.valueOf (m_ePdfALevel.getPart ()));
-            aIdentificationSchema.setConformance (m_ePdfALevel.getConformance ());
+            if (m_ePdfALevel != null)
+            {
+              final PDFAIdentificationSchema aIdentificationSchema = aXmpMetadata.createAndAddPDFAIdentificationSchema ();
+              aIdentificationSchema.setPart (Integer.valueOf (m_ePdfALevel.getPart ()));
+              aIdentificationSchema.setConformance (m_ePdfALevel.getConformance ());
+            }
+
+            if (m_bCreatePdfUA)
+            {
+              if (m_ePdfALevel != null)
+              {
+                // PDF/A requires the description of the PDF/UA identification schema
+                new PdfAXmpExtensionSchema (PDF_UA_ID_NAMESPACE_URI,
+                                            PDF_UA_ID_PREFIX,
+                                            "PDF/UA identification schema").addProperty (new PdfAXmpExtensionSchema.Property ("part",
+                                                                                                                              "Integer",
+                                                                                                                              PdfAXmpExtensionSchema.CATEGORY_INTERNAL,
+                                                                                                                              "Indicates, which part of ISO 14289 standard is followed",
+                                                                                                                              "1"))
+                                                                           .addToMetadata (aXmpMetadata);
+              }
+              else
+              {
+                final XMPSchema aUASchema = aXmpMetadata.createAndAddDefaultSchema (PDF_UA_ID_PREFIX,
+                                                                                    PDF_UA_ID_NAMESPACE_URI);
+                aUASchema.setTextPropertyValue ("part", "1");
+              }
+            }
 
             for (final PdfAXmpExtensionSchema aSchema : m_aXmpExtensionSchemas)
               aSchema.addToMetadata (aXmpMetadata);
@@ -1095,18 +1188,21 @@ public class PageLayoutPDF implements IPLVisitable
           }
 
           // Set color profile (needed by PDF/A)
-          final ICC_Profile aRgbProfile = ICC_Profile.getInstance (ColorSpace.CS_sRGB);
-          final byte [] aRgbBytes = aRgbProfile.getData ();
-
-          try (final NonBlockingByteArrayInputStream aColorProfile = new NonBlockingByteArrayInputStream (aRgbBytes))
+          if (m_ePdfALevel != null)
           {
-            final PDOutputIntent aIntent = new PDOutputIntent (aDoc, aColorProfile);
-            aIntent.setInfo ("sRGB IEC61966-2.1");
-            aIntent.setOutputCondition ("sRGB IEC61966-2.1");
-            aIntent.setOutputConditionIdentifier ("sRGB IEC61966-2.1");
-            aIntent.setRegistryName ("http://www.color.org");
+            final ICC_Profile aRgbProfile = ICC_Profile.getInstance (ColorSpace.CS_sRGB);
+            final byte [] aRgbBytes = aRgbProfile.getData ();
 
-            aDocCatalogue.addOutputIntent (aIntent);
+            try (final NonBlockingByteArrayInputStream aColorProfile = new NonBlockingByteArrayInputStream (aRgbBytes))
+            {
+              final PDOutputIntent aIntent = new PDOutputIntent (aDoc, aColorProfile);
+              aIntent.setInfo ("sRGB IEC61966-2.1");
+              aIntent.setOutputCondition ("sRGB IEC61966-2.1");
+              aIntent.setOutputConditionIdentifier ("sRGB IEC61966-2.1");
+              aIntent.setRegistryName ("http://www.color.org");
+
+              aDocCatalogue.addOutputIntent (aIntent);
+            }
           }
 
           if (StringHelper.isNotEmpty (m_sDocumentLanguage))

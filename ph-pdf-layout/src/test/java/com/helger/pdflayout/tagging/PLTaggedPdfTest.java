@@ -19,6 +19,7 @@ package com.helger.pdflayout.tagging;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -67,7 +68,7 @@ import com.helger.pdflayout.watermark.PLTextWatermark;
  *
  * @author Philip Helger
  */
-public final class PLTaggedPDFTest
+public final class PLTaggedPdfTest
 {
   private static final int TABLE_BODY_ROWS = 80;
 
@@ -130,7 +131,7 @@ public final class PLTaggedPDFTest
   public void testStructure () throws Exception
   {
     final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
-    _createLayout ().setCreateTaggedPDF (true).renderTo (aBAOS);
+    _createLayout ().setCreateTaggedPdf (true).renderTo (aBAOS);
     final byte [] aPdf = aBAOS.toByteArray ();
     SimpleFileIO.writeFile (new File ("pdf/tagging/structure.pdf"), aPdf);
 
@@ -180,12 +181,56 @@ public final class PLTaggedPDFTest
   public void testPdfUA1 () throws Exception
   {
     final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ();
-    _createLayout ().setCreateTaggedPDF (true).renderTo (aBAOS);
-    final ICommonsList <String> aErrors = PdfAValidatorHelper.validate (aBAOS.toByteArray (), PDFAFlavour.PDFUA_1);
-    // All content is tagged or an artifact. The only remaining PDF/UA failure is the missing XMP
-    // metadata (7.1-8), because no PDF/UA identification is written.
-    aErrors.removeIf (x -> x.startsWith ("7.1-8:"));
+    final PageLayoutPDF aPageLayout = _createLayout ().setCreatePdfUA (true);
+    assertTrue (aPageLayout.isCreatePdfUA ());
+    aPageLayout.renderTo (aBAOS);
+    final byte [] aPdf = aBAOS.toByteArray ();
+    SimpleFileIO.writeFile (new File ("pdf/tagging/pdfua-1.pdf"), aPdf);
+
+    final ICommonsList <String> aErrors = PdfAValidatorHelper.validate (aPdf, PDFAFlavour.PDFUA_1);
     assertTrue (String.join ("\n", aErrors), aErrors.isEmpty ());
+  }
+
+  @Test
+  public void testPdfA3aAndPdfUA1 () throws Exception
+  {
+    final PageLayoutPDF aPageLayout = _createLayout ().setPdfALevel (EPdfALevel.PDF_A_3A).setCreatePdfUA (true);
+    final byte [] aPdf = PdfAValidatorHelper.renderAndAssertValid (aPageLayout, "3a");
+    SimpleFileIO.writeFile (new File ("pdf/tagging/pdfa-3a-pdfua-1.pdf"), aPdf);
+
+    final ICommonsList <String> aErrors = PdfAValidatorHelper.validate (aPdf, PDFAFlavour.PDFUA_1);
+    assertTrue (String.join ("\n", aErrors), aErrors.isEmpty ());
+  }
+
+  @Test
+  public void testPdfUARequirements () throws Exception
+  {
+    // Title is required
+    try
+    {
+      _createLayout ().setDocumentTitle (null).setCreatePdfUA (true).renderTo (new NonBlockingByteArrayOutputStream ());
+      fail ();
+    }
+    catch (final PDFCreationException ex)
+    {
+      assertTrue (ex.getMessage (), ex.getMessage ().contains ("title"));
+    }
+
+    // Embedded fonts are required
+    final PLPageSet aPS = new PLPageSet (PDRectangle.A4);
+    aPS.addElement (new PLText ("Helvetica", new FontSpec (PreloadFont.REGULAR, 10)));
+    try
+    {
+      new PageLayoutPDF ().setDocumentTitle ("Title")
+                          .addPageSet (aPS)
+                          .setCreatePdfUA (true)
+                          .renderTo (new NonBlockingByteArrayOutputStream ());
+      fail ();
+    }
+    catch (final PDFCreationException ex)
+    {
+      assertTrue (ex.getMessage (), ex.getMessage ().contains ("Helvetica"));
+    }
   }
 
   @Test
