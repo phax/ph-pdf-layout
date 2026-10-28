@@ -179,6 +179,17 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.4.0 - work in progress
+* PDF/A: the PDF/A level can now be chosen with `PageLayoutPDF.setPdfALevel (EPdfALevel)`: PDF/A-2b, -2u, -3b, -3u and -3a.
+  `setCreatePDF_A (true)` still declares PDF/A-3a as before.
+  * With `setPdfALevel` rendering fails with a clear `PDFCreationException` if a font is not embedded (e.g. the standard 14 fonts like `PreloadFont.REGULAR`), because PDF/A requires all fonts to be embedded. `setCreatePDF_A` does not check this, for compatibility.
+  * The levels B and U no longer get the empty structure tree and the "marked" flag that only make sense for a tagged PDF (level A).
+* PDF/A: link annotations now carry the "print" flag, which PDF/A requires (veraPDF rule 6.3.2-1). Before, every PDF/A with a link was not conformant.
+* PDF/A: fixed the viewer preferences - the document catalogue referenced a page dictionary as its viewer preferences.
+* Added associated (embedded) files: `PageLayoutPDF.addAssociatedFile (PdfAssociatedFile)` embeds a file with its MIME type and `AFRelationship` (`EPdfAFRelationship`) and references it from the `/AF` array of the document catalogue, as PDF/A-3 requires. PDF/A-2 does not allow arbitrary embedded files - rendering fails then.
+* Added XMP extension schemas: `PageLayoutPDF.addXmpExtensionSchema (PdfAXmpExtensionSchema)` adds custom XMP text properties together with the PDF/A extension schema description (`pdfaExtension:schemas`) that PDF/A requires for them.
+* The tests check the PDF/A output with veraPDF (test scope only).
+
 v8.3.6 - 2026-10-26
 * Fixed splitting of a `PLVBox` (and so of a `PLTable`) whose rows are all not vertically splittable, for example a table in which every row was set to `setVertSplittable (false)`.
   The VBox was treated as a whole that cannot be split, so a table that is higher than a page ran over the end of the page and rendering failed with `The value of 'StartTop' must be >= 0!`.
