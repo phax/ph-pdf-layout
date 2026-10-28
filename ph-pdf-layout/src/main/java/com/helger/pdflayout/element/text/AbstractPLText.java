@@ -57,6 +57,7 @@ import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.TextAndWidthSpec;
+import com.helger.pdflayout.tagging.EPLStructureRole;
 
 /**
  * Render text
@@ -699,6 +700,16 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
     else
       PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+  }
+
+  /**
+   * {@inheritDoc} A text is a paragraph.
+   */
+  @Override
+  @Nullable
+  protected EPLStructureRole getDefaultStructureRole ()
+  {
+    return EPLStructureRole.P;
   }
 
   @Override

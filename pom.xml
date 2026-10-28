@@ -25,7 +25,7 @@
     <version>3.1.0</version>
   </parent>
   <artifactId>ph-pdf-layout-parent-pom</artifactId>
-  <version>8.3.7-SNAPSHOT</version>
+  <version>8.4.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ph-pdf-layout-parent-pom</name>
   <description>Parent POM for ibrary for creating nicely layouted PDF documents based on PDFBox</description>
@@ -75,6 +75,7 @@
   <properties>
     <pdfbox.version>3.0.8</pdfbox.version>
     <pdfcompare.version>1.2.11</pdfcompare.version>
+    <verapdf.version>1.30.3</verapdf.version>
   </properties>
 
   <dependencyManagement>
@@ -112,6 +113,11 @@
         <groupId>org.apache.pdfbox</groupId>
         <artifactId>jbig2-imageio</artifactId>
         <version>3.0.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.verapdf</groupId>
+        <artifactId>validation-model-jakarta</artifactId>
+        <version>${verapdf.version}</version>
       </dependency>
 
       <dependency>

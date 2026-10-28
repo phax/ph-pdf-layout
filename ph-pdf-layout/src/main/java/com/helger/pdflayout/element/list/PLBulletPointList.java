@@ -19,6 +19,7 @@ package com.helger.pdflayout.element.list;
 import java.io.IOException;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.Nonnegative;
 import com.helger.base.enforce.ValueEnforcer;
@@ -32,6 +33,7 @@ import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
+import com.helger.pdflayout.tagging.EPLStructureRole;
 
 /**
  * A simple bullet point list. Internally it builds on the PLTable and uses two columns - one for
@@ -61,7 +63,8 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     ValueEnforcer.notNull (aBulletPointCreator, "BulletPointCreator");
 
     // Using different width types requires to NOT use a colspan
-    m_aTable = new PLTable (aWidthSpec, WidthSpec.star ()).setID ("bulletpoint-list");
+    // Tagged PDF: the list itself is the "L", so the table creates no structure element
+    m_aTable = new PLTable (aWidthSpec, WidthSpec.star ()).setID ("bulletpoint-list").setStructureRole (null);
     m_aBulletPointCreator = aBulletPointCreator;
   }
 
@@ -83,11 +86,16 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
     final int nBulletPointIndex = m_aTable.getRowCount ();
     final String sIDPrefix = "bulletpoint-" + nBulletPointIndex;
 
-    final PLTableCell aCellLeft = new PLTableCell (m_aBulletPointCreator.getBulletPointElement (nBulletPointIndex)).setID (sIDPrefix +
-                                                                                                                           "-itself");
-    final PLTableCell aCellRight = new PLTableCell (aElement).setID (sIDPrefix + "-content");
+    final IPLRenderableObject <?> aBullet = m_aBulletPointCreator.getBulletPointElement (nBulletPointIndex);
+    // Tagged PDF: the text of the bullet belongs directly to the label
+    if (aBullet instanceof final AbstractPLRenderableObject <?> aRealBullet)
+      aRealBullet.setStructureRole (null);
+    final PLTableCell aCellLeft = new PLTableCell (aBullet).setID (sIDPrefix + "-itself")
+                                                           .setStructureRole (EPLStructureRole.LBL);
+    final PLTableCell aCellRight = new PLTableCell (aElement).setID (sIDPrefix + "-content")
+                                                             .setStructureRole (EPLStructureRole.LBODY);
 
-    m_aTable.addAndReturnRow (aCellLeft, aCellRight).setID (sIDPrefix + "-row");
+    m_aTable.addAndReturnRow (aCellLeft, aCellRight).setID (sIDPrefix + "-row").setStructureRole (EPLStructureRole.LI);
     return this;
   }
 
@@ -101,6 +109,16 @@ public class PLBulletPointList extends AbstractPLRenderableObject <PLBulletPoint
   protected void onMarkAsNotPrepared ()
   {
     m_aTable.internalMarkAsNotPrepared ();
+  }
+
+  /**
+   * {@inheritDoc} A list.
+   */
+  @Override
+  @Nullable
+  protected EPLStructureRole getDefaultStructureRole ()
+  {
+    return EPLStructureRole.L;
   }
 
   @Override

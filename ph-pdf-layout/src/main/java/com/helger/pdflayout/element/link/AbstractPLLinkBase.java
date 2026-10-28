@@ -33,6 +33,8 @@ import com.helger.pdflayout.element.box.AbstractPLInlineBox;
 import com.helger.pdflayout.link.ELinkBorderStyle;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
+import com.helger.pdflayout.tagging.EPLStructureRole;
+import com.helger.pdflayout.tagging.PLTaggingContext;
 
 /**
  * Common base class for PDF link annotations wrapping another PL element. Provides the link
@@ -174,6 +176,16 @@ public abstract class AbstractPLLinkBase <IMPLTYPE extends AbstractPLLinkBase <I
   @NonNull
   protected abstract String getMissingActionDebugReason ();
 
+  /**
+   * {@inheritDoc} A link contains its annotation and its content.
+   */
+  @Override
+  @Nullable
+  protected EPLStructureRole getDefaultStructureRole ()
+  {
+    return EPLStructureRole.LINK;
+  }
+
   @Override
   protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
@@ -221,6 +233,11 @@ public abstract class AbstractPLLinkBase <IMPLTYPE extends AbstractPLLinkBase <I
     aLink.setRectangle (aLowerLeft);
 
     aCtx.getContentStream ().getPage ().getAnnotations ().add (aLink);
+
+    // Tagged PDF: the annotation belongs to the link structure element
+    final PLTaggingContext aTagging = aCtx.getContentStream ().getTagging ();
+    if (aTagging != null)
+      aTagging.addAnnotation (aLink);
   }
 
   @Override

@@ -27,6 +27,7 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDNamedDestination;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
@@ -64,6 +65,8 @@ import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.PreloadFont;
 import com.helger.pdflayout.spec.SizeSpec;
+import com.helger.pdflayout.tagging.EPLStructureRole;
+import com.helger.pdflayout.tagging.PLTaggingContext;
 
 /**
  * A multi-style rich-text inline element. Each {@link PLRichTextRun} carries its own
@@ -405,6 +408,16 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     m_aPreparedLines = null;
   }
 
+  /**
+   * {@inheritDoc} A rich text is a paragraph.
+   */
+  @Override
+  @Nullable
+  protected EPLStructureRole getDefaultStructureRole ()
+  {
+    return EPLStructureRole.P;
+  }
+
   @Override
   protected void onRender (@NonNull final PageRenderContext aCtx) throws IOException
   {
@@ -453,8 +466,18 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
       }
 
       float fCursorX = fRenderLeft + fIndentX;
+      int nSegIndex = 0;
       for (final PLRichTextSegment aSeg : aLine.segments ())
       {
+        // Tagged PDF: a segment with a hyperlink is a link structure element in the paragraph
+        final PLTaggingContext aTagging = aCS.getTagging ();
+        final boolean bLinkElement = aTagging != null &&
+                                     aSeg.annotations ().containsAny (x -> x instanceof PLHyperlinkAnnotation) &&
+                                     aTagging.beginElement (getID () + "-link-" + nLine + "-" + nSegIndex,
+                                                            false,
+                                                            EPLStructureRole.LINK,
+                                                            null);
+        nSegIndex++;
         final float fSegStartX = fCursorX;
         final float fSegBaseWidth = aSeg.getWidth ();
         final int nSegChars = aSeg.getText ().length ();
@@ -545,6 +568,9 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
                                                              fSegBaselineY + fFontSize);
                 }
         }
+
+        if (bLinkElement)
+          aTagging.endElement ();
 
         fCursorX += fSegFullWidth;
       }
@@ -652,6 +678,11 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     final PDRectangle aRect = new PDRectangle (fStartX, fBaselineY, fSegWidth, fFontSize);
     aLink.setRectangle (aRect);
     aCtx.getContentStream ().getPage ().getAnnotations ().add (aLink);
+
+    // Tagged PDF: the annotation belongs to the link structure element of the segment
+    final PLTaggingContext aTagging = aCtx.getContentStream ().getTagging ();
+    if (aTagging != null)
+      aTagging.addAnnotation (aLink);
   }
 
   @Override

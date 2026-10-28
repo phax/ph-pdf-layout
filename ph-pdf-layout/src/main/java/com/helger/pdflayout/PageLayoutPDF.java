@@ -20,26 +20,43 @@ import java.awt.color.ColorSpace;
 import java.awt.color.ICC_Profile;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.contentstream.operator.Operator;
+import org.apache.pdfbox.contentstream.operator.OperatorName;
+import org.apache.pdfbox.cos.COSArray;
+import org.apache.pdfbox.cos.COSDictionary;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdfparser.PDFStreamParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
+import org.apache.pdfbox.pdmodel.PDDocumentNameDictionary;
+import org.apache.pdfbox.pdmodel.PDEmbeddedFilesNameTreeNode;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDMetadata;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDMarkInfo;
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureTreeRoot;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.graphics.color.PDOutputIntent;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationPopup;
 import org.apache.pdfbox.pdmodel.interactive.viewerpreferences.PDViewerPreferences;
 import org.apache.xmpbox.XMPMetadata;
 import org.apache.xmpbox.schema.AdobePDFSchema;
 import org.apache.xmpbox.schema.DublinCoreSchema;
 import org.apache.xmpbox.schema.PDFAIdentificationSchema;
+import org.apache.xmpbox.schema.XMPSchema;
 import org.apache.xmpbox.schema.XMPBasicSchema;
 import org.apache.xmpbox.type.BadFieldValueException;
 import org.apache.xmpbox.xml.XmpSerializer;
@@ -59,7 +76,11 @@ import com.helger.base.io.stream.StreamHelper;
 import com.helger.base.state.EChange;
 import com.helger.base.string.StringHelper;
 import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.CommonsTreeMap;
+import com.helger.collection.commons.CommonsTreeSet;
 import com.helger.collection.commons.ICommonsList;
+import com.helger.collection.commons.ICommonsSortedMap;
+import com.helger.collection.commons.ICommonsSortedSet;
 import com.helger.commons.vendor.VendorInfo;
 import com.helger.datetime.helper.PDTFactory;
 import com.helger.datetime.zone.PDTConfig;
@@ -68,7 +89,12 @@ import com.helger.pdflayout.base.IPLVisitable;
 import com.helger.pdflayout.base.IPLVisitor;
 import com.helger.pdflayout.base.PLPageSet;
 import com.helger.pdflayout.base.PLPageSetPrepareResult;
+import com.helger.pdflayout.pdfa.EPdfALevel;
+import com.helger.pdflayout.pdfa.PdfAXmpExtensionSchema;
+import com.helger.pdflayout.pdfa.PdfAssociatedFile;
 import com.helger.pdflayout.render.PreparationContextGlobal;
+import com.helger.pdflayout.tagging.PLTaggingContext;
+import com.helger.pdflayout.watermark.PLTextWatermark;
 
 /**
  * Main class for creating layouted PDFs. This class contains the meta data as well as a list of
@@ -88,6 +114,30 @@ public class PageLayoutPDF implements IPLVisitable
    * By default no PDF/A compliant PDF is created.
    */
   public static final boolean DEFAULT_CREATE_PDF_A = false;
+  /**
+   * By default no tagged PDF is created.
+   *
+   * @since 8.4.0
+   */
+  public static final boolean DEFAULT_CREATE_TAGGED_PDF = false;
+  /**
+   * By default no PDF/UA is created.
+   *
+   * @since 8.4.0
+   */
+  public static final boolean DEFAULT_CREATE_PDF_UA = false;
+  /**
+   * The namespace URI of the PDF/UA identification XMP schema.
+   *
+   * @since 8.4.0
+   */
+  public static final String PDF_UA_ID_NAMESPACE_URI = "http://www.aiim.org/pdfua/ns/id/";
+  /**
+   * The namespace prefix of the PDF/UA identification XMP schema.
+   *
+   * @since 8.4.0
+   */
+  public static final String PDF_UA_ID_PREFIX = "pdfuaid";
 
   private static final Logger LOGGER = LoggerFactory.getLogger (PageLayoutPDF.class);
 
@@ -99,13 +149,19 @@ public class PageLayoutPDF implements IPLVisitable
   private String m_sDocumentSubject;
   private String m_sDocumentLanguage = DEFAULT_DOCUMENT_LANGUAGE;
   private boolean m_bCompressPDF = DEFAULT_COMPRESS_PDF;
-  private boolean m_bCreatePDF_A = DEFAULT_CREATE_PDF_A;
+  private EPdfALevel m_ePdfALevel;
+  private boolean m_bPdfAStrict = false;
+  private boolean m_bCreateTaggedPdf = DEFAULT_CREATE_TAGGED_PDF;
+  private boolean m_bCreatePdfUA = DEFAULT_CREATE_PDF_UA;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
   private int m_nCustomLeadingPageCount = -1;
   private int m_nCustomTrailingPageCount = -1;
   private int m_nCustomTotalPageCount = -1;
   private IPDDocumentCustomizer m_aDocumentCustomizer;
   private IXMPMetadataCustomizer m_aMetadataCustomizer;
+  private final ICommonsList <PdfAssociatedFile> m_aAssociatedFiles = new CommonsArrayList <> ();
+  private final ICommonsList <PdfAXmpExtensionSchema> m_aXmpExtensionSchemas = new CommonsArrayList <> ();
+  private final ICommonsList <PLTextWatermark> m_aWatermarks = new CommonsArrayList <> ();
 
   /**
    * Constructor. Initializes Author, CreationDate and Creator from class {@link VendorInfo}.
@@ -141,22 +197,58 @@ public class PageLayoutPDF implements IPLVisitable
   /**
    * @return if PDF/A conformant PDF should be created or not.
    * @since 6.0.3
+   * @see #getPdfALevel()
    */
   public final boolean isCreatePDF_A ()
   {
-    return m_bCreatePDF_A;
+    return m_ePdfALevel != null;
   }
 
   /**
+   * Enable or disable the creation of PDF/A. When enabled, the PDF declares PDF/A-3a, as in
+   * previous versions. Unlike {@link #setPdfALevel(EPdfALevel)}, this method does not reject fonts
+   * that are not embedded.
+   *
    * @param bCreatePDF_A
    *        <code>true</code> to enable creation of PDF/A, <code>false</code> to disable it.
    * @return this for chaining
    * @since 6.0.3
+   * @see #setPdfALevel(EPdfALevel)
    */
   @NonNull
   public final PageLayoutPDF setCreatePDF_A (final boolean bCreatePDF_A)
   {
-    m_bCreatePDF_A = bCreatePDF_A;
+    m_ePdfALevel = bCreatePDF_A ? EPdfALevel.PDF_A_3A : null;
+    m_bPdfAStrict = false;
+    return this;
+  }
+
+  /**
+   * @return The PDF/A level to be declared. <code>null</code> if no PDF/A is created.
+   * @since 8.4.0
+   */
+  @Nullable
+  public final EPdfALevel getPdfALevel ()
+  {
+    return m_ePdfALevel;
+  }
+
+  /**
+   * Set the PDF/A level to be declared. When a level is set, rendering fails if the document uses
+   * a font that is not embedded (e.g. one of the standard 14 fonts like {@link
+   * com.helger.pdflayout.spec.PreloadFont#REGULAR}), because PDF/A requires all fonts to be
+   * embedded.
+   *
+   * @param ePdfALevel
+   *        The PDF/A level to use. May be <code>null</code> to disable the creation of PDF/A.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final PageLayoutPDF setPdfALevel (@Nullable final EPdfALevel ePdfALevel)
+  {
+    m_ePdfALevel = ePdfALevel;
+    m_bPdfAStrict = ePdfALevel != null;
     return this;
   }
 
@@ -529,6 +621,173 @@ public class PageLayoutPDF implements IPLVisitable
     return this;
   }
 
+  /**
+   * @return <code>true</code> if a tagged PDF is created explicitly. A tagged PDF is also created
+   *         for a PDF/A level that requires it, see {@link #setPdfALevel(EPdfALevel)}.
+   * @since 8.4.0
+   */
+  public final boolean isCreateTaggedPdf ()
+  {
+    return m_bCreateTaggedPdf;
+  }
+
+  /**
+   * Create a tagged PDF: the PDF gets a logical structure (paragraphs, headings, tables, lists,
+   * figures, links) from the structure roles of the elements, and all other content is marked as
+   * artifact. A tagged PDF is created automatically for a PDF/A level that requires it (level A)
+   * when set with {@link #setPdfALevel(EPdfALevel)}.
+   *
+   * @param bCreateTaggedPdf
+   *        <code>true</code> to create a tagged PDF.
+   * @return this for chaining
+   * @see com.helger.pdflayout.base.AbstractPLRenderableObject#setStructureRole(EPLStructureRole)
+   * @since 8.4.0
+   */
+  @NonNull
+  public final PageLayoutPDF setCreateTaggedPdf (final boolean bCreateTaggedPdf)
+  {
+    m_bCreateTaggedPdf = bCreateTaggedPdf;
+    return this;
+  }
+
+  /**
+   * @return <code>true</code> if a PDF/UA-1 (ISO 14289-1) document is created.
+   * @since 8.4.0
+   */
+  public final boolean isCreatePdfUA ()
+  {
+    return m_bCreatePdfUA;
+  }
+
+  /**
+   * Create a PDF/UA-1 (ISO 14289-1) document: a tagged PDF (see {@link #setCreateTaggedPdf(boolean)})
+   * with XMP metadata that contains the PDF/UA identification, the document title and the language.
+   * It can be combined with PDF/A (see {@link #setPdfALevel(EPdfALevel)}). PDF/UA requires a
+   * document title (see {@link #setDocumentTitle(String)}) and embedded fonts - rendering fails
+   * otherwise.
+   * <p>
+   * Only the technical requirements can be fulfilled automatically. Whether the structure roles,
+   * the alternate texts and the reading order make sense has to be checked by a human.
+   * </p>
+   *
+   * @param bCreatePdfUA
+   *        <code>true</code> to create PDF/UA.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final PageLayoutPDF setCreatePdfUA (final boolean bCreatePdfUA)
+  {
+    m_bCreatePdfUA = bCreatePdfUA;
+    return this;
+  }
+
+  private boolean _isTagged ()
+  {
+    return m_bCreateTaggedPdf || m_bCreatePdfUA || (m_bPdfAStrict && m_ePdfALevel != null && m_ePdfALevel.isTagged ());
+  }
+
+  /**
+   * @return <code>true</code> if a second pass is needed that writes the XMP metadata (PDF/A or
+   *         PDF/UA).
+   */
+  private boolean _isMetadataPass ()
+  {
+    return m_ePdfALevel != null || m_bCreatePdfUA;
+  }
+
+  /**
+   * @return A copy of all associated files to be embedded. Never <code>null</code> but maybe empty.
+   * @since 8.4.0
+   */
+  @NonNull
+  @ReturnsMutableCopy
+  public final ICommonsList <PdfAssociatedFile> getAllAssociatedFiles ()
+  {
+    return m_aAssociatedFiles.getClone ();
+  }
+
+  /**
+   * Add a file that is embedded into the PDF and associated with the whole document. Arbitrary
+   * embedded files are allowed in PDF/A-3 but not in PDF/A-2 - rendering a PDF/A-2 document with
+   * associated files fails.
+   *
+   * @param aAssociatedFile
+   *        The file to embed. May not be <code>null</code>. The file name must be unique within this
+   *        document.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final PageLayoutPDF addAssociatedFile (@NonNull final PdfAssociatedFile aAssociatedFile)
+  {
+    ValueEnforcer.notNull (aAssociatedFile, "AssociatedFile");
+    if (m_aAssociatedFiles.containsAny (x -> x.getFileName ().equals (aAssociatedFile.getFileName ())))
+      throw new IllegalArgumentException ("An associated file with the name '" +
+                                          aAssociatedFile.getFileName () +
+                                          "' is already contained");
+    m_aAssociatedFiles.add (aAssociatedFile);
+    return this;
+  }
+
+  /**
+   * @return A copy of all XMP extension schemas. Never <code>null</code> but maybe empty.
+   * @since 8.4.0
+   */
+  @NonNull
+  @ReturnsMutableCopy
+  public final ICommonsList <PdfAXmpExtensionSchema> getAllXmpExtensionSchemas ()
+  {
+    return m_aXmpExtensionSchemas.getClone ();
+  }
+
+  /**
+   * Add a custom XMP schema together with its PDF/A extension schema description. The XMP metadata
+   * is only written when PDF/A is created (see {@link #setPdfALevel(EPdfALevel)}). The schemas are
+   * added before the {@link IXMPMetadataCustomizer} is invoked.
+   *
+   * @param aSchema
+   *        The schema to add. May not be <code>null</code>.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final PageLayoutPDF addXmpExtensionSchema (@NonNull final PdfAXmpExtensionSchema aSchema)
+  {
+    ValueEnforcer.notNull (aSchema, "Schema");
+    m_aXmpExtensionSchemas.add (aSchema);
+    return this;
+  }
+
+  /**
+   * @return A copy of all watermarks. Never <code>null</code> but maybe empty.
+   * @since 8.4.0
+   */
+  @NonNull
+  @ReturnsMutableCopy
+  public final ICommonsList <PLTextWatermark> getAllWatermarks ()
+  {
+    return m_aWatermarks.getClone ();
+  }
+
+  /**
+   * Add a watermark that is drawn behind the content of every page, after the layout is complete.
+   * Watermarks are drawn in the order they were added, before the {@link IPDDocumentCustomizer} is
+   * invoked.
+   *
+   * @param aWatermark
+   *        The watermark to add. May not be <code>null</code>.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final PageLayoutPDF addWatermark (@NonNull final PLTextWatermark aWatermark)
+  {
+    ValueEnforcer.notNull (aWatermark, "Watermark");
+    m_aWatermarks.add (aWatermark);
+    return this;
+  }
+
   @NonNull
   public EChange visit (@NonNull final IPLVisitor aVisitor) throws IOException
   {
@@ -564,6 +823,94 @@ public class PageLayoutPDF implements IPLVisitable
   }
 
   /**
+   * PDF/A requires all fonts that are used for rendering to be embedded. Fail early with a clear
+   * message instead of creating a PDF that only claims to be PDF/A. Fonts that are only listed in
+   * the page resources but never selected with the <code>Tf</code> operator are ignored, as in
+   * PDF/A.
+   */
+  private static void _checkFontsEmbedded (@NonNull final PDDocument aDoc) throws IOException, PDFCreationException
+  {
+    final ICommonsSortedSet <String> aNotEmbedded = new CommonsTreeSet <> ();
+    for (final PDPage aPage : aDoc.getPages ())
+    {
+      final PDResources aResources = aPage.getResources ();
+      if (aResources != null && aPage.hasContents ())
+      {
+        final List <Object> aTokens = new PDFStreamParser (aPage).parse ();
+        for (int i = 2; i < aTokens.size (); ++i)
+          if (aTokens.get (i) instanceof final Operator aOperator &&
+              OperatorName.SET_FONT_AND_SIZE.equals (aOperator.getName ()) &&
+              aTokens.get (i - 2) instanceof final COSName aFontName)
+          {
+            final PDFont aFont = aResources.getFont (aFontName);
+            if (aFont != null && !aFont.isEmbedded ())
+              aNotEmbedded.add (aFont.getName ());
+          }
+      }
+    }
+    if (aNotEmbedded.isNotEmpty ())
+      throw new PDFCreationException ("PDF/A requires all fonts to be embedded, but the following fonts are not embedded: " +
+                                      aNotEmbedded +
+                                      ". Use an embedded font (e.g. PreloadFont.createEmbedding) instead of the standard 14 fonts.");
+  }
+
+  /**
+   * Embed all associated files and reference them from the <code>/AF</code> array of the document
+   * catalogue.
+   */
+  private void _embedAssociatedFiles (@NonNull final PDDocument aDoc, @NonNull final Calendar aDate) throws IOException
+  {
+    final ICommonsSortedMap <String, PDComplexFileSpecification> aNames = new CommonsTreeMap <> ();
+    final COSArray aAF = new COSArray ();
+    for (final PdfAssociatedFile aFile : m_aAssociatedFiles)
+    {
+      final PDEmbeddedFile aEmbeddedFile;
+      try (final InputStream aIS = new NonBlockingByteArrayInputStream (aFile.getContent ()))
+      {
+        aEmbeddedFile = new PDEmbeddedFile (aDoc, aIS, COSName.FLATE_DECODE);
+      }
+      aEmbeddedFile.setSubtype (aFile.getMimeType ());
+      aEmbeddedFile.setSize (aFile.getContent ().length);
+      aEmbeddedFile.setCreationDate (aDate);
+      aEmbeddedFile.setModDate (aDate);
+
+      final PDComplexFileSpecification aFileSpec = new PDComplexFileSpecification ();
+      aFileSpec.setFile (aFile.getFileName ());
+      aFileSpec.setFileUnicode (aFile.getFileName ());
+      aFileSpec.setEmbeddedFile (aEmbeddedFile);
+      aFileSpec.setEmbeddedFileUnicode (aEmbeddedFile);
+      if (StringHelper.isNotEmpty (aFile.getDescription ()))
+        aFileSpec.setFileDescription (aFile.getDescription ());
+      aFileSpec.getCOSObject ().setName (COSName.AF_RELATIONSHIP, aFile.getRelationship ().getID ());
+
+      aNames.put (aFile.getFileName (), aFileSpec);
+      aAF.add (aFileSpec);
+    }
+
+    final PDEmbeddedFilesNameTreeNode aTree = new PDEmbeddedFilesNameTreeNode ();
+    aTree.setNames (aNames);
+
+    final PDDocumentCatalog aCatalogue = aDoc.getDocumentCatalog ();
+    PDDocumentNameDictionary aNameDict = aCatalogue.getNames ();
+    if (aNameDict == null)
+      aNameDict = new PDDocumentNameDictionary (aCatalogue);
+    aNameDict.setEmbeddedFiles (aTree);
+    aCatalogue.setNames (aNameDict);
+    aCatalogue.getCOSObject ().setItem (COSName.AF, aAF);
+  }
+
+  /**
+   * PDF/A requires every annotation except popups to have the flags entry with the "print" flag set.
+   */
+  private static void _setAnnotationsPrinted (@NonNull final PDDocument aDoc) throws IOException
+  {
+    for (final PDPage aPage : aDoc.getPages ())
+      for (final PDAnnotation aAnnotation : aPage.getAnnotations ())
+        if (!(aAnnotation instanceof PDAnnotationPopup))
+          aAnnotation.setPrinted (true);
+  }
+
+  /**
    * Render this layout to an OutputStream.
    *
    * @param aOS
@@ -579,12 +926,29 @@ public class PageLayoutPDF implements IPLVisitable
   {
     ValueEnforcer.notNull (aOS, "OutputStream");
 
+    if (m_ePdfALevel != null && !m_ePdfALevel.isArbitraryEmbeddedFilesAllowed () && m_aAssociatedFiles.isNotEmpty ())
+    {
+      StreamHelper.close (aOS);
+      throw new PDFCreationException ("PDF/A level '" +
+                                      m_ePdfALevel.getID () +
+                                      "' does not allow arbitrary embedded files - use PDF/A-3 instead");
+    }
+
+    if (m_bCreatePdfUA && StringHelper.isEmpty (m_sDocumentTitle))
+    {
+      StreamHelper.close (aOS);
+      throw new PDFCreationException ("PDF/UA requires a document title");
+    }
+
+    final Calendar aCreationDate = m_aDocumentCreationDate == null ? PDTFactory.createCalendar ()
+                                                                   : GregorianCalendar.from (m_aDocumentCreationDate);
+
     try (final NonBlockingByteArrayOutputStream aTmpOS = new NonBlockingByteArrayOutputStream ())
     {
       // create a new document
       // Use a buffered OS - approx 30% faster!
       try (final PDDocument aDoc = new PDDocument ();
-           final OutputStream aBufferedOS = StreamHelper.getBuffered (m_bCreatePDF_A ? aTmpOS : aOS))
+           final OutputStream aBufferedOS = StreamHelper.getBuffered (_isMetadataPass () ? aTmpOS : aOS))
       {
         // Small consistency check to avoid creating empty, invalid PDFs
         int nTotalElements = 0;
@@ -645,6 +1009,9 @@ public class PageLayoutPDF implements IPLVisitable
         if (m_nCustomTotalPageCount > 0)
           nTotalPageCount = m_nCustomTotalPageCount;
 
+        // Tagged PDF (optional)
+        final PLTaggingContext aTagging = _isTagged () ? new PLTaggingContext (m_sDocumentLanguage) : null;
+
         // Render all page sets
         nPageSetIndex = 0;
         final int nPageSetCount = m_aPageSets.size ();
@@ -659,11 +1026,31 @@ public class PageLayoutPDF implements IPLVisitable
                                    nPageSetIndex,
                                    nPageSetCount,
                                    nTotalPageIndex,
-                                   nTotalPageCount);
+                                   nTotalPageCount,
+                                   aTagging);
           // Increment afterwards
           nTotalPageIndex += aPR.getPageCount ();
           nPageSetIndex++;
         }
+
+        if (aTagging != null)
+        {
+          aTagging.finish (aDoc);
+          final PDDocumentCatalog aCatalog = aDoc.getDocumentCatalog ();
+          if (StringHelper.isNotEmpty (m_sDocumentLanguage))
+            aCatalog.setLanguage (m_sDocumentLanguage);
+          final PDViewerPreferences aViewerPrefs = new PDViewerPreferences (new COSDictionary ());
+          aViewerPrefs.setDisplayDocTitle (true);
+          aCatalog.setViewerPreferences (aViewerPrefs);
+        }
+
+        // Draw the watermarks (optional)
+        for (final PLTextWatermark aWatermark : m_aWatermarks)
+          aWatermark.drawOnAllPages (aDoc, m_bCompressPDF);
+
+        // Embed the associated files (optional)
+        if (m_aAssociatedFiles.isNotEmpty ())
+          _embedAssociatedFiles (aDoc, aCreationDate);
 
         // Customize the whole document (optional)
         if (m_aDocumentCustomizer != null)
@@ -684,8 +1071,8 @@ public class PageLayoutPDF implements IPLVisitable
         throw new PDFCreationException ("Internal error rendering PDF", ex);
       }
 
-      // Do specific PDF/A stuff if needed
-      if (m_bCreatePDF_A)
+      // Do specific PDF/A and PDF/UA stuff if needed
+      if (_isMetadataPass ())
       {
         if (LOGGER.isDebugEnabled ())
           LOGGER.debug ("Start adding PDF/A information");
@@ -694,9 +1081,6 @@ public class PageLayoutPDF implements IPLVisitable
         try (final PDDocument aDoc = Loader.loadPDF (aTmpOS.getBufferOrCopy ());
              final OutputStream aBufferedOS = StreamHelper.getBuffered (aOS))
         {
-
-          final Calendar aCreationDate = m_aDocumentCreationDate == null ? PDTFactory.createCalendar ()
-                                                                         : GregorianCalendar.from (m_aDocumentCreationDate);
           final String sProducer = PLConfig.PROJECT_NAME + " " + PLConfig.PROJECT_VERSION;
 
           final XMPMetadata aXmpMetadata = XMPMetadata.createXMPMetadata ();
@@ -710,11 +1094,22 @@ public class PageLayoutPDF implements IPLVisitable
 
           final PDDocumentCatalog aDocCatalogue = aDoc.getDocumentCatalog ();
 
-          final PDMarkInfo aMarkInfo = new PDMarkInfo ();
-          final PDStructureTreeRoot aTreeRoot = new PDStructureTreeRoot ();
-          aDocCatalogue.setMarkInfo (aMarkInfo);
-          aDocCatalogue.setStructureTreeRoot (aTreeRoot);
-          aDocCatalogue.getMarkInfo ().setMarked (true);
+          // PDF/A and PDF/UA require embedded fonts
+          if (m_bPdfAStrict || m_bCreatePdfUA)
+            _checkFontsEmbedded (aDoc);
+
+          // Only a stub, if no real structure tree was created
+          if (m_ePdfALevel != null && m_ePdfALevel.isTagged () && aDocCatalogue.getStructureTreeRoot () == null)
+          {
+            final PDMarkInfo aMarkInfo = new PDMarkInfo ();
+            final PDStructureTreeRoot aTreeRoot = new PDStructureTreeRoot ();
+            aDocCatalogue.setMarkInfo (aMarkInfo);
+            aDocCatalogue.setStructureTreeRoot (aTreeRoot);
+            aDocCatalogue.getMarkInfo ().setMarked (true);
+          }
+
+          // PDF/A requires the annotation flags with the "print" flag set
+          _setAnnotationsPrinted (aDoc);
 
           final PDDocumentInformation aDocInfo = aDoc.getDocumentInformation ();
           aDocInfo.setCreationDate (aCreationDate);
@@ -742,9 +1137,37 @@ public class PageLayoutPDF implements IPLVisitable
               aDCSchema.addSubject (m_sDocumentSubject);
             aDCSchema.addDate (aCreationDate);
 
-            final PDFAIdentificationSchema aIdentificationSchema = aXmpMetadata.createAndAddPDFAIdentificationSchema ();
-            aIdentificationSchema.setPart (Integer.valueOf (3));
-            aIdentificationSchema.setConformance ("A");
+            if (m_ePdfALevel != null)
+            {
+              final PDFAIdentificationSchema aIdentificationSchema = aXmpMetadata.createAndAddPDFAIdentificationSchema ();
+              aIdentificationSchema.setPart (Integer.valueOf (m_ePdfALevel.getPart ()));
+              aIdentificationSchema.setConformance (m_ePdfALevel.getConformance ());
+            }
+
+            if (m_bCreatePdfUA)
+            {
+              if (m_ePdfALevel != null)
+              {
+                // PDF/A requires the description of the PDF/UA identification schema
+                new PdfAXmpExtensionSchema (PDF_UA_ID_NAMESPACE_URI,
+                                            PDF_UA_ID_PREFIX,
+                                            "PDF/UA identification schema").addProperty (new PdfAXmpExtensionSchema.Property ("part",
+                                                                                                                              "Integer",
+                                                                                                                              PdfAXmpExtensionSchema.CATEGORY_INTERNAL,
+                                                                                                                              "Indicates, which part of ISO 14289 standard is followed",
+                                                                                                                              "1"))
+                                                                           .addToMetadata (aXmpMetadata);
+              }
+              else
+              {
+                final XMPSchema aUASchema = aXmpMetadata.createAndAddDefaultSchema (PDF_UA_ID_PREFIX,
+                                                                                    PDF_UA_ID_NAMESPACE_URI);
+                aUASchema.setTextPropertyValue ("part", "1");
+              }
+            }
+
+            for (final PdfAXmpExtensionSchema aSchema : m_aXmpExtensionSchemas)
+              aSchema.addToMetadata (aXmpMetadata);
 
             if (m_aMetadataCustomizer != null)
               m_aMetadataCustomizer.customizeMetadata (aXmpMetadata);
@@ -765,35 +1188,39 @@ public class PageLayoutPDF implements IPLVisitable
           }
 
           // Set color profile (needed by PDF/A)
-          final ICC_Profile aRgbProfile = ICC_Profile.getInstance (ColorSpace.CS_sRGB);
-          final byte [] aRgbBytes = aRgbProfile.getData ();
-
-          try (final NonBlockingByteArrayInputStream aColorProfile = new NonBlockingByteArrayInputStream (aRgbBytes))
+          if (m_ePdfALevel != null)
           {
-            final PDOutputIntent aIntent = new PDOutputIntent (aDoc, aColorProfile);
-            aIntent.setInfo ("sRGB IEC61966-2.1");
-            aIntent.setOutputCondition ("sRGB IEC61966-2.1");
-            aIntent.setOutputConditionIdentifier ("sRGB IEC61966-2.1");
-            aIntent.setRegistryName ("http://www.color.org");
+            final ICC_Profile aRgbProfile = ICC_Profile.getInstance (ColorSpace.CS_sRGB);
+            final byte [] aRgbBytes = aRgbProfile.getData ();
 
-            aDocCatalogue.addOutputIntent (aIntent);
+            try (final NonBlockingByteArrayInputStream aColorProfile = new NonBlockingByteArrayInputStream (aRgbBytes))
+            {
+              final PDOutputIntent aIntent = new PDOutputIntent (aDoc, aColorProfile);
+              aIntent.setInfo ("sRGB IEC61966-2.1");
+              aIntent.setOutputCondition ("sRGB IEC61966-2.1");
+              aIntent.setOutputConditionIdentifier ("sRGB IEC61966-2.1");
+              aIntent.setRegistryName ("http://www.color.org");
+
+              aDocCatalogue.addOutputIntent (aIntent);
+            }
           }
 
           if (StringHelper.isNotEmpty (m_sDocumentLanguage))
             aDocCatalogue.setLanguage (m_sDocumentLanguage);
 
-          for (final PDPage aPage : aDoc.getPages ())
-          {
-            final PDViewerPreferences aViewerPrefs = new PDViewerPreferences (aPage.getCOSObject ());
-            aViewerPrefs.setDisplayDocTitle (true);
-            aDocCatalogue.setViewerPreferences (aViewerPrefs);
-          }
+          final PDViewerPreferences aViewerPrefs = new PDViewerPreferences (new COSDictionary ());
+          aViewerPrefs.setDisplayDocTitle (true);
+          aDocCatalogue.setViewerPreferences (aViewerPrefs);
 
           // save document to final output stream
           aDoc.save (aBufferedOS);
 
           if (LOGGER.isDebugEnabled ())
             LOGGER.debug ("PDF with PDF/A successfully created");
+        }
+        catch (final PDFCreationException ex)
+        {
+          throw ex;
         }
         catch (final IOException ex)
         {

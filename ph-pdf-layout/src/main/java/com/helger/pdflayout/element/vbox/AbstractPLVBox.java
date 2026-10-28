@@ -47,6 +47,7 @@ import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.pdflayout.spec.SizeSpec;
+import com.helger.pdflayout.tagging.PLTaggingContext;
 
 /**
  * Vertical box - groups several rows.
@@ -880,6 +881,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   {
     final float fCurX = aCtx.getStartLeft () + getOutlineLeft ();
     float fCurY = aCtx.getStartTop () - getOutlineTop ();
+    final PLTaggingContext aTagging = aCtx.getContentStream ().getTagging ();
 
     int nIndex = 0;
     for (final PLVBoxRow aRow : m_aRows)
@@ -888,9 +890,29 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
       final float fRowWidth = m_aPreparedRowSize[nIndex].getWidth ();
       final float fRowHeight = m_aPreparedRowSize[nIndex].getHeight ();
 
-      // Perform contained element after border
-      final PageRenderContext aRowElementCtx = new PageRenderContext (aCtx, fCurX, fCurY, fRowWidth, fRowHeight);
-      aElement.render (aRowElementCtx);
+      // Tagged PDF: header rows contain header cells. Repeated header rows (on all fragments
+      // except the first) are artifacts, so that their content is only once in the structure.
+      final boolean bHeaderRow = aTagging != null && nIndex < m_nHeaderRowCount;
+      final boolean bRepeatedHeaderRow = bHeaderRow && !isFirstFragment ();
+      if (bRepeatedHeaderRow)
+        aTagging.beginArtifact ();
+      else
+        if (bHeaderRow)
+          aTagging.beginHeaderRow ();
+      try
+      {
+        // Perform contained element after border
+        final PageRenderContext aRowElementCtx = new PageRenderContext (aCtx, fCurX, fCurY, fRowWidth, fRowHeight);
+        aElement.render (aRowElementCtx);
+      }
+      finally
+      {
+        if (bRepeatedHeaderRow)
+          aTagging.endArtifact ();
+        else
+          if (bHeaderRow)
+            aTagging.endHeaderRow ();
+      }
 
       // Update Y-pos
       fCurY -= fRowHeight;

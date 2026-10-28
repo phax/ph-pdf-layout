@@ -29,6 +29,7 @@ import com.helger.pdflayout.base.IPLRenderableObject;
 import com.helger.pdflayout.element.box.AbstractPLBox;
 import com.helger.pdflayout.element.special.PLSpacerX;
 import com.helger.pdflayout.render.PageRenderContext;
+import com.helger.pdflayout.tagging.EPLStructureRole;
 
 /**
  * This class represents a single table cell within a table row.
@@ -82,6 +83,16 @@ public class PLTableCell extends AbstractPLBox <PLTableCell>
     final PLTableCell ret = new PLTableCell (null, aBase.getColSpan ());
     ret.setBasicDataFrom (aBase);
     return ret;
+  }
+
+  /**
+   * {@inheritDoc} A table cell - in a header row it becomes a header cell.
+   */
+  @Override
+  @Nullable
+  protected EPLStructureRole getDefaultStructureRole ()
+  {
+    return EPLStructureRole.TD;
   }
 
   @Override

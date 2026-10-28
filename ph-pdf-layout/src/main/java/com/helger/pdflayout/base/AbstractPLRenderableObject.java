@@ -33,6 +33,8 @@ import com.helger.pdflayout.render.PLAnchorRegistry;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
+import com.helger.pdflayout.tagging.EPLStructureRole;
+import com.helger.pdflayout.tagging.PLTaggingContext;
 
 /**
  * Abstract layout object that supports rendering.
@@ -50,6 +52,11 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
   private SizeSpec m_aPreparedSize;
   private SizeSpec m_aRenderSize;
   private String m_sAnchorName = DEFAULT_ANCHOR_NAME;
+  // Tagged PDF
+  private boolean m_bStructureRoleSet = false;
+  private EPLStructureRole m_eStructureRole;
+  private String m_sAlternateText;
+  private boolean m_bArtifact = false;
 
   public AbstractPLRenderableObject ()
   {}
@@ -65,6 +72,124 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
     // available on the fragment that actually renders. Duplicate registration
     // is suppressed via isFirstFragment() in the render hook.
     m_sAnchorName = aSource.getAnchorName ();
+    // Access the private fields via the base type
+    final AbstractPLRenderableObject <?> aRealSource = aSource;
+    m_bStructureRoleSet = aRealSource.m_bStructureRoleSet;
+    m_eStructureRole = aRealSource.m_eStructureRole;
+    m_sAlternateText = aRealSource.m_sAlternateText;
+    m_bArtifact = aRealSource.m_bArtifact;
+    return thisAsT ();
+  }
+
+  /**
+   * Get the structure role of this element in a tagged PDF, if none was set explicitly. Override
+   * this in element types that have a natural role, e.g. a text is a paragraph.
+   *
+   * @return The default structure role. May be <code>null</code> for an element that only groups
+   *         other elements.
+   * @since 8.4.0
+   */
+  @OverrideOnDemand
+  @Nullable
+  protected EPLStructureRole getDefaultStructureRole ()
+  {
+    return null;
+  }
+
+  /**
+   * Get the structure role of this element in a tagged PDF. Only used when a tagged PDF is created.
+   *
+   * @return The explicitly set role, or the default role of the element type. May be
+   *         <code>null</code> if this element creates no structure element - its content then
+   *         belongs to the structure element of the parent.
+   * @since 8.4.0
+   */
+  @Nullable
+  public final EPLStructureRole getStructureRole ()
+  {
+    return m_bStructureRoleSet ? m_eStructureRole : getDefaultStructureRole ();
+  }
+
+  /**
+   * Set the structure role of this element in a tagged PDF, e.g. {@link EPLStructureRole#H1} for a
+   * heading.
+   *
+   * @param eStructureRole
+   *        The role. May be <code>null</code> so that this element creates no structure element.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final IMPLTYPE setStructureRole (@Nullable final EPLStructureRole eStructureRole)
+  {
+    m_bStructureRoleSet = true;
+    m_eStructureRole = eStructureRole;
+    return thisAsT ();
+  }
+
+  /**
+   * Go back to the default structure role of the element type.
+   *
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final IMPLTYPE resetStructureRole ()
+  {
+    m_bStructureRoleSet = false;
+    m_eStructureRole = null;
+    return thisAsT ();
+  }
+
+  /**
+   * @return The alternate text of this element in a tagged PDF, e.g. the description of an image.
+   *         May be <code>null</code>.
+   * @since 8.4.0
+   */
+  @Nullable
+  public final String getAlternateText ()
+  {
+    return m_sAlternateText;
+  }
+
+  /**
+   * Set the alternate text of this element in a tagged PDF. Figures and formulas should have one.
+   *
+   * @param sAlternateText
+   *        The alternate text. May be <code>null</code>.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final IMPLTYPE setAlternateText (@Nullable final String sAlternateText)
+  {
+    m_sAlternateText = sAlternateText;
+    return thisAsT ();
+  }
+
+  /**
+   * @return <code>true</code> if this element and all its children are an artifact in a tagged PDF
+   *         - decoration that is not part of the logical structure.
+   * @since 8.4.0
+   */
+  public final boolean isArtifact ()
+  {
+    return m_bArtifact;
+  }
+
+  /**
+   * Mark this element and all its children as artifact in a tagged PDF - decoration that is not
+   * part of the logical structure.
+   *
+   * @param bArtifact
+   *        <code>true</code> to mark it as artifact.
+   * @return this for chaining
+   * @since 8.4.0
+   */
+  @NonNull
+  public final IMPLTYPE setArtifact (final boolean bArtifact)
+  {
+    m_bArtifact = bArtifact;
     return thisAsT ();
   }
 
@@ -337,8 +462,40 @@ public abstract class AbstractPLRenderableObject <IMPLTYPE extends AbstractPLRen
                                                         aCtx.getHeight ()));
     }
 
-    // Main perform after border
-    onRender (aCtx);
+    // Tagged PDF: open the structure element or artifact of this element
+    final PLTaggingContext aTagging = aCtx.getContentStream ().getTagging ();
+    boolean bArtifact = false;
+    boolean bElement = false;
+    if (aTagging != null)
+    {
+      if (m_bArtifact)
+      {
+        aTagging.beginArtifact ();
+        bArtifact = true;
+      }
+      else
+      {
+        final EPLStructureRole eRole = getStructureRole ();
+        if (eRole != null)
+        {
+          // Later fragments of a split element continue its structure element
+          bElement = aTagging.beginElement (getOriginalID (), !isFirstFragment (), eRole, m_sAlternateText);
+        }
+      }
+    }
+
+    try
+    {
+      // Main perform after border
+      onRender (aCtx);
+    }
+    finally
+    {
+      if (bElement)
+        aTagging.endElement ();
+      if (bArtifact)
+        aTagging.endArtifact ();
+    }
 
     // Notify a registered listener (if any) that this element just rendered.
     // Fires after onRender so an exception suppresses the event. Reaches every
