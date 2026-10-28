@@ -35,6 +35,7 @@ import com.helger.pdflayout.spec.BorderStyleSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.WidthSpec;
+import com.helger.pdflayout.tagging.EPLStructureRole;
 
 /**
  * A special HBox representing a table row.
@@ -66,6 +67,16 @@ public class PLTableRow extends AbstractPLHBox <PLTableRow>
     final PLTableRow ret = new PLTableRow ();
     ret.setBasicDataFrom (aBase);
     return ret;
+  }
+
+  /**
+   * {@inheritDoc} A table row.
+   */
+  @Override
+  @Nullable
+  protected EPLStructureRole getDefaultStructureRole ()
+  {
+    return EPLStructureRole.TR;
   }
 
   @Override

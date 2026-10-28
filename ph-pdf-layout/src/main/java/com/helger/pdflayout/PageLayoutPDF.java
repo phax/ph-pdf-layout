@@ -92,6 +92,7 @@ import com.helger.pdflayout.pdfa.EPdfALevel;
 import com.helger.pdflayout.pdfa.PdfAXmpExtensionSchema;
 import com.helger.pdflayout.pdfa.PdfAssociatedFile;
 import com.helger.pdflayout.render.PreparationContextGlobal;
+import com.helger.pdflayout.tagging.PLTaggingContext;
 import com.helger.pdflayout.watermark.PLTextWatermark;
 
 /**
@@ -112,6 +113,12 @@ public class PageLayoutPDF implements IPLVisitable
    * By default no PDF/A compliant PDF is created.
    */
   public static final boolean DEFAULT_CREATE_PDF_A = false;
+  /**
+   * By default no tagged PDF is created.
+   *
+   * @since 8.4.0
+   */
+  public static final boolean DEFAULT_CREATE_TAGGED_PDF = false;
 
   private static final Logger LOGGER = LoggerFactory.getLogger (PageLayoutPDF.class);
 
@@ -125,6 +132,7 @@ public class PageLayoutPDF implements IPLVisitable
   private boolean m_bCompressPDF = DEFAULT_COMPRESS_PDF;
   private EPdfALevel m_ePdfALevel;
   private boolean m_bPdfAStrict = false;
+  private boolean m_bCreateTaggedPDF = DEFAULT_CREATE_TAGGED_PDF;
   private final ICommonsList <PLPageSet> m_aPageSets = new CommonsArrayList <> ();
   private int m_nCustomLeadingPageCount = -1;
   private int m_nCustomTrailingPageCount = -1;
@@ -594,6 +602,40 @@ public class PageLayoutPDF implements IPLVisitable
   }
 
   /**
+   * @return <code>true</code> if a tagged PDF is created explicitly. A tagged PDF is also created
+   *         for a PDF/A level that requires it, see {@link #setPdfALevel(EPdfALevel)}.
+   * @since 8.4.0
+   */
+  public final boolean isCreateTaggedPDF ()
+  {
+    return m_bCreateTaggedPDF;
+  }
+
+  /**
+   * Create a tagged PDF: the PDF gets a logical structure (paragraphs, headings, tables, lists,
+   * figures, links) from the structure roles of the elements, and all other content is marked as
+   * artifact. A tagged PDF is created automatically for a PDF/A level that requires it (level A)
+   * when set with {@link #setPdfALevel(EPdfALevel)}.
+   *
+   * @param bCreateTaggedPDF
+   *        <code>true</code> to create a tagged PDF.
+   * @return this for chaining
+   * @see com.helger.pdflayout.base.AbstractPLRenderableObject#setStructureRole(EPLStructureRole)
+   * @since 8.4.0
+   */
+  @NonNull
+  public final PageLayoutPDF setCreateTaggedPDF (final boolean bCreateTaggedPDF)
+  {
+    m_bCreateTaggedPDF = bCreateTaggedPDF;
+    return this;
+  }
+
+  private boolean _isTagged ()
+  {
+    return m_bCreateTaggedPDF || (m_bPdfAStrict && m_ePdfALevel != null && m_ePdfALevel.isTagged ());
+  }
+
+  /**
    * @return A copy of all associated files to be embedded. Never <code>null</code> but maybe empty.
    * @since 8.4.0
    */
@@ -900,6 +942,9 @@ public class PageLayoutPDF implements IPLVisitable
         if (m_nCustomTotalPageCount > 0)
           nTotalPageCount = m_nCustomTotalPageCount;
 
+        // Tagged PDF (optional)
+        final PLTaggingContext aTagging = _isTagged () ? new PLTaggingContext (m_sDocumentLanguage) : null;
+
         // Render all page sets
         nPageSetIndex = 0;
         final int nPageSetCount = m_aPageSets.size ();
@@ -914,10 +959,22 @@ public class PageLayoutPDF implements IPLVisitable
                                    nPageSetIndex,
                                    nPageSetCount,
                                    nTotalPageIndex,
-                                   nTotalPageCount);
+                                   nTotalPageCount,
+                                   aTagging);
           // Increment afterwards
           nTotalPageIndex += aPR.getPageCount ();
           nPageSetIndex++;
+        }
+
+        if (aTagging != null)
+        {
+          aTagging.finish (aDoc);
+          final PDDocumentCatalog aCatalog = aDoc.getDocumentCatalog ();
+          if (StringHelper.isNotEmpty (m_sDocumentLanguage))
+            aCatalog.setLanguage (m_sDocumentLanguage);
+          final PDViewerPreferences aViewerPrefs = new PDViewerPreferences (new COSDictionary ());
+          aViewerPrefs.setDisplayDocTitle (true);
+          aCatalog.setViewerPreferences (aViewerPrefs);
         }
 
         // Draw the watermarks (optional)
@@ -973,7 +1030,8 @@ public class PageLayoutPDF implements IPLVisitable
           if (m_bPdfAStrict)
             _checkFontsEmbedded (aDoc);
 
-          if (m_ePdfALevel.isTagged ())
+          // Only a stub, if no real structure tree was created
+          if (m_ePdfALevel.isTagged () && aDocCatalogue.getStructureTreeRoot () == null)
           {
             final PDMarkInfo aMarkInfo = new PDMarkInfo ();
             final PDStructureTreeRoot aTreeRoot = new PDStructureTreeRoot ();

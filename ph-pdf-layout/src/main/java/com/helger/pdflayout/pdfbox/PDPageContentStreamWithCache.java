@@ -18,12 +18,14 @@ package com.helger.pdflayout.pdfbox;
 
 import java.io.IOException;
 
+import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdfwriter.COSWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.base.enforce.ValueEnforcer;
 import com.helger.base.equals.EqualsHelper;
@@ -31,6 +33,7 @@ import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.FontSpec;
 import com.helger.pdflayout.spec.LineDashPatternSpec;
 import com.helger.pdflayout.spec.LoadedFont;
+import com.helger.pdflayout.tagging.PLTaggingContext;
 
 /**
  * A special version of PDPageContentStream with an integrated "cache" to avoid setting the same
@@ -53,6 +56,9 @@ public class PDPageContentStreamWithCache
   private PLColor m_aLastUsedNonStrokingColor = PLColor.BLACK;
   private LineDashPatternSpec m_aLastUsedLineDashPattern = LineDashPatternSpec.SOLID;
   private float m_fLastUsedLineWidth = 0f;
+  // Tagged PDF only
+  private PLTaggingContext m_aTagging;
+  private boolean m_bInTaggedContent = false;
 
   private void _resetStatus ()
   {
@@ -72,6 +78,69 @@ public class PDPageContentStreamWithCache
     m_aDocument = aDocument;
     m_aPage = aSourcePage;
     m_aStream = new PDPageContentStreamExt (aDocument, aSourcePage, aAppendContent, bCompress);
+  }
+
+  /**
+   * Switch this content stream to a tagged PDF. All content is an artifact, except for text objects
+   * and images that are drawn while a structure element is open and no artifact is open. Must be
+   * called once, directly after the constructor.
+   *
+   * @param aTagging
+   *        The tagging context of the document. May not be <code>null</code>.
+   * @throws IOException
+   *         on write error
+   * @since 8.4.0
+   */
+  public void internalStartTagging (@NonNull final PLTaggingContext aTagging) throws IOException
+  {
+    ValueEnforcer.notNull (aTagging, "Tagging");
+    if (m_aTagging != null)
+      throw new IllegalStateException ("Tagging was already started");
+    m_aTagging = aTagging;
+    aTagging.startPage (m_aPage);
+    // Everything is an artifact by default
+    m_aStream.beginMarkedContent (COSName.ARTIFACT);
+  }
+
+  /**
+   * @return The tagging context of the document, or <code>null</code> if no tagged PDF is created.
+   * @since 8.4.0
+   */
+  @Nullable
+  public final PLTaggingContext getTagging ()
+  {
+    return m_aTagging;
+  }
+
+  /**
+   * Leave the default artifact and start a marked content of the innermost open structure element,
+   * if a tagged PDF is created and no artifact is open.
+   */
+  private void _beginTaggedContent () throws IOException
+  {
+    if (m_aTagging != null && !m_aTagging.isInArtifact () && !m_bInTaggedContent)
+    {
+      final String sTag = m_aTagging.getCurrentStructureType ();
+      final int nMCID = m_aTagging.createMarkedContent ();
+      // End the default artifact
+      m_aStream.endMarkedContent ();
+      m_aStream.beginMarkedContentWithMCID (COSName.getPDFName (sTag), nMCID);
+      m_bInTaggedContent = true;
+    }
+  }
+
+  /**
+   * End the marked content started by {@link #_beginTaggedContent()} and go back to the default
+   * artifact.
+   */
+  private void _endTaggedContent () throws IOException
+  {
+    if (m_bInTaggedContent)
+    {
+      m_aStream.endMarkedContent ();
+      m_aStream.beginMarkedContent (COSName.ARTIFACT);
+      m_bInTaggedContent = false;
+    }
   }
 
   /**
@@ -278,12 +347,14 @@ public class PDPageContentStreamWithCache
 
   public void beginText () throws IOException
   {
+    _beginTaggedContent ();
     m_aStream.beginText ();
   }
 
   public void endText () throws IOException
   {
     m_aStream.endText ();
+    _endTaggedContent ();
   }
 
   public void setCharacterSpacing (final float fSpacing) throws IOException
@@ -310,11 +381,18 @@ public class PDPageContentStreamWithCache
                            final float fWidth,
                            final float fHeight) throws IOException
   {
+    _beginTaggedContent ();
     m_aStream.drawImage (aImage, fX, fY, fWidth, fHeight);
+    _endTaggedContent ();
   }
 
   public void close () throws IOException
   {
+    if (m_aTagging != null)
+    {
+      // End the default artifact
+      m_aStream.endMarkedContent ();
+    }
     m_aStream.close ();
   }
 

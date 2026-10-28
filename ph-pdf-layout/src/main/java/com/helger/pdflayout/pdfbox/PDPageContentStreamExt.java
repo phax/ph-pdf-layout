@@ -1499,6 +1499,25 @@ public class PDPageContentStreamExt implements Closeable
   }
 
   /**
+   * Begin a marked content sequence with an inline property list that only contains the marked
+   * content ID - the form used for the content of a tagged PDF.
+   *
+   * @param tag
+   *        the tag, which is the structure type of the owning structure element
+   * @param nMCID
+   *        the marked content ID. Must be &ge; 0.
+   * @throws IOException
+   *         If the content stream could not be written
+   * @since 8.4.0
+   */
+  public void beginMarkedContentWithMCID (final COSName tag, final int nMCID) throws IOException
+  {
+    writeOperand (tag);
+    write ("<</MCID " + nMCID + ">> ");
+    writeOperator ((byte) 'B', (byte) 'D', (byte) 'C');
+  }
+
+  /**
    * End a marked content sequence.
    *
    * @throws IOException

@@ -53,6 +53,7 @@ import com.helger.pdflayout.spec.HeightSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.SizeSpec;
 import com.helger.pdflayout.spec.WidthSpec;
+import com.helger.pdflayout.tagging.EPLStructureRole;
 
 /**
  * A special table with a repeating header
@@ -498,6 +499,16 @@ public class PLTable extends AbstractPLRenderableObject <PLTable> implements
 
     return PLSplitResult.createSplit (new PLElementWithSize (aTable1, aSplitResult.getFirstElement ().getSize ()),
                                       new PLElementWithSize (aTable2, aSplitResult.getSecondElement ().getSize ()));
+  }
+
+  /**
+   * {@inheritDoc} A table.
+   */
+  @Override
+  @Nullable
+  protected EPLStructureRole getDefaultStructureRole ()
+  {
+    return EPLStructureRole.TABLE;
   }
 
   @Override

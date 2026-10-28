@@ -53,6 +53,7 @@ import com.helger.pdflayout.spec.BorderSpec;
 import com.helger.pdflayout.spec.MarginSpec;
 import com.helger.pdflayout.spec.PaddingSpec;
 import com.helger.pdflayout.spec.SizeSpec;
+import com.helger.pdflayout.tagging.PLTaggingContext;
 
 /**
  * Represents a single page layout as element. It consists of a page size, a page header and footer
@@ -869,19 +870,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
             } // splitHeight > 0
           }
           // Next page
-          if (aCurPageElements.isEmpty ())
-          {
-            if (!bIsPagebreakDesired)
-            {
-              // one element too large for a page
-              LOGGER.warn ("The single element " +
-                           aElement.getDebugID () +
-                           " does not fit onto a single page" +
-                           (bIsVertSplittable ? " even though it is vertically splittable!"
-                                              : " and is not vertically splittable!"));
-            }
-          }
-          else
+          if (!aCurPageElements.isEmpty ())
           {
             // We found elements fitting onto a page (at least one)
             if (LOGGER.isDebugEnabled ())
@@ -910,6 +899,15 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
 
             // Continue with next element
             continue;
+          }
+          if (!bIsPagebreakDesired)
+          {
+            // one element too large for a page
+            LOGGER.warn ("The single element " +
+                         aElement.getDebugID () +
+                         " does not fit onto a single page" +
+                         (bIsVertSplittable ? " even though it is vertically splittable!"
+                                            : " and is not vertically splittable!"));
           }
         }
         // Add element to current page (may also be a page break)
@@ -947,6 +945,26 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
   }
 
   /**
+   * Render a page header or footer. In a tagged PDF it is an artifact.
+   */
+  private static void _renderAsArtifact (@NonNull final IPLRenderableObject <?> aElement,
+                                         @NonNull final PageRenderContext aRCtx,
+                                         @Nullable final PLTaggingContext aTagging) throws IOException
+  {
+    if (aTagging != null)
+      aTagging.beginArtifact ();
+    try
+    {
+      aElement.render (aRCtx);
+    }
+    finally
+    {
+      if (aTagging != null)
+        aTagging.endArtifact ();
+    }
+  }
+
+  /**
    * Render all pages of this layout to the specified PDDocument
    *
    * @param aPrepareResult
@@ -966,6 +984,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
    * @throws IOException
    *         In case of render errors
    */
+  @Deprecated (forRemoval = true, since = "8.4.0")
   public void renderAllPages (@NonNull final PLPageSetPrepareResult aPrepareResult,
                               @NonNull final PDDocument aDoc,
                               final boolean bCompressPDF,
@@ -973,6 +992,50 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                               @Nonnegative final int nPageSetCount,
                               @Nonnegative final int nTotalPageStartIndex,
                               @Nonnegative final int nTotalPageCount) throws IOException
+  {
+    renderAllPages (aPrepareResult,
+                    aDoc,
+                    bCompressPDF,
+                    nPageSetIndex,
+                    nPageSetCount,
+                    nTotalPageStartIndex,
+                    nTotalPageCount,
+                    null);
+  }
+
+  /**
+   * Render all pages of this layout to the specified PDDocument, optionally as tagged PDF. Page
+   * headers, page footers and the fill and border of the page are artifacts.
+   *
+   * @param aPrepareResult
+   *        The preparation result. May not be <code>null</code>.
+   * @param aDoc
+   *        The PDDocument. May not be <code>null</code>.
+   * @param bCompressPDF
+   *        <code>true</code> for create enflated PDF content
+   * @param nPageSetIndex
+   *        Page set index. Always &ge; 0.
+   * @param nPageSetCount
+   *        Page set count. Always &ge; 1.
+   * @param nTotalPageStartIndex
+   *        Total page index. Always &ge; 0.
+   * @param nTotalPageCount
+   *        Total page count. Always &ge; 1.
+   * @param aTagging
+   *        The tagging context of the document for a tagged PDF. May be <code>null</code> for an
+   *        untagged PDF.
+   * @throws IOException
+   *         In case of render errors
+   * @since 8.4.0
+   */
+  public void renderAllPages (@NonNull final PLPageSetPrepareResult aPrepareResult,
+                              @NonNull final PDDocument aDoc,
+                              final boolean bCompressPDF,
+                              @Nonnegative final int nPageSetIndex,
+                              @Nonnegative final int nPageSetCount,
+                              @Nonnegative final int nTotalPageStartIndex,
+                              @Nonnegative final int nTotalPageCount,
+                              @Nullable final PLTaggingContext aTagging) throws IOException
   {
     if (!m_bPrepared)
       throw new IllegalStateException ("Cannot render PageSet that is not prepared");
@@ -1034,6 +1097,8 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                                                                             aPage,
                                                                                             PDPageContentStream.AppendMode.OVERWRITE,
                                                                                             bCompressPDF);
+      if (aTagging != null)
+        aContentStream.internalStartTagging (aTagging);
       try
       {
         // Page rect before content - debug: red
@@ -1069,7 +1134,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                                                  m_aRenderListener);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
-          aPageHeader.render (aRCtx);
+          _renderAsArtifact (aPageHeader, aRCtx, aTagging);
         }
         float fCurY = _getYTop (aMBP);
         for (final PLElementWithSize aElementWithHeight : aPerPage)
@@ -1124,7 +1189,7 @@ public class PLPageSet extends AbstractPLObject <PLPageSet> implements
                                                                  m_aRenderListener);
           if (m_aRCCustomizer != null)
             m_aRCCustomizer.customizeRenderContext (aRCtx);
-          aPageFooter.render (aRCtx);
+          _renderAsArtifact (aPageFooter, aRCtx, aTagging);
         }
       }
       finally

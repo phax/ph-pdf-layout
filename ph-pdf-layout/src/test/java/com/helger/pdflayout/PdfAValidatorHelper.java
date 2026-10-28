@@ -56,6 +56,28 @@ public final class PdfAValidatorHelper
     }
   }
 
+  @NonNull
+  private static ICommonsList <String> _validate (@NonNull final PDFAParser aParser,
+                                                 @NonNull final PDFAFlavour eFlavour) throws Exception
+  {
+    final ICommonsList <String> ret = new CommonsArrayList <> ();
+    try (final PDFAValidator aValidator = Foundries.defaultInstance ().createValidator (eFlavour, false))
+    {
+      final ValidationResult aResult = aValidator.validate (aParser);
+      for (final TestAssertion aTA : aResult.getTestAssertions ())
+        if (aTA.getStatus () == TestAssertion.Status.FAILED)
+          ret.add (aTA.getRuleId ().getClause () +
+                   "-" +
+                   aTA.getRuleId ().getTestNumber () +
+                   ": " +
+                   aTA.getMessage () +
+                   (aTA.getLocation () != null ? " [" + aTA.getLocation ().getContext () + "]" : ""));
+      if (ret.isEmpty () && !aResult.isCompliant ())
+        ret.add ("Not compliant, but no failed rule was reported");
+    }
+    return ret;
+  }
+
   /**
    * Validate the provided PDF with veraPDF against the PDF/A flavour that the PDF declares.
    *
@@ -72,30 +94,36 @@ public final class PdfAValidatorHelper
                                                 @NonNull final String sExpectedFlavourID) throws Exception
   {
     _ensureInitialised ();
-
-    final ICommonsList <String> ret = new CommonsArrayList <> ();
     try (final InputStream aIS = new NonBlockingByteArrayInputStream (aPdfBytes);
          final PDFAParser aParser = Foundries.defaultInstance ().createParser (aIS, PDFAFlavour.NO_FLAVOUR))
     {
       final PDFAFlavour eFlavour = aParser.getFlavour ();
       assertEquals ("Declared PDF/A flavour", sExpectedFlavourID, eFlavour.getId ());
-
-      try (final PDFAValidator aValidator = Foundries.defaultInstance ().createValidator (eFlavour, false))
-      {
-        final ValidationResult aResult = aValidator.validate (aParser);
-        for (final TestAssertion aTA : aResult.getTestAssertions ())
-          if (aTA.getStatus () == TestAssertion.Status.FAILED)
-            ret.add (aTA.getRuleId ().getClause () +
-                     "-" +
-                     aTA.getRuleId ().getTestNumber () +
-                     ": " +
-                     aTA.getMessage () +
-                     (aTA.getLocation () != null ? " [" + aTA.getLocation ().getContext () + "]" : ""));
-        if (ret.isEmpty () && !aResult.isCompliant ())
-          ret.add ("Not compliant, but no failed rule was reported");
-      }
+      return _validate (aParser, eFlavour);
     }
-    return ret;
+  }
+
+  /**
+   * Validate the provided PDF with veraPDF against an explicit flavour, e.g. PDF/UA-1.
+   *
+   * @param aPdfBytes
+   *        The PDF to validate. May not be <code>null</code>.
+   * @param eFlavour
+   *        The flavour to validate against. May not be <code>null</code>.
+   * @return The messages of all failed rules. Never <code>null</code> but maybe empty.
+   * @throws Exception
+   *         on error
+   */
+  @NonNull
+  public static ICommonsList <String> validate (final byte @NonNull [] aPdfBytes,
+                                                @NonNull final PDFAFlavour eFlavour) throws Exception
+  {
+    _ensureInitialised ();
+    try (final InputStream aIS = new NonBlockingByteArrayInputStream (aPdfBytes);
+         final PDFAParser aParser = Foundries.defaultInstance ().createParser (aIS, eFlavour))
+    {
+      return _validate (aParser, eFlavour);
+    }
   }
 
   /**

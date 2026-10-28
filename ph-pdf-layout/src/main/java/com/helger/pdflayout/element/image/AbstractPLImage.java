@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.Nonnegative;
 import com.helger.annotation.OverridingMethodsMustInvokeSuper;
@@ -35,6 +36,7 @@ import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.spec.SizeSpec;
+import com.helger.pdflayout.tagging.EPLStructureRole;
 
 /**
  * Base class for a static image based on {@link BufferedImage}.
@@ -164,6 +166,16 @@ public abstract class AbstractPLImage <IMPLTYPE extends AbstractPLImage <IMPLTYP
   {
     // Fill and border
     PLRenderHelper.fillAndRenderBorder (thisAsT (), aCtx, 0f, 0f);
+  }
+
+  /**
+   * {@inheritDoc} An image is a figure - set an alternate text with {@link #setAlternateText(String)}.
+   */
+  @Override
+  @Nullable
+  protected EPLStructureRole getDefaultStructureRole ()
+  {
+    return EPLStructureRole.FIGURE;
   }
 
   @Override

@@ -188,6 +188,13 @@ v8.4.0 - work in progress
 * PDF/A: fixed the viewer preferences - the document catalogue referenced a page dictionary as its viewer preferences.
 * Added associated (embedded) files: `PageLayoutPDF.addAssociatedFile (PdfAssociatedFile)` embeds a file with its MIME type and `AFRelationship` (`EPdfAFRelationship`) and references it from the `/AF` array of the document catalogue, as PDF/A-3 requires. PDF/A-2 does not allow arbitrary embedded files - rendering fails then.
 * Added XMP extension schemas: `PageLayoutPDF.addXmpExtensionSchema (PdfAXmpExtensionSchema)` adds custom XMP text properties together with the PDF/A extension schema description (`pdfaExtension:schemas`) that PDF/A requires for them.
+* Added tagged PDF (package `com.helger.pdflayout.tagging`): `PageLayoutPDF.setCreateTaggedPDF (true)` creates the logical structure of the document, and `setPdfALevel (EPdfALevel.PDF_A_3A)` does so automatically.
+  * Every element has a structure role (`setStructureRole (EPLStructureRole)`), with a default per element type: text and rich text `P`, image `Figure`, table `Table` / `TR` / `TD`, cells of header rows `TH` (with scope column), bullet list `L` / `LI` / `Lbl` / `LBody`, link `Link`. Boxes only group and create no structure element. Set e.g. `EPLStructureRole.H1` on a heading and an alternate text on images with `setAlternateText`.
+  * Text and images are tagged content of the innermost structure element; everything else (fills, borders, lines), page headers and footers, repeated table header rows and elements marked with `setArtifact (true)` are artifacts. The fragments of a split element continue the same structure element.
+  * Link annotations are part of the structure (also inside artifacts) and get the link target as alternate description.
+  * The tests check PDF/A-3a and PDF/UA-1 with veraPDF; the output fulfils PDF/UA-1, except that it does not claim PDF/UA.
+  * Untagged output does not change.
+* Added text watermarks: `PageLayoutPDF.addWatermark (PLTextWatermark)` draws a text behind the content of every page - centred and rotated, or at the top, bottom or bottom right edge (`EPLWatermarkPosition`), optionally with transparency. It is marked as artifact in a tagged PDF.
 * The tests check the PDF/A output with veraPDF (test scope only).
 
 v8.3.6 - 2026-10-26
