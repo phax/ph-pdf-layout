@@ -179,23 +179,34 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.4.0 - work in progress
-* PDF/A: the PDF/A level can now be chosen with `PageLayoutPDF.setPdfALevel (EPdfALevel)`: PDF/A-2b, -2u, -3b, -3u and -3a. The new PDF/A types are in the package `com.helger.pdflayout.pdfa`.
+v8.4.0 - 2026-10-28
+* PDF/A: the PDF/A level can now be chosen with `PageLayoutPDF.setPdfALevel (EPdfALevel)`: PDF/A-2b, -2u, -3b, -3u and -3a.
+  The new PDF/A types are in the package `com.helger.pdflayout.pdfa`.
   `setCreatePDF_A (true)` still declares PDF/A-3a as before.
-  * With `setPdfALevel` rendering fails with a clear `PDFCreationException` if a font that is used for drawing text is not embedded (e.g. the standard 14 fonts like `PreloadFont.REGULAR`), because PDF/A requires all fonts to be embedded. `setCreatePDF_A` does not check this, for compatibility.
+  * With `setPdfALevel` rendering fails with a clear `PDFCreationException` if a font that is used for drawing text is not embedded (e.g. the standard 14 fonts like `PreloadFont.REGULAR`), because PDF/A requires all fonts to be embedded.
+    `setCreatePDF_A` does not check this, for compatibility.
   * The levels B and U no longer get the empty structure tree and the "marked" flag that only make sense for a tagged PDF (level A).
-* PDF/A: link annotations now carry the "print" flag, which PDF/A requires (veraPDF rule 6.3.2-1). Before, every PDF/A with a link was not conformant.
+* PDF/A: link annotations now carry the "print" flag, which PDF/A requires (veraPDF rule 6.3.2-1).
+  Before, every PDF/A with a link was not conformant.
 * PDF/A: fixed the viewer preferences - the document catalogue referenced a page dictionary as its viewer preferences.
-* Added associated (embedded) files: `PageLayoutPDF.addAssociatedFile (PdfAssociatedFile)` embeds a file with its MIME type and `AFRelationship` (`EPdfAFRelationship`) and references it from the `/AF` array of the document catalogue, as PDF/A-3 requires. PDF/A-2 does not allow arbitrary embedded files - rendering fails then.
+* Added associated (embedded) files: `PageLayoutPDF.addAssociatedFile (PdfAssociatedFile)` embeds a file with its MIME type and `AFRelationship` (`EPdfAFRelationship`) and references it from the `/AF` array of the document catalogue, as PDF/A-3 requires.
+  PDF/A-2 does not allow arbitrary embedded files - rendering fails then.
 * Added XMP extension schemas: `PageLayoutPDF.addXmpExtensionSchema (PdfAXmpExtensionSchema)` adds custom XMP text properties together with the PDF/A extension schema description (`pdfaExtension:schemas`) that PDF/A requires for them.
 * Added tagged PDF (package `com.helger.pdflayout.tagging`): `PageLayoutPDF.setCreateTaggedPdf (true)` creates the logical structure of the document, and `setPdfALevel (EPdfALevel.PDF_A_3A)` does so automatically.
-  * Every element has a structure role (`setStructureRole (EPLStructureRole)`), with a default per element type: text and rich text `P`, image `Figure`, table `Table` / `TR` / `TD`, cells of header rows `TH` (with scope column), bullet list `L` / `LI` / `Lbl` / `LBody`, link `Link`. Boxes only group and create no structure element. Set e.g. `EPLStructureRole.H1` on a heading and an alternate text on images with `setAlternateText`.
-  * Text and images are tagged content of the innermost structure element; everything else (fills, borders, lines), page headers and footers, repeated table header rows and elements marked with `setArtifact (true)` are artifacts. The fragments of a split element continue the same structure element.
+  * Every element has a structure role (`setStructureRole (EPLStructureRole)`), with a default per element type: text and rich text `P`, image `Figure`, table `Table` / `TR` / `TD`, cells of header rows `TH` (with scope column), bullet list `L` / `LI` / `Lbl` / `LBody`, link `Link`.
+    Boxes only group and create no structure element.
+    Set e.g. `EPLStructureRole.H1` on a heading and an alternate text on images with `setAlternateText`.
+  * Text and images are tagged content of the innermost structure element; everything else (fills, borders, lines), page headers and footers, repeated table header rows and elements marked with `setArtifact (true)` are artifacts.
+    The fragments of a split element continue the same structure element.
   * Link annotations are part of the structure (also inside artifacts) and get the link target as alternate description.
   * The tests check PDF/A-3a and PDF/UA-1 with veraPDF.
-* Added PDF/UA-1 (ISO 14289-1): `PageLayoutPDF.setCreatePdfUA (true)` creates a tagged PDF with XMP metadata that contains the PDF/UA identification (`pdfuaid:part` 1), the title and the language. It can be combined with every PDF/A level; together with PDF/A the PDF/UA identification schema is described as PDF/A extension schema. PDF/UA requires a document title and embedded fonts - rendering fails otherwise. veraPDF reports no failure for the test documents; the human checks of PDF/UA (meaningful alternate texts, reading order) remain the job of the author.
+* Added PDF/UA-1 (ISO 14289-1): `PageLayoutPDF.setCreatePdfUA (true)` creates a tagged PDF with XMP metadata that contains the PDF/UA identification (`pdfuaid:part` 1), the title and the language.
+  It can be combined with every PDF/A level; together with PDF/A the PDF/UA identification schema is described as PDF/A extension schema.
+  PDF/UA requires a document title and embedded fonts - rendering fails otherwise.
+  veraPDF reports no failure for the test documents; the human checks of PDF/UA (meaningful alternate texts, reading order) remain the job of the author.
   * Untagged output does not change.
-* Added text watermarks: `PageLayoutPDF.addWatermark (PLTextWatermark)` draws a text behind the content of every page - centred and rotated, or at the top, bottom or bottom right edge (`EPLWatermarkPosition`), optionally with transparency. It is marked as artifact in a tagged PDF.
+* Added text watermarks: `PageLayoutPDF.addWatermark (PLTextWatermark)` draws a text behind the content of every page - centred and rotated, or at the top, bottom or bottom right edge (`EPLWatermarkPosition`), optionally with transparency.
+  It is marked as artifact in a tagged PDF.
 * The tests check the PDF/A output with veraPDF (test scope only).
 
 v8.3.6 - 2026-10-26
