@@ -110,4 +110,18 @@ public enum EPdfALevel implements IHasID <String>
   {
     return EnumHelper.getFromIDOrNull (EPdfALevel.class, sID);
   }
+
+  /**
+   * Find the level with the provided ID, ignoring the case.
+   *
+   * @param sID
+   *        The ID to search, e.g. <code>3b</code> or <code>3B</code>. May be <code>null</code>.
+   * @return <code>null</code> if no such level exists.
+   * @since 8.4.1
+   */
+  @Nullable
+  public static EPdfALevel getFromIDCaseInsensitiveOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDCaseInsensitiveOrNull (EPdfALevel.class, sID);
+  }
 }

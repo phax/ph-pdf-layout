@@ -57,6 +57,19 @@ public final class EPdfALevelTest
   }
 
   @Test
+  public void testGetFromIDCaseInsensitiveOrNull ()
+  {
+    for (final EPdfALevel e : EPdfALevel.values ())
+    {
+      assertSame (e, EPdfALevel.getFromIDCaseInsensitiveOrNull (e.getID ()));
+      assertSame (e, EPdfALevel.getFromIDCaseInsensitiveOrNull (e.getID ().toUpperCase (Locale.ROOT)));
+    }
+    assertNull (EPdfALevel.getFromIDCaseInsensitiveOrNull (null));
+    assertNull (EPdfALevel.getFromIDCaseInsensitiveOrNull ("1b"));
+    assertNull (EPdfALevel.getFromIDCaseInsensitiveOrNull ("1B"));
+  }
+
+  @Test
   public void testSpecificValues ()
   {
     assertEquals (3, EPdfALevel.PDF_A_3B.getPart ());
