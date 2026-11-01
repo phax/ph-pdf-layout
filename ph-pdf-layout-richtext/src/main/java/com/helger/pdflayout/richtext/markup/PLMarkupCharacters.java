@@ -598,21 +598,24 @@ public final class PLMarkupCharacters
   private static final class HyperlinkFactory implements IPLMarkupCharacterFactory
   {
     /**
-     * Regex: <code>(?&lt;!\\)(\\\\)*\{link(:(ul|none))?(\[([^}]+)\])?\}</code>
+     * Regex: <code>(?&lt;!\\)(\\\\)*\{link(:(ul|none))?(\[(([^{}]+))\])?\}</code>
      * <ul>
      * <li><code>(?&lt;!\\)(\\\\)*</code> — escape guard.</li>
      * <li><code>\{link</code> — literal <code>{link</code>.</li>
      * <li><code>(:(ul|none))?</code> — OPTIONAL style suffix: <code>:ul</code> (default underline,
      * kept for explicitness) or <code>:none</code> (no decoration). group 3 captures the style
      * literal.</li>
-     * <li><code>(\[([^}]+)\])?</code> — OPTIONAL URI in square brackets. group 5 captures the URI
-     * content; we use <code>[^}]</code> (not <code>[^]]</code>) so that a stray closing brace in
-     * the URI ends the marker cleanly. The whole bracket block is optional, which is how the
-     * CLOSING marker <code>{link}</code> is recognised — no brackets means "close".</li>
+     * <li><code>(\[(([^{}]+))\])?</code> — OPTIONAL URI in square brackets. group 5 captures the URI
+     * content; we use <code>[^{}]</code> (not <code>[^]]</code>) so that a URI can contain square
+     * brackets, while a brace in the URI ends the marker cleanly. A URI has to percent-encode
+     * braces. Excluding the opening brace keeps the time linear: an unclosed <code>{link[</code>
+     * is only scanned up to the next marker, not to the end of the text. The whole bracket block
+     * is optional, which is how the CLOSING marker <code>{link}</code> is recognised — no brackets
+     * means "close".</li>
      * <li><code>\}</code> — literal <code>}</code>.</li>
      * </ul>
      */
-    private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{link(:(ul|none))?(\\[(([^}]+))\\])?\\}");
+    private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{link(:(ul|none))?(\\[(([^{}]+))\\])?\\}");
     private static final String MARKER = "{";
 
     @Override

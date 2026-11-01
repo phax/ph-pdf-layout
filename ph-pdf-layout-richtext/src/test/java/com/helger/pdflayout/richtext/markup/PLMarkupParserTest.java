@@ -104,6 +104,25 @@ public final class PLMarkupParserTest
   }
 
   @Test (timeout = 10_000)
+  public void testManyUnclosedLinksAreLinear ()
+  {
+    final String sText = "{link[".repeat (200_000);
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse (sText);
+    assertEquals (1, aTokens.size ());
+    assertEquals (sText, ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+
+    // With a closing brace at the end only the last opening can use it
+    assertTrue (new PLMarkupParser ().parse (sText + "x]}").size () > 1);
+  }
+
+  @Test
+  public void testLinkTargetMustNotContainBraces ()
+  {
+    assertEquals (1, new PLMarkupParser ().parse ("{link[http://a/{b}]}").size ());
+    assertEquals (2, new PLMarkupParser ().parse ("{link[http://a/?q=[1]]}text").size ());
+  }
+
+  @Test (timeout = 10_000)
   public void testLongRunOfSpacesIsLinear ()
   {
     final String sSpaces = " ".repeat (1_000_000);

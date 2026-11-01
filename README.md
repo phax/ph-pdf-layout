@@ -45,6 +45,92 @@ The basic elements provided are:
 A set of example files as created from the unit test can be found in folder [example-files](https://github.com/phax/ph-pdf-layout/tree/master/example-files).
   The source code for these examples is https://github.com/phax/ph-pdf-layout/tree/master/ph-pdf-layout/src/test/java/com/helger/pdflayout
 
+# PDF/A
+
+Since v8.4.0 the PDF/A level of a document can be chosen with `PageLayoutPDF.setPdfALevel (EPdfALevel)`.
+The types are in the package `com.helger.pdflayout.pdfa`.
+
+| `EPdfALevel` | Level | Tagged PDF | Associated files |
+|---|---|---|---|
+| `PDF_A_2B` | PDF/A-2b | no | not allowed |
+| `PDF_A_2U` | PDF/A-2u | no | not allowed |
+| `PDF_A_3B` | PDF/A-3b | no | allowed |
+| `PDF_A_3U` | PDF/A-3u | no | allowed |
+| `PDF_A_3A` | PDF/A-3a | yes, created automatically | allowed |
+
+All fonts used for drawing text must be embedded, so the standard 14 fonts like `PreloadFont.REGULAR` cannot be used.
+For Open Source fonts see the https://github.com/phax/ph-fonts project.
+
+```java
+final PreloadFont aFont = PreloadFont.createEmbedding (EFontResourceRoboto.ROBOTO_NORMAL.getFontResource ());
+
+final PLPageSet aPS = new PLPageSet (PDRectangle.A4).setMargin (50);
+aPS.addElement (new PLText ("Hello PDF/A", new FontSpec (aFont, 10)));
+
+new PageLayoutPDF ().setDocumentTitle ("My document")
+                    .setDocumentLanguage ("en-GB")
+                    .setPdfALevel (EPdfALevel.PDF_A_3B)
+                    .addPageSet (aPS)
+                    .renderTo (new File ("pdfa.pdf"));
+```
+
+The XMP metadata with the PDF/A identification and the sRGB output intent are added automatically.
+The document language defaults to `en-US`.
+
+Rendering fails with a `PDFCreationException` if
+* a font used for drawing text is not embedded
+* a PDF/A-2 document has associated files
+
+Rendering does not check the conformance of the result, so it is recommended to validate the created PDFs, for example with [veraPDF](https://verapdf.org/).
+Things to watch out for:
+* CMYK colours are not conformant, because the output intent is sRGB.
+  This affects `PLCMYKColor` and the `{color_cmyk:C,M,Y,K}` markup of `ph-pdf-layout-richtext`.
+* Custom XMP properties added with `setMetadataCustomizer` are not conformant without a PDF/A extension schema description.
+  Use `addXmpExtensionSchema` instead (see below).
+
+Note: `setCreatePDF_A (true)` is the API from before v8.4.0 and still declares PDF/A-3a.
+It does not check the fonts and only creates an empty structure tree, unless `setCreateTaggedPdf (true)` is used as well.
+
+## Tagged PDF and PDF/UA
+
+`PDF_A_3A` creates the logical structure of the document from the structure roles of the elements.
+Each element type has a default role, e.g. `P` for text and `Figure` for images.
+Headings need an explicit role and images should have an alternate text:
+
+```java
+aPS.addElement (new PLText ("Chapter 1", aFontSpec).setStructureRole (EPLStructureRole.H1));
+aPS.addElement (new PLImage (aImage).setAlternateText ("The company logo"));
+```
+
+Every PDF/A level can be combined with PDF/UA-1 using `setCreatePdfUA (true)`, which also creates a tagged PDF.
+PDF/UA requires a document title and embedded fonts - rendering fails otherwise.
+Whether the alternate texts and the reading order are meaningful has to be checked by a human.
+
+## Associated files
+
+PDF/A-3 allows embedding arbitrary files, for example the XML source of an invoice.
+The file name must be unique within the document.
+
+```java
+aPageLayout.addAssociatedFile (new PdfAssociatedFile (aXmlBytes,
+                                                      "invoice.xml",
+                                                      "text/xml",
+                                                      "The invoice as XML",
+                                                      EPdfAFRelationship.SOURCE));
+```
+
+## XMP extension schemas
+
+`PdfAXmpExtensionSchema` adds custom XMP text properties together with the description (`pdfaExtension:schemas`) that PDF/A requires for them:
+
+```java
+aPageLayout.addXmpExtensionSchema (new PdfAXmpExtensionSchema ("urn:example:invoice:1p0#",
+                                                               "inv",
+                                                               "Invoice metadata").addTextProperty ("DocumentType",
+                                                                                                    "The type of the document",
+                                                                                                    "INVOICE"));
+```
+
 # Rich text (markup) — module `ph-pdf-layout-richtext`
 
 The optional sibling module **`ph-pdf-layout-richtext`** adds **multi-style runs inside a single paragraph** — i.e. a single text element can carry mixed bold/italic, per-segment colors, in-line hyperlinks, anchors, underlines, strikethrough, inline code, sub/superscript and background highlights.
@@ -79,7 +165,7 @@ Markup syntax (Markdown / CommonMark style for bold, italic and line breaks; the
 | `{bg:#rrggbb}…{bg}` | fills a background rectangle behind the wrapped run (default `tight` extent — per-segment box that follows sub/superscript shifts) |
 | `{bg:tight:#rrggbb}…{bg}` | background with explicit `tight` extent — same as the default |
 | `{bg:line:#rrggbb}…{bg}` | background with `line` extent — uses the line's full slot so the highlight stays a single uniform rectangle across mixed sizes / sub-superscript, and is contiguous across wrapped lines |
-| `{link[uri]}…{link}` | wraps the inner text in an external hyperlink (default underline-decorated) |
+| `{link[uri]}…{link}` | wraps the inner text in an external hyperlink (default underline-decorated); `uri` must not contain `{` or `}` |
 | `{link:none[uri]}…{link}` | hyperlink with no visual decoration |
 | `{link[#name]}…{link}` | internal link jumping to a named anchor declared elsewhere |
 | `{anchor:name}…{anchor}` | declares a named destination targetable by `#name` link URIs |
@@ -180,8 +266,13 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 # News and Noteworthy
 
 v8.4.1 - work in progress
-* Richtext markup: the hard break pattern needed quadratic time for a long run of spaces that is not followed by a line ending. It is linear now, and matches the same text
-* Richtext markup: a hard break after an odd number of backslashes works, e.g. `\\\` before the line ending is an escaped backslash and the marker. So far only a single backslash was recognised. New `IPLMarkupCharacterFactory.getTextEnd`
+* Richtext markup: the hard break pattern needed quadratic time for a long run of spaces that is not followed by a line ending.
+  It is linear now, and matches the same text
+* Richtext markup: a hard break after an odd number of backslashes works, e.g. `\\\` before the line ending is an escaped backslash and the marker.
+  So far only a single backslash was recognised.
+  New `IPLMarkupCharacterFactory.getTextEnd`
+* Richtext markup: the link pattern needed quadratic time for many unclosed `{link[`.
+  It is linear now; the target of a link can no longer contain `{` or `}`, which a URL has to percent-encode anyway
 * PDF/A: added `EPdfALevel.getFromIDCaseInsensitiveOrNull (String)`
 
 v8.4.0 - 2026-10-28
