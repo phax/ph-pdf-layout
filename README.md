@@ -265,7 +265,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.4.1 - work in progress
+v8.4.1 - 2026-11-01
 * Richtext markup: the hard break pattern needed quadratic time for a long run of spaces that is not followed by a line ending.
   It is linear now, and matches the same text
 * Richtext markup: a hard break after an odd number of backslashes works, e.g. `\\\` before the line ending is an escaped backslash and the marker.
