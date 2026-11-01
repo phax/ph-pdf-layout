@@ -51,6 +51,68 @@ public final class PLMarkupParserTest
   }
 
   @Test
+  public void testHardBreakAfterAnyNumberOfSpaces ()
+  {
+    for (final String sSpaces : new String [] { "  ", "   ", "          " })
+    {
+      final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("foo" + sSpaces + "\nbar");
+      assertEquals (3, aTokens.size ());
+      assertEquals ("foo", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+      assertTrue (aTokens.get (1) instanceof IPLMarkupToken.NewLine);
+      assertEquals ("bar", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+    }
+  }
+
+  @Test
+  public void testHardBreakAfterBackslashes ()
+  {
+    // One backslash is the marker
+    ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("foo\\\nbar");
+    assertEquals (3, aTokens.size ());
+    assertEquals ("foo", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.NewLine);
+
+    // Two backslashes are an escaped backslash
+    aTokens = new PLMarkupParser ().parse ("foo\\\\\nbar");
+    assertEquals (3, aTokens.size ());
+    assertEquals ("foo\\", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.SoftBreak);
+
+    // An escaped backslash and the marker: the backslash stays text
+    aTokens = new PLMarkupParser ().parse ("foo\\\\\\\nbar");
+    assertEquals (3, aTokens.size ());
+    assertEquals ("foo\\", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.NewLine);
+    assertEquals ("bar", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+
+    // Only backslashes before the marker
+    aTokens = new PLMarkupParser ().parse ("\\\\\\\nbar");
+    assertEquals (3, aTokens.size ());
+    assertEquals ("\\", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof IPLMarkupToken.NewLine);
+  }
+
+  @Test (timeout = 10_000)
+  public void testLongRunOfBackslashesIsLinear ()
+  {
+    // Every position of the run must not start a new scan
+    for (final int nCount : new int [] { 1_000_000, 1_000_001 })
+    {
+      final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("\\".repeat (nCount) + "x");
+      assertEquals (1, aTokens.size ());
+    }
+  }
+
+  @Test (timeout = 10_000)
+  public void testLongRunOfSpacesIsLinear ()
+  {
+    final String sSpaces = " ".repeat (1_000_000);
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("x" + sSpaces + "x");
+    assertEquals (1, aTokens.size ());
+    assertEquals ("x" + sSpaces + "x", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+  }
+
+  @Test
   public void testBold ()
   {
     final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("hi **bold** world");

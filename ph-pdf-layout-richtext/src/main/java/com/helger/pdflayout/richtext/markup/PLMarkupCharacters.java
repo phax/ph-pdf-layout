@@ -310,21 +310,33 @@ public final class PLMarkupCharacters
   private static final class HardBreakFactory implements IPLMarkupCharacterFactory
   {
     /**
-     * Regex: <code>( {2,}|(?&lt;!\\)\\)(\r\n|\n)</code>
+     * Regex: <code>((?&lt;! ) {2,}+|(?&lt;!\\)((?:\\\\)*+)\\)(\r\n|\n)</code>
      * <ul>
-     * <li><code>{2,}</code> — two-or-more space characters; OR</li>
-     * <li><code>(?&lt;!\\)\\</code> — a single backslash whose immediately preceding character is
-     * NOT a backslash, so an escaped backslash (<code>\\</code>) doesn't produce a hard break.</li>
+     * <li><code>(?&lt;! ) {2,}+</code> — two-or-more space characters; OR. A match can only start
+     * at the first space of a run and the quantifier is possessive, so a long run of spaces that
+     * is not followed by a line ending is scanned once. Trying every start position needs
+     * quadratic time.</li>
+     * <li><code>(?&lt;!\\)((?:\\\\)*+)\\</code> — a run of backslashes of odd length: group 2
+     * holds the pairs, which are escaped backslashes, and the last one is the marker. A run of even
+     * length is only escaped backslashes and doesn't produce a hard break.</li>
      * <li><code>(\r\n|\n)</code> — the line ending.</li>
      * </ul>
      */
-    private static final Pattern PATTERN = Pattern.compile ("( {2,}|(?<!\\\\)\\\\)(\r\n|\n)");
+    private static final Pattern PATTERN = Pattern.compile ("((?<! ) {2,}+|(?<!\\\\)((?:\\\\\\\\)*+)\\\\)(\r\n|\n)");
 
     @Override
     @NonNull
     public Pattern getPattern ()
     {
       return PATTERN;
+    }
+
+    @Override
+    public int getTextEnd (@NonNull final Matcher aMatcher)
+    {
+      // The escaped backslashes before the marker are text
+      final int nPairsEnd = aMatcher.end (2);
+      return nPairsEnd < 0 ? aMatcher.start () : nPairsEnd;
     }
 
     @Override

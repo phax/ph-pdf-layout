@@ -157,7 +157,7 @@ public final class PLMarkupParser
           final Matcher aMatcher = aFactory.getPattern ().matcher (sCurrent);
           while (aMatcher.find ())
           {
-            final String sPart = sCurrent.substring (nBegin, aMatcher.start ());
+            final String sPart = sCurrent.substring (nBegin, aFactory.getTextEnd (aMatcher));
             nBegin = aMatcher.end ();
 
             if (!sPart.isEmpty ())

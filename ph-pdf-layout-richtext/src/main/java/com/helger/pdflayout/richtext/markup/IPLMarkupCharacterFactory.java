@@ -40,6 +40,20 @@ public interface IPLMarkupCharacterFactory
   Pattern getPattern ();
 
   /**
+   * Get the position up to which the text before a match is kept. All of the match after this
+   * position is replaced by the token.
+   *
+   * @param aMatcher
+   *        The matcher, positioned on the current match. Never <code>null</code>.
+   * @return The start of the match by default. A factory overrides this if the beginning of the
+   *         match is text and only needed to decide about the match.
+   */
+  default int getTextEnd (@NonNull final Matcher aMatcher)
+  {
+    return aMatcher.start ();
+  }
+
+  /**
    * @return <code>true</code> if the pattern is only meaningful at the begin of a line. Default is
    *         <code>false</code>.
    */

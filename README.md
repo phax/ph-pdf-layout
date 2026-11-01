@@ -179,6 +179,10 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.4.1 - work in progress
+* Richtext markup: the hard break pattern needed quadratic time for a long run of spaces that is not followed by a line ending. It is linear now, and matches the same text
+* Richtext markup: a hard break after an odd number of backslashes works, e.g. `\\\` before the line ending is an escaped backslash and the marker. So far only a single backslash was recognised. New `IPLMarkupCharacterFactory.getTextEnd`
+
 v8.4.0 - 2026-10-28
 * PDF/A: the PDF/A level can now be chosen with `PageLayoutPDF.setPdfALevel (EPdfALevel)`: PDF/A-2b, -2u, -3b, -3u and -3a.
   The new PDF/A types are in the package `com.helger.pdflayout.pdfa`.
