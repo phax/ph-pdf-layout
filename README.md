@@ -265,7 +265,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.4.3 - work in progress
+v8.4.3 - 2026-11-03
 * Added `PLRichText.setReplacePlaceholder`: the placeholders of `EPLPlaceholder`, such as `${total-page-number}`, are replaced in the runs of a rich text, for example in a page footer.
   A placeholder must be within one run; in markup the braces are escaped: `$\{total-page-number\}`.
 
