@@ -18,6 +18,7 @@ package com.helger.pdflayout.richtext.element;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.action.PDAction;
@@ -34,12 +35,15 @@ import com.helger.annotation.OverridingMethodsMustInvokeSuper;
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.annotation.style.ReturnsMutableCopy;
 import com.helger.base.enforce.ValueEnforcer;
+import com.helger.base.state.EChange;
+import com.helger.base.string.StringReplace;
 import com.helger.base.tostring.ToStringGenerator;
 import com.helger.collection.commons.CommonsArrayList;
 import com.helger.collection.commons.CommonsHashMap;
 import com.helger.collection.commons.ICommonsList;
 import com.helger.collection.commons.ICommonsMap;
 import com.helger.pdflayout.base.AbstractPLInlineElement;
+import com.helger.pdflayout.base.EPLPlaceholder;
 import com.helger.pdflayout.base.IPLHasHorizontalAlignment;
 import com.helger.pdflayout.base.IPLSplittableObject;
 import com.helger.pdflayout.base.PLColor;
@@ -47,6 +51,7 @@ import com.helger.pdflayout.base.PLElementWithSize;
 import com.helger.pdflayout.base.PLSplitResult;
 import com.helger.pdflayout.pdfbox.PDPageContentStreamWithCache;
 import com.helger.pdflayout.render.PLAnchorRegistry;
+import com.helger.pdflayout.render.PagePreRenderContext;
 import com.helger.pdflayout.render.PageRenderContext;
 import com.helger.pdflayout.render.PreparationContext;
 import com.helger.pdflayout.render.PreparationContextGlobal;
@@ -84,13 +89,19 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
                         IPLSplittableObject <PLRichText, PLRichText>
 {
   public static final float DEFAULT_LINE_SPACING = 1f;
+  public static final boolean DEFAULT_REPLACE_PLACEHOLDERS = false;
+
+  // Call only once here - used read-only!
+  private static final ICommonsMap <String, String> ESTIMATION_REPLACEMENTS = EPLPlaceholder.getEstimationReplacements ();
 
   private final ICommonsList <PLRichTextRun> m_aRuns;
   private float m_fLineSpacing = DEFAULT_LINE_SPACING;
   private EHorzAlignment m_eHorzAlign = DEFAULT_HORZ_ALIGNMENT;
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
+  private boolean m_bReplacePlaceholder = DEFAULT_REPLACE_PLACEHOLDERS;
 
   // prepare result
+  private transient ICommonsMap <FontSpec, LoadedFont> m_aLoadedFonts;
   private transient ICommonsList <PLRichTextLine> m_aPreparedLines;
   private transient float m_fTextHeight;
   private transient float m_fDescent;
@@ -135,6 +146,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
     setLineSpacing (aSource.getLineSpacing ());
     setHorzAlign (aSource.getHorzAlign ());
     setVertSplittable (aSource.isVertSplittable ());
+    setReplacePlaceholder (aSource.isReplacePlaceholder ());
     return this;
   }
 
@@ -188,20 +200,76 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
   }
 
   /**
+   * @return <code>true</code> if the placeholders of {@link EPLPlaceholder} in the texts of the runs
+   *         are replaced, <code>false</code> otherwise. The default value is
+   *         {@link #DEFAULT_REPLACE_PLACEHOLDERS} so {@value #DEFAULT_REPLACE_PLACEHOLDERS}.
+   */
+  public boolean isReplacePlaceholder ()
+  {
+    return m_bReplacePlaceholder;
+  }
+
+  /**
+   * Change whether the placeholders of {@link EPLPlaceholder} in the texts of the runs should be
+   * replaced or not, for example the page number in a page footer. A placeholder must be within one
+   * run. The preparation uses an estimated text for each placeholder, so the replaced text should
+   * not need more lines. Enabling this slows down the rendering. Enable this only if necessary.
+   *
+   * @param bReplacePlaceholder
+   *        <code>true</code> if placeholders should be replaced, <code>false</code> otherwise.
+   * @return this for chaining
+   */
+  @NonNull
+  public PLRichText setReplacePlaceholder (final boolean bReplacePlaceholder)
+  {
+    m_bReplacePlaceholder = bReplacePlaceholder;
+    return this;
+  }
+
+  /**
+   * Get a copy of the runs with all placeholders replaced.
+   *
+   * @return <code>null</code> if no run changed.
+   */
+  @Nullable
+  private ICommonsList <PLRichTextRun> _getRunsWithReplacements (@NonNull final Map <String, String> aReplacements)
+  {
+    final ICommonsList <PLRichTextRun> ret = new CommonsArrayList <> (m_aRuns.size ());
+    boolean bChanged = false;
+    for (final PLRichTextRun aRun : m_aRuns)
+    {
+      final String sText = aRun.getText ();
+      final String sReplaced = StringReplace.replaceMultiple (sText, aReplacements);
+      if (sReplaced.equals (sText))
+        ret.add (aRun);
+      else
+      {
+        ret.add (new PLRichTextRun (sReplaced,
+                                    aRun.getFontSpec (),
+                                    aRun.getAllAnnotations (),
+                                    aRun.getBaselineOffsetScale ()));
+        bChanged = true;
+      }
+    }
+    return bChanged ? ret : null;
+  }
+
+  /**
    * Layout pass. Walks the run list, calls {@link LoadedFont#getStringWidth} on each word, and
    * emits {@link PLRichTextLine}s that fit within {@code fAvailableWidth}. Embedded {@code '\n'}
    * characters force a hard line break. When a run overflows the current line we split on the last
    * whitespace - the second half inherits the run's font and annotations.
    */
   @NonNull
-  private ICommonsList <PLRichTextLine> _layout (final float fAvailableWidth,
-                                                 @NonNull final ICommonsMap <FontSpec, LoadedFont> aLoadedFonts) throws IOException
+  private static ICommonsList <PLRichTextLine> _layout (@NonNull final List <PLRichTextRun> aRuns,
+                                                        final float fAvailableWidth,
+                                                        @NonNull final ICommonsMap <FontSpec, LoadedFont> aLoadedFonts) throws IOException
   {
     final ICommonsList <PLRichTextLine> aLines = new CommonsArrayList <> ();
     ICommonsList <PLRichTextSegment> aCurrent = new CommonsArrayList <> ();
     float fCurrentWidth = 0f;
 
-    for (final PLRichTextRun aRun : m_aRuns)
+    for (final PLRichTextRun aRun : aRuns)
     {
       final FontSpec aFontSpec = aRun.getFontSpec ();
       final LoadedFont aLoadedFont = aLoadedFonts.get (aFontSpec);
@@ -377,7 +445,16 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
       m_fTextHeight = fMaxTextHeight;
       m_fDescent = fMaxDescent;
 
-      m_aPreparedLines = _layout (fElementWidth, aLoadedFonts);
+      m_aLoadedFonts = aLoadedFonts;
+      ICommonsList <PLRichTextRun> aRuns = m_aRuns;
+      if (m_bReplacePlaceholder)
+      {
+        // Use the approximations of the placeholders
+        final ICommonsList <PLRichTextRun> aEstimatedRuns = _getRunsWithReplacements (ESTIMATION_REPLACEMENTS);
+        if (aEstimatedRuns != null)
+          aRuns = aEstimatedRuns;
+      }
+      m_aPreparedLines = _layout (aRuns, fElementWidth, aLoadedFonts);
 
       float fMaxLineWidth = 0f;
       for (final PLRichTextLine aLine : m_aPreparedLines)
@@ -406,6 +483,27 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
   protected void onMarkAsNotPrepared ()
   {
     m_aPreparedLines = null;
+    m_aLoadedFonts = null;
+  }
+
+  /**
+   * {@inheritDoc} If placeholders are replaced, the lines are laid out again with the values of the
+   * page. The size of the element stays the one of the preparation.
+   */
+  @Override
+  @NonNull
+  public EChange beforeRender (@NonNull final PagePreRenderContext aCtx) throws IOException
+  {
+    if (m_bReplacePlaceholder && m_aLoadedFonts != null)
+    {
+      final ICommonsList <PLRichTextRun> aRuns = _getRunsWithReplacements (aCtx.getAllPlaceholders ());
+      if (aRuns != null)
+      {
+        m_aPreparedLines = _layout (aRuns, getPrepareAvailableSize ().getWidth () - getOutlineXSum (), m_aLoadedFonts);
+        return EChange.CHANGED;
+      }
+    }
+    return EChange.UNCHANGED;
   }
 
   /**
@@ -798,6 +896,7 @@ public class PLRichText extends AbstractPLInlineElement <PLRichText> implements
                             .append ("LineSpacing", m_fLineSpacing)
                             .append ("HorzAlign", m_eHorzAlign)
                             .append ("VertSplittable", m_bVertSplittable)
+                            .append ("ReplacePlaceholder", m_bReplacePlaceholder)
                             .getToString ();
   }
 }
