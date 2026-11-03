@@ -93,6 +93,7 @@ import com.helger.pdflayout.pdfa.EPdfALevel;
 import com.helger.pdflayout.pdfa.PdfAXmpExtensionSchema;
 import com.helger.pdflayout.pdfa.PdfAssociatedFile;
 import com.helger.pdflayout.render.PreparationContextGlobal;
+import com.helger.pdflayout.spec.IPLMissingCodePointCallback;
 import com.helger.pdflayout.tagging.PLTaggingContext;
 import com.helger.pdflayout.watermark.PLTextWatermark;
 
@@ -159,6 +160,7 @@ public class PageLayoutPDF implements IPLVisitable
   private int m_nCustomTotalPageCount = -1;
   private IPDDocumentCustomizer m_aDocumentCustomizer;
   private IXMPMetadataCustomizer m_aMetadataCustomizer;
+  private IPLMissingCodePointCallback m_aMissingCodePointCallback;
   private final ICommonsList <PdfAssociatedFile> m_aAssociatedFiles = new CommonsArrayList <> ();
   private final ICommonsList <PdfAXmpExtensionSchema> m_aXmpExtensionSchemas = new CommonsArrayList <> ();
   private final ICommonsList <PLTextWatermark> m_aWatermarks = new CommonsArrayList <> ();
@@ -622,6 +624,32 @@ public class PageLayoutPDF implements IPLVisitable
   }
 
   /**
+   * @return The callback for a character that a font cannot show. May be <code>null</code>.
+   * @since 8.4.2
+   */
+  @Nullable
+  public final IPLMissingCodePointCallback getMissingCodePointCallback ()
+  {
+    return m_aMissingCodePointCallback;
+  }
+
+  /**
+   * Set the callback for a character that a font cannot show. Such a character is drawn as the
+   * fallback code point of the font, for example as a question mark, also without a callback.
+   *
+   * @param aMissingCodePointCallback
+   *        The callback to use. May be <code>null</code>.
+   * @return this for chaining
+   * @since 8.4.2
+   */
+  @NonNull
+  public final PageLayoutPDF setMissingCodePointCallback (@Nullable final IPLMissingCodePointCallback aMissingCodePointCallback)
+  {
+    m_aMissingCodePointCallback = aMissingCodePointCallback;
+    return this;
+  }
+
+  /**
    * @return <code>true</code> if a tagged PDF is created explicitly. A tagged PDF is also created
    *         for a PDF/A level that requires it, see {@link #setPdfALevel(EPdfALevel)}.
    * @since 8.4.0
@@ -809,7 +837,7 @@ public class PageLayoutPDF implements IPLVisitable
     try (final PDDocument aDoc = new PDDocument ())
     {
       // Global context
-      final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal (aDoc);
+      final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal (aDoc, m_aMissingCodePointCallback);
       // Through all page sets
       for (final PLPageSet aPageSet : m_aPageSets)
       {
@@ -983,7 +1011,7 @@ public class PageLayoutPDF implements IPLVisitable
         }
 
         // Prepare all page sets
-        final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal (aDoc);
+        final PreparationContextGlobal aGlobalPrepareCtx = new PreparationContextGlobal (aDoc, m_aMissingCodePointCallback);
         final PLPageSetPrepareResult [] aPRs = new PLPageSetPrepareResult [m_aPageSets.size ()];
         int nPageSetIndex = 0;
         // Eventually start at the custom offset

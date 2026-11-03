@@ -48,7 +48,7 @@ All elements extend `AbstractPLRenderableObject` -> `AbstractPLElement` -> `Abst
 
 ### Font System
 
-`PreloadFont` -> `LoadedFont` (per-document). Fonts are registered in `PreloadFontManager`, lazily loaded into PDFBox `PDFont` instances per document. Standard 14 PDF fonts available via `PreloadFont.REGULAR`, `.BOLD`, etc. Custom fonts via `PreloadFontManager.getOrAddEmbeddingPreloadFont(IFontResource)`.
+`PreloadFont` -> `LoadedFont` (per-document). Fonts are registered in `PreloadFontManager`, lazily loaded into PDFBox `PDFont` instances per document. Standard 14 PDF fonts available via `PreloadFont.REGULAR`, `.BOLD`, etc. Custom fonts via `PreloadFontManager.getOrAddEmbeddingPreloadFont(IFontResource)`. A character that a font does not have is drawn as the fallback code point of the `PreloadFont`, and `PageLayoutPDF.setMissingCodePointCallback` reports it once per font and code point.
 
 ### XML Serialization
 

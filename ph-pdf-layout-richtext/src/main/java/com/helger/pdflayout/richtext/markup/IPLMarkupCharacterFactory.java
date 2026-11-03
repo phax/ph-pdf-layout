@@ -45,12 +45,17 @@ public interface IPLMarkupCharacterFactory
    *
    * @param aMatcher
    *        The matcher, positioned on the current match. Never <code>null</code>.
-   * @return The start of the match by default. A factory overrides this if the beginning of the
-   *         match is text and only needed to decide about the match.
+   * @return The position after the backslashes at the start of the match by default: the patterns
+   *         accept escaped backslashes in front of the marker, and they are text. A factory overrides
+   *         this if another beginning of the match is text and only needed to decide about the match.
    */
   default int getTextEnd (@NonNull final Matcher aMatcher)
   {
-    return aMatcher.start ();
+    final String sMatch = aMatcher.group ();
+    int nBackslashes = 0;
+    while (nBackslashes < sMatch.length () && sMatch.charAt (nBackslashes) == '\\')
+      nBackslashes++;
+    return aMatcher.start () + nBackslashes;
   }
 
   /**

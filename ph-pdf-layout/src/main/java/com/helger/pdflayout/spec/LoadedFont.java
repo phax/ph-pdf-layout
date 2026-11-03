@@ -116,6 +116,10 @@ public class LoadedFont
    * The fallback character to be used in case an unmappable character is contained
    */
   private final int m_nFallbackCodePoint;
+  /**
+   * The callback for a code point that the font does not have.
+   */
+  private final IPLMissingCodePointCallback m_aMissingCodePointCallback;
   // Status vars
   private final float m_fLineHeight;
   private final float m_fDescent;
@@ -123,13 +127,36 @@ public class LoadedFont
   private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <> ();
   private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
 
+  @Deprecated (forRemoval = true, since = "8.4.2")
   public LoadedFont (@NonNull final PDFont aFont,
                      final int nFallbackCodePoint,
                      @CheckForSigned final float fCustomLineHeight)
   {
+    this (aFont, nFallbackCodePoint, fCustomLineHeight, null);
+  }
+
+  /**
+   * Constructor
+   *
+   * @param aFont
+   *        The underlying font. May not be <code>null</code>.
+   * @param nFallbackCodePoint
+   *        The code point to be used for a code point that is not part of the font.
+   * @param fCustomLineHeight
+   *        The line height of the font, if it is greater than 0.
+   * @param aMissingCodePointCallback
+   *        The callback for a code point that is not part of the font. May be <code>null</code>.
+   * @since 8.4.2
+   */
+  public LoadedFont (@NonNull final PDFont aFont,
+                     final int nFallbackCodePoint,
+                     @CheckForSigned final float fCustomLineHeight,
+                     @Nullable final IPLMissingCodePointCallback aMissingCodePointCallback)
+  {
     ValueEnforcer.notNull (aFont, "Font");
     m_aFont = aFont;
     m_nFallbackCodePoint = nFallbackCodePoint;
+    m_aMissingCodePointCallback = aMissingCodePointCallback;
 
     PDFontDescriptor aFD = aFont.getFontDescriptor ();
     if (aFD == null)
@@ -223,6 +250,8 @@ public class LoadedFont
     {
       aECP = encodeCodepointWithFallback (m_aFont, nCodePoint, m_nFallbackCodePoint);
       m_aEncodedCodePointCache.put (nCodePoint, aECP);
+      if (m_aMissingCodePointCallback != null && aECP.getCodePoint () != nCodePoint)
+        m_aMissingCodePointCallback.onMissingCodePoint (m_aFont, nCodePoint, aECP.getCodePoint ());
     }
     return aECP;
   }

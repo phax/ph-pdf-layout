@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.base.enforce.ValueEnforcer;
@@ -27,6 +28,7 @@ import com.helger.collection.commons.CommonsHashMap;
 import com.helger.collection.commons.ICommonsMap;
 import com.helger.pdflayout.debug.PLDebugLog;
 import com.helger.pdflayout.spec.FontSpec;
+import com.helger.pdflayout.spec.IPLMissingCodePointCallback;
 import com.helger.pdflayout.spec.LoadedFont;
 import com.helger.pdflayout.spec.PreloadFont;
 
@@ -40,6 +42,7 @@ import com.helger.pdflayout.spec.PreloadFont;
 public final class PreparationContextGlobal
 {
   private final PDDocument m_aDoc;
+  private final IPLMissingCodePointCallback m_aMissingCodePointCallback;
   private final ICommonsMap <PreloadFont, LoadedFont> m_aFontCache = new CommonsHashMap <> ();
 
   /**
@@ -48,10 +51,27 @@ public final class PreparationContextGlobal
    * @param aDoc
    *        The {@link PDDocument} worked upon
    */
+  @Deprecated (forRemoval = true, since = "8.4.2")
   public PreparationContextGlobal (@NonNull final PDDocument aDoc)
+  {
+    this (aDoc, null);
+  }
+
+  /**
+   * Constructor
+   *
+   * @param aDoc
+   *        The {@link PDDocument} worked upon
+   * @param aMissingCodePointCallback
+   *        The callback for a character that a font cannot show. May be <code>null</code>.
+   * @since 8.4.2
+   */
+  public PreparationContextGlobal (@NonNull final PDDocument aDoc,
+                                   @Nullable final IPLMissingCodePointCallback aMissingCodePointCallback)
   {
     ValueEnforcer.notNull (aDoc, "PDDocument");
     m_aDoc = aDoc;
+    m_aMissingCodePointCallback = aMissingCodePointCallback;
   }
 
   /**
@@ -75,7 +95,8 @@ public final class PreparationContextGlobal
 
       aLoadedFont = new LoadedFont (aPreloadFont.loadPDFont (m_aDoc),
                                     aPreloadFont.getFallbackCodePoint (),
-                                    aPreloadFont.getFontLineHeight ());
+                                    aPreloadFont.getFontLineHeight (),
+                                    m_aMissingCodePointCallback);
       m_aFontCache.put (aPreloadFont, aLoadedFont);
     }
     return aLoadedFont;

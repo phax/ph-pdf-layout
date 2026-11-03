@@ -111,7 +111,7 @@ public final class PDFontEncodeBenchmarkLoadedFont extends AbstractEncodeBenchma
                                 final List <String []> aTextSets,
                                 final List <String> aTextSetNames) throws IOException
   {
-    final LoadedFont aLF = new LoadedFont (aFont, PreloadFont.DEFAULT_FALLBACK_CODE_POINT, -1);
+    final LoadedFont aLF = new LoadedFont (aFont, PreloadFont.DEFAULT_FALLBACK_CODE_POINT, -1, null);
     for (int i = 0; i < aTextSets.size (); ++i)
     {
       final String [] aTexts = aTextSets.get (i);

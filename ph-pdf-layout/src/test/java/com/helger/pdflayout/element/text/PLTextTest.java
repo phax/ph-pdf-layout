@@ -671,7 +671,7 @@ public final class PLTextTest
 
     try (final PDDocument aDoc = new PDDocument ())
     {
-      final PreparationContextGlobal aGlobalCtx = new PreparationContextGlobal (aDoc);
+      final PreparationContextGlobal aGlobalCtx = new PreparationContextGlobal (aDoc, null);
 
       final PLText aText1 = new PLText (sText1, r10).setHorzAlign (EHorzAlignment.BLOCK);
       aText1.prepare (new PreparationContext (aGlobalCtx, fAvailableWidth, fAvailableHeight));

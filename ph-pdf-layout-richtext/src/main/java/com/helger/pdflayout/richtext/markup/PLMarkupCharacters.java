@@ -63,7 +63,9 @@ import com.helger.pdflayout.richtext.annotation.PLUnderlineAnnotation;
  * = underline, <code>none</code> = no decoration) is optional and defaults to underline.</li>
  * <li>{@code {anchor:name}} — declares a named anchor as a link target</li>
  * <li>Backslash before any marker escapes it ({@code \*} renders a literal {@code *}, {@code \**}
- * renders a literal {@code **}).</li>
+ * renders a literal {@code **}). A backslash before a curly brace always renders the literal brace
+ * (<code>\{</code> and <code>\}</code>), also if the text is no marker, so text can be escaped without
+ * knowing the markers.</li>
  * </ul>
  *
  * @author Philip Helger
@@ -378,7 +380,6 @@ public final class PLMarkupCharacters
      * </ul>
      */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{color:#(\\p{XDigit}{6})\\}");
-    private static final String MARKER = "{";
 
     @Override
     @NonNull
@@ -402,7 +403,8 @@ public final class PLMarkupCharacters
     @NonNull
     public String unescape (@NonNull final String sText)
     {
-      return sText.replaceAll ("\\\\" + Pattern.quote (MARKER), MARKER);
+      // PLMarkupParser removes the backslash of a curly brace after all factories
+      return sText;
     }
   }
 
@@ -517,7 +519,6 @@ public final class PLMarkupCharacters
      * parameterised form.
      */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{(_|\\^)(:(-?\\d+(\\.\\d*)?)\\|(-?\\d+(\\.\\d*)?))?\\}");
-    private static final String MARKER = "{";
 
     /** Default font scale for both subscript and superscript. */
     public static final float DEFAULT_FONT_SCALE = 0.61f;
@@ -566,7 +567,8 @@ public final class PLMarkupCharacters
     @NonNull
     public String unescape (@NonNull final String sText)
     {
-      return sText.replaceAll ("\\\\" + Pattern.quote (MARKER), MARKER);
+      // PLMarkupParser removes the backslash of a curly brace after all factories
+      return sText;
     }
 
     private static float _parseFloat (final String sValue, final float fDefault)
@@ -616,7 +618,6 @@ public final class PLMarkupCharacters
      * </ul>
      */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{link(:(ul|none))?(\\[(([^{}]+))\\])?\\}");
-    private static final String MARKER = "{";
 
     @Override
     @NonNull
@@ -644,7 +645,8 @@ public final class PLMarkupCharacters
     @NonNull
     public String unescape (@NonNull final String sText)
     {
-      return sText.replaceAll ("\\\\" + Pattern.quote (MARKER), MARKER);
+      // PLMarkupParser removes the backslash of a curly brace after all factories
+      return sText;
     }
   }
 
@@ -674,7 +676,6 @@ public final class PLMarkupCharacters
      * hyperlink markup.
      */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{anchor(:((\\w+)))?\\}");
-    private static final String MARKER = "{";
 
     @Override
     @NonNull
@@ -700,7 +701,8 @@ public final class PLMarkupCharacters
     @NonNull
     public String unescape (@NonNull final String sText)
     {
-      return sText.replaceAll ("\\\\" + Pattern.quote (MARKER), MARKER);
+      // PLMarkupParser removes the backslash of a curly brace after all factories
+      return sText;
     }
   }
 
@@ -731,7 +733,6 @@ public final class PLMarkupCharacters
      * </ul>
      */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{bg(:(tight|line))?(:#(\\p{XDigit}{6}))?\\}");
-    private static final String MARKER = "{";
 
     @Override
     @NonNull
@@ -763,7 +764,8 @@ public final class PLMarkupCharacters
     @NonNull
     public String unescape (@NonNull final String sText)
     {
-      return sText.replaceAll ("\\\\" + Pattern.quote (MARKER), MARKER);
+      // PLMarkupParser removes the backslash of a curly brace after all factories
+      return sText;
     }
   }
 
@@ -797,7 +799,6 @@ public final class PLMarkupCharacters
      * syntax is whitespace-free.
      */
     private static final Pattern PATTERN = Pattern.compile ("(?<!\\\\)(\\\\\\\\)*\\{color_cmyk:(\\d+(\\.\\d*)?),(\\d+(\\.\\d*)?),(\\d+(\\.\\d*)?),(\\d+(\\.\\d*)?)\\}");
-    private static final String MARKER = "{";
 
     @Override
     @NonNull
@@ -821,7 +822,8 @@ public final class PLMarkupCharacters
     @NonNull
     public String unescape (@NonNull final String sText)
     {
-      return sText.replaceAll ("\\\\" + Pattern.quote (MARKER), MARKER);
+      // PLMarkupParser removes the backslash of a curly brace after all factories
+      return sText;
     }
   }
 }

@@ -290,6 +290,42 @@ public final class PLMarkupParserTest
   }
 
   @Test
+  public void testEscapedBraces ()
+  {
+    // Text that is no marker, a marker, and a backslash in front of a brace
+    for (final String [] aPair : new String [] [] { { "\\{a\\}", "{a}" },
+                                                    { "\\{color:#112233\\}", "{color:#112233}" },
+                                                    { "\\{color:#112233}", "{color:#112233}" },
+                                                    { "\\{link[http://x]\\}", "{link[http://x]}" },
+                                                    { "\\{link[http://x]}", "{link[http://x]}" },
+                                                    { "\\{bg:#112233\\}\\{bg\\}", "{bg:#112233}{bg}" },
+                                                    { "\\{\\_\\}", "{_}" },
+                                                    { "\\\\\\{a", "\\{a" } })
+    {
+      final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse (aPair[0]);
+      assertEquals (aPair[0], 1, aTokens.size ());
+      assertEquals (aPair[1], ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    }
+
+    // An escaped backslash does not escape the marker after it
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("\\\\{color:#112233}");
+    assertEquals (2, aTokens.size ());
+    assertEquals ("\\", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof Color);
+  }
+
+  @Test
+  public void testEscapedBackslashInFrontOfMarker ()
+  {
+    final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("a\\\\**b**");
+    assertEquals (4, aTokens.size ());
+    assertEquals ("a\\", ((IPLMarkupToken.Text) aTokens.get (0)).getText ());
+    assertTrue (aTokens.get (1) instanceof BoldToggle);
+    assertEquals ("b", ((IPLMarkupToken.Text) aTokens.get (2)).getText ());
+    assertTrue (aTokens.get (3) instanceof BoldToggle);
+  }
+
+  @Test
   public void testColor ()
   {
     final ICommonsList <IPLMarkupToken> aTokens = new PLMarkupParser ().parse ("hi {color:#ff0000}red{color:#000000} done");

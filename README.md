@@ -169,7 +169,7 @@ Markup syntax (Markdown / CommonMark style for bold, italic and line breaks; the
 | `{link:none[uri]}…{link}` | hyperlink with no visual decoration |
 | `{link[#name]}…{link}` | internal link jumping to a named anchor declared elsewhere |
 | `{anchor:name}…{anchor}` | declares a named destination targetable by `#name` link URIs |
-| `\*`, `\**`, `\_`, `\__`, `\{`, `\\` | backslash-escape any marker |
+| `\*`, `\**`, `\_`, `\__`, `\{`, `\}`, `\\` | backslash-escape any marker; `\{` and `\}` always give the literal brace |
 | bare `\n` / `\r\n` | CommonMark **soft break** — rendered as a single space; word-wrap decides line breaks |
 | `  \n` (two-or-more trailing spaces) | CommonMark **hard line break** |
 | `\<newline>` (backslash immediately before the line ending) | CommonMark **hard line break** |
@@ -265,6 +265,15 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.4.2 - work in progress
+* Added `IPLMissingCodePointCallback` and `PageLayoutPDF.setMissingCodePointCallback`: called once per font and code point for a character that a font cannot show, which is drawn as the fallback code point of the font.
+  New overloads of the constructors of `LoadedFont` and `PreparationContextGlobal`.
+* Richtext markup: an escaped marker stays escaped.
+  So far the first factory with a curly brace removed the backslash, so `\{color:#112233}` was a marker for a later factory, which also meant that text could not be escaped safely, and each of these factories took one more backslash from `\\\{`.
+  The backslash of a curly brace is now removed once, after all factories, and `\}` gives a literal `}`
+* Richtext markup: an escaped backslash in front of a marker is no longer lost: `a\\**b**` shows `a\` and a bold `b`.
+  So far the marker took the backslash with it.
+
 v8.4.1 - 2026-11-01
 * Richtext markup: the hard break pattern needed quadratic time for a long run of spaces that is not followed by a line ending.
   It is linear now, and matches the same text
@@ -346,9 +355,11 @@ v8.3.1 - 2026-05-30
   * Italic is `*italic*` or `_italic_` — both Markdown forms are accepted (was `_italic_` only).
   * `***foo***` toggles bold and italic together.
   * `__underline__` is unchanged, but **differs from CommonMark**: CommonMark uses `__` as alternate bold; here `__` stays reserved for underline because there is no standard Markdown for underline.
-  * Line breaks now follow CommonMark inline semantics: a bare `\n` / `\r\n` is a **soft break** (rendered as a single space and word-wrapped). A **hard line break** requires either two-or-more trailing spaces before the line ending, or a backslash immediately before the line ending.
+  * Line breaks now follow CommonMark inline semantics: a bare `\n` / `\r\n` is a **soft break** (rendered as a single space and word-wrapped).
+    A **hard line break** requires either two-or-more trailing spaces before the line ending, or a backslash immediately before the line ending.
   * Backslash escape now applies to the new markers too: `\*`, `\**`, `\_`, `\__`.
-  * Internally: new `IPLMarkupToken.SoftBreak`; new `HARD_BREAK` factory; new `ITALIC_UNDERSCORE` factory in `PLMarkupCharacters`; `BOLD` regex gained a `(?!\*)` lookahead so it cooperates with italic in `***…***`. All affected unit tests and pixel-diff baselines have been updated; the rendered output of the existing markup tests is byte-identical to v8.3.0 once the new escape-demo line is taken into account.
+  * Internally: new `IPLMarkupToken.SoftBreak`; new `HARD_BREAK` factory; new `ITALIC_UNDERSCORE` factory in `PLMarkupCharacters`; `BOLD` regex gained a `(?!\*)` lookahead so it cooperates with italic in `***…***`.
+    All affected unit tests and pixel-diff baselines have been updated; the rendered output of the existing markup tests is byte-identical to v8.3.0 once the new escape-demo line is taken into account.
 
 v8.3.0 - 2026-05-29
 * New optional module `ph-pdf-layout-richtext` providing multi-style runs in a single paragraph, plus inline links, anchors, underline, sub/superscript and a Markdown-style markup parser.
@@ -362,13 +373,19 @@ v8.2.0 - 2026-05-28
 * Added per-element render callback: new `IPLRenderListener`, settable via `PLPageSet.setRenderListener(...)`, fires after every element renders (including nested children) with the full `PageRenderContext`.
 * `PageRenderContext` now exposes page indices (`getPageSetIndex`, `getPageSetPageIndex`, `getTotalPageIndex` and their counts), matching the names already used by `PagePreRenderContext`.
 * New `PLRenderedElementCollector` helper consumes the listener and produces an ordered map from each element's original ID to its first-appearance page and coordinates - the natural input for building a TOC or PDF outline.
-* Added `PLOutlineBuilder` for generating PDF outlines (bookmarks). Declare a nested entry tree of `(title, elementID)` pairs, register the builder as both render listener and document customizer, and the resulting PDF opens with a clickable bookmark tree pointing at the rendered positions. Supports grouping nodes without destinations and tolerates missing element references.
-* Added named-anchor support: new `IPLHasAnchorName` interface on every renderable element exposes `setAnchorName(String)`. When set, the rendering pipeline registers a PDF named destination at the element's top-left, addressable via URL fragments (`mypdf.pdf#section1`), bookmarks, or internal links. Duplicate anchor names are logged as a warning and the first registration wins.
+* Added `PLOutlineBuilder` for generating PDF outlines (bookmarks).
+  Declare a nested entry tree of `(title, elementID)` pairs, register the builder as both render listener and document customizer, and the resulting PDF opens with a clickable bookmark tree pointing at the rendered positions.
+  Supports grouping nodes without destinations and tolerates missing element references.
+* Added named-anchor support: new `IPLHasAnchorName` interface on every renderable element exposes `setAnchorName(String)`.
+  When set, the rendering pipeline registers a PDF named destination at the element's top-left, addressable via URL fragments (`mypdf.pdf#section1`), bookmarks, or internal links.
+  Duplicate anchor names are logged as a warning and the first registration wins.
 * New `PLAnchor` element - a zero-size marker for inserting an anchor at an arbitrary position in the document flow.
-* Added internal-link support: new `PLInternalLink` wraps another element and creates a clickable PDF link annotation that jumps to a named anchor via `PDActionGoTo` + `PDNamedDestination`. Forward references work because resolution happens at PDF read time. Extracted common link-annotation logic (rectangle, border, color) from `AbstractPLExternalLink` into a shared `AbstractPLLinkBase`; external-link behaviour is preserved byte-for-byte.
+* Added internal-link support: new `PLInternalLink` wraps another element and creates a clickable PDF link annotation that jumps to a named anchor via `PDActionGoTo` + `PDNamedDestination`.
+  Forward references work because resolution happens at PDF read time.
+  Extracted common link-annotation logic (rectangle, border, color) from `AbstractPLExternalLink` into a shared `AbstractPLLinkBase`; external-link behaviour is preserved byte-for-byte.
 
 v8.1.2 - 2026-05-16
-* Security: dropped `Serializable` from `PreloadFont` (and its inner `EncodedCodePoint`) to remove a CWE-502 deserialization gadget surface. 
+* Security: dropped `Serializable` from `PreloadFont` (and its inner `EncodedCodePoint`) to remove a CWE-502 deserialization gadget surface.
   Note: the `instanceof IFontResource` guard previously present in `readObject` ran only after the foreign class had already been instantiated.
 * Security: `AbstractPLExternalLink.setURI(String)` now validates the URI scheme against an allowlist
   (`http`, `https`, `mailto`, `tel`, `ftp`, `ftps` by default).
@@ -385,7 +402,8 @@ v8.1.2 - 2026-05-16
 v8.1.1 - 2026-05-16
 * Updated to PDFBox 3.0.7
 * Removed OSGI bundling
-* Fixed thread-safety issue with preload Standard 14 fonts. See [#65](https://github.com/phax/ph-pdf-layout/issues/65) - thx @andreasa-winenet
+* Fixed thread-safety issue with preload Standard 14 fonts.
+  See [#65](https://github.com/phax/ph-pdf-layout/issues/65) - thx @andreasa-winenet
 
 v8.1.0 - 2025-11-16
 * Updated to PDFBox 3.0.6
@@ -401,7 +419,8 @@ v7.4.2 - 2025-07-08
   See [#58](https://github.com/phax/ph-pdf-layout/issues/58) - thx @xxs3315
 
 v7.4.1 - 2025-06-24
-* Added support for rounded edges on `PLBox` and `PLText`. See [#48](https://github.com/phax/ph-pdf-layout/issues/48) - thx @marco-de-angelis
+* Added support for rounded edges on `PLBox` and `PLText`.
+  See [#48](https://github.com/phax/ph-pdf-layout/issues/48) - thx @marco-de-angelis
 
 v7.4.0 - 2025-06-17
 * Added `ELineJoinStyle` and `ELineCapStyle` enums
@@ -412,12 +431,15 @@ v7.4.0 - 2025-06-17
 
 v7.3.7 - 2025-05-06
 * Updated to PDFBox 3.0.5
-* Added a new method `PreloadFont.setUseFontLineHeightFromHHEA()` to use the line height from the font instead of the default bounding box. This is especially helpful for the "Noto" and "Kurinto" fonts, which have a very large bounding box. Fixes [#46](https://github.com/phax/ph-pdf-layout/issues/46) - thx @mrrao 
+* Added a new method `PreloadFont.setUseFontLineHeightFromHHEA()` to use the line height from the font instead of the default bounding box.
+  This is especially helpful for the "Noto" and "Kurinto" fonts, which have a very large bounding box.
+  Fixes [#46](https://github.com/phax/ph-pdf-layout/issues/46) - thx @mrrao 
 
 v7.3.6 - 2025-03-31
 * Updated to PDFBox 3.0.4
 * Made PDF/A property "document language" customizable in `PageLayoutPDF`
-* Added new interface `IXMPMetadataCustomizer` to be able to customize the `XMPMetadata`. See [pr #44](https://github.com/phax/ph-pdf-layout/pull/44) - thx @stmuecke
+* Added new interface `IXMPMetadataCustomizer` to be able to customize the `XMPMetadata`.
+  See [pr #44](https://github.com/phax/ph-pdf-layout/pull/44) - thx @stmuecke
 
 v7.3.5 - 2024-10-09
 * Updated to PDFBox 3.0.3
@@ -425,27 +447,35 @@ v7.3.5 - 2024-10-09
 * Added a setter of `PLFontSpec` into `AbstractPLText`
 
 v7.3.4 - 2024-05-30
-* Fixed an issue with `BLOCK` horizontal alignment in case of a page break. See [issue #36](https://github.com/phax/ph-pdf-layout/issues/36)
+* Fixed an issue with `BLOCK` horizontal alignment in case of a page break.
+  See [issue #36](https://github.com/phax/ph-pdf-layout/issues/36)
 
 v7.3.3 - 2024-05-29
 * Updated to PDFBox 3.0.2
-* Added new horizontal alignment type `BLOCK` as a mixture of `LEFT` and `JUSTIFY`. See [issue #36](https://github.com/phax/ph-pdf-layout/issues/36) - thx @istvangaal
+* Added new horizontal alignment type `BLOCK` as a mixture of `LEFT` and `JUSTIFY`.
+  See [issue #36](https://github.com/phax/ph-pdf-layout/issues/36) - thx @istvangaal
 
 v7.3.2 - 2024-03-27
 * Updated to ph-commons 11.1.5
 * Created Java 21 compatibility
 * Extracted a parent POM and prepared a submodule structure
-* Using https://github.com/red6/pdfcompare to test created PDFs against the stored ones. See [issue #35](https://github.com/phax/ph-pdf-layout/issues/35) - thx @Lolf1010
+* Using https://github.com/red6/pdfcompare to test created PDFs against the stored ones.
+  See [issue #35](https://github.com/phax/ph-pdf-layout/issues/35) - thx @Lolf1010
 
 v7.3.1 - 2024-01-24
 * Updated to PDFBox 3.0.1
-* Added support for clipping content of block elements via `.setClipContent(boolean)`. See [issue #34](https://github.com/phax/ph-pdf-layout/issues/34) - thx @terrason
+* Added support for clipping content of block elements via `.setClipContent(boolean)`.
+  See [issue #34](https://github.com/phax/ph-pdf-layout/issues/34) - thx @terrason
 
 v7.3.0 - 2023-10-30
-* Completely removed usage of `java.awt.Color`. Backwards incompatible change. This finalizes [issue #32](https://github.com/phax/ph-pdf-layout/issues/32).
+* Completely removed usage of `java.awt.Color`.
+  Backwards incompatible change.
+  This finalizes [issue #32](https://github.com/phax/ph-pdf-layout/issues/32).
 
 v7.2.0 - 2023-10-30
-* Added new class `PLColor` and deprecated all methods using `java.awt.Color`. Backwards incompatible change. See [issue #32](https://github.com/phax/ph-pdf-layout/issues/32) - thx @AndroidDeveloperLB
+* Added new class `PLColor` and deprecated all methods using `java.awt.Color`.
+  Backwards incompatible change.
+  See [issue #32](https://github.com/phax/ph-pdf-layout/issues/32) - thx @AndroidDeveloperLB
 
 v7.1.0 - 2023-08-20
 * Updated to PDFBox 3.0.0
@@ -453,7 +483,8 @@ v7.1.0 - 2023-08-20
 v7.0.1 - 2023-07-31
 * Updated to PDFBox 2.0.29
 * Updated to ph-commons 11.1.0
-* Improved API to create an empty cell. See [issue #29](https://github.com/phax/ph-pdf-layout/issues/29) - thx @fheldt
+* Improved API to create an empty cell.
+  See [issue #29](https://github.com/phax/ph-pdf-layout/issues/29) - thx @fheldt
 
 v7.0.0 - 2022-09-14
 * Using Java 11 as the baseline
@@ -463,12 +494,14 @@ v6.0.3 - 2022-08-17
 * Added support for PDF/A creation in `PageLayoutPDF` - thx @robertholfeld for publishing this in his branch
 
 v6.0.2 - 2022-05-25
-* Extended `PDPageContentStreamWithCache` API. See [issue #23](https://github.com/phax/ph-pdf-layout/issues/23) - thx @schneidh
+* Extended `PDPageContentStreamWithCache` API.
+  See [issue #23](https://github.com/phax/ph-pdf-layout/issues/23) - thx @schneidh
 
 v6.0.1 - 2022-05-07
 * Updated to jbig2-imageio 3.0.4
 * Updated to PDFBox 2.0.26
-* Added support for creating external links via new class `PLExternalLink`. See [issue #14](https://github.com/phax/ph-pdf-layout/issues/14) - thx @rgarg-atheer and @martin19
+* Added support for creating external links via new class `PLExternalLink`.
+  See [issue #14](https://github.com/phax/ph-pdf-layout/issues/14) - thx @rgarg-atheer and @martin19
 
 v6.0.0 - 2022-01-05
 * Changed artifactId from `ph-pdf-layout4` to `ph-pdf-layout`
@@ -489,7 +522,8 @@ v5.2.0 - 2021-03-21
 
 v5.1.2 - 2020-06-15
 * Updated to PDFBox 2.0.20
-* Allow different page content height if the first page header and footer have different heights. See [issue #14](https://github.com/phax/ph-pdf-layout/issues/14).
+* Allow different page content height if the first page header and footer have different heights.
+  See [issue #14](https://github.com/phax/ph-pdf-layout/issues/14).
 
 v5.1.1 - 2020-05-29
 * Updated to ph-fonts 4.1.0 (changed Maven groupId)

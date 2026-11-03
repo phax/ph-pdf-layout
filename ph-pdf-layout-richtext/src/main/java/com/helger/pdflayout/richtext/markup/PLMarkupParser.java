@@ -82,6 +82,40 @@ public final class PLMarkupParser
 
   private final ICommonsList <IPLMarkupCharacterFactory> m_aFactories;
 
+  /**
+   * Remove the backslash of an escaped backslash and of an escaped curly brace. This must happen
+   * after all factories: several of them start with a curly brace, so if one removed the backslash,
+   * the next one would see a marker. It is a linear scan: an escaped backslash must not make the next
+   * character look escaped.
+   */
+  @NonNull
+  private static String _unescapeText (@NonNull final String sText)
+  {
+    if (sText.indexOf ('\\') < 0)
+      return sText;
+
+    final int nLength = sText.length ();
+    final StringBuilder aSB = new StringBuilder (nLength);
+    int nIndex = 0;
+    while (nIndex < nLength)
+    {
+      final char cChar = sText.charAt (nIndex);
+      if (cChar == '\\' && nIndex + 1 < nLength)
+      {
+        final char cNext = sText.charAt (nIndex + 1);
+        if (cNext == '\\' || cNext == '{' || cNext == '}')
+        {
+          aSB.append (cNext);
+          nIndex += 2;
+          continue;
+        }
+      }
+      aSB.append (cChar);
+      nIndex++;
+    }
+    return aSB.toString ();
+  }
+
   /** Creates a parser using {@link #DEFAULT_FACTORIES}. */
   public PLMarkupParser ()
   {
@@ -116,7 +150,7 @@ public final class PLMarkupParser
       aSegments = _splitOnce (aFactory, aSegments);
     }
 
-    // Unescape any remaining backslash-backslash pairs in the plain text.
+    // Unescape any remaining backslash pairs and curly braces in the plain text.
     final ICommonsList <IPLMarkupToken> aResult = new CommonsArrayList <> ();
     for (final Object aSegment : aSegments)
     {
@@ -124,7 +158,7 @@ public final class PLMarkupParser
       {
         if (!sPlain.isEmpty ())
         {
-          aResult.add (new IPLMarkupToken.Text (sPlain.replace ("\\\\", "\\")));
+          aResult.add (new IPLMarkupToken.Text (_unescapeText (sPlain)));
         }
       }
       else
