@@ -265,7 +265,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.4.2 - work in progress
+v8.4.2 - 2026-11-03
 * Added `IPLMissingCodePointCallback` and `PageLayoutPDF.setMissingCodePointCallback`: called once per font and code point for a character that a font cannot show, which is drawn as the fallback code point of the font.
   New overloads of the constructors of `LoadedFont` and `PreparationContextGlobal`.
 * Richtext markup: an escaped marker stays escaped.
