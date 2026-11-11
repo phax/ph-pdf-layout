@@ -33,16 +33,20 @@ import com.helger.base.version.Version;
 @IsSPIImplementation
 public final class ThirdPartyModuleProvider_ph_pdf_layout implements IThirdPartyModuleProviderSPI
 {
-  public static final IThirdPartyModule PDFBOX = new ThirdPartyModule ("Apache PDFBox",
-                                                                       "Apache",
-                                                                       ELicense.APACHE2,
-                                                                       new Version (3, 0, 8),
-                                                                       "http://pdfbox.apache.org/");
-  public static final IThirdPartyModule JBIG_IMAGEIO = new ThirdPartyModule ("Apache PDFBox ImageIO",
-                                                                             "Apache",
-                                                                             ELicense.APACHE2,
-                                                                             new Version (3, 0, 5),
-                                                                             "http://pdfbox.apache.org/");
+  public static final IThirdPartyModule PDFBOX = ThirdPartyModule.builder ()
+                                                                 .displayName ("Apache PDFBox")
+                                                                 .copyrightOwner ("Apache")
+                                                                 .license (ELicense.APACHE2)
+                                                                 .version (new Version (3, 0, 8))
+                                                                 .webSiteUrl ("http://pdfbox.apache.org/")
+                                                                 .build ();
+  public static final IThirdPartyModule JBIG_IMAGEIO = ThirdPartyModule.builder ()
+                                                                       .displayName ("Apache PDFBox ImageIO")
+                                                                       .copyrightOwner ("Apache")
+                                                                       .license (ELicense.APACHE2)
+                                                                       .version (new Version (3, 0, 5))
+                                                                       .webSiteUrl ("http://pdfbox.apache.org/")
+                                                                       .build ();
 
   @Nullable
   public IThirdPartyModule [] getAllThirdPartyModules ()
