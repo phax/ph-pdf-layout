@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.helger</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>3.1.1</version>
+    <version>3.2.0</version>
   </parent>
   <artifactId>ph-pdf-layout-parent-pom</artifactId>
   <version>8.4.4-SNAPSHOT</version>
@@ -75,7 +75,7 @@
   <properties>
     <pdfbox.version>3.0.8</pdfbox.version>
     <pdfcompare.version>1.2.13</pdfcompare.version>
-    <verapdf.version>1.30.3</verapdf.version>
+    <verapdf.version>1.30.4</verapdf.version>
   </properties>
 
   <dependencyManagement>
