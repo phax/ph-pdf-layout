@@ -25,7 +25,6 @@
     <version>3.2.0</version>
     <relativePath />
   </parent>
-  <groupId>com.helger</groupId>
   <artifactId>ph-pdf-layout-bom</artifactId>
   <version>8.4.5-SNAPSHOT</version>
   <packaging>pom</packaging>
