@@ -191,6 +191,7 @@
       <groupId>de.redsix</groupId>
       <artifactId>pdfcompare</artifactId>
       <version>${pdfcompare.version}</version>
+      <scope>test</scope>
       <exclusions>
         <exclusion>
           <groupId>ch.qos.logback</groupId>

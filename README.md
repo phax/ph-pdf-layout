@@ -265,6 +265,9 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
+v8.4.5 - work in progress
+* The test library `pdfcompare` is no longer a compile dependency of `ph-pdf-layout`, so it is no longer pulled into projects using it
+
 v8.4.4 - 2026-11-14
 * Requires at least ph-commons 12.6.0
 * Added new submodule `ph-pdf-layout-bom` with a Bill of Materials for all ph-pdf-layout artifacts
