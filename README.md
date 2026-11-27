@@ -265,7 +265,7 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 # News and Noteworthy
 
-v8.4.5 - work in progress
+v8.4.5 - 2026-11-27
 * The test library `pdfcompare` is no longer a compile dependency of `ph-pdf-layout`, so it is no longer pulled into projects using it
 * The debug messages "Not rendering the box/inline box/link ..." are only logged if `PLDebugLog.isDebugRender()` is enabled.
   So far they were logged at INFO level for every empty split fragment, for example for each cell of a table row that is split over a page break
