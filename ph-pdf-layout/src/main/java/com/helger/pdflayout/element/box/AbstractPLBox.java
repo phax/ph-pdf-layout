@@ -428,7 +428,7 @@ public abstract class AbstractPLBox <IMPLTYPE extends AbstractPLBox <IMPLTYPE>> 
         aCSWC.restoreGraphicsState ();
       }
     }
-    else
+    else if (PLDebugLog.isDebugRender ())
       PLDebugLog.debugRender (this, "Not rendering the box, because no element is contained");
   }
 

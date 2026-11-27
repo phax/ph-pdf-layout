@@ -65,7 +65,7 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
   private static final Logger LOGGER = LoggerFactory.getLogger (AbstractPLVBox.class);
 
   // All the rows of this VBox
-  private final ICommonsList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
+  private final CommonsArrayList <PLVBoxRow> m_aRows = new CommonsArrayList <> ();
   // Vertical splittable?
   private boolean m_bVertSplittable = DEFAULT_VERT_SPLITTABLE;
   // Header rows to be repeated after a split
@@ -713,6 +713,8 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
                                                                                    .setVertSplittable (true);
 
     final int nTotalRows = getRowCount ();
+    // The second VBox usually receives most of the rows - avoid growing the list row by row
+    aVBox2.m_aRows.ensureCapacity (nTotalRows);
     final ICommonsList <SizeSpec> aVBox1RowSize = new CommonsArrayList <> (nTotalRows);
     final ICommonsList <SizeSpec> aVBox1ElementSize = new CommonsArrayList <> (nTotalRows);
     float fUsedVBox1RowHeight = 0;
@@ -730,8 +732,10 @@ public abstract class AbstractPLVBox <IMPLTYPE extends AbstractPLVBox <IMPLTYPE>
     }
 
     // The height and width after header rows are identical
-    final ICommonsList <SizeSpec> aVBox2RowSize = aVBox1RowSize.getClone ();
-    final ICommonsList <SizeSpec> aVBox2ElementSize = aVBox1ElementSize.getClone ();
+    final ICommonsList <SizeSpec> aVBox2RowSize = new CommonsArrayList <> (nTotalRows);
+    aVBox2RowSize.addAll (aVBox1RowSize);
+    final ICommonsList <SizeSpec> aVBox2ElementSize = new CommonsArrayList <> (nTotalRows);
+    aVBox2ElementSize.addAll (aVBox1ElementSize);
     float fUsedVBox2RowHeight = fUsedVBox1RowHeight;
 
     // Copy all content rows

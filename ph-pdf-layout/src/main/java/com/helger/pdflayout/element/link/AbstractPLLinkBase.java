@@ -194,14 +194,16 @@ public abstract class AbstractPLLinkBase <IMPLTYPE extends AbstractPLLinkBase <I
     final IPLRenderableObject <?> aElement = getElement ();
     if (aElement == null)
     {
-      PLDebugLog.debugRender (this, "Not rendering a link, because no element is contained");
+      if (PLDebugLog.isDebugRender ())
+        PLDebugLog.debugRender (this, "Not rendering a link, because no element is contained");
       return;
     }
 
     final PDAction aAction = createLinkAction ();
     if (aAction == null)
     {
-      PLDebugLog.debugRender (this, getMissingActionDebugReason ());
+      if (PLDebugLog.isDebugRender ())
+        PLDebugLog.debugRender (this, getMissingActionDebugReason ());
       return;
     }
 

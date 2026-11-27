@@ -60,6 +60,7 @@ import org.jspecify.annotations.NonNull;
 
 import com.helger.annotation.concurrent.NotThreadSafe;
 import com.helger.annotation.style.CodingStyleguideUnaware;
+import com.helger.base.io.nonblocking.NonBlockingBufferedOutputStream;
 import com.helger.collection.stack.NonBlockingStack;
 import com.helger.pdflayout.base.PLColor;
 import com.helger.pdflayout.spec.ELineCapStyle;
@@ -83,6 +84,8 @@ import com.helger.pdflayout.spec.ELineJoinStyle;
 public class PDPageContentStreamExt implements Closeable
 {
   private static final Log LOGGER = LogFactory.getLog (PDPageContentStreamExt.class);
+  // Content streams are written in many small pieces, so buffer them
+  private static final int OUTPUT_BUFFER_SIZE = 16 * 1024;
 
   private final PDDocument m_aDoc;
   protected OutputStream m_aOS;
@@ -191,7 +194,7 @@ public class PDPageContentStreamExt implements Closeable
       {
         // create a new stream to encapsulate the existing stream
         final PDStream saveGraphics = new PDStream (aDoc);
-        m_aOS = saveGraphics.createOutputStream (filter);
+        m_aOS = new NonBlockingBufferedOutputStream (saveGraphics.createOutputStream (filter), OUTPUT_BUFFER_SIZE);
 
         // save the initial/unmodified graphics context
         saveGraphicsState ();
@@ -203,7 +206,8 @@ public class PDPageContentStreamExt implements Closeable
 
       // Sets the compoundStream as page contents
       sourcePage.getCOSObject ().setItem (COSName.CONTENTS, array);
-      m_aOS = contentsToAppend.createOutputStream (filter);
+      m_aOS = new NonBlockingBufferedOutputStream (contentsToAppend.createOutputStream (filter),
+                                                OUTPUT_BUFFER_SIZE);
 
       // restore the initial/unmodified graphics context
       if (resetContext)
@@ -219,7 +223,7 @@ public class PDPageContentStreamExt implements Closeable
       }
       final PDStream contents = new PDStream (aDoc);
       sourcePage.setContents (contents);
-      m_aOS = contents.createOutputStream (filter);
+      m_aOS = new NonBlockingBufferedOutputStream (contents.createOutputStream (filter), OUTPUT_BUFFER_SIZE);
     }
 
     // this has to be done here, as the resources will be set to null when

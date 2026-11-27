@@ -267,6 +267,12 @@ Between v4.0.0 and v5.2.2 the `artifactId` was called `ph-pdf-layout4`
 
 v8.4.5 - work in progress
 * The test library `pdfcompare` is no longer a compile dependency of `ph-pdf-layout`, so it is no longer pulled into projects using it
+* The debug messages "Not rendering the box/inline box/link ..." are only logged if `PLDebugLog.isDebugRender()` is enabled.
+  So far they were logged at INFO level for every empty split fragment, for example for each cell of a table row that is split over a page break
+* Performance: splitting a long `PLText` over pages no longer cleans the line endings of the remaining text again for each page
+* Performance: `HeightSpec.auto()` returns a shared instance, and splitting a `PLVBox` or `PLTable` pre-sizes the lists of the remaining rows
+* Performance: a code point of a subset font is only added to the subset once, and not for every occurrence
+* Performance: the output of `PDPageContentStreamExt` is buffered
 
 v8.4.4 - 2026-11-14
 * Requires at least ph-commons 12.6.0

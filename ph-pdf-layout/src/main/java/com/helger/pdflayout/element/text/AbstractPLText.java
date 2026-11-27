@@ -119,6 +119,19 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
   }
 
   /**
+   * Set the internal text fields from a text that is already cleaned.
+   *
+   * @param sCleanedText
+   *        Text to use, as returned by {@link #getCleanedPLText(String)}. May not be
+   *        <code>null</code>.
+   */
+  private void _setCleanedText (@NonNull final String sCleanedText)
+  {
+    m_sOriginalText = sCleanedText;
+    m_sTextWithPlaceholdersReplaced = sCleanedText;
+  }
+
+  /**
    * Set the internal text fields
    *
    * @param sText
@@ -126,8 +139,7 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
    */
   private void _setText (@Nullable final String sText)
   {
-    m_sOriginalText = getCleanedPLText (sText);
-    m_sTextWithPlaceholdersReplaced = m_sOriginalText;
+    _setCleanedText (getCleanedPLText (sText));
   }
 
   @Override
@@ -566,7 +578,9 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     final AbstractPLText <?> aNewText = internalCreateNewVertSplitObject (thisAsT ()).internalMarkAsSplitFragment (this,
                                                                                                                    bIsFirstHalf,
                                                                                                                    sIDSuffix);
-    aNewText._setText (sTextContent);
+    // The prepared lines were created from cleaned text, so cleaning again is not needed. This
+    // matters for long texts, that are split once per page.
+    aNewText._setCleanedText (sTextContent);
     // Set this explicitly after setBasicDataFrom!
     aNewText.setVertSplittable (bSplittableCopy);
 

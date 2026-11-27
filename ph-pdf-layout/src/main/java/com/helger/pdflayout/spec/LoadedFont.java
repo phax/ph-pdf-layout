@@ -65,6 +65,8 @@ public class LoadedFont
     private final byte [] m_aEncoded;
     // Lazy inited
     private volatile Integer m_aEncodedValue;
+    // Was the code point already added to the font subset?
+    private boolean m_bAddedToSubset = false;
 
     private EncodedCodePoint (final int nCodePoint, final byte @NonNull [] aEncoded)
     {
@@ -318,8 +320,12 @@ public class LoadedFont
         nCPOfs += Character.charCount (nCP);
 
         final EncodedCodePoint aECP = _getEncodedCodePoint (nCP);
-        if (m_bFontWillBeSubset)
+        if (m_bFontWillBeSubset && !aECP.m_bAddedToSubset)
+        {
+          // Add each code point only once, and not once per occurrence
           m_aFont.addToSubset (aECP.getCodePoint ());
+          aECP.m_bAddedToSubset = true;
+        }
         aECP.writeEncodedBytes (aBAOS);
       }
       return aBAOS.toByteArray ();

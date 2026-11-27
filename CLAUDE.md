@@ -63,6 +63,7 @@ Spec classes (`FontSpec`, `BorderSpec`, `MarginSpec`, etc.) have micro-type conv
 - **Framework**: JUnit 4 with `PLDebugTestRule` (manages debug state per test)
 - **PDF comparison**: `PDFTestComparer.renderAndCompare(layout, targetFile)` renders a layout and compares pixel-by-pixel against reference files in `example-files/`
 - **Generated PDFs**: Written to `ph-pdf-layout/pdf/` during test runs
+- **Performance**: `supplementary/benchmark/MainLayoutBenchmark` (test sources) times complete documents per scenario; arguments `[scenario] [rounds] [scale]`. Run it with `-Dorg.slf4j.simpleLogger.log.com.helger.pdflayout.debug=warn` and profile with JFR
 - **When layout changes**: Tests fail because output differs from reference. Visually verify the new PDF in `pdf/`, then overwrite the corresponding `example-files/` baseline
 
 ## Key Conventions

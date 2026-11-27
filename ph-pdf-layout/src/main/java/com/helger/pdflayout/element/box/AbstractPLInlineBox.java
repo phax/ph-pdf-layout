@@ -311,7 +311,7 @@ public abstract class AbstractPLInlineBox <IMPLTYPE extends AbstractPLInlineBox 
                                                                    getRenderHeight ());
       m_aElement.render (aElementCtx);
     }
-    else
+    else if (PLDebugLog.isDebugRender ())
       PLDebugLog.debugRender (this, "Not rendering the inline box, because no element is contained");
   }
 

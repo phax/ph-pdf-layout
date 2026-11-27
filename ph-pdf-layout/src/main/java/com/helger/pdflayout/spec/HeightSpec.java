@@ -45,6 +45,9 @@ import com.helger.base.tostring.ToStringGenerator;
 @MustImplementEqualsAndHashcode
 public class HeightSpec implements Serializable
 {
+  // The class is immutable, so the auto instance can be shared
+  private static final HeightSpec AUTO = new HeightSpec (EValueUOMType.AUTO, 0);
+
   private final EValueUOMType m_eType;
   private final float m_fValue;
 
@@ -196,13 +199,13 @@ public class HeightSpec implements Serializable
   }
 
   /**
-   * Create a new auto height element.
+   * Get the auto height element. Since 8.4.5 this is a shared instance.
    *
    * @return Never <code>null</code>.
    */
   @NonNull
   public static HeightSpec auto ()
   {
-    return new HeightSpec (EValueUOMType.AUTO, 0);
+    return AUTO;
   }
 }
