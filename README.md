@@ -273,6 +273,8 @@ v8.4.5 - work in progress
 * Performance: `HeightSpec.auto()` returns a shared instance, and splitting a `PLVBox` or `PLTable` pre-sizes the lists of the remaining rows
 * Performance: a code point of a subset font is only added to the subset once, and not for every occurrence
 * Performance: the output of `PDPageContentStreamExt` is buffered
+* Performance: `LoadedFont` caches the encoding and width of code points below 256 in arrays instead of maps
+* Performance: preparing a `PLText` only searches for placeholders if the text contains `${`
 
 v8.4.4 - 2026-11-14
 * Requires at least ph-commons 12.6.0

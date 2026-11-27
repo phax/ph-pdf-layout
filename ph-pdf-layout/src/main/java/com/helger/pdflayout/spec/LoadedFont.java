@@ -18,6 +18,7 @@ package com.helger.pdflayout.spec;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.pdfbox.pdmodel.font.PDCIDFont;
@@ -111,6 +112,8 @@ public class LoadedFont
   }
 
   private static final Logger LOGGER = LoggerFactory.getLogger (LoadedFont.class);
+  // Code points below this value are cached in arrays instead of maps
+  private static final int DIRECT_CACHE_SIZE = 256;
 
   /** The underlying PDFBox font */
   private final PDFont m_aFont;
@@ -128,6 +131,9 @@ public class LoadedFont
   private final boolean m_bFontWillBeSubset;
   private final IntObjectMap <EncodedCodePoint> m_aEncodedCodePointCache = new IntObjectMap <> ();
   private final IntFloatMap m_aCodePointWidthCache = new IntFloatMap ();
+  // Faster caches for the most common code points
+  private final EncodedCodePoint [] m_aEncodedCodePointDirectCache = new EncodedCodePoint [DIRECT_CACHE_SIZE];
+  private final float [] m_aCodePointWidthDirectCache = new float [DIRECT_CACHE_SIZE];
 
   @Deprecated (forRemoval = true, since = "8.4.2")
   public LoadedFont (@NonNull final PDFont aFont,
@@ -186,6 +192,8 @@ public class LoadedFont
 
     m_fDescent = aFD.getDescent ();
     m_bFontWillBeSubset = m_aFont.willBeSubset ();
+    // -1 means "not yet cached"
+    Arrays.fill (m_aCodePointWidthDirectCache, -1f);
   }
 
   /**
@@ -246,12 +254,20 @@ public class LoadedFont
   @NonNull
   private EncodedCodePoint _getEncodedCodePoint (final int nCodePoint) throws IOException
   {
+    final boolean bDirect = nCodePoint >= 0 && nCodePoint < DIRECT_CACHE_SIZE;
     // Fast path: shared read lock
-    EncodedCodePoint aECP = m_aEncodedCodePointCache.get (nCodePoint);
+    EncodedCodePoint aECP;
+    if (bDirect)
+      aECP = m_aEncodedCodePointDirectCache[nCodePoint];
+    else
+      aECP = m_aEncodedCodePointCache.get (nCodePoint);
     if (aECP == null)
     {
       aECP = encodeCodepointWithFallback (m_aFont, nCodePoint, m_nFallbackCodePoint);
-      m_aEncodedCodePointCache.put (nCodePoint, aECP);
+      if (bDirect)
+        m_aEncodedCodePointDirectCache[nCodePoint] = aECP;
+      else
+        m_aEncodedCodePointCache.put (nCodePoint, aECP);
       if (m_aMissingCodePointCallback != null && aECP.getCodePoint () != nCodePoint)
         m_aMissingCodePointCallback.onMissingCodePoint (m_aFont, nCodePoint, aECP.getCodePoint ());
     }
@@ -260,13 +276,21 @@ public class LoadedFont
 
   private float _getCodePointWidth (final int nCodePoint) throws IOException
   {
+    final boolean bDirect = nCodePoint >= 0 && nCodePoint < DIRECT_CACHE_SIZE;
     // Fast path: shared read lock
-    float fWidth = m_aCodePointWidthCache.get (nCodePoint, -1f);
+    float fWidth;
+    if (bDirect)
+      fWidth = m_aCodePointWidthDirectCache[nCodePoint];
+    else
+      fWidth = m_aCodePointWidthCache.get (nCodePoint, -1f);
     if (fWidth < 0)
     {
       final EncodedCodePoint aECP = _getEncodedCodePoint (nCodePoint);
       fWidth = m_aFont.getWidth (aECP.getEncodedIntValue ());
-      m_aCodePointWidthCache.put (nCodePoint, fWidth);
+      if (bDirect)
+        m_aCodePointWidthDirectCache[nCodePoint] = fWidth;
+      else
+        m_aCodePointWidthCache.put (nCodePoint, fWidth);
     }
     return fWidth;
   }

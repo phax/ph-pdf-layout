@@ -446,8 +446,12 @@ public abstract class AbstractPLText <IMPLTYPE extends AbstractPLText <IMPLTYPE>
     }
     else
     {
-      // Use the approximations from the placeholders
-      sTextToFit = StringReplace.replaceMultiple (m_sOriginalText, ESTIMATION_REPLACEMENTS);
+      // Use the approximations from the placeholders. All placeholders start with "${", so a text
+      // without it does not need to be searched for each placeholder.
+      if (m_sOriginalText.indexOf ("${") < 0)
+        sTextToFit = m_sOriginalText;
+      else
+        sTextToFit = StringReplace.replaceMultiple (m_sOriginalText, ESTIMATION_REPLACEMENTS);
     }
     internalSetPreparedLines (m_aLoadedFont.getFitToWidth (sTextToFit, fFontSize, fAvailableWidth));
 
