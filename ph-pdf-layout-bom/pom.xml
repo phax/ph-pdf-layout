@@ -26,7 +26,7 @@
     <relativePath />
   </parent>
   <artifactId>ph-pdf-layout-bom</artifactId>
-  <version>8.4.5</version>
+  <version>8.4.6-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>ph-pdf-layout-bom</name>
   <description>Bill of Materials for all ph-pdf-layout artifacts</description>
@@ -65,8 +65,4 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <scm>
-    <tag>ph-pdf-layout-parent-pom-8.4.5</tag>
-  </scm>
 </project>
